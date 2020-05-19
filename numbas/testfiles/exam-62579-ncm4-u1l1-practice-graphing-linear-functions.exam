@@ -1,0 +1,3236 @@
+// Numbas version: exam_results_page_options
+{
+    "feedback": {
+        "showanswerstate": true,
+        "showactualmark": true,
+        "advicethreshold": 0,
+        "intro": "<p>Today, you will be graphing linear functions.&nbsp; You will also be identifying key characteristics of them via their graph or equation.</p>",
+        "feedbackmessages": [],
+        "showtotalmark": true,
+        "allowrevealanswer": true
+    },
+    "metadata": {
+        "description": "Plot linear functions and identify key characteristics.",
+        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+    },
+    "navigation": {
+        "browse": true,
+        "startpassword": "",
+        "onleave": {
+            "action": "none",
+            "message": ""
+        },
+        "preventleave": true,
+        "allowregen": true,
+        "reverse": true,
+        "showfrontpage": true,
+        "allowsteps": true,
+        "showresultspage": "oncompletion"
+    },
+    "timing": {
+        "timedwarning": {
+            "action": "none",
+            "message": ""
+        },
+        "timeout": {
+            "action": "none",
+            "message": ""
+        },
+        "allowPause": true
+    },
+    "showstudentname": true,
+    "duration": 0,
+    "showQuestionGroupNames": false,
+    "percentPass": 0,
+    "name": "NCM4 U1L1 PRACTICE Graphing Linear Functions",
+    "question_groups": [
+        {
+            "pickQuestions": 1,
+            "pickingStrategy": "all-ordered",
+            "name": "Group",
+            "questions": [
+                {
+                    "name": "NC Math 4 U1L1 Terry's copy of  Graphs I: Linear Coordinates",
+                    "extensions": [
+                        "jsxgraph"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Nasir Khan",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/909/"
+                        },
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "variables": {
+                        "g": {
+                            "description": "<p>This is the x-coordinate of the fourth point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "g"
+                        },
+                        "c": {
+                            "description": "<p>This is the x-coordinate of the second point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "c"
+                        },
+                        "h": {
+                            "description": "<p>This is the y-coordinate of the fourth point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "h"
+                        },
+                        "f": {
+                            "description": "<p>This is the y-coordinate of the third point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "f"
+                        },
+                        "ee": {
+                            "description": "<p>This is the x-coordinate of the third point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "ee"
+                        },
+                        "b": {
+                            "description": "<p>This is the y-coordinate of the first point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "b"
+                        },
+                        "a": {
+                            "description": "<p>This is the x-coordinate of the first point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "a"
+                        },
+                        "d": {
+                            "description": "<p>This is the y-coordinate of the second point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "d"
+                        }
+                    },
+                    "advice": "<p>The correct answers are obtained as follows.</p>\n<ul>\n<li>The point $A$ is distance $\\var{a}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{a}$.</li>\n<li>The point $A$ is distance $\\var{b}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{b}$.</li>\n<li>The point $B$ is distance $\\var{c}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{c}$.</li>\n<li>The point $B$ is distance $\\var{d}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{d}$.</li>\n<li>The point $C$ is distance $\\var{ee}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{ee}$.</li>\n<li>The point $C$ is distance $\\var{f}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{f}$.</li>\n<li>The point $D$ is distance $\\var{g}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{g}$.</li>\n<li>The point $D$ is distance $\\var{h}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{h}$.</li>\n</ul>\n<p></p>",
+                    "functions": {
+                        "dragpoint": {
+                            "parameters": [],
+                            "language": "javascript",
+                            "type": "html",
+                            "definition": "// set up the board\nJXG.Options.point.showInfobox = false;\nvar div = Numbas.extensions.jsxgraph.makeBoard('500px','500px',{boundingBox:[-11,11,11,-11],grid:true,withLabel:true});\n\nvar board = div.board;\n\nvar x1 = Numbas.jme.unwrapValue(scope.variables.a);\nvar y1 = Numbas.jme.unwrapValue(scope.variables.b);\nvar x2 = Numbas.jme.unwrapValue(scope.variables.c);\nvar y2 = Numbas.jme.unwrapValue(scope.variables.d);\nvar x3 = Numbas.jme.unwrapValue(scope.variables.ee);\nvar y3 = Numbas.jme.unwrapValue(scope.variables.f);\nvar x4 = Numbas.jme.unwrapValue(scope.variables.g);\nvar y4 = Numbas.jme.unwrapValue(scope.variables.h);\n\nvar e = board.create('point',[10,0],{size:-1,name:'x'});\ne.setProperty({fixed:true});\nvar f = board.create('point',[0,10],{size:-1,name:'y'});\nf.setProperty({fixed:true});\n\nvar a = board.create('point',[x1,y1],{size:5});\na.setProperty({fixed:true});\nvar b = board.create('point',[x2,y2],{size:5});\nb.setProperty({fixed:true});\nvar c = board.create('point',[x3,y3],{size:5});\nc.setProperty({fixed:true});\nvar d = board.create('point',[x4,y4],{size:5});\nd.setProperty({fixed:true});\n\nreturn div;"
+                        }
+                    },
+                    "rulesets": {},
+                    "showQuestionGroupNames": false,
+                    "tags": [],
+                    "type": "question",
+                    "statement": "<p>What are the coordinates of the points $A$-$D$ on the following graph?</p>\n<p>Note that all coordinates are whole numbers.</p>\n<p>{dragpoint()}</p>",
+                    "ungrouped_variables": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "ee",
+                        "f",
+                        "g",
+                        "h"
+                    ],
+                    "parts": [
+                        {
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "prompt": "<p>Coordinates are given in the form&nbsp;$(x,y)$</p>\n<p>In order to find the coordinate of a certain point, you must first find the $x$ coordinate by looking at which value the point is on the x-axis (the horizontal axis). Then, find the $y$ coordinate by looking at which value the point is on the y-axis (the vertical axis).</p>",
+                                    "scripts": {},
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showCorrectAnswer": true,
+                                    "type": "information",
+                                    "variableReplacements": []
+                                }
+                            ],
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "prompt": "<p>The coordinates of $A$ are&nbsp;$\\big($[[0]],[[1]]$\\big)$.</p>\n<p><span id=\"distance\">The coordinates of $B$ are&nbsp;$\\big($[[2]],[[3]]$\\big)$.</span></p>\n<p><span id=\"distance\">The coordinates of $C$ are&nbsp;$\\big($[[4]],[[5]]$\\big)$.</span></p>\n<p><span id=\"distance\">The coordinates of $D$ are $\\big($[[6]],[[7]]$\\big)$.</span></p>",
+                            "scripts": {},
+                            "gaps": [
+                                {
+                                    "maxValue": "a",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "a",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "b",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "b",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "c",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "c",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "d",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "d",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "ee",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "ee",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "f",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "f",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "g",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "g",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "h",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "h",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                }
+                            ],
+                            "variableReplacementStrategy": "originalfirst",
+                            "variableReplacements": [],
+                            "type": "gapfill",
+                            "stepsPenalty": 0
+                        }
+                    ],
+                    "question_groups": [
+                        {
+                            "name": "",
+                            "pickingStrategy": "all-ordered",
+                            "pickQuestions": 0,
+                            "questions": []
+                        }
+                    ],
+                    "metadata": {
+                        "description": "<p>This question allows you to practice identifying the coordinates of points on graphs.</p>",
+                        "licence": "Creative Commons Attribution 4.0 International"
+                    },
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "variablesTest": {
+                        "condition": "c<>a and ee<>a and g<>a and ee<>c and g<>c and g<>ee",
+                        "maxRuns": 100
+                    }
+                },
+                {
+                    "name": "NC Math 4 U1L1 Terry's copy of  Graphs I: Linear Coordinates",
+                    "extensions": [
+                        "jsxgraph"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Nasir Khan",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/909/"
+                        },
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "variables": {
+                        "g": {
+                            "description": "<p>This is the x-coordinate of the fourth point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "g"
+                        },
+                        "c": {
+                            "description": "<p>This is the x-coordinate of the second point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "c"
+                        },
+                        "h": {
+                            "description": "<p>This is the y-coordinate of the fourth point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "h"
+                        },
+                        "f": {
+                            "description": "<p>This is the y-coordinate of the third point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "f"
+                        },
+                        "ee": {
+                            "description": "<p>This is the x-coordinate of the third point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "ee"
+                        },
+                        "b": {
+                            "description": "<p>This is the y-coordinate of the first point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "b"
+                        },
+                        "a": {
+                            "description": "<p>This is the x-coordinate of the first point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "a"
+                        },
+                        "d": {
+                            "description": "<p>This is the y-coordinate of the second point.</p>",
+                            "group": "Ungrouped variables",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "name": "d"
+                        }
+                    },
+                    "advice": "<p>The correct answers are obtained as follows.</p>\n<ul>\n<li>The point $A$ is distance $\\var{a}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{a}$.</li>\n<li>The point $A$ is distance $\\var{b}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{b}$.</li>\n<li>The point $B$ is distance $\\var{c}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{c}$.</li>\n<li>The point $B$ is distance $\\var{d}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{d}$.</li>\n<li>The point $C$ is distance $\\var{ee}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{ee}$.</li>\n<li>The point $C$ is distance $\\var{f}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{f}$.</li>\n<li>The point $D$ is distance $\\var{g}$ from the origin in the horizontal direction (positive is to the right and negative is to the left), so its $x$-coordinate is $\\var{g}$.</li>\n<li>The point $D$ is distance $\\var{h}$ from the origin in the vertical direction (positive is upwards and negative is downwards), so its $y$-coordinate is $\\var{h}$.</li>\n</ul>\n<p></p>",
+                    "functions": {
+                        "dragpoint": {
+                            "parameters": [],
+                            "language": "javascript",
+                            "type": "html",
+                            "definition": "// set up the board\nJXG.Options.point.showInfobox = false;\nvar div = Numbas.extensions.jsxgraph.makeBoard('500px','500px',{boundingBox:[-11,11,11,-11],grid:true,withLabel:true});\n\nvar board = div.board;\n\nvar x1 = Numbas.jme.unwrapValue(scope.variables.a);\nvar y1 = Numbas.jme.unwrapValue(scope.variables.b);\nvar x2 = Numbas.jme.unwrapValue(scope.variables.c);\nvar y2 = Numbas.jme.unwrapValue(scope.variables.d);\nvar x3 = Numbas.jme.unwrapValue(scope.variables.ee);\nvar y3 = Numbas.jme.unwrapValue(scope.variables.f);\nvar x4 = Numbas.jme.unwrapValue(scope.variables.g);\nvar y4 = Numbas.jme.unwrapValue(scope.variables.h);\n\nvar e = board.create('point',[10,0],{size:-1,name:'x'});\ne.setProperty({fixed:true});\nvar f = board.create('point',[0,10],{size:-1,name:'y'});\nf.setProperty({fixed:true});\n\nvar a = board.create('point',[x1,y1],{size:5});\na.setProperty({fixed:true});\nvar b = board.create('point',[x2,y2],{size:5});\nb.setProperty({fixed:true});\nvar c = board.create('point',[x3,y3],{size:5});\nc.setProperty({fixed:true});\nvar d = board.create('point',[x4,y4],{size:5});\nd.setProperty({fixed:true});\n\nreturn div;"
+                        }
+                    },
+                    "rulesets": {},
+                    "showQuestionGroupNames": false,
+                    "tags": [],
+                    "type": "question",
+                    "statement": "<p>What are the coordinates of the points $A$-$D$ on the following graph?</p>\n<p>Note that all coordinates are whole numbers.</p>\n<p>{dragpoint()}</p>",
+                    "ungrouped_variables": [
+                        "a",
+                        "b",
+                        "c",
+                        "d",
+                        "ee",
+                        "f",
+                        "g",
+                        "h"
+                    ],
+                    "parts": [
+                        {
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "prompt": "<p>Coordinates are given in the form&nbsp;$(x,y)$</p>\n<p>In order to find the coordinate of a certain point, you must first find the $x$ coordinate by looking at which value the point is on the x-axis (the horizontal axis). Then, find the $y$ coordinate by looking at which value the point is on the y-axis (the vertical axis).</p>",
+                                    "scripts": {},
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showCorrectAnswer": true,
+                                    "type": "information",
+                                    "variableReplacements": []
+                                }
+                            ],
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "prompt": "<p>The coordinates of $A$ are&nbsp;$\\big($[[0]],[[1]]$\\big)$.</p>\n<p><span id=\"distance\">The coordinates of $B$ are&nbsp;$\\big($[[2]],[[3]]$\\big)$.</span></p>\n<p><span id=\"distance\">The coordinates of $C$ are&nbsp;$\\big($[[4]],[[5]]$\\big)$.</span></p>\n<p><span id=\"distance\">The coordinates of $D$ are $\\big($[[6]],[[7]]$\\big)$.</span></p>",
+                            "scripts": {},
+                            "gaps": [
+                                {
+                                    "maxValue": "a",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "a",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "b",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "b",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "c",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "c",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "d",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "d",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "ee",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "ee",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "f",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "f",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "g",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "g",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                },
+                                {
+                                    "maxValue": "h",
+                                    "marks": 1,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "integerPartialCredit": 0,
+                                    "type": "numberentry",
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showPrecisionHint": false,
+                                    "minValue": "h",
+                                    "integerAnswer": true,
+                                    "showCorrectAnswer": true
+                                }
+                            ],
+                            "variableReplacementStrategy": "originalfirst",
+                            "variableReplacements": [],
+                            "type": "gapfill",
+                            "stepsPenalty": 0
+                        }
+                    ],
+                    "question_groups": [
+                        {
+                            "name": "",
+                            "pickingStrategy": "all-ordered",
+                            "pickQuestions": 0,
+                            "questions": []
+                        }
+                    ],
+                    "metadata": {
+                        "description": "<p>This question allows you to practice identifying the coordinates of points on graphs.</p>",
+                        "licence": "Creative Commons Attribution 4.0 International"
+                    },
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "variablesTest": {
+                        "condition": "c<>a and ee<>a and g<>a and ee<>c and g<>c and g<>ee",
+                        "maxRuns": 100
+                    }
+                },
+                {
+                    "name": "NC Math 4 U1L1 Graphing Linear Equation",
+                    "extensions": [],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Ben Brawn",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/605/"
+                        },
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "rulesets": {},
+                    "advice": "",
+                    "tags": [],
+                    "statement": "<p>You are given the equation&nbsp;$y=\\simplify[all,fractionNumbers]{{a}x+{b}}$.&nbsp;</p>",
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "parts": [
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>This equation, or its graph, can be described as a</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>straight line</p>",
+                                "<p>parabola/quadratic</p>",
+                                "<p>cubic</p>",
+                                "<p>hyperbola</p>",
+                                "<p>circle</p>",
+                                "<p>quartic</p>"
+                            ],
+                            "shuffleChoices": true,
+                            "marks": 0,
+                            "matrix": [
+                                "1",
+                                "0",
+                                "0",
+                                0,
+                                0,
+                                0
+                            ],
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>An equation of the form $y=ax+b$ is&nbsp;known as&nbsp;a linear equation,&nbsp;and its graph is a straight line.&nbsp;</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far left of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "lleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the left of the graph $x$ is negative, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&gt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&lt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far right&nbsp;of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "rleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the right&nbsp;of the graph $x$ is positive, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&lt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&gt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": true,
+                                    "minValue": "{b}",
+                                    "marks": 1,
+                                    "maxValue": "{b}",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": true,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>The $y$-intercept is the value of $y$ when $x=0$, that is, the value of $y$ where the graph hits&nbsp;the $y$-axis. To find it, substitute $x=0$ into our equation:</p>\n<p>\\[y=\\simplify[unitFactor,basic,fractionNumbers]{{a}0+{b}}=\\var{b}.\\]</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The $y$-intercept of the graph is $y=$[[0]].</p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "checkingType": "absdiff",
+                                    "checkVariableNames": false,
+                                    "valuegenerators": [],
+                                    "useCustomName": false,
+                                    "vsetRange": [
+                                        0,
+                                        1
+                                    ],
+                                    "checkingAccuracy": 0.001,
+                                    "unitTests": [],
+                                    "showFeedbackIcon": true,
+                                    "answer": "set({xints})",
+                                    "scripts": {},
+                                    "failureRate": 1,
+                                    "showPreview": true,
+                                    "showCorrectAnswer": true,
+                                    "marks": 1,
+                                    "vsetRangePoints": 5,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "jme",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p><em><strong>Round your decimal to three decimal places.</strong></em></p>\n<p>The $x$-intercept is the value of $x$ when $y=0$, that is, the value of $x$ where the graph hits&nbsp;the $x$-axis. To find it, substitute $y=0$ into our equation:</p>\n<p>\\[0=\\simplify[all,fractionNumbers]{{a}x+{b}} \\]</p>\n<p></p>\n<p>Solving this&nbsp;equation tells us that&nbsp;the $x$-intercept is $x=\\simplify[all, fractionNumbers]{{-b}/{a}}$.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The set of $x$-intercepts of the graph&nbsp;would be&nbsp;[[0]].</p>\n<p><strong>Note:&nbsp;</strong>If there are no intercepts, enter<strong> <strong>set()</strong></strong></p>\n<p><span>If there is only one intercept, say $x=5$, enter <strong><strong>set(5)</strong></strong></span></p>\n<p><span>If there are two intercepts, say $x=-2$ and $x=1.5$, enter <strong>set(-2,1.5)</strong></span></p>\n<p><span>If there are three intercepts, say $x=-2$,&nbsp;$x=1.5$ and $x=5$, enter<strong> <strong>set(-2,1.5,5)</strong></strong></span></p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "minValue": "0",
+                                    "marks": 1,
+                                    "maxValue": "0",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>A degree $n$ polynomial has at most $n-1$ bends in its graph.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>Given the degree of a polynomial is $1$, the maximum number of possible 'bends' or 'turns' in the graph is&nbsp;[[0]].</p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "functions": {},
+                    "ungrouped_variables": [
+                        "a",
+                        "b",
+                        "lleading",
+                        "rleading",
+                        "xints"
+                    ],
+                    "variable_groups": [],
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                        "description": ""
+                    },
+                    "variables": {
+                        "a": {
+                            "name": "a",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-6..6 except 0)"
+                        },
+                        "b": {
+                            "name": "b",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)"
+                        },
+                        "xints": {
+                            "name": "xints",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "precround(-b/a,3)"
+                        },
+                        "lleading": {
+                            "name": "lleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a<0,1,0),if(a<0,0,1)]"
+                        },
+                        "rleading": {
+                            "name": "rleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a>0,1,0),if(a>0,0,1)]"
+                        }
+                    }
+                },
+                {
+                    "name": "NC Math 4 U1L1 Graphing Linear Equation",
+                    "extensions": [],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Ben Brawn",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/605/"
+                        },
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "rulesets": {},
+                    "advice": "",
+                    "tags": [],
+                    "statement": "<p>You are given the equation&nbsp;$y=\\simplify[all,fractionNumbers]{{a}x+{b}}$.&nbsp;</p>",
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "parts": [
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>This equation, or its graph, can be described as a</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>straight line</p>",
+                                "<p>parabola/quadratic</p>",
+                                "<p>cubic</p>",
+                                "<p>hyperbola</p>",
+                                "<p>circle</p>",
+                                "<p>quartic</p>"
+                            ],
+                            "shuffleChoices": true,
+                            "marks": 0,
+                            "matrix": [
+                                "1",
+                                "0",
+                                "0",
+                                0,
+                                0,
+                                0
+                            ],
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>An equation of the form $y=ax+b$ is&nbsp;known as&nbsp;a linear equation,&nbsp;and its graph is a straight line.&nbsp;</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far left of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "lleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the left of the graph $x$ is negative, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&gt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&lt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far right&nbsp;of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "rleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the right&nbsp;of the graph $x$ is positive, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&lt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&gt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": true,
+                                    "minValue": "{b}",
+                                    "marks": 1,
+                                    "maxValue": "{b}",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": true,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>The $y$-intercept is the value of $y$ when $x=0$, that is, the value of $y$ where the graph hits&nbsp;the $y$-axis. To find it, substitute $x=0$ into our equation:</p>\n<p>\\[y=\\simplify[unitFactor,basic,fractionNumbers]{{a}0+{b}}=\\var{b}.\\]</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The $y$-intercept of the graph is $y=$[[0]].</p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "checkingType": "absdiff",
+                                    "checkVariableNames": false,
+                                    "valuegenerators": [],
+                                    "useCustomName": false,
+                                    "vsetRange": [
+                                        0,
+                                        1
+                                    ],
+                                    "checkingAccuracy": 0.001,
+                                    "unitTests": [],
+                                    "showFeedbackIcon": true,
+                                    "answer": "set({xints})",
+                                    "scripts": {},
+                                    "failureRate": 1,
+                                    "showPreview": true,
+                                    "showCorrectAnswer": true,
+                                    "marks": 1,
+                                    "vsetRangePoints": 5,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "jme",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p><em><strong>Round your decimal to three decimal places.</strong></em></p>\n<p>The $x$-intercept is the value of $x$ when $y=0$, that is, the value of $x$ where the graph hits&nbsp;the $x$-axis. To find it, substitute $y=0$ into our equation:</p>\n<p>\\[0=\\simplify[all,fractionNumbers]{{a}x+{b}} \\]</p>\n<p></p>\n<p>Solving this&nbsp;equation tells us that&nbsp;the $x$-intercept is $x=\\simplify[all, fractionNumbers]{{-b}/{a}}$.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The set of $x$-intercepts of the graph&nbsp;would be&nbsp;[[0]].</p>\n<p><strong>Note:&nbsp;</strong>If there are no intercepts, enter<strong> <strong>set()</strong></strong></p>\n<p><span>If there is only one intercept, say $x=5$, enter <strong><strong>set(5)</strong></strong></span></p>\n<p><span>If there are two intercepts, say $x=-2$ and $x=1.5$, enter <strong>set(-2,1.5)</strong></span></p>\n<p><span>If there are three intercepts, say $x=-2$,&nbsp;$x=1.5$ and $x=5$, enter<strong> <strong>set(-2,1.5,5)</strong></strong></span></p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "minValue": "0",
+                                    "marks": 1,
+                                    "maxValue": "0",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>A degree $n$ polynomial has at most $n-1$ bends in its graph.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>Given the degree of a polynomial is $1$, the maximum number of possible 'bends' or 'turns' in the graph is&nbsp;[[0]].</p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "functions": {},
+                    "ungrouped_variables": [
+                        "a",
+                        "b",
+                        "lleading",
+                        "rleading",
+                        "xints"
+                    ],
+                    "variable_groups": [],
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                        "description": ""
+                    },
+                    "variables": {
+                        "a": {
+                            "name": "a",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-6..6 except 0)"
+                        },
+                        "b": {
+                            "name": "b",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)"
+                        },
+                        "xints": {
+                            "name": "xints",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "precround(-b/a,3)"
+                        },
+                        "lleading": {
+                            "name": "lleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a<0,1,0),if(a<0,0,1)]"
+                        },
+                        "rleading": {
+                            "name": "rleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a>0,1,0),if(a>0,0,1)]"
+                        }
+                    }
+                },
+                {
+                    "name": "NC Math 4 U1L1 Graphing Linear Equation",
+                    "extensions": [],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Ben Brawn",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/605/"
+                        },
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "rulesets": {},
+                    "advice": "",
+                    "tags": [],
+                    "statement": "<p>You are given the equation&nbsp;$y=\\simplify[all,fractionNumbers]{{a}x+{b}}$.&nbsp;</p>",
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "parts": [
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>This equation, or its graph, can be described as a</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>straight line</p>",
+                                "<p>parabola/quadratic</p>",
+                                "<p>cubic</p>",
+                                "<p>hyperbola</p>",
+                                "<p>circle</p>",
+                                "<p>quartic</p>"
+                            ],
+                            "shuffleChoices": true,
+                            "marks": 0,
+                            "matrix": [
+                                "1",
+                                "0",
+                                "0",
+                                0,
+                                0,
+                                0
+                            ],
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>An equation of the form $y=ax+b$ is&nbsp;known as&nbsp;a linear equation,&nbsp;and its graph is a straight line.&nbsp;</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far left of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "lleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the left of the graph $x$ is negative, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&gt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&lt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "showCellAnswerState": true,
+                            "useCustomName": false,
+                            "prompt": "<p>As we move to the far right&nbsp;of the graph, the graph</p>",
+                            "scripts": {},
+                            "showCorrectAnswer": true,
+                            "unitTests": [],
+                            "showFeedbackIcon": true,
+                            "stepsPenalty": "1",
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "minMarks": 0,
+                            "choices": [
+                                "<p>goes upwards.</p>",
+                                "<p>goes downwards.</p>"
+                            ],
+                            "shuffleChoices": false,
+                            "marks": 0,
+                            "matrix": "rleading",
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "displayColumns": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>What happens to the graph as you go far to the left or right is called the long term behaviour of a graph.</p>\n<p>The leading term (the term that includes the highest power) determines the long term behaviour of a&nbsp;polynomial. In our polynomial the leading term is&nbsp;$\\simplify[all,fractionNumbers]{{a}x}$.</p>\n<p>As we go far to the right&nbsp;of the graph $x$ is positive, and so $\\simplify[all,fractionNumbers]{{a}x}$&nbsp;<span data-jme-visible=\"a&lt;0\">is negative. That is, the graph goes downwards.</span>&nbsp;<span data-jme-visible=\"a&gt;0\">is positive. That is, the graph goes upwards.</span>&nbsp;</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "type": "1_n_2",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": true,
+                                    "minValue": "{b}",
+                                    "marks": 1,
+                                    "maxValue": "{b}",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": true,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>The $y$-intercept is the value of $y$ when $x=0$, that is, the value of $y$ where the graph hits&nbsp;the $y$-axis. To find it, substitute $x=0$ into our equation:</p>\n<p>\\[y=\\simplify[unitFactor,basic,fractionNumbers]{{a}0+{b}}=\\var{b}.\\]</p>\n<p></p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The $y$-intercept of the graph is $y=$[[0]].</p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "checkingType": "absdiff",
+                                    "checkVariableNames": false,
+                                    "valuegenerators": [],
+                                    "useCustomName": false,
+                                    "vsetRange": [
+                                        0,
+                                        1
+                                    ],
+                                    "checkingAccuracy": 0.001,
+                                    "unitTests": [],
+                                    "showFeedbackIcon": true,
+                                    "answer": "set({xints})",
+                                    "scripts": {},
+                                    "failureRate": 1,
+                                    "showPreview": true,
+                                    "showCorrectAnswer": true,
+                                    "marks": 1,
+                                    "vsetRangePoints": 5,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "jme",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p><em><strong>Round your decimal to three decimal places.</strong></em></p>\n<p>The $x$-intercept is the value of $x$ when $y=0$, that is, the value of $x$ where the graph hits&nbsp;the $x$-axis. To find it, substitute $y=0$ into our equation:</p>\n<p>\\[0=\\simplify[all,fractionNumbers]{{a}x+{b}} \\]</p>\n<p></p>\n<p>Solving this&nbsp;equation tells us that&nbsp;the $x$-intercept is $x=\\simplify[all, fractionNumbers]{{-b}/{a}}$.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>The set of $x$-intercepts of the graph&nbsp;would be&nbsp;[[0]].</p>\n<p><strong>Note:&nbsp;</strong>If there are no intercepts, enter<strong> <strong>set()</strong></strong></p>\n<p><span>If there is only one intercept, say $x=5$, enter <strong><strong>set(5)</strong></strong></span></p>\n<p><span>If there are two intercepts, say $x=-2$ and $x=1.5$, enter <strong>set(-2,1.5)</strong></span></p>\n<p><span>If there are three intercepts, say $x=-2$,&nbsp;$x=1.5$ and $x=5$, enter<strong> <strong>set(-2,1.5,5)</strong></strong></span></p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        },
+                        {
+                            "sortAnswers": false,
+                            "marks": 0,
+                            "gaps": [
+                                {
+                                    "mustBeReduced": false,
+                                    "useCustomName": false,
+                                    "notationStyles": [
+                                        "plain",
+                                        "en",
+                                        "si-en"
+                                    ],
+                                    "showFractionHint": true,
+                                    "showCorrectAnswer": true,
+                                    "unitTests": [],
+                                    "mustBeReducedPC": 0,
+                                    "showFeedbackIcon": true,
+                                    "scripts": {},
+                                    "correctAnswerFraction": false,
+                                    "minValue": "0",
+                                    "marks": 1,
+                                    "maxValue": "0",
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "allowFractions": false,
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "type": "numberentry",
+                                    "customMarkingAlgorithm": "",
+                                    "correctAnswerStyle": "plain"
+                                }
+                            ],
+                            "useCustomName": false,
+                            "extendBaseMarkingAlgorithm": true,
+                            "variableReplacements": [],
+                            "steps": [
+                                {
+                                    "marks": 0,
+                                    "useCustomName": false,
+                                    "extendBaseMarkingAlgorithm": true,
+                                    "variableReplacements": [],
+                                    "customName": "",
+                                    "adaptiveMarkingPenalty": 0,
+                                    "showCorrectAnswer": true,
+                                    "variableReplacementStrategy": "originalfirst",
+                                    "showFeedbackIcon": true,
+                                    "prompt": "<p>A degree $n$ polynomial has at most $n-1$ bends in its graph.</p>",
+                                    "unitTests": [],
+                                    "scripts": {},
+                                    "type": "information",
+                                    "customMarkingAlgorithm": ""
+                                }
+                            ],
+                            "customName": "",
+                            "adaptiveMarkingPenalty": 0,
+                            "showCorrectAnswer": true,
+                            "stepsPenalty": "1",
+                            "variableReplacementStrategy": "originalfirst",
+                            "showFeedbackIcon": true,
+                            "prompt": "<p>Given the degree of a polynomial is $1$, the maximum number of possible 'bends' or 'turns' in the graph is&nbsp;[[0]].</p>\n<p></p>",
+                            "unitTests": [],
+                            "scripts": {},
+                            "type": "gapfill",
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "functions": {},
+                    "ungrouped_variables": [
+                        "a",
+                        "b",
+                        "lleading",
+                        "rleading",
+                        "xints"
+                    ],
+                    "variable_groups": [],
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                        "description": ""
+                    },
+                    "variables": {
+                        "a": {
+                            "name": "a",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-6..6 except 0)"
+                        },
+                        "b": {
+                            "name": "b",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)"
+                        },
+                        "xints": {
+                            "name": "xints",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "precround(-b/a,3)"
+                        },
+                        "lleading": {
+                            "name": "lleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a<0,1,0),if(a<0,0,1)]"
+                        },
+                        "rleading": {
+                            "name": "rleading",
+                            "group": "Ungrouped variables",
+                            "description": "",
+                            "templateType": "anything",
+                            "definition": "[if(a>0,1,0),if(a>0,0,1)]"
+                        }
+                    }
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Slope-Intercept Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{y={m[1]}/{m[0]}x+{yint[1]}/{yint[0]}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "rulesets": {},
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International",
+                        "description": ""
+                    },
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "parts": [
+                        {
+                            "shuffleChoices": true,
+                            "customName": "",
+                            "unitTests": [],
+                            "variableReplacements": [],
+                            "showFeedbackIcon": true,
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "customMarkingAlgorithm": "",
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "useCustomName": false,
+                            "adaptiveMarkingPenalty": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', -yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yintSend], ['b', mSend]])}"
+                            ],
+                            "minMarks": 0,
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "displayType": "radiogroup",
+                            "maxMarks": 0,
+                            "scripts": {},
+                            "type": "1_n_2",
+                            "showCellAnswerState": true,
+                            "extendBaseMarkingAlgorithm": true
+                        }
+                    ],
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint",
+                        "mSend",
+                        "yintSend"
+                    ],
+                    "variables": {
+                        "yint": {
+                            "name": "yint",
+                            "description": "",
+                            "definition": "rational_approximation(C/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "m": {
+                            "name": "m",
+                            "description": "",
+                            "definition": "rational_approximation(-A/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "mSend": {
+                            "name": "mSend",
+                            "description": "",
+                            "definition": "m[1]/m[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "B": {
+                            "name": "B",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "A": {
+                            "name": "A",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "C": {
+                            "name": "C",
+                            "description": "",
+                            "definition": "random(-10..10)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "yintSend": {
+                            "name": "yintSend",
+                            "description": "",
+                            "definition": "yint[1]/yint[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        }
+                    },
+                    "functions": {},
+                    "tags": [],
+                    "advice": "",
+                    "variable_groups": []
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Slope-Intercept Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{y={m[1]}/{m[0]}x+{yint[1]}/{yint[0]}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "rulesets": {},
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International",
+                        "description": ""
+                    },
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "parts": [
+                        {
+                            "shuffleChoices": true,
+                            "customName": "",
+                            "unitTests": [],
+                            "variableReplacements": [],
+                            "showFeedbackIcon": true,
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "customMarkingAlgorithm": "",
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "useCustomName": false,
+                            "adaptiveMarkingPenalty": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', -yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yintSend], ['b', mSend]])}"
+                            ],
+                            "minMarks": 0,
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "displayType": "radiogroup",
+                            "maxMarks": 0,
+                            "scripts": {},
+                            "type": "1_n_2",
+                            "showCellAnswerState": true,
+                            "extendBaseMarkingAlgorithm": true
+                        }
+                    ],
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint",
+                        "mSend",
+                        "yintSend"
+                    ],
+                    "variables": {
+                        "yint": {
+                            "name": "yint",
+                            "description": "",
+                            "definition": "rational_approximation(C/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "m": {
+                            "name": "m",
+                            "description": "",
+                            "definition": "rational_approximation(-A/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "mSend": {
+                            "name": "mSend",
+                            "description": "",
+                            "definition": "m[1]/m[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "B": {
+                            "name": "B",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "A": {
+                            "name": "A",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "C": {
+                            "name": "C",
+                            "description": "",
+                            "definition": "random(-10..10)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "yintSend": {
+                            "name": "yintSend",
+                            "description": "",
+                            "definition": "yint[1]/yint[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        }
+                    },
+                    "functions": {},
+                    "tags": [],
+                    "advice": "",
+                    "variable_groups": []
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Slope-Intercept Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{y={m[1]}/{m[0]}x+{yint[1]}/{yint[0]}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "rulesets": {},
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International",
+                        "description": ""
+                    },
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "parts": [
+                        {
+                            "shuffleChoices": true,
+                            "customName": "",
+                            "unitTests": [],
+                            "variableReplacements": [],
+                            "showFeedbackIcon": true,
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "customMarkingAlgorithm": "",
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "useCustomName": false,
+                            "adaptiveMarkingPenalty": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', -yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yintSend], ['b', mSend]])}"
+                            ],
+                            "minMarks": 0,
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "displayType": "radiogroup",
+                            "maxMarks": 0,
+                            "scripts": {},
+                            "type": "1_n_2",
+                            "showCellAnswerState": true,
+                            "extendBaseMarkingAlgorithm": true
+                        }
+                    ],
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint",
+                        "mSend",
+                        "yintSend"
+                    ],
+                    "variables": {
+                        "yint": {
+                            "name": "yint",
+                            "description": "",
+                            "definition": "rational_approximation(C/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "m": {
+                            "name": "m",
+                            "description": "",
+                            "definition": "rational_approximation(-A/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "mSend": {
+                            "name": "mSend",
+                            "description": "",
+                            "definition": "m[1]/m[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "B": {
+                            "name": "B",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "A": {
+                            "name": "A",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "C": {
+                            "name": "C",
+                            "description": "",
+                            "definition": "random(-10..10)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "yintSend": {
+                            "name": "yintSend",
+                            "description": "",
+                            "definition": "yint[1]/yint[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        }
+                    },
+                    "functions": {},
+                    "tags": [],
+                    "advice": "",
+                    "variable_groups": []
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Slope-Intercept Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{y={m[1]}/{m[0]}x+{yint[1]}/{yint[0]}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "rulesets": {},
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International",
+                        "description": ""
+                    },
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "parts": [
+                        {
+                            "shuffleChoices": true,
+                            "customName": "",
+                            "unitTests": [],
+                            "variableReplacements": [],
+                            "showFeedbackIcon": true,
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "customMarkingAlgorithm": "",
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "useCustomName": false,
+                            "adaptiveMarkingPenalty": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', -yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yintSend], ['b', mSend]])}"
+                            ],
+                            "minMarks": 0,
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "displayType": "radiogroup",
+                            "maxMarks": 0,
+                            "scripts": {},
+                            "type": "1_n_2",
+                            "showCellAnswerState": true,
+                            "extendBaseMarkingAlgorithm": true
+                        }
+                    ],
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint",
+                        "mSend",
+                        "yintSend"
+                    ],
+                    "variables": {
+                        "yint": {
+                            "name": "yint",
+                            "description": "",
+                            "definition": "rational_approximation(C/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "m": {
+                            "name": "m",
+                            "description": "",
+                            "definition": "rational_approximation(-A/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "mSend": {
+                            "name": "mSend",
+                            "description": "",
+                            "definition": "m[1]/m[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "B": {
+                            "name": "B",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "A": {
+                            "name": "A",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "C": {
+                            "name": "C",
+                            "description": "",
+                            "definition": "random(-10..10)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "yintSend": {
+                            "name": "yintSend",
+                            "description": "",
+                            "definition": "yint[1]/yint[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        }
+                    },
+                    "functions": {},
+                    "tags": [],
+                    "advice": "",
+                    "variable_groups": []
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Slope-Intercept Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{y={m[1]}/{m[0]}x+{yint[1]}/{yint[0]}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "rulesets": {},
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "metadata": {
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International",
+                        "description": ""
+                    },
+                    "variablesTest": {
+                        "maxRuns": 100,
+                        "condition": ""
+                    },
+                    "parts": [
+                        {
+                            "shuffleChoices": true,
+                            "customName": "",
+                            "unitTests": [],
+                            "variableReplacements": [],
+                            "showFeedbackIcon": true,
+                            "showCorrectAnswer": true,
+                            "marks": 0,
+                            "customMarkingAlgorithm": "",
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "useCustomName": false,
+                            "adaptiveMarkingPenalty": 0,
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-mSend], ['b', yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',mSend], ['b', -yintSend]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yintSend], ['b', mSend]])}"
+                            ],
+                            "minMarks": 0,
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "displayType": "radiogroup",
+                            "maxMarks": 0,
+                            "scripts": {},
+                            "type": "1_n_2",
+                            "showCellAnswerState": true,
+                            "extendBaseMarkingAlgorithm": true
+                        }
+                    ],
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint",
+                        "mSend",
+                        "yintSend"
+                    ],
+                    "variables": {
+                        "yint": {
+                            "name": "yint",
+                            "description": "",
+                            "definition": "rational_approximation(C/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "m": {
+                            "name": "m",
+                            "description": "",
+                            "definition": "rational_approximation(-A/B)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "mSend": {
+                            "name": "mSend",
+                            "description": "",
+                            "definition": "m[1]/m[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "B": {
+                            "name": "B",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "A": {
+                            "name": "A",
+                            "description": "",
+                            "definition": "random(-5..5 except 0)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "C": {
+                            "name": "C",
+                            "description": "",
+                            "definition": "random(-10..10)",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        },
+                        "yintSend": {
+                            "name": "yintSend",
+                            "description": "",
+                            "definition": "yint[1]/yint[0]",
+                            "templateType": "anything",
+                            "group": "Ungrouped variables"
+                        }
+                    },
+                    "functions": {},
+                    "tags": [],
+                    "advice": "",
+                    "variable_groups": []
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Standard Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "tags": [],
+                    "parts": [
+                        {
+                            "useCustomName": false,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', -yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yint], ['b', m]])}"
+                            ],
+                            "showCorrectAnswer": true,
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "type": "1_n_2",
+                            "customName": "",
+                            "marks": 0,
+                            "shuffleChoices": true,
+                            "extendBaseMarkingAlgorithm": true,
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "variableReplacements": [],
+                            "minMarks": 0,
+                            "adaptiveMarkingPenalty": 0,
+                            "showFeedbackIcon": true,
+                            "scripts": {},
+                            "showCellAnswerState": true,
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "unitTests": [],
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{{A}x + {B}y={C}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "variables": {
+                        "m": {
+                            "name": "m",
+                            "templateType": "anything",
+                            "definition": "(-A/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "A": {
+                            "name": "A",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "yint": {
+                            "name": "yint",
+                            "templateType": "anything",
+                            "definition": "(C/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "C": {
+                            "name": "C",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "B": {
+                            "name": "B",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        }
+                    },
+                    "variablesTest": {
+                        "condition": "",
+                        "maxRuns": 100
+                    },
+                    "metadata": {
+                        "description": "",
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+                    },
+                    "rulesets": {},
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint"
+                    ],
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "functions": {},
+                    "advice": ""
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Standard Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "tags": [],
+                    "parts": [
+                        {
+                            "useCustomName": false,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', -yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yint], ['b', m]])}"
+                            ],
+                            "showCorrectAnswer": true,
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "type": "1_n_2",
+                            "customName": "",
+                            "marks": 0,
+                            "shuffleChoices": true,
+                            "extendBaseMarkingAlgorithm": true,
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "variableReplacements": [],
+                            "minMarks": 0,
+                            "adaptiveMarkingPenalty": 0,
+                            "showFeedbackIcon": true,
+                            "scripts": {},
+                            "showCellAnswerState": true,
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "unitTests": [],
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{{A}x + {B}y={C}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "variables": {
+                        "m": {
+                            "name": "m",
+                            "templateType": "anything",
+                            "definition": "(-A/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "A": {
+                            "name": "A",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "yint": {
+                            "name": "yint",
+                            "templateType": "anything",
+                            "definition": "(C/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "C": {
+                            "name": "C",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "B": {
+                            "name": "B",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        }
+                    },
+                    "variablesTest": {
+                        "condition": "",
+                        "maxRuns": 100
+                    },
+                    "metadata": {
+                        "description": "",
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+                    },
+                    "rulesets": {},
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint"
+                    ],
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "functions": {},
+                    "advice": ""
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Standard Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "tags": [],
+                    "parts": [
+                        {
+                            "useCustomName": false,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', -yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yint], ['b', m]])}"
+                            ],
+                            "showCorrectAnswer": true,
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "type": "1_n_2",
+                            "customName": "",
+                            "marks": 0,
+                            "shuffleChoices": true,
+                            "extendBaseMarkingAlgorithm": true,
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "variableReplacements": [],
+                            "minMarks": 0,
+                            "adaptiveMarkingPenalty": 0,
+                            "showFeedbackIcon": true,
+                            "scripts": {},
+                            "showCellAnswerState": true,
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "unitTests": [],
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{{A}x + {B}y={C}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "variables": {
+                        "m": {
+                            "name": "m",
+                            "templateType": "anything",
+                            "definition": "(-A/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "A": {
+                            "name": "A",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "yint": {
+                            "name": "yint",
+                            "templateType": "anything",
+                            "definition": "(C/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "C": {
+                            "name": "C",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "B": {
+                            "name": "B",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        }
+                    },
+                    "variablesTest": {
+                        "condition": "",
+                        "maxRuns": 100
+                    },
+                    "metadata": {
+                        "description": "",
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+                    },
+                    "rulesets": {},
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint"
+                    ],
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "functions": {},
+                    "advice": ""
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Standard Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "tags": [],
+                    "parts": [
+                        {
+                            "useCustomName": false,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', -yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yint], ['b', m]])}"
+                            ],
+                            "showCorrectAnswer": true,
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "type": "1_n_2",
+                            "customName": "",
+                            "marks": 0,
+                            "shuffleChoices": true,
+                            "extendBaseMarkingAlgorithm": true,
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "variableReplacements": [],
+                            "minMarks": 0,
+                            "adaptiveMarkingPenalty": 0,
+                            "showFeedbackIcon": true,
+                            "scripts": {},
+                            "showCellAnswerState": true,
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "unitTests": [],
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{{A}x + {B}y={C}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "variables": {
+                        "m": {
+                            "name": "m",
+                            "templateType": "anything",
+                            "definition": "(-A/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "A": {
+                            "name": "A",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "yint": {
+                            "name": "yint",
+                            "templateType": "anything",
+                            "definition": "(C/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "C": {
+                            "name": "C",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "B": {
+                            "name": "B",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        }
+                    },
+                    "variablesTest": {
+                        "condition": "",
+                        "maxRuns": 100
+                    },
+                    "metadata": {
+                        "description": "",
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+                    },
+                    "rulesets": {},
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint"
+                    ],
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "functions": {},
+                    "advice": ""
+                },
+                {
+                    "name": "NCM4 U1L1 Plot the graph of a linear equation Standard Form",
+                    "extensions": [
+                        "geogebra"
+                    ],
+                    "custom_part_types": [],
+                    "resources": [],
+                    "navigation": {
+                        "allowregen": true,
+                        "showfrontpage": false,
+                        "preventleave": false
+                    },
+                    "contributors": [
+                        {
+                            "name": "Terry Young",
+                            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+                        }
+                    ],
+                    "tags": [],
+                    "parts": [
+                        {
+                            "useCustomName": false,
+                            "choices": [
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',-m], ['b', yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',m], ['b', -yint]])}",
+                                "{geogebra_applet(\"https://www.geogebra.org/m/t2euxgf5\", [['m',yint], ['b', m]])}"
+                            ],
+                            "showCorrectAnswer": true,
+                            "prompt": "<p>Select the plot that best represents the given linear equation.</p>",
+                            "type": "1_n_2",
+                            "customName": "",
+                            "marks": 0,
+                            "shuffleChoices": true,
+                            "extendBaseMarkingAlgorithm": true,
+                            "distractors": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "matrix": [
+                                "1",
+                                0,
+                                0,
+                                0
+                            ],
+                            "variableReplacements": [],
+                            "minMarks": 0,
+                            "adaptiveMarkingPenalty": 0,
+                            "showFeedbackIcon": true,
+                            "scripts": {},
+                            "showCellAnswerState": true,
+                            "maxMarks": 0,
+                            "displayType": "radiogroup",
+                            "variableReplacementStrategy": "originalfirst",
+                            "displayColumns": 0,
+                            "unitTests": [],
+                            "customMarkingAlgorithm": ""
+                        }
+                    ],
+                    "statement": "<p>GIVEN:&nbsp; $\\simplify{{A}x + {B}y={C}}$</p>\n<p>FIND:&nbsp; Plot the equation of the line.</p>",
+                    "variables": {
+                        "m": {
+                            "name": "m",
+                            "templateType": "anything",
+                            "definition": "(-A/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "A": {
+                            "name": "A",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "yint": {
+                            "name": "yint",
+                            "templateType": "anything",
+                            "definition": "(C/B)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "C": {
+                            "name": "C",
+                            "templateType": "anything",
+                            "definition": "random(-10..10)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        },
+                        "B": {
+                            "name": "B",
+                            "templateType": "anything",
+                            "definition": "random(-5..5 except 0)",
+                            "group": "Ungrouped variables",
+                            "description": ""
+                        }
+                    },
+                    "variablesTest": {
+                        "condition": "",
+                        "maxRuns": 100
+                    },
+                    "metadata": {
+                        "description": "",
+                        "licence": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
+                    },
+                    "rulesets": {},
+                    "ungrouped_variables": [
+                        "A",
+                        "B",
+                        "C",
+                        "m",
+                        "yint"
+                    ],
+                    "preamble": {
+                        "css": "",
+                        "js": ""
+                    },
+                    "variable_groups": [],
+                    "functions": {},
+                    "advice": ""
+                }
+            ]
+        }
+    ],
+    "contributors": [
+        {
+            "name": "Terry Young",
+            "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/3130/"
+        }
+    ],
+    "extensions": [
+        "geogebra",
+        "jsxgraph"
+    ],
+    "custom_part_types": [],
+    "resources": []
+}
