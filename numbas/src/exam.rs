@@ -83,7 +83,7 @@ where
 pub struct Exam {
     name: String,
     #[serde(rename = "duration")]
-    duration_in_seconds: Option<u32>, // in seconds
+    duration_in_seconds: Option<usize>, // in seconds
     #[serde(rename = "percentPass", deserialize_with = "from_str_optional")]
     percentage_needed_to_pass: Option<u32>, //TODO: is this a float?
     resources: Vec<[String; 2]>,
