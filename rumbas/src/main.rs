@@ -1,4 +1,7 @@
+use crate::data::default::default_files;
+use crate::data::optional_overwrite::OptionalOverwrite;
 use std::env;
+use std::path::Path;
 mod data;
 
 fn main() {
@@ -6,13 +9,25 @@ fn main() {
     match args.len() {
         1 => println!("Please provide an argument"),
         2 => {
-            let path = &args[1];
-
-            let exam = data::exam::Exam::from_file(path);
-            match exam {
-                Ok(v) => {
-                    println!("{:#?}", v);
-                    let numbas = v.to_numbas();
+            let path = Path::new(&args[1]);
+            if path.is_absolute() {
+                println!("Absolute path's are not supported");
+                return;
+            }
+            let exam_result = data::exam::Exam::from_file(path);
+            match exam_result {
+                Ok(mut exam) => {
+                    println!("{:#?}", exam);
+                    let default_files = default_files(path);
+                    println!("Found {} default files.", default_files.len());
+                    for default_file in default_files.iter() {
+                        if exam.empty_fields().len() > 0 {
+                            println!("Reading {}", default_file.get_path().display());
+                            let default_exam = default_file.read_as_exam().unwrap(); //TODO
+                            exam.overwrite(&default_exam);
+                        }
+                    }
+                    let numbas = exam.to_numbas();
                     match numbas {
                         Ok(res) => println!("{:#?}", res),
                         Err(missing_fields) => {
