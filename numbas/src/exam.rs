@@ -3,7 +3,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::fmt::Display;
-use std::num::ParseIntError;
 use std::str::FromStr;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
@@ -81,18 +80,11 @@ where
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Exam {
-    name: String,
-    #[serde(rename = "duration")]
-    duration_in_seconds: Option<usize>, // in seconds
-    #[serde(rename = "percentPass", deserialize_with = "from_str_optional")]
-    percentage_needed_to_pass: Option<u32>, //TODO: is this a float?
+    #[serde(flatten)]
+    basic_settings: BasicExamSettings,
     resources: Vec<[String; 2]>,
     extensions: Vec<String>,
     custom_part_types: Vec<CustomPartType>,
-    #[serde(rename = "showQuestionGroupNames")]
-    show_question_group_names: Option<bool>,
-    #[serde(rename = "showstudentname")]
-    show_student_name: Option<bool>,
 
     navigation: ExamNavigation,
     timing: ExamTiming,
@@ -100,7 +92,7 @@ pub struct Exam {
 
     // rulesets: TODO
     functions: Option<HashMap<String, ExamFunction>>,
-    variables: Option<HashMap<String, ExamFunction>>,
+    variables: Option<HashMap<String, ExamVariable>>,
     question_groups: Vec<ExamQuestionGroup>,
     //contributors TODO
     //metadata TODO
@@ -114,6 +106,63 @@ impl Exam {
             s
         };
         serde_json::from_str(json)
+    }
+
+    pub fn new(
+        basic_settings: BasicExamSettings,
+        resources: Vec<[String; 2]>,
+        extensions: Vec<String>,
+        custom_part_types: Vec<CustomPartType>,
+        navigation: ExamNavigation,
+        timing: ExamTiming,
+        feedback: ExamFeedback,
+        functions: Option<HashMap<String, ExamFunction>>,
+        variables: Option<HashMap<String, ExamVariable>>,
+        question_groups: Vec<ExamQuestionGroup>,
+    ) -> Exam {
+        Exam {
+            basic_settings,
+            resources,
+            extensions,
+            custom_part_types,
+            navigation,
+            timing,
+            feedback,
+            functions,
+            variables,
+            question_groups,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct BasicExamSettings {
+    name: String,
+    #[serde(rename = "duration")]
+    duration_in_seconds: Option<usize>,
+    #[serde(rename = "percentPass", deserialize_with = "from_str_optional")]
+    percentage_needed_to_pass: Option<f64>,
+    #[serde(rename = "showQuestionGroupNames")]
+    show_question_group_names: Option<bool>,
+    #[serde(rename = "showstudentname")]
+    show_student_name: Option<bool>,
+}
+
+impl BasicExamSettings {
+    pub fn new(
+        name: String,
+        duration_in_seconds: Option<usize>,
+        percentage_needed_to_pass: Option<f64>,
+        show_question_group_names: Option<bool>,
+        show_student_name: Option<bool>,
+    ) -> BasicExamSettings {
+        BasicExamSettings {
+            name,
+            duration_in_seconds,
+            percentage_needed_to_pass,
+            show_question_group_names,
+            show_student_name,
+        }
     }
 }
 
@@ -139,6 +188,33 @@ pub struct ExamNavigation {
     #[serde(rename = "startpassword")]
     start_password: Option<String>, //TODO: if empty string -> also None
 }
+
+impl ExamNavigation {
+    pub fn new(
+        allow_regenerate: bool,
+        reverse: Option<bool>,
+        browsing_enabled: Option<bool>,
+        allow_steps: Option<bool>,
+        show_frontpage: bool,
+        show_results_page: Option<ExamShowResultsPage>,
+        prevent_leaving: Option<bool>,
+        on_leave: Option<ExamAction>,
+        start_password: Option<String>,
+    ) -> ExamNavigation {
+        ExamNavigation {
+            allow_regenerate,
+            reverse,
+            browsing_enabled,
+            allow_steps,
+            show_frontpage,
+            show_results_page,
+            prevent_leaving,
+            on_leave,
+            start_password,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "action")]
 pub enum ExamAction {
@@ -160,6 +236,17 @@ pub struct ExamTiming {
     #[serde(rename = "timedwarning")]
     timed_warning: ExamAction,
 }
+
+impl ExamTiming {
+    pub fn new(allow_pause: bool, timeout: ExamAction, timed_warning: ExamAction) -> ExamTiming {
+        ExamTiming {
+            allow_pause,
+            timeout,
+            timed_warning,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ExamFeedback {
     #[serde(rename = "showactualmark")]
@@ -178,6 +265,30 @@ pub struct ExamFeedback {
     feedback_messages: Vec<ExamFeedbackMessage>,
 }
 
+impl ExamFeedback {
+    pub fn new(
+        show_actual_mark: bool,
+        show_total_mark: bool,
+        show_answer_state: bool,
+        allow_reveal_answer: bool,
+        review: Option<ExamReview>,
+        advice: Option<String>,
+        intro: String,
+        feedback_messages: Vec<ExamFeedbackMessage>,
+    ) -> ExamFeedback {
+        ExamFeedback {
+            show_actual_mark,
+            show_total_mark,
+            show_answer_state,
+            allow_reveal_answer,
+            review,
+            advice,
+            intro,
+            feedback_messages,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ExamReview {
     #[serde(rename = "reviewshowscore")]
@@ -190,10 +301,32 @@ pub struct ExamReview {
     show_advice: Option<bool>,
 }
 
+impl ExamReview {
+    pub fn new(
+        show_score: Option<bool>,
+        show_feedback: Option<bool>,
+        show_expected_answer: Option<bool>,
+        show_advice: Option<bool>,
+    ) -> ExamReview {
+        ExamReview {
+            show_score,
+            show_feedback,
+            show_expected_answer,
+            show_advice,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ExamFeedbackMessage {
     message: String,
     threshold: String, //TODO type
+}
+
+impl ExamFeedbackMessage {
+    pub fn new(message: String, threshold: String) -> ExamFeedbackMessage {
+        ExamFeedbackMessage { message, threshold }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

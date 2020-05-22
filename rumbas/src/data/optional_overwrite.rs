@@ -5,14 +5,6 @@ pub trait OptionalOverwrite {
     fn overwrite(&mut self, other: &Self::Item);
 }
 
-impl OptionalOverwrite for String {
-    type Item = String;
-    fn empty_fields(&self) -> Vec<String> {
-        Vec::new()
-    }
-    fn overwrite(&mut self, _other: &String) {}
-}
-
 macro_rules! impl_optional_overwrite {
     ($($type: ty), *) => {
         $(
@@ -26,7 +18,15 @@ macro_rules! impl_optional_overwrite {
         )*
     };
 }
-impl_optional_overwrite!(bool, f64, usize);
+impl_optional_overwrite!(String, bool, f64, usize);
+
+impl<T> OptionalOverwrite for Vec<T> {
+    type Item = Vec<T>;
+    fn empty_fields(&self) -> Vec<String> {
+        Vec::new()
+    }
+    fn overwrite(&mut self, _other: &Vec<T>) {}
+}
 
 macro_rules! optional_overwrite {
     // This macro creates a struct with all optional fields
