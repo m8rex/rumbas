@@ -2,16 +2,13 @@ use crate::data::optional_overwrite::OptionalOverwrite;
 use serde::Deserialize;
 use serde::Serialize;
 use std::fs;
+use std::path::Path;
 
 type NumbasResult<T> = Result<T, Vec<String>>;
 
 optional_overwrite! {
     Exam,
     name: String,
-    duration_in_seconds: usize,
-    percentage_needed_to_pass: f64,
-    show_names_of_question_groups: bool,
-    show_name_of_student: bool,
     navigation: Navigation,
     timing: Timing,
     feedback: Feedback
@@ -27,7 +24,8 @@ optional_overwrite! {
     show_results_page: ShowResultsPage,
     prevent_leaving: bool,
     on_leave: Action,
-    start_password: String
+    start_password: String,
+    show_names_of_question_groups: bool
 }
 
 impl Navigation {
@@ -86,6 +84,7 @@ impl Action {
 
 optional_overwrite! {
     Timing,
+    duration_in_seconds: usize,
     allow_pause: bool,
     on_timeout: Action,
     timed_warning: Action
@@ -108,6 +107,8 @@ impl Timing {
 
 optional_overwrite! {
     Feedback,
+    percentage_needed_to_pass: f64,
+    show_name_of_student: bool,
     show_actual_mark: bool,
     show_total_mark: bool,
     show_answer_state: bool,
@@ -185,10 +186,13 @@ impl Exam {
         if empty_fields.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
                 self.name.clone().unwrap(),
-                self.duration_in_seconds,
-                self.percentage_needed_to_pass,
-                self.show_names_of_question_groups,
-                self.show_name_of_student,
+                self.timing.clone().unwrap().duration_in_seconds,
+                self.feedback.clone().unwrap().percentage_needed_to_pass,
+                self.navigation
+                    .clone()
+                    .unwrap()
+                    .show_names_of_question_groups,
+                self.feedback.clone().unwrap().show_name_of_student,
             );
 
             //TODO
@@ -235,8 +239,33 @@ impl Exam {
         }
     }
 
-    pub fn from_file(file: &str) -> serde_json::Result<Exam> {
-        let json = fs::read_to_string(file).expect(&format!("Failed to read {}", file)[..]);
+    pub fn from_file(file: &Path) -> serde_json::Result<Exam> {
+        let json = fs::read_to_string(file).expect(
+            &format!(
+                "Failed to read {}",
+                file.to_str().map_or("invalid filename", |s| s)
+            )[..],
+        );
         serde_json::from_str(&json)
     }
+}
+
+macro_rules! exam_from {
+    ($($func_name: ident: $var: ident: $type: ty), *) => {
+        impl Exam {
+            $(
+                pub fn $func_name($var: $type) -> Exam {
+                    let mut empty: Exam = serde_json::from_str("{}").unwrap(); //TODO is this to hacky?
+                    empty.$var = Some($var);
+                    empty
+                }
+            )*
+        }
+    };
+}
+
+exam_from! {
+    from_navigation: navigation: Navigation,
+    from_timing: timing: Timing,
+    from_feedback: feedback: Feedback
 }
