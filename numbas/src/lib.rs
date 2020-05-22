@@ -6,7 +6,7 @@ mod tests {
     use serde_json::Result;
     use std::fs;
     fn exam_from_file(file: &str) -> Result<exam::Exam> {
-        let s = fs::read_to_string(file).expect("Failed to read the font json file");
+        let s = fs::read_to_string(file).expect(&format!("Failed to read {}", file)[..]);
         exam::Exam::from_str(&s)
     }
     #[test]

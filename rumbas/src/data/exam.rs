@@ -1,6 +1,9 @@
 use crate::data::optional_overwrite::OptionalOverwrite;
 use serde::Deserialize;
 use serde::Serialize;
+use std::fs;
+
+type NumbasResult<T> = Result<T, Vec<String>>;
 
 optional_overwrite! {
     Exam,
@@ -28,19 +31,23 @@ optional_overwrite! {
 }
 
 impl Navigation {
-    fn to_numbas(&self) -> numbas::exam::ExamNavigation {
-        //TODO: check empty
-        numbas::exam::ExamNavigation::new(
-            self.allow_regenerate.unwrap(),
-            self.reverse,
-            self.browsing_enabled,
-            self.allow_steps,
-            self.show_frontpage.unwrap(),
-            self.show_results_page.map(|s| s.to_numbas()),
-            self.prevent_leaving,
-            self.on_leave.clone().map(|s| s.to_numbas()),
-            self.start_password.clone(),
-        )
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamNavigation> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamNavigation::new(
+                self.allow_regenerate.unwrap(),
+                self.reverse,
+                self.browsing_enabled,
+                self.allow_steps,
+                self.show_frontpage.unwrap(),
+                self.show_results_page.map(|s| s.to_numbas()),
+                self.prevent_leaving,
+                self.on_leave.clone().map(|s| s.to_numbas()),
+                self.start_password.clone(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
     }
 }
 
@@ -85,13 +92,17 @@ optional_overwrite! {
 }
 
 impl Timing {
-    fn to_numbas(&self) -> numbas::exam::ExamTiming {
-        //TODO: check empty
-        numbas::exam::ExamTiming::new(
-            self.allow_pause.unwrap(),
-            self.on_timeout.clone().unwrap().to_numbas(),
-            self.timed_warning.clone().unwrap().to_numbas(),
-        )
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamTiming> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamTiming::new(
+                self.allow_pause.unwrap(),
+                self.on_timeout.clone().unwrap().to_numbas(),
+                self.timed_warning.clone().unwrap().to_numbas(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
     }
 }
 
@@ -108,23 +119,27 @@ optional_overwrite! {
 }
 
 impl Feedback {
-    //TODO: check empty
-    fn to_numbas(&self) -> numbas::exam::ExamFeedback {
-        numbas::exam::ExamFeedback::new(
-            self.show_actual_mark.unwrap(),
-            self.show_total_mark.unwrap(),
-            self.show_answer_state.unwrap(),
-            self.allow_reveal_answer.unwrap(),
-            self.review.clone().map(|s| s.to_numbas()),
-            self.advice.clone(),
-            self.intro.clone().unwrap(),
-            self.feedback_messages
-                .clone()
-                .unwrap()
-                .iter()
-                .map(|s| s.to_numbas())
-                .collect(),
-        )
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamFeedback> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamFeedback::new(
+                self.show_actual_mark.unwrap(),
+                self.show_total_mark.unwrap(),
+                self.show_answer_state.unwrap(),
+                self.allow_reveal_answer.unwrap(),
+                self.review.clone().map(|s| s.to_numbas().unwrap()),
+                self.advice.clone(),
+                self.intro.clone().unwrap(),
+                self.feedback_messages
+                    .clone()
+                    .unwrap()
+                    .iter()
+                    .map(|s| s.to_numbas())
+                    .collect(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
     }
 }
 
@@ -137,14 +152,18 @@ optional_overwrite! {
 }
 
 impl Review {
-    //TODO: check empty
-    fn to_numbas(&self) -> numbas::exam::ExamReview {
-        numbas::exam::ExamReview::new(
-            self.show_score,
-            self.show_feedback,
-            self.show_expected_answer,
-            self.show_advice,
-        )
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamReview> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamReview::new(
+                self.show_score,
+                self.show_feedback,
+                self.show_expected_answer,
+                self.show_advice,
+            ))
+        } else {
+            Err(empty_fields)
+        }
     }
 }
 
@@ -161,54 +180,63 @@ impl FeedbackMessage {
 }
 
 impl Exam {
-    pub fn to_numbas(&self) -> numbas::exam::Exam {
-        //TODO: check for empty fields
-        let basic_settings = numbas::exam::BasicExamSettings::new(
-            self.name.clone().unwrap(),
-            self.duration_in_seconds,
-            self.percentage_needed_to_pass,
-            self.show_names_of_question_groups,
-            self.show_name_of_student,
-        );
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::Exam> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            let basic_settings = numbas::exam::BasicExamSettings::new(
+                self.name.clone().unwrap(),
+                self.duration_in_seconds,
+                self.percentage_needed_to_pass,
+                self.show_names_of_question_groups,
+                self.show_name_of_student,
+            );
 
-        //TODO
-        let resources: Vec<[String; 2]> = Vec::new();
+            //TODO
+            let resources: Vec<[String; 2]> = Vec::new();
 
-        //TODO
-        let extensions: Vec<String> = Vec::new();
+            //TODO
+            let extensions: Vec<String> = Vec::new();
 
-        //TODO
-        let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
+            //TODO
+            let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
 
-        //TODO
-        let navigation = self.navigation.clone().unwrap().to_numbas();
+            //TODO
+            let navigation = self.navigation.clone().unwrap().to_numbas().unwrap();
 
-        //TODO
-        let timing = self.timing.clone().unwrap().to_numbas();
+            //TODO
+            let timing = self.timing.clone().unwrap().to_numbas().unwrap();
 
-        //TODO
-        let feedback = self.feedback.clone().unwrap().to_numbas();
+            //TODO
+            let feedback = self.feedback.clone().unwrap().to_numbas().unwrap();
 
-        //TODO
-        let functions = None;
+            //TODO
+            let functions = None;
 
-        //TODO
-        let variables = None;
+            //TODO
+            let variables = None;
 
-        //TODO
-        let question_groups: Vec<numbas::exam::ExamQuestionGroup> = Vec::new();
+            //TODO
+            let question_groups: Vec<numbas::exam::ExamQuestionGroup> = Vec::new();
 
-        numbas::exam::Exam::new(
-            basic_settings,
-            resources,
-            extensions,
-            custom_part_types,
-            navigation,
-            timing,
-            feedback,
-            functions,
-            variables,
-            question_groups,
-        )
+            Ok(numbas::exam::Exam::new(
+                basic_settings,
+                resources,
+                extensions,
+                custom_part_types,
+                navigation,
+                timing,
+                feedback,
+                functions,
+                variables,
+                question_groups,
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+
+    pub fn from_file(file: &str) -> serde_json::Result<Exam> {
+        let json = fs::read_to_string(file).expect(&format!("Failed to read {}", file)[..]);
+        serde_json::from_str(&json)
     }
 }

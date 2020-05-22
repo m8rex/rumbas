@@ -1,3 +1,3 @@
 #[macro_use]
-mod optional_overwrite;
-mod exam;
+pub mod optional_overwrite;
+pub mod exam;
