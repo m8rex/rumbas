@@ -21,7 +21,7 @@ fn main() {
                     let default_files = default_files(path);
                     println!("Found {} default files.", default_files.len());
                     for default_file in default_files.iter() {
-                        if exam.empty_fields().len() > 0 {
+                        if !exam.empty_fields().is_empty() {
                             println!("Reading {}", default_file.get_path().display());
                             let default_exam = default_file.read_as_exam().unwrap(); //TODO
                             exam.overwrite(&default_exam);
@@ -29,7 +29,7 @@ fn main() {
                     }
                     let numbas = exam.to_numbas();
                     match numbas {
-                        Ok(res) => println!("{:#?}", res),
+                        Ok(res) => (), // println!("{:#?}", res),
                         Err(missing_fields) => {
                             println!("Missing fields:\n{}", missing_fields.join("\n"))
                         }

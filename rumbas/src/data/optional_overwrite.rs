@@ -1,8 +1,25 @@
+use std::collections::HashMap;
+
 pub trait OptionalOverwrite {
     type Item;
 
     fn empty_fields(&self) -> Vec<String>;
     fn overwrite(&mut self, other: &Self::Item);
+}
+
+impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
+    type Item = Vec<O>;
+    fn empty_fields(&self) -> Vec<String> {
+        let mut empty = Vec::new();
+        for (i, item) in self.iter().enumerate() {
+            let extra_empty = item.empty_fields();
+            for extra in extra_empty.iter() {
+                empty.push(format!("{}.{}", i, extra));
+            }
+        }
+        empty
+    }
+    fn overwrite(&mut self, _other: &Self::Item) {}
 }
 
 macro_rules! impl_optional_overwrite {
@@ -18,24 +35,30 @@ macro_rules! impl_optional_overwrite {
         )*
     };
 }
-impl_optional_overwrite!(String, bool, f64, usize);
-
-impl<T> OptionalOverwrite for Vec<T> {
-    type Item = Vec<T>;
+impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
+//TODO: different if implements
+impl<U, T> OptionalOverwrite for HashMap<U, T> {
+    type Item = HashMap<U, T>;
     fn empty_fields(&self) -> Vec<String> {
         Vec::new()
     }
-    fn overwrite(&mut self, _other: &Vec<T>) {}
+    fn overwrite(&mut self, _other: &Self::Item) {}
 }
 
 macro_rules! optional_overwrite {
     // This macro creates a struct with all optional fields
     // It also adds a method to overwrite all fields with None value with the values of another object of the same type
     // It also adds a method to list the fields that are None
-    ($struct: ident, $($field: ident: $type: ty), *) => {
+    ($struct: ident$(: $container_attribute: meta)?, $($field: ident: $type: ty$(: $attribute: meta)?), *) => {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        $(
+            #[$container_attribute]
+        )?
         pub struct $struct {
             $(
+                $(
+                    #[$attribute]
+                )?
                 pub $field: Option<$type>
             ),*
         }
@@ -199,6 +222,58 @@ mod test {
                     test: t3.t.unwrap().test
                 }),
             }
+        );
+    }
+
+    #[test]
+    fn empty_fields_vec_of_simple_structs() {
+        let t1 = Temp {
+            name: Some("test".to_string()),
+            test: None,
+        };
+        let t2 = Temp {
+            name: Some("test2".to_string()),
+            test: Some("name".to_string()),
+        };
+        let t3 = Temp {
+            name: None,
+            test: None,
+        };
+        let v = vec![t1, t2, t3];
+        assert_eq!(v.empty_fields(), vec!["0.test", "2.name", "2.test"]);
+    }
+
+    #[test]
+    fn empty_fields_vec_ofcomplex_structs() {
+        let t1 = Temp2 {
+            other: Some("val".to_string()),
+            t: Some(Temp {
+                name: Some("val".to_string()),
+                test: Some("name".to_string()),
+            }),
+        };
+        let t2 = Temp2 {
+            other: None,
+            t: Some(Temp {
+                name: None,
+                test: Some("name".to_string()),
+            }),
+        };
+        let t3 = Temp2 {
+            other: None,
+            t: None,
+        };
+        let t4 = Temp2 {
+            other: None,
+            t: Some(Temp {
+                name: None,
+                test: None,
+            }),
+        };
+        let v = vec![t1, t2, t3, t4];
+        assert_eq!(
+            v.empty_fields(),
+            vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
         );
     }
 }
