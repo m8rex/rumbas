@@ -1,6 +1,7 @@
 use crate::data::optional_overwrite::OptionalOverwrite;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
@@ -11,7 +12,8 @@ optional_overwrite! {
     name: String,
     navigation: Navigation,
     timing: Timing,
-    feedback: Feedback
+    feedback: Feedback,
+    question_groups: Vec<QuestionGroup>
 }
 
 optional_overwrite! {
@@ -173,12 +175,232 @@ pub struct FeedbackMessage {
     message: String,
     threshold: String, //TODO type
 }
-
+impl_optional_overwrite!(FeedbackMessage);
 impl FeedbackMessage {
     fn to_numbas(&self) -> numbas::exam::ExamFeedbackMessage {
         numbas::exam::ExamFeedbackMessage::new(self.message.clone(), self.threshold.clone())
     }
 }
+
+/*
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(try_from = "String")]
+pub struct QuestionPath {
+    question: String,
+    question_data: Option<Question>,
+}*/
+
+optional_overwrite! {
+    QuestionPath: serde(try_from = "String"),
+    question: String,
+    question_data: Question
+}
+
+impl std::convert::TryFrom<String> for QuestionPath {
+    type Error = serde_json::error::Error;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let question_data = Question::from_name(&s)?;
+        Ok(QuestionPath {
+            question: Some(s),
+            question_data: Some(question_data),
+        })
+    }
+}
+
+optional_overwrite! {
+    QuestionGroup,
+    name: String,
+    picking_strategy: PickingStrategy,
+    questions: Vec<QuestionPath>
+}
+
+impl QuestionGroup {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
+        //TODO: check empty
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamQuestionGroup::new(
+                self.name.clone(),
+                self.picking_strategy.clone().unwrap().to_numbas(),
+                Vec::new(), //TODO
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum PickingStrategy {
+    #[serde(rename = "all_ordered")]
+    AllOrdered,
+    #[serde(rename = "all_shuffled")]
+    AllShuffled,
+    #[serde(rename = "random_subset")]
+    RandomSubset { pick_questions: usize },
+}
+impl_optional_overwrite!(PickingStrategy);
+impl PickingStrategy {
+    pub fn to_numbas(&self) -> numbas::exam::ExamQuestionGroupPickingStrategy {
+        match self {
+            PickingStrategy::AllOrdered => {
+                numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered
+            }
+            PickingStrategy::AllShuffled => {
+                numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled
+            }
+            PickingStrategy::RandomSubset { pick_questions } => {
+                numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset {
+                    pick_questions: *pick_questions,
+                }
+            }
+        }
+    }
+}
+
+optional_overwrite! {
+    Question,
+    name: String,
+    statement: String,
+    advice: String,
+    parts: Vec<QuestionPart>,
+    variables: HashMap<String, Variable>, //TODO variables_test
+    functions: HashMap<String, Function>,
+    navigation: Navigation,
+    extensions: Vec<String> //TODO: obj of bools
+    //TODO al lot of options
+
+}
+
+impl Question {
+    pub fn from_name(name: &String) -> serde_json::Result<Question> {
+        let file = Path::new("questions").join(format!("{}.json", name));
+        let json = fs::read_to_string(&file).expect(
+            &format!(
+                "Failed to read {}",
+                file.to_str().map_or("invalid filename", |s| s)
+            )[..],
+        );
+        serde_json::from_str(&json)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "type")]
+pub enum QuestionPart {
+    //TODO; other types
+    //TODO: custom_part_constructor types?
+    #[serde(rename = "jme")]
+    JME(QuestionPartJME),
+}
+impl_optional_overwrite!(QuestionPart);
+
+macro_rules! question_part_type {
+    ($struct: ident, $($field: ident: $type: ty), *) => {
+        optional_overwrite! {
+            $struct,
+            marks: usize,
+            prompt: String,
+            use_custom_name: bool,
+            custom_name: String,
+            steps_penalty: usize,
+            enable_minimum_marks: bool,
+            minimum_marks: usize, //TODO: separate?
+            show_correct_answer: bool,
+            show_feedback_icon: bool,
+            variable_replacement_strategy: VariableReplacementStrategy,
+            adaptive_marking_penalty: usize,
+            // custom_marking_algorithm: String TO
+            extend_base_marking_algorithm: bool,
+            steps: Vec<QuestionPart>,
+            $(
+                $field: $type
+            ),*
+        }
+    }
+}
+question_part_type! {
+    QuestionPartJME,
+    answer: String,
+    answer_simplification: JMEAnswerSimplification,
+    show_preview: bool,
+    checking_type: CheckingType,
+    checking_accuracy: f64,
+    failure_rate: f64,
+    vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+    vset_range_points: usize,
+    check_variable_names: bool,
+    single_letter_variables: bool,
+    allow_unknown_functions: bool,
+    implicit_function_composition: bool,
+    max_length: numbas::exam::JMELengthRestriction, // TODO: custom struct, (because of partialCredit)
+    min_length: numbas::exam::JMELengthRestriction,
+    must_have: numbas::exam::JMEStringRestriction,
+    may_not_have: numbas::exam::JMEStringRestriction,
+    must_match_pattern: numbas::exam::JMEPatternRestriction
+}
+
+//TODO: rename etc
+optional_overwrite! {
+    JMEAnswerSimplification,
+    simplify_basic: bool,
+    simplify_unit_factor: bool,
+    simplify_unit_power: bool,
+    simplify_unit_denominator: bool,
+    simplify_zero_factor: bool,
+    simplify_zero_term: bool,
+    simplify_zero_power: bool,
+    simplify_zero_base: bool,
+    collect_numbers: bool,
+    constants_first: bool,
+    simplify_sqrt_products: bool,
+    simplify_sqrt_division: bool,
+    simplify_sqrt_square: bool,
+    simplify_other_numbers: bool
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum CheckingType {
+    RelativeDifference,
+    AbsoluteDifference,
+    DecimalPlaces,
+    SignificantFigures,
+}
+impl_optional_overwrite!(CheckingType);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum VariableReplacementStrategy {
+    #[serde(rename = "original_first")]
+    OriginalFirst,
+}
+impl_optional_overwrite!(VariableReplacementStrategy);
+
+optional_overwrite! {
+    Variable,
+    definition: String,
+    description: String,
+    template_type: String, //TODO , "anything"
+    group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+}
+
+optional_overwrite! {
+    Function,
+    parameters: HashMap<String, numbas::exam::ExamFunctionType>,
+    output_type: numbas::exam::ExamFunctionType,
+    definition: String,
+    language: numbas::exam::ExamFunctionLanguage
+}
+impl_optional_overwrite!(
+    numbas::exam::ExamFunctionType,
+    numbas::exam::ExamFunctionLanguage,
+    numbas::exam::JMELengthRestriction,
+    numbas::exam::JMEStringRestriction,
+    numbas::exam::JMEPatternRestriction,
+    numbas::exam::CheckingType,
+    numbas::exam::AnswerSimplificationType
+);
 
 impl Exam {
     pub fn to_numbas(&self) -> NumbasResult<numbas::exam::Exam> {
@@ -194,15 +416,6 @@ impl Exam {
                     .show_names_of_question_groups,
                 self.feedback.clone().unwrap().show_name_of_student,
             );
-
-            //TODO
-            let resources: Vec<[String; 2]> = Vec::new();
-
-            //TODO
-            let extensions: Vec<String> = Vec::new();
-
-            //TODO
-            let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
 
             //TODO
             let navigation = self.navigation.clone().unwrap().to_numbas().unwrap();
@@ -221,6 +434,14 @@ impl Exam {
 
             //TODO
             let question_groups: Vec<numbas::exam::ExamQuestionGroup> = Vec::new();
+
+            // Below from questions
+            //TODO
+            let resources: Vec<[String; 2]> = Vec::new();
+            //TODO obj of bools
+            let extensions: Vec<String> = Vec::new();
+            //TODO
+            let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
 
             Ok(numbas::exam::Exam::new(
                 basic_settings,

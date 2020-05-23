@@ -78,7 +78,7 @@ where
         Err(_) => Ok(None),
     }
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Exam {
     #[serde(flatten)]
     basic_settings: BasicExamSettings,
@@ -135,7 +135,7 @@ impl Exam {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct BasicExamSettings {
     name: String,
     #[serde(rename = "duration")]
@@ -166,9 +166,9 @@ impl BasicExamSettings {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CustomPartType {} //TODO: add fields
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamNavigation {
     #[serde(rename = "allowregen")]
     allow_regenerate: bool,
@@ -215,20 +215,20 @@ impl ExamNavigation {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "action")]
 pub enum ExamAction {
     #[serde(rename = "none")]
     None { message: String },
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamShowResultsPage {
     #[serde(rename = "oncompletion")]
     OnCompletion,
     #[serde(rename = "never")]
     Never,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamTiming {
     #[serde(rename = "allowPause")]
     allow_pause: bool,
@@ -247,7 +247,7 @@ impl ExamTiming {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedback {
     #[serde(rename = "showactualmark")]
     show_actual_mark: bool, // show student's score
@@ -289,7 +289,7 @@ impl ExamFeedback {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamReview {
     #[serde(rename = "reviewshowscore")]
     show_score: Option<bool>,
@@ -317,7 +317,7 @@ impl ExamReview {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedbackMessage {
     message: String,
     threshold: String, //TODO type
@@ -329,7 +329,7 @@ impl ExamFeedbackMessage {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFunction {
     //TODO
     parameters: Vec<ExamFunctionParameter>,
@@ -341,7 +341,7 @@ pub struct ExamFunction {
 
 pub type ExamFunctionParameter = (String, ExamFunctionType);
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamFunctionLanguage {
     #[serde(rename = "jme")]
     JME,
@@ -349,7 +349,7 @@ pub enum ExamFunctionLanguage {
     JavaScript,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamFunctionType {
     #[serde(rename = "boolean")]
     Boolean,
@@ -385,13 +385,17 @@ pub enum ExamFunctionType {
     Vector,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamVariable {
     name: String,
     definition: String,
+    description: String,
+    #[serde(rename = "templateType")]
+    template_type: String, //TODO: type?
+    group: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionGroup {
     //TODO
     name: Option<String>,
@@ -400,7 +404,21 @@ pub struct ExamQuestionGroup {
     questions: Vec<ExamQuestion>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+impl ExamQuestionGroup {
+    pub fn new(
+        name: Option<String>,
+        picking_strategy: ExamQuestionGroupPickingStrategy,
+        questions: Vec<ExamQuestion>,
+    ) -> ExamQuestionGroup {
+        ExamQuestionGroup {
+            name,
+            picking_strategy,
+            questions,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamQuestionGroupPickingStrategy {
     #[serde(rename = "all-ordered")]
     AllOrdered,
@@ -413,7 +431,7 @@ pub enum ExamQuestionGroupPickingStrategy {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestion {
     //TODO
     name: String,
@@ -437,7 +455,7 @@ pub struct ExamQuestion {
     //TODO type: question?
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]
 pub enum ExamQuestionPart {
     //TODO: custom_part_constructor types?
@@ -463,7 +481,7 @@ pub enum ExamQuestionPart {
     Extension(ExamQuestionPartExtension),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartSharedData {
     marks: Option<usize>,
     prompt: Option<String>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
@@ -498,13 +516,13 @@ pub struct ExamQuestionPartSharedData {
     //[serde(rename= "variableReplacements")]
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "originalfirst")]
     OriginalFirst,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartJME {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
@@ -548,8 +566,9 @@ pub struct ExamQuestionPartJME {
     //TODO: valuegenerators
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerSimplificationType {
+    //TODO casing?
     Basic,
     UnitFactor,
     UnitPower,
@@ -566,7 +585,7 @@ pub enum AnswerSimplificationType {
     OtherNumbers,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum JMECheckingType {
     //TODO: other items (dp and sigfig)
     #[serde(rename = "reldiff")]
@@ -579,7 +598,7 @@ pub enum JMECheckingType {
     SignificantFigures,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMERestriction {
     name: String,
     strings: Vec<String>,
@@ -588,14 +607,14 @@ pub struct JMERestriction {
     message: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     restriction: JMERestriction,
     length: Option<usize>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEStringRestriction {
     #[serde(flatten)]
     restriction: JMERestriction,
@@ -603,7 +622,7 @@ pub struct JMEStringRestriction {
     show_strings: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEPatternRestriction {
     #[serde(flatten)]
     restriction: JMERestriction,
@@ -612,14 +631,14 @@ pub struct JMEPatternRestriction {
     name_to_compare: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariablesTest {
     condition: String,
     #[serde(rename = "maxRuns")]
     max_runs: usize,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartNumberEntry {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
@@ -649,7 +668,7 @@ pub struct ExamQuestionPartNumberEntry {
     answer: Option<NumberEntryAnswerType>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerStyle {
     #[serde(rename = "plain")]
     Plain,
@@ -663,13 +682,13 @@ pub enum AnswerStyle {
     SiFr,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum CheckingType {
     #[serde(rename = "range")]
     Range,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum NumberEntryAnswerType {
     MinMax {
         #[serde(rename = "minvalue")]
@@ -682,7 +701,7 @@ pub enum NumberEntryAnswerType {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct QuestionPrecision {
     #[serde(rename = "precisionType")]
     precision_type: String, //TODO: enum ('none',...)
@@ -696,7 +715,7 @@ pub struct QuestionPrecision {
     strict_precision: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum QuestionPrecisionType {
     #[serde(rename = "none")]
     None,
@@ -706,7 +725,7 @@ pub enum QuestionPrecisionType {
     SignificantFigures,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartMatrix {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
@@ -737,7 +756,7 @@ pub struct ExamQuestionPartMatrix {
     #[serde(flatten)]
     precision: QuestionPrecision,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartPatternMatch {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
@@ -752,13 +771,13 @@ pub struct ExamQuestionPartPatternMatch {
     match_mode: PatternMatchMode,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum PatternMatchMode {
     #[serde(rename = "regex")]
     Regex,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartMultipleChoice {
     //TODO
     #[serde(flatten)]
@@ -791,30 +810,30 @@ pub struct ExamQuestionPartMultipleChoice {
     distractors: Option<MultipleChoiceMatrix>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceDisplayType {
     #[serde(rename = "radiogroup")]
     Radio,
     #[serde(rename = "checkbox")]
     Check,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceWarningType {
     #[serde(rename = "none")]
     None,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceLayoutType {
     #[serde(rename = "all")]
     All,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct MultipleChoiceLayout {
     r#type: MultipleChoiceLayoutType,
     expression: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceMatrix {
     Item(Primitive),
@@ -822,7 +841,7 @@ pub enum MultipleChoiceMatrix {
     Matrix(Vec<Vec<Primitive>>),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum Primitive {
     String(String),
@@ -830,7 +849,7 @@ pub enum Primitive {
     Float(f64),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartGapFill {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
@@ -838,12 +857,12 @@ pub struct ExamQuestionPartGapFill {
     sort_answers: Option<bool>,
     gaps: Vec<ExamQuestionPart>,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartInformation {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartExtension {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
