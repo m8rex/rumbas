@@ -217,7 +217,6 @@ optional_overwrite! {
 
 impl QuestionGroup {
     pub fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
-        //TODO: check empty
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionGroup::new(
@@ -469,24 +468,4 @@ impl Exam {
         );
         serde_json::from_str(&json)
     }
-}
-
-macro_rules! exam_from {
-    ($($func_name: ident: $var: ident: $type: ty), *) => {
-        impl Exam {
-            $(
-                pub fn $func_name($var: $type) -> Exam {
-                    let mut empty: Exam = serde_json::from_str("{}").unwrap(); //TODO is this to hacky?
-                    empty.$var = Some($var);
-                    empty
-                }
-            )*
-        }
-    };
-}
-
-exam_from! {
-    from_navigation: navigation: Navigation,
-    from_timing: timing: Timing,
-    from_feedback: feedback: Feedback
 }

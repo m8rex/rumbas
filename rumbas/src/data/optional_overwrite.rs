@@ -1,12 +1,38 @@
 use std::collections::HashMap;
 
-pub trait OptionalOverwrite {
+pub trait OptionalOverwrite: Clone {
     type Item;
 
     fn empty_fields(&self) -> Vec<String>;
     fn overwrite(&mut self, other: &Self::Item);
 }
 
+macro_rules! impl_optional_overwrite_option {
+    ($($type: ty$([$($gen: tt), *])?), *) => {
+        $(
+        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Option<$type> {
+            type Item = Option<$type>;
+            fn empty_fields(&self) -> Vec<String> {
+                if let Some(val) = &self {
+                    return val.empty_fields()
+                }
+                else {
+                    return vec!["".to_string()]
+                }
+            }
+            fn overwrite(&mut self, other: &Self::Item) {
+                if let Some(ref mut val) = self {
+                    if let Some(other_val) = &other {
+                        val.overwrite(&other_val);
+                    }
+                } else {
+                    *self = other.clone();
+                }
+            }
+        }
+        )*
+    };
+}
 impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
     type Item = Vec<O>;
     fn empty_fields(&self) -> Vec<String> {
@@ -21,6 +47,7 @@ impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
 }
+impl_optional_overwrite_option!(Vec<U>[U]);
 
 macro_rules! impl_optional_overwrite {
     ($($type: ty), *) => {
@@ -30,20 +57,22 @@ macro_rules! impl_optional_overwrite {
             fn empty_fields(&self) -> Vec<String> {
                 Vec::new()
             }
-            fn overwrite(&mut self, _other: &$type) {}
+            fn overwrite(&mut self, _other: &Self::Item) {}
         }
+        impl_optional_overwrite_option!($type);
         )*
     };
 }
 impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 //TODO: different if implements
-impl<U, T> OptionalOverwrite for HashMap<U, T> {
+impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U, T> {
     type Item = HashMap<U, T>;
     fn empty_fields(&self) -> Vec<String> {
         Vec::new()
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
 }
+impl_optional_overwrite_option!(HashMap < U, T > [U, T]);
 
 macro_rules! optional_overwrite {
     // This macro creates a struct with all optional fields
@@ -67,31 +96,25 @@ macro_rules! optional_overwrite {
             fn empty_fields(&self) -> Vec<String> {
                 let mut empty = Vec::new();
                 $(
-
-                    if let Some(val) = &self.$field {
-                        let extra_empty = val.empty_fields();
+                    let extra_empty = &self.$field.empty_fields();
+                    if extra_empty.len() == 1 && extra_empty[0] == "" {
+                        empty.push(stringify!($field).to_string());
+                    }
+                    else {
                         for extra in extra_empty.iter() {
                             empty.push(format!("{}.{}", stringify!($field), extra));
                         }
-                    } else{
-                        empty.push(stringify!($field).to_string());
                     }
                 )*
                 empty
             }
-            fn overwrite(&mut self, other: &$struct) {
+            fn overwrite(&mut self, other: &Self::Item) {
                 $(
-                    if let Some(ref mut val) = self.$field {
-                        if let Some(other_val) = &other.$field {
-                            val.overwrite(&other_val);
-                        }
-                    } else {
-                        self.$field = other.$field.clone();
-                    }
+                    self.$field.overwrite(&other.$field);
                 )*
             }
-
         }
+        impl_optional_overwrite_option!($struct);
     }
 }
 
