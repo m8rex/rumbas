@@ -1,4 +1,4 @@
-use crate::data::exam::{Exam, Feedback, Navigation, Timing};
+use crate::data::exam::{Feedback, Navigation, Question, Timing};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -15,6 +15,14 @@ pub enum DefaultFileType {
     Navigation,
     Timing,
     Feedback,
+    Question,
+}
+
+pub enum DefaultData {
+    Navigation(Navigation),
+    Timing(Timing),
+    Feedback(Feedback),
+    Question(Question),
 }
 
 impl DefaultFileType {
@@ -25,25 +33,30 @@ impl DefaultFileType {
                 Some("navigation") => Some(DefaultFileType::Navigation),
                 Some("timing") => Some(DefaultFileType::Timing),
                 Some("feedback") => Some(DefaultFileType::Feedback),
+                Some("question") => Some(DefaultFileType::Question),
                 _ => None,
             },
             None => None,
         }
     }
-    fn read_as_exam(&self, path: &PathBuf) -> serde_json::Result<Exam> {
+    fn read_as_data(&self, path: &PathBuf) -> serde_json::Result<DefaultData> {
         let json = fs::read_to_string(path).unwrap();
         match self {
             DefaultFileType::Navigation => {
                 let n: Navigation = serde_json::from_str(&json)?;
-                Ok(Exam::from_navigation(n))
+                Ok(DefaultData::Navigation(n))
             }
             DefaultFileType::Timing => {
-                let n: Timing = serde_json::from_str(&json)?;
-                Ok(Exam::from_timing(n))
+                let t: Timing = serde_json::from_str(&json)?;
+                Ok(DefaultData::Timing(t))
             }
             DefaultFileType::Feedback => {
-                let n: Feedback = serde_json::from_str(&json)?;
-                Ok(Exam::from_feedback(n))
+                let f: Feedback = serde_json::from_str(&json)?;
+                Ok(DefaultData::Feedback(f))
+            }
+            DefaultFileType::Question => {
+                let q: Question = serde_json::from_str(&json)?;
+                Ok(DefaultData::Question(q))
             }
         }
     }
@@ -61,8 +74,8 @@ impl DefaultFile {
         None
     }
 
-    pub fn read_as_exam(&self) -> serde_json::Result<Exam> {
-        self.r#type.read_as_exam(&self.path)
+    pub fn read_as_data(&self) -> serde_json::Result<DefaultData> {
+        self.r#type.read_as_data(&self.path)
     }
 
     pub fn get_path(&self) -> PathBuf {

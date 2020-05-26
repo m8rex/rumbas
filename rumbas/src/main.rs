@@ -1,4 +1,4 @@
-use crate::data::default::default_files;
+use crate::data::default::{default_files, DefaultData};
 use crate::data::optional_overwrite::OptionalOverwrite;
 use std::env;
 use std::path::Path;
@@ -23,8 +23,25 @@ fn main() {
                     for default_file in default_files.iter() {
                         if !exam.empty_fields().is_empty() {
                             println!("Reading {}", default_file.get_path().display());
-                            let default_exam = default_file.read_as_exam().unwrap(); //TODO
-                            exam.overwrite(&default_exam);
+                            let default_data = default_file.read_as_data().unwrap(); //TODO
+                            match default_data {
+                                DefaultData::Navigation(n) => exam.navigation.overwrite(&Some(n)),
+                                DefaultData::Timing(t) => exam.timing.overwrite(&Some(t)),
+                                DefaultData::Feedback(f) => exam.feedback.overwrite(&Some(f)),
+                                DefaultData::Question(q) => {
+                                    if let Some(ref mut groups) = exam.question_groups {
+                                        groups.iter_mut().for_each(|qg| {
+                                            if let Some(ref mut questions) = &mut qg.questions {
+                                                questions.iter_mut().for_each(|question| {
+                                                    question
+                                                        .question_data
+                                                        .overwrite(&Some(q.clone()))
+                                                })
+                                            }
+                                        })
+                                    }
+                                }
+                            }
                         }
                     }
                     let numbas = exam.to_numbas();
