@@ -1,4 +1,5 @@
 use crate::data::default::{default_files, DefaultData};
+use crate::data::exam;
 use crate::data::optional_overwrite::OptionalOverwrite;
 use std::env;
 use std::path::Path;
@@ -10,6 +11,7 @@ fn main() {
         1 => println!("Please provide an argument"),
         2 => {
             let path = Path::new(&args[1]);
+            println!("{:?}", path.display());
             if path.is_absolute() {
                 println!("Absolute path's are not supported");
                 return;
@@ -41,24 +43,86 @@ fn main() {
                                         })
                                     }
                                 }
+                                DefaultData::QuestionPart(p) => {
+                                    if let Some(ref mut groups) = exam.question_groups {
+                                        groups.iter_mut().for_each(|qg| {
+                                            if let Some(ref mut questions) = &mut qg.questions {
+                                                questions.iter_mut().for_each(|question| {
+                                                    if let Some(ref mut question_data) =
+                                                        question.question_data
+                                                    {
+                                                        if let Some(ref mut parts) =
+                                                            question_data.parts
+                                                        {
+                                                            parts.iter_mut().for_each(|part| {
+                                                                if let (
+                                                                    exam::QuestionPart::GapFill(_),
+                                                                    exam::QuestionPart::GapFill(_),
+                                                                ) = (&p, &part)
+                                                                {
+                                                                    part.overwrite(&p.clone())
+                                                                }
+                                                            })
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                } //TODO: cleanup...
+                                DefaultData::QuestionPartGapFillGap(p) => {
+                                    if let Some(ref mut groups) = exam.question_groups {
+                                        groups.iter_mut().for_each(|qg| {
+                                            if let Some(ref mut questions) = &mut qg.questions {
+                                                questions.iter_mut().for_each(|question| {
+                                                    if let Some(ref mut question_data) =
+                                                        question.question_data
+                                                    {
+                                                        if let Some(ref mut parts) =
+                                                            question_data.parts
+                                                        {
+                                                            parts.iter_mut().for_each(|part| {
+                                                                if let exam::QuestionPart::GapFill(
+                                                                    gap_fill,
+                                                                ) = part
+                                                                {
+                                                                    if let Some(ref mut gaps) =
+                                                                        gap_fill.gaps
+                                                                    {
+                                                                        gaps.iter_mut().for_each(
+                                                                            |gap| {
+                                                                                if let (
+                                                                    exam::QuestionPart::JME(_),
+                                                                    exam::QuestionPart::JME(_),
+                                                                ) = (&p, &gap)
+                                                                {
+                                                                    gap.overwrite(&p.clone())
+                                                                }
+                                                                            },
+                                                                        )
+                                                                    }
+                                                                }
+                                                            })
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                }
                             }
                         }
                     }
                     let numbas = exam.to_numbas();
                     match numbas {
-                        Ok(res) => (), // println!("{:#?}", res),
+                        Ok(res) => println!("{:#?}", serde_json::to_string(&res)),
                         Err(missing_fields) => {
                             println!("Missing fields:\n{}", missing_fields.join("\n"))
                         }
                     }
                 }
                 Err(e) => {
-                    println!(
-                        "Error in the json on column {} of line {}. The type of the error is {:?}",
-                        e.column(),
-                        e.line(),
-                        e.classify() // Better explanation: Eof -> end of file, Data: wrong datatype or missing field, Syntax: syntax error
-                    );
+                    println!("{}", e);
                 }
             };
         }

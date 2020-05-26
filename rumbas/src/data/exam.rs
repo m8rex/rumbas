@@ -3,7 +3,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 type NumbasResult<T> = Result<T, Vec<String>>;
 
@@ -59,7 +59,7 @@ pub enum ShowResultsPage {
 }
 impl_optional_overwrite!(ShowResultsPage);
 impl ShowResultsPage {
-    fn to_numbas(&self) -> numbas::exam::ExamShowResultsPage {
+    fn to_numbas(self) -> numbas::exam::ExamShowResultsPage {
         match self {
             ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
             ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
@@ -80,6 +80,28 @@ impl Action {
             Action::None { message } => numbas::exam::ExamAction::None {
                 message: message.to_string(),
             },
+        }
+    }
+}
+
+optional_overwrite! {
+    QuestionNavigation,
+    allow_regenerate: bool,
+    show_frontpage: bool,
+    prevent_leaving: bool
+}
+
+impl QuestionNavigation {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::QuestionNavigation> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::QuestionNavigation::new(
+                self.allow_regenerate.unwrap(),
+                self.show_frontpage.unwrap(),
+                self.prevent_leaving,
+            ))
+        } else {
+            Err(empty_fields)
         }
     }
 }
@@ -182,14 +204,6 @@ impl FeedbackMessage {
     }
 }
 
-/*
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(try_from = "String")]
-pub struct QuestionPath {
-    question: String,
-    question_data: Option<Question>,
-}*/
-
 optional_overwrite! {
     QuestionPath: serde(try_from = "String"),
     question: String,
@@ -197,10 +211,13 @@ optional_overwrite! {
 }
 
 impl std::convert::TryFrom<String> for QuestionPath {
-    type Error = serde_json::error::Error;
+    type Error = JsonError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = Question::from_name(&s)?;
+        let question_data = Question::from_name(&s).map_err(|e| {
+            println!("{}", e);
+            e
+        })?;
         Ok(QuestionPath {
             question: Some(s),
             question_data: Some(question_data),
@@ -211,7 +228,7 @@ impl std::convert::TryFrom<String> for QuestionPath {
 optional_overwrite! {
     QuestionGroup,
     name: String,
-    picking_strategy: PickingStrategy,
+    picking_strategy: PickingStrategy: serde(flatten),
     questions: Vec<QuestionPath>
 }
 
@@ -222,7 +239,18 @@ impl QuestionGroup {
             Ok(numbas::exam::ExamQuestionGroup::new(
                 self.name.clone(),
                 self.picking_strategy.clone().unwrap().to_numbas(),
-                Vec::new(), //TODO
+                self.questions
+                    .clone()
+                    .unwrap()
+                    .iter()
+                    .map(|q| {
+                        q.question_data
+                            .clone()
+                            .unwrap()
+                            .to_numbas(q.question.clone().unwrap())
+                            .unwrap()
+                    })
+                    .collect(),
             ))
         } else {
             Err(empty_fields)
@@ -231,6 +259,7 @@ impl QuestionGroup {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
     AllOrdered,
@@ -260,20 +289,104 @@ impl PickingStrategy {
 
 optional_overwrite! {
     Question,
-    name: String,
     statement: String,
     advice: String,
     parts: Vec<QuestionPart>,
-    variables: HashMap<String, Variable>, //TODO variables_test
+    variables: HashMap<String, Variable>,
+    variables_test: VariablesTest,
     functions: HashMap<String, Function>,
-    navigation: Navigation,
-    extensions: Vec<String> //TODO: obj of bools
+    navigation: QuestionNavigation,
+    extensions: Extensions,
+    ungrouped_variables: Vec<String>
     //TODO al lot of options
 
 }
 
 impl Question {
-    pub fn from_name(name: &String) -> serde_json::Result<Question> {
+    //TODO: add to_numbas on Option's to reduce burden?
+    fn to_numbas(&self, name: String) -> NumbasResult<numbas::exam::ExamQuestion> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamQuestion::new(
+                name,
+                self.statement.clone().unwrap(),
+                self.advice.clone().unwrap(),
+                self.parts
+                    .clone()
+                    .unwrap()
+                    .iter()
+                    .map(|p| p.to_numbas().unwrap())
+                    .collect(),
+                self.variables
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|(k, v)| (k.clone(), v.to_numbas(k).unwrap()))
+                    .collect(),
+                self.variables_test.clone().unwrap().to_numbas().unwrap(),
+                self.functions
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|(k, v)| (k, v.to_numbas().unwrap()))
+                    .collect(),
+                self.ungrouped_variables.clone().unwrap(),
+                self.navigation.clone().unwrap().to_numbas().unwrap(),
+                self.extensions.clone().unwrap().to_numbas().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    VariablesTest,
+    condition: String,
+    max_runs: usize
+}
+
+impl VariablesTest {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamQuestionVariablesTest::new(
+                self.condition.clone().unwrap(),
+                self.max_runs.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct JsonError {
+    error: serde_json::error::Error,
+    file: PathBuf,
+}
+
+impl JsonError {
+    pub fn from(error: serde_json::error::Error, file: PathBuf) -> JsonError {
+        JsonError { error, file }
+    }
+}
+impl std::fmt::Display for JsonError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Error in {} on column {} of line {}. The type of the error is {:?}",
+            self.file.display(),
+            self.error.column(),
+            self.error.line(),
+            self.error.classify()
+        ) // Better explanation: Eof -> end of file, Data: wrong datatype or missing field, Syntax: syntax error
+    }
+}
+pub type JsonResult<T> = Result<T, JsonError>;
+
+impl Question {
+    pub fn from_name(name: &String) -> JsonResult<Question> {
         let file = Path::new("questions").join(format!("{}.json", name));
         let json = fs::read_to_string(&file).expect(
             &format!(
@@ -281,19 +394,30 @@ impl Question {
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        serde_json::from_str(&json)
+        serde_json::from_str(&json).map_err(|e| JsonError::from(e, file.to_path_buf()))
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "type")]
-pub enum QuestionPart {
-    //TODO; other types
-    //TODO: custom_part_constructor types?
-    #[serde(rename = "jme")]
-    JME(QuestionPartJME),
+optional_overwrite_enum! {
+    QuestionPart: serde(tag = "type"),
+    JME: QuestionPartJME: serde(rename = "jme"),
+    GapFill: QuestionPartGapFill: serde(rename = "gapfill")
 }
-impl_optional_overwrite!(QuestionPart);
+
+impl QuestionPart {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPart> {
+        match self {
+            QuestionPart::JME(d) => {
+                let n = d.to_numbas()?;
+                Ok(numbas::exam::ExamQuestionPart::JME(n))
+            }
+            QuestionPart::GapFill(d) => {
+                let n = d.to_numbas()?;
+                Ok(numbas::exam::ExamQuestionPart::GapFill(n))
+            }
+        }
+    }
+}
 
 macro_rules! question_part_type {
     ($struct: ident, $($field: ident: $type: ty), *) => {
@@ -310,12 +434,32 @@ macro_rules! question_part_type {
             show_feedback_icon: bool,
             variable_replacement_strategy: VariableReplacementStrategy,
             adaptive_marking_penalty: usize,
-            // custom_marking_algorithm: String TO
+            custom_marking_algorithm: String, // TODO? empty string -> none?
             extend_base_marking_algorithm: bool,
             steps: Vec<QuestionPart>,
             $(
                 $field: $type
             ),*
+        }
+        impl $struct {
+            pub fn to_numbas_shared_data(&self) -> numbas::exam::ExamQuestionPartSharedData {
+                numbas::exam::ExamQuestionPartSharedData::new(
+            self.marks,
+            self.prompt.clone(),
+            self.use_custom_name,
+            self.custom_name.clone(),
+            self.steps_penalty,
+            self.enable_minimum_marks,
+            self.minimum_marks,
+            self.show_correct_answer.clone().unwrap(),
+            self.show_feedback_icon,
+            self.variable_replacement_strategy.clone().unwrap().to_numbas(),
+            self.adaptive_marking_penalty,
+            self.custom_marking_algorithm.clone(),
+            self.extend_base_marking_algorithm,
+            self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas().unwrap()).collect()),
+                )
+            }
         }
     }
 }
@@ -333,13 +477,50 @@ question_part_type! {
     single_letter_variables: bool,
     allow_unknown_functions: bool,
     implicit_function_composition: bool,
-    max_length: numbas::exam::JMELengthRestriction, // TODO: custom struct, (because of partialCredit)
-    min_length: numbas::exam::JMELengthRestriction,
-    must_have: numbas::exam::JMEStringRestriction,
-    may_not_have: numbas::exam::JMEStringRestriction,
-    must_match_pattern: numbas::exam::JMEPatternRestriction
+    max_length: JMELengthRestriction,
+    min_length: JMELengthRestriction,
+    must_have: JMEStringRestriction,
+    may_not_have: JMEStringRestriction,
+    must_match_pattern: JMEPatternRestriction
 }
 
+impl QuestionPartJME {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamQuestionPartJME::new(
+                self.to_numbas_shared_data(),
+                self.answer.clone().unwrap(),
+                Some(
+                    self.answer_simplification
+                        .clone()
+                        .unwrap()
+                        .to_numbas()
+                        .unwrap(),
+                ),
+                self.show_preview.clone().unwrap(),
+                self.checking_type.clone().unwrap().to_numbas(),
+                self.checking_accuracy.unwrap(),
+                self.failure_rate.unwrap(),
+                self.vset_range.unwrap(),
+                self.vset_range_points.unwrap(),
+                self.check_variable_names.unwrap(),
+                self.single_letter_variables,
+                self.allow_unknown_functions,
+                self.implicit_function_composition,
+                self.max_length.clone().map(|v| v.to_numbas().unwrap()),
+                self.min_length.clone().map(|v| v.to_numbas().unwrap()),
+                self.must_have.clone().map(|v| v.to_numbas().unwrap()),
+                self.may_not_have.clone().map(|v| v.to_numbas().unwrap()),
+                self.must_match_pattern
+                    .clone()
+                    .map(|v| v.to_numbas().unwrap()),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
 //TODO: rename etc
 optional_overwrite! {
     JMEAnswerSimplification,
@@ -359,6 +540,60 @@ optional_overwrite! {
     simplify_other_numbers: bool
 }
 
+impl JMEAnswerSimplification {
+    pub fn to_numbas(&self) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            let mut v = Vec::new();
+            if self.simplify_basic.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::Basic);
+            }
+            if self.simplify_unit_factor.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::UnitFactor);
+            }
+            if self.simplify_unit_power.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::UnitPower);
+            }
+            if self.simplify_unit_denominator.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::UnitDenominator);
+            }
+            if self.simplify_zero_factor.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ZeroFactor);
+            }
+            if self.simplify_zero_term.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ZeroTerm);
+            }
+            if self.simplify_zero_power.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ZeroPower);
+            }
+            if self.simplify_zero_base.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ZeroBase);
+            }
+            if self.collect_numbers.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::CollectNumbers);
+            }
+            if self.constants_first.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ConstantsFirst);
+            }
+            if self.simplify_sqrt_products.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::SqrtProduct);
+            }
+            if self.simplify_sqrt_division.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::SqrtDivision);
+            }
+            if self.simplify_sqrt_square.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::SqrtSquare);
+            }
+            if self.simplify_other_numbers.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::OtherNumbers);
+            }
+            Ok(v)
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum CheckingType {
@@ -368,6 +603,102 @@ pub enum CheckingType {
     SignificantFigures,
 }
 impl_optional_overwrite!(CheckingType);
+impl CheckingType {
+    pub fn to_numbas(&self) -> numbas::exam::JMECheckingType {
+        match self {
+            CheckingType::RelativeDifference => numbas::exam::JMECheckingType::RelativeDifference,
+            CheckingType::AbsoluteDifference => numbas::exam::JMECheckingType::AbsoluteDifference,
+            CheckingType::DecimalPlaces => numbas::exam::JMECheckingType::DecimalPlaces,
+            CheckingType::SignificantFigures => numbas::exam::JMECheckingType::SignificantFigures,
+        }
+    }
+}
+
+optional_overwrite! {
+    JMERestriction,
+    name: String,
+    strings: Vec<String>,
+    partial_credit: String, //TODO: type
+    message: String
+}
+
+impl JMERestriction {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::JMERestriction> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMERestriction::new(
+                self.name.clone().unwrap(),
+                self.strings.clone().unwrap(),
+                self.partial_credit.clone().unwrap(),
+                self.message.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    JMELengthRestriction,
+    restriction: JMERestriction: serde(flatten),
+    length: usize
+}
+
+impl JMELengthRestriction {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::JMELengthRestriction> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMELengthRestriction::new(
+                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.length,
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    JMEStringRestriction,
+    restriction: JMERestriction: serde(flatten),
+    show_strings: bool
+}
+
+impl JMEStringRestriction {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::JMEStringRestriction> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMEStringRestriction::new(
+                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.show_strings.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    JMEPatternRestriction,
+    restriction: JMERestriction: serde(flatten),
+    pattern: String, //TODO type?
+    name_to_compare: String
+}
+
+impl JMEPatternRestriction {
+    pub fn to_numbas(&self) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMEPatternRestriction::new(
+                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.pattern.clone().unwrap(),
+                self.name_to_compare.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
@@ -376,13 +707,58 @@ pub enum VariableReplacementStrategy {
 }
 impl_optional_overwrite!(VariableReplacementStrategy);
 
+impl VariableReplacementStrategy {
+    pub fn to_numbas(&self) -> numbas::exam::VariableReplacementStrategy {
+        match self {
+            VariableReplacementStrategy::OriginalFirst => {
+                numbas::exam::VariableReplacementStrategy::OriginalFirst
+            }
+        }
+    }
+}
+
 optional_overwrite! {
     Variable,
     definition: String,
     description: String,
-    template_type: String, //TODO , "anything"
+    template_type: VariableTemplateType,
     group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
+impl Variable {
+    fn to_numbas(&self, name: String) -> NumbasResult<numbas::exam::ExamVariable> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamVariable::new(
+                name,
+                self.definition.clone().unwrap(),
+                self.description.clone().unwrap(),
+                self.template_type.clone().unwrap().to_numbas(),
+                self.group.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum VariableTemplateType {
+    Anything,
+    RandomRange,
+}
+
+impl VariableTemplateType {
+    fn to_numbas(&self) -> numbas::exam::ExamVariableTemplateType {
+        match self {
+            VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
+            VariableTemplateType::RandomRange => {
+                numbas::exam::ExamVariableTemplateType::RandomRange
+            }
+        }
+    }
+}
+impl_optional_overwrite!(VariableTemplateType);
 
 optional_overwrite! {
     Function,
@@ -391,15 +767,52 @@ optional_overwrite! {
     definition: String,
     language: numbas::exam::ExamFunctionLanguage
 }
+impl Function {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamFunction> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamFunction::new(
+                self.parameters.clone().unwrap().into_iter().collect(),
+                self.output_type.clone().unwrap(),
+                self.definition.clone().unwrap(),
+                self.language.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
 impl_optional_overwrite!(
     numbas::exam::ExamFunctionType,
     numbas::exam::ExamFunctionLanguage,
-    numbas::exam::JMELengthRestriction,
-    numbas::exam::JMEStringRestriction,
-    numbas::exam::JMEPatternRestriction,
-    numbas::exam::CheckingType,
     numbas::exam::AnswerSimplificationType
 );
+
+question_part_type! {
+    QuestionPartGapFill,
+    sort_answers: bool,
+    gaps: Vec<QuestionPart>
+}
+
+impl QuestionPartGapFill {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::ExamQuestionPartGapFill::new(
+                self.to_numbas_shared_data(),
+                self.sort_answers,
+                self.gaps
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|g| g.to_numbas().unwrap())
+                    .collect(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
 
 impl Exam {
     pub fn to_numbas(&self) -> NumbasResult<numbas::exam::Exam> {
@@ -432,12 +845,18 @@ impl Exam {
             let variables = None;
 
             //TODO
-            let question_groups: Vec<numbas::exam::ExamQuestionGroup> = Vec::new();
+            let question_groups: Vec<numbas::exam::ExamQuestionGroup> = self
+                .question_groups
+                .clone()
+                .unwrap()
+                .iter()
+                .map(|qg| qg.clone().to_numbas().unwrap())
+                .collect();
 
             // Below from questions
             //TODO
             let resources: Vec<[String; 2]> = Vec::new();
-            //TODO obj of bools
+            //TODO from obj of bools
             let extensions: Vec<String> = Vec::new();
             //TODO
             let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
@@ -459,13 +878,34 @@ impl Exam {
         }
     }
 
-    pub fn from_file(file: &Path) -> serde_json::Result<Exam> {
+    pub fn from_file(file: &Path) -> JsonResult<Exam> {
         let json = fs::read_to_string(file).expect(
             &format!(
                 "Failed to read {}",
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        serde_json::from_str(&json)
+        serde_json::from_str(&json).map_err(|e| JsonError::from(e, file.to_path_buf()))
+    }
+}
+
+//TODO: add other extensions
+optional_overwrite! {
+    Extensions,
+    jsx_graph: bool
+}
+
+impl Extensions {
+    fn to_numbas(&self) -> NumbasResult<Vec<String>> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            let mut extensions = Vec::new();
+            if self.jsx_graph.unwrap() {
+                extensions.push("jsx_graph".to_string());
+            }
+            Ok(extensions)
+        } else {
+            Err(empty_fields)
+        }
     }
 }
