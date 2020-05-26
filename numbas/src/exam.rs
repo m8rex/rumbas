@@ -6,6 +6,7 @@ use std::fmt::Display;
 use std::str::FromStr;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
+//TODO: advicethreshold?
 
 fn from_str_optional<'de, T, D>(deserializer: D) -> Result<Option<T>, D::Error>
 where
@@ -216,6 +217,30 @@ impl ExamNavigation {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct QuestionNavigation {
+    #[serde(rename = "allowregen")]
+    allow_regenerate: bool,
+    #[serde(rename = "showfrontpage")]
+    show_frontpage: bool,
+    #[serde(rename = "preventleave")]
+    prevent_leaving: Option<bool>,
+}
+
+impl QuestionNavigation {
+    pub fn new(
+        allow_regenerate: bool,
+        show_frontpage: bool,
+        prevent_leaving: Option<bool>,
+    ) -> QuestionNavigation {
+        QuestionNavigation {
+            allow_regenerate,
+            show_frontpage,
+            prevent_leaving,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "action")]
 pub enum ExamAction {
     #[serde(rename = "none")]
@@ -339,6 +364,22 @@ pub struct ExamFunction {
     language: ExamFunctionLanguage,
 }
 
+impl ExamFunction {
+    pub fn new(
+        parameters: Vec<ExamFunctionParameter>,
+        output_type: ExamFunctionType,
+        definition: String,
+        language: ExamFunctionLanguage,
+    ) -> ExamFunction {
+        ExamFunction {
+            parameters,
+            output_type,
+            definition,
+            language,
+        }
+    }
+}
+
 pub type ExamFunctionParameter = (String, ExamFunctionType);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -391,8 +432,34 @@ pub struct ExamVariable {
     definition: String,
     description: String,
     #[serde(rename = "templateType")]
-    template_type: String, //TODO: type?
+    template_type: ExamVariableTemplateType,
     group: String,
+}
+
+impl ExamVariable {
+    pub fn new(
+        name: String,
+        definition: String,
+        description: String,
+        template_type: ExamVariableTemplateType,
+        group: String,
+    ) -> ExamVariable {
+        ExamVariable {
+            name,
+            definition,
+            description,
+            template_type,
+            group,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ExamVariableTemplateType {
+    #[serde(rename = "anything")]
+    Anything,
+    #[serde(rename = "rand_range")]
+    RandomRange,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -447,12 +514,40 @@ pub struct ExamQuestion {
     //rulesets TODO
     //preamble TODO
     //contributors TODO
-    navigation: ExamNavigation,
+    navigation: QuestionNavigation,
     //custom part types TODO
     extensions: Vec<String>,
     //metadata TODO
     //resources TODO
     //TODO type: question?
+}
+
+impl ExamQuestion {
+    pub fn new(
+        name: String,
+        statement: String,
+        advice: String,
+        parts: Vec<ExamQuestionPart>,
+        variables: HashMap<String, ExamVariable>,
+        variables_test: ExamQuestionVariablesTest,
+        functions: HashMap<String, ExamFunction>,
+        ungrouped_variables: Vec<String>,
+        navigation: QuestionNavigation,
+        extensions: Vec<String>,
+    ) -> ExamQuestion {
+        ExamQuestion {
+            name,
+            statement,
+            advice,
+            parts,
+            variables,
+            variables_test,
+            functions,
+            ungrouped_variables,
+            navigation,
+            extensions,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -516,6 +611,42 @@ pub struct ExamQuestionPartSharedData {
     //[serde(rename= "variableReplacements")]
 }
 
+impl ExamQuestionPartSharedData {
+    pub fn new(
+        marks: Option<usize>,
+        prompt: Option<String>,
+        use_custom_name: Option<bool>,
+        custom_name: Option<String>,
+        steps_penalty: Option<usize>,
+        enable_minimum_marks: Option<bool>,
+        minimum_marks: Option<usize>,
+        show_correct_answer: bool,
+        show_feedback_icon: Option<bool>,
+        variable_replacement_strategy: VariableReplacementStrategy,
+        adaptive_marking_penalty: Option<usize>,
+        custom_marking_algorithm: Option<String>,
+        extend_base_marking_algorithm: Option<bool>,
+        steps: Option<Vec<ExamQuestionPart>>,
+    ) -> ExamQuestionPartSharedData {
+        ExamQuestionPartSharedData {
+            marks,
+            prompt,
+            use_custom_name,
+            custom_name,
+            steps_penalty,
+            enable_minimum_marks,
+            minimum_marks,
+            show_correct_answer,
+            show_feedback_icon,
+            variable_replacement_strategy,
+            adaptive_marking_penalty,
+            custom_marking_algorithm,
+            extend_base_marking_algorithm,
+            steps,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "originalfirst")]
@@ -566,6 +697,50 @@ pub struct ExamQuestionPartJME {
     //TODO: valuegenerators
 }
 
+impl ExamQuestionPartJME {
+    pub fn new(
+        part_data: ExamQuestionPartSharedData,
+        answer: String,
+        answer_simplification: Option<Vec<AnswerSimplificationType>>,
+        show_preview: bool,
+        checking_type: JMECheckingType,
+        checking_accuracy: f64,
+        failure_rate: f64,
+        vset_range: [f64; 2],
+        vset_range_points: usize,
+        check_variable_names: bool,
+        single_letter_variables: Option<bool>,
+        allow_unknown_functions: Option<bool>,
+        implicit_function_composition: Option<bool>,
+        max_length: Option<JMELengthRestriction>,
+        min_length: Option<JMELengthRestriction>,
+        must_have: Option<JMEStringRestriction>,
+        may_not_have: Option<JMEStringRestriction>,
+        must_match_pattern: Option<JMEPatternRestriction>,
+    ) -> ExamQuestionPartJME {
+        ExamQuestionPartJME {
+            part_data,
+            answer,
+            answer_simplification,
+            show_preview,
+            checking_type,
+            checking_accuracy,
+            failure_rate,
+            vset_range,
+            vset_range_points,
+            check_variable_names,
+            single_letter_variables,
+            allow_unknown_functions,
+            implicit_function_composition,
+            max_length,
+            min_length,
+            must_have,
+            may_not_have,
+            must_match_pattern,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerSimplificationType {
     //TODO casing?
@@ -607,11 +782,36 @@ pub struct JMERestriction {
     message: String,
 }
 
+impl JMERestriction {
+    pub fn new(
+        name: String,
+        strings: Vec<String>,
+        partial_credit: String, //TODO: type
+        message: String,
+    ) -> JMERestriction {
+        JMERestriction {
+            name,
+            strings,
+            partial_credit,
+            message,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     restriction: JMERestriction,
     length: Option<usize>,
+}
+
+impl JMELengthRestriction {
+    pub fn new(restriction: JMERestriction, length: Option<usize>) -> JMELengthRestriction {
+        JMELengthRestriction {
+            restriction,
+            length,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -620,6 +820,15 @@ pub struct JMEStringRestriction {
     restriction: JMERestriction,
     #[serde(rename = "showStrings")]
     show_strings: bool,
+}
+
+impl JMEStringRestriction {
+    pub fn new(restriction: JMERestriction, show_strings: bool) -> JMEStringRestriction {
+        JMEStringRestriction {
+            restriction,
+            show_strings,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -631,11 +840,34 @@ pub struct JMEPatternRestriction {
     name_to_compare: String,
 }
 
+impl JMEPatternRestriction {
+    pub fn new(
+        restriction: JMERestriction,
+        pattern: String,
+        name_to_compare: String,
+    ) -> JMEPatternRestriction {
+        JMEPatternRestriction {
+            restriction,
+            pattern,
+            name_to_compare,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariablesTest {
     condition: String,
     #[serde(rename = "maxRuns")]
     max_runs: usize,
+}
+
+impl ExamQuestionVariablesTest {
+    pub fn new(condition: String, max_runs: usize) -> ExamQuestionVariablesTest {
+        ExamQuestionVariablesTest {
+            condition,
+            max_runs,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -857,6 +1089,21 @@ pub struct ExamQuestionPartGapFill {
     sort_answers: Option<bool>,
     gaps: Vec<ExamQuestionPart>,
 }
+
+impl ExamQuestionPartGapFill {
+    pub fn new(
+        part_data: ExamQuestionPartSharedData,
+        sort_answers: Option<bool>,
+        gaps: Vec<ExamQuestionPart>,
+    ) -> ExamQuestionPartGapFill {
+        ExamQuestionPartGapFill {
+            part_data,
+            sort_answers,
+            gaps,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartInformation {
     #[serde(flatten)]

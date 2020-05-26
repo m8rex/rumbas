@@ -1,4 +1,7 @@
-use crate::data::exam::{Feedback, Navigation, Question, Timing};
+use crate::data::exam::{
+    Feedback, Navigation, Question, QuestionPart, QuestionPartGapFill, QuestionPartJME, Timing,
+};
+use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -16,6 +19,14 @@ pub enum DefaultFileType {
     Timing,
     Feedback,
     Question,
+    QuestionPart(QuestionPartType),
+    QuestionPartGapFillGap(QuestionPartType),
+}
+
+#[derive(Debug)]
+pub enum QuestionPartType {
+    JME,
+    GapFill,
 }
 
 pub enum DefaultData {
@@ -23,6 +34,8 @@ pub enum DefaultData {
     Timing(Timing),
     Feedback(Feedback),
     Question(Question),
+    QuestionPart(QuestionPart),
+    QuestionPartGapFillGap(QuestionPart),
 }
 
 impl DefaultFileType {
@@ -34,6 +47,16 @@ impl DefaultFileType {
                 Some("timing") => Some(DefaultFileType::Timing),
                 Some("feedback") => Some(DefaultFileType::Feedback),
                 Some("question") => Some(DefaultFileType::Question),
+                Some("questionpart.gapfill") => {
+                    //TODO others etc
+                    Some(DefaultFileType::QuestionPart(QuestionPartType::GapFill))
+                }
+                Some("questionpart.gapfill.gap.jme") => {
+                    //TODO others etc
+                    Some(DefaultFileType::QuestionPartGapFillGap(
+                        QuestionPartType::JME,
+                    ))
+                }
                 _ => None,
             },
             None => None,
@@ -58,6 +81,29 @@ impl DefaultFileType {
                 let q: Question = serde_json::from_str(&json)?;
                 Ok(DefaultData::Question(q))
             }
+            DefaultFileType::QuestionPart(question_part_type) => match question_part_type {
+                QuestionPartType::GapFill => {
+                    let q: QuestionPartGapFill = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::GapFill(q)))
+                }
+                QuestionPartType::JME => {
+                    let q: QuestionPartJME = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::JME(q)))
+                }
+            }, //TODO: reduce duplicate
+            DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
+            {
+                QuestionPartType::GapFill => {
+                    let q: QuestionPartGapFill = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::GapFill(
+                        q,
+                    )))
+                }
+                QuestionPartType::JME => {
+                    let q: QuestionPartJME = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::JME(q)))
+                }
+            },
         }
     }
 }
@@ -89,23 +135,24 @@ pub fn default_files(path: &Path) -> Vec<DefaultFile> {
         .into_iter()
         .map(|p| DefaultFile::from(&p))
         .filter(|p| p.is_some());
-    usefull_paths.into_iter().map(|p| p.unwrap()).collect()
+    usefull_paths.map(|p| p.unwrap()).collect()
 }
 
 fn default_file_paths(path: &Path) -> Vec<PathBuf> {
-    let mut result = Vec::new();
+    let mut result = HashSet::new(); //Use set to remove duplicates (only happens for the 'defaults' folder in root
+                                     //TODO: write tests and maybe use .take(count()-1) instead of hashset
     let ancestors = path.ancestors();
     for a in ancestors {
         let defaults_path = a.with_file_name("defaults");
         if defaults_path.is_dir() {
             for entry in defaults_path.read_dir().expect("read_dir call failed") {
                 if let Ok(entry) = entry {
-                    result.push(entry.path()); //TODO: order files from the folder
+                    result.insert(entry.path()); //TODO: order files from the folder
                     println!("{:?}", entry.path());
                 }
             }
         }
     }
 
-    result
+    result.into_iter().collect::<Vec<PathBuf>>()
 }

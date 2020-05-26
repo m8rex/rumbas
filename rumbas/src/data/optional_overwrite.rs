@@ -118,6 +118,42 @@ macro_rules! optional_overwrite {
     }
 }
 
+macro_rules! optional_overwrite_enum {
+    ($enum: ident$(: $container_attribute: meta)?, $($field: ident: $type: ty$(: $attribute: meta)?), *) => {
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        $(
+            #[$container_attribute]
+        )?
+        pub enum $enum {
+            $(
+                $(
+                    #[$attribute]
+                )?
+                $field($type)
+            ),*
+        }
+        impl OptionalOverwrite for $enum {
+            type Item = $enum;
+            fn empty_fields(&self) -> Vec<String> {
+                match self {
+                $(
+                    $enum::$field(val) => val.empty_fields()
+                ),*
+                }
+            }
+            fn overwrite(&mut self, other: &Self::Item) {
+                match (self, other) {
+                $(
+                    (&mut $enum::$field(ref mut val), &$enum::$field(ref valo)) => val.overwrite(&valo)
+                ),*
+                    , _ => ()
+                };
+            }
+        }
+        impl_optional_overwrite_option!($enum);
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
