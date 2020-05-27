@@ -295,6 +295,7 @@ optional_overwrite! {
     variables: HashMap<String, Variable>,
     variables_test: VariablesTest,
     functions: HashMap<String, Function>,
+    preamble: Preamble,
     navigation: QuestionNavigation,
     extensions: Extensions,
     ungrouped_variables: Vec<String>
@@ -331,6 +332,9 @@ impl Question {
                     .map(|(k, v)| (k, v.to_numbas().unwrap()))
                     .collect(),
                 self.ungrouped_variables.clone().unwrap(),
+                Vec::new(),     //TODO: calculate from variables
+                HashMap::new(), //TODO: add to Question type
+                self.preamble.clone().unwrap().to_numbas().unwrap(),
                 self.navigation.clone().unwrap().to_numbas().unwrap(),
                 self.extensions.clone().unwrap().to_numbas().unwrap(),
             ))
@@ -353,6 +357,26 @@ impl VariablesTest {
             Ok(numbas::exam::ExamQuestionVariablesTest::new(
                 self.condition.clone().unwrap(),
                 self.max_runs.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    Preamble,
+    js: String,
+    css: String
+}
+
+impl Preamble {
+    fn to_numbas(&self) -> NumbasResult<numbas::exam::Preamble> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::Preamble::new(
+                self.js.clone().unwrap(),
+                self.css.clone().unwrap(),
             ))
         } else {
             Err(empty_fields)
@@ -618,7 +642,7 @@ optional_overwrite! {
     JMERestriction,
     name: String,
     strings: Vec<String>,
-    partial_credit: String, //TODO: type
+    partial_credit: f64, //TODO, is number, so maybe usize?
     message: String
 }
 
@@ -839,10 +863,10 @@ impl Exam {
             let feedback = self.feedback.clone().unwrap().to_numbas().unwrap();
 
             //TODO
-            let functions = None;
+            let functions = Some(HashMap::new());
 
             //TODO
-            let variables = None;
+            let variables = Some(HashMap::new());
 
             //TODO
             let question_groups: Vec<numbas::exam::ExamQuestionGroup> = self
