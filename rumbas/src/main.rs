@@ -115,7 +115,21 @@ fn main() {
                     }
                     let numbas = exam.to_numbas();
                     match numbas {
-                        Ok(res) => println!("{:#?}", serde_json::to_string(&res)),
+                        //TODO: move this part to numbas crate?
+                        Ok(res) => match serde_json::to_string(&res) {
+                            Ok(s) => match std::fs::write(
+                                "output.json",
+                                format!(
+                                    r#"// Numbas version: exam_results_page_options
+{}"#,
+                                    s
+                                ),
+                            ) {
+                                Ok(_) => println!("Saved output.json"),
+                                Err(e) => println!("Error saving output.json: {}", e),
+                            },
+                            Err(e) => println!("Error generating output.json: {}", e),
+                        },
                         Err(missing_fields) => {
                             println!("Missing fields:\n{}", missing_fields.join("\n"))
                         }
