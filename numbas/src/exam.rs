@@ -171,8 +171,25 @@ impl Exam {
             question_groups,
         }
     }
-}
 
+    //TODO: return Result type instead of printing errors
+    pub fn write(&self, file_name: &str) {
+        match serde_json::to_string(self) {
+            Ok(s) => match std::fs::write(
+                file_name,
+                format!(
+                    r#"// Numbas version: exam_results_page_options
+{}"#,
+                    s
+                ),
+            ) {
+                Ok(_) => println!("Saved output.json"),
+                Err(e) => println!("Error saving output.json: {}", e),
+            },
+            Err(e) => println!("Error generating output.json: {}", e),
+        }
+    }
+}
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct BasicExamSettings {
