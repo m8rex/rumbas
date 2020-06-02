@@ -1,3 +1,5 @@
+use serde::Deserialize;
+use serde::Serialize;
 use std::collections::HashMap;
 
 pub trait OptionalOverwrite: Clone {
@@ -7,7 +9,16 @@ pub trait OptionalOverwrite: Clone {
     fn overwrite(&mut self, other: &Self::Item);
 }
 
-macro_rules! impl_optional_overwrite_option {
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+#[serde(untagged)]
+//TODO: improve, all strings (not only none are seen as empty)
+pub enum Noneable<T> {
+    None(String),
+    NotNone(T),
+}
+
+macro_rules! impl_optional_overwrite_option_no_noneable {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
         impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Option<$type> {
@@ -30,6 +41,54 @@ macro_rules! impl_optional_overwrite_option {
                 }
             }
         }
+        )*
+    };
+}
+macro_rules! impl_optional_overwrite_option {
+    ($($type: ty$([$($gen: tt), *])?), *) => {
+        $(
+            //TODO: call other macro?
+        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Option<$type> {
+            type Item = Option<$type>;
+            fn empty_fields(&self) -> Vec<String> {
+                if let Some(val) = &self {
+                    return val.empty_fields()
+                }
+                else {
+                    return vec!["".to_string()]
+                }
+            }
+            fn overwrite(&mut self, other: &Self::Item) {
+                if let Some(ref mut val) = self {
+                    if let Some(other_val) = &other {
+                        val.overwrite(&other_val);
+                    }
+                } else {
+                    *self = other.clone();
+                }
+            }
+        }
+        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Noneable<$type> {
+            type Item = Noneable<$type>;
+            fn empty_fields(&self) -> Vec<String> {
+                if let Noneable::NotNone(val) = &self {
+                    return val.empty_fields()
+                }
+                else {
+                    return vec![]
+                }
+            }
+            fn overwrite(&mut self, other: &Self::Item) {
+                if let Noneable::NotNone(ref mut val) = self {
+                    if let Noneable::NotNone(other_val) = &other {
+                        val.overwrite(&other_val);
+                    }
+                } else {
+                    // Do nothing, none is a valid value
+                }
+            }
+        }
+        impl_optional_overwrite_option_no_noneable!(Noneable<$type>$([ $($gen),* ])?);
         )*
     };
 }
