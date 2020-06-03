@@ -243,7 +243,7 @@ pub struct ExamNavigation {
     #[serde(rename = "preventleave")]
     prevent_leaving: Option<bool>,
     #[serde(rename = "onleave")]
-    on_leave: Option<ExamAction>,
+    on_leave: Option<ExamLeaveAction>,
     #[serde(rename = "startpassword")]
     start_password: Option<String>, //TODO: if empty string -> also None
 }
@@ -257,7 +257,7 @@ impl ExamNavigation {
         show_frontpage: bool,
         show_results_page: Option<ExamShowResultsPage>,
         prevent_leaving: Option<bool>,
-        on_leave: Option<ExamAction>,
+        on_leave: Option<ExamLeaveAction>,
         start_password: Option<String>,
     ) -> ExamNavigation {
         ExamNavigation {
@@ -301,9 +301,21 @@ impl QuestionNavigation {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "action")]
-pub enum ExamAction {
+pub enum ExamLeaveAction {
     #[serde(rename = "none")]
-    None { message: String },
+    None { message: String }, //This message doesn't do anything
+    #[serde(rename = "warnifunattempted")]
+    WarnIfNotAttempted { message: String }, // Show a warning message if a user moves away from a question that is not attempted
+    #[serde(rename = "preventifunattempted")]
+    PreventIfNotAttempted { message: String }, // Prevent a user from moving away from a question that is not attempted
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "action")]
+pub enum ExamTimeoutAction {
+    #[serde(rename = "none")]
+    None { message: String }, //This message doesn't do anything
+    #[serde(rename = "warn")]
+    Warn { message: String }, // Show a warning message
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamShowResultsPage {
@@ -317,13 +329,17 @@ pub enum ExamShowResultsPage {
 pub struct ExamTiming {
     #[serde(rename = "allowPause")]
     allow_pause: bool,
-    timeout: ExamAction,
+    timeout: ExamTimeoutAction, // Action to do on timeout
     #[serde(rename = "timedwarning")]
-    timed_warning: ExamAction,
+    timed_warning: ExamTimeoutAction, // Action to do five minutes before timeout
 }
 
 impl ExamTiming {
-    pub fn new(allow_pause: bool, timeout: ExamAction, timed_warning: ExamAction) -> ExamTiming {
+    pub fn new(
+        allow_pause: bool,
+        timeout: ExamTimeoutAction,
+        timed_warning: ExamTimeoutAction,
+    ) -> ExamTiming {
         ExamTiming {
             allow_pause,
             timeout,

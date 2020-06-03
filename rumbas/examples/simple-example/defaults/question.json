@@ -16,5 +16,12 @@
 },
 "extensions": {
   "jsx_graph": false
-}
+},
+"preamble": {
+  "css": "",
+  "js": ""
+},
+"variables": {},
+"functions": {},
+"variables_test": {}
 }
