@@ -7,6 +7,7 @@ use std::path::Path;
 mod data;
 
 fn main() {
+    let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let args: Vec<String> = env::args().collect();
     match args.len() {
         1 => println!("Please provide an argument"),
@@ -116,10 +117,28 @@ fn main() {
                     }
                     let numbas = exam.to_numbas();
                     match numbas {
-                        //TODO: move this part to numbas crate?
-                        Ok(res) => res.write("output.json"),
+                        Ok(res) => {
+                            let output_name = "output.exam";
+                            res.write(&format!("{}/{}", numbas_path, output_name)[..]);
+                            let output = std::process::Command::new("python")
+                                .current_dir(numbas_path)
+                                .arg("bin/numbas.py")
+                                .arg("-l")
+                                .arg("nl-NL") //TODO: from html
+                                .arg("-t")
+                                .arg("vbtw")
+                                .arg(output_name)
+                                .output()
+                                .expect("failed to execute process");
+                            if output.stdout.len() > 0 {
+                                println!("{}", std::str::from_utf8(&output.stdout).unwrap());
+                            }
+                            if output.stderr.len() > 0 {
+                                eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
+                            }
+                        }
                         Err(missing_fields) => {
-                            println!("Missing fields:\n{}", missing_fields.join("\n"))
+                            println!("Missing fields:\n{}", missing_fields.join("\n"));
                         }
                     }
                 }
