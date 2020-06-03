@@ -47,6 +47,20 @@ impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Noneable<T> {
     }
 }
 
+macro_rules! impl_to_numbas {
+    ($($type: ty), *) => {
+        $(
+        impl ToNumbas for $type {
+            type NumbasType = $type;
+            fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+                Ok(self.clone())
+            }
+        }
+        )*
+    };
+}
+impl_to_numbas!(String, bool, f64, usize, [f64; 2]);
+
 optional_overwrite! {
     Exam,
     name: String,
@@ -65,8 +79,8 @@ optional_overwrite! {
     show_frontpage: bool,
     show_results_page: ShowResultsPage,
     prevent_leaving: bool,
-    on_leave: Action,
-    start_password: String,
+    on_leave: LeaveAction,
+    start_password: String, //TODO: Noneable, but "" is none in this case?
     show_names_of_question_groups: bool
 }
 
@@ -112,17 +126,29 @@ impl ToNumbas for ShowResultsPage {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
-pub enum Action {
-    None { message: String },
+pub enum LeaveAction {
+    None,
+    WarnIfNotAttempted { message: String },
+    PreventIfNotAttempted { message: String },
 }
-impl_optional_overwrite!(Action);
-impl ToNumbas for Action {
-    type NumbasType = numbas::exam::ExamAction;
+impl_optional_overwrite!(LeaveAction);
+impl ToNumbas for LeaveAction {
+    type NumbasType = numbas::exam::ExamLeaveAction;
     fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
-            Action::None { message } => numbas::exam::ExamAction::None {
-                message: message.to_string(),
+            LeaveAction::None => numbas::exam::ExamLeaveAction::None {
+                message: "".to_string(), // message doesn't mean anything
             },
+            LeaveAction::WarnIfNotAttempted { message } => {
+                numbas::exam::ExamLeaveAction::WarnIfNotAttempted {
+                    message: message.to_string(),
+                }
+            }
+            LeaveAction::PreventIfNotAttempted { message } => {
+                numbas::exam::ExamLeaveAction::PreventIfNotAttempted {
+                    message: message.to_string(),
+                }
+            }
         })
     }
 }
@@ -152,10 +178,32 @@ impl ToNumbas for QuestionNavigation {
 
 optional_overwrite! {
     Timing,
-    duration_in_seconds: usize,
+    duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
     allow_pause: bool,
-    on_timeout: Action,
-    timed_warning: Action
+    on_timeout: TimeoutAction,
+    timed_warning: TimeoutAction
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "action")]
+pub enum TimeoutAction {
+    None,
+    Warn { message: String },
+}
+impl_optional_overwrite!(TimeoutAction);
+impl ToNumbas for TimeoutAction {
+    type NumbasType = numbas::exam::ExamTimeoutAction;
+    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+        Ok(match self {
+            TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
+                message: "".to_string(), // message doesn't mean anything
+            },
+            TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
+                message: message.to_string(),
+            },
+        })
+    }
 }
 
 impl ToNumbas for Timing {
@@ -176,13 +224,13 @@ impl ToNumbas for Timing {
 
 optional_overwrite! {
     Feedback,
-    percentage_needed_to_pass: f64,
+    percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
     show_name_of_student: bool,
-    show_actual_mark: bool,
-    show_total_mark: bool,
-    show_answer_state: bool,
-    allow_reveal_answer: bool,
-    review: Review,
+    show_current_marks: bool, // Whether current marks are shown during exam or not (show_actual_mark in numbas)
+    show_maximum_marks: bool, // Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
+    show_answer_state: bool, // Whether answer feedback is shown (right or wrong etc)
+    allow_reveal_answer: bool, // Whether the 'reveal answer' button is present
+    review: Review, // If none, everything is true???
     advice: String,
     intro: String,
     feedback_messages: Vec<FeedbackMessage>
@@ -194,11 +242,11 @@ impl ToNumbas for Feedback {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamFeedback::new(
-                self.show_actual_mark.unwrap(),
-                self.show_total_mark.unwrap(),
+                self.show_current_marks.unwrap(),
+                self.show_maximum_marks.unwrap(),
                 self.show_answer_state.unwrap(),
                 self.allow_reveal_answer.unwrap(),
-                self.review.clone().map(|s| s.to_numbas().unwrap()),
+                self.review.clone().map(|o| o.to_numbas().unwrap()),
                 self.advice.clone(),
                 self.intro.clone().unwrap(),
                 self.feedback_messages
@@ -216,10 +264,10 @@ impl ToNumbas for Feedback {
 
 optional_overwrite! {
     Review,
-    show_score: bool,
-    show_feedback: bool,
-    show_expected_answer: bool,
-    show_advice: bool
+    show_score: bool, // Whether to show score in result overview page
+    show_feedback: bool, // Show feedback while reviewing
+    show_expected_answer: bool, // Show expected answer while reviewing
+    show_advice: bool // Show advice while reviewing
 }
 
 impl ToNumbas for Review {
@@ -566,9 +614,9 @@ question_part_type! {
     implicit_function_composition: bool,
     max_length: Noneable<JMELengthRestriction>,
     min_length: Noneable<JMELengthRestriction>,
-    must_have: JMEStringRestriction,
-    may_not_have: JMEStringRestriction,
-    must_match_pattern: JMEPatternRestriction
+    must_have: Noneable<JMEStringRestriction>,
+    may_not_have: Noneable<JMEStringRestriction>,
+    must_match_pattern: Noneable<JMEPatternRestriction>
 }
 
 impl ToNumbas for QuestionPartJME {
@@ -604,11 +652,18 @@ impl ToNumbas for QuestionPartJME {
                     .clone()
                     .map(|v| v.to_numbas().unwrap())
                     .flatten(),
-                self.must_have.clone().map(|v| v.to_numbas().unwrap()),
-                self.may_not_have.clone().map(|v| v.to_numbas().unwrap()),
+                self.must_have
+                    .clone()
+                    .map(|v| v.to_numbas().unwrap())
+                    .flatten(),
+                self.may_not_have
+                    .clone()
+                    .map(|v| v.to_numbas().unwrap())
+                    .flatten(),
                 self.must_match_pattern
                     .clone()
-                    .map(|v| v.to_numbas().unwrap()),
+                    .map(|v| v.to_numbas().unwrap())
+                    .flatten(),
             ))
         } else {
             Err(empty_fields)
@@ -932,8 +987,19 @@ impl ToNumbas for Exam {
         if empty_fields.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
                 self.name.clone().unwrap(),
-                self.timing.clone().unwrap().duration_in_seconds,
-                self.feedback.clone().unwrap().percentage_needed_to_pass,
+                self.timing
+                    .clone()
+                    .unwrap()
+                    .duration_in_seconds
+                    .unwrap()
+                    .to_numbas()
+                    .unwrap(),
+                self.feedback
+                    .clone()
+                    .unwrap()
+                    .percentage_needed_to_pass
+                    .to_numbas()
+                    .unwrap(),
                 self.navigation
                     .clone()
                     .unwrap()

@@ -124,9 +124,9 @@ fn main() {
                                 .current_dir(numbas_path)
                                 .arg("bin/numbas.py")
                                 .arg("-l")
-                                .arg("nl-NL") //TODO: from html
-                                .arg("-t")
-                                .arg("vbtw")
+                                .arg("nl-NL") //TODO: from json
+                                .arg("-t") //TODO from json
+                                .arg("default")
                                 .arg(output_name)
                                 .output()
                                 .expect("failed to execute process");
