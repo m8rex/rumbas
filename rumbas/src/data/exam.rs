@@ -950,7 +950,7 @@ impl ToNumbas for VariableReplacementStrategy {
 optional_overwrite! {
     Variable,
     definition: String,
-    description: String,
+    description: String, //TODO: description dependant of template type, for random_range: start, end and step instead
     template_type: VariableTemplateType,
     group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
