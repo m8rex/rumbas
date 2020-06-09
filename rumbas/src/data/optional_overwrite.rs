@@ -137,7 +137,7 @@ impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U
         }
         empty
     }
-    fn overwrite(&mut self, other: &Self::Item) {}
+    fn overwrite(&mut self, _other: &Self::Item) {}
 }
 impl_optional_overwrite_option!(HashMap < U, T > [U, T]);
 

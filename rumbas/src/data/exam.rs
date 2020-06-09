@@ -1,4 +1,5 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::translatable::TranslatableString;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -8,20 +9,24 @@ use std::path::{Path, PathBuf};
 type NumbasResult<T> = Result<T, Vec<String>>;
 pub trait ToNumbas: Clone {
     type NumbasType;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType>;
-    fn to_numbas_with_name(&self, _name: String) -> NumbasResult<Self::NumbasType> {
-        self.to_numbas()
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType>;
+    fn to_numbas_with_name(
+        &self,
+        locale: &String,
+        _name: String,
+    ) -> NumbasResult<Self::NumbasType> {
+        self.to_numbas(&locale)
     }
 }
 
 impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Option<T> {
     type NumbasType = <T as ToNumbas>::NumbasType;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match self {
             Some(val) => {
                 let empty_fields = val.empty_fields();
                 if empty_fields.is_empty() {
-                    Ok(val.to_numbas().unwrap())
+                    Ok(val.to_numbas(&locale).unwrap())
                 } else {
                     Err(empty_fields)
                 }
@@ -32,12 +37,12 @@ impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Option<T> {
 }
 impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Noneable<T> {
     type NumbasType = Option<<T as ToNumbas>::NumbasType>;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match self {
             Noneable::NotNone(val) => {
                 let empty_fields = val.empty_fields();
                 if empty_fields.is_empty() {
-                    Ok(Some(val.clone().to_numbas().unwrap()))
+                    Ok(Some(val.clone().to_numbas(&locale).unwrap()))
                 } else {
                     Err(empty_fields)
                 }
@@ -52,7 +57,7 @@ macro_rules! impl_to_numbas {
         $(
         impl ToNumbas for $type {
             type NumbasType = $type;
-            fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+            fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
                 Ok(self.clone())
             }
         }
@@ -63,12 +68,19 @@ impl_to_numbas!(String, bool, f64, usize, [f64; 2]);
 
 optional_overwrite! {
     Exam,
-    name: String,
+    locales: Vec<Locale>,
+    name: TranslatableString,
     navigation: Navigation,
     timing: Timing,
     feedback: Feedback,
     question_groups: Vec<QuestionGroup>,
     numbas_settings: NumbasSettings
+}
+
+optional_overwrite! {
+    Locale,
+    name: String, //TODO: document names best used for shareability?
+    numbas_locale: SupportedLocale
 }
 
 optional_overwrite! {
@@ -87,7 +99,7 @@ optional_overwrite! {
 
 impl ToNumbas for Navigation {
     type NumbasType = numbas::exam::ExamNavigation;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamNavigation> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamNavigation> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
@@ -96,9 +108,10 @@ impl ToNumbas for Navigation {
                 self.browsing_enabled,
                 self.allow_steps,
                 self.show_frontpage.unwrap(),
-                self.show_results_page.map(|s| s.to_numbas().unwrap()),
+                self.show_results_page
+                    .map(|s| s.to_numbas(&locale).unwrap()),
                 self.prevent_leaving,
-                self.on_leave.clone().map(|s| s.to_numbas().unwrap()),
+                self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
                 self.start_password.clone(),
             ))
         } else {
@@ -116,7 +129,7 @@ pub enum ShowResultsPage {
 impl_optional_overwrite!(ShowResultsPage);
 impl ToNumbas for ShowResultsPage {
     type NumbasType = numbas::exam::ExamShowResultsPage;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
             ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
@@ -135,7 +148,7 @@ pub enum LeaveAction {
 impl_optional_overwrite!(LeaveAction);
 impl ToNumbas for LeaveAction {
     type NumbasType = numbas::exam::ExamLeaveAction;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             LeaveAction::None => numbas::exam::ExamLeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
@@ -163,7 +176,7 @@ optional_overwrite! {
 
 impl ToNumbas for QuestionNavigation {
     type NumbasType = numbas::exam::QuestionNavigation;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::QuestionNavigation> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::QuestionNavigation> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::QuestionNavigation::new(
@@ -195,7 +208,7 @@ pub enum TimeoutAction {
 impl_optional_overwrite!(TimeoutAction);
 impl ToNumbas for TimeoutAction {
     type NumbasType = numbas::exam::ExamTimeoutAction;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
@@ -209,13 +222,17 @@ impl ToNumbas for TimeoutAction {
 
 impl ToNumbas for Timing {
     type NumbasType = numbas::exam::ExamTiming;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamTiming> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamTiming> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamTiming::new(
                 self.allow_pause.unwrap(),
-                self.on_timeout.clone().unwrap().to_numbas().unwrap(),
-                self.timed_warning.clone().unwrap().to_numbas().unwrap(),
+                self.on_timeout.clone().unwrap().to_numbas(&locale).unwrap(),
+                self.timed_warning
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
             ))
         } else {
             Err(empty_fields)
@@ -239,7 +256,7 @@ optional_overwrite! {
 
 impl ToNumbas for Feedback {
     type NumbasType = numbas::exam::ExamFeedback;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamFeedback> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFeedback> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamFeedback::new(
@@ -247,14 +264,14 @@ impl ToNumbas for Feedback {
                 self.show_maximum_marks.unwrap(),
                 self.show_answer_state.unwrap(),
                 self.allow_reveal_answer.unwrap(),
-                self.review.clone().map(|o| o.to_numbas().unwrap()),
+                self.review.clone().map(|o| o.to_numbas(&locale).unwrap()),
                 self.advice.clone(),
                 self.intro.clone().unwrap(),
                 self.feedback_messages
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|s| s.to_numbas().unwrap())
+                    .map(|s| s.to_numbas(&locale).unwrap())
                     .collect(),
             ))
         } else {
@@ -273,7 +290,7 @@ optional_overwrite! {
 
 impl ToNumbas for Review {
     type NumbasType = numbas::exam::ExamReview;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamReview> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamReview> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamReview::new(
@@ -296,7 +313,7 @@ pub struct FeedbackMessage {
 impl_optional_overwrite!(FeedbackMessage);
 impl ToNumbas for FeedbackMessage {
     type NumbasType = numbas::exam::ExamFeedbackMessage;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
         Ok(numbas::exam::ExamFeedbackMessage::new(
             self.message.clone(),
             self.threshold.clone(),
@@ -406,12 +423,16 @@ optional_overwrite! {
 
 impl ToNumbas for QuestionGroup {
     type NumbasType = numbas::exam::ExamQuestionGroup;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionGroup::new(
                 self.name.clone(),
-                self.picking_strategy.clone().unwrap().to_numbas().unwrap(),
+                self.picking_strategy
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.questions
                     .clone()
                     .unwrap()
@@ -420,7 +441,7 @@ impl ToNumbas for QuestionGroup {
                         q.question_data
                             .clone()
                             .unwrap()
-                            .to_numbas_with_name(q.question.clone().unwrap())
+                            .to_numbas_with_name(&locale, q.question.clone().unwrap())
                             .unwrap()
                     })
                     .collect(),
@@ -444,7 +465,10 @@ pub enum PickingStrategy {
 impl_optional_overwrite!(PickingStrategy);
 impl ToNumbas for PickingStrategy {
     type NumbasType = numbas::exam::ExamQuestionGroupPickingStrategy;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionGroupPickingStrategy> {
+    fn to_numbas(
+        &self,
+        _locale: &String,
+    ) -> NumbasResult<numbas::exam::ExamQuestionGroupPickingStrategy> {
         Ok(match self {
             PickingStrategy::AllOrdered => {
                 numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered
@@ -479,14 +503,18 @@ optional_overwrite! {
 
 impl ToNumbas for Question {
     type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         //TODO?
         Err(vec![
             "Should not happen, don't call this method Missing name".to_string(),
         ])
     }
     //TODO: add to_numbas on Option's to reduce burden?
-    fn to_numbas_with_name(&self, name: String) -> NumbasResult<numbas::exam::ExamQuestion> {
+    fn to_numbas_with_name(
+        &self,
+        locale: &String,
+        name: String,
+    ) -> NumbasResult<numbas::exam::ExamQuestion> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestion::new(
@@ -497,27 +525,31 @@ impl ToNumbas for Question {
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|p| p.to_numbas().unwrap())
+                    .map(|p| p.to_numbas(&locale).unwrap())
                     .collect(),
                 self.variables
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(k, v)| (k.clone(), v.to_numbas_with_name(k).unwrap()))
+                    .map(|(k, v)| (k.clone(), v.to_numbas_with_name(&locale, k).unwrap()))
                     .collect(),
-                self.variables_test.clone().unwrap().to_numbas().unwrap(),
+                self.variables_test
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.functions
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(k, v)| (k, v.to_numbas().unwrap()))
+                    .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
                     .collect(),
                 self.ungrouped_variables.clone().unwrap(),
                 Vec::new(),     //TODO: calculate from variables
                 HashMap::new(), //TODO: add to Question type
-                self.preamble.clone().unwrap().to_numbas().unwrap(),
-                self.navigation.clone().unwrap().to_numbas().unwrap(),
-                self.extensions.clone().unwrap().to_numbas().unwrap(),
+                self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
+                self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
+                self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
             ))
         } else {
             Err(empty_fields)
@@ -533,7 +565,7 @@ optional_overwrite! {
 
 impl ToNumbas for VariablesTest {
     type NumbasType = numbas::exam::ExamQuestionVariablesTest;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionVariablesTest::new(
@@ -554,7 +586,7 @@ optional_overwrite! {
 
 impl ToNumbas for Preamble {
     type NumbasType = numbas::exam::Preamble;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::Preamble> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::Preamble> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::Preamble::new(
@@ -614,14 +646,14 @@ optional_overwrite_enum! {
 
 impl ToNumbas for QuestionPart {
     type NumbasType = numbas::exam::ExamQuestionPart;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPart> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPart> {
         match self {
             QuestionPart::JME(d) => {
-                let n = d.to_numbas()?;
+                let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::JME(n))
             }
             QuestionPart::GapFill(d) => {
-                let n = d.to_numbas()?;
+                let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::GapFill(n))
             }
         }
@@ -651,7 +683,7 @@ macro_rules! question_part_type {
             ),*
         }
         impl $struct {
-            fn to_numbas_shared_data(&self) -> numbas::exam::ExamQuestionPartSharedData {
+            fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
             self.marks,
             self.prompt.clone(),
@@ -662,11 +694,11 @@ macro_rules! question_part_type {
             self.minimum_marks,
             self.show_correct_answer.clone().unwrap(),
             self.show_feedback_icon,
-            self.variable_replacement_strategy.clone().unwrap().to_numbas().unwrap(),
+            self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
             self.adaptive_marking_penalty,
             self.custom_marking_algorithm.clone(),
             self.extend_base_marking_algorithm,
-            self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas().unwrap()).collect()),
+            self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
                 )
             }
         }
@@ -695,21 +727,25 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartJME {
     type NumbasType = numbas::exam::ExamQuestionPartJME;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionPartJME::new(
-                self.to_numbas_shared_data(),
+                self.to_numbas_shared_data(&locale),
                 self.answer.clone().unwrap(),
                 Some(
                     self.answer_simplification
                         .clone()
                         .unwrap()
-                        .to_numbas()
+                        .to_numbas(&locale)
                         .unwrap(),
                 ),
                 self.show_preview.clone().unwrap(),
-                self.checking_type.clone().unwrap().to_numbas().unwrap(),
+                self.checking_type
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.checking_accuracy.unwrap(),
                 self.failure_rate.unwrap(),
                 self.vset_range.unwrap(),
@@ -720,23 +756,23 @@ impl ToNumbas for QuestionPartJME {
                 self.implicit_function_composition,
                 self.max_length
                     .clone()
-                    .map(|v| v.to_numbas().unwrap())
+                    .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
                 self.min_length
                     .clone()
-                    .map(|v| v.to_numbas().unwrap())
+                    .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
                 self.must_have
                     .clone()
-                    .map(|v| v.to_numbas().unwrap())
+                    .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
                 self.may_not_have
                     .clone()
-                    .map(|v| v.to_numbas().unwrap())
+                    .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
                 self.must_match_pattern
                     .clone()
-                    .map(|v| v.to_numbas().unwrap())
+                    .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
             ))
         } else {
@@ -765,7 +801,10 @@ optional_overwrite! {
 
 impl ToNumbas for JMEAnswerSimplification {
     type NumbasType = Vec<numbas::exam::AnswerSimplificationType>;
-    fn to_numbas(&self) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
+    fn to_numbas(
+        &self,
+        _locale: &String,
+    ) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             let mut v = Vec::new();
@@ -829,7 +868,7 @@ pub enum CheckingType {
 impl_optional_overwrite!(CheckingType);
 impl ToNumbas for CheckingType {
     type NumbasType = numbas::exam::JMECheckingType;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             CheckingType::RelativeDifference => numbas::exam::JMECheckingType::RelativeDifference,
             CheckingType::AbsoluteDifference => numbas::exam::JMECheckingType::AbsoluteDifference,
@@ -849,7 +888,7 @@ optional_overwrite! {
 
 impl ToNumbas for JMERestriction {
     type NumbasType = numbas::exam::JMERestriction;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::JMERestriction> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::JMERestriction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMERestriction::new(
@@ -872,11 +911,15 @@ optional_overwrite! {
 
 impl ToNumbas for JMELengthRestriction {
     type NumbasType = numbas::exam::JMELengthRestriction;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::JMELengthRestriction> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMELengthRestriction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMELengthRestriction::new(
-                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.restriction
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.length,
             ))
         } else {
@@ -893,11 +936,15 @@ optional_overwrite! {
 
 impl ToNumbas for JMEStringRestriction {
     type NumbasType = numbas::exam::JMEStringRestriction;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::JMEStringRestriction> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEStringRestriction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMEStringRestriction::new(
-                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.restriction
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.show_strings.clone().unwrap(),
             ))
         } else {
@@ -915,11 +962,15 @@ optional_overwrite! {
 
 impl ToNumbas for JMEPatternRestriction {
     type NumbasType = numbas::exam::JMEPatternRestriction;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMEPatternRestriction::new(
-                self.restriction.clone().unwrap().to_numbas().unwrap(),
+                self.restriction
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.pattern.clone().unwrap(),
                 self.name_to_compare.clone().unwrap(),
             ))
@@ -938,7 +989,7 @@ impl_optional_overwrite!(VariableReplacementStrategy);
 
 impl ToNumbas for VariableReplacementStrategy {
     type NumbasType = numbas::exam::VariableReplacementStrategy;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             VariableReplacementStrategy::OriginalFirst => {
                 numbas::exam::VariableReplacementStrategy::OriginalFirst
@@ -956,21 +1007,25 @@ optional_overwrite! {
 }
 impl ToNumbas for Variable {
     type NumbasType = numbas::exam::ExamVariable;
-    fn to_numbas_with_name(&self, name: String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamVariable::new(
                 name,
                 self.definition.clone().unwrap(),
                 self.description.clone().unwrap(),
-                self.template_type.clone().unwrap().to_numbas().unwrap(),
+                self.template_type
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
                 self.group.clone().unwrap(),
             ))
         } else {
             Err(empty_fields)
         }
     }
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         //TODO?
         Err(vec![
             "Should not happen, don't call this method Missing name".to_string(),
@@ -987,7 +1042,7 @@ pub enum VariableTemplateType {
 
 impl ToNumbas for VariableTemplateType {
     type NumbasType = numbas::exam::ExamVariableTemplateType;
-    fn to_numbas(&self) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
             VariableTemplateType::RandomRange => {
@@ -1007,7 +1062,7 @@ optional_overwrite! {
 }
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamFunction> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFunction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamFunction::new(
@@ -1035,17 +1090,17 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartGapFill {
     type NumbasType = numbas::exam::ExamQuestionPartGapFill;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionPartGapFill::new(
-                self.to_numbas_shared_data(),
+                self.to_numbas_shared_data(&locale),
                 self.sort_answers,
                 self.gaps
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|g| g.to_numbas().unwrap())
+                    .map(|g| g.to_numbas(&locale).unwrap())
                     .collect(),
             ))
         } else {
@@ -1056,23 +1111,23 @@ impl ToNumbas for QuestionPartGapFill {
 
 impl ToNumbas for Exam {
     type NumbasType = numbas::exam::Exam;
-    fn to_numbas(&self) -> NumbasResult<numbas::exam::Exam> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
-                self.name.clone().unwrap(),
+                self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
                 self.timing
                     .clone()
                     .unwrap()
                     .duration_in_seconds
                     .unwrap()
-                    .to_numbas()
+                    .to_numbas(&locale)
                     .unwrap(),
                 self.feedback
                     .clone()
                     .unwrap()
                     .percentage_needed_to_pass
-                    .to_numbas()
+                    .to_numbas(&locale)
                     .unwrap(),
                 self.navigation
                     .clone()
@@ -1082,13 +1137,13 @@ impl ToNumbas for Exam {
             );
 
             //TODO
-            let navigation = self.navigation.clone().unwrap().to_numbas().unwrap();
+            let navigation = self.navigation.clone().unwrap().to_numbas(&locale).unwrap();
 
             //TODO
-            let timing = self.timing.clone().unwrap().to_numbas().unwrap();
+            let timing = self.timing.clone().unwrap().to_numbas(&locale).unwrap();
 
             //TODO
-            let feedback = self.feedback.clone().unwrap().to_numbas().unwrap();
+            let feedback = self.feedback.clone().unwrap().to_numbas(&locale).unwrap();
 
             //TODO
             let functions = Some(HashMap::new());
@@ -1102,7 +1157,7 @@ impl ToNumbas for Exam {
                 .clone()
                 .unwrap()
                 .iter()
-                .map(|qg| qg.clone().to_numbas().unwrap())
+                .map(|qg| qg.clone().to_numbas(&locale).unwrap())
                 .collect();
 
             // Below from questions
@@ -1150,7 +1205,7 @@ optional_overwrite! {
 
 impl ToNumbas for Extensions {
     type NumbasType = Vec<String>;
-    fn to_numbas(&self) -> NumbasResult<Vec<String>> {
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Vec<String>> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             let mut extensions = Vec::new();
