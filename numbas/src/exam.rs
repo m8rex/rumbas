@@ -183,10 +183,10 @@ impl Exam {
                     s
                 ),
             ) {
-                Ok(_) => println!("Saved output.json"),
-                Err(e) => println!("Error saving output.json: {}", e),
+                Ok(_) => println!("Saved {}", file_name),
+                Err(e) => println!("Error saving {}: {}", file_name, e),
             },
-            Err(e) => println!("Error generating output.json: {}", e),
+            Err(e) => println!("Error generating {}: {}", file_name, e),
         }
     }
 }
