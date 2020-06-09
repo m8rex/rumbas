@@ -118,8 +118,10 @@ fn main() {
                     let numbas = exam.to_numbas();
                     match numbas {
                         Ok(res) => {
-                            let output_name = "output.exam";
-                            res.write(&format!("{}/{}", numbas_path, output_name)[..]);
+                            let output_name = path.with_extension("exam");
+                            let output_path = Path::new(&numbas_path).join(&output_name);
+                            std::fs::create_dir_all(output_path.parent().unwrap()); //TODO?
+                            res.write(&output_path.to_str().unwrap());
                             let output = std::process::Command::new("python")
                                 .current_dir(numbas_path)
                                 .arg("bin/numbas.py")
