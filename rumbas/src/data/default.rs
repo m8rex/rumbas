@@ -1,5 +1,6 @@
 use crate::data::exam::{
-    Feedback, Navigation, Question, QuestionPart, QuestionPartGapFill, QuestionPartJME, Timing,
+    Feedback, Navigation, NumbasSettings, Question, QuestionPart, QuestionPartGapFill,
+    QuestionPartJME, Timing,
 };
 use std::collections::HashSet;
 use std::fs;
@@ -18,6 +19,7 @@ pub enum DefaultFileType {
     Navigation,
     Timing,
     Feedback,
+    NumbasSettings,
     Question,
     QuestionPart(QuestionPartType),
     QuestionPartGapFillGap(QuestionPartType),
@@ -33,6 +35,7 @@ pub enum DefaultData {
     Navigation(Navigation),
     Timing(Timing),
     Feedback(Feedback),
+    NumbasSettings(NumbasSettings),
     Question(Question),
     QuestionPart(QuestionPart),
     QuestionPartGapFillGap(QuestionPart),
@@ -46,6 +49,7 @@ impl DefaultFileType {
                 Some("navigation") => Some(DefaultFileType::Navigation),
                 Some("timing") => Some(DefaultFileType::Timing),
                 Some("feedback") => Some(DefaultFileType::Feedback),
+                Some("numbas_settings") => Some(DefaultFileType::NumbasSettings),
                 Some("question") => Some(DefaultFileType::Question),
                 Some("questionpart.gapfill") => {
                     //TODO others etc
@@ -76,6 +80,10 @@ impl DefaultFileType {
             DefaultFileType::Feedback => {
                 let f: Feedback = serde_json::from_str(&json)?;
                 Ok(DefaultData::Feedback(f))
+            }
+            DefaultFileType::NumbasSettings => {
+                let f: NumbasSettings = serde_json::from_str(&json)?;
+                Ok(DefaultData::NumbasSettings(f))
             }
             DefaultFileType::Question => {
                 let q: Question = serde_json::from_str(&json)?;
