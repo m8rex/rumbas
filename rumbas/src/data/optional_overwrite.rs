@@ -127,9 +127,17 @@ impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U, T> {
     type Item = HashMap<U, T>;
     fn empty_fields(&self) -> Vec<String> {
-        Vec::new()
+        let mut empty = Vec::new();
+        // Key is not displayable, so show an index, just to differentiate
+        for (i, (_key, item)) in self.iter().enumerate() {
+            let extra_empty = item.empty_fields();
+            for extra in extra_empty.iter() {
+                empty.push(format!("{}.{}", i, extra));
+            }
+        }
+        empty
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
+    fn overwrite(&mut self, other: &Self::Item) {}
 }
 impl_optional_overwrite_option!(HashMap < U, T > [U, T]);
 
