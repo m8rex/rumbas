@@ -1,7 +1,8 @@
 use crate::data::exam::{
-    Feedback, Navigation, NumbasSettings, Question, QuestionPart, QuestionPartGapFill,
+    Exam, Feedback, Navigation, NumbasSettings, Question, QuestionPart, QuestionPartGapFill,
     QuestionPartJME, Timing,
 };
+use crate::data::optional_overwrite::OptionalOverwrite;
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -137,7 +138,7 @@ impl DefaultFile {
     }
 }
 
-pub fn default_files(path: &Path) -> Vec<DefaultFile> {
+fn default_files(path: &Path) -> Vec<DefaultFile> {
     let paths = default_file_paths(path);
     let usefull_paths = paths
         .into_iter()
@@ -163,4 +164,85 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     }
 
     result.into_iter().collect::<Vec<PathBuf>>()
+}
+
+pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
+    let default_files = default_files(path);
+    println!("Found {} default files.", default_files.len());
+    for default_file in default_files.iter() {
+        if !exam.empty_fields().is_empty() {
+            println!("Reading {}", default_file.get_path().display());
+            let default_data = default_file.read_as_data().unwrap(); //TODO
+                                                                     //TODO: always call overwrite
+            match default_data {
+                DefaultData::Navigation(n) => exam.navigation.overwrite(&Some(n)),
+                DefaultData::Timing(t) => exam.timing.overwrite(&Some(t)),
+                DefaultData::Feedback(f) => exam.feedback.overwrite(&Some(f)),
+                DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Some(f)),
+                DefaultData::Question(q) => {
+                    if let Some(ref mut groups) = exam.question_groups {
+                        groups.iter_mut().for_each(|qg| {
+                            if let Some(ref mut questions) = &mut qg.questions {
+                                questions.iter_mut().for_each(|question| {
+                                    question.question_data.overwrite(&Some(q.clone()))
+                                })
+                            }
+                        })
+                    }
+                }
+                DefaultData::QuestionPart(p) => {
+                    if let Some(ref mut groups) = exam.question_groups {
+                        groups.iter_mut().for_each(|qg| {
+                            if let Some(ref mut questions) = &mut qg.questions {
+                                questions.iter_mut().for_each(|question| {
+                                    if let Some(ref mut question_data) = question.question_data {
+                                        if let Some(ref mut parts) = question_data.parts {
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::GapFill(_),
+                                                    QuestionPart::GapFill(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                } //TODO: cleanup...
+                DefaultData::QuestionPartGapFillGap(p) => {
+                    if let Some(ref mut groups) = exam.question_groups {
+                        groups.iter_mut().for_each(|qg| {
+                            if let Some(ref mut questions) = &mut qg.questions {
+                                questions.iter_mut().for_each(|question| {
+                                    if let Some(ref mut question_data) = question.question_data {
+                                        if let Some(ref mut parts) = question_data.parts {
+                                            parts.iter_mut().for_each(|part| {
+                                                if let QuestionPart::GapFill(gap_fill) = part {
+                                                    if let Some(ref mut gaps) = gap_fill.gaps {
+                                                        gaps.iter_mut().for_each(|gap| {
+                                                            if let (
+                                                                QuestionPart::JME(_),
+                                                                QuestionPart::JME(_),
+                                                            ) = (&p, &gap)
+                                                            {
+                                                                gap.overwrite(&p.clone())
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
 }
