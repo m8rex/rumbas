@@ -5,6 +5,3 @@ if [ -n "$(ls -A /rumbas/themes)" ]; then
 fi
 # Run rumbas
 cd /rumbas && rumbas "$@"
-# Copy output
-cp -r $NUMBAS_FOLDER/output/output /rumbas/output
-

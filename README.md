@@ -36,18 +36,21 @@ Functions can be specified by just a filename:
 ### Docker
 The easiest way is to use docker.
 - Clone this repo
-- Build the docker image with `docker build -t rumbas .`
+- Get the docker image
+  - Either Pull the latest image from dockerhub (not yet available)
+  - Or Build the docker image with `docker build -t rumbas .`
 - Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas rumbas <relative path of exam in the mounted folder>`
   - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas rumbas exams/rumbas-exam-test.json`
 
 ### Without docker
+- Make sure python 3 is installed (and added to the path)
 - Clone numbas from https://github.com/numbas/Numbas
-- Set the `NUMBAS_FOLDER` env variable to the root of the cloned Numbas repo
 - Install rumbas
   - Build it yourself (see rumbas folder)
   - Download binaries (not yet available)
 - Run rumbas
-  - TODO what with the themes?
+  - Make sure that the `NUMBAS_FOLDER` env variable is set to the root of the cloned Numbas repo
+  - IMPORTANT: Themes don't work the right way yet, you need to make sure that de themes is added to the themes folder of your local numbas clone -> use Docker to not have this problem.
 
 ## TODO
 - [ ] Basic exam settings (`name`, `duration`, `percentPass`, `showQuestionGroupNames`, `showStudentName`)
