@@ -6,6 +6,9 @@ use std::env;
 use std::path::Path;
 mod data;
 
+const CACHE_FOLDER: &'static str = ".rumbas";
+const OUTPUT_FOLDER: &'static str = "_output";
+
 fn main() {
     let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let args: Vec<String> = env::args().collect();
@@ -118,18 +121,24 @@ fn main() {
                     let numbas = exam.to_numbas();
                     match numbas {
                         Ok(res) => {
-                            let output_name = path.with_extension("exam");
-                            let output_path = Path::new(&numbas_path).join(&output_name);
-                            std::fs::create_dir_all(output_path.parent().unwrap()); //TODO?
-                            res.write(&output_path.to_str().unwrap());
+                            let numbas_exam_name = path.with_extension("exam");
+                            let numbas_exam_path = Path::new(CACHE_FOLDER).join(&numbas_exam_name);
+                            std::fs::create_dir_all(numbas_exam_path.parent().unwrap()); //TODO
+                            let numbas_output_path =
+                                Path::new(OUTPUT_FOLDER).join(path.with_extension(""));
+                            std::fs::create_dir_all(&numbas_output_path);
+
+                            res.write(&numbas_exam_path.to_str().unwrap());
                             let output = std::process::Command::new("python")
                                 .current_dir(numbas_path)
                                 .arg("bin/numbas.py")
                                 .arg("-l")
-                                .arg("nl-NL") //TODO: from json
+                                .arg("nl-NL") //TODO:from json
                                 .arg("-t") //TODO from json
                                 .arg("default")
-                                .arg(output_name)
+                                .arg("-o")
+                                .arg(numbas_output_path.canonicalize().unwrap())
+                                .arg(numbas_exam_path.canonicalize().unwrap()) //TODO?
                                 .output()
                                 .expect("failed to execute process");
                             if output.stdout.len() > 0 {
