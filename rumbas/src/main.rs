@@ -35,6 +35,9 @@ fn main() {
                                 DefaultData::Navigation(n) => exam.navigation.overwrite(&Some(n)),
                                 DefaultData::Timing(t) => exam.timing.overwrite(&Some(t)),
                                 DefaultData::Feedback(f) => exam.feedback.overwrite(&Some(f)),
+                                DefaultData::NumbasSettings(f) => {
+                                    exam.numbas_settings.overwrite(&Some(f))
+                                }
                                 DefaultData::Question(q) => {
                                     if let Some(ref mut groups) = exam.question_groups {
                                         groups.iter_mut().for_each(|qg| {
@@ -129,13 +132,16 @@ fn main() {
                             std::fs::create_dir_all(&numbas_output_path);
 
                             res.write(&numbas_exam_path.to_str().unwrap());
+
+                            let numbas_settings = exam.numbas_settings.unwrap();
+
                             let output = std::process::Command::new("python")
                                 .current_dir(numbas_path)
                                 .arg("bin/numbas.py")
                                 .arg("-l")
-                                .arg("nl-NL") //TODO:from json
-                                .arg("-t") //TODO from json
-                                .arg("default")
+                                .arg(&numbas_settings.locale.unwrap().to_str())
+                                .arg("-t")
+                                .arg(numbas_settings.theme.unwrap())
                                 .arg("-o")
                                 .arg(numbas_output_path.canonicalize().unwrap())
                                 .arg(numbas_exam_path.canonicalize().unwrap()) //TODO?

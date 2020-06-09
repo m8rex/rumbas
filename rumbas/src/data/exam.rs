@@ -67,7 +67,8 @@ optional_overwrite! {
     navigation: Navigation,
     timing: Timing,
     feedback: Feedback,
-    question_groups: Vec<QuestionGroup>
+    question_groups: Vec<QuestionGroup>,
+    numbas_settings: NumbasSettings
 }
 
 optional_overwrite! {
@@ -304,6 +305,78 @@ impl ToNumbas for FeedbackMessage {
 }
 
 optional_overwrite! {
+    NumbasSettings,
+    locale: SupportedLocale,
+    theme: String //TODO: check if valid theme? Or is numbas error ok?
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
+pub enum SupportedLocale {
+    #[serde(rename = "ar-SA")]
+    ArSA,
+    #[serde(rename = "de-DE")]
+    DeDE,
+    #[serde(rename = "en-GB")]
+    EnGB,
+    #[serde(rename = "es-ES")]
+    EsES,
+    #[serde(rename = "fr-FR")]
+    FrFR,
+    #[serde(rename = "he-IL")]
+    HeIL,
+    #[serde(rename = "it-IT")]
+    ItIT,
+    #[serde(rename = "ja-JP")]
+    JaJP,
+    #[serde(rename = "ko-KR")]
+    KoKR,
+    #[serde(rename = "nb-NO")]
+    NbNO,
+    #[serde(rename = "nl-NL")]
+    NlNL,
+    #[serde(rename = "pl-PL")]
+    PlPL,
+    #[serde(rename = "pt-BR")]
+    PtBR,
+    #[serde(rename = "sq-AL")]
+    SqAL,
+    #[serde(rename = "sv-SE")]
+    SvSE,
+    #[serde(rename = "tr-TR")]
+    TrTR,
+    #[serde(rename = "vi-VN")]
+    ViVN,
+    #[serde(rename = "zh-CN")]
+    ZhCN,
+}
+impl_optional_overwrite!(SupportedLocale);
+//TODO?
+impl SupportedLocale {
+    pub fn to_str(&self) -> &'static str {
+        match self {
+            SupportedLocale::ArSA => "ar-SA",
+            SupportedLocale::DeDE => "de-DE",
+            SupportedLocale::EnGB => "en-GB",
+            SupportedLocale::EsES => "es-ES",
+            SupportedLocale::FrFR => "fr-FR",
+            SupportedLocale::HeIL => "he-IL",
+            SupportedLocale::ItIT => "it-IT",
+            SupportedLocale::JaJP => "ja-JP",
+            SupportedLocale::KoKR => "ko-KR",
+            SupportedLocale::NbNO => "nb-NO",
+            SupportedLocale::NlNL => "nl-NL",
+            SupportedLocale::PlPL => "pl-PL",
+            SupportedLocale::PtBR => "pt-BR",
+            SupportedLocale::SqAL => "sq-AL",
+            SupportedLocale::SvSE => "sv-SE",
+            SupportedLocale::TrTR => "tr-TR",
+            SupportedLocale::ViVN => "vi-VN",
+            SupportedLocale::ZhCN => "zg-CN",
+        }
+    }
+}
+
+optional_overwrite! {
     QuestionPath: serde(try_from = "String"),
     question: String,
     question_data: Question
@@ -509,11 +582,12 @@ impl std::fmt::Display for JsonError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Error in {} on column {} of line {}. The type of the error is {:?}",
+            "Error in {} on column {} of line {}. The type of the error is {:?}. The error message is {}",
             self.file.display(),
             self.error.column(),
             self.error.line(),
-            self.error.classify()
+            self.error.classify(),
+            self.error,
         ) // Better explanation: Eof -> end of file, Data: wrong datatype or missing field, Syntax: syntax error
     }
 }
