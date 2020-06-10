@@ -44,6 +44,7 @@ macro_rules! impl_optional_overwrite_option_no_noneable {
         )*
     };
 }
+
 macro_rules! impl_optional_overwrite_option {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
@@ -92,6 +93,7 @@ macro_rules! impl_optional_overwrite_option {
         )*
     };
 }
+
 impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
     type Item = Vec<O>;
     fn empty_fields(&self) -> Vec<String> {
@@ -123,7 +125,7 @@ macro_rules! impl_optional_overwrite {
     };
 }
 impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
-//TODO: different if implements
+
 impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U, T> {
     type Item = HashMap<U, T>;
     fn empty_fields(&self) -> Vec<String> {

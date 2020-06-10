@@ -48,7 +48,8 @@ pub enum SupportedLocale {
     ZhCN,
 }
 impl_optional_overwrite!(SupportedLocale);
-//TODO?
+
+//TODO? macro to reduce duplication?
 impl SupportedLocale {
     pub fn to_str(&self) -> &'static str {
         match self {

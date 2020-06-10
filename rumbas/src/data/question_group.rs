@@ -11,27 +11,6 @@ optional_overwrite! {
     questions: Vec<QuestionPath>
 }
 
-optional_overwrite! {
-    QuestionPath: serde(try_from = "String"),
-    question: String,
-    question_data: Question
-}
-
-impl std::convert::TryFrom<String> for QuestionPath {
-    type Error = JsonError;
-
-    fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = Question::from_name(&s).map_err(|e| {
-            println!("{}", e);
-            e
-        })?;
-        Ok(QuestionPath {
-            question: Some(s),
-            question_data: Some(question_data),
-        })
-    }
-}
-
 impl ToNumbas for QuestionGroup {
     type NumbasType = numbas::exam::ExamQuestionGroup;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
@@ -74,6 +53,7 @@ pub enum PickingStrategy {
     RandomSubset { pick_questions: usize },
 }
 impl_optional_overwrite!(PickingStrategy);
+
 impl ToNumbas for PickingStrategy {
     type NumbasType = numbas::exam::ExamQuestionGroupPickingStrategy;
     fn to_numbas(
@@ -92,6 +72,27 @@ impl ToNumbas for PickingStrategy {
                     pick_questions: *pick_questions,
                 }
             }
+        })
+    }
+}
+
+optional_overwrite! {
+    QuestionPath: serde(try_from = "String"),
+    question: String,
+    question_data: Question
+}
+
+impl std::convert::TryFrom<String> for QuestionPath {
+    type Error = JsonError;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let question_data = Question::from_name(&s).map_err(|e| {
+            println!("{}", e);
+            e
+        })?;
+        Ok(QuestionPath {
+            question: Some(s),
+            question_data: Some(question_data),
         })
     }
 }

@@ -73,6 +73,7 @@ pub struct FeedbackMessage {
     threshold: String, //TODO type
 }
 impl_optional_overwrite!(FeedbackMessage);
+
 impl ToNumbas for FeedbackMessage {
     type NumbasType = numbas::exam::ExamFeedbackMessage;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {

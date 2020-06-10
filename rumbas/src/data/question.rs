@@ -84,6 +84,19 @@ impl ToNumbas for Question {
     }
 }
 
+impl Question {
+    pub fn from_name(name: &String) -> JsonResult<Question> {
+        let file = Path::new("questions").join(format!("{}.json", name));
+        let json = fs::read_to_string(&file).expect(
+            &format!(
+                "Failed to read {}",
+                file.to_str().map_or("invalid filename", |s| s)
+            )[..],
+        );
+        serde_json::from_str(&json).map_err(|e| JsonError::from(e, file.to_path_buf()))
+    }
+}
+
 optional_overwrite! {
     VariablesTest,
     condition: String,
@@ -102,18 +115,5 @@ impl ToNumbas for VariablesTest {
         } else {
             Err(empty_fields)
         }
-    }
-}
-
-impl Question {
-    pub fn from_name(name: &String) -> JsonResult<Question> {
-        let file = Path::new("questions").join(format!("{}.json", name));
-        let json = fs::read_to_string(&file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
-        serde_json::from_str(&json).map_err(|e| JsonError::from(e, file.to_path_buf()))
     }
 }

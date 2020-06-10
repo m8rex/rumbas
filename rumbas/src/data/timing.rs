@@ -1,34 +1,13 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
+
 optional_overwrite! {
     Timing,
     duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
     allow_pause: bool,
     on_timeout: TimeoutAction,
     timed_warning: TimeoutAction
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "action")]
-pub enum TimeoutAction {
-    None,
-    Warn { message: String },
-}
-impl_optional_overwrite!(TimeoutAction);
-impl ToNumbas for TimeoutAction {
-    type NumbasType = numbas::exam::ExamTimeoutAction;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
-            TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
-                message: "".to_string(), // message doesn't mean anything
-            },
-            TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
-                message: message.to_string(),
-            },
-        })
-    }
 }
 
 impl ToNumbas for Timing {
@@ -48,5 +27,28 @@ impl ToNumbas for Timing {
         } else {
             Err(empty_fields)
         }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "action")]
+pub enum TimeoutAction {
+    None,
+    Warn { message: String },
+}
+impl_optional_overwrite!(TimeoutAction);
+
+impl ToNumbas for TimeoutAction {
+    type NumbasType = numbas::exam::ExamTimeoutAction;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(match self {
+            TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
+                message: "".to_string(), // message doesn't mean anything
+            },
+            TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
+                message: message.to_string(),
+            },
+        })
     }
 }

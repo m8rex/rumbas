@@ -1,6 +1,7 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
+
 optional_overwrite! {
     Variable,
     definition: String,
@@ -8,6 +9,7 @@ optional_overwrite! {
     template_type: VariableTemplateType,
     group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
+
 impl ToNumbas for Variable {
     type NumbasType = numbas::exam::ExamVariable;
     fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {

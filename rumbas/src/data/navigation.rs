@@ -46,6 +46,7 @@ pub enum ShowResultsPage {
     Never,
 }
 impl_optional_overwrite!(ShowResultsPage);
+
 impl ToNumbas for ShowResultsPage {
     type NumbasType = numbas::exam::ExamShowResultsPage;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
@@ -65,6 +66,7 @@ pub enum LeaveAction {
     PreventIfNotAttempted { message: String },
 }
 impl_optional_overwrite!(LeaveAction);
+
 impl ToNumbas for LeaveAction {
     type NumbasType = numbas::exam::ExamLeaveAction;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {

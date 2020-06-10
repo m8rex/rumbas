@@ -21,7 +21,6 @@ impl OptionalOverwrite for TranslatableString {
         // These default values should be read before language is interpreted
     }
 }
-
 impl_optional_overwrite_option!(TranslatableString);
 
 impl TranslatableString {
