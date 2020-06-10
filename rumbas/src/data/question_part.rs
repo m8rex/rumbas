@@ -31,9 +31,9 @@ macro_rules! question_part_type {
         optional_overwrite! {
             $struct,
             marks: usize,
-            prompt: String,
+            prompt: TranslatableString,
             use_custom_name: bool,
-            custom_name: String,
+            custom_name: String, //Translatable?
             steps_penalty: usize,
             enable_minimum_marks: bool,
             minimum_marks: usize, //TODO: separate?
@@ -52,7 +52,7 @@ macro_rules! question_part_type {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
             self.marks,
-            self.prompt.clone(),
+            self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
             self.use_custom_name,
             self.custom_name.clone(),
             self.steps_penalty,

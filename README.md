@@ -23,8 +23,8 @@ Rumbas does not specify default values by itself:
 
 The html input can be specified in two ways:
   - inline in the json,
-  - in a separate html file (Recommended for larger jsons)
-      - The value of the json field should then equal `file:<filename>`
+  - in a separate html file (Recommended for larger htmls)
+      - The value of the json field should then equal `file:<path to filename in questions folder>`
 This is also possible for the description of functions
 
 Functions can be specified by just a filename:
@@ -103,6 +103,8 @@ The easiest way is to use docker.
   - [ ] at Questions
   - [ ] at Exams
 - [ ] Support for translations
-  - [ ] In name of exam
-  - [ ] Everywhere
+  - [x] In name of exam
+  - [x] Everywhere
+  - [ ] Fix optional overwrite
+  - [ ] Fix substitutions (for example for common parts like functions)
 - [ ] Tests

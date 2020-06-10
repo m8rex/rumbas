@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -62,26 +63,26 @@ impl ToNumbas for ShowResultsPage {
 #[serde(tag = "action")]
 pub enum LeaveAction {
     None,
-    WarnIfNotAttempted { message: String },
-    PreventIfNotAttempted { message: String },
+    WarnIfNotAttempted { message: TranslatableString },
+    PreventIfNotAttempted { message: TranslatableString },
 }
 impl_optional_overwrite!(LeaveAction);
 
 impl ToNumbas for LeaveAction {
     type NumbasType = numbas::exam::ExamLeaveAction;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             LeaveAction::None => numbas::exam::ExamLeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             LeaveAction::WarnIfNotAttempted { message } => {
                 numbas::exam::ExamLeaveAction::WarnIfNotAttempted {
-                    message: message.to_string(),
+                    message: message.to_string(&locale).unwrap(),
                 }
             }
             LeaveAction::PreventIfNotAttempted { message } => {
                 numbas::exam::ExamLeaveAction::PreventIfNotAttempted {
-                    message: message.to_string(),
+                    message: message.to_string(&locale).unwrap(),
                 }
             }
         })

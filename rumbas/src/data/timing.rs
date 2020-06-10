@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -35,19 +36,19 @@ impl ToNumbas for Timing {
 #[serde(tag = "action")]
 pub enum TimeoutAction {
     None,
-    Warn { message: String },
+    Warn { message: TranslatableString },
 }
 impl_optional_overwrite!(TimeoutAction);
 
 impl ToNumbas for TimeoutAction {
     type NumbasType = numbas::exam::ExamTimeoutAction;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
-                message: message.to_string(),
+                message: message.to_string(&locale).unwrap(),
             },
         })
     }

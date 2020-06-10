@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -11,8 +12,8 @@ optional_overwrite! {
     show_answer_state: bool, // Whether answer feedback is shown (right or wrong etc)
     allow_reveal_answer: bool, // Whether the 'reveal answer' button is present
     review: Review, // If none, everything is true???
-    advice: String,
-    intro: String,
+    advice: TranslatableString,
+    intro: TranslatableString,
     feedback_messages: Vec<FeedbackMessage>
 }
 
@@ -27,8 +28,8 @@ impl ToNumbas for Feedback {
                 self.show_answer_state.unwrap(),
                 self.allow_reveal_answer.unwrap(),
                 self.review.clone().map(|o| o.to_numbas(&locale).unwrap()),
-                self.advice.clone(),
-                self.intro.clone().unwrap(),
+                self.advice.clone().map(|o| o.to_string(&locale)).flatten(),
+                self.intro.clone().unwrap().to_string(&locale).unwrap(),
                 self.feedback_messages
                     .clone()
                     .unwrap()

@@ -2,11 +2,12 @@ use crate::data::json::JsonError;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     QuestionGroup,
-    name: String,
+    name: TranslatableString,
     picking_strategy: PickingStrategy: serde(flatten),
     questions: Vec<QuestionPath>
 }
@@ -17,23 +18,17 @@ impl ToNumbas for QuestionGroup {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionGroup::new(
-                self.name.clone(),
+                self.name.clone().map(|s| s.to_string(&locale)).flatten(),
                 self.picking_strategy
                     .clone()
                     .unwrap()
                     .to_numbas(&locale)
                     .unwrap(),
-                self.questions
+                self.questions //TODO: add ToNumbas to QuestionPath?
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|q| {
-                        q.question_data
-                            .clone()
-                            .unwrap()
-                            .to_numbas_with_name(&locale, q.question.clone().unwrap())
-                            .unwrap()
-                    })
+                    .map(|q| q.to_numbas(&locale).unwrap())
                     .collect(),
             ))
         } else {
@@ -78,7 +73,7 @@ impl ToNumbas for PickingStrategy {
 
 optional_overwrite! {
     QuestionPath: serde(try_from = "String"),
-    question: String,
+    question_name: String,
     question_data: Question
 }
 
@@ -91,8 +86,25 @@ impl std::convert::TryFrom<String> for QuestionPath {
             e
         })?;
         Ok(QuestionPath {
-            question: Some(s),
+            question_name: Some(s),
             question_data: Some(question_data),
         })
+    }
+}
+
+impl ToNumbas for QuestionPath {
+    type NumbasType = numbas::exam::ExamQuestion;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(self
+                .question_data
+                .clone()
+                .unwrap()
+                .to_numbas_with_name(&locale, self.question_name.clone().unwrap())
+                .unwrap())
+        } else {
+            Err(empty_fields)
+        }
     }
 }

@@ -1,11 +1,12 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
     QuestionPartJME,
-    answer: String,
+    answer: TranslatableString, //TODO: should this be translatable?
     answer_simplification: JMEAnswerSimplification,
     show_preview: bool,
     checking_type: CheckingType,
@@ -31,7 +32,7 @@ impl ToNumbas for QuestionPartJME {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionPartJME::new(
                 self.to_numbas_shared_data(&locale),
-                self.answer.clone().unwrap(),
+                self.answer.clone().unwrap().to_string(&locale).unwrap(),
                 Some(
                     self.answer_simplification
                         .clone()
@@ -181,22 +182,27 @@ impl ToNumbas for CheckingType {
 
 optional_overwrite! {
     JMERestriction,
-    name: String,
-    strings: Vec<String>,
+    name: TranslatableString,
+    strings: Vec<TranslatableString>,
     partial_credit: f64, //TODO, is number, so maybe usize?
-    message: String
+    message: TranslatableString
 }
 
 impl ToNumbas for JMERestriction {
     type NumbasType = numbas::exam::JMERestriction;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::JMERestriction> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMERestriction> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMERestriction::new(
-                self.name.clone().unwrap(),
-                self.strings.clone().unwrap(),
+                self.name.clone().unwrap().to_string(&locale).unwrap(),
+                self.strings
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|s| s.to_string(&locale).unwrap())
+                    .collect(),
                 self.partial_credit.clone().unwrap(),
-                self.message.clone().unwrap(),
+                self.message.clone().unwrap().to_string(&locale).unwrap(),
             ))
         } else {
             Err(empty_fields)
@@ -258,7 +264,7 @@ optional_overwrite! {
     JMEPatternRestriction,
     restriction: JMERestriction: serde(flatten),
     pattern: String, //TODO type?
-    name_to_compare: String
+    name_to_compare: String //TODO, translateable?
 }
 
 impl ToNumbas for JMEPatternRestriction {
