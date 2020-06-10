@@ -100,6 +100,7 @@ impl ToNumbas for Exam {
         }
     }
 }
+
 impl Exam {
     pub fn from_file(file: &Path) -> JsonResult<Exam> {
         let json = fs::read_to_string(file).expect(

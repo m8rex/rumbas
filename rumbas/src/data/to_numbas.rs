@@ -1,6 +1,7 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 
 pub type NumbasResult<T> = Result<T, Vec<String>>;
+
 pub trait ToNumbas: Clone {
     type NumbasType;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType>;
@@ -29,6 +30,7 @@ impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Option<T> {
         }
     }
 }
+
 impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Noneable<T> {
     type NumbasType = Option<<T as ToNumbas>::NumbasType>;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
@@ -58,4 +60,5 @@ macro_rules! impl_to_numbas {
         )*
     };
 }
+
 impl_to_numbas!(String, bool, f64, usize, [f64; 2]);

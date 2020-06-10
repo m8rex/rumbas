@@ -2,6 +2,7 @@ use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
+
 question_part_type! {
     QuestionPartJME,
     answer: String,
@@ -78,6 +79,7 @@ impl ToNumbas for QuestionPartJME {
         }
     }
 }
+
 //TODO: rename etc
 optional_overwrite! {
     JMEAnswerSimplification,
@@ -164,6 +166,7 @@ pub enum CheckingType {
     SignificantFigures,
 }
 impl_optional_overwrite!(CheckingType);
+
 impl ToNumbas for CheckingType {
     type NumbasType = numbas::exam::JMECheckingType;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {

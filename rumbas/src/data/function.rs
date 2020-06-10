@@ -2,6 +2,7 @@ use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
 optional_overwrite! {
     Function,
     parameters: HashMap<String, numbas::exam::ExamFunctionType>,
@@ -9,6 +10,7 @@ optional_overwrite! {
     definition: String,
     language: numbas::exam::ExamFunctionLanguage
 }
+
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFunction> {
@@ -25,6 +27,7 @@ impl ToNumbas for Function {
         }
     }
 }
+
 impl_optional_overwrite!(
     numbas::exam::ExamFunctionType,
     numbas::exam::ExamFunctionLanguage

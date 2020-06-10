@@ -11,6 +11,7 @@ impl JsonError {
         JsonError { error, file }
     }
 }
+
 impl std::fmt::Display for JsonError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -24,4 +25,5 @@ impl std::fmt::Display for JsonError {
         ) // Better explanation: Eof -> end of file, Data: wrong datatype or missing field, Syntax: syntax error
     }
 }
+
 pub type JsonResult<T> = Result<T, JsonError>;
