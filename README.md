@@ -53,32 +53,32 @@ The easiest way is to use docker.
   - IMPORTANT: Themes don't work the right way yet, you need to make sure that de themes is added to the themes folder of your local numbas clone -> use Docker to not have this problem.
 
 ## TODO
-- [ ] Basic exam settings (`name`, `duration`, `percentPass`, `showQuestionGroupNames`, `showStudentName`)
-  - [ ] support in json
-  - [ ] support in default
-- [ ] Navigation exam settings
-  - [ ] support in json
-  - [ ] support in default
-- [ ] Timing exam settings
-  - [ ] support in json
-  - [ ] support in default
-- [ ] Feedback exam settings
-  - [ ] support in json
-  - [ ] support in default
+- [x] Basic exam settings (`name`, `duration`, `percentPass`, `showQuestionGroupNames`, `showStudentName`)
+  - [x] support in json
+  - [x] support in default
+- [x] Navigation exam settings
+  - [x] support in json
+  - [x] support in default
+- [x] Timing exam settings
+  - [x] support in json
+  - [x] support in default
+- [x] Feedback exam settings
+  - [x] support in json
+  - [x] support in default
   - [ ] support for `file:<filename>`
-- [ ] Support for `question_groups` in exams
-  - [ ] `name` and `pickingStrategy`
-  - [ ] `questions`
-- [ ] Support for basic info in questions (`name`, `statement`, `advice`)
+- [x] Support for `question_groups` in exams
+  - [x] `name` and `pickingStrategy`
+  - [x] `questions`
+- [x] Support for basic info in questions (`name`, `statement`, `advice`)
 - [ ] Support for `parts` in questions
-  - [ ] JME
+  - [x] JME
   - [ ] NumberEntry
   - [ ] Matrix
   - [ ] PatternMatch
   - [ ] OneNTwo (rename)
   - [ ] MNTwo (rename)
   - [ ] MNX (rename)
-  - [ ] GapFill
+  - [x] GapFill
   - [ ] Information
   - [ ] Extension
 - [ ] Support for resources and extensions in questions
@@ -94,7 +94,7 @@ The easiest way is to use docker.
 - [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
   - [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
   - [ ] `custom_part_types` are added to exam if they are used in the questions
-- [ ] Theme support
+- [x] Theme support
 - [ ] rulesets and preamble
   - [ ] at Questions
   - [ ] at Exams
@@ -102,3 +102,7 @@ The easiest way is to use docker.
 - [ ] contributors and metadata
   - [ ] at Questions
   - [ ] at Exams
+- [ ] Support for translations
+  - [ ] In name of exam
+  - [ ] Everywhere
+- [ ] Tests
