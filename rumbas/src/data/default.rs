@@ -1,13 +1,19 @@
-use crate::data::exam::{
-    Exam, Feedback, Navigation, NumbasSettings, Question, QuestionPart, QuestionPartGapFill,
-    QuestionPartJME, Timing,
-};
+use crate::data::exam::Exam;
+use crate::data::feedback::Feedback;
+use crate::data::gapfill::QuestionPartGapFill;
+use crate::data::jme::QuestionPartJME;
+use crate::data::navigation::Navigation;
+use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::OptionalOverwrite;
+use crate::data::question::Question;
+use crate::data::question_part::QuestionPart;
+use crate::data::timing::Timing;
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 //TODO Tests
+//Questionnavigation?? -> in question?
 
 #[derive(Debug)]
 pub struct DefaultFile {

@@ -1,5 +1,5 @@
 use crate::data::default::combine_with_default_files;
-use crate::data::exam::ToNumbas;
+use crate::data::to_numbas::ToNumbas;
 use std::env;
 use std::path::Path;
 mod data;
