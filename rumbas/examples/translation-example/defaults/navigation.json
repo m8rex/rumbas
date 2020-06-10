@@ -1,0 +1,14 @@
+{
+ "allow_regenerate": true,
+ "reverse": true,
+ "browsing_enabled": true,
+ "allow_steps": true,
+ "show_frontpage": true,
+ "show_results_page": "on_completion",
+ "prevent_leaving": true,
+ "on_leave": {
+  "action": "none"
+ },
+ "start_password": "",
+ "show_names_of_question_groups": false
+}

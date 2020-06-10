@@ -1,0 +1,75 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\simplify{{d}*e^({f}x)+{a}x^2+{b}x+{c}}$"
+  },
+  "advice": "",
+  "rulesets": {},
+  "variables": {
+    "a": {
+      "group": "Ungrouped variables",
+      "definition": "random(-10 .. 10#0.5)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "b": {
+      "group": "Ungrouped variables",
+      "definition": "random(-4 .. 4#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "c": {
+      "group": "Ungrouped variables",
+      "definition": "random(-5 .. 12#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "f": {
+      "group": "Ungrouped variables",
+      "definition": "random(-3 .. 7#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "d": {
+      "group": "Ungrouped variables",
+      "definition": "random(-6 .. 6#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "f*d*(a^2+b^2)<>0",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "a",
+    "b",
+    "c",
+    "f",
+    "d"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "mmm",
+          "answer": "{d*f}*e^({f}x)+{2a}x+{b}",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

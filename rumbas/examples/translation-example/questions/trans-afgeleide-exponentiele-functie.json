@@ -1,0 +1,55 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=e^\\simplify{{a}x}$"
+  },
+  "advice": {
+    "nl": "<p>Gebruik de kettingregel: {f} is de samenstelling {fgh} waarbij {h} en {g}.</p>",
+    "en": "<p>Use the chain rule: {f} is the composition {fgh} with {h} and {g}.</p>",
+    "{f}": "$f(x)=e^\\simplify{{a}x}$",
+    "{fgh}": "$f=g\\circ h$",
+    "{h}": "$h(x)=\\simplify{{a}x}$",
+    "{g}": "$g(x)=e^x$"
+  },
+  "rulesets": {},
+  "variables": {
+    "a": {
+      "name": "a",
+      "group": "Ungrouped variables",
+      "definition": "random(-10 .. 10#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "a<>0 and a<>1",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "a"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "prompt": "TEMP TEST",
+          "marks": 1,
+          "answer": "{a}*e^({a}*x)",
+          "value_generators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

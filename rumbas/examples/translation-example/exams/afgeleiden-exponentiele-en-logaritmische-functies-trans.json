@@ -1,0 +1,66 @@
+{
+  "navigation": {
+    "show_names_of_question_groups": true
+  },
+  "locales": [
+    { 
+      "name": "nl",
+      "numbas_locale": "nl-NL"
+    },
+    { 
+      "name": "en",
+      "numbas_locale": "en-GB"
+    }
+  ],
+  "name": {
+    "nl": "Afgeleiden (met exponentiële en logaritmische functies)",
+    "en": "Derivatives (with exponential and logaritmical functions)"
+  },
+  "question_groups": [
+    {
+      "name": {
+        "nl": "Exponentiële functies",
+        "en": "Exponential functions"
+      },
+      "picking_strategy": "random_subset",
+      "pick_questions": 4,
+      "questions": [
+          "trans-afgeleide-exponentiele-functie",
+          "trans-afgeleide-exponentiele-functie-en-kettingregel",
+          "trans-afgeleide-exponentiele-functie-en-productregel",
+          "trans-afgeleide-exponentiele-functie-en-quotientregel",
+          "trans-afgeleide-exponentiele-functie-en-veelterm",
+          "trans-afgeleide-exponentiele-functie-en-quotientregel-eenvoudiger",
+          "trans-afgeleide-meerdere-exponentiele-functies"
+      ]
+    },
+    {
+      "name": {
+        "nl": "Logaritmische functies",
+        "en": "Logarithmic functions"
+      },
+      "picking_strategy": "random_subset",
+      "pick_questions": 3,
+      "questions": [
+        "trans-afgeleide-logaritmische-functie-en-quotientregel-eenvoudiger",
+        "trans-afgeleide-logaritmische-functie-en-quotientregel",
+        "trans-afgeleide-logaritmische-functie-en-productregel",
+        "trans-afgeleide-logaritmische-functie-en-kettingregel",
+        "trans-afgeleide-logaritmische-functie-2",
+        "trans-afgeleide-logaritmische-functie-1"
+      ]
+    },
+    {
+      "name": {
+        "nl": "Combinatie",
+        "en": "Combination"
+      },
+      "picking_strategy": "random_subset",
+      "pick_questions": 1,
+      "questions": [
+          "trans-afgeleide-exponentiele-functie-logaritmische-functie-en-quotiëntregel-2",
+          "trans-afgeleide-exponentiele-functie-logaritmische-functie-en-quotiëntregel-1"
+          ]
+    }
+  ]
+}

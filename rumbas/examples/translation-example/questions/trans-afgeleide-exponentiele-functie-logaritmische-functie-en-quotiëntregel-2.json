@@ -1,0 +1,51 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\frac{\\ln x}{e^\\simplify{{a}x}}$" 
+  },
+  "advice": {
+    "nl": "<p>Gebruik de quotiëntregel.</p>\n<p>Je kan ook het functievoorschrift herschrijven zodat je de productregel kan toepassen:</p>\n<p>{rewrite}.</p>",
+    "en": "<p>Use the quotient rule.</p>\n<p>It's also possible to rewrite the formule and apply the product rule:</p>\n<p>{rewrite}.</p>",
+    "{rewrite}": "$y=\\frac{\\ln x}{e^\\simplify{{a}x}}=e^\\simplify{-{a}x}\\ln x $"
+  },
+  "rulesets": {},
+  "variables": {
+    "a": {
+      "group": "Ungrouped variables",
+      "definition": "random(-8 .. 12#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "a<>0",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "a"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "",
+          "answer": "(1-{a}x*ln(x))/(x e^({a}x))",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
