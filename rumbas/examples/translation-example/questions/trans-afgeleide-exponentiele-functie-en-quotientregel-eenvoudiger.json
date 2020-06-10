@@ -1,0 +1,58 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\frac{e^\\simplify{{a}x}}{\\simplify{x^{ex}}}$"
+  },
+  "advice": {
+    "nl": "<p>Gebruik de quotiëntregel.</p>\n<p>Je kan ook het functievoorschrift herschrijven zodat je de productregel kan toepassen:</p>\n<p>{rewrite}.</p>",
+    "en": "<p>Use the quotient rule.</p>\n<p>It is also possible to rewrite the formula and apply the product rule:</p>\n<p>{rewrite}.</p>",
+    "{rewrite}": "$y=\\frac{e^\\simplify{{a}x}}{\\simplify{x^{ex}}}=\\simplify{x^{-ex}e^({a}x)}$"
+  },
+  "rulesets": {},
+  "variables": {
+    "ex": {
+      "group": "Ungrouped variables",
+      "definition": "random(1 .. 6#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "a": {
+      "group": "Ungrouped variables",
+      "definition": "random(-8 .. 12#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "a<>0",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "ex",
+    "a"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "mmmmm",
+          "answer": "e^({a}x)({a}x-{ex})/x^({ex}+1)",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

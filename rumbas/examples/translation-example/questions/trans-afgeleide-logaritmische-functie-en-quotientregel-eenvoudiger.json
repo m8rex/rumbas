@@ -1,0 +1,52 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func} met {cond}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func} with {cond}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\frac{\\ln(x)}{\\simplify{x^{ex}}}$", 
+    "{cond}": "$x>0$"
+  },
+  "advice": {
+    "nl": "<p>Gebruik de quotiëntregel.</p>\n<p>Je kan ook het functievoorschrift herschrijven zodat je de productregel kan toepassen:</p>\n<p>{rewrite}.</p>",
+    "en": "<p>Use the quotient rule.</p>\n<p>It is also possible to rewrite the formula and apply the product rule:</p>\n<p>{rewrite}.</p>",
+    "{rewrite}": "$y=\\frac{\\ln(x)}{\\simplify{x^{ex}}}=\\simplify{x^{-ex}}\\ln(x)$"
+  },
+  "rulesets": {},
+  "variables": {
+    "ex": {
+      "group": "Ungrouped variables",
+      "definition": "random(1 .. 6#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "ex"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "",
+          "answer": "(1-{ex}*ln(x))/x^({ex}+1)",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

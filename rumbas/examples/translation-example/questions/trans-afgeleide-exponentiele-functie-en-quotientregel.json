@@ -1,0 +1,64 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\frac{e^\\simplify{{a}x}}{\\simplify{x^{ex}+{b}}}$"
+  },
+  "advice": {
+    "nl": "<p>Gebruik de quotiëntregel.</p>",
+    "en": "<p>Use the quotient rule.</p>"
+  },
+  "rulesets": {},
+  "variables": {
+    "ex": {
+      "group": "Ungrouped variables",
+      "definition": "random(1 .. 6#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "a": {
+      "group": "Ungrouped variables",
+      "definition": "random(-8 .. 12#1)",
+      "description": "",
+      "template_type": "random_range"
+    },
+    "b": {
+      "group": "Ungrouped variables",
+      "definition": "random(-7 .. 10#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "a*b<>0",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "ex",
+    "a",
+    "b"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "Huh?",
+          "answer": "e^({a}x)({a}x^{ex}-{ex}x^{ex-1}+{a*b})/(x^{ex}+{b})^2",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

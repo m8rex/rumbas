@@ -1,0 +1,56 @@
+{
+  "statement": {
+    "nl": "<p>Gegeven is de functie {func} met {cond}.&nbsp; De afgeleide functie is gegeven door</p>",
+    "en": "<p>Given the function {func} with {cond}.&nbsp; Its derivative function is given by</p>",
+    "{func}": "$y=\\ln(\\simplify{{a}x})$",
+    "{cond}": "$x>0$"
+  },
+  "advice": {
+    "nl": "<p>Gebruik de kettingregel: {f} is de samenstelling {fgh} waarbij {h} en {g}.</p>\n<p>(Nog eenvoudiger is het als je rekenregels voor de logaritme gebruikt: {ln}.)</p>",
+    "en": "<p>Use the chain rule: {f} is the composition {fgh} with {h} and {g}.</p>\n<p>(You can also solve this more easily by using the calculation rules of logarithms: {ln}.)</p>",
+    "{f}": "$f(x)=\\ln(\\simplify{{a}x})$",
+    "{fgh}": "$f=g\\circ h$",
+    "{h}": "$h(x)=\\simplify{{a}x}$",
+    "{g}": "$g(x)=\\ln x$",
+    "{ln}": "$\\ln(\\simplify{{a}x})=\\ln x + \\ln \\var{a}$"
+  },
+  "rulesets": {},
+  "variables": {
+    "a": {
+      "group": "Ungrouped variables",
+      "definition": "random(2 .. 10#1)",
+      "description": "",
+      "template_type": "random_range"
+    }
+  },
+  "variables_test": {
+    "condition": "",
+    "max_runs": 100
+  },
+  "ungrouped_variables": [
+    "a"
+  ],
+  "variable_groups": [],
+  "functions": {},
+  "parts": [
+    {
+      "type": "gapfill",
+      "marks": 0,
+      "prompt": "<p>$y'=$ [[0]]</p>",
+      "gaps": [
+        {
+          "type": "jme",
+          "marks": 1,
+          "prompt": "",
+          "answer": "1/x",
+          "valuegenerators": [
+            {
+              "name": "x",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
