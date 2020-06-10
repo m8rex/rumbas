@@ -2,6 +2,7 @@ use crate::data::locale::SupportedLocale;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use serde::{Deserialize, Serialize};
 
+//TODO: is locale still being used?
 optional_overwrite! {
     NumbasSettings,
     locale: SupportedLocale,

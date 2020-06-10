@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     Variable,
-    definition: String,
-    description: String, //TODO: description dependant of template type, for random_range: start, end and step instead
+    definition: String,//TODO: definition dependant of template type, for random_range: start, end and step instead
+    description: String,
     template_type: VariableTemplateType,
     group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }

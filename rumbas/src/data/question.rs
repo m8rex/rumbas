@@ -6,6 +6,7 @@ use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::translatable::TranslatableString;
 use crate::data::variable::Variable;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -14,8 +15,8 @@ use std::path::Path;
 
 optional_overwrite! {
     Question,
-    statement: String,
-    advice: String,
+    statement: TranslatableString,
+    advice: TranslatableString,
     parts: Vec<QuestionPart>,
     variables: HashMap<String, Variable>,
     variables_test: VariablesTest,
@@ -46,8 +47,8 @@ impl ToNumbas for Question {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestion::new(
                 name,
-                self.statement.clone().unwrap(),
-                self.advice.clone().unwrap(),
+                self.statement.clone().unwrap().to_string(&locale).unwrap(),
+                self.advice.clone().unwrap().to_string(&locale).unwrap(),
                 self.parts
                     .clone()
                     .unwrap()

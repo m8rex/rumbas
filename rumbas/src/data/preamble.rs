@@ -2,6 +2,7 @@ use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
+// TODO: maybe translatable? So different text's can be set for different languages?
 optional_overwrite! {
     Preamble,
     js: String,
