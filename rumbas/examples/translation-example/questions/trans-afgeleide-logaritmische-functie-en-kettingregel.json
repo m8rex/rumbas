@@ -43,12 +43,6 @@
     "condition": "c1*c2*(e1-e2)<>0",
     "max_runs": 100
   },
-  "ungrouped_variables": [
-    "e1",
-    "e2",
-    "c1",
-    "c2"
-  ],
   "variable_groups": [],
   "functions": {},
   "parts": [

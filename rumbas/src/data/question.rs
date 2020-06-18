@@ -13,6 +13,8 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
+const UNGROUPED_GROUP: &'static str = "Ungrouped variables";
+
 optional_overwrite! {
     Question,
     statement: TranslatableString,
@@ -23,8 +25,7 @@ optional_overwrite! {
     functions: HashMap<String, Function>,
     preamble: Preamble,
     navigation: QuestionNavigation,
-    extensions: Extensions,
-    ungrouped_variables: Vec<String>
+    extensions: Extensions
     //TODO al lot of options
 
 }
@@ -72,7 +73,13 @@ impl ToNumbas for Question {
                     .into_iter()
                     .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
                     .collect(),
-                self.ungrouped_variables.clone().unwrap(),
+                self.variables
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .filter(|(_k, v)| &v.group.clone().unwrap()[..] == UNGROUPED_GROUP)
+                    .map(|(k, _)| k)
+                    .collect(),
                 Vec::new(),     //TODO: calculate from variables
                 HashMap::new(), //TODO: add to Question type
                 self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
