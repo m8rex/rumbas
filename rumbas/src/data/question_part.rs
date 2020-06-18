@@ -1,5 +1,6 @@
 use crate::data::gapfill::QuestionPartGapFill;
 use crate::data::jme::QuestionPartJME;
+use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
@@ -7,7 +8,8 @@ use serde::{Deserialize, Serialize};
 optional_overwrite_enum! {
     QuestionPart: serde(tag = "type"),
     JME: QuestionPartJME: serde(rename = "jme"),
-    GapFill: QuestionPartGapFill: serde(rename = "gapfill")
+    GapFill: QuestionPartGapFill: serde(rename = "gapfill"),
+    ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one")
 }
 
 impl ToNumbas for QuestionPart {
@@ -22,12 +24,16 @@ impl ToNumbas for QuestionPart {
                 let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::GapFill(n))
             }
+            QuestionPart::ChooseOne(d) => {
+                let n = d.to_numbas(&locale)?;
+                Ok(numbas::exam::ExamQuestionPart::ChooseOne(n))
+            }
         }
     }
 }
 
 macro_rules! question_part_type {
-    ($struct: ident, $($field: ident: $type: ty), *) => {
+    ($struct: ident, $($field: ident: $type: ty$(: $field_attribute: meta)?), *) => {
         optional_overwrite! {
             $struct,
             marks: usize,
@@ -45,7 +51,7 @@ macro_rules! question_part_type {
             extend_base_marking_algorithm: bool,
             steps: Vec<QuestionPart>,
             $(
-                $field: $type
+                $field: $type $(: $field_attribute)?
             ),*
         }
         impl $struct {
