@@ -538,9 +538,21 @@ impl ExamVariable {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamVariableTemplateType {
     #[serde(rename = "anything")]
-    Anything,
+    Anything, //JME
+    #[serde(rename = "list of numbers")]
+    ListOfNumbers,
+    #[serde(rename = "list of strings")]
+    ListOfStrings,
+    #[serde(rename = "long string")]
+    LongString,
+    #[serde(rename = "number")]
+    Number,
     #[serde(rename = "randrange")]
-    RandomRange,
+    RandomRange, // Chooses a value from the range
+    #[serde(rename = "range")]
+    Range,
+    #[serde(rename = "string")]
+    r#String,
 }
 
 #[skip_serializing_none]
