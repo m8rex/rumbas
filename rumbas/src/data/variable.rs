@@ -1,10 +1,11 @@
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     Variable,
-    definition: String,//TODO: definition dependant of template type, for random_range: start, end and step instead
+    definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
     description: String,
     template_type: VariableTemplateType,
     group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
@@ -17,7 +18,7 @@ impl ToNumbas for Variable {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamVariable::new(
                 name,
-                self.definition.clone().unwrap(),
+                self.definition.clone().unwrap().get_content(),
                 self.description.clone().unwrap(),
                 self.template_type
                     .clone()

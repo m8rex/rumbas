@@ -1,3 +1,4 @@
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -13,7 +14,7 @@ optional_overwrite! {
     show_results_page: ShowResultsPage,
     prevent_leaving: bool,
     on_leave: LeaveAction,
-    start_password: String, //TODO: Noneable, but "" is none in this case?
+    start_password: FileString, //TODO: Noneable, but "" is none in this case?
     show_names_of_question_groups: bool
 }
 
@@ -32,7 +33,7 @@ impl ToNumbas for Navigation {
                     .map(|s| s.to_numbas(&locale).unwrap()),
                 self.prevent_leaving,
                 self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
-                self.start_password.clone(),
+                self.start_password.clone().map(|s| s.get_content()),
             ))
         } else {
             Err(empty_fields)

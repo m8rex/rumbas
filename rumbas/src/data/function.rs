@@ -1,3 +1,4 @@
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
@@ -7,7 +8,7 @@ optional_overwrite! {
     Function,
     parameters: HashMap<String, numbas::exam::ExamFunctionType>,
     output_type: numbas::exam::ExamFunctionType,
-    definition: String,
+    definition: FileString,
     language: numbas::exam::ExamFunctionLanguage
 }
 
@@ -19,7 +20,7 @@ impl ToNumbas for Function {
             Ok(numbas::exam::ExamFunction::new(
                 self.parameters.clone().unwrap().into_iter().collect(),
                 self.output_type.clone().unwrap(),
-                self.definition.clone().unwrap(),
+                self.definition.clone().unwrap().get_content(),
                 self.language.clone().unwrap(),
             ))
         } else {
