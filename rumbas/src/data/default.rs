@@ -5,6 +5,7 @@ use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
+use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::OptionalOverwrite;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;
@@ -38,6 +39,7 @@ pub enum QuestionPartType {
     JME,
     GapFill,
     ChooseOne,
+    NumberEntry,
 }
 
 pub enum DefaultData {
@@ -66,6 +68,9 @@ impl DefaultFileType {
                 }
                 Some("questionpart.choose_one") => {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::ChooseOne))
+                }
+                Some("questionpart.number_entry") => {
+                    Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
                 }
                 Some("questionpart.gapfill.gap.jme") => {
                     //TODO others etc
@@ -114,6 +119,10 @@ impl DefaultFileType {
                     let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
                 }
+                QuestionPartType::NumberEntry => {
+                    let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
+                }
             }, //TODO: reduce duplicate
             DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
             {
@@ -130,6 +139,10 @@ impl DefaultFileType {
                 QuestionPartType::ChooseOne => {
                     let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
+                }
+                QuestionPartType::NumberEntry => {
+                    let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
                 }
             },
         }
@@ -230,6 +243,15 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                 if let (
                                                     QuestionPart::ChooseOne(_),
                                                     QuestionPart::ChooseOne(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            });
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::NumberEntry(_),
+                                                    QuestionPart::NumberEntry(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())

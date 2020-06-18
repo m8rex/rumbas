@@ -1,6 +1,7 @@
 use crate::data::gapfill::QuestionPartGapFill;
 use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseOne;
+use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
@@ -9,7 +10,8 @@ optional_overwrite_enum! {
     QuestionPart: serde(tag = "type"),
     JME: QuestionPartJME: serde(rename = "jme"),
     GapFill: QuestionPartGapFill: serde(rename = "gapfill"),
-    ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one")
+    ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one"),
+    NumberEntry: QuestionPartNumberEntry: serde(rename = "number_entry")
 }
 
 impl ToNumbas for QuestionPart {
@@ -27,6 +29,10 @@ impl ToNumbas for QuestionPart {
             QuestionPart::ChooseOne(d) => {
                 let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::ChooseOne(n))
+            }
+            QuestionPart::NumberEntry(d) => {
+                let n = d.to_numbas(&locale)?;
+                Ok(numbas::exam::ExamQuestionPart::NumberEntry(n))
             }
         }
     }
