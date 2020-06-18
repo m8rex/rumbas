@@ -41,7 +41,7 @@ macro_rules! question_part_type {
             show_feedback_icon: bool,
             variable_replacement_strategy: VariableReplacementStrategy,
             adaptive_marking_penalty: usize,
-            custom_marking_algorithm: String, // TODO? empty string -> none?
+            custom_marking_algorithm: String, // TODO? empty string -> none?, from file?
             extend_base_marking_algorithm: bool,
             steps: Vec<QuestionPart>,
             $(

@@ -1,3 +1,4 @@
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use serde::Deserialize;
 use serde::Serialize;
@@ -7,8 +8,8 @@ use std::collections::HashMap;
 #[serde(untagged)]
 pub enum TranslatableString {
     //TODO: custom reader that checks for missing values etc?
-    Translated(HashMap<String, String>), // Maps locales on formattable strings and parts like "{func}" (between {}) to values
-    NotTranslated(String),
+    Translated(HashMap<String, FileString>), // Maps locales on formattable strings and parts like "{func}" (between {}) to values
+    NotTranslated(FileString),
 }
 
 impl OptionalOverwrite for TranslatableString {
@@ -27,17 +28,19 @@ impl_optional_overwrite_option!(TranslatableString);
 impl TranslatableString {
     pub fn to_string(&self, locale: &String) -> Option<String> {
         match self {
-            TranslatableString::NotTranslated(s) => Some(s.clone()),
-            TranslatableString::Translated(m) => m.get(locale).map(|s| substitute(s, &m)),
+            TranslatableString::NotTranslated(s) => Some(s.get_content()),
+            TranslatableString::Translated(m) => {
+                m.get(locale).map(|s| substitute(&s.get_content(), &m))
+            }
         }
     }
 }
 
-fn substitute(pattern: &String, map: &HashMap<String, String>) -> String {
+fn substitute(pattern: &String, map: &HashMap<String, FileString>) -> String {
     let mut result = pattern.clone();
     for (key, val) in map.iter() {
         if key.starts_with("{") && key.ends_with("}") {
-            result = result.replace(key, val);
+            result = result.replace(key, &val.get_content());
         }
     }
     result

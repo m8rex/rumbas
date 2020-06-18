@@ -65,7 +65,7 @@ The easiest way is to use docker.
 - [x] Feedback exam settings
   - [x] support in json
   - [x] support in default
-  - [ ] support for `file:<filename>`
+- [x] Support for `file:<filename>` for html strings
 - [x] Support for `question_groups` in exams
   - [x] `name` and `pickingStrategy`
   - [x] `questions`

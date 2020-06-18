@@ -8,6 +8,7 @@ pub mod default;
 pub mod exam;
 pub mod extension;
 pub mod feedback;
+pub mod file_reference;
 pub mod function;
 pub mod gapfill;
 pub mod jme;
