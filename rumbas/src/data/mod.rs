@@ -17,6 +17,7 @@ pub mod locale;
 pub mod multiple_choice;
 pub mod navigation;
 pub mod numbas_settings;
+pub mod number_entry;
 pub mod preamble;
 pub mod question;
 pub mod question_group;

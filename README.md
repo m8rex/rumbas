@@ -72,7 +72,7 @@ The easiest way is to use docker.
 - [x] Support for basic info in questions (`name`, `statement`, `advice`)
 - [ ] Support for `parts` in questions
   - [x] JME
-  - [ ] NumberEntry
+  - [x] NumberEntry
   - [ ] Matrix
   - [ ] PatternMatch
   - [x] ChooseOne
