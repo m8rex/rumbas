@@ -75,9 +75,9 @@ The easiest way is to use docker.
   - [ ] NumberEntry
   - [ ] Matrix
   - [ ] PatternMatch
-  - [ ] OneNTwo (rename)
-  - [ ] MNTwo (rename)
-  - [ ] MNX (rename)
+  - [ ] ChooseOne
+  - [ ] ChooseSeveral
+  - [ ] MatchChoicesWithAnswers
   - [x] GapFill
   - [ ] Information
   - [ ] Extension

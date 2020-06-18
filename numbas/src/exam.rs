@@ -666,11 +666,11 @@ pub enum ExamQuestionPart {
     #[serde(rename = "patternmatch")]
     PatternMatch(ExamQuestionPartPatternMatch),
     #[serde(rename = "1_n_2")]
-    OneNTwo(ExamQuestionPartMultipleChoice),
+    ChooseOne(ExamQuestionPartMultipleChoice),
     #[serde(rename = "m_n_2")]
-    MNTwo(ExamQuestionPartMultipleChoice),
+    ChooseSeveral(ExamQuestionPartMultipleChoice),
     #[serde(rename = "m_n_x")]
-    MNX(ExamQuestionPartMultipleChoice),
+    MatchChoicesWithAnswers(ExamQuestionPartMultipleChoice),
     #[serde(rename = "gapfill")]
     GapFill(ExamQuestionPartGapFill),
     #[serde(rename = "information")]
