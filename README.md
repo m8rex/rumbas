@@ -75,7 +75,7 @@ The easiest way is to use docker.
   - [ ] NumberEntry
   - [ ] Matrix
   - [ ] PatternMatch
-  - [ ] ChooseOne
+  - [x] ChooseOne
   - [ ] ChooseSeveral
   - [ ] MatchChoicesWithAnswers
   - [x] GapFill

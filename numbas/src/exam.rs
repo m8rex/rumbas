@@ -666,7 +666,7 @@ pub enum ExamQuestionPart {
     #[serde(rename = "patternmatch")]
     PatternMatch(ExamQuestionPartPatternMatch),
     #[serde(rename = "1_n_2")]
-    ChooseOne(ExamQuestionPartMultipleChoice),
+    ChooseOne(ExamQuestionPartChooseOne),
     #[serde(rename = "m_n_2")]
     ChooseSeveral(ExamQuestionPartMultipleChoice),
     #[serde(rename = "m_n_x")]
@@ -1128,42 +1128,74 @@ pub enum PatternMatchMode {
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamQuestionPartChooseOne {
+    //TODO -> Split for different types
+    #[serde(flatten)]
+    pub part_data: ExamQuestionPartSharedData,
+    #[serde(rename = "minAnswers")]
+    pub min_answers: Option<usize>, // Minimum number of responses the student must select
+    #[serde(rename = "choices")]
+    pub answers: Vec<String>,
+    #[serde(rename = "shuffleChoices")]
+    pub shuffle_answers: bool,
+    #[serde(rename = "displayType")]
+    pub display_type: ChooseOneDisplayType, // How to display the response selectors
+    #[serde(rename = "displayColumns")]
+    pub columns: u8, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
+    #[serde(rename = "warningType")]
+    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    #[serde(rename = "showCellAnswerState")]
+    pub show_cell_answer_state: bool,
+    #[serde(rename = "matrix")]
+    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub distractors: Option<MultipleChoiceMatrix>, //TODO: type (contains only strings...)
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ChooseOneDisplayType {
+    #[serde(rename = "radiogroup")]
+    Radio,
+    #[serde(rename = "dropdownlist")]
+    DropDown,
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartMultipleChoice {
-    //TODO
+    //TODO -> Split for different types
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
     #[serde(rename = "minMarks")]
-    min_marks: Option<usize>,
+    min_marks: Option<usize>, //TODO; what is difference with minimum_marks? -> not for 1_n_2
     #[serde(rename = "maxMarks")]
-    max_marks: Option<usize>,
+    max_marks: Option<usize>, // Is there a maximum number of marks the student can get? -> not for 1_n_2
     #[serde(rename = "minAnswers")]
-    min_answers: Option<usize>,
+    min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
-    max_answers: Option<usize>,
+    max_answers: Option<usize>, // Maximum number of responses the student can select -> always one for 1_n_2
     #[serde(rename = "shuffleChoices")]
     shuffle_choices: bool,
     #[serde(rename = "shuffleAnswers")]
     shuffle_answers: Option<bool>,
     #[serde(rename = "displayType")]
-    display_type: MultipleChoiceDisplayType,
+    display_type: MultipleChoiceDisplayType, // How to display the response selectors -> only for 1_n_2?
     #[serde(rename = "displayColumns")]
-    display_columns: usize,
+    displayed_columns: usize, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
-    warning_type: Option<MultipleChoiceWarningType>,
+    wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(flatten)]
-    layout: Option<MultipleChoiceLayout>,
+    layout: Option<MultipleChoiceLayout>, // None for everything except m_n_x
     #[serde(rename = "showCellAnswerState")]
     show_cell_answer_state: bool,
     choices: Vec<String>,
-    answers: Option<Vec<String>>,
-    matrix: Option<MultipleChoiceMatrix>,
+    answers: Option<Vec<String>>, // None for everything except m_n_x
+    #[serde(rename = "matrix")]
+    marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     distractors: Option<MultipleChoiceMatrix>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceDisplayType {
-    #[serde(rename = "radiogroup")]
-    Radio,
     #[serde(rename = "checkbox")]
     Check,
 }
@@ -1171,11 +1203,14 @@ pub enum MultipleChoiceDisplayType {
 pub enum MultipleChoiceWarningType {
     #[serde(rename = "none")]
     None,
+    //TODO: also prevent and warn -> same as leave actions?
+    //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceLayoutType {
     #[serde(rename = "all")]
     All,
+    //TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766
 }
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

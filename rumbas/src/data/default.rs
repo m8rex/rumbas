@@ -2,6 +2,7 @@ use crate::data::exam::Exam;
 use crate::data::feedback::Feedback;
 use crate::data::gapfill::QuestionPartGapFill;
 use crate::data::jme::QuestionPartJME;
+use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::OptionalOverwrite;
@@ -36,6 +37,7 @@ pub enum DefaultFileType {
 pub enum QuestionPartType {
     JME,
     GapFill,
+    ChooseOne,
 }
 
 pub enum DefaultData {
@@ -61,6 +63,9 @@ impl DefaultFileType {
                 Some("questionpart.gapfill") => {
                     //TODO others etc
                     Some(DefaultFileType::QuestionPart(QuestionPartType::GapFill))
+                }
+                Some("questionpart.choose_one") => {
+                    Some(DefaultFileType::QuestionPart(QuestionPartType::ChooseOne))
                 }
                 Some("questionpart.gapfill.gap.jme") => {
                     //TODO others etc
@@ -105,6 +110,10 @@ impl DefaultFileType {
                     let q: QuestionPartJME = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::JME(q)))
                 }
+                QuestionPartType::ChooseOne => {
+                    let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
+                }
             }, //TODO: reduce duplicate
             DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
             {
@@ -117,6 +126,10 @@ impl DefaultFileType {
                 QuestionPartType::JME => {
                     let q: QuestionPartJME = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::JME(q)))
+                }
+                QuestionPartType::ChooseOne => {
+                    let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
                 }
             },
         }
@@ -203,6 +216,7 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                 questions.iter_mut().for_each(|question| {
                                     if let Some(ref mut question_data) = question.question_data {
                                         if let Some(ref mut parts) = question_data.parts {
+                                            //TODO: others etc
                                             parts.iter_mut().for_each(|part| {
                                                 if let (
                                                     QuestionPart::GapFill(_),
@@ -211,7 +225,16 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                 {
                                                     part.overwrite(&p.clone())
                                                 }
-                                            })
+                                            });
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::ChooseOne(_),
+                                                    QuestionPart::ChooseOne(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            });
                                         }
                                     }
                                 })

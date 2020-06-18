@@ -14,6 +14,7 @@ pub mod gapfill;
 pub mod jme;
 pub mod json;
 pub mod locale;
+pub mod multiple_choice;
 pub mod navigation;
 pub mod numbas_settings;
 pub mod preamble;
