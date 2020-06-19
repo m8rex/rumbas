@@ -20,7 +20,7 @@ optional_overwrite! {
     navigation: Navigation,
     timing: Timing,
     feedback: Feedback,
-    question_groups: Vec<QuestionGroup>,
+    question_groups: Vec<QuestionGroup>, //TODO: remove?
     numbas_settings: NumbasSettings
 }
 
