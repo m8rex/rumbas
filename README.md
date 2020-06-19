@@ -81,30 +81,38 @@ The easiest way is to use docker.
   - [x] GapFill
   - [ ] Information
   - [ ] Extension
-- [ ] Support for resources and extensions in questions
-  - [ ] Resources and extensions are added to exam if they are used in the questions
-- [ ] Support for variables in questions
-  - [ ] Specified in json
-  - [ ] Ungrouped
-  - [ ] variable groups?
+- [ ] Support for extensions in questions
+  - [ ] Extensions are added to exam if they are used in the questions
+- [x] Support for variables in questions
+  - [x] Specified in json
+  - [x] Ungrouped
+  - [ ] Short representation as string or list
+  - [ ] variable groups? -> will not be implemented, don't see the use case of it yet...
   - [ ] variables test
 - [ ] Support for functions in questions
   - [ ] Specified in json
   - [ ] Specified as file
-- [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
-  - [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
-  - [ ] `custom_part_types` are added to exam if they are used in the questions
-- [x] Theme support
-- [ ] rulesets and preamble
-  - [ ] at Questions
-  - [ ] at Exams
-- [ ] functions, variables at Exams
-- [ ] contributors and metadata
-  - [ ] at Questions
-  - [ ] at Exams
 - [ ] Support for translations
   - [x] In name of exam
   - [x] Everywhere
   - [ ] Fix optional overwrite
-  - [ ] Fix substitutions (for example for common parts like functions)
+  - [x] Fix substitutions (for example for common parts like functions)
+- [ ] Theme support
+  - [x] when using docker
+  - [ ] when not using docker
+- [ ] preamble
+  - [x] at Questions
+  - [ ] at Exams
+- [ ] rulesets
+  - [ ] at Questions
+  - [ ] at Exams
+- [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
+  - [ ] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
+  - [ ] `custom_part_types` are added to exam if they are used in the questions
+- [ ] Support for resources in questions
+  - [ ] Resources are added to exam if they are used in the questions
 - [ ] Tests
+- [ ] functions, variables at Exams -> usefull?
+- [ ] contributors and metadata -> usefull?
+  - [ ] at Questions
+  - [ ] at Exams

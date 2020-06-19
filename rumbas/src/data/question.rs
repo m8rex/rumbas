@@ -80,8 +80,8 @@ impl ToNumbas for Question {
                     .filter(|(_k, v)| &v.group.clone().unwrap()[..] == UNGROUPED_GROUP)
                     .map(|(k, _)| k)
                     .collect(),
-                Vec::new(),     //TODO: calculate from variables
-                HashMap::new(), //TODO: add to Question type
+                Vec::new(),     // Don't add variable groups
+                HashMap::new(), //TODO: add to Question type ?
                 self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
                 self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
                 self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
