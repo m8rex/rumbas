@@ -44,4 +44,11 @@ impl FileString {
     pub fn get_content(&self) -> String {
         self.content.clone()
     }
+
+    pub fn s(content: &String) -> FileString {
+        FileString {
+            file_name: None,
+            content: content.clone(),
+        }
+    }
 }

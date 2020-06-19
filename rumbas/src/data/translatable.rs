@@ -49,11 +49,12 @@ fn substitute(pattern: &String, map: &HashMap<String, FileString>) -> String {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::data::file_reference::FileString;
 
     #[test]
     fn no_translation() {
         let val = "some string".to_string();
-        let t = TranslatableString::NotTranslated(val.clone());
+        let t = TranslatableString::NotTranslated(FileString::s(&val));
         assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
     }
 
@@ -62,8 +63,8 @@ mod test {
         let val_nl = "een string".to_string();
         let val_en = "some string".to_string();
         let mut m = HashMap::new();
-        m.insert("nl".to_string(), val_nl.clone());
-        m.insert("en".to_string(), val_en.clone());
+        m.insert("nl".to_string(), FileString::s(&val_nl));
+        m.insert("en".to_string(), FileString::s(&val_en));
         let t = TranslatableString::Translated(m);
         assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
         assert_eq!(t.to_string(&"en".to_string()), Some(val_en));
@@ -74,23 +75,25 @@ mod test {
         let val_nl = "een string met functie {func} en {0}".to_string();
         let val_en = "some string with function {func} and {0}".to_string();
         let mut m = HashMap::new();
-        m.insert("nl".to_string(), val_nl.clone());
-        m.insert("en".to_string(), val_en.clone());
-        m.insert("{0}".to_string(), "x^2".to_string());
-        m.insert("{func}".to_string(), "e^x".to_string());
+        m.insert("nl".to_string(), FileString::s(&val_nl));
+        m.insert("en".to_string(), FileString::s(&val_en));
+        m.insert("{0}".to_string(), FileString::s(&"x^2".to_string()));
+        m.insert("{func}".to_string(), FileString::s(&"e^x".to_string()));
         let t = TranslatableString::Translated(m.clone());
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!(
                 "een string met functie {} en {}",
-                m["{func}"], m["{0}"]
+                m["{func}"].get_content(),
+                m["{0}"].get_content()
             ))
         );
         assert_eq!(
             t.to_string(&"en".to_string()),
             Some(format!(
                 "some string with function {} and {}",
-                m["{func}"], m["{0}"]
+                m["{func}"].get_content(),
+                m["{0}"].get_content()
             ))
         );
     }
