@@ -7,20 +7,20 @@ use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
-use crate::data::variable::Variable;
+use crate::data::variable::VariableRepresentation;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-const UNGROUPED_GROUP: &'static str = "Ungrouped variables";
+pub const UNGROUPED_GROUP: &'static str = "Ungrouped variables";
 
 optional_overwrite! {
     Question,
     statement: TranslatableString,
     advice: TranslatableString,
     parts: Vec<QuestionPart>,
-    variables: HashMap<String, Variable>,
+    variables: HashMap<String, VariableRepresentation>,
     variables_test: VariablesTest,
     functions: HashMap<String, Function>,
     preamble: Preamble,
@@ -60,7 +60,12 @@ impl ToNumbas for Question {
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(k, v)| (k.clone(), v.to_numbas_with_name(&locale, k).unwrap()))
+                    .map(|(k, v)| {
+                        (
+                            k.clone(),
+                            v.to_variable().to_numbas_with_name(&locale, k).unwrap(),
+                        )
+                    })
                     .collect(),
                 self.variables_test
                     .clone()
@@ -77,7 +82,9 @@ impl ToNumbas for Question {
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .filter(|(_k, v)| &v.group.clone().unwrap()[..] == UNGROUPED_GROUP)
+                    .filter(|(_k, v)| {
+                        &v.to_variable().group.clone().unwrap()[..] == UNGROUPED_GROUP
+                    })
                     .map(|(k, _)| k)
                     .collect(),
                 Vec::new(),     // Don't add variable groups
