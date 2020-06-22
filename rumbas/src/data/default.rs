@@ -72,6 +72,10 @@ impl DefaultFileType {
                 Some("questionpart.number_entry") => {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
                 }
+                Some("questionpart.jme") => {
+                    //TODO others etc
+                    Some(DefaultFileType::QuestionPart(QuestionPartType::JME))
+                }
                 Some("questionpart.gapfill.gap.jme") => {
                     //TODO others etc
                     Some(DefaultFileType::QuestionPartGapFillGap(
@@ -234,6 +238,15 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                 if let (
                                                     QuestionPart::GapFill(_),
                                                     QuestionPart::GapFill(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            });
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::JME(_),
+                                                    QuestionPart::JME(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())

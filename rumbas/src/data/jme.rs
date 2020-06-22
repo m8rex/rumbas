@@ -263,7 +263,7 @@ impl ToNumbas for JMEStringRestriction {
 optional_overwrite! {
     JMEPatternRestriction,
     restriction: JMERestriction: serde(flatten),
-    pattern: String, //TODO type?
+    pattern: String, //TODO type? If string -> InputString?
     name_to_compare: String //TODO, translateable?
 }
 
