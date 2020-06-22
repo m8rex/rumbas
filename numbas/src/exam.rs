@@ -1122,22 +1122,24 @@ pub struct ExamQuestionPartMatrix {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartPatternMatch {
     #[serde(flatten)]
-    part_data: ExamQuestionPartSharedData,
+    pub part_data: ExamQuestionPartSharedData,
     #[serde(rename = "caseSensitive")]
-    case_sensitive: bool,
+    pub case_sensitive: bool,
     #[serde(rename = "partialCredit")]
-    partial_credit: usize,
-    answer: Primitive,
+    pub partial_credit: f64,
+    pub answer: Primitive,
     #[serde(rename = "displayAnswer")]
-    display_answer: Option<Primitive>,
+    pub display_answer: Option<Primitive>,
     #[serde(rename = "matchMode")]
-    match_mode: PatternMatchMode,
+    pub match_mode: PatternMatchMode,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
 pub enum PatternMatchMode {
     #[serde(rename = "regex")]
     Regex,
+    #[serde(rename = "exact")]
+    Exact, //TODO: check all options
 }
 
 #[skip_serializing_none]

@@ -7,6 +7,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::OptionalOverwrite;
+use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;
 use crate::data::timing::Timing;
@@ -40,6 +41,7 @@ pub enum QuestionPartType {
     GapFill,
     ChooseOne,
     NumberEntry,
+    PatternMatch,
 }
 
 pub enum DefaultData {
@@ -73,9 +75,11 @@ impl DefaultFileType {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
                 }
                 Some("questionpart.jme") => {
-                    //TODO others etc
                     Some(DefaultFileType::QuestionPart(QuestionPartType::JME))
                 }
+                Some("questionpart.pattern_match") => Some(DefaultFileType::QuestionPart(
+                    QuestionPartType::PatternMatch,
+                )),
                 Some("questionpart.gapfill.gap.jme") => {
                     //TODO others etc
                     Some(DefaultFileType::QuestionPartGapFillGap(
@@ -127,6 +131,10 @@ impl DefaultFileType {
                     let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
                 }
+                QuestionPartType::PatternMatch => {
+                    let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
+                }
             }, //TODO: reduce duplicate
             DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
             {
@@ -147,6 +155,10 @@ impl DefaultFileType {
                 QuestionPartType::NumberEntry => {
                     let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
+                }
+                QuestionPartType::PatternMatch => {
+                    let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
                 }
             },
         }
@@ -265,6 +277,15 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                 if let (
                                                     QuestionPart::NumberEntry(_),
                                                     QuestionPart::NumberEntry(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            });
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::PatternMatch(_),
+                                                    QuestionPart::PatternMatch(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
