@@ -1,3 +1,4 @@
+use crate::data::input_string::InputString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use serde::Deserialize;
 use serde::Serialize;
@@ -9,7 +10,7 @@ const FILE_PREFIX: &'static str = "file:";
 #[serde(try_from = "String")]
 pub struct FileString {
     file_name: Option<String>,
-    content: String,
+    content: InputString,
 }
 impl_optional_overwrite!(FileString);
 
@@ -26,7 +27,7 @@ impl std::convert::TryFrom<String> for FileString {
                 std::fs::read_to_string(&file_path)
                     .map(|s| FileString {
                         file_name: Some(file_name.to_string()),
-                        content: s.clone(),
+                        content: InputString::from(s.clone()),
                     })
                     .map_err(|e| format!("Failed to read {}: {}", file_path.to_str().unwrap(), e))
                 //TODO?
@@ -34,7 +35,7 @@ impl std::convert::TryFrom<String> for FileString {
         } else {
             Ok(FileString {
                 file_name: None,
-                content: s.clone(),
+                content: InputString::from(s.clone()),
             })
         }
     }
@@ -42,13 +43,13 @@ impl std::convert::TryFrom<String> for FileString {
 
 impl FileString {
     pub fn get_content(&self) -> String {
-        self.content.clone()
+        self.content.0.clone()
     }
 
     pub fn s(content: &String) -> FileString {
         FileString {
             file_name: None,
-            content: content.clone(),
+            content: InputString::from(content.clone()),
         }
     }
 }

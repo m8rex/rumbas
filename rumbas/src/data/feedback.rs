@@ -70,7 +70,7 @@ impl ToNumbas for Review {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct FeedbackMessage {
-    message: String,
+    message: String,   //TODO: inputstring or filestring?
     threshold: String, //TODO type
 }
 impl_optional_overwrite!(FeedbackMessage);
