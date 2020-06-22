@@ -46,6 +46,9 @@ impl ToNumbas for Question {
     ) -> NumbasResult<numbas::exam::ExamQuestion> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
+            if self.variables.clone().unwrap().contains_key("e") {
+                panic!("e is not allowed as a variable name"); //TODO
+            }
             Ok(numbas::exam::ExamQuestion::new(
                 name,
                 self.statement.clone().unwrap().to_string(&locale).unwrap(),
