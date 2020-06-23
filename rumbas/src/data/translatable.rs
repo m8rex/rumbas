@@ -37,6 +37,8 @@ impl TranslatableString {
     }
 }
 
+//TODO: check for infinite loops / recursion? -> don't substitute something that is already
+//substituted
 fn substitute(pattern: &String, locale: &String, map: &HashMap<String, FileString>) -> String {
     let mut result = pattern.clone();
     let mut substituted = false;
