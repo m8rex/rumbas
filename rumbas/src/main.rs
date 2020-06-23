@@ -23,7 +23,7 @@ fn main() {
             match exam_result {
                 Ok(mut exam) => {
                     combine_with_default_files(path, &mut exam);
-                    println!("{:#?}", exam);
+                    //println!("{:#?}", exam);
                     for locale_item in exam.locales.clone().unwrap().iter() {
                         let locale = locale_item.clone().name.unwrap(); //TODO?
                         let numbas = exam.to_numbas(&locale);
@@ -66,7 +66,11 @@ fn main() {
                                 }
                             }
                             Err(missing_fields) => {
-                                println!("Missing fields:\n{}", missing_fields.join("\n"));
+                                println!(
+                                    "Missing fields ({}):\n{}",
+                                    locale,
+                                    missing_fields.join("\n")
+                                );
                             }
                         }
                     }
