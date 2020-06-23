@@ -1,7 +1,3 @@
-use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
-use crate::data::question::UNGROUPED_GROUP;
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
