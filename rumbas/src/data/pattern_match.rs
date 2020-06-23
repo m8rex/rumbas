@@ -25,10 +25,10 @@ impl ToNumbas for QuestionPartPatternMatch {
                 case_sensitive: self.case_sensitive.unwrap(),
                 partial_credit: self.partial_credit.unwrap(),
                 answer: numbas::exam::Primitive::String(
-                    self.pattern.clone().unwrap().get_content(),
+                    self.pattern.clone().unwrap().get_content(&locale),
                 ),
                 display_answer: Some(numbas::exam::Primitive::String(
-                    self.display_answer.clone().unwrap().get_content(),
+                    self.display_answer.clone().unwrap().get_content(&locale),
                 )),
                 match_mode: self.match_mode.unwrap(),
             })

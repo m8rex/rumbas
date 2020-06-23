@@ -28,20 +28,27 @@ impl_optional_overwrite_option!(TranslatableString);
 impl TranslatableString {
     pub fn to_string(&self, locale: &String) -> Option<String> {
         match self {
-            TranslatableString::NotTranslated(s) => Some(s.get_content()),
-            TranslatableString::Translated(m) => {
-                m.get(locale).map(|s| substitute(&s.get_content(), &m))
-            }
+            TranslatableString::NotTranslated(s) => Some(s.get_content(&locale)),
+            TranslatableString::Translated(m) => m
+                .get(locale)
+                .or(m.get("content"))
+                .map(|s| substitute(&s.get_content(&locale), &locale, &m)), //TODO content to static string //TODO: check for missing translations
         }
     }
 }
 
-fn substitute(pattern: &String, map: &HashMap<String, FileString>) -> String {
+fn substitute(pattern: &String, locale: &String, map: &HashMap<String, FileString>) -> String {
     let mut result = pattern.clone();
+    let mut substituted = false;
     for (key, val) in map.iter() {
         if key.starts_with("{") && key.ends_with("}") {
-            result = result.replace(key, &val.get_content());
+            let before = result.clone();
+            result = result.replace(key, &val.get_content(&locale));
+            substituted = substituted || before != result;
         }
+    }
+    if substituted {
+        return substitute(&result, &locale, &map);
     }
     result
 }

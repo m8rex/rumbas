@@ -52,21 +52,21 @@ impl ToNumbas for QuestionPartNumberEntry {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
-    Normal(FileString),
+    Normal(FileString), //TODO: filestrings?
     Range { from: FileString, to: FileString },
 }
 impl_optional_overwrite!(NumberEntryAnswer);
 
 impl ToNumbas for NumberEntryAnswer {
     type NumbasType = numbas::exam::NumberEntryAnswerType;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             NumberEntryAnswer::Normal(f) => numbas::exam::NumberEntryAnswerType::Answer {
-                answer: numbas::exam::Primitive::String(f.get_content()),
+                answer: numbas::exam::Primitive::String(f.get_content(&locale)),
             },
             NumberEntryAnswer::Range { from, to } => numbas::exam::NumberEntryAnswerType::MinMax {
-                min_value: numbas::exam::Primitive::String(from.get_content()),
-                max_value: numbas::exam::Primitive::String(to.get_content()),
+                min_value: numbas::exam::Primitive::String(from.get_content(&locale)),
+                max_value: numbas::exam::Primitive::String(to.get_content(&locale)),
             },
         })
     }

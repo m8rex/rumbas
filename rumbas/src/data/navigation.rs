@@ -33,7 +33,7 @@ impl ToNumbas for Navigation {
                     .map(|s| s.to_numbas(&locale).unwrap()),
                 self.prevent_leaving,
                 self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
-                self.start_password.clone().map(|s| s.get_content()),
+                self.start_password.clone().map(|s| s.get_content(&locale)),
             ))
         } else {
             Err(empty_fields)

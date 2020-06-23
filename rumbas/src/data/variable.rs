@@ -20,7 +20,7 @@ impl ToNumbas for Variable {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamVariable::new(
                 name,
-                self.definition.clone().unwrap().get_content(),
+                self.definition.clone().unwrap().get_content(&locale),
                 self.description.clone().unwrap(),
                 self.template_type
                     .clone()
@@ -173,9 +173,7 @@ impl RangeData {
     pub fn try_from_range(s: &String) -> Option<RangeData> {
         let re = Regex::new(r"^(\d+(?:\.\d*)?) \.\. (\d+(?:\.\d*)?)\#(\d+(?:\.\d*)?)$")
             .expect("It to be a valid regex");
-        println!("{:?}", re.captures(s));
         if let Some(c) = re.captures(s) {
-            println!("{:?}", c);
             return Some(RangeData {
                 from: c.get(1).unwrap().as_str().parse().unwrap(),
                 to: c.get(2).unwrap().as_str().parse().unwrap(),
@@ -189,7 +187,6 @@ impl RangeData {
     }
     pub fn try_from_random_range(s: &String) -> Option<RangeData> {
         if s.starts_with("random(") && s.ends_with(")") {
-            println!("in {}", &s[7..s.len() - 1].to_string());
             return RangeData::try_from_range(&s[7..s.len() - 1].to_string());
         }
         None
