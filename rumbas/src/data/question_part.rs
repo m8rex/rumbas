@@ -1,4 +1,5 @@
 use crate::data::gapfill::QuestionPartGapFill;
+use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::number_entry::QuestionPartNumberEntry;
@@ -13,7 +14,8 @@ optional_overwrite_enum! {
     GapFill: QuestionPartGapFill: serde(rename = "gapfill"),
     ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one"),
     NumberEntry: QuestionPartNumberEntry: serde(rename = "number_entry"),
-    PatternMatch: QuestionPartPatternMatch: serde(rename = "pattern_match")
+    PatternMatch: QuestionPartPatternMatch: serde(rename = "pattern_match"),
+    Information: QuestionPartInformation: serde(rename = "information")
 }
 
 impl ToNumbas for QuestionPart {
@@ -40,6 +42,10 @@ impl ToNumbas for QuestionPart {
                 let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::PatternMatch(n))
             }
+            QuestionPart::Information(d) => {
+                let n = d.to_numbas(&locale)?;
+                Ok(numbas::exam::ExamQuestionPart::Information(n))
+            }
         }
     }
 }
@@ -61,10 +67,10 @@ macro_rules! question_part_type {
             adaptive_marking_penalty: usize,
             custom_marking_algorithm: String, // TODO? empty string -> none?, from file?
             extend_base_marking_algorithm: bool,
-            steps: Vec<QuestionPart>,
+            steps: Vec<QuestionPart>
             $(
-                $field: $type $(: $field_attribute)?
-            ),*
+                ,$field: $type $(: $field_attribute)?
+            )*
         }
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {

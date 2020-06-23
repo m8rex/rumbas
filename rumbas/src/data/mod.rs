@@ -11,6 +11,7 @@ pub mod feedback;
 pub mod file_reference;
 pub mod function;
 pub mod gapfill;
+pub mod information;
 pub mod input_string;
 pub mod jme;
 pub mod json;
