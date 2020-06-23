@@ -1,6 +1,7 @@
 use crate::data::exam::Exam;
 use crate::data::feedback::Feedback;
 use crate::data::gapfill::QuestionPartGapFill;
+use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::navigation::Navigation;
@@ -42,6 +43,7 @@ pub enum QuestionPartType {
     ChooseOne,
     NumberEntry,
     PatternMatch,
+    Information,
 }
 
 pub enum DefaultData {
@@ -80,12 +82,21 @@ impl DefaultFileType {
                 Some("questionpart.pattern_match") => Some(DefaultFileType::QuestionPart(
                     QuestionPartType::PatternMatch,
                 )),
+                Some("questionpart.information") => {
+                    Some(DefaultFileType::QuestionPart(QuestionPartType::Information))
+                }
                 Some("questionpart.gapfill.gap.jme") => {
                     //TODO others etc
                     Some(DefaultFileType::QuestionPartGapFillGap(
                         QuestionPartType::JME,
                     ))
                 }
+                Some("questionpart.gapfill.gap.number_entry") => Some(
+                    DefaultFileType::QuestionPartGapFillGap(QuestionPartType::NumberEntry),
+                ),
+                Some("questionpart.gapfill.gap.pattern_match") => Some(
+                    DefaultFileType::QuestionPartGapFillGap(QuestionPartType::PatternMatch),
+                ),
                 _ => None,
             },
             None => None,
@@ -135,6 +146,10 @@ impl DefaultFileType {
                     let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
                 }
+                QuestionPartType::Information => {
+                    let q: QuestionPartInformation = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::Information(q)))
+                }
             }, //TODO: reduce duplicate
             DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
             {
@@ -150,15 +165,27 @@ impl DefaultFileType {
                 }
                 QuestionPartType::ChooseOne => {
                     let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::ChooseOne(q),
+                    ))
                 }
                 QuestionPartType::NumberEntry => {
                     let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::NumberEntry(q),
+                    ))
                 }
                 QuestionPartType::PatternMatch => {
                     let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::PatternMatch(q),
+                    ))
+                }
+                QuestionPartType::Information => {
+                    let q: QuestionPartInformation = serde_json::from_str(&json)?;
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::Information(q),
+                    ))
                 }
             },
         }
@@ -291,6 +318,15 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                     part.overwrite(&p.clone())
                                                 }
                                             });
+                                            parts.iter_mut().for_each(|part| {
+                                                if let (
+                                                    QuestionPart::Information(_),
+                                                    QuestionPart::Information(_),
+                                                ) = (&p, &part)
+                                                {
+                                                    part.overwrite(&p.clone())
+                                                }
+                                            });
                                         }
                                     }
                                 })
@@ -312,6 +348,20 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                             if let (
                                                                 QuestionPart::JME(_),
                                                                 QuestionPart::JME(_),
+                                                            ) = (&p, &gap)
+                                                            {
+                                                                gap.overwrite(&p.clone())
+                                                            }
+                                                            if let (
+                                                                QuestionPart::NumberEntry(_),
+                                                                QuestionPart::NumberEntry(_),
+                                                            ) = (&p, &gap)
+                                                            {
+                                                                gap.overwrite(&p.clone())
+                                                            }
+                                                            if let (
+                                                                QuestionPart::PatternMatch(_),
+                                                                QuestionPart::PatternMatch(_),
                                                             ) = (&p, &gap)
                                                             {
                                                                 gap.overwrite(&p.clone())

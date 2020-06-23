@@ -1279,7 +1279,7 @@ impl ExamQuestionPartGapFill {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartInformation {
     #[serde(flatten)]
-    part_data: ExamQuestionPartSharedData,
+    pub part_data: ExamQuestionPartSharedData,
 }
 
 #[skip_serializing_none]
