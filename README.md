@@ -35,8 +35,13 @@ Functions can be specified by just a filename:
   - next should be the real definition
 
 Templating is possible:
-  - Currently only for exams
-  - Should be placed in template_questions or template_exams folder
+  - Templates should be placed in the `template_questions`/`template_exams` folder
+    - These files look like ordinary question/exam files
+    - Contains strings like `"template:<name>" as value for some fields (e.g. `"template:equation"`)
+  - `Values files` should be placed in the `questions`/`exams` folder
+    - Contains a `template` field which specifies the template. This path is relative within `template_questions`/`template_exams`
+    - Contains a field for every template variable in the template file
+    - If the template file contains `"template:<name>"`, the field `name` has to be specified in the values file
 
 ## Running rumbas
 ### Docker
@@ -127,6 +132,6 @@ The easiest way is to use docker.
   - [ ] at Exams
 - [ ] Templating
   - [x] Exams
-  - [ ] Questions
+  - [x] Questions
   - [ ] What about default values?
 - [x] Question preview
