@@ -5,7 +5,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
-use crate::data::template::ExamFileType;
+use crate::data::template::{ExamFileType, TemplateData};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -107,14 +107,37 @@ const TEMPLATE_PREFIX: &'static str = "template";
 impl Exam {
     pub fn from_file(file: &Path) -> JsonResult<Exam> {
         use ExamFileType::*;
-        let json = fs::read_to_string(file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
         let input: std::result::Result<ExamFileType, serde_json::error::Error> =
-            serde_json::from_str(&json);
+            if file.starts_with("exams") {
+                //TODO: better solutions? Use static values for "exams"
+                let json = fs::read_to_string(file).expect(
+                    &format!(
+                        "Failed to read {}",
+                        file.to_str().map_or("invalid filename", |s| s)
+                    )[..],
+                );
+                serde_json::from_str(&json)
+            } else if file.starts_with("questions") {
+                //TODO: improve this part
+                let mut data = HashMap::new();
+                data.insert(
+                    "question".to_string(),
+                    serde_json::Value::String(
+                        file.with_extension("")
+                            .strip_prefix("questions")
+                            .unwrap()
+                            .to_string_lossy()
+                            .into_owned(),
+                    ),
+                );
+                let t = TemplateData {
+                    relative_template_path: "question_preview".to_string(), //TODO
+                    data,
+                };
+                Ok(Template(t))
+            } else {
+                panic!("{} should start with questions/ or exams/", file.display());
+            };
         input
             .map(|e| match e {
                 Normal(e) => Ok(e),

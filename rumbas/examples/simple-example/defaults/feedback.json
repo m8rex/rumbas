@@ -1,8 +1,8 @@
 {
 "percentage_needed_to_pass": 0,
 "show_name_of_student": true,
-"show_actual_mark": false,
-"show_total_mark": false,
+"show_current_marks": false,
+"show_maximum_marks": false,
 "show_answer_state": true,
 "allow_reveal_answer": true,
 "review":{
