@@ -15,8 +15,16 @@ pub enum TranslatableString {
 impl OptionalOverwrite for TranslatableString {
     type Item = TranslatableString;
     fn empty_fields(&self) -> Vec<String> {
-        let empty = Vec::new();
-        empty
+        match self {
+            TranslatableString::Translated(m) => {
+                let mut empty = Vec::new();
+                for (_, v) in m.iter() {
+                    empty.extend(v.empty_fields().iter().cloned());
+                }
+                empty
+            }
+            TranslatableString::NotTranslated(f) => f.empty_fields(),
+        }
     }
     fn overwrite(&mut self, _other: &Self::Item) {
         //TODO: Maybe add languages of other that are missing in self?

@@ -8,22 +8,37 @@ use std::path::Path;
 const FILE_PREFIX: &'static str = "file:";
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(try_from = "String")]
+#[serde(from = "String")]
 pub struct FileString {
     file_name: Option<String>,
     content: Option<InputString>,
     translated_content: HashMap<String, InputString>,
+    error_message: Option<String>,
 }
-impl_optional_overwrite!(FileString);
+impl OptionalOverwrite for FileString {
+    type Item = FileString;
+    fn empty_fields(&self) -> Vec<String> {
+        if let Some(e) = &self.error_message {
+            vec![e.clone()]
+        } else {
+            Vec::new()
+        }
+    }
+    fn overwrite(&mut self, _other: &Self::Item) {}
+}
+impl_optional_overwrite_option!(FileString);
 
 //TODO: error message is not shown if no file found
-impl std::convert::TryFrom<String> for FileString {
-    type Error = String;
-
-    fn try_from(s: String) -> Result<Self, Self::Error> {
+impl std::convert::From<String> for FileString {
+    fn from(s: String) -> Self {
         if s.starts_with(FILE_PREFIX) {
             if s == FILE_PREFIX {
-                Err(format!("Missing filename after {}", FILE_PREFIX))
+                FileString {
+                    file_name: Some("".to_string()),
+                    content: None,
+                    translated_content: HashMap::new(),
+                    error_message: Some("Missing filename".to_string()),
+                }
             } else {
                 let relative_file_name = s.split(FILE_PREFIX).collect::<Vec<&str>>()[1];
                 let file_path = Path::new("questions").join(relative_file_name);
@@ -32,7 +47,6 @@ impl std::convert::TryFrom<String> for FileString {
                     //Look for translation dirs
                     let mut translated_content = HashMap::new();
                     for entry in file_dir.read_dir().expect("read_dir call failed") {
-                        //TODO
                         if let Ok(entry) = entry {
                             if let Ok(entry_name) = entry.file_name().into_string() {
                                 println!("{}", entry_name);
@@ -62,20 +76,31 @@ impl std::convert::TryFrom<String> for FileString {
                         .map(|s| InputString::from(s.clone()))
                         .ok();
                     if content.is_none() && translated_content.len() == 0 {
-                        Err(format!("Failed to read {}", file_path.to_str().unwrap()))
+                        FileString {
+                            file_name: Some(relative_file_name.to_string()),
+                            content: None,
+                            translated_content: HashMap::new(),
+                            error_message: Some(relative_file_name.to_string()),
+                        }
                     } else {
-                        Ok(FileString {
+                        FileString {
                             file_name: Some(relative_file_name.to_string()),
                             content,
                             translated_content,
-                        })
+                            error_message: None,
+                        }
                     }
                 } else {
-                    Err(format!("Failed to read {}", file_path.to_str().unwrap()))
+                    FileString {
+                        file_name: Some(relative_file_name.to_string()),
+                        content: None,
+                        translated_content: HashMap::new(),
+                        error_message: Some(relative_file_name.to_string()),
+                    }
                 }
             }
         } else {
-            Ok(FileString::s(&s))
+            FileString::s(&s)
         }
     }
 }
@@ -96,6 +121,7 @@ impl FileString {
             file_name: None,
             content: Some(InputString::from(content.clone())),
             translated_content: HashMap::new(),
+            error_message: None,
         }
     }
 }
