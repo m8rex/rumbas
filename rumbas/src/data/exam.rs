@@ -5,7 +5,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
-use crate::data::template::{ExamFileType, TemplateData};
+use crate::data::template::{ExamFileType, TemplateData, TEMPLATE_EXAMS_FOLDER, TEMPLATE_PREFIX};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -102,8 +102,6 @@ impl ToNumbas for Exam {
     }
 }
 
-const TEMPLATE_EXAMS_FOLDER: &'static str = "template_exams";
-const TEMPLATE_PREFIX: &'static str = "template";
 impl Exam {
     pub fn from_file(file: &Path) -> JsonResult<Exam> {
         use ExamFileType::*;
