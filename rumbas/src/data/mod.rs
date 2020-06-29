@@ -24,6 +24,7 @@ pub mod pattern_match;
 pub mod preamble;
 pub mod question;
 pub mod question_group;
+pub mod template;
 pub mod timing;
 pub mod translatable;
 pub mod variable;
