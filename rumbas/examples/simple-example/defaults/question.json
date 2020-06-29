@@ -23,5 +23,8 @@
 },
 "variables": {},
 "functions": {},
-"variables_test": {}
+"variables_test": {
+  "condition": "",
+  "max_runs": 100
+}
 }

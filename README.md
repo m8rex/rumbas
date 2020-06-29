@@ -14,6 +14,8 @@ A rumbas project should have to following folder structure:
   - A folder named `questions` that contains the questions
   - A folder named `exams` that contains the exams
   - A folder named `themes` the contains the themes
+  - A folder named `template_questions` that contains templates for questions
+  - A folder named `template_exams` that contains the template for exams
   - A folder named `custom_part_types` that contains `custom_part_types`
 
 Rumbas does not specify default values by itself:
@@ -32,6 +34,10 @@ Functions can be specified by just a filename:
   - file should start with comments of form `# param <name> <type>`
   - next should be the real definition
 
+Templating is possible:
+  - Currently only for exams
+  - Should be placed in template_questions or template_exams folder
+
 ## Running rumbas
 ### Docker
 The easiest way is to use docker.
@@ -41,6 +47,9 @@ The easiest way is to use docker.
   - Or Build the docker image with `docker build -t rumbas .`
 - Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas rumbas <relative path of exam in the mounted folder>`
   - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas rumbas exams/rumbas-exam-test.json`
+  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas rumbas questions/question1.json`
+    - This compiles a single exercise by using the `template_exams/question_preview.json` template
+  
 
 ### Without docker
 - Make sure python 3 is installed (and added to the path)
@@ -74,21 +83,21 @@ The easiest way is to use docker.
   - [x] JME
   - [x] NumberEntry
   - [ ] Matrix
-  - [ ] PatternMatch
+  - [x] PatternMatch
   - [x] ChooseOne
   - [ ] ChooseSeveral
   - [ ] MatchChoicesWithAnswers
   - [x] GapFill
-  - [ ] Information
+  - [x] Information
   - [ ] Extension
 - [ ] Support for extensions in questions
   - [ ] Extensions are added to exam if they are used in the questions
 - [x] Support for variables in questions
   - [x] Specified in json
   - [x] Ungrouped
-  - [ ] Short representation as string or list
-  - [ ] variable groups? -> will not be implemented, don't see the use case of it yet...
-  - [ ] variables test
+  - [x] Short representation as string or list
+  - [-] variable groups? -> will not be implemented, don't see the use case of it yet...
+  - [x] variables test
 - [ ] Support for functions in questions
   - [ ] Specified in json
   - [ ] Specified as file
@@ -116,3 +125,8 @@ The easiest way is to use docker.
 - [ ] contributors and metadata -> usefull?
   - [ ] at Questions
   - [ ] at Exams
+- [ ] Templating
+  - [x] Exams
+  - [ ] Questions
+  - [ ] What about default values?
+- [x] Question preview
