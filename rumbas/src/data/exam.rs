@@ -5,6 +5,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
+use crate::data::template::ExamFileType;
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -101,14 +102,42 @@ impl ToNumbas for Exam {
     }
 }
 
+const TEMPLATE_EXAMS_FOLDER: &'static str = "template_exams";
+const TEMPLATE_PREFIX: &'static str = "template";
 impl Exam {
     pub fn from_file(file: &Path) -> JsonResult<Exam> {
+        use ExamFileType::*;
         let json = fs::read_to_string(file).expect(
             &format!(
                 "Failed to read {}",
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        serde_json::from_str(&json).map_err(|e| JsonError::from(e, file.to_path_buf()))
+        let input: std::result::Result<ExamFileType, serde_json::error::Error> =
+            serde_json::from_str(&json);
+        input
+            .map(|e| match e {
+                Normal(e) => Ok(e),
+                Template(t) => {
+                    let template_file = Path::new(TEMPLATE_EXAMS_FOLDER)
+                        .join(format!("{}.json", t.relative_template_path));
+                    let template_json = fs::read_to_string(&template_file).expect(
+                        &format!(
+                            "Failed to read {}",
+                            template_file.to_str().map_or("invalid filename", |s| s)
+                        )[..],
+                    );
+
+                    let json = t.data.iter().fold(template_json, |s, (k, v)| {
+                        s.replace(
+                            &format!("\"{}:{}\"", TEMPLATE_PREFIX, k)[..],
+                            &serde_json::to_string(v).unwrap()[..],
+                        )
+                    });
+                    serde_json::from_str(&json)
+                }
+            })
+            .and_then(std::convert::identity) //flatten result is currently only possible in nightly
+            .map_err(|e| JsonError::from(e, file.to_path_buf()))
     }
 }
