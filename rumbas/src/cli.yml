@@ -1,0 +1,20 @@
+name: rumbas
+version: "0.1.0"
+author: Jesse Hoobergs <jesse@hoobergs.be>
+about: Make online exercises great again!
+args:
+    - EXAM_OR_QUESTION:
+        help: The path to the exam or question file to use
+        required: true
+        index: 1
+    - verbose:
+        short: v
+        multiple: true
+        help: Sets the level of verbosity
+    - scorm:
+        short: s
+        help: Include the files necessary to make a SCORM package
+    - zip:
+        short: z
+        help: Create a zip file instead of a directory 
+subcommands:
