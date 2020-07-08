@@ -4,7 +4,7 @@ use std::env;
 use std::path::Path;
 #[macro_use]
 extern crate clap;
-use clap::App;
+use clap::{crate_version, App};
 mod data;
 
 const CACHE_FOLDER: &'static str = ".rumbas";
@@ -13,9 +13,9 @@ const OUTPUT_FOLDER: &'static str = "_output";
 fn main() {
     let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let yaml = load_yaml!("cli.yml");
-    let matches = App::from_yaml(yaml).get_matches();
+    let matches = App::from_yaml(yaml).version(crate_version!()).get_matches();
 
-    let path = Path::new(matches.value_of("EXAM_OR_QUESTION").unwrap());
+    let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
     println!("{:?}", path.display());
     if path.is_absolute() {
         println!("Absolute path's are not supported");

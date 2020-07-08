@@ -1,9 +1,8 @@
 name: rumbas
-version: "0.1.0"
 author: Jesse Hoobergs <jesse@hoobergs.be>
 about: Make online exercises great again!
 args:
-    - EXAM_OR_QUESTION:
+    - EXAM_OR_QUESTION_PATH:
         help: The path to the exam or question file to use
         required: true
         index: 1
