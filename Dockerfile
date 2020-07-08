@@ -28,4 +28,5 @@ ENV NUMBAS_FOLDER=/usr/app/Numbas
 
 COPY --from=builder /usr/app/rumbas/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas
 COPY entrypoint.sh .
-ENTRYPOINT ["./entrypoint.sh"]
+WORKDIR /rumbas
+ENTRYPOINT ["/usr/app/entrypoint.sh"]
