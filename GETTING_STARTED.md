@@ -207,9 +207,46 @@ When the description of a `question`/`exam` is read:
 - Go to `<absolute_path_to_rumbas-examples_repo>/_output` to find the generated html. 
 	- Click on the `index.html` file to open the exam in the browser
 
+## Simplifying docker usage
+In this section we describe create .bat or .sh files to make the docker usage of rumbas transparant for the user.
+
+Important: Make sure to use the latest version of rumbas (or at least a specific version, not latest)
+
+### Windows
+We will create a folder `docker_scripts` on the `C` drive and add it to the `PATH` environment variable.
+In this folder you can create a file for each of the following two scripts.
+
+#### Creating the `docker_scripts` folder
+- Create a folder 'docker_scripts' on the C drive
+- Click on the window icon in the left bottom corner
+- Search for 'Edit environment variables' and click on it
+- Select 'Path' and click 'edit'
+- Click on 'New'
+- Typ 'C:\docker_scripts'
+- Click on 'Ok'
+- Open a new terminal so the new PATH variable is set
+
+#### rumbas.bat
+When you add this file, you will be able to write `rumbas` in the terminal, instead of needing to type the whole docker command with the volume mount.
+```bat
+@echo off
+set str=%*
+set "str=%str:\=/%"
+docker run --rm -v %cd%:/rumbas m8rex/rumbas:0.1.1 %str%
+```
+
+#### rumbas_shell.bat
+Always starting a container might be a bit to slow and overkill. With this script you can run `rumbas-shell` to get a docker container where you can repeatedly execute rumbas commands. Because of the current implementation of the docker container, it is best to call `/usr/app/entrypoint.sh <path>` instead of calling rumbas directly. Just calling `rumbas` will only work if you don't use custom themes.
+```bat
+@echo off
+docker run -it --rm -v %cd%:/rumbas --entrypoint=sh m8rex/rumbas:0.1.1
+```
+
 ## Next steps
 - Look at all questions in the `M0` folder
   - Look at the default files and which fields they specify
   - See how content is loaded from files
   - How content is translated
   - How templates are used
+ 
+  
