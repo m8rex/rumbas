@@ -232,7 +232,7 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
             for entry in defaults_path.read_dir().expect("read_dir call failed") {
                 if let Ok(entry) = entry {
                     result.insert(entry.path()); //TODO: order files from the folder
-                    println!("{:?}", entry.path());
+                                                 //println!("{:?}", entry.path());
                 }
             }
         }
@@ -243,10 +243,10 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
 
 pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
     let default_files = default_files(path);
-    println!("Found {} default files.", default_files.len());
+    //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
         if !exam.empty_fields().is_empty() {
-            println!("Reading {}", default_file.get_path().display());
+            //println!("Reading {}", default_file.get_path().display());
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {

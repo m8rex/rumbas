@@ -49,7 +49,7 @@ impl std::convert::From<String> for FileString {
                     for entry in file_dir.read_dir().expect("read_dir call failed") {
                         if let Ok(entry) = entry {
                             if let Ok(entry_name) = entry.file_name().into_string() {
-                                println!("{}", entry_name);
+                                //println!("{}", entry_name);
                                 if entry_name.starts_with("locale-") {
                                     let locale = entry_name
                                         .splitn(2, "locale-")
@@ -59,10 +59,10 @@ impl std::convert::From<String> for FileString {
                                         .to_string();
                                     let locale_file_path =
                                         file_dir.join(entry_name).join(file_name);
-                                    println!("{}", locale_file_path.display());
+                                    //println!("{}", locale_file_path.display());
                                     if locale_file_path.exists() {
                                         if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                                            println!("{}", s);
+                                            //println!("{}", s);
                                             translated_content
                                                 .insert(locale, InputString::from(s.clone()));
                                         }
