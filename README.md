@@ -7,6 +7,8 @@
   - So git can be used for version control 🎉 
 - Consistent naming of fields in the json (not the case in numbas)
 - Written in Rust
+- Preferred way to use it is docker
+- Currently in beta, not all features are implemented yet.
 
 ## Folder structure
 A rumbas project should have to following folder structure:
@@ -27,9 +29,10 @@ The html input can be specified in two ways:
   - inline in the json,
   - in a separate html file (Recommended for larger htmls)
       - The value of the json field should then equal `file:<path to filename in questions folder>`
-This is also possible for the description of functions
+This is will also be possible for the description of functions
 
 Functions can be specified by just a filename:
+  - Not yet implemented
   - Language is taken from the extension (`js` or `jme`)
   - file should start with comments of form `# param <name> <type>`
   - next should be the real definition
@@ -46,13 +49,12 @@ Templating is possible:
 ## Running rumbas
 ### Docker
 The easiest way is to use docker.
-- Clone this repo
 - Get the docker image
-  - Either Pull the latest image from dockerhub (not yet available)
-  - Or Build the docker image with `docker build -t rumbas .`
-- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas rumbas <relative path of exam in the mounted folder>`
-  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas rumbas exams/rumbas-exam-test.json`
-  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas rumbas questions/question1.json`
+  - Either Pull the latest image from [dockerhub](https://hub.docker.com/repository/docker/m8rex/rumbas): `docker pull m8rex/rumbas`
+  - Or Clone this repo & Build the docker image with `docker build -t rumbas .`
+- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas m8rex/rumbas <relative path of exam in the mounted folder>`
+  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas exams/rumbas-exam-test.json`
+  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas questions/question1.json`
     - This compiles a single exercise by using the `template_exams/question_preview.json` template
   
 
