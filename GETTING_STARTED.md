@@ -212,6 +212,12 @@ In this section we describe create .bat or .sh files to make the docker usage of
 
 Important: Make sure to use the latest version of rumbas (or at least a specific version, not latest)
 
+### Explanation
+In the Windows and Unix sections below, we will explain how you can run rumbas in your terminal by just writing `rumbas` or `rumbas_shell`.
+
+- `rumbas`: You will be able to write `rumbas` in the terminal, instead of needing to type the whole docker command with the volume mount.
+- `rumbas_shell`: Always starting a container might be a bit to slow and overkill. With this script you can run `rumbas-shell` to get a docker container where you can repeatedly execute rumbas commands. Because of the current implementation of the docker container, it is best to call `/usr/app/entrypoint.sh <path>` instead of calling rumbas directly. Just calling `rumbas` will only work if you don't use custom themes.
+
 ### Windows
 We will create a folder `docker_scripts` on the `C` drive and add it to the `PATH` environment variable.
 In this folder you can create a file for each of the following two scripts.
@@ -227,7 +233,6 @@ In this folder you can create a file for each of the following two scripts.
 - Open a new terminal so the new PATH variable is set
 
 #### rumbas.bat
-When you add this file, you will be able to write `rumbas` in the terminal, instead of needing to type the whole docker command with the volume mount.
 ```bat
 @echo off
 set str=%*
@@ -236,10 +241,35 @@ docker run --rm -v %cd%:/rumbas m8rex/rumbas:0.1.1 %str%
 ```
 
 #### rumbas_shell.bat
-Always starting a container might be a bit to slow and overkill. With this script you can run `rumbas-shell` to get a docker container where you can repeatedly execute rumbas commands. Because of the current implementation of the docker container, it is best to call `/usr/app/entrypoint.sh <path>` instead of calling rumbas directly. Just calling `rumbas` will only work if you don't use custom themes.
 ```bat
 @echo off
 docker run -it --rm -v %cd%:/rumbas --entrypoint=sh m8rex/rumbas:0.1.1
+```
+
+### Unix
+We will create a folder `docker_scripts` in `/usr/local/bin` 
+
+```
+sudo mkdir /usr/local/bin/docker_scripts
+```
+
+And add it to the path by adding to following line to the `~/.bashrc` file:
+
+```
+export PATH=$PATH:/usr/local/bin/docker_scripts
+```
+
+In this folder you can create a file for each of the following two scripts.
+#### rumbas
+```sh
+#!/bin/sh
+docker run --rm -v $PWD:/rumbas m8rex/rumbas:0.1.1 $@
+```
+
+#### rumbas_shell
+```sh
+#!/bin/sh
+docker run -it --rm -v $PWD:/rumbas --entrypoint=sh m8rex/rumbas:0.1.1
 ```
 
 ## Next steps
