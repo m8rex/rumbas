@@ -80,7 +80,7 @@ fn main() {
 
                         let numbas_settings = exam.numbas_settings.clone().unwrap();
 
-                        let output = std::process::Command::new("python")
+                        let output = std::process::Command::new("python3")
                             .current_dir(numbas_path.clone())
                             .arg("bin/numbas.py")
                             .arg("-l")

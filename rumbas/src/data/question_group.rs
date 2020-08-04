@@ -1,8 +1,8 @@
-use crate::data::json::JsonError;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
+use crate::data::yaml::YamlError;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -78,7 +78,7 @@ optional_overwrite! {
 }
 
 impl std::convert::TryFrom<String> for QuestionPath {
-    type Error = JsonError;
+    type Error = YamlError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let question_data = Question::from_name(&s).map_err(|e| {

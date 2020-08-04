@@ -1,6 +1,5 @@
 use crate::data::extension::Extensions;
 use crate::data::function::Function;
-use crate::data::json::{JsonError, JsonResult};
 use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::preamble::Preamble;
@@ -9,6 +8,7 @@ use crate::data::template::{QuestionFileType, TEMPLATE_PREFIX, TEMPLATE_QUESTION
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
+use crate::data::yaml::{YamlError, YamlResult};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -104,41 +104,41 @@ impl ToNumbas for Question {
 }
 
 impl Question {
-    pub fn from_name(name: &String) -> JsonResult<Question> {
+    pub fn from_name(name: &String) -> YamlResult<Question> {
         use QuestionFileType::*;
-        let file = Path::new("questions").join(format!("{}.json", name));
-        let json = fs::read_to_string(&file).expect(
+        let file = Path::new("questions").join(format!("{}.yaml", name));
+        let yaml = fs::read_to_string(&file).expect(
             &format!(
                 "Failed to read {}",
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        let input: std::result::Result<QuestionFileType, serde_json::error::Error> =
-            serde_json::from_str(&json);
+        let input: std::result::Result<QuestionFileType, serde_yaml::Error> =
+            serde_yaml::from_str(&yaml);
         input
             .map(|e| match e {
                 Normal(e) => Ok(e),
                 Template(t) => {
                     let template_file = Path::new(TEMPLATE_QUESTIONS_FOLDER)
-                        .join(format!("{}.json", t.relative_template_path));
-                    let template_json = fs::read_to_string(&template_file).expect(
+                        .join(format!("{}.yaml", t.relative_template_path));
+                    let template_yaml = fs::read_to_string(&template_file).expect(
                         &format!(
                             "Failed to read {}",
                             template_file.to_str().map_or("invalid filename", |s| s)
                         )[..],
                     );
 
-                    let json = t.data.iter().fold(template_json, |s, (k, v)| {
+                    let yaml = t.data.iter().fold(template_yaml, |s, (k, v)| {
                         s.replace(
                             &format!("\"{}:{}\"", TEMPLATE_PREFIX, k)[..],
-                            &serde_json::to_string(v).unwrap()[..],
+                            &serde_yaml::to_string(v).unwrap()[..],
                         )
                     });
-                    serde_json::from_str(&json)
+                    serde_yaml::from_str(&yaml)
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
-            .map_err(|e| JsonError::from(e, file.to_path_buf()))
+            .map_err(|e| YamlError::from(e, file.to_path_buf()))
     }
 }
 

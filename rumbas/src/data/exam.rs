@@ -1,5 +1,4 @@
 use crate::data::feedback::Feedback;
-use crate::data::json::{JsonError, JsonResult};
 use crate::data::locale::Locale;
 use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
@@ -9,6 +8,7 @@ use crate::data::template::{ExamFileType, TemplateData, TEMPLATE_EXAMS_FOLDER, T
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
+use crate::data::yaml::{YamlError, YamlResult};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -103,24 +103,24 @@ impl ToNumbas for Exam {
 }
 
 impl Exam {
-    pub fn from_file(file: &Path) -> JsonResult<Exam> {
+    pub fn from_file(file: &Path) -> YamlResult<Exam> {
         use ExamFileType::*;
-        let input: std::result::Result<ExamFileType, serde_json::error::Error> =
+        let input: std::result::Result<ExamFileType, serde_yaml::Error> =
             if file.starts_with("exams") {
                 //TODO: better solutions? Use static values for "exams"
-                let json = fs::read_to_string(file).expect(
+                let yaml = fs::read_to_string(file).expect(
                     &format!(
                         "Failed to read {}",
                         file.to_str().map_or("invalid filename", |s| s)
                     )[..],
                 );
-                serde_json::from_str(&json)
+                serde_yaml::from_str(&yaml)
             } else if file.starts_with("questions") {
                 //TODO: improve this part
                 let mut data = HashMap::new();
                 data.insert(
                     "question".to_string(),
-                    serde_json::Value::String(
+                    serde_yaml::Value::String(
                         file.with_extension("")
                             .strip_prefix("questions")
                             .unwrap()
@@ -141,24 +141,24 @@ impl Exam {
                 Normal(e) => Ok(e),
                 Template(t) => {
                     let template_file = Path::new(TEMPLATE_EXAMS_FOLDER)
-                        .join(format!("{}.json", t.relative_template_path));
-                    let template_json = fs::read_to_string(&template_file).expect(
+                        .join(format!("{}.yaml", t.relative_template_path));
+                    let template_yaml = fs::read_to_string(&template_file).expect(
                         &format!(
                             "Failed to read {}",
                             template_file.to_str().map_or("invalid filename", |s| s)
                         )[..],
                     );
 
-                    let json = t.data.iter().fold(template_json, |s, (k, v)| {
+                    let yaml = t.data.iter().fold(template_yaml, |s, (k, v)| {
                         s.replace(
                             &format!("\"{}:{}\"", TEMPLATE_PREFIX, k)[..],
-                            &serde_json::to_string(v).unwrap()[..],
+                            &serde_yaml::to_string(v).unwrap()[..],
                         )
                     });
-                    serde_json::from_str(&json)
+                    serde_yaml::from_str(&yaml)
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
-            .map_err(|e| JsonError::from(e, file.to_path_buf()))
+            .map_err(|e| YamlError::from(e, file.to_path_buf()))
     }
 }
