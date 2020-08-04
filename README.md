@@ -3,9 +3,9 @@
 ## What is Rumbas ?
 
 - A system to create online exercises, build on top of numbas.
-- Text-based: json (and html) specifications are converted to html files (e.g. scorm package)
+- Text-based: yaml (and html and tex) specifications are converted to html files (e.g. scorm package)
   - So git can be used for version control 🎉 
-- Consistent naming of fields in the json (not the case in numbas)
+- Consistent naming of fields in the yaml (not the case in the json of numbas)
 - Written in Rust
 - Preferred way to use it is docker
 - Currently in beta, not all features are implemented yet.
@@ -26,9 +26,9 @@ Rumbas does not specify default values by itself:
   - Users can also create multiple versions of the default settings (e.g. a default setting for practice exams and a default setting for real exams)
 
 The html input can be specified in two ways:
-  - inline in the json,
+  - inline in the yaml,
   - in a separate html file (Recommended for larger htmls)
-      - The value of the json field should then equal `file:<path to filename in questions folder>`
+      - The value of the yaml field should then equal `file:<path to filename in questions folder>`
 This is will also be possible for the description of functions
 
 Functions can be specified by just a filename:
@@ -53,9 +53,9 @@ The easiest way is to use docker.
   - Either Pull the latest image from [dockerhub](https://hub.docker.com/repository/docker/m8rex/rumbas): `docker pull m8rex/rumbas`
   - Or Clone this repo & Build the docker image with `docker build -t rumbas .`
 - Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas m8rex/rumbas <relative path of exam in the mounted folder>`
-  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas exams/rumbas-exam-test.json`
-  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas questions/question1.json`
-    - This compiles a single exercise by using the `template_exams/question_preview.json` template
+  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas exams/rumbas-exam-test.yaml`
+  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas questions/question1.yaml`
+    - This compiles a single exercise by using the `template_exams/question_preview.yaml` template
   
 
 ### Without docker
@@ -70,16 +70,16 @@ The easiest way is to use docker.
 
 ## TODO
 - [x] Basic exam settings (`name`, `duration`, `percentPass`, `showQuestionGroupNames`, `showStudentName`)
-  - [x] support in json
+  - [x] support in yaml
   - [x] support in default
 - [x] Navigation exam settings
-  - [x] support in json
+  - [x] support in yaml
   - [x] support in default
 - [x] Timing exam settings
-  - [x] support in json
+  - [x] support in yaml
   - [x] support in default
 - [x] Feedback exam settings
-  - [x] support in json
+  - [x] support in yaml 
   - [x] support in default
 - [x] Support for `file:<filename>` for html strings
 - [x] Support for `question_groups` in exams
@@ -100,13 +100,13 @@ The easiest way is to use docker.
 - [ ] Support for extensions in questions
   - [ ] Extensions are added to exam if they are used in the questions
 - [x] Support for variables in questions
-  - [x] Specified in json
+  - [x] Specified in yaml 
   - [x] Ungrouped
   - [x] Short representation as string or list
   - [-] variable groups? -> will not be implemented, don't see the use case of it yet...
   - [x] variables test
 - [ ] Support for functions in questions
-  - [ ] Specified in json
+  - [ ] Specified in yaml 
   - [ ] Specified as file
 - [ ] Support for translations
   - [x] In name of exam
