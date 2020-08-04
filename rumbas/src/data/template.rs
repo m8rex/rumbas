@@ -1,7 +1,7 @@
 use crate::data::exam::Exam;
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_yaml::Value;
 use std::collections::HashMap;
 
 pub const TEMPLATE_EXAMS_FOLDER: &'static str = "template_exams";

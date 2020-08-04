@@ -102,87 +102,87 @@ impl DefaultFileType {
             None => None,
         }
     }
-    fn read_as_data(&self, path: &PathBuf) -> serde_json::Result<DefaultData> {
-        let json = fs::read_to_string(path).unwrap();
+    fn read_as_data(&self, path: &PathBuf) -> serde_yaml::Result<DefaultData> {
+        let yaml = fs::read_to_string(path).unwrap();
         match self {
             DefaultFileType::Navigation => {
-                let n: Navigation = serde_json::from_str(&json)?;
+                let n: Navigation = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::Navigation(n))
             }
             DefaultFileType::Timing => {
-                let t: Timing = serde_json::from_str(&json)?;
+                let t: Timing = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::Timing(t))
             }
             DefaultFileType::Feedback => {
-                let f: Feedback = serde_json::from_str(&json)?;
+                let f: Feedback = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::Feedback(f))
             }
             DefaultFileType::NumbasSettings => {
-                let f: NumbasSettings = serde_json::from_str(&json)?;
+                let f: NumbasSettings = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::NumbasSettings(f))
             }
             DefaultFileType::Question => {
-                let q: Question = serde_json::from_str(&json)?;
+                let q: Question = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::Question(q))
             }
             DefaultFileType::QuestionPart(question_part_type) => match question_part_type {
                 QuestionPartType::GapFill => {
-                    let q: QuestionPartGapFill = serde_json::from_str(&json)?;
+                    let q: QuestionPartGapFill = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::GapFill(q)))
                 }
                 QuestionPartType::JME => {
-                    let q: QuestionPartJME = serde_json::from_str(&json)?;
+                    let q: QuestionPartJME = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::JME(q)))
                 }
                 QuestionPartType::ChooseOne => {
-                    let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
+                    let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
                 }
                 QuestionPartType::NumberEntry => {
-                    let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
+                    let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
                 }
                 QuestionPartType::PatternMatch => {
-                    let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
+                    let q: QuestionPartPatternMatch = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
                 }
                 QuestionPartType::Information => {
-                    let q: QuestionPartInformation = serde_json::from_str(&json)?;
+                    let q: QuestionPartInformation = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::Information(q)))
                 }
             }, //TODO: reduce duplicate
             DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
             {
                 QuestionPartType::GapFill => {
-                    let q: QuestionPartGapFill = serde_json::from_str(&json)?;
+                    let q: QuestionPartGapFill = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::GapFill(
                         q,
                     )))
                 }
                 QuestionPartType::JME => {
-                    let q: QuestionPartJME = serde_json::from_str(&json)?;
+                    let q: QuestionPartJME = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::JME(q)))
                 }
                 QuestionPartType::ChooseOne => {
-                    let q: QuestionPartChooseOne = serde_json::from_str(&json)?;
+                    let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::ChooseOne(q),
                     ))
                 }
                 QuestionPartType::NumberEntry => {
-                    let q: QuestionPartNumberEntry = serde_json::from_str(&json)?;
+                    let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::NumberEntry(q),
                     ))
                 }
                 QuestionPartType::PatternMatch => {
-                    let q: QuestionPartPatternMatch = serde_json::from_str(&json)?;
+                    let q: QuestionPartPatternMatch = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::PatternMatch(q),
                     ))
                 }
                 QuestionPartType::Information => {
-                    let q: QuestionPartInformation = serde_json::from_str(&json)?;
+                    let q: QuestionPartInformation = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::Information(q),
                     ))
@@ -204,7 +204,7 @@ impl DefaultFile {
         None
     }
 
-    pub fn read_as_data(&self) -> serde_json::Result<DefaultData> {
+    pub fn read_as_data(&self) -> serde_yaml::Result<DefaultData> {
         self.r#type.read_as_data(&self.path)
     }
 

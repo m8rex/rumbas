@@ -118,11 +118,11 @@ impl VariableRepresentation {
         match self {
             VariableRepresentation::ListOfStrings(l) => create_ungrouped_variable(
                 VariableTemplateType::ListOfStrings,
-                &serde_json::to_string(l).unwrap(),
+                &serde_yaml::to_string(l).unwrap(),
             ),
             VariableRepresentation::ListOfNumbers(l) => create_ungrouped_variable(
                 VariableTemplateType::ListOfNumbers,
-                &serde_json::to_string(l).unwrap(),
+                &serde_yaml::to_string(l).unwrap(),
             ),
             VariableRepresentation::Long(v) => v.clone(),
             VariableRepresentation::Number(n) => {
