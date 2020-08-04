@@ -8,7 +8,7 @@ pub const TEMPLATE_EXAMS_FOLDER: &'static str = "template_exams";
 pub const TEMPLATE_QUESTIONS_FOLDER: &'static str = "template_questions";
 pub const TEMPLATE_PREFIX: &'static str = "template";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateData {
     #[serde(rename = "template")]
     pub relative_template_path: String,
@@ -16,14 +16,14 @@ pub struct TemplateData {
     pub data: HashMap<String, Value>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum ExamFileType {
     Template(TemplateData),
     Normal(Exam),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum QuestionFileType {
     Template(TemplateData),

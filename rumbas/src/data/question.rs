@@ -127,11 +127,18 @@ impl Question {
                             template_file.to_str().map_or("invalid filename", |s| s)
                         )[..],
                     );
-
                     let yaml = t.data.iter().fold(template_yaml, |s, (k, v)| {
+                        //TODO: change this, this worked for json but not for yaml with it's
+                        //indentation etc
                         s.replace(
-                            &format!("\"{}:{}\"", TEMPLATE_PREFIX, k)[..],
-                            &serde_yaml::to_string(v).unwrap()[..],
+                            &format!("{}:{}", TEMPLATE_PREFIX, k)[..],
+                            &match v {
+                                serde_yaml::Value::Null => "null".to_string(),
+                                serde_yaml::Value::Bool(b) => b.to_string(),
+                                serde_yaml::Value::Number(n) => n.to_string(),
+                                serde_yaml::Value::String(n) => n.to_string(),
+                                _ => serde_yaml::to_string(v).unwrap()[4..].to_string(),
+                            },
                         )
                     });
                     serde_yaml::from_str(&yaml)
