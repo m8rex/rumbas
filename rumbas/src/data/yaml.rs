@@ -21,7 +21,7 @@ impl std::fmt::Display for YamlError {
                 self.file.display(),
                 location.column(),
                 location.line(),
-                self,
+                self.error,
             )
         } else {
             write!(
