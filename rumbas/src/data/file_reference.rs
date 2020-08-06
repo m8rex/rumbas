@@ -1,5 +1,6 @@
 use crate::data::input_string::InputString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::template::Value;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -25,8 +26,9 @@ impl OptionalOverwrite for FileString {
         }
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
 }
-impl_optional_overwrite_option!(FileString);
+impl_optional_overwrite_value!(FileString);
 
 //TODO: error message is not shown if no file found
 impl std::convert::From<String> for FileString {

@@ -1,5 +1,6 @@
-use serde::Deserialize;
+use crate::data::template::Value;
 use serde::Serialize;
+use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
 
 pub trait OptionalOverwrite: Clone {
@@ -7,6 +8,7 @@ pub trait OptionalOverwrite: Clone {
 
     fn empty_fields(&self) -> Vec<String>;
     fn overwrite(&mut self, other: &Self::Item);
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value);
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -18,57 +20,48 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
-macro_rules! impl_optional_overwrite_option_no_noneable {
+macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Option<$type> {
-            type Item = Option<$type>;
+        impl$(< $($gen: OptionalOverwrite + DeserializeOwned ),* >)? OptionalOverwrite for Value<$type> {
+            type Item = Value<$type>;
             fn empty_fields(&self) -> Vec<String> {
-                if let Some(val) = &self {
-                    return val.empty_fields()
+                if let Value::Normal(val) = &self {
+                    val.empty_fields()
+                }
+                else if let Value::Template(val) = &self {
+                    vec![val.yaml()]
                 }
                 else {
-                    return vec!["".to_string()]
+                    vec!["".to_string()]
                 }
             }
             fn overwrite(&mut self, other: &Self::Item) {
-                if let Some(ref mut val) = self {
-                    if let Some(other_val) = &other {
+                if let Value::Normal(ref mut val) = self {
+                    if let Value::Normal(other_val) = &other {
                         val.overwrite(&other_val);
                     }
                 } else {
                     *self = other.clone();
                 }
             }
+            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+                if let Value::Template(ts) = self {
+                    if ts.key == Some(key.clone()) {
+                        *self=Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
+                    }
+                }
+            }
         }
+
         )*
     };
 }
 
-macro_rules! impl_optional_overwrite_option {
+macro_rules! impl_optional_overwrite_value {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-            //TODO: call other macro?
-        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Option<$type> {
-            type Item = Option<$type>;
-            fn empty_fields(&self) -> Vec<String> {
-                if let Some(val) = &self {
-                    return val.empty_fields()
-                }
-                else {
-                    return vec!["".to_string()]
-                }
-            }
-            fn overwrite(&mut self, other: &Self::Item) {
-                if let Some(ref mut val) = self {
-                    if let Some(other_val) = &other {
-                        val.overwrite(&other_val);
-                    }
-                } else {
-                    *self = other.clone();
-                }
-            }
-        }
+        impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
         impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Noneable<$type> {
             type Item = Noneable<$type>;
             fn empty_fields(&self) -> Vec<String> {
@@ -88,8 +81,13 @@ macro_rules! impl_optional_overwrite_option {
                     // Do nothing, none is a valid value
                 }
             }
+            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+                if let Noneable::NotNone(item) = self {
+                    item.insert_template_value(&key, &val);
+                }
+            }
         }
-        impl_optional_overwrite_option_no_noneable!(Noneable<$type>$([ $($gen),* ])?);
+        impl_optional_overwrite_value_only!(Noneable<$type>$([ $($gen),* ])?);
         )*
     };
 }
@@ -107,8 +105,13 @@ impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
         empty
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        for (_i, item) in self.iter_mut().enumerate() {
+            item.insert_template_value(&key, &val);
+        }
+    }
 }
-impl_optional_overwrite_option!(Vec<U>[U]);
+impl_optional_overwrite_value!(Vec<U>[U]);
 
 macro_rules! impl_optional_overwrite {
     ($($type: ty), *) => {
@@ -119,15 +122,16 @@ macro_rules! impl_optional_overwrite {
                 Vec::new()
             }
             fn overwrite(&mut self, _other: &Self::Item) {}
+            fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
         }
-        impl_optional_overwrite_option!($type);
+        impl_optional_overwrite_value!($type);
         )*
     };
 }
 impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 
-impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U, T> {
-    type Item = HashMap<U, T>;
+impl<T: OptionalOverwrite> OptionalOverwrite for HashMap<String, T> {
+    type Item = HashMap<String, T>;
     fn empty_fields(&self) -> Vec<String> {
         let mut empty = Vec::new();
         // Key is not displayable, so show an index, just to differentiate
@@ -140,8 +144,13 @@ impl<U: OptionalOverwrite, T: OptionalOverwrite> OptionalOverwrite for HashMap<U
         empty
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        for (i, (_key, mut item)) in self.iter_mut().enumerate() {
+            item.insert_template_value(&key, &val);
+        }
+    }
 }
-impl_optional_overwrite_option!(HashMap < U, T > [U, T]);
+impl_optional_overwrite_value!(HashMap < String, T > [T]);
 
 macro_rules! optional_overwrite {
     // This macro creates a struct with all optional fields
@@ -157,7 +166,7 @@ macro_rules! optional_overwrite {
                 $(
                     #[$attribute]
                 )?
-                pub $field: Option<$type>
+                pub $field: Value<$type>
             ),*
         }
         impl OptionalOverwrite for $struct {
@@ -182,8 +191,19 @@ macro_rules! optional_overwrite {
                     self.$field.overwrite(&other.$field);
                 )*
             }
+            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+                $(
+                    self.$field.insert_template_value(&key, &val);
+                )*
+            }
         }
-        impl_optional_overwrite_option!($struct);
+
+        impl std::convert::From<$struct> for Value<$struct> {
+            fn from(val: $struct) -> Self {
+                Value::Normal(val)
+            }
+        }
+        impl_optional_overwrite_value!($struct);
     }
 }
 
@@ -218,8 +238,16 @@ macro_rules! optional_overwrite_enum {
                     , _ => ()
                 };
             }
+            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+                match self {
+                $(
+                    &mut $enum::$field(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
+                ),*
+                    , _ => ()
+                };
+            }
         }
-        impl_optional_overwrite_option!($enum);
+        impl_optional_overwrite_value!($enum);
     }
 }
 
@@ -239,22 +267,22 @@ mod test {
         other: String,
         t: Temp
     }
-
+    //TODO: template
     #[test]
     fn empty_fields_simple_structs() {
         let t = Temp {
-            name: Some("test".to_string()),
-            test: None,
+            name: Value::Normal("test".to_string()),
+            test: Value::None,
         };
         assert_eq!(t.empty_fields(), vec!["test"]);
         let t = Temp {
-            name: Some("test2".to_string()),
-            test: Some("name".to_string()),
+            name: Value::Normal("test2".to_string()),
+            test: Value::Normal("name".to_string()),
         };
         assert_eq!(t.empty_fields().len(), 0);
         let t = Temp {
-            name: None,
-            test: None,
+            name: Value::None,
+            test: Value::None,
         };
         assert_eq!(t.empty_fields(), vec!["name", "test"]);
     }
@@ -262,31 +290,31 @@ mod test {
     #[test]
     fn empty_fields_complex_structs() {
         let t = Temp2 {
-            other: Some("val".to_string()),
-            t: Some(Temp {
-                name: Some("val".to_string()),
-                test: Some("name".to_string()),
+            other: Value::Normal("val".to_string()),
+            t: Value::Normal(Temp {
+                name: Value::Normal("val".to_string()),
+                test: Value::Normal("name".to_string()),
             }),
         };
         assert_eq!(t.empty_fields().len(), 0);
         let t = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: None,
-                test: Some("name".to_string()),
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::None,
+                test: Value::Normal("name".to_string()),
             }),
         };
         assert_eq!(t.empty_fields(), vec!["other", "t.name"]);
         let t = Temp2 {
-            other: None,
-            t: None,
+            other: Value::None,
+            t: Value::None,
         };
         assert_eq!(t.empty_fields(), vec!["other", "t"]);
         let t = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: None,
-                test: None,
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::None,
+                test: Value::None,
             }),
         };
         assert_eq!(t.empty_fields(), vec!["other", "t.name", "t.test"]);
@@ -295,12 +323,12 @@ mod test {
     #[test]
     fn overwrite_simple_structs() {
         let mut t = Temp {
-            name: Some("test".to_string()),
-            test: None,
+            name: Value::Normal("test".to_string()),
+            test: Value::None,
         };
         let t2 = Temp {
-            name: Some("test2".to_string()),
-            test: Some("name".to_string()),
+            name: Value::Normal("test2".to_string()),
+            test: Value::Normal("name".to_string()),
         };
         t.overwrite(&t2);
         assert_eq!(
@@ -315,37 +343,37 @@ mod test {
     #[test]
     fn overwrite_nested_structs() {
         let t3 = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: None,
-                test: Some("name".to_string()),
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::None,
+                test: Value::Normal("name".to_string()),
             }),
         };
         let mut t4 = Temp2 {
-            other: None,
-            t: None,
+            other: Value::None,
+            t: Value::None,
         };
         t4.overwrite(&t3);
         assert_eq!(
             t4,
             Temp2 {
-                other: None,
+                other: Value::None,
                 t: t3.clone().t
             }
         );
         let t5 = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: Some("test".to_string()),
-                test: Some("name2".to_string()),
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::Normal("test".to_string()),
+                test: Value::Normal("name2".to_string()),
             }),
         };
         t4.overwrite(&t5);
         assert_eq!(
             t4,
             Temp2 {
-                other: None,
-                t: Some(Temp {
+                other: Value::None,
+                t: Value::Normal(Temp {
                     name: t5.t.unwrap().name,
                     test: t3.t.unwrap().test
                 }),
@@ -356,16 +384,16 @@ mod test {
     #[test]
     fn empty_fields_vec_of_simple_structs() {
         let t1 = Temp {
-            name: Some("test".to_string()),
-            test: None,
+            name: Value::Normal("test".to_string()),
+            test: Value::None,
         };
         let t2 = Temp {
-            name: Some("test2".to_string()),
-            test: Some("name".to_string()),
+            name: Value::Normal("test2".to_string()),
+            test: Value::Normal("name".to_string()),
         };
         let t3 = Temp {
-            name: None,
-            test: None,
+            name: Value::None,
+            test: Value::None,
         };
         let v = vec![t1, t2, t3];
         assert_eq!(v.empty_fields(), vec!["0.test", "2.name", "2.test"]);
@@ -374,28 +402,28 @@ mod test {
     #[test]
     fn empty_fields_vec_ofcomplex_structs() {
         let t1 = Temp2 {
-            other: Some("val".to_string()),
-            t: Some(Temp {
-                name: Some("val".to_string()),
-                test: Some("name".to_string()),
+            other: Value::Normal("val".to_string()),
+            t: Value::Normal(Temp {
+                name: Value::Normal("val".to_string()),
+                test: Value::Normal("name".to_string()),
             }),
         };
         let t2 = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: None,
-                test: Some("name".to_string()),
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::None,
+                test: Value::Normal("name".to_string()),
             }),
         };
         let t3 = Temp2 {
-            other: None,
-            t: None,
+            other: Value::None,
+            t: Value::None,
         };
         let t4 = Temp2 {
-            other: None,
-            t: Some(Temp {
-                name: None,
-                test: None,
+            other: Value::None,
+            t: Value::Normal(Temp {
+                name: Value::None,
+                test: Value::None,
             }),
         };
         let v = vec![t1, t2, t3, t4];

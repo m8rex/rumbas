@@ -4,6 +4,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
+use crate::data::template::Value;
 use crate::data::template::{ExamFileType, TemplateData, TEMPLATE_EXAMS_FOLDER, TEMPLATE_PREFIX};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -48,8 +49,9 @@ impl ToNumbas for Exam {
                 self.navigation
                     .clone()
                     .unwrap()
-                    .show_names_of_question_groups,
-                self.feedback.clone().unwrap().show_name_of_student,
+                    .show_names_of_question_groups
+                    .into(),
+                self.feedback.clone().unwrap().show_name_of_student.into(),
             );
 
             //TODO
@@ -62,10 +64,10 @@ impl ToNumbas for Exam {
             let feedback = self.feedback.clone().unwrap().to_numbas(&locale).unwrap();
 
             //TODO
-            let functions = Some(HashMap::new());
+            let functions = Value::Normal(HashMap::new());
 
             //TODO
-            let variables = Some(HashMap::new());
+            let variables = Value::Normal(HashMap::new());
 
             //TODO
             let question_groups: Vec<numbas::exam::ExamQuestionGroup> = self
@@ -92,8 +94,8 @@ impl ToNumbas for Exam {
                 navigation,
                 timing,
                 feedback,
-                functions,
-                variables,
+                functions.into(),
+                variables.into(),
                 question_groups,
             ))
         } else {

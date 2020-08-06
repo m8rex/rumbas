@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
@@ -86,8 +87,8 @@ impl std::convert::TryFrom<String> for QuestionPath {
             e
         })?;
         Ok(QuestionPath {
-            question_name: Some(s),
-            question_data: Some(question_data),
+            question_name: Value::Normal(s),
+            question_data: Value::Normal(question_data),
         })
     }
 }

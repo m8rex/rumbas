@@ -1,6 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -31,14 +32,17 @@ impl ToNumbas for QuestionPartNumberEntry {
             Ok(Self::NumbasType {
                 part_data: self.to_numbas_shared_data(&locale),
                 correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
-                correct_answer_style: self.display_correct_in_style.clone(),
+                correct_answer_style: self.display_correct_in_style.clone().into(),
                 allow_fractions: self.allow_fractions.unwrap(),
-                notation_styles: self.allowed_notation_styles.clone(),
-                fractions_must_be_reduced: self.fractions_must_be_reduced,
-                partial_credit_if_fraction_not_reduced: self.partial_credit_if_fraction_not_reduced,
+                notation_styles: self.allowed_notation_styles.clone().into(),
+                fractions_must_be_reduced: self.fractions_must_be_reduced.clone().into(),
+                partial_credit_if_fraction_not_reduced: self
+                    .partial_credit_if_fraction_not_reduced
+                    .clone()
+                    .into(),
                 precision: None,           //TODO
                 show_precision_hint: None, //TODO
-                show_fraction_hint: self.hint_fraction,
+                show_fraction_hint: self.hint_fraction.clone().into(),
                 answer: self.answer.to_numbas(locale).unwrap(),
 
                 checking_type: Some(numbas::exam::CheckingType::Range), //TODO
