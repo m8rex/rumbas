@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -51,9 +52,9 @@ impl ToNumbas for QuestionPartJME {
                 self.vset_range.unwrap(),
                 self.vset_range_points.unwrap(),
                 self.check_variable_names.unwrap(),
-                self.single_letter_variables,
-                self.allow_unknown_functions,
-                self.implicit_function_composition,
+                self.single_letter_variables.clone().into(),
+                self.allow_unknown_functions.clone().into(),
+                self.implicit_function_composition.clone().into(),
                 self.max_length
                     .clone()
                     .map(|v| v.to_numbas(&locale).unwrap())
@@ -227,7 +228,7 @@ impl ToNumbas for JMELengthRestriction {
                     .unwrap()
                     .to_numbas(&locale)
                     .unwrap(),
-                self.length,
+                self.length.clone().into(),
             ))
         } else {
             Err(empty_fields)

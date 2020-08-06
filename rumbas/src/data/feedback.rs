@@ -1,4 +1,5 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -57,10 +58,10 @@ impl ToNumbas for Review {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamReview::new(
-                self.show_score,
-                self.show_feedback,
-                self.show_expected_answer,
-                self.show_advice,
+                self.show_score.clone().into(),
+                self.show_feedback.clone().into(),
+                self.show_expected_answer.clone().into(),
+                self.show_advice.clone().into(),
             ))
         } else {
             Err(empty_fields)

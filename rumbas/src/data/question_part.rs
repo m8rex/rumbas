@@ -5,6 +5,7 @@ use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::pattern_match::QuestionPartPatternMatch;
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
@@ -75,19 +76,19 @@ macro_rules! question_part_type {
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
-            self.marks,
+            self.marks.clone().into(),
             self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
-            self.use_custom_name,
-            self.custom_name.clone(),
-            self.steps_penalty,
-            self.enable_minimum_marks,
-            self.minimum_marks,
+            self.use_custom_name.clone().into(),
+            self.custom_name.clone().into(),
+            self.steps_penalty.clone().into(),
+            self.enable_minimum_marks.clone().into(),
+            self.minimum_marks.clone().into(),
             self.show_correct_answer.clone().unwrap(),
-            self.show_feedback_icon,
+            self.show_feedback_icon.clone().into(),
             self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
-            self.adaptive_marking_penalty,
-            self.custom_marking_algorithm.clone(),
-            self.extend_base_marking_algorithm,
+            self.adaptive_marking_penalty.clone().into(),
+            self.custom_marking_algorithm.clone().into(),
+            self.extend_base_marking_algorithm.clone().into(),
             self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
                 )
             }

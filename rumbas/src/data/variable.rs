@@ -1,6 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::UNGROUPED_GROUP;
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -101,15 +102,16 @@ impl OptionalOverwrite for VariableRepresentation {
     fn overwrite(&mut self, _other: &Self::Item) {
         //TODO?
     }
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
 }
-impl_optional_overwrite_option!(VariableRepresentation);
+impl_optional_overwrite_value!(VariableRepresentation);
 
 fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &String) -> Variable {
     Variable {
-        template_type: Some(template_type),
-        definition: Some(FileString::s(definition)),
-        description: Some("".to_string()),
-        group: Some(UNGROUPED_GROUP.to_string()),
+        template_type: Value::Normal(template_type),
+        definition: Value::Normal(FileString::s(definition)),
+        description: Value::Normal("".to_string()),
+        group: Value::Normal(UNGROUPED_GROUP.to_string()),
     }
 }
 

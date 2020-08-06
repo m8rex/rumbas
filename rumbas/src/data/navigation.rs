@@ -1,5 +1,6 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::template::Value;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -25,13 +26,14 @@ impl ToNumbas for Navigation {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
                 self.allow_regenerate.unwrap(),
-                self.reverse,
-                self.browsing_enabled,
-                self.allow_steps,
+                self.reverse.clone().into(),
+                self.browsing_enabled.clone().into(),
+                self.allow_steps.clone().into(),
                 self.show_frontpage.unwrap(),
                 self.show_results_page
+                    .clone()
                     .map(|s| s.to_numbas(&locale).unwrap()),
-                self.prevent_leaving,
+                self.prevent_leaving.clone().into(),
                 self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
                 self.start_password.clone().map(|s| s.get_content(&locale)),
             ))
@@ -105,7 +107,7 @@ impl ToNumbas for QuestionNavigation {
             Ok(numbas::exam::QuestionNavigation::new(
                 self.allow_regenerate.unwrap(),
                 self.show_frontpage.unwrap(),
-                self.prevent_leaving,
+                self.prevent_leaving.clone().into(),
             ))
         } else {
             Err(empty_fields)

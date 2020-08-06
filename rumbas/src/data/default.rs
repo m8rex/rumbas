@@ -11,6 +11,7 @@ use crate::data::optional_overwrite::OptionalOverwrite;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;
+use crate::data::template::Value;
 use crate::data::timing::Timing;
 use std::collections::HashSet;
 use std::fs;
@@ -250,28 +251,30 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {
-                DefaultData::Navigation(n) => exam.navigation.overwrite(&Some(n)),
-                DefaultData::Timing(t) => exam.timing.overwrite(&Some(t)),
-                DefaultData::Feedback(f) => exam.feedback.overwrite(&Some(f)),
-                DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Some(f)),
+                DefaultData::Navigation(n) => exam.navigation.overwrite(&Value::Normal(n)),
+                DefaultData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
+                DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
+                DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
                 DefaultData::Question(q) => {
-                    if let Some(ref mut groups) = exam.question_groups {
+                    if let Value::Normal(ref mut groups) = exam.question_groups {
                         groups.iter_mut().for_each(|qg| {
-                            if let Some(ref mut questions) = &mut qg.questions {
+                            if let Value::Normal(ref mut questions) = &mut qg.questions {
                                 questions.iter_mut().for_each(|question| {
-                                    question.question_data.overwrite(&Some(q.clone()))
+                                    question.question_data.overwrite(&Value::Normal(q.clone()))
                                 })
                             }
                         })
                     }
                 }
                 DefaultData::QuestionPart(p) => {
-                    if let Some(ref mut groups) = exam.question_groups {
+                    if let Value::Normal(ref mut groups) = exam.question_groups {
                         groups.iter_mut().for_each(|qg| {
-                            if let Some(ref mut questions) = &mut qg.questions {
+                            if let Value::Normal(ref mut questions) = &mut qg.questions {
                                 questions.iter_mut().for_each(|question| {
-                                    if let Some(ref mut question_data) = question.question_data {
-                                        if let Some(ref mut parts) = question_data.parts {
+                                    if let Value::Normal(ref mut question_data) =
+                                        question.question_data
+                                    {
+                                        if let Value::Normal(ref mut parts) = question_data.parts {
                                             //TODO: others etc
                                             parts.iter_mut().for_each(|part| {
                                                 if let (
@@ -335,15 +338,19 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                     }
                 } //TODO: cleanup...
                 DefaultData::QuestionPartGapFillGap(p) => {
-                    if let Some(ref mut groups) = exam.question_groups {
+                    if let Value::Normal(ref mut groups) = exam.question_groups {
                         groups.iter_mut().for_each(|qg| {
-                            if let Some(ref mut questions) = &mut qg.questions {
+                            if let Value::Normal(ref mut questions) = &mut qg.questions {
                                 questions.iter_mut().for_each(|question| {
-                                    if let Some(ref mut question_data) = question.question_data {
-                                        if let Some(ref mut parts) = question_data.parts {
+                                    if let Value::Normal(ref mut question_data) =
+                                        question.question_data
+                                    {
+                                        if let Value::Normal(ref mut parts) = question_data.parts {
                                             parts.iter_mut().for_each(|part| {
                                                 if let QuestionPart::GapFill(gap_fill) = part {
-                                                    if let Some(ref mut gaps) = gap_fill.gaps {
+                                                    if let Value::Normal(ref mut gaps) =
+                                                        gap_fill.gaps
+                                                    {
                                                         gaps.iter_mut().for_each(|gap| {
                                                             if let (
                                                                 QuestionPart::JME(_),
