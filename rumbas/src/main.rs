@@ -43,9 +43,7 @@ fn main() {
     let exam_result = data::exam::Exam::from_file(path);
     match exam_result {
         Ok(mut exam) => {
-            println!("{:?}", exam);
             combine_with_default_files(path, &mut exam);
-            println!("{:?}", exam);
             //println!("{:#?}", exam);
             if exam.locales.0.is_none() {
                 eprintln!("Locales not set!");
