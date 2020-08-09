@@ -2,6 +2,7 @@ use crate::data::exam::Exam;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use crate::data::yaml::YamlError;
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -93,25 +94,39 @@ pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
 }
-
+/*impl<T> OptionalOverwrite for ValueType<T> {
+    type Item = ValueType<T>;
+    fn empty_fields(&self) -> Vec<String> {
+        self.0.empty_fields()
+    }
+    fn overwrite(&mut self, other: &Self::Item) {
+        if let Some(v) = self.0 {
+            v.overwrite(other);
+        }
+    }
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        self.0.insert_template_value(key, val)
+    }
+}
+impl_optional_overwrite_value!(ValueType<T>[T]);
+*/
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Value<T>(pub Option<ValueType<T>>);
-/*
-impl<T> std::convert::TryFrom<serde_yaml::Value> for Value<T> {
-type Error = String;
+#[serde(transparent)]
 
-fn try_from(serde_value: serde_yaml::Value) -> Result<Self, Self::Error> {
-if let serde_yaml::Value::String(s) = serde_value {
-let ts_result = TemplateString::try_from(s);
-match ts_result {
-Ok(ts) => return Ok(Value::Template(ts)),
-Err(s) => {
-println!("No template: {}", s);
-}
-}
-}
-serde_yaml::from_value(serde_value).map_err(|e| format!("{:?}", e))
-}
+pub struct Value<T>(pub Option<ValueType<T>>);
+/*impl<T> OptionalOverwrite for Value<T> {
+    type Item = Value<T>;
+    fn empty_fields(&self) -> Vec<String> {
+        self.0.empty_fields()
+    }
+    fn overwrite(&mut self, other: &Self::Item) {
+        if let Some(v) = self.0 {
+            v.overwrite(other);
+        }
+    }
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        self.0.insert_template_value(key, val)
+    }
 }*/
 
 impl<T> Value<T> {

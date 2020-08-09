@@ -1,5 +1,8 @@
 ---
 type: normal
+locales:
+- name: en
+  numbas_locale: en-GB
 name: Test exam
 question_groups:
 - name: test_group
