@@ -1,9 +1,9 @@
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
 
-pub trait OptionalOverwrite: Clone {
+pub trait OptionalOverwrite: Clone + DeserializeOwned {
     type Item;
 
     fn empty_fields(&self) -> Vec<String>;
@@ -26,10 +26,10 @@ macro_rules! impl_optional_overwrite_value_only {
         impl$(< $($gen: OptionalOverwrite + DeserializeOwned ),* >)? OptionalOverwrite for Value<$type> {
             type Item = Value<$type>;
             fn empty_fields(&self) -> Vec<String> {
-                if let Value::Normal(val) = &self {
+                if let Some(ValueType::Normal(val)) = &self.0 {
                     val.empty_fields()
                 }
-                else if let Value::Template(val) = &self {
+                else if let Some(ValueType::Template(val)) = &self.0 {
                     vec![val.yaml()]
                 }
                 else {
@@ -37,8 +37,8 @@ macro_rules! impl_optional_overwrite_value_only {
                 }
             }
             fn overwrite(&mut self, other: &Self::Item) {
-                if let Value::Normal(ref mut val) = self {
-                    if let Value::Normal(other_val) = &other {
+                if let Some(ValueType::Normal(ref mut val)) = self.0 {
+                    if let Some(ValueType::Normal(other_val)) = &other.0 {
                         val.overwrite(&other_val);
                     }
                 } else {
@@ -46,7 +46,7 @@ macro_rules! impl_optional_overwrite_value_only {
                 }
             }
             fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
-                if let Value::Template(ts) = self {
+                if let Some(ValueType::Template(ts)) = &self.0 {
                     if ts.key == Some(key.clone()) {
                         *self=Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
                     }
@@ -243,7 +243,6 @@ macro_rules! optional_overwrite_enum {
                 $(
                     &mut $enum::$field(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
                 ),*
-                    , _ => ()
                 };
             }
         }

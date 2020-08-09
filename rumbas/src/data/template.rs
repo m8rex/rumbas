@@ -1,6 +1,7 @@
 use crate::data::exam::Exam;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
+use crate::data::yaml::YamlError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -17,14 +18,16 @@ pub struct TemplateData {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(untagged)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
 pub enum ExamFileType {
     Template(TemplateData),
     Normal(Exam),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(untagged)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
 pub enum QuestionFileType {
     Template(TemplateData),
     Normal(Question),
@@ -57,82 +60,107 @@ impl TemplateString {
 }
 
 //TODO: error message is not shown if no file found
-impl std::convert::From<String> for TemplateString {
-    fn from(s: String) -> Self {
+impl std::convert::TryFrom<String> for TemplateString {
+    type Error = String;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
         let mut prefix = TEMPLATE_PREFIX.to_owned();
         prefix.push_str(":");
         if s.starts_with(&prefix) {
             if s == prefix {
-                TemplateString {
+                Ok(TemplateString {
                     key: Some("".to_string()),
                     error_message: Some("Missing template key".to_string()),
-                }
+                })
             } else {
                 let key = s.split(&prefix).collect::<Vec<&str>>()[1];
-                TemplateString {
+                Ok(TemplateString {
                     key: Some(key.to_string()),
                     error_message: None,
-                }
+                })
             }
         } else {
-            //TODO
-            TemplateString {
-                key: Some("".to_string()),
-                error_message: Some("Temp error!".to_string()),
-            }
+            println!("Failing try from");
+            Err(format!("String does not start with {}", prefix))
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
-pub enum Value<T> {
+//#[serde(try_from = "serde_yaml::Value")]
+pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
-    None,
 }
 
-impl<T> std::convert::From<Value<T>> for Option<T> {
-    fn from(value: Value<T>) -> Option<T> {
-        match value {
-            Value::Normal(val) => Some(val),
-            Value::Template(ts) => panic!(format!(
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Value<T>(pub Option<ValueType<T>>);
+/*
+impl<T> std::convert::TryFrom<serde_yaml::Value> for Value<T> {
+type Error = String;
+
+fn try_from(serde_value: serde_yaml::Value) -> Result<Self, Self::Error> {
+if let serde_yaml::Value::String(s) = serde_value {
+let ts_result = TemplateString::try_from(s);
+match ts_result {
+Ok(ts) => return Ok(Value::Template(ts)),
+Err(s) => {
+println!("No template: {}", s);
+}
+}
+}
+serde_yaml::from_value(serde_value).map_err(|e| format!("{:?}", e))
+}
+}*/
+
+impl<T> Value<T> {
+    #[inline]
+    pub fn Normal(val: T) -> Value<T> {
+        Value(Some(ValueType::Normal(val)))
+    }
+    #[inline]
+    pub fn Template(ts: TemplateString) -> Value<T> {
+        Value(Some(ValueType::Template(ts)))
+    }
+}
+
+impl<T: std::clone::Clone> Value<T> {
+    #[inline]
+    pub fn unwrap(&self) -> T {
+        self.clone().0.unwrap().unwrap()
+    }
+}
+
+impl<T: std::clone::Clone> ValueType<T> {
+    #[inline]
+    pub fn unwrap(&self) -> T {
+        match self {
+            ValueType::Normal(val) => val.to_owned(),
+            ValueType::Template(ts) => panic!(format!(
                 "missing value for template key {}",
-                ts.key.unwrap()
+                ts.clone().key.unwrap()
             )),
-            Value::None => None,
         }
     }
 }
 
 impl<T: std::clone::Clone> Value<T> {
-    /*  #[inline]
-    pub fn to_option(self) -> Option<T> {
-        Option::from(self)
-    }*/
-
     #[inline]
     pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U> {
-        Option::from(self).map(f)
-        /*match self {
-            Value::Normal(val) => Some(f(val)),
-            Value::Template(ts) => panic!(format!(
+        self.0.unwrap().map(f)
+    }
+}
+
+impl<T: std::clone::Clone> ValueType<T> {
+    #[inline]
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U> {
+        match self {
+            ValueType::Normal(val) => Some(f(val)),
+            ValueType::Template(ts) => panic!(format!(
                 "missing value for template key {}",
                 ts.key.unwrap()
             )),
-            Value::None => None,
-        }*/ //TODO
-    }
-
-    #[inline]
-    pub fn unwrap(&self) -> T {
-        match self {
-            Value::Normal(val) => val.clone(),
-            Value::Template(ts) => panic!(format!(
-                "missing value for template key {}",
-                ts.key.clone().unwrap()
-            )),
-            Value::None => panic!("called `Value::unwrap()` on a `None` value"),
         }
     }
 }

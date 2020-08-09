@@ -5,7 +5,7 @@ use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::pattern_match::QuestionPartPatternMatch;
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
@@ -76,19 +76,19 @@ macro_rules! question_part_type {
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
-            self.marks.clone().into(),
+            Some(self.marks.clone().unwrap()),
             self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
-            self.use_custom_name.clone().into(),
-            self.custom_name.clone().into(),
-            self.steps_penalty.clone().into(),
-            self.enable_minimum_marks.clone().into(),
-            self.minimum_marks.clone().into(),
+            Some(self.use_custom_name.clone().unwrap()),
+            Some(self.custom_name.clone().unwrap()),
+            Some(self.steps_penalty.clone().unwrap()),
+            Some(self.enable_minimum_marks.clone().unwrap()),
+            Some(self.minimum_marks.clone().unwrap()),
             self.show_correct_answer.clone().unwrap(),
-            self.show_feedback_icon.clone().into(),
+            Some(self.show_feedback_icon.clone().unwrap()),
             self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
-            self.adaptive_marking_penalty.clone().into(),
-            self.custom_marking_algorithm.clone().into(),
-            self.extend_base_marking_algorithm.clone().into(),
+            Some(self.adaptive_marking_penalty.clone().unwrap()),
+            Some(self.custom_marking_algorithm.clone().unwrap()),
+            Some(self.extend_base_marking_algorithm.clone().unwrap()),
             self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
                 )
             }

@@ -4,8 +4,8 @@ use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
-use crate::data::template::Value;
 use crate::data::template::{QuestionFileType, TEMPLATE_PREFIX, TEMPLATE_QUESTIONS_FOLDER};
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
@@ -21,10 +21,10 @@ optional_overwrite! {
     Question,
     statement: TranslatableString,
     advice: TranslatableString,
-    parts: Vec<QuestionPart>,
-    variables: HashMap<String, VariableRepresentation>,
+    parts: Vec<Value<QuestionPart>>,
+    variables: HashMap<String, Value<VariableRepresentation>>,
     variables_test: VariablesTest,
-    functions: HashMap<String, Function>,
+    functions: HashMap<String, Value<Function>>,
     preamble: Preamble,
     navigation: QuestionNavigation,
     extensions: Extensions
@@ -48,7 +48,7 @@ impl ToNumbas for Question {
     ) -> NumbasResult<numbas::exam::ExamQuestion> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
-            if self.variables.clone().unwrap().contains_key("e") {
+            if self.variables.unwrap().contains_key("e") {
                 panic!("e is not allowed as a variable name"); //TODO
             }
             Ok(numbas::exam::ExamQuestion::new(
@@ -68,7 +68,10 @@ impl ToNumbas for Question {
                     .map(|(k, v)| {
                         (
                             k.clone(),
-                            v.to_variable().to_numbas_with_name(&locale, k).unwrap(),
+                            v.unwrap()
+                                .to_variable()
+                                .to_numbas_with_name(&locale, k)
+                                .unwrap(),
                         )
                     })
                     .collect(),
@@ -88,7 +91,7 @@ impl ToNumbas for Question {
                     .unwrap()
                     .into_iter()
                     .filter(|(_k, v)| {
-                        &v.to_variable().group.clone().unwrap()[..] == UNGROUPED_GROUP
+                        &v.unwrap().to_variable().group.clone().unwrap()[..] == UNGROUPED_GROUP
                     })
                     .map(|(k, _)| k)
                     .collect(),
@@ -114,8 +117,10 @@ impl Question {
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
+        println!("{:?}", yaml);
         let input: std::result::Result<QuestionFileType, serde_yaml::Error> =
             serde_yaml::from_str(&yaml);
+        println!("{:?}", input);
         input
             .map(|e| match e {
                 Normal(e) => Ok(e),
@@ -128,21 +133,11 @@ impl Question {
                             template_file.to_str().map_or("invalid filename", |s| s)
                         )[..],
                     );
-                    let yaml = t.data.iter().fold(template_yaml, |s, (k, v)| {
-                        //TODO: change this, this worked for json but not for yaml with it's
-                        //indentation etc
-                        s.replace(
-                            &format!("{}:{}", TEMPLATE_PREFIX, k)[..],
-                            &match v {
-                                serde_yaml::Value::Null => "null".to_string(),
-                                serde_yaml::Value::Bool(b) => b.to_string(),
-                                serde_yaml::Value::Number(n) => n.to_string(),
-                                serde_yaml::Value::String(n) => n.to_string(),
-                                _ => serde_yaml::to_string(v).unwrap()[4..].to_string(),
-                            },
-                        )
+                    let mut question: Question = serde_yaml::from_str(&template_yaml).unwrap();
+                    t.data.iter().for_each(|(k, v)| {
+                        question.insert_template_value(k, v);
                     });
-                    serde_yaml::from_str(&yaml)
+                    Ok(question)
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly

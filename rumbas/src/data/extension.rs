@@ -1,5 +1,5 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 //TODO: add other extensions

@@ -1,7 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::UNGROUPED_GROUP;
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -81,11 +81,11 @@ impl_optional_overwrite!(VariableTemplateType);
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
-    ListOfStrings(Vec<String>),
-    ListOfNumbers(Vec<f64>),
-    Long(Variable),
-    Number(f64),
-    Other(VariableStringRepresentation),
+    ListOfStrings(Vec<Value<String>>),
+    ListOfNumbers(Vec<Value<f64>>),
+    Long(Value<Variable>),
+    Number(Value<f64>),
+    Other(Value<VariableStringRepresentation>),
 }
 
 impl OptionalOverwrite for VariableRepresentation {
@@ -102,7 +102,15 @@ impl OptionalOverwrite for VariableRepresentation {
     fn overwrite(&mut self, _other: &Self::Item) {
         //TODO?
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        match self {
+            VariableRepresentation::ListOfStrings(v) => v.insert_template_value(key, val),
+            VariableRepresentation::ListOfNumbers(v) => v.insert_template_value(key, val),
+            VariableRepresentation::Long(v) => v.insert_template_value(key, val),
+            VariableRepresentation::Number(v) => v.insert_template_value(key, val),
+            VariableRepresentation::Other(v) => v.insert_template_value(key, val),
+        }
+    }
 }
 impl_optional_overwrite_value!(VariableRepresentation);
 
@@ -120,26 +128,28 @@ impl VariableRepresentation {
         match self {
             VariableRepresentation::ListOfStrings(l) => create_ungrouped_variable(
                 VariableTemplateType::ListOfStrings,
-                &serde_yaml::to_string(l).unwrap(),
+                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
             ),
             VariableRepresentation::ListOfNumbers(l) => create_ungrouped_variable(
                 VariableTemplateType::ListOfNumbers,
-                &serde_yaml::to_string(l).unwrap(),
+                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
             ),
-            VariableRepresentation::Long(v) => v.clone(),
+            VariableRepresentation::Long(v) => v.clone().unwrap(),
             VariableRepresentation::Number(n) => {
-                create_ungrouped_variable(VariableTemplateType::Number, &n.to_string())
+                create_ungrouped_variable(VariableTemplateType::Number, &n.unwrap().to_string())
             }
-
-            VariableRepresentation::Other(VariableStringRepresentation::Anything(s)) => {
-                create_ungrouped_variable(VariableTemplateType::Anything, s)
-            }
-            VariableRepresentation::Other(VariableStringRepresentation::Range(r)) => {
-                create_ungrouped_variable(VariableTemplateType::Range, &r.to_range())
-            }
-            VariableRepresentation::Other(VariableStringRepresentation::RandomRange(r)) => {
-                create_ungrouped_variable(VariableTemplateType::RandomRange, &r.to_random_range())
-            }
+            VariableRepresentation::Other(o) => match o.unwrap() {
+                VariableStringRepresentation::Anything(s) => {
+                    create_ungrouped_variable(VariableTemplateType::Anything, &s)
+                }
+                VariableStringRepresentation::Range(r) => {
+                    create_ungrouped_variable(VariableTemplateType::Range, &r.to_range())
+                }
+                VariableStringRepresentation::RandomRange(r) => create_ungrouped_variable(
+                    VariableTemplateType::RandomRange,
+                    &r.to_random_range(),
+                ),
+            },
         }
     }
 }
@@ -163,6 +173,7 @@ impl std::convert::From<String> for VariableStringRepresentation {
         VariableStringRepresentation::Anything(s)
     }
 }
+impl_optional_overwrite!(VariableStringRepresentation);
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub struct RangeData {
