@@ -29,8 +29,8 @@ macro_rules! impl_optional_overwrite_value_only {
                 if let Some(ValueType::Normal(val)) = &self.0 {
                     val.empty_fields()
                 }
-                else if let Some(ValueType::Template(val)) = &self.0 {
-                    vec![val.yaml()]
+                else if let Some(ValueType::Template(ts)) = &self.0 {
+                    vec![ts.yaml()]
                 }
                 else {
                     vec!["".to_string()]
@@ -39,6 +39,7 @@ macro_rules! impl_optional_overwrite_value_only {
             fn overwrite(&mut self, other: &Self::Item) {
                 if let Some(ValueType::Normal(ref mut val)) = self.0 {
                     if let Some(ValueType::Normal(other_val)) = &other.0 {
+                        println!("Overwriting");
                         val.overwrite(&other_val);
                     }
                 } else {
