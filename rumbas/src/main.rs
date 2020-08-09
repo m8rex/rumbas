@@ -46,7 +46,7 @@ fn main() {
             combine_with_default_files(path, &mut exam);
             //println!("{:#?}", exam);
             for locale_item in exam.locales.clone().unwrap().iter() {
-                let locale = locale_item.clone().name.unwrap(); //TODO?
+                let locale = locale_item.clone().unwrap().name.unwrap();
                 let numbas = exam.to_numbas(&locale);
                 match numbas {
                     Ok(res) => {
@@ -85,7 +85,7 @@ fn main() {
                             .arg("bin/numbas.py")
                             .arg("-l")
                             //TODO.arg(&numbas_settings.locale.unwrap().to_str())
-                            .arg(locale_item.numbas_locale.clone().unwrap().to_str())
+                            .arg(locale_item.unwrap().numbas_locale.clone().unwrap().to_str())
                             .arg("-t")
                             .arg(numbas_settings.theme.unwrap())
                             .args(&extra_args)

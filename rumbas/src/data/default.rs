@@ -11,7 +11,7 @@ use crate::data::optional_overwrite::OptionalOverwrite;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use std::collections::HashSet;
 use std::fs;
@@ -256,10 +256,13 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                 DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
                 DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
                 DefaultData::Question(q) => {
-                    if let Value::Normal(ref mut groups) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg| {
-                            if let Value::Normal(ref mut questions) = &mut qg.questions {
-                                questions.iter_mut().for_each(|question| {
+                    if let Some(ValueType::Normal(ref mut groups)) = exam.question_groups.0 {
+                        groups.iter_mut().for_each(|qg_value| {
+                            let mut qg = qg_value.unwrap();
+                            if let Some(ValueType::Normal(ref mut questions)) = &mut qg.questions.0
+                            {
+                                questions.iter_mut().for_each(|question_value| {
+                                    let mut question = question_value.unwrap();
                                     question.question_data.overwrite(&Value::Normal(q.clone()))
                                 })
                             }
@@ -267,62 +270,54 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                     }
                 }
                 DefaultData::QuestionPart(p) => {
-                    if let Value::Normal(ref mut groups) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg| {
-                            if let Value::Normal(ref mut questions) = &mut qg.questions {
-                                questions.iter_mut().for_each(|question| {
-                                    if let Value::Normal(ref mut question_data) =
+                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
+                        groups.iter_mut().for_each(|qg_value| {
+                            let mut qg = qg_value.unwrap();
+                            if let Value(Some(ValueType::Normal(ref mut questions))) =
+                                &mut qg.questions
+                            {
+                                questions.iter_mut().for_each(|question_value| {
+                                    let mut question = question_value.unwrap();
+                                    if let Value(Some(ValueType::Normal(ref mut question_data))) =
                                         question.question_data
                                     {
-                                        if let Value::Normal(ref mut parts) = question_data.parts {
+                                        if let Value(Some(ValueType::Normal(ref mut parts))) =
+                                            question_data.parts
+                                        {
                                             //TODO: others etc
-                                            parts.iter_mut().for_each(|part| {
+                                            parts.iter_mut().for_each(|part_value| {
+                                                let mut part = part_value.unwrap();
                                                 if let (
                                                     QuestionPart::GapFill(_),
                                                     QuestionPart::GapFill(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
-                                                }
-                                            });
-                                            parts.iter_mut().for_each(|part| {
-                                                if let (
+                                                } else if let (
                                                     QuestionPart::JME(_),
                                                     QuestionPart::JME(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
-                                                }
-                                            });
-                                            parts.iter_mut().for_each(|part| {
-                                                if let (
+                                                } else if let (
                                                     QuestionPart::ChooseOne(_),
                                                     QuestionPart::ChooseOne(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
-                                                }
-                                            });
-                                            parts.iter_mut().for_each(|part| {
-                                                if let (
+                                                } else if let (
                                                     QuestionPart::NumberEntry(_),
                                                     QuestionPart::NumberEntry(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
-                                                }
-                                            });
-                                            parts.iter_mut().for_each(|part| {
-                                                if let (
+                                                } else if let (
                                                     QuestionPart::PatternMatch(_),
                                                     QuestionPart::PatternMatch(_),
                                                 ) = (&p, &part)
                                                 {
                                                     part.overwrite(&p.clone())
-                                                }
-                                            });
-                                            parts.iter_mut().for_each(|part| {
-                                                if let (
+                                                } else if let (
                                                     QuestionPart::Information(_),
                                                     QuestionPart::Information(_),
                                                 ) = (&p, &part)
@@ -338,18 +333,28 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                     }
                 } //TODO: cleanup...
                 DefaultData::QuestionPartGapFillGap(p) => {
-                    if let Value::Normal(ref mut groups) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg| {
-                            if let Value::Normal(ref mut questions) = &mut qg.questions {
-                                questions.iter_mut().for_each(|question| {
-                                    if let Value::Normal(ref mut question_data) =
+                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
+                        groups.iter_mut().for_each(|qg_value| {
+                            let mut qg = qg_value.unwrap();
+                            if let Value(Some(ValueType::Normal(ref mut questions))) =
+                                &mut qg.questions
+                            {
+                                questions.iter_mut().for_each(|question_value| {
+                                    let mut question = question_value.unwrap();
+                                    if let Value(Some(ValueType::Normal(ref mut question_data))) =
                                         question.question_data
                                     {
-                                        if let Value::Normal(ref mut parts) = question_data.parts {
-                                            parts.iter_mut().for_each(|part| {
-                                                if let QuestionPart::GapFill(gap_fill) = part {
-                                                    if let Value::Normal(ref mut gaps) =
-                                                        gap_fill.gaps
+                                        if let Value(Some(ValueType::Normal(ref mut parts))) =
+                                            question_data.parts
+                                        {
+                                            parts.iter_mut().for_each(|part_value| {
+                                                let mut part = part_value.unwrap();
+                                                if let QuestionPart::GapFill(ref mut gap_fill) =
+                                                    part
+                                                {
+                                                    if let Value(Some(ValueType::Normal(
+                                                        ref mut gaps,
+                                                    ))) = gap_fill.gaps
                                                     {
                                                         gaps.iter_mut().for_each(|gap| {
                                                             if let (

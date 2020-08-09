@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
@@ -10,7 +10,7 @@ optional_overwrite! {
     QuestionGroup,
     name: TranslatableString,
     picking_strategy: PickingStrategy: serde(flatten),
-    questions: Vec<QuestionPath>
+    questions: Vec<Value<QuestionPath>>
 }
 
 impl ToNumbas for QuestionGroup {

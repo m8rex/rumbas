@@ -1,5 +1,5 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -15,7 +15,7 @@ optional_overwrite! {
     review: Review, // If none, everything is true???
     advice: TranslatableString,
     intro: TranslatableString,
-    feedback_messages: Vec<FeedbackMessage>
+    feedback_messages: Vec<Value<FeedbackMessage>>
 }
 
 impl ToNumbas for Feedback {
@@ -58,10 +58,10 @@ impl ToNumbas for Review {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamReview::new(
-                self.show_score.clone().into(),
-                self.show_feedback.clone().into(),
-                self.show_expected_answer.clone().into(),
-                self.show_advice.clone().into(),
+                Some(self.show_score.clone().unwrap()),
+                Some(self.show_feedback.clone().unwrap()),
+                Some(self.show_expected_answer.clone().unwrap()),
+                Some(self.show_advice.clone().unwrap()),
             ))
         } else {
             Err(empty_fields)

@@ -4,8 +4,8 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
-use crate::data::template::Value;
 use crate::data::template::{ExamFileType, TemplateData, TEMPLATE_EXAMS_FOLDER, TEMPLATE_PREFIX};
+use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -17,12 +17,12 @@ use std::path::Path;
 
 optional_overwrite! {
     Exam,
-    locales: Vec<Locale>,
+    locales: Vec<Value<Locale>>,
     name: TranslatableString,
     navigation: Navigation,
     timing: Timing,
     feedback: Feedback,
-    question_groups: Vec<QuestionGroup>, //TODO: remove?
+    question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
     numbas_settings: NumbasSettings
 }
 
@@ -37,7 +37,6 @@ impl ToNumbas for Exam {
                     .clone()
                     .unwrap()
                     .duration_in_seconds
-                    .unwrap()
                     .to_numbas(&locale)
                     .unwrap(),
                 self.feedback
@@ -46,12 +45,14 @@ impl ToNumbas for Exam {
                     .percentage_needed_to_pass
                     .to_numbas(&locale)
                     .unwrap(),
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .show_names_of_question_groups
-                    .into(),
-                self.feedback.clone().unwrap().show_name_of_student.into(),
+                Some(
+                    self.navigation
+                        .clone()
+                        .unwrap()
+                        .show_names_of_question_groups
+                        .unwrap(),
+                ),
+                Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
             );
 
             //TODO
@@ -94,8 +95,8 @@ impl ToNumbas for Exam {
                 navigation,
                 timing,
                 feedback,
-                functions.into(),
-                variables.into(),
+                Some(functions.unwrap()),
+                Some(variables.unwrap()),
                 question_groups,
             ))
         } else {
@@ -151,13 +152,11 @@ impl Exam {
                         )[..],
                     );
 
-                    let yaml = t.data.iter().fold(template_yaml, |s, (k, v)| {
-                        s.replace(
-                            &format!("\"{}:{}\"", TEMPLATE_PREFIX, k)[..],
-                            &serde_yaml::to_string(v).unwrap()[..],
-                        )
+                    let mut exam: Exam = serde_yaml::from_str(&template_yaml).unwrap();
+                    t.data.iter().for_each(|(k, v)| {
+                        exam.insert_template_value(k, v);
                     });
-                    serde_yaml::from_str(&yaml)
+                    Ok(exam)
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly

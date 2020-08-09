@@ -1,5 +1,5 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
 

@@ -1,8 +1,0 @@
-{
-  "name": "Test exam",
-  "question_groups": [{
-    "name": "test_group",
-    "picking_strategy": "all_ordered",
-    "questions": ["question1"]
-  }]
-}

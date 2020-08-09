@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,7 @@ impl ToNumbas for QuestionPartGapFill {
         if empty_fields.is_empty() {
             Ok(numbas::exam::ExamQuestionPartGapFill::new(
                 self.to_numbas_shared_data(&locale),
-                self.sort_answers.clone().into(),
+                Some(self.sort_answers.clone().unwrap()),
                 self.gaps
                     .clone()
                     .unwrap()

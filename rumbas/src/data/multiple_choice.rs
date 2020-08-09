@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::data::template::Value;
+use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -21,10 +21,10 @@ impl ToNumbas for QuestionPartChooseOne {
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
-            let answers = self.answers.clone().unwrap();
+            let answers = self.answers.unwrap();
             Ok(numbas::exam::ExamQuestionPartChooseOne {
                 part_data: self.to_numbas_shared_data(&locale),
-                min_answers: self.should_select_at_least.clone().into(),
+                min_answers: Some(self.should_select_at_least.clone().unwrap()),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 answers: answers
                     .iter()
