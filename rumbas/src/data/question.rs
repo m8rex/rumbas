@@ -117,10 +117,8 @@ impl Question {
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        println!("{:?}", yaml);
         let input: std::result::Result<QuestionFileType, serde_yaml::Error> =
             serde_yaml::from_str(&yaml);
-        println!("{:?}", input);
         input
             .map(|e| match e {
                 Normal(e) => Ok(e),
