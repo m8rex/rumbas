@@ -50,6 +50,8 @@ macro_rules! impl_optional_overwrite_value_only {
                     if ts.key == Some(key.clone()) {
                         *self=Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
                     }
+                } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
+                    v.insert_template_value(key, val);
                 }
             }
         }
@@ -145,7 +147,7 @@ impl<T: OptionalOverwrite> OptionalOverwrite for HashMap<String, T> {
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
-        for (i, (_key, mut item)) in self.iter_mut().enumerate() {
+        for (_i, (_key, item)) in self.iter_mut().enumerate() {
             item.insert_template_value(&key, &val);
         }
     }

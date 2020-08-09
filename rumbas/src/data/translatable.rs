@@ -31,7 +31,12 @@ impl OptionalOverwrite for TranslatableString {
         //TODO: Maybe add languages of other that are missing in self?
         // These default values should be read before language is interpreted
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        match self {
+            TranslatableString::Translated(m) => m.insert_template_value(key, val),
+            TranslatableString::NotTranslated(f) => f.insert_template_value(key, val),
+        }
+    }
 }
 impl_optional_overwrite_value!(TranslatableString);
 

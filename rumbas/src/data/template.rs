@@ -81,7 +81,6 @@ impl std::convert::TryFrom<String> for TemplateString {
                 })
             }
         } else {
-            println!("Failing try from");
             Err(format!("String does not start with {}", prefix))
         }
     }
@@ -94,40 +93,10 @@ pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
 }
-/*impl<T> OptionalOverwrite for ValueType<T> {
-    type Item = ValueType<T>;
-    fn empty_fields(&self) -> Vec<String> {
-        self.0.empty_fields()
-    }
-    fn overwrite(&mut self, other: &Self::Item) {
-        if let Some(v) = self.0 {
-            v.overwrite(other);
-        }
-    }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
-        self.0.insert_template_value(key, val)
-    }
-}
-impl_optional_overwrite_value!(ValueType<T>[T]);
-*/
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(transparent)]
-
 pub struct Value<T>(pub Option<ValueType<T>>);
-/*impl<T> OptionalOverwrite for Value<T> {
-    type Item = Value<T>;
-    fn empty_fields(&self) -> Vec<String> {
-        self.0.empty_fields()
-    }
-    fn overwrite(&mut self, other: &Self::Item) {
-        if let Some(v) = self.0 {
-            v.overwrite(other);
-        }
-    }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
-        self.0.insert_template_value(key, val)
-    }
-}*/
 
 impl<T> Value<T> {
     #[inline]
