@@ -39,10 +39,9 @@ macro_rules! impl_optional_overwrite_value_only {
             fn overwrite(&mut self, other: &Self::Item) {
                 if let Some(ValueType::Normal(ref mut val)) = self.0 {
                     if let Some(ValueType::Normal(other_val)) = &other.0 {
-                        println!("Overwriting");
                         val.overwrite(&other_val);
                     }
-                } else {
+                } else if self.0.is_none() {
                     *self = other.clone();
                 }
             }
