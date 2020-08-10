@@ -58,11 +58,12 @@ fn main() {
                                 .join(&numbas_exam_name);
                             std::fs::create_dir_all(numbas_exam_path.parent().unwrap()); //TODO
                             let numbas_output_path = if output_extension == "" {
-                                let absolute_path = Path::new(OUTPUT_FOLDER)
-                                    .join(&locale)
-                                    .canonicalize()
-                                    .unwrap()
-                                    .join(path.with_extension(output_extension));
+                                let absolute_path =
+                                    Path::new(OUTPUT_FOLDER) //TODO: create locale path if it does not exist
+                                        .join(&locale)
+                                        .canonicalize()
+                                        .unwrap() //TODO: this fails if locale path does not exist
+                                        .join(path.with_extension(output_extension));
                                 std::fs::remove_dir_all(&absolute_path).unwrap_or(()); //If error, don't mind
                                 let err = std::fs::create_dir_all(&absolute_path);
                                 eprintln!("{:?}", err);
