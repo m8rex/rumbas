@@ -273,7 +273,7 @@ mod test {
     fn empty_fields_simple_structs() {
         let t = Temp {
             name: Value::Normal("test".to_string()),
-            test: Value::None,
+            test: Value::None(),
         };
         assert_eq!(t.empty_fields(), vec!["test"]);
         let t = Temp {
@@ -282,8 +282,8 @@ mod test {
         };
         assert_eq!(t.empty_fields().len(), 0);
         let t = Temp {
-            name: Value::None,
-            test: Value::None,
+            name: Value::None(),
+            test: Value::None(),
         };
         assert_eq!(t.empty_fields(), vec!["name", "test"]);
     }
@@ -299,23 +299,23 @@ mod test {
         };
         assert_eq!(t.empty_fields().len(), 0);
         let t = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
-                name: Value::None,
+                name: Value::None(),
                 test: Value::Normal("name".to_string()),
             }),
         };
         assert_eq!(t.empty_fields(), vec!["other", "t.name"]);
         let t = Temp2 {
-            other: Value::None,
-            t: Value::None,
+            other: Value::None(),
+            t: Value::None(),
         };
         assert_eq!(t.empty_fields(), vec!["other", "t"]);
         let t = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
-                name: Value::None,
-                test: Value::None,
+                name: Value::None(),
+                test: Value::None(),
             }),
         };
         assert_eq!(t.empty_fields(), vec!["other", "t.name", "t.test"]);
@@ -325,7 +325,7 @@ mod test {
     fn overwrite_simple_structs() {
         let mut t = Temp {
             name: Value::Normal("test".to_string()),
-            test: Value::None,
+            test: Value::None(),
         };
         let t2 = Temp {
             name: Value::Normal("test2".to_string()),
@@ -344,26 +344,26 @@ mod test {
     #[test]
     fn overwrite_nested_structs() {
         let t3 = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
-                name: Value::None,
+                name: Value::None(),
                 test: Value::Normal("name".to_string()),
             }),
         };
         let mut t4 = Temp2 {
-            other: Value::None,
-            t: Value::None,
+            other: Value::None(),
+            t: Value::None(),
         };
         t4.overwrite(&t3);
         assert_eq!(
             t4,
             Temp2 {
-                other: Value::None,
+                other: Value::None(),
                 t: t3.clone().t
             }
         );
         let t5 = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
                 name: Value::Normal("test".to_string()),
                 test: Value::Normal("name2".to_string()),
@@ -373,7 +373,7 @@ mod test {
         assert_eq!(
             t4,
             Temp2 {
-                other: Value::None,
+                other: Value::None(),
                 t: Value::Normal(Temp {
                     name: t5.t.unwrap().name,
                     test: t3.t.unwrap().test
@@ -386,15 +386,15 @@ mod test {
     fn empty_fields_vec_of_simple_structs() {
         let t1 = Temp {
             name: Value::Normal("test".to_string()),
-            test: Value::None,
+            test: Value::None(),
         };
         let t2 = Temp {
             name: Value::Normal("test2".to_string()),
             test: Value::Normal("name".to_string()),
         };
         let t3 = Temp {
-            name: Value::None,
-            test: Value::None,
+            name: Value::None(),
+            test: Value::None(),
         };
         let v = vec![t1, t2, t3];
         assert_eq!(v.empty_fields(), vec!["0.test", "2.name", "2.test"]);
@@ -410,21 +410,21 @@ mod test {
             }),
         };
         let t2 = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
-                name: Value::None,
+                name: Value::None(),
                 test: Value::Normal("name".to_string()),
             }),
         };
         let t3 = Temp2 {
-            other: Value::None,
-            t: Value::None,
+            other: Value::None(),
+            t: Value::None(),
         };
         let t4 = Temp2 {
-            other: Value::None,
+            other: Value::None(),
             t: Value::Normal(Temp {
-                name: Value::None,
-                test: Value::None,
+                name: Value::None(),
+                test: Value::None(),
             }),
         };
         let v = vec![t1, t2, t3, t4];

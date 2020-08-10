@@ -107,6 +107,10 @@ impl<T> Value<T> {
     pub fn Template(ts: TemplateString) -> Value<T> {
         Value(Some(ValueType::Template(ts)))
     }
+    #[inline]
+    pub fn None() -> Value<T> {
+        Value(None)
+    }
 }
 
 impl<T: std::clone::Clone> Value<T> {

@@ -9,18 +9,24 @@ use std::collections::HashMap;
 #[serde(untagged)]
 pub enum TranslatableString {
     //TODO: custom reader that checks for missing values etc?
-    Translated(HashMap<String, TranslatableString>), // Maps locales on formattable strings and parts like "{func}" (between {}) to values
-    NotTranslated(FileString),
+    Translated(Value<HashMap<String, Value<TranslatableString>>>), // Maps locales on formattable strings and parts like "{func}" (between {}) to values
+    NotTranslated(Value<FileString>),
 }
 
 impl OptionalOverwrite for TranslatableString {
     type Item = TranslatableString;
     fn empty_fields(&self) -> Vec<String> {
         match self {
-            TranslatableString::Translated(m) => {
+            TranslatableString::Translated(m_value) => {
                 let mut empty = Vec::new();
-                for (_, v) in m.iter() {
-                    empty.extend(v.empty_fields().iter().cloned());
+                match &m_value.0 {
+                    Some(ValueType::Normal(m)) => {
+                        for (_, v) in m.iter() {
+                            empty.extend(v.empty_fields().iter().cloned());
+                        }
+                    }
+                    Some(ValueType::Template(ts)) => empty.push(ts.yaml()),
+                    None => empty.push("".to_string()),
                 }
                 empty
             }
@@ -43,17 +49,31 @@ impl_optional_overwrite_value!(TranslatableString);
 impl TranslatableString {
     pub fn to_string(&self, locale: &String) -> Option<String> {
         match self {
-            TranslatableString::NotTranslated(s) => Some(s.get_content(&locale)),
-            TranslatableString::Translated(m) => m
-                .get(locale)
-                .or(m.get("content")) //TODO
-                .map(|t| match t {
-                    TranslatableString::NotTranslated(s) => {
-                        substitute(&s.get_content(&locale), &locale, &m)
-                    }
-                    _ => t.to_string(&locale),
-                })
-                .flatten(), //TODO content to static string //TODO: check for missing translations
+            //TODO: just use unwrap on values?
+            TranslatableString::NotTranslated(Value(None)) => {
+                panic!(format!("Should not happen: Missing value."))
+            }
+            TranslatableString::NotTranslated(Value(Some(ValueType::Normal(s)))) => {
+                Some(s.get_content(&locale))
+            }
+            TranslatableString::NotTranslated(Value(Some(ValueType::Template(ts)))) => panic!(
+                format!("Should not happen: Missing value for {}.", ts.yaml())
+            ),
+            TranslatableString::Translated(m_value) => {
+                let m = m_value.unwrap();
+                m.get(locale)
+                    .or(m.get("content")) //TODO
+                    .map(|t_value| {
+                        let t = t_value.unwrap();
+                        match t {
+                            TranslatableString::NotTranslated(s) => {
+                                substitute(&s.unwrap().get_content(&locale), &locale, &m)
+                            }
+                            _ => t.to_string(&locale),
+                        }
+                    })
+                    .flatten()
+            } //TODO content to static string //TODO: check for missing translations
         }
     }
 }
@@ -63,14 +83,14 @@ impl TranslatableString {
 fn substitute(
     pattern: &String,
     locale: &String,
-    map: &HashMap<String, TranslatableString>,
+    map: &HashMap<String, Value<TranslatableString>>,
 ) -> Option<String> {
     let mut result = pattern.clone();
     let mut substituted = false;
     for (key, val) in map.iter() {
         if key.starts_with("{") && key.ends_with("}") {
             let before = result.clone();
-            if let Some(v) = val.to_string(&locale) {
+            if let Some(v) = val.unwrap().to_string(&locale) {
                 result = result.replace(key, &v);
                 substituted = substituted || before != result;
             } else {
@@ -93,7 +113,7 @@ mod test {
     #[test]
     fn no_translation() {
         let val = "some string".to_string();
-        let t = NotTranslated(FileString::s(&val));
+        let t = NotTranslated(Value::Normal(FileString::s(&val)));
         assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
     }
 
@@ -102,9 +122,15 @@ mod test {
         let val_nl = "een string".to_string();
         let val_en = "some string".to_string();
         let mut m = HashMap::new();
-        m.insert("nl".to_string(), NotTranslated(FileString::s(&val_nl)));
-        m.insert("en".to_string(), NotTranslated(FileString::s(&val_en)));
-        let t = Translated(m);
+        m.insert(
+            "nl".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+        );
+        m.insert(
+            "en".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+        );
+        let t = Translated(Value::Normal(m));
         assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
         assert_eq!(t.to_string(&"en".to_string()), Some(val_en));
     }
@@ -114,19 +140,29 @@ mod test {
         let val_nl = "een string met functie {func} en {0}".to_string();
         let val_en = "some string with function {func} and {0}".to_string();
         let mut m = HashMap::new();
-        m.insert("nl".to_string(), NotTranslated(FileString::s(&val_nl)));
-        m.insert("en".to_string(), NotTranslated(FileString::s(&val_en)));
+        m.insert(
+            "nl".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+        );
+        m.insert(
+            "en".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+        );
         let val1 = "x^2";
         let val2 = "e^x";
         m.insert(
             "{0}".to_string(),
-            NotTranslated(FileString::s(&val1.to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &val1.to_string(),
+            )))),
         );
         m.insert(
             "{func}".to_string(),
-            NotTranslated(FileString::s(&val2.to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &val2.to_string(),
+            )))),
         );
-        let t = Translated(m.clone());
+        let t = Translated(Value::Normal(m.clone()));
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!("een string met functie {} en {}", val2, val1))
@@ -142,33 +178,53 @@ mod test {
         let val_nl = "een string met functie {func} en {0}".to_string();
         let val_en = "some string with function {func} and {0}".to_string();
         let mut m = HashMap::new();
-        m.insert("nl".to_string(), NotTranslated(FileString::s(&val_nl)));
-        m.insert("en".to_string(), NotTranslated(FileString::s(&val_en)));
+        m.insert(
+            "nl".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+        );
+        m.insert(
+            "en".to_string(),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+        );
         let val1 = "x^2";
         let val2 = "e^x ({cond})";
         m.insert(
             "{0}".to_string(),
-            NotTranslated(FileString::s(&val1.to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &val1.to_string(),
+            )))),
         );
         let mut m2 = HashMap::new();
         m2.insert(
             "content".to_string(),
-            NotTranslated(FileString::s(&val2.to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &val2.to_string(),
+            )))),
         );
 
         let mut m3 = HashMap::new();
         m3.insert(
             "nl".to_string(),
-            NotTranslated(FileString::s(&"met x groter dan 0".to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &"met x groter dan 0".to_string(),
+            )))),
         );
         m3.insert(
             "en".to_string(),
-            NotTranslated(FileString::s(&"with x larger than 0".to_string())),
+            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+                &"with x larger than 0".to_string(),
+            )))),
         );
-        m2.insert("{cond}".to_string(), Translated(m3));
+        m2.insert(
+            "{cond}".to_string(),
+            Value::Normal(Translated(Value::Normal(m3))),
+        );
 
-        m.insert("{func}".to_string(), Translated(m2));
-        let t = Translated(m.clone());
+        m.insert(
+            "{func}".to_string(),
+            Value::Normal(Translated(Value::Normal(m2))),
+        );
+        let t = Translated(Value::Normal(m.clone()));
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!(
