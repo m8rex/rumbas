@@ -44,7 +44,6 @@ fn main() {
     match exam_result {
         Ok(mut exam) => {
             combine_with_default_files(path, &mut exam);
-            println!("{:#?}", exam);
             if exam.locales.0.is_none() {
                 eprintln!("Locales not set!");
             } else {
