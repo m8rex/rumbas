@@ -1,10 +1,7 @@
 ---
-type: normal
-statement:
-  nl: <p>Gegeven is de functie {func} met {cond}.&nbsp; De afgeleide functie is gegeven door</p>
-  en: <p>Given the function {func} with {cond}.&nbsp; Its derivative function is given by</p>
-  "{func}": $y=\ln(\simplify{{a}x})$
-  "{cond}": $x>0$
+type: template
+template: derivative
+function: $y=\ln(\simplify{{a}x})$ met {cond}
 advice:
   nl: |-
     <p>Gebruik de kettingregel: {f} is de samenstelling {fgh} waarbij {h} en {g}.</p>
@@ -17,23 +14,7 @@ advice:
   "{h}": $h(x)=\simplify{{a}x}$
   "{g}": $g(x)=\ln x$
   "{ln}": $\ln(\simplify{{a}x})=\ln x + \ln \var{a}$
-rulesets: {}
 variables:
   a: random(2 .. 10#1)
-variables_test:
-  condition: ''
-  max_runs: 100
-variable_groups: []
-functions: {}
-parts:
-- type: gapfill
-  marks: 0
-  prompt: <p>$y'=$ [[0]]</p>
-  gaps:
-  - type: jme
-    marks: 1
-    prompt: ''
-    answer: 1/x
-    valuegenerators:
-    - name: x
-      value: ''
+variables_condition: ''
+answer: 1/x

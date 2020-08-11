@@ -1,9 +1,7 @@
 ---
-type: normal
-statement:
-  nl: <p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>
-  en: <p>Given the function {func}.&nbsp; Its derivative function is given by</p>
-  "{func}": $y=\frac{e^\simplify{{a}x}}{\simplify{x^{ex}}}$
+type: template
+template: derivative
+function: $y=\frac{e^\simplify{{a}x}}{\simplify{x^{ex}}}$
 advice:
   nl: |-
     <p>Gebruik de quotiëntregel.</p>
@@ -14,24 +12,8 @@ advice:
     <p>It is also possible to rewrite the formula and apply the product rule:</p>
     <p>{rewrite}.</p>
   "{rewrite}": $y=\frac{e^\simplify{{a}x}}{\simplify{x^{ex}}}=\simplify{x^{-ex}e^({a}x)}$
-rulesets: {}
 variables:
   ex: random(1 .. 6#1)
   a: random(-8 .. 12#1)
-variables_test:
-  condition: a<>0
-  max_runs: 100
-variable_groups: []
-functions: {}
-parts:
-- type: gapfill
-  marks: 0
-  prompt: <p>$y'=$ [[0]]</p>
-  gaps:
-  - type: jme
-    marks: 1
-    prompt: mmmmm
-    answer: e^({a}x)({a}x-{ex})/x^({ex}+1)
-    valuegenerators:
-    - name: x
-      value: ''
+variables_condition: a<>0
+answer: e^({a}x)({a}x-{ex})/x^({ex}+1)

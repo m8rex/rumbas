@@ -4,7 +4,7 @@ show_name_of_student: true
 show_current_marks: true
 show_maximum_marks: true
 show_answer_state: true
-allow_reveal_answer: false
+allow_reveal_answer: true
 review:
   show_score: true
   show_feedback: true
