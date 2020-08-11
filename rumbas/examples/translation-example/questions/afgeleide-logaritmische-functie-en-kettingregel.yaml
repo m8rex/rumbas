@@ -1,0 +1,36 @@
+---
+type: normal
+statement:
+  nl: <p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>
+  en: <p>Given the function {func}.&nbsp; Its derivative function is given by</p>
+  "{func}": $y=\ln(\simplify{{c1}x^{e1}+{c2}x^{e2}})$
+advice:
+  nl: "<p>Gebruik de kettingregel: {f} is de samenstelling {fgh} waarbij {h} en {g}.</p>"
+  en: "<p>Use the chain rule: {f} is the composition {fgh} with {h} and {g}.</p>"
+  "{f}": $f(x)=\ln(\simplify{{c1}x^{e1}+{c2}x^{e2}})$
+  "{fgh}": $f=g\circ h$
+  "{h}": $h(x)=\simplify{{c1}x^{e1}+{c2}x^{e2}}$
+  "{g}": $g(x)=\ln x$
+rulesets: {}
+variables:
+  e1: random(1 .. 10#1)
+  e2: random(0 .. 8#1)
+  c1: random(1 .. 8#0.5)
+  c2: random(-7 .. 8#1)
+variables_test:
+  condition: c1*c2*(e1-e2)<>0
+  max_runs: 100
+variable_groups: []
+functions: {}
+parts:
+- type: gapfill
+  marks: 0
+  prompt: <p>$y'=$ [[0]]</p>
+  gaps:
+  - type: jme
+    marks: 1
+    prompt: mmmmmmmm
+    answer: ({c1*e1}x^{e1-1}+{c2*e2}x^{e2-1})/({c1}x^{e1}+{c2}x^{e2})
+    valuegenerators:
+    - name: x
+      value: ''

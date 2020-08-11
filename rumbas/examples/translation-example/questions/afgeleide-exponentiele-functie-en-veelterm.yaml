@@ -1,0 +1,31 @@
+---
+type: normal
+statement:
+  nl: <p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>
+  en: <p>Given the function {func}.&nbsp; Its derivative function is given by</p>
+  "{func}": $y=\simplify{{d}*e^({f}x)+{a}x^2+{b}x+{c}}$
+advice: ''
+rulesets: {}
+variables:
+  a: random(-10 .. 10#0.5)
+  b: random(-4 .. 4#1)
+  c: random(-5 .. 12#1)
+  f: random(-3 .. 7#1)
+  d: random(-6 .. 6#1)
+variables_test:
+  condition: f*d*(a^2+b^2)<>0
+  max_runs: 100
+variable_groups: []
+functions: {}
+parts:
+- type: gapfill
+  marks: 0
+  prompt: <p>$y'=$ [[0]]</p>
+  gaps:
+  - type: jme
+    marks: 1
+    prompt: mmm
+    answer: "{d*f}*e^({f}x)+{2a}x+{b}"
+    valuegenerators:
+    - name: x
+      value: ''

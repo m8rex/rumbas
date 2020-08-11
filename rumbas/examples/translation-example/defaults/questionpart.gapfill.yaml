@@ -1,0 +1,17 @@
+---
+use_custom_name: false
+custom_name: ''
+show_correct_answer: true
+show_feedback_icon: true
+scripts: {}
+variable_replacements: []
+variable_replacement_strategy: original_first
+adaptive_marking_penalty: 0
+custom_marking_algorithm: ''
+extend_base_marking_algorithm: true
+unit_tests: []
+sort_answers: false
+steps_penalty: 0
+enable_minimum_marks: false
+minimum_marks: 0
+steps: []

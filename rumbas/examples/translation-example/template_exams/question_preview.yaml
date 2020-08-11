@@ -1,0 +1,17 @@
+---
+locales:
+- name: nl
+  numbas_locale: nl-NL
+- name: en
+  numbas_locale: en-GB
+name:
+  nl: Vraag voorbeeld
+  en: Question preview
+question_groups:
+- name:
+    nl: Q1
+    en: Q1
+  picking_strategy: random_subset
+  pick_questions: 1
+  questions:
+  - template:question
