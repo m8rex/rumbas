@@ -11,8 +11,8 @@ This guide assumes that you will use docker to run rumbas.
 
 ### Short answer
 - Rumbas is entirely file based
-- The content of exams and questions are specified in [JSON](https://en.wikipedia.org/wiki/JSON)
-- The Rumbas program converts these descriptions in JSON to a [Numbas](https://www.numbas.org.uk/) exam
+- The content of exams and questions are specified in [YAML](https://en.wikipedia.org/wiki/YAML)
+- The Rumbas program converts these descriptions in YAML to a [Numbas](https://www.numbas.org.uk/) exam
 
 ### Folder structure
 A rumbas project should have to following folder structure:
@@ -27,60 +27,40 @@ A rumbas project should have to following folder structure:
 Browse through the folders in the [rumbas-examples repo](https://github.com/m8rex/rumbas-examples) on your computer to see how this works.
 
 #### Exams folder
-The exams folder contains json files of the following form:
-```json
-{
-  "locales": [
-    { 
-      "name": "nl",
-      "numbas_locale": "nl-NL"
-    },
-    { 
-      "name": "en",
-      "numbas_locale": "en-GB"
-    }
-  ],
-  "name": {
-    "nl": "Test algebra",
-    "en": "Exam algebra"
-  },
-  "question_groups": [
-    {
-      "name": {
-        "nl": "Deel 1",
-        "en": "Part 1"
-      },
-      "picking_strategy": "all_ordered",
-      "questions": [
-          "M0/algebra/H2/calculate_a",
-          "M0/algebra/H2/calculate_b"
-      ]
-    },
-	{
-      "name": {
-        "nl": "Deel 2",
-        "en": "Part 2"
-      },
-      "picking_strategy": "all_shuffled",
-      "questions": [
-          "M0/algebra/H2/calculate_a",
-          "M0/algebra/H2/calculate_b"
-      ]
-    },
-	{
-      "name": {
-        "nl": "Deel 3",
-        "en": "Part 3"
-      },
-      "picking_strategy": "random_subset",
-      "pick_questions": 1,
-      "questions": [
-          "M0/algebra/H2/calculate_a",
-          "M0/algebra/H2/calculate_b"
-      ]
-    },
-  ]
-}
+The exams folder contains yaml files of the following form:
+```yaml
+---
+locales:
+- name: nl
+  numbas_locale: nl-NL
+- name: en
+  numbas_locale: en-GB
+name:
+  nl: Test algebra
+  en: Exam algebra
+question_groups:
+- name:
+    nl: Deel 1
+    en: Part 1
+  picking_strategy: all_ordered
+  questions:
+  - M0/algebra/H2/calculate_a
+  - M0/algebra/H2/calculate_b
+- name:
+    nl: Deel 2
+    en: Part 2
+  picking_strategy: all_shuffled
+  questions:
+  - M0/algebra/H2/calculate_a
+  - M0/algebra/H2/calculate_b
+- name:
+    nl: Deel 3
+    en: Part 3
+  picking_strategy: random_subset
+  pick_questions: 1
+  questions:
+  - M0/algebra/H2/calculate_a
+  - M0/algebra/H2/calculate_b
 ```
 
 This specifies:
@@ -94,39 +74,39 @@ This specifies:
 	- The third question group:
 		- Show only one of the two questions and chooses this at random
 - It uses two questions that are specified by the files:
-	- `questions/M0/algebra/H2/calculate_a.json`
-	- `questions/M0/algebra/H2/calculate_b.json`
+	- `questions/M0/algebra/H2/calculate_a.yaml`
+	- `questions/M0/algebra/H2/calculate_b.yaml`
 
 IMPORTANT: There are much more settings that can (and should be set) for exams. See the section about the default folder.
 
 #### Question folders
-The questions folder contains json files of the following form:
-```json
-{
-  "variables": {
-    "m": "random(2,3)",
-    "b": "random(1..5)",
-    "a": "random(5,6,8)"
-  },
-  "statement": {
-    "content": "file:expression_no_calculator.html",
-    "{expr}": "\\( (\\var{a} \\cdot \\var{m} + 1) \\cdot (-\\var{b}) + \\left(\\frac{\\var{m} \\cdot \\var{a}}{\\var{m} }+(-\\var{2*b})\\right) \\cdot \\var{m} \\)"
-  },
-  "parts": [
-    {
-      "type": "number_entry",
-      "answer": "{(a*m+1)*(-b) + (a - 2*b)*m}",
-      "marks": 1,
-      "allow_fractions": false
-    }
-  ],
-  "advice": {
-    "content": "{sol}{postamble}",
-    "{sol}": "\\begin{array}<br/>&amp; (\\var{a} \\cdot \\var{m} + 1) \\cdot (-\\var{b}) + \\left(\\frac{\\var{m} \\cdot \\var{a}}{\\var{m} }+(-\\var{2*b})\\right) \\cdot \\var{m} \\\\<br/> &amp; = (\\var{a*m} + 1) \\cdot (-\\var{b}) + (\\var{a} - \\var{2*b}) \\cdot \\var{m} \\\\<br/> &amp; = (\\var{a*m+1}) \\cdot (-\\var{b}) + (\\var{a - 2*b}) \\cdot \\var{m} \\\\<br/> &amp; = \\var{(a*m+1)*(-b)} + \\var{(a - 2*b)*m} \\\\<br/> &amp; = \\var{(a*m+1)*(-b) + (a - 2*b)*m}\\\\<br/>\\end{array}",
-    "{postamble}": "file:postamble.html",
-    "{chapter}": "file:M0/algebra/H2.html"
-  }
-}
+The questions folder contains yaml files of the following form:
+```yaml
+---
+variables:
+  m: random(2,3)
+  b: random(1..5)
+  a: random(5,6,8)
+statement:
+  content: file:expression_no_calculator.html
+  "{expr}": \( (\var{a} \cdot \var{m} + 1) \cdot (-\var{b}) + \left(\frac{\var{m} \cdot \var{a}}{\var{m} }+(-\var{2*b})\right) \cdot \var{m} \)
+parts:
+- type: number_entry
+  answer: "{(a*m+1)*(-b) + (a - 2*b)*m}"
+  marks: 1
+  allow_fractions: false
+advice:
+  content: "{sol}{postamble}"
+  "{sol}": |
+    \begin{array}
+    & (\var{a} \cdot \var{m} + 1) \cdot (-\var{b}) + \left(\frac{\var{m} \cdot \var{a}}{\var{m} }+(-\var{2*b})\right) \cdot \var{m} \\
+    & = (\var{a*m} + 1) \cdot (-\var{b}) + (\var{a} - \var{2*b}) \cdot \var{m} \\
+    & = (\var{a*m+1}) \cdot (-\var{b}) + (\var{a - 2*b}) \cdot \var{m} \\
+    & = \var{(a*m+1)*(-b)} + \var{(a - 2*b)*m} \\
+    & = \var{(a*m+1)*(-b) + (a - 2*b)*m}\\
+    \end{array}
+  "{postamble}": file:postamble.html
+  "{chapter}": file:M0/algebra/H2.html
 ```
 
 This specifies:
@@ -137,8 +117,8 @@ This specifies:
 - That the content of the statement can be found in the file `questions/expression_no_calculator.html`
   - When you work with translations (for example the locale 'nl'), he will first check for the file `questions/locale-nl/expression_no_calculator.html`
 - That this content contains a placeholder `{expr}` which will be set with the given expression
-  - Note that backslashes need to be escaped in JSON
-  - Rumbas supports a shorter way to write `\\var{}` (`µ{}`) and `\\simplify{}` (`§{}`)
+  - Note that backslashes do not need to be escaped in YAML (except when used between quotes)
+  - Rumbas supports a shorter way to write `\var{}` (`µ{}`) and `\simplify{}` (`§{}`)
   - You can also specify this expression in a .tex file and load it with `file:<filepath_in_questions_folder>`
 - That this question has one part:
   - Of type `number_entry`
@@ -161,7 +141,7 @@ Folders named `default` can be specified:
 
 When the description of a `question`/`exam` is read:
 - All default folders in ancestor folders are examined for default values:
-	- e.g. if a question is positioned in `questions/M0/algebra/H1/nul_in_N_and_Z.json` the following default folders will be checked:
+	- e.g. if a question is positioned in `questions/M0/algebra/H1/nul_in_N_and_Z.yaml` the following default folders will be checked:
 		- `questions/M0/algebra/H1/default`
 		- `questions/M0/algebra/default`
 		- `questions/M0/default/`
@@ -193,17 +173,17 @@ When the description of a `question`/`exam` is read:
 
 ### Templating
 - Templates need to be specified in the `template_questions` and `template_exams` folder
-- The template files are specified in JSON format but some fields have a string value of the form `template:<parameter_name>`
+- The template files are specified in YAML format but some fields have a string value of the form `template:<parameter_name>`
   - This specifies that the value of this field is a parameter and how that parameter is called
 - A question that uses a template is specified in the `questions` folder
-  - In JSON format
+  - In YAML format
   - Contains the `template` field which specifies which template to use (relative to the `template_exams`/`template_questions` folder
   - Contains a field for every parameter in the template
-- A special templated exam is the file `templated_exams/question_preview.json` which is used as wrapper when a question is converted to a numbas exam by itself.
+- A special templated exam is the file `templated_exams/question_preview.yaml` which is used as wrapper when a question is converted to a numbas exam by itself.
 
 ## Running rumbas
 - Run `docker run --rm -it -v <absolute_path_to_rumbas-examples_repo>:/rumbas m8rex/rumbas <exam_or_question_file>`
-	- e.g.`docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas m8rex/rumbas exams/M0/algebra/begintest.json`
+	- e.g.`docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas m8rex/rumbas exams/M0/algebra/begintest.yaml`
 - Go to `<absolute_path_to_rumbas-examples_repo>/_output` to find the generated html. 
 	- Click on the `index.html` file to open the exam in the browser
 
@@ -243,7 +223,7 @@ docker run --rm -v %cd%:/rumbas m8rex/rumbas:0.1.1 %str%
 #### rumbas_shell.bat
 ```bat
 @echo off
-docker run -it --rm -v %cd%:/rumbas --entrypoint=sh m8rex/rumbas:0.1.1
+docker run -it --rm -v %cd%:/rumbas --entrypoint=sh m8rex/rumbas:0.2.0
 ```
 
 ### Unix
@@ -266,11 +246,15 @@ In this folder you can create a file for each of the following two scripts.
 docker run --rm -v $PWD:/rumbas m8rex/rumbas:0.1.1 $@
 ```
 
+Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas`
+
 #### rumbas_shell
 ```sh
 #!/bin/sh
-docker run -it --rm -v $PWD:/rumbas --entrypoint=sh m8rex/rumbas:0.1.1
+docker run -it --rm -v $PWD:/rumbas --entrypoint=sh m8rex/rumbas:0.2.0
 ```
+
+Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas_shell`
 
 ## Next steps
 - Look at all questions in the `M0` folder
