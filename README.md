@@ -92,7 +92,7 @@ The easiest way is to use docker.
   - [ ] Matrix
   - [x] PatternMatch
   - [x] ChooseOne
-  - [ ] ChooseSeveral
+  - [x] ChooseMultiple
   - [ ] MatchChoicesWithAnswers
   - [x] GapFill
   - [x] Information

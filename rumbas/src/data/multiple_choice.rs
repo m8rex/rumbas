@@ -89,3 +89,59 @@ optional_overwrite! {
     feedback: TranslatableString,
     marks: f64 //TODO; float or not?
 }
+
+question_part_type! {
+    QuestionPartChooseMultiple,
+    answers: Vec<MultipleChoiceAnswer>,
+    shuffle_answers: bool,
+    show_cell_answer_state: bool,
+    should_select_at_least: usize,
+    should_select_at_most: usize,
+    columns: usize
+    //min_marks & max_marks?
+    //TODO wrong_nb_choices_warning:
+    //TODO other?
+}
+
+impl ToNumbas for QuestionPartChooseMultiple {
+    type NumbasType = numbas::exam::ExamQuestionPartChooseMultiple;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            let answers = self.answers.unwrap();
+            Ok(numbas::exam::ExamQuestionPartChooseMultiple {
+                part_data: self.to_numbas_shared_data(&locale),
+                min_answers: Some(self.should_select_at_least.clone().unwrap()),
+                max_answers: Some(self.should_select_at_most.clone().unwrap()),
+                min_marks: Some(0),
+                max_marks: Some(0),
+                shuffle_answers: self.shuffle_answers.unwrap(),
+                choices: answers
+                    .iter()
+                    .map(|a| a.statement.clone().unwrap().to_string(&locale).unwrap())
+                    .collect(),
+                display_columns: self.columns.unwrap(),
+                wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
+                show_cell_answer_state: self.show_cell_answer_state.unwrap(),
+                marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Row(
+                    answers
+                        .iter()
+                        .map(|a| numbas::exam::Primitive::Float(a.marks.clone().unwrap()))
+                        .collect(),
+                )),
+                distractors: Some(numbas::exam::MultipleChoiceMatrix::Row(
+                    answers
+                        .iter()
+                        .map(|a| {
+                            numbas::exam::Primitive::String(
+                                a.feedback.clone().unwrap().to_string(&locale).unwrap(), //TODO
+                            )
+                        })
+                        .collect(),
+                )),
+            })
+        } else {
+            Err(empty_fields)
+        }
+    }
+}

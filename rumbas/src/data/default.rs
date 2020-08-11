@@ -3,6 +3,7 @@ use crate::data::feedback::Feedback;
 use crate::data::gapfill::QuestionPartGapFill;
 use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
+use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
@@ -42,6 +43,7 @@ pub enum QuestionPartType {
     JME,
     GapFill,
     ChooseOne,
+    ChooseMultiple,
     NumberEntry,
     PatternMatch,
     Information,
@@ -74,6 +76,9 @@ impl DefaultFileType {
                 Some("questionpart.choose_one") => {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::ChooseOne))
                 }
+                Some("questionpart.choose_multiple") => Some(DefaultFileType::QuestionPart(
+                    QuestionPartType::ChooseMultiple,
+                )),
                 Some("questionpart.number_entry") => {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
                 }
@@ -139,6 +144,10 @@ impl DefaultFileType {
                     let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
                 }
+                QuestionPartType::ChooseMultiple => {
+                    let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
+                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseMultiple(q)))
+                }
                 QuestionPartType::NumberEntry => {
                     let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
@@ -168,6 +177,12 @@ impl DefaultFileType {
                     let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::ChooseOne(q),
+                    ))
+                }
+                QuestionPartType::ChooseMultiple => {
+                    let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::ChooseMultiple(q),
                     ))
                 }
                 QuestionPartType::NumberEntry => {
@@ -318,6 +333,12 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                             {
                                                                 part.overwrite(&p.clone())
                                                             } else if let (
+                                                                QuestionPart::ChooseMultiple(_),
+                                                                QuestionPart::ChooseMultiple(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
                                                                 QuestionPart::NumberEntry(_),
                                                                 QuestionPart::NumberEntry(_),
                                                             ) = (&p, &part)
@@ -335,6 +356,64 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                             ) = (&p, &part)
                                                             {
                                                                 part.overwrite(&p.clone())
+                                                            }
+                                                            if let Value(Some(ValueType::Normal(
+                                                                ref mut steps,
+                                                            ))) = &mut part.get_steps()
+                                                            {
+                                                                steps.iter_mut().for_each(|part| {
+                                                                    //TODO; do this much better
+                                                                    //TODO: part_value
+                                                                    /*if let Some(
+                                                                        ValueType::Normal(
+                                                                            ref mut part,
+                                                                        ),
+                                                                    ) = &mut part_value
+                                                                    {*/
+                                                                    if let (
+                                                                QuestionPart::GapFill(_),
+                                                                QuestionPart::GapFill(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::JME(_),
+                                                                QuestionPart::JME(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::ChooseOne(_),
+                                                                QuestionPart::ChooseOne(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::ChooseMultiple(_),
+                                                                QuestionPart::ChooseMultiple(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::NumberEntry(_),
+                                                                QuestionPart::NumberEntry(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::PatternMatch(_),
+                                                                QuestionPart::PatternMatch(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::Information(_),
+                                                                QuestionPart::Information(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            }
+                                                                })
                                                             }
                                                         }
                                                     });

@@ -680,7 +680,7 @@ pub enum ExamQuestionPart {
     #[serde(rename = "1_n_2")]
     ChooseOne(ExamQuestionPartChooseOne),
     #[serde(rename = "m_n_2")]
-    ChooseSeveral(ExamQuestionPartMultipleChoice),
+    ChooseMultiple(ExamQuestionPartChooseMultiple),
     #[serde(rename = "m_n_x")]
     MatchChoicesWithAnswers(ExamQuestionPartMultipleChoice),
     #[serde(rename = "gapfill")]
@@ -1173,6 +1173,34 @@ pub enum ChooseOneDisplayType {
     Radio,
     #[serde(rename = "dropdownlist")]
     DropDown,
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamQuestionPartChooseMultiple {
+    //TODO -> Split for different types
+    #[serde(flatten)]
+    pub part_data: ExamQuestionPartSharedData,
+    #[serde(rename = "minMarks")]
+    pub min_marks: Option<usize>, //TODO; what is difference with minimum_marks?
+    #[serde(rename = "maxMarks")]
+    pub max_marks: Option<usize>, // Is there a maximum number of marks the student can get?
+    #[serde(rename = "minAnswers")]
+    pub min_answers: Option<usize>, // Minimum number of responses the student must select
+    #[serde(rename = "maxAnswers")]
+    pub max_answers: Option<usize>, // Maximum number of responses the student can select
+    #[serde(rename = "shuffleChoices")]
+    pub shuffle_answers: bool,
+    #[serde(rename = "displayColumns")]
+    pub display_columns: usize, // How many columns to use to display the choices.
+    #[serde(rename = "warningType")]
+    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    #[serde(rename = "showCellAnswerState")]
+    pub show_cell_answer_state: bool,
+    pub choices: Vec<String>,
+    #[serde(rename = "matrix")]
+    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub distractors: Option<MultipleChoiceMatrix>,
 }
 
 #[skip_serializing_none]
