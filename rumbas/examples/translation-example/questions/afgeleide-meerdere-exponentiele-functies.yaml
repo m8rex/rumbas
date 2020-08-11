@@ -1,32 +1,14 @@
 ---
-type: normal
-statement:
-  nl: <p>Gegeven is de functie {func}.&nbsp; De afgeleide functie is gegeven door</p>
-  en: <p>Given the function {func}.&nbsp; Its derivative function is given by</p>
-  "{func}": $y=\simplify{{c1}*e^({a1}x)+{c2}*e^({a2}x)}$
+type: template
+template: derivative
+function: $y=\simplify{{c1}*e^({a1}x)+{c2}*e^({a2}x)}$
 advice:
   nl: <p>Gebruik de rekenregels voor som/verschil en de kettingregel.</p>
   en: <p>Use the calculation rules for sum/difference and the chain rule.</p>
-rulesets: {}
 variables:
   a1: random(-6 .. 6#1)
   a2: random(-6 .. 6#1)
   c1: random(-12 .. 12#1)
   c2: random(-12 .. 12#1)
-variables_test:
-  condition: a1*a2*(a1-a2)*c1*c2<>0
-  max_runs: 100
-variable_groups: []
-functions: {}
-parts:
-- type: gapfill
-  marks: 0
-  prompt: <p>$y'=$ [[0]]</p>
-  gaps:
-  - type: jme
-    marks: 1
-    prompt: tmp
-    answer: "{c1*a1}*e^({a1}*x)+{c2*a2}*e^({a2}x)"
-    valuegenerators:
-    - name: x
-      value: ''
+variables_condition: a1*a2*(a1-a2)*c1*c2<>0
+answer: "{c1*a1}*e^({a1}*x)+{c2*a2}*e^({a2}x)"
