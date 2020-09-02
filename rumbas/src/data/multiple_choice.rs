@@ -35,10 +35,7 @@ impl ToNumbas for QuestionPartChooseOne {
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
                 marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Row(
-                    answers
-                        .iter()
-                        .map(|a| numbas::exam::Primitive::Float(a.marks.clone().unwrap()))
-                        .collect(),
+                    answers.iter().map(|a| a.marks.clone().unwrap()).collect(),
                 )),
                 distractors: Some(numbas::exam::MultipleChoiceMatrix::Row(
                     answers
@@ -83,11 +80,12 @@ impl ChooseOneDisplay {
     }
 }
 
+impl_optional_overwrite!(numbas::exam::Primitive);
 optional_overwrite! {
     MultipleChoiceAnswer,
     statement: TranslatableString,
     feedback: TranslatableString,
-    marks: f64 //TODO; float or not?
+    marks: numbas::exam::Primitive
 }
 
 question_part_type! {
@@ -124,10 +122,7 @@ impl ToNumbas for QuestionPartChooseMultiple {
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
                 marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Row(
-                    answers
-                        .iter()
-                        .map(|a| numbas::exam::Primitive::Float(a.marks.clone().unwrap()))
-                        .collect(),
+                    answers.iter().map(|a| a.marks.clone().unwrap()).collect(),
                 )),
                 distractors: Some(numbas::exam::MultipleChoiceMatrix::Row(
                     answers
