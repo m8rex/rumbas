@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `jsx_graph` extension
 ### Changed
 - Type of marks in multiple choice answer (from float to primitive)
+- Type of parameters in function (from HashMap to Vec to preserve order)
 
 ## [0.2.1] - 2020-08-18
 

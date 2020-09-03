@@ -3,15 +3,15 @@ use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 optional_overwrite! {
     Function,
-    parameters: HashMap<String, Value<numbas::exam::ExamFunctionType>>,
+    parameters: Vec<(String, numbas::exam::ExamFunctionType)>,
     output_type: numbas::exam::ExamFunctionType,
     definition: FileString,
     language: numbas::exam::ExamFunctionLanguage
 }
+impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
@@ -23,7 +23,7 @@ impl ToNumbas for Function {
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(a, b)| (a, b.unwrap()))
+                    .map(|(a, b)| (a, b))
                     .collect(),
                 self.output_type.clone().unwrap(),
                 self.definition.clone().unwrap().get_content(&locale),
