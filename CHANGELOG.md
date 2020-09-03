@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Support for `questionpart.gapfill.gap.choose_one` default file
+- Support for `jsx_graph` extension
 ### Changed
 - Type of marks in multiple choice answer (from float to primitive)
 

@@ -1,3 +1,4 @@
+use crate::data::extension::Extensions;
 use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
 use crate::data::navigation::Navigation;
@@ -82,8 +83,23 @@ impl ToNumbas for Exam {
             // Below from questions
             //TODO
             let resources: Vec<[String; 2]> = Vec::new();
-            //TODO from obj of bools
-            let extensions: Vec<String> = Vec::new();
+
+            let extensions: Vec<String> = self
+                .question_groups
+                .clone()
+                .unwrap()
+                .iter()
+                .flat_map(|qg| {
+                    qg.clone()
+                        .unwrap()
+                        .questions
+                        .unwrap()
+                        .into_iter()
+                        .map(|q| q.unwrap().question_data.unwrap().extensions.unwrap())
+                })
+                .fold(Extensions::new(), |a, b| Extensions::combine(a, b))
+                .to_paths();
+
             //TODO
             let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
 
