@@ -5,6 +5,7 @@ use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
+use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
@@ -44,6 +45,7 @@ pub enum QuestionPartType {
     GapFill,
     ChooseOne,
     ChooseMultiple,
+    MatchAnswersWithItems,
     NumberEntry,
     PatternMatch,
     Information,
@@ -78,6 +80,9 @@ impl DefaultFileType {
                 }
                 Some("questionpart.choose_multiple") => Some(DefaultFileType::QuestionPart(
                     QuestionPartType::ChooseMultiple,
+                )),
+                Some("questionpart.match_answers") => Some(DefaultFileType::QuestionPart(
+                    QuestionPartType::MatchAnswersWithItems,
                 )),
                 Some("questionpart.number_entry") => {
                     Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
@@ -151,6 +156,12 @@ impl DefaultFileType {
                     let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::ChooseMultiple(q)))
                 }
+                QuestionPartType::MatchAnswersWithItems => {
+                    let q: QuestionPartMatchAnswersWithItems = serde_yaml::from_str(&yaml)?;
+                    Ok(DefaultData::QuestionPart(
+                        QuestionPart::MatchAnswersWithItems(q),
+                    ))
+                }
                 QuestionPartType::NumberEntry => {
                     let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
@@ -186,6 +197,12 @@ impl DefaultFileType {
                     let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
                     Ok(DefaultData::QuestionPartGapFillGap(
                         QuestionPart::ChooseMultiple(q),
+                    ))
+                }
+                QuestionPartType::MatchAnswersWithItems => {
+                    let q: QuestionPartMatchAnswersWithItems = serde_yaml::from_str(&yaml)?;
+                    Ok(DefaultData::QuestionPartGapFillGap(
+                        QuestionPart::MatchAnswersWithItems(q),
                     ))
                 }
                 QuestionPartType::NumberEntry => {
@@ -342,6 +359,16 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                             {
                                                                 part.overwrite(&p.clone())
                                                             } else if let (
+                                                                QuestionPart::MatchAnswersWithItems(
+                                                                    _,
+                                                                ),
+                                                                QuestionPart::MatchAnswersWithItems(
+                                                                    _,
+                                                                ),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
                                                                 QuestionPart::NumberEntry(_),
                                                                 QuestionPart::NumberEntry(_),
                                                             ) = (&p, &part)
@@ -394,6 +421,12 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                             } else if let (
                                                                 QuestionPart::ChooseMultiple(_),
                                                                 QuestionPart::ChooseMultiple(_),
+                                                            ) = (&p, &part)
+                                                            {
+                                                                part.overwrite(&p.clone())
+                                                            } else if let (
+                                                                QuestionPart::MatchAnswersWithItems(_),
+                                                                QuestionPart::MatchAnswersWithItems(_),
                                                             ) = (&p, &part)
                                                             {
                                                                 part.overwrite(&p.clone())

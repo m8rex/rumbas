@@ -93,7 +93,7 @@ The easiest way is to use docker.
   - [x] PatternMatch
   - [x] ChooseOne
   - [x] ChooseMultiple
-  - [ ] MatchChoicesWithAnswers
+  - [x] MatchAnswers
   - [x] GapFill
   - [x] Information
   - [ ] Extension

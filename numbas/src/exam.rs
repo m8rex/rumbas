@@ -682,7 +682,7 @@ pub enum ExamQuestionPart {
     #[serde(rename = "m_n_2")]
     ChooseMultiple(ExamQuestionPartChooseMultiple),
     #[serde(rename = "m_n_x")]
-    MatchChoicesWithAnswers(ExamQuestionPartMultipleChoice),
+    MatchAnswersWithChoices(ExamQuestionPartMatchAnswersWithChoices),
     #[serde(rename = "gapfill")]
     GapFill(ExamQuestionPartGapFill),
     #[serde(rename = "information")]
@@ -1205,43 +1205,43 @@ pub struct ExamQuestionPartChooseMultiple {
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct ExamQuestionPartMultipleChoice {
+pub struct ExamQuestionPartMatchAnswersWithChoices {
     //TODO -> Split for different types
     #[serde(flatten)]
-    part_data: ExamQuestionPartSharedData,
+    pub part_data: ExamQuestionPartSharedData,
     #[serde(rename = "minMarks")]
-    min_marks: Option<usize>, //TODO; what is difference with minimum_marks? -> not for 1_n_2
+    pub min_marks: Option<usize>, //TODO; what is difference with minimum_marks? -> not for 1_n_2
     #[serde(rename = "maxMarks")]
-    max_marks: Option<usize>, // Is there a maximum number of marks the student can get? -> not for 1_n_2
+    pub max_marks: Option<usize>, // Is there a maximum number of marks the student can get? -> not for 1_n_2
     #[serde(rename = "minAnswers")]
-    min_answers: Option<usize>, // Minimum number of responses the student must select
+    pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
-    max_answers: Option<usize>, // Maximum number of responses the student can select -> always one for 1_n_2
+    pub max_answers: Option<usize>, // Maximum number of responses the student can select -> always one for 1_n_2
     #[serde(rename = "shuffleChoices")]
-    shuffle_choices: bool,
+    pub shuffle_choices: bool,
     #[serde(rename = "shuffleAnswers")]
-    shuffle_answers: Option<bool>,
+    pub shuffle_answers: bool,
     #[serde(rename = "displayType")]
-    display_type: MultipleChoiceDisplayType, // How to display the response selectors -> only for 1_n_2?
-    #[serde(rename = "displayColumns")]
-    displayed_columns: usize, // How many columns to use to display the choices.
+    pub display_type: MatchAnswersWithChoicesDisplayType, // How to display the response selectors -> only for 1_n_2?
+    //#[serde(rename = "displayColumns")] //TODO?
+    //pub displayed_columns: usize, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
-    wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
-    #[serde(flatten)]
-    layout: Option<MultipleChoiceLayout>, // None for everything except m_n_x
+    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    pub layout: MatchAnswersWithChoicesLayout,
     #[serde(rename = "showCellAnswerState")]
-    show_cell_answer_state: bool,
-    choices: Vec<String>,
-    answers: Option<Vec<String>>, // None for everything except m_n_x
+    pub show_cell_answer_state: bool,
+    pub choices: Vec<String>,
+    pub answers: Vec<String>,
     #[serde(rename = "matrix")]
-    marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    distractors: Option<MultipleChoiceMatrix>,
+    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum MultipleChoiceDisplayType {
+pub enum MatchAnswersWithChoicesDisplayType {
     #[serde(rename = "checkbox")]
     Check,
+    #[serde(rename = "radiogroup")]
+    Radio,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum MultipleChoiceWarningType {
@@ -1251,21 +1251,22 @@ pub enum MultipleChoiceWarningType {
     //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum MultipleChoiceLayoutType {
+pub enum MatchAnswersWithChoicesLayoutType {
     #[serde(rename = "all")]
     All,
     //TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766
 }
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct MultipleChoiceLayout {
-    r#type: MultipleChoiceLayoutType,
+pub struct MatchAnswersWithChoicesLayout {
+    r#type: MatchAnswersWithChoicesLayoutType,
     expression: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceMatrix {
+    //TODO use specific type for the three types
     Item(Primitive),
     Row(Vec<Primitive>),
     Matrix(Vec<Vec<Primitive>>),

@@ -3,6 +3,7 @@ use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
+use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::pattern_match::QuestionPartPatternMatch;
@@ -16,6 +17,7 @@ optional_overwrite_enum! {
     GapFill: QuestionPartGapFill: serde(rename = "gapfill"),
     ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one"),
     ChooseMultiple: QuestionPartChooseMultiple: serde(rename = "choose_multiple"),
+    MatchAnswersWithItems: QuestionPartMatchAnswersWithItems: serde(rename= "match_answers"),
     NumberEntry: QuestionPartNumberEntry: serde(rename = "number_entry"),
     PatternMatch: QuestionPartPatternMatch: serde(rename = "pattern_match"),
     Information: QuestionPartInformation: serde(rename = "information")
@@ -41,6 +43,10 @@ impl ToNumbas for QuestionPart {
                 let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::ChooseMultiple(n))
             }
+            QuestionPart::MatchAnswersWithItems(d) => {
+                let n = d.to_numbas(&locale)?;
+                Ok(numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(n))
+            }
             QuestionPart::NumberEntry(d) => {
                 let n = d.to_numbas(&locale)?;
                 Ok(numbas::exam::ExamQuestionPart::NumberEntry(n))
@@ -64,6 +70,7 @@ impl QuestionPart {
             QuestionPart::GapFill(d) => d.get_steps(),
             QuestionPart::ChooseOne(d) => d.get_steps(),
             QuestionPart::ChooseMultiple(d) => d.get_steps(),
+            QuestionPart::MatchAnswersWithItems(d) => d.get_steps(),
             QuestionPart::NumberEntry(d) => d.get_steps(),
             QuestionPart::PatternMatch(d) => d.get_steps(),
             QuestionPart::Information(d) => d.get_steps(),
