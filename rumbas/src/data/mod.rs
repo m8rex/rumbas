@@ -4,6 +4,7 @@ pub mod optional_overwrite;
 pub mod to_numbas;
 #[macro_use]
 pub mod question_part;
+pub mod custom_part_type;
 pub mod default;
 pub mod exam;
 pub mod extension;
