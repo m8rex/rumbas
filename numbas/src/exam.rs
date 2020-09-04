@@ -224,7 +224,103 @@ impl BasicExamSettings {
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct CustomPartType {} //TODO: add fields
+pub struct CustomPartType {
+    name: String,
+    short_name: String,
+    description: String,
+    settings: CustomPartTypeSettings,
+    help_url: String,
+    public_availability: CustomPartAvailability,
+    marking_script: String,
+    can_be_gap: bool,
+    can_be_step: bool,
+    marking_notes: Vec<CustomPartMarkingNotes>,
+    published: bool,
+    extensions: Vec<String>,
+    #[serde(flatten)]
+    input_widget: CustomPartInputWidget,
+    //TODO source
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartMarkingNotes {
+    name: String,
+    definition: String,
+    description: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum CustomPartInputWidget {
+    //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
+    #[serde(rename = "string")]
+    String {
+        // The student enters a single line of text.
+        input_options: CustomPartStringInputOptions,
+    },
+    #[serde(rename = "number")]
+    Number {
+        // The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.
+        input_options: CustomPartNumberInputOptions,
+    },
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartInputOptionValue<T: Clone> {
+    value: T,
+    r#static: bool,
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartStringInputOptions {
+    //TODO? hint & correctAnswer is shared for all...
+    hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    #[serde(rename = "correctAnswer")]
+    correct_answer: String, // A JME expression which evaluates to the expected answer to the part.
+    #[serde(rename = "allowEmpty")]
+    allow_empty: CustomPartInputOptionValue<bool>, // If false, the part will only be marked if their answer is non-empty.
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartNumberInputOptions {
+    //TODO? hint & correctAnswer is shared for all...
+    hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    #[serde(rename = "correctAnswer")]
+    correct_answer: String, // A JME expression which evaluates to the expected answer to the part.
+    #[serde(rename = "allowFractions")]
+    allow_fractions: CustomPartInputOptionValue<bool>, //Allow the student to enter their answer as a fraction?
+    #[serde(rename = "allowedNotationStyles")]
+    allowed_notation_styles: CustomPartInputOptionValue<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum CustomPartAvailability {
+    #[serde(rename = "always")]
+    Always,
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartTypeSettings {
+    label: String,
+    name: String,
+    hint: String,
+    #[serde(flatten)]
+    input_type: CustomPartInputType,
+    evaluate: bool,
+    help_url: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum CustomPartInputType {
+    #[serde(rename = "code")]
+    Code { default_value: Primitive },
+    #[serde(rename = "checkbox")]
+    CheckBox { default_value: bool },
+}
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
