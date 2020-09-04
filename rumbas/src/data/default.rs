@@ -111,6 +111,11 @@ impl DefaultFileType {
                 Some("questionpart.gapfill.gap.choose_one") => Some(
                     DefaultFileType::QuestionPartGapFillGap(QuestionPartType::ChooseOne),
                 ),
+                Some("questionpart.gapfill.gap.match_answers") => {
+                    Some(DefaultFileType::QuestionPartGapFillGap(
+                        QuestionPartType::MatchAnswersWithItems,
+                    ))
+                }
                 _ => None,
             },
             None => None,
@@ -509,26 +514,33 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                                                                 )
                                                                             }
                                                                             if let (
-                                                                    QuestionPart::NumberEntry(_),
-                                                                    QuestionPart::NumberEntry(_),
-                                                                ) = (&p, &gap)
-                                                                {
-                                                                    gap.overwrite(&p.clone())
-                                                                }
-                                                                            if let (
-                                                                    QuestionPart::PatternMatch(_),
-                                                                    QuestionPart::PatternMatch(_),
-                                                                ) = (&p, &gap)
-                                                                {
-                                                                    gap.overwrite(&p.clone())
-                                                                }
-                                                                            if let (
-                                                                    QuestionPart::ChooseOne(_),
-                                                                    QuestionPart::ChooseOne(_),
-                                                                ) = (&p, &gap)
-                                                                {
-                                                                    gap.overwrite(&p.clone())
-                                                                }
+                                                                                QuestionPart::NumberEntry(_),
+                                                                                QuestionPart::NumberEntry(_),
+                                                                            ) = (&p, &gap)
+                                                                            {
+                                                                                gap.overwrite(&p.clone())
+                                                                            }
+                                                                                        if let (
+                                                                                QuestionPart::PatternMatch(_),
+                                                                                QuestionPart::PatternMatch(_),
+                                                                            ) = (&p, &gap)
+                                                                            {
+                                                                                gap.overwrite(&p.clone())
+                                                                            }
+                                                                                        if let (
+                                                                                QuestionPart::ChooseOne(_),
+                                                                                QuestionPart::ChooseOne(_),
+                                                                            ) = (&p, &gap)
+                                                                            {
+                                                                                gap.overwrite(&p.clone())
+                                                                            }
+                                                                                        if let (
+                                                                                QuestionPart::MatchAnswersWithItems(_),
+                                                                                QuestionPart::MatchAnswersWithItems(_),
+                                                                            ) = (&p, &gap)
+                                                                            {
+                                                                                gap.overwrite(&p.clone())
+                                                                            }
                                                                         },
                                                                     )
                                                                 }
