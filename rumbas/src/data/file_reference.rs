@@ -26,7 +26,7 @@ impl OptionalOverwrite for FileString {
         }
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
+    fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(FileString);
 
