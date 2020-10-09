@@ -58,28 +58,27 @@ fn main() {
                                 .join(&locale) //TODO, in filename?
                                 .join(&numbas_exam_name);
                             std::fs::create_dir_all(numbas_exam_path.parent().unwrap())
-                                .expect("Failed to create folders");
+                                .expect("Failed to create cache folders");
+                            let locale_folder_path = Path::new(OUTPUT_FOLDER).join(&locale);
+                            std::fs::create_dir_all(&locale_folder_path)
+                                .expect("Failed to create output locale folder fath");
+                            let absolute_path = locale_folder_path
+                                .canonicalize()
+                                .unwrap()
+                                .join(path.with_extension(output_extension));
                             let numbas_output_path = if output_extension == "" {
-                                let absolute_path =
-                                    Path::new(OUTPUT_FOLDER) //TODO: create locale path if it does not exist
-                                        .join(&locale)
-                                        .canonicalize()
-                                        .unwrap() //TODO: this fails if locale path does not exist
-                                        .join(path.with_extension(output_extension));
+                                // Remove current folder
                                 std::fs::remove_dir_all(&absolute_path).unwrap_or(()); //If error, don't mind
-                                let err = std::fs::create_dir_all(&absolute_path);
-                                eprintln!("{:?}", err);
+                                                                                       // Create folder
+                                std::fs::create_dir_all(&absolute_path)
+                                    .expect("Failed creating folder for output");
                                 absolute_path
                             } else {
-                                let absolute_path = Path::new(OUTPUT_FOLDER)
-                                    .join(&locale)
-                                    .canonicalize()
-                                    .unwrap();
-                                let err = std::fs::create_dir_all(&absolute_path);
-                                eprintln!("{:?}", err);
-                                absolute_path.join(path.with_extension(output_extension))
+                                std::fs::create_dir_all(&absolute_path.parent().unwrap())
+                                    .expect("Failed creating folder for output");
+                                absolute_path
                             };
-                            println!("{}", numbas_output_path.display());
+                            //println!("{}", numbas_output_path.display());
 
                             res.write(&numbas_exam_path.to_str().unwrap());
 
