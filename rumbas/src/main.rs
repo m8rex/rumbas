@@ -33,12 +33,13 @@ fn main() {
         ""
     };
 
-    let log_level = match matches.occurrences_of("v") {
+    //TODO: logging
+    /*let log_level = match matches.occurrences_of("v") {
         0 => 0,
         1 => 1,
         2 => 2,
         _ => 3,
-    };
+    };*/
 
     let exam_result = data::exam::Exam::from_file(path);
     match exam_result {
@@ -56,7 +57,8 @@ fn main() {
                             let numbas_exam_path = Path::new(CACHE_FOLDER)
                                 .join(&locale) //TODO, in filename?
                                 .join(&numbas_exam_name);
-                            std::fs::create_dir_all(numbas_exam_path.parent().unwrap()); //TODO
+                            std::fs::create_dir_all(numbas_exam_path.parent().unwrap())
+                                .expect("Failed to create folders");
                             let numbas_output_path = if output_extension == "" {
                                 let absolute_path =
                                     Path::new(OUTPUT_FOLDER) //TODO: create locale path if it does not exist

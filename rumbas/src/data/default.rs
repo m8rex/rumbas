@@ -287,7 +287,7 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
     //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
         if !exam.empty_fields().is_empty() {
-            //println!("Reading {}", default_file.get_path().display());
+            println!("Reading {}", default_file.get_path().display()); //TODO: debug
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {
@@ -475,7 +475,6 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                                     &mut qg.questions.0
                                 {
                                     questions.iter_mut().for_each(|question_value| {
-                                        let mut question = question_value.unwrap();
                                         if let Some(ValueType::Normal(ref mut question)) =
                                             &mut question_value.0
                                         {

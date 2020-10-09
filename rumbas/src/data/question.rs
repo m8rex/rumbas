@@ -4,7 +4,7 @@ use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
-use crate::data::template::{QuestionFileType, TEMPLATE_PREFIX, TEMPLATE_QUESTIONS_FOLDER};
+use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;

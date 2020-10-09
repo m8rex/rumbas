@@ -1,8 +1,6 @@
 use crate::data::exam::Exam;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
-use crate::data::yaml::YamlError;
-use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -50,7 +48,7 @@ impl OptionalOverwrite for TemplateString {
         }
     }
     fn overwrite(&mut self, _other: &Self::Item) {}
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {}
+    fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(TemplateString);
 
@@ -100,14 +98,19 @@ pub struct Value<T>(pub Option<ValueType<T>>);
 
 impl<T> Value<T> {
     #[inline]
+    #[allow(non_snake_case)]
     pub fn Normal(val: T) -> Value<T> {
         Value(Some(ValueType::Normal(val)))
     }
     #[inline]
+    #[allow(non_snake_case)]
+    #[allow(dead_code)]
     pub fn Template(ts: TemplateString) -> Value<T> {
         Value(Some(ValueType::Template(ts)))
     }
     #[inline]
+    #[allow(non_snake_case)]
+    #[allow(dead_code)]
     pub fn None() -> Value<T> {
         Value(None)
     }

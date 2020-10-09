@@ -4,7 +4,6 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 //TODO: defaults
 question_part_type! {
