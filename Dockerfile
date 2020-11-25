@@ -22,13 +22,17 @@ FROM python:3.6.10-alpine
 WORKDIR /usr/app
 RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
-RUN cd Numbas && git checkout f420421a7ef3c2cd4c39e43f377d2a363ae2f81e
-RUN cd Numbas && pip install -r requirements.txt
+
+WORKDIR /usr/app/Numbas
+RUN git fetch && git checkout 58fcacacefd393518645f88b17a44c55da27810b
+RUN pip install -r requirements.txt
 
 # Add jsx graph extension
-RUN mkdir -p Numbas/extensions
-RUN git clone https://github.com/numbas/numbas-extension-jsxgraph.git Numbas/extensions/jsxgraph
-RUN cd Numbas/extensions/jsxgraph && git checkout 9bc865f695009cf1942060be4e725e3dc687895b 
+RUN mkdir -p extensions
+WORKDIR /usr/app/Numbas/extensions
+RUN git clone https://github.com/numbas/numbas-extension-jsxgraph.git jsxgraph
+WORKDIR /usr/app/Numbas/extensions/jsxgraph
+RUN git fetch && git checkout 9bc865f695009cf1942060be4e725e3dc687895b 
 
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
