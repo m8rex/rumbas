@@ -5,11 +5,25 @@ use std::path::Path;
 #[macro_use]
 extern crate clap;
 use clap::{crate_version, App};
+
 mod data;
 
+/// The name of the local folder used as cache
+/// It caches the .exam files that are given to Numbas.
 const CACHE_FOLDER: &'static str = ".rumbas";
+
+/// The name of the local folder used for the output.
 const OUTPUT_FOLDER: &'static str = "_output";
 
+/// The main cli function
+/// # Requirements
+/// Make sure `NUMBAS_FOLDER` is set
+/// # Usage
+/// `rumbas compile <path_to_exam_or_question>`
+/// will compile a rumbas exam or question to HTML.
+///
+/// The `_output` folder will contain the generated HTML files.
+/// Host these with a webserver.
 fn main() {
     let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let yaml = load_yaml!("cli.yml");
