@@ -6,7 +6,7 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    QuestionPartInformation,
+    pub struct QuestionPartInformation {}
 }
 
 impl ToNumbas for QuestionPartInformation {

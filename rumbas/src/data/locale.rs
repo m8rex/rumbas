@@ -4,11 +4,14 @@ use serde::Deserialize;
 use serde::Serialize;
 
 optional_overwrite! {
-    Locale,
-    name: String, //TODO: document names best used for shareability?
-    numbas_locale: SupportedLocale
+    pub struct Locale {
+        name: String, //TODO: document names best used for shareability?
+        /// The locale to use in the Numbas interface
+        numbas_locale: SupportedLocale
+    }
 }
 
+/// Locales supported by Numbas
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
 pub enum SupportedLocale {
     #[serde(rename = "ar-SA")]

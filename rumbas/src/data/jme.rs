@@ -7,25 +7,26 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    QuestionPartJME,
-    answer: TranslatableString, //TODO: should this be translatable?
-    answer_simplification: JMEAnswerSimplification,
-    show_preview: bool,
-    checking_type: CheckingType,
-    checking_accuracy: f64,
-    failure_rate: f64,
-    vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
-    vset_range_points: usize,
-    check_variable_names: bool,
-    single_letter_variables: bool,
-    allow_unknown_functions: bool,
-    implicit_function_composition: bool,
-    max_length: Noneable<JMELengthRestriction>,
-    min_length: Noneable<JMELengthRestriction>,
-    must_have: Noneable<JMEStringRestriction>,
-    may_not_have: Noneable<JMEStringRestriction>,
-    must_match_pattern: Noneable<JMEPatternRestriction>,
-    value_generators: Noneable<Vec<JMEValueGenerator>>
+    pub struct QuestionPartJME {
+        answer: TranslatableString, //TODO: should this be translatable?
+        answer_simplification: JMEAnswerSimplification,
+        show_preview: bool,
+        checking_type: CheckingType,
+        checking_accuracy: f64,
+        failure_rate: f64,
+        vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+        vset_range_points: usize,
+        check_variable_names: bool,
+        single_letter_variables: bool,
+        allow_unknown_functions: bool,
+        implicit_function_composition: bool,
+        max_length: Noneable<JMELengthRestriction>,
+        min_length: Noneable<JMELengthRestriction>,
+        must_have: Noneable<JMEStringRestriction>,
+        may_not_have: Noneable<JMEStringRestriction>,
+        must_match_pattern: Noneable<JMEPatternRestriction>,
+        value_generators: Noneable<Vec<JMEValueGenerator>>
+    }
 }
 
 impl ToNumbas for QuestionPartJME {
@@ -91,30 +92,31 @@ impl ToNumbas for QuestionPartJME {
 // See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
 //TODO: rename etc
 optional_overwrite! {
-    JMEAnswerSimplification,
-    simplify_basic: bool,
-    simplify_unit_factor: bool,
-    simplify_unit_power: bool,
-    simplify_unit_denominator: bool,
-    simplify_zero_factor: bool,
-    simplify_zero_term: bool,
-    simplify_zero_power: bool,
-    simplify_zero_base: bool,
-    collect_numbers: bool,
-    constants_first: bool,
-    simplify_sqrt_products: bool,
-    simplify_sqrt_division: bool,
-    simplify_sqrt_square: bool,
-    simplify_other_numbers: bool,
-    simplify_no_leading_minus: bool,
-    simplify_fractions: bool,
-    simplify_trigonometric: bool,
-    cancel_terms: bool,
-    cancel_factors: bool,
-    collect_like_fractions: bool,
-    order_canonical: bool,
-    use_times_dot: bool, // Use \cdot instead of \times
-    expand_brackets: bool
+    pub struct JMEAnswerSimplification {
+        simplify_basic: bool,
+        simplify_unit_factor: bool,
+        simplify_unit_power: bool,
+        simplify_unit_denominator: bool,
+        simplify_zero_factor: bool,
+        simplify_zero_term: bool,
+        simplify_zero_power: bool,
+        simplify_zero_base: bool,
+        collect_numbers: bool,
+        constants_first: bool,
+        simplify_sqrt_products: bool,
+        simplify_sqrt_division: bool,
+        simplify_sqrt_square: bool,
+        simplify_other_numbers: bool,
+        simplify_no_leading_minus: bool,
+        simplify_fractions: bool,
+        simplify_trigonometric: bool,
+        cancel_terms: bool,
+        cancel_factors: bool,
+        collect_like_fractions: bool,
+        order_canonical: bool,
+        use_times_dot: bool, // Use \cdot instead of \times
+        expand_brackets: bool
+    }
 }
 
 impl ToNumbas for JMEAnswerSimplification {
@@ -225,11 +227,12 @@ impl ToNumbas for CheckingType {
 }
 
 optional_overwrite! {
-    JMERestriction,
-    name: TranslatableString,
-    strings: Vec<TranslatableString>,
-    partial_credit: f64, //TODO, is number, so maybe usize?
-    message: TranslatableString
+    pub struct JMERestriction {
+        name: TranslatableString,
+        strings: Vec<TranslatableString>,
+        partial_credit: f64, //TODO, is number, so maybe usize?
+        message: TranslatableString
+    }
 }
 
 impl ToNumbas for JMERestriction {
@@ -255,9 +258,11 @@ impl ToNumbas for JMERestriction {
 }
 
 optional_overwrite! {
-    JMELengthRestriction,
-    restriction: JMERestriction: serde(flatten),
-    length: usize
+    pub struct JMELengthRestriction {
+        #[serde(flatten)]
+        restriction: JMERestriction,
+        length: usize
+    }
 }
 
 impl ToNumbas for JMELengthRestriction {
@@ -280,9 +285,11 @@ impl ToNumbas for JMELengthRestriction {
 }
 
 optional_overwrite! {
-    JMEStringRestriction,
-    restriction: JMERestriction: serde(flatten),
-    show_strings: bool
+    pub struct JMEStringRestriction {
+        #[serde(flatten)]
+        restriction: JMERestriction,
+        show_strings: bool
+    }
 }
 
 impl ToNumbas for JMEStringRestriction {
@@ -305,10 +312,12 @@ impl ToNumbas for JMEStringRestriction {
 }
 
 optional_overwrite! {
-    JMEPatternRestriction,
-    restriction: JMERestriction: serde(flatten),
-    pattern: String, //TODO type? If string -> FileString?
-    name_to_compare: String //TODO, translateable?
+    pub struct JMEPatternRestriction {
+        #[serde(flatten)]
+        restriction: JMERestriction,
+        pattern: String, //TODO type? If string -> InputString?
+        name_to_compare: String //TODO, translateable?
+    }
 }
 
 impl ToNumbas for JMEPatternRestriction {
@@ -332,9 +341,10 @@ impl ToNumbas for JMEPatternRestriction {
 }
 
 optional_overwrite! {
-    JMEValueGenerator,
-    name: FileString,
-    value: FileString
+    pub struct JMEValueGenerator {
+        name: FileString,
+        value: FileString
+    }
 }
 
 impl ToNumbas for JMEValueGenerator {

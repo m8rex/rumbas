@@ -12,15 +12,25 @@ use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
 optional_overwrite_enum! {
-    QuestionPart: serde(tag = "type"),
-    JME: QuestionPartJME: serde(rename = "jme"),
-    GapFill: QuestionPartGapFill: serde(rename = "gapfill"),
-    ChooseOne: QuestionPartChooseOne: serde(rename = "choose_one"),
-    ChooseMultiple: QuestionPartChooseMultiple: serde(rename = "choose_multiple"),
-    MatchAnswersWithItems: QuestionPartMatchAnswersWithItems: serde(rename= "match_answers"),
-    NumberEntry: QuestionPartNumberEntry: serde(rename = "number_entry"),
-    PatternMatch: QuestionPartPatternMatch: serde(rename = "pattern_match"),
-    Information: QuestionPartInformation: serde(rename = "information")
+    #[serde(tag="type")]
+    pub enum QuestionPart {
+        #[serde(rename = "jme")]
+        JME(QuestionPartJME),
+        #[serde(rename = "gapfill")]
+        GapFill(QuestionPartGapFill),
+        #[serde(rename = "choose_one")]
+        ChooseOne(QuestionPartChooseOne),
+        #[serde(rename = "choose_multiple")]
+        ChooseMultiple(QuestionPartChooseMultiple),
+        #[serde(rename= "match_answers")]
+        MatchAnswersWithItems(QuestionPartMatchAnswersWithItems),
+        #[serde(rename = "number_entry")]
+        NumberEntry(QuestionPartNumberEntry),
+        #[serde(rename = "pattern_match")]
+        PatternMatch(QuestionPartPatternMatch),
+        #[serde(rename = "information")]
+        Information(QuestionPartInformation)
+    }
 }
 
 impl ToNumbas for QuestionPart {
@@ -79,26 +89,39 @@ impl QuestionPart {
 }
 
 macro_rules! question_part_type {
-    ($struct: ident, $($field: ident: $type: ty$(: $field_attribute: meta)?), *) => {
+    (
+        $(#[$outer:meta])*
+        pub struct $struct: ident {
+            $($(
+                $(#[$inner:meta])*
+                $field: ident: $type: ty
+             ),+)?
+        }
+    )=> {
         optional_overwrite! {
-            $struct,
-            marks: usize,
-            prompt: TranslatableString,
-            use_custom_name: bool,
-            custom_name: String, //Translatable?
-            steps_penalty: usize,
-            enable_minimum_marks: bool,
-            minimum_marks: usize, //TODO: separate?
-            show_correct_answer: bool,
-            show_feedback_icon: bool,
-            variable_replacement_strategy: VariableReplacementStrategy,
-            adaptive_marking_penalty: usize,
-            custom_marking_algorithm: String, // TODO? empty string -> none?, from file?
-            extend_base_marking_algorithm: bool,
-            steps: Vec<QuestionPart>
-            $(
-                ,$field: $type $(: $field_attribute)?
-            )*
+            $(#[$outer])*
+            pub struct $struct {
+                marks: usize,
+                prompt: TranslatableString,
+                use_custom_name: bool,
+                custom_name: String, //Translatable?
+                steps_penalty: usize,
+                enable_minimum_marks: bool,
+                minimum_marks: usize, //TODO: separate?
+                show_correct_answer: bool,
+                show_feedback_icon: bool,
+                variable_replacement_strategy: VariableReplacementStrategy,
+                adaptive_marking_penalty: usize,
+                custom_marking_algorithm: String, // TODO? empty string -> none?, from file?
+                extend_base_marking_algorithm: bool,
+                steps: Vec<QuestionPart>
+                $(,
+                $(
+                    $(#[$inner])*
+                    $field: $type
+                ),+
+                )?
+            }
         }
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {

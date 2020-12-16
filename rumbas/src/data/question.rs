@@ -18,18 +18,18 @@ use std::path::Path;
 pub const UNGROUPED_GROUP: &'static str = "Ungrouped variables";
 
 optional_overwrite! {
-    Question,
-    statement: TranslatableString,
-    advice: TranslatableString,
-    parts: Vec<Value<QuestionPart>>,
-    variables: HashMap<String, Value<VariableRepresentation>>,
-    variables_test: VariablesTest,
-    functions: HashMap<String, Value<Function>>,
-    preamble: Preamble,
-    navigation: QuestionNavigation,
-    extensions: Extensions
-    //TODO al lot of options
-
+    pub struct Question {
+        statement: TranslatableString,
+        advice: TranslatableString,
+        parts: Vec<Value<QuestionPart>>,
+        variables: HashMap<String, Value<VariableRepresentation>>,
+        variables_test: VariablesTest,
+        functions: HashMap<String, Value<Function>>,
+        preamble: Preamble,
+        navigation: QuestionNavigation,
+        extensions: Extensions
+        //TODO al lot of options
+    }
 }
 
 impl ToNumbas for Question {
@@ -144,9 +144,10 @@ impl Question {
 }
 
 optional_overwrite! {
-    VariablesTest,
-    condition: String,
-    max_runs: usize
+    pub struct VariablesTest {
+        condition: String,
+        max_runs: usize
+    }
 }
 
 impl ToNumbas for VariablesTest {

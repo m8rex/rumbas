@@ -5,8 +5,7 @@ use crate::data::navigation::Navigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
-use crate::data::template::{ExamFileType, TemplateData, TEMPLATE_EXAMS_FOLDER};
-use crate::data::template::{Value, ValueType};
+use crate::data::template::{ExamFileType, TemplateData, Value, ValueType, TEMPLATE_EXAMS_FOLDER};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -17,14 +16,23 @@ use std::fs;
 use std::path::Path;
 
 optional_overwrite! {
-    Exam,
-    locales: Vec<Value<Locale>>,
-    name: TranslatableString,
-    navigation: Navigation,
-    timing: Timing,
-    feedback: Feedback,
-    question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
-    numbas_settings: NumbasSettings
+    /// An Exam
+    pub struct Exam {
+        /// All locales for which the exam should be generated
+        locales: Vec<Value<Locale>>,
+        /// The name of the exam
+        name: TranslatableString,
+        /// The navigation settings for this exam
+        navigation: Navigation,
+        /// The timing settings for this exam
+        timing: Timing,
+        /// The feedback settings for this exam
+        feedback: Feedback,
+        /// The questions groups for this exam
+        question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
+        /// The settings to set for numbas
+        numbas_settings: NumbasSettings
+    }
 }
 
 impl ToNumbas for Exam {

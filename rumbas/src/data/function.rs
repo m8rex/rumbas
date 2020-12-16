@@ -5,11 +5,12 @@ use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    Function,
-    parameters: Vec<(String, numbas::exam::ExamFunctionType)>,
-    output_type: numbas::exam::ExamFunctionType,
-    definition: FileString,
-    language: numbas::exam::ExamFunctionLanguage
+    pub struct Function {
+        parameters: Vec<(String, numbas::exam::ExamFunctionType)>,
+        output_type: numbas::exam::ExamFunctionType,
+        definition: FileString,
+        language: numbas::exam::ExamFunctionLanguage
+    }
 }
 impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 

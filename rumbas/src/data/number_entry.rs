@@ -7,19 +7,20 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    QuestionPartNumberEntry,
-    answer: NumberEntryAnswer,
-    display_correct_as_fraction: bool,
-    allow_fractions: bool,
-    allowed_notation_styles: Vec<numbas::exam::AnswerStyle>,
+    pub struct QuestionPartNumberEntry {
+        answer: NumberEntryAnswer,
+        display_correct_as_fraction: bool,
+        allow_fractions: bool,
+        allowed_notation_styles: Vec<numbas::exam::AnswerStyle>,
 
-    display_correct_in_style: numbas::exam::AnswerStyle,
-    fractions_must_be_reduced: bool,
-    partial_credit_if_fraction_not_reduced: f64,
+        display_correct_in_style: numbas::exam::AnswerStyle,
+        fractions_must_be_reduced: bool,
+        partial_credit_if_fraction_not_reduced: f64,
 
-    hint_fraction: bool
+        hint_fraction: bool
 
-    //TODO: precision, show_precision_hint
+        //TODO: precision, show_precision_hint
+    }
 
 }
 impl_optional_overwrite!(numbas::exam::AnswerStyle);

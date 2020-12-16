@@ -7,13 +7,16 @@ use serde::{Deserialize, Serialize};
 
 //TODO: defaults
 question_part_type! {
-    QuestionPartChooseOne,
-    answers: Vec<MultipleChoiceAnswer>,
-    shuffle_answers: bool,
-    show_cell_answer_state: bool,
-    should_select_at_least: usize, // TODO 0 or 1?
-    display: ChooseOneDisplay: serde(flatten)
-    //TODO wrong_nb_choices_warning:
+    pub struct QuestionPartChooseOne {
+        answers: Vec<MultipleChoiceAnswer>,
+        shuffle_answers: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize, // TODO 0 or 1?
+        /// !FLATTENED: all its attributes should be added to [QuestionPartChooseOne]
+        #[serde(flatten)]
+        display: ChooseOneDisplay
+        //TODO wrong_nb_choices_warning:
+    }
 }
 
 impl ToNumbas for QuestionPartChooseOne {
@@ -82,23 +85,25 @@ impl ChooseOneDisplay {
 
 impl_optional_overwrite!(numbas::exam::Primitive);
 optional_overwrite! {
-    MultipleChoiceAnswer,
-    statement: TranslatableString,
-    feedback: TranslatableString,
-    marks: numbas::exam::Primitive
+    pub struct MultipleChoiceAnswer {
+        statement: TranslatableString,
+        feedback: TranslatableString,
+        marks: numbas::exam::Primitive
+    }
 }
 
 question_part_type! {
-    QuestionPartChooseMultiple,
-    answers: Vec<MultipleChoiceAnswer>,
-    shuffle_answers: bool,
-    show_cell_answer_state: bool,
-    should_select_at_least: usize,
-    should_select_at_most: usize,
-    columns: usize
-    //min_marks & max_marks?
-    //TODO wrong_nb_choices_warning:
-    //TODO other?
+    pub struct QuestionPartChooseMultiple {
+        answers: Vec<MultipleChoiceAnswer>,
+        shuffle_answers: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize,
+        should_select_at_most: usize,
+        columns: usize
+        //min_marks & max_marks?
+        //TODO wrong_nb_choices_warning:
+        //TODO other?
+    }
 }
 
 impl ToNumbas for QuestionPartChooseMultiple {
@@ -142,32 +147,37 @@ impl ToNumbas for QuestionPartChooseMultiple {
 }
 
 optional_overwrite! {
-    MatchAnswersItemMarks,
-    marks: numbas::exam::Primitive,
-    answer: TranslatableString
+    pub struct MatchAnswersItemMarks {
+        marks: numbas::exam::Primitive,
+        answer: TranslatableString
+    }
 }
 
 optional_overwrite! {
-    MatchAnswersItem,
-    statement: TranslatableString,
-    answer_marks: Vec<MatchAnswersItemMarks> // Map points to strings of answers ! use anchors in yaml
+    pub struct MatchAnswersItem {
+        statement: TranslatableString,
+        /// Map points to strings of answers ! use anchors in yaml
+        answer_marks: Vec<MatchAnswersItemMarks>
+    }
 }
 
 question_part_type! {
-    QuestionPartMatchAnswersWithItems,
-    answers: Vec<Value<TranslatableString>>,  // Values of the answers
-    items: Vec<Value<MatchAnswersItem>>, // Items for which the answer can be selected
-    shuffle_answers: bool,
-    shuffle_items: bool,
-    show_cell_answer_state: bool,
-    should_select_at_least: usize,
-    should_select_at_most: usize,
-
-    display: MatchAnswerWithItemsDisplay : serde(flatten),
-    layout: numbas::exam::MatchAnswersWithChoicesLayout
-    //min_marks & max_marks?
-    //TODO wrong_nb_choices_warning:
-    //TODO other?
+    pub struct QuestionPartMatchAnswersWithItems {
+        answers: Vec<Value<TranslatableString>>,  // Values of the answers
+        items: Vec<Value<MatchAnswersItem>>, // Items for which the answer can be selected
+        shuffle_answers: bool,
+        shuffle_items: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize,
+        should_select_at_most: usize,
+        /// !FLATTENED
+        #[serde(flatten)]
+        display: MatchAnswerWithItemsDisplay,
+        layout: numbas::exam::MatchAnswersWithChoicesLayout
+        //min_marks & max_marks?
+        //TODO wrong_nb_choices_warning:
+        //TODO other?
+    }
 }
 impl_optional_overwrite!(
     numbas::exam::MatchAnswersWithChoicesLayout,

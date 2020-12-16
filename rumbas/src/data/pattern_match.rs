@@ -6,12 +6,13 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    QuestionPartPatternMatch,
-    case_sensitive: bool,
-    partial_credit: f64,
-    pattern: TranslatableString, //TODO: type
-    display_answer: TranslatableString,
-    match_mode: numbas::exam::PatternMatchMode
+    pub struct QuestionPartPatternMatch {
+        case_sensitive: bool,
+        partial_credit: f64,
+        pattern: TranslatableString, //TODO: type
+        display_answer: TranslatableString,
+        match_mode: numbas::exam::PatternMatchMode
+    }
 }
 impl_optional_overwrite!(numbas::exam::PatternMatchMode);
 
