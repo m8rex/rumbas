@@ -7,11 +7,12 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    Variable,
-    definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
-    description: String,
-    template_type: VariableTemplateType,
-    group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+    pub struct Variable {
+        definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
+        description: String,
+        template_type: VariableTemplateType,
+        group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+    }
 }
 
 impl ToNumbas for Variable {
@@ -42,16 +43,25 @@ impl ToNumbas for Variable {
     }
 }
 
+/// The different template_types for a variable
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
-    Anything,
+    /// Not specified
+    Anything, // TODO: allow this?
+    /// A list of numbers
     ListOfNumbers,
+    /// A list of strings
     ListOfStrings,
+    /// A long string
     LongString,
+    /// A number
     Number,
+    /// A random number from a range
     RandomRange,
+    /// A range
     Range,
+    /// A string
     r#String,
 }
 

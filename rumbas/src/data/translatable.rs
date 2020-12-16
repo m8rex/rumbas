@@ -5,11 +5,19 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
 
+/// A translatable string
+///
+/// In yaml it should be specified as either
+/// - a simple string: "this is a string"
+/// - a file string: file:<path>
+/// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum TranslatableString {
     //TODO: custom reader that checks for missing values etc?
-    Translated(Value<HashMap<String, Value<TranslatableString>>>), // Maps locales on formattable strings and parts like "{func}" (between {}) to values
+    /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
+    Translated(Value<HashMap<String, Value<TranslatableString>>>),
+    /// A file reference or string
     NotTranslated(Value<FileString>),
 }
 

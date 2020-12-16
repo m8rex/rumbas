@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 
 //TODO: is locale still being used?
 optional_overwrite! {
-    NumbasSettings,
-    locale: SupportedLocale,
-    theme: String //TODO: check if valid theme? Or is numbas error ok?
+    pub struct NumbasSettings {
+        locale: SupportedLocale,
+        theme: String //TODO: check if valid theme? Or is numbas error ok?
+    }
 }

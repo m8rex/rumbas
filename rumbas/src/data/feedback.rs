@@ -5,17 +5,22 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    Feedback,
-    percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
-    show_name_of_student: bool,
-    show_current_marks: bool, // Whether current marks are shown during exam or not (show_actual_mark in numbas)
-    show_maximum_marks: bool, // Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
-    show_answer_state: bool, // Whether answer feedback is shown (right or wrong etc)
-    allow_reveal_answer: bool, // Whether the 'reveal answer' button is present
-    review: Review, // If none, everything is true???
-    advice: TranslatableString,
-    intro: TranslatableString,
-    feedback_messages: Vec<Value<FeedbackMessage>>
+    pub struct Feedback {
+        percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
+        show_name_of_student: bool,
+        /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
+        show_current_marks: bool,
+        /// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
+        show_maximum_marks: bool,
+        /// Whether answer feedback is shown (right or wrong etc)
+        show_answer_state: bool,
+        // Whether the 'reveal answer' button is present
+        allow_reveal_answer: bool,
+        review: Review, // If none, everything is true???
+        advice: TranslatableString,
+        intro: TranslatableString,
+        feedback_messages: Vec<Value<FeedbackMessage>>
+    }
 }
 
 impl ToNumbas for Feedback {
@@ -45,11 +50,16 @@ impl ToNumbas for Feedback {
 }
 
 optional_overwrite! {
-    Review,
-    show_score: bool, // Whether to show score in result overview page
-    show_feedback: bool, // Show feedback while reviewing
-    show_expected_answer: bool, // Show expected answer while reviewing
-    show_advice: bool // Show advice while reviewing
+    pub struct Review {
+        /// Whether to show score in result overview page
+        show_score: bool,
+        /// Show feedback while reviewing
+        show_feedback: bool,
+        /// Show expected answer while reviewing
+        show_expected_answer: bool,
+        /// Show advice while reviewing
+        show_advice: bool
+    }
 }
 
 impl ToNumbas for Review {

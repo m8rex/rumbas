@@ -6,9 +6,13 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    QuestionPartGapFill,
-    sort_answers: bool,
-    gaps: Vec<QuestionPart>
+    // The Gap fill question part type
+    pub struct QuestionPartGapFill {
+        /// Whether the answers should be sorted
+        sort_answers: bool,
+        /// The gaps
+        gaps: Vec<QuestionPart>
+    }
 }
 
 impl ToNumbas for QuestionPartGapFill {

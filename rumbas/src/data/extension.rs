@@ -4,9 +4,13 @@ use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
 //TODO: add other extensions
 optional_overwrite! {
-    Extensions,
-    jsx_graph: bool,
-    stats: bool
+    /// Specify which extensions should be enabled
+    pub struct Extensions {
+        /// Whether the jsx_graph extension is enabled
+        jsx_graph: bool,
+        /// Whether the stats extension is enabled
+        stats: bool
+    }
 }
 
 impl ToNumbas for Extensions {

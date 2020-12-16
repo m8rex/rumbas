@@ -6,17 +6,18 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    Navigation,
-    allow_regenerate: bool,
-    reverse: bool,
-    browsing_enabled: bool,
-    allow_steps: bool,
-    show_frontpage: bool,
-    show_results_page: ShowResultsPage,
-    prevent_leaving: bool,
-    on_leave: LeaveAction,
-    start_password: FileString, //TODO: Noneable, but "" is none in this case?
-    show_names_of_question_groups: bool
+    pub struct Navigation {
+        allow_regenerate: bool,
+        reverse: bool,
+        browsing_enabled: bool,
+        allow_steps: bool,
+        show_frontpage: bool,
+        show_results_page: ShowResultsPage,
+        prevent_leaving: bool,
+        on_leave: LeaveAction,
+        start_password: FileString, //TODO: Noneable, but "" is none in this case?
+        show_names_of_question_groups: bool
+    }
 }
 
 impl ToNumbas for Navigation {
@@ -93,10 +94,11 @@ impl ToNumbas for LeaveAction {
 }
 
 optional_overwrite! {
-    QuestionNavigation,
-    allow_regenerate: bool,
-    show_frontpage: bool,
-    prevent_leaving: bool
+    pub struct QuestionNavigation {
+        allow_regenerate: bool,
+        show_frontpage: bool,
+        prevent_leaving: bool
+    }
 }
 
 impl ToNumbas for QuestionNavigation {

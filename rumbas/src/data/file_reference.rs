@@ -6,8 +6,12 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::path::Path;
 
+/// The prefix used to specify a file reference
 const FILE_PREFIX: &'static str = "file:";
 
+/// A string that has to be read from a file.
+///
+/// Specified by a string starting with [FILE_PREFIX].
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 pub struct FileString {

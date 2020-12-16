@@ -1,6 +1,10 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
+/// The datatype for the input strings
+///
+/// It supports the shorthand µ for \var
+/// It supports the shorthand § for \simplify
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 pub struct InputString(pub String);

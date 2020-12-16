@@ -6,9 +6,12 @@ use serde::{Deserialize, Serialize};
 
 // TODO: maybe translatable? So different text's can be set for different languages?
 optional_overwrite! {
-    Preamble,
-    js: FileString,
-    css: FileString
+    pub struct Preamble {
+        /// The JavaScript to add to the outputfiles
+        js: FileString,
+        /// The CSS to add to the outputfiles
+        css: FileString
+    }
 }
 
 impl ToNumbas for Preamble {

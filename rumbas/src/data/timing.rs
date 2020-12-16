@@ -5,11 +5,12 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    Timing,
-    duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
-    allow_pause: bool,
-    on_timeout: TimeoutAction,
-    timed_warning: TimeoutAction
+    pub struct Timing {
+        duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
+        allow_pause: bool,
+        on_timeout: TimeoutAction,
+        timed_warning: TimeoutAction
+    }
 }
 
 impl ToNumbas for Timing {

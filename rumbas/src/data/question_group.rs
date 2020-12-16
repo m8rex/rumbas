@@ -7,10 +7,15 @@ use crate::data::yaml::YamlError;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
-    QuestionGroup,
-    name: TranslatableString,
-    picking_strategy: PickingStrategy: serde(flatten),
-    questions: Vec<Value<QuestionPath>>
+    pub struct QuestionGroup {
+        /// The name
+        name: TranslatableString,
+        /// The strategy to use to pick the questions to show
+        #[serde(flatten)]
+        picking_strategy: PickingStrategy,
+        /// The questions
+        questions: Vec<Value<QuestionPath>>
+    }
 }
 
 impl ToNumbas for QuestionGroup {
@@ -73,9 +78,11 @@ impl ToNumbas for PickingStrategy {
 }
 
 optional_overwrite! {
-    QuestionPath: serde(try_from = "String"),
-    question_name: String,
-    question_data: Question
+    #[serde(try_from = "String")]
+    pub struct QuestionPath {
+        question_name: String,
+        question_data: Question
+    }
 }
 
 impl std::convert::TryFrom<String> for QuestionPath {

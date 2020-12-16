@@ -158,16 +158,22 @@ macro_rules! optional_overwrite {
     // This macro creates a struct with all optional fields
     // It also adds a method to overwrite all fields with None value with the values of another object of the same type
     // It also adds a method to list the fields that are None
-    ($struct: ident$(: $container_attribute: meta)?, $($field: ident: $type: ty$(: $attribute: meta)?), *) => {
+    (
+        $(#[$outer:meta])*
+        pub struct $struct: ident {
+            $(
+                $(#[$inner:meta])*
+                $field: ident: $type: ty
+            ),+
+        }
+    ) => {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         $(
-            #[$container_attribute]
-        )?
+            #[$outer]
+        )*
         pub struct $struct {
             $(
-                $(
-                    #[$attribute]
-                )?
+                $(#[$inner])*
                 pub $field: Value<$type>
             ),*
         }
@@ -210,16 +216,25 @@ macro_rules! optional_overwrite {
 }
 
 macro_rules! optional_overwrite_enum {
-    ($enum: ident$(: $container_attribute: meta)?, $($field: ident: $type: ty$(: $attribute: meta)?), *) => {
+    (
+
+        $(#[$outer:meta])*
+        pub enum $enum: ident {
+            $(
+                $(#[$inner:meta])*
+                $field: ident($type: ty)
+            ),+
+        }
+    ) => {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         $(
-            #[$container_attribute]
-        )?
+            #[$outer]
+        )*
         pub enum $enum {
             $(
                 $(
-                    #[$attribute]
-                )?
+                    #[$inner]
+                )*
                 $field($type)
             ),*
         }
@@ -258,15 +273,17 @@ mod test {
     use serde::Deserialize;
     use serde::Serialize;
     optional_overwrite! {
-        Temp,
+        pub struct Temp {
         name: String,
         test: String
+        }
     }
 
     optional_overwrite! {
-        Temp2,
+        pub struct Temp2 {
         other: String,
         t: Temp
+        }
     }
     //TODO: template
     #[test]
