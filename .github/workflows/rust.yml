@@ -31,5 +31,5 @@ jobs:
       run: cargo test --verbose
       working-directory: rumbas
     - name: Run doc
-      run: cargo doc
+      run: cargo doc --no-deps
       working-directory: rumbas
