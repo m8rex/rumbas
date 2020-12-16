@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rumbas"] = [{"text":"impl Copy for SupportedLocale","synthetic":false,"types":[]},{"text":"impl Copy for ChooseOneDisplay","synthetic":false,"types":[]},{"text":"impl Copy for MatchAnswerWithItemsDisplay","synthetic":false,"types":[]},{"text":"impl Copy for ShowResultsPage","synthetic":false,"types":[]},{"text":"impl Copy for RangeData","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["CACHE_FOLDER","The name of the local folder used as cache It caches the .exam files that are given to Numbas."],["OUTPUT_FOLDER","The name of the local folder used for the output."]],"fn":[["main","The main cli function"]],"mod":[["data","Contains all the data types"]]});

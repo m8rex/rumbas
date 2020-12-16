@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CheckingType",""]],"struct":[["JMEAnswerSimplification",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["QuestionPartJME",""]]});

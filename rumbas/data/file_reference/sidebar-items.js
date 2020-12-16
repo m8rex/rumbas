@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["FILE_PREFIX","The prefix used to specify a file reference"]],"struct":[["FileString","A string that has to be read from a file."]]});
