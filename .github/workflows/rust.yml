@@ -30,3 +30,6 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
       working-directory: rumbas
+    - name: Run doc
+      run: cargo doc
+      working-directory: rumbas
