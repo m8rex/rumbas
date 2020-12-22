@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 //TODO: add other extensions
 optional_overwrite! {
     Extensions,
-    jsx_graph: bool
+    jsx_graph: bool,
+    stats: bool
 }
 
 impl ToNumbas for Extensions {
@@ -16,6 +17,9 @@ impl ToNumbas for Extensions {
             let mut extensions = Vec::new();
             if self.jsx_graph.unwrap() {
                 extensions.push("jsx_graph".to_string());
+            }
+            if self.stats.unwrap() {
+                extensions.push("stats".to_string());
             }
             Ok(extensions)
         } else {
@@ -28,12 +32,14 @@ impl Extensions {
     pub fn new() -> Extensions {
         Extensions {
             jsx_graph: Value::Normal(false),
+            stats: Value::Normal(false),
         }
     }
 
     pub fn combine(e: Extensions, f: Extensions) -> Extensions {
         Extensions {
             jsx_graph: Value::Normal(e.jsx_graph.unwrap() || f.jsx_graph.unwrap()),
+            stats: Value::Normal(e.stats.unwrap() || f.stats.unwrap()),
         }
     }
 
@@ -41,11 +47,14 @@ impl Extensions {
         let numbas_path = std::env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set"); //TODO: static str for NUMBAS_FOLDER
         let mut paths = Vec::new();
         if self.jsx_graph.unwrap() {
-            paths.push("extensions/jsxgraph");
+            paths.push("jsxgraph"); // TODO: add a toString?
+        }
+        if self.stats.unwrap() {
+            paths.push("stats");
         }
         paths
             .into_iter()
-            .map(|s| format!("{}/{}", numbas_path, s))
+            .map(|s| format!("{}/extensions/{}", numbas_path, s))
             .collect()
     }
 }
