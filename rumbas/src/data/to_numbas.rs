@@ -64,3 +64,14 @@ macro_rules! impl_to_numbas {
 }
 
 impl_to_numbas!(String, bool, f64, usize, [f64; 2]);
+
+impl<O: ToNumbas> ToNumbas for Vec<O> {
+    type NumbasType = Vec<O::NumbasType>;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let mut v = Vec::new();
+        for item in self.into_iter() {
+            v.push(item.to_numbas(&locale)?);
+        }
+        Ok(v)
+    }
+}
