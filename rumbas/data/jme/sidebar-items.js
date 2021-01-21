@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["CheckingType",""]],"struct":[["JMEAnswerSimplification",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["QuestionPartJME",""]]});
+initSidebarItems({"enum":[["CheckingType",""]],"struct":[["JMEAnswerSimplification",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["JMEValueGenerator",""],["QuestionPartJME",""]]});
