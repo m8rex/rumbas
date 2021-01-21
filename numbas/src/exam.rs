@@ -61,6 +61,15 @@ where
                     "sqrtDivision" => Ok(AnswerSimplificationType::SqrtDivision),
                     "sqrtSquare" => Ok(AnswerSimplificationType::SqrtSquare),
                     "otherNumbers" => Ok(AnswerSimplificationType::OtherNumbers),
+                    "timesDot" => Ok(AnswerSimplificationType::TimesDot),
+                    "expandBrackets" => Ok(AnswerSimplificationType::ExpandBrackets),
+                    "noLeadingMinus" => Ok(AnswerSimplificationType::NoLeadingMinus),
+                    "trig" => Ok(AnswerSimplificationType::Trigonometric),
+                    "collectLikeFractions" => Ok(AnswerSimplificationType::CollectLikeFractions),
+                    "canonicalOrder" => Ok(AnswerSimplificationType::CanonicalOrder),
+                    "cancelFactors" => Ok(AnswerSimplificationType::CancelFactors),
+                    "cancelTerms" => Ok(AnswerSimplificationType::CancelTerms),
+                    "simplifyFractions" => Ok(AnswerSimplificationType::Fractions),
                     _ => Err(serde::de::Error::custom(format!(
                         "unknown answer simplification type {}",
                         item
@@ -106,6 +115,15 @@ where
                 AnswerSimplificationType::SqrtDivision => "sqrtDivision",
                 AnswerSimplificationType::SqrtSquare => "sqrtSquare",
                 AnswerSimplificationType::OtherNumbers => "otherNumbers",
+                AnswerSimplificationType::TimesDot => "timesDot",
+                AnswerSimplificationType::ExpandBrackets => "expandBrackets",
+                AnswerSimplificationType::NoLeadingMinus => "noLeadingMinus",
+                AnswerSimplificationType::Trigonometric => "trig",
+                AnswerSimplificationType::CollectLikeFractions => "collectLikeFractions",
+                AnswerSimplificationType::CanonicalOrder => "canonicalOrder",
+                AnswerSimplificationType::CancelFactors => "cancelFactors",
+                AnswerSimplificationType::CancelTerms => "cancelTerms",
+                AnswerSimplificationType::Fractions => "simplifyFractions",
             };
             parts.push(new_item.to_string());
         }
@@ -877,6 +895,15 @@ pub enum AnswerSimplificationType {
     SqrtDivision,
     SqrtSquare,
     OtherNumbers,
+    TimesDot,
+    ExpandBrackets,
+    CollectLikeFractions,
+    CanonicalOrder,
+    NoLeadingMinus,
+    Fractions,
+    Trigonometric,
+    CancelTerms,
+    CancelFactors,
 }
 
 #[skip_serializing_none]
