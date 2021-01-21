@@ -23,7 +23,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
-RUN git fetch && git checkout 58fcacacefd393518645f88b17a44c55da27810b
+RUN git fetch && git checkout 89643bd0737730fc34711fee921af906af31ba04
 
 # Fetch jsx graph extension
 FROM alpine as jsxgraph_fetcher
