@@ -1,3 +1,4 @@
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
@@ -23,7 +24,8 @@ question_part_type! {
     min_length: Noneable<JMELengthRestriction>,
     must_have: Noneable<JMEStringRestriction>,
     may_not_have: Noneable<JMEStringRestriction>,
-    must_match_pattern: Noneable<JMEPatternRestriction>
+    must_match_pattern: Noneable<JMEPatternRestriction>,
+    value_generators: Noneable<Vec<JMEValueGenerator>>
 }
 
 impl ToNumbas for QuestionPartJME {
@@ -72,6 +74,10 @@ impl ToNumbas for QuestionPartJME {
                     .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
                 self.must_match_pattern
+                    .clone()
+                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .flatten(),
+                self.value_generators
                     .clone()
                     .map(|v| v.to_numbas(&locale).unwrap())
                     .flatten(),
@@ -301,7 +307,7 @@ impl ToNumbas for JMEStringRestriction {
 optional_overwrite! {
     JMEPatternRestriction,
     restriction: JMERestriction: serde(flatten),
-    pattern: String, //TODO type? If string -> InputString?
+    pattern: String, //TODO type? If string -> FileString?
     name_to_compare: String //TODO, translateable?
 }
 
@@ -318,6 +324,27 @@ impl ToNumbas for JMEPatternRestriction {
                     .unwrap(),
                 self.pattern.clone().unwrap(),
                 self.name_to_compare.clone().unwrap(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    JMEValueGenerator,
+    name: FileString,
+    value: FileString
+}
+
+impl ToNumbas for JMEValueGenerator {
+    type NumbasType = numbas::exam::JMEValueGenerator;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEValueGenerator> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMEValueGenerator::new(
+                self.name.clone().unwrap().get_content(&locale),
+                self.value.clone().unwrap().get_content(&locale),
             ))
         } else {
             Err(empty_fields)

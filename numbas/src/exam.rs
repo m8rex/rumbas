@@ -830,7 +830,8 @@ pub struct ExamQuestionPartJME {
     may_not_have: Option<JMEStringRestriction>,
     #[serde(rename = "mustmatchpattern")]
     must_match_pattern: Option<JMEPatternRestriction>,
-    //TODO: valuegenerators
+    #[serde(rename = "valuegenerators")]
+    value_generators: Option<Vec<JMEValueGenerator>>,
 }
 
 impl ExamQuestionPartJME {
@@ -853,6 +854,7 @@ impl ExamQuestionPartJME {
         must_have: Option<JMEStringRestriction>,
         may_not_have: Option<JMEStringRestriction>,
         must_match_pattern: Option<JMEPatternRestriction>,
+        value_generators: Option<Vec<JMEValueGenerator>>,
     ) -> ExamQuestionPartJME {
         ExamQuestionPartJME {
             part_data,
@@ -873,6 +875,7 @@ impl ExamQuestionPartJME {
             must_have,
             may_not_have,
             must_match_pattern,
+            value_generators,
         }
     }
 }
@@ -1002,6 +1005,19 @@ impl JMEPatternRestriction {
             pattern,
             name_to_compare,
         }
+    }
+}
+
+#[skip_serializing_none]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct JMEValueGenerator {
+    name: String,
+    value: String,
+}
+
+impl JMEValueGenerator {
+    pub fn new(name: String, value: String) -> Self {
+        Self { name, value }
     }
 }
 
