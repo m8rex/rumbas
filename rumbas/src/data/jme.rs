@@ -82,6 +82,7 @@ impl ToNumbas for QuestionPartJME {
     }
 }
 
+// See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
 //TODO: rename etc
 optional_overwrite! {
     JMEAnswerSimplification,
@@ -98,7 +99,16 @@ optional_overwrite! {
     simplify_sqrt_products: bool,
     simplify_sqrt_division: bool,
     simplify_sqrt_square: bool,
-    simplify_other_numbers: bool
+    simplify_other_numbers: bool,
+    simplify_no_leading_minus: bool,
+    simplify_fractions: bool,
+    simplify_trigonometric: bool,
+    cancel_terms: bool,
+    cancel_factors: bool,
+    collect_like_fractions: bool,
+    order_canonical: bool,
+    use_times_dot: bool, // Use \cdot instead of \times
+    expand_brackets: bool
 }
 
 impl ToNumbas for JMEAnswerSimplification {
@@ -151,6 +161,33 @@ impl ToNumbas for JMEAnswerSimplification {
             }
             if self.simplify_other_numbers.unwrap() {
                 v.push(numbas::exam::AnswerSimplificationType::OtherNumbers);
+            }
+            if self.simplify_no_leading_minus.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::NoLeadingMinus);
+            }
+            if self.simplify_fractions.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::Fractions);
+            }
+            if self.simplify_trigonometric.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::Trigonometric);
+            }
+            if self.cancel_terms.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::CancelTerms);
+            }
+            if self.cancel_factors.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::CancelFactors);
+            }
+            if self.collect_like_fractions.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::CollectLikeFractions);
+            }
+            if self.order_canonical.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::CanonicalOrder);
+            }
+            if self.use_times_dot.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::TimesDot);
+            }
+            if self.expand_brackets.unwrap() {
+                v.push(numbas::exam::AnswerSimplificationType::ExpandBrackets);
             }
             Ok(v)
         } else {
