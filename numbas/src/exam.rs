@@ -252,6 +252,8 @@ pub struct ExamNavigation {
     reverse: Option<bool>,
     #[serde(rename = "browse")]
     browsing_enabled: Option<bool>,
+    #[serde(rename = "navigatemode")]
+    navigation_mode: Option<ExamNavigationMode>,
     #[serde(rename = "allowsteps")]
     allow_steps: Option<bool>,
     #[serde(rename = "showfrontpage")]
@@ -271,6 +273,7 @@ impl ExamNavigation {
         allow_regenerate: bool,
         reverse: Option<bool>,
         browsing_enabled: Option<bool>,
+        navigation_mode: Option<ExamNavigationMode>,
         allow_steps: Option<bool>,
         show_frontpage: bool,
         show_results_page: Option<ExamShowResultsPage>,
@@ -282,6 +285,7 @@ impl ExamNavigation {
             allow_regenerate,
             reverse,
             browsing_enabled,
+            navigation_mode,
             allow_steps,
             show_frontpage,
             show_results_page,
@@ -334,6 +338,13 @@ pub enum ExamTimeoutAction {
     None { message: String }, //This message doesn't do anything
     #[serde(rename = "warn")]
     Warn { message: String }, // Show a warning message
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ExamNavigationMode {
+    #[serde(rename = "sequence")]
+    Sequence,
+    #[serde(rename = "menu")]
+    Menu,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamShowResultsPage {

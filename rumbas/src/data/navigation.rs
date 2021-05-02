@@ -10,6 +10,7 @@ optional_overwrite! {
     allow_regenerate: bool,
     reverse: bool,
     browsing_enabled: bool,
+    navigation_mode: ExamNavigationMode,
     allow_steps: bool,
     show_frontpage: bool,
     show_results_page: ShowResultsPage,
@@ -28,6 +29,9 @@ impl ToNumbas for Navigation {
                 self.allow_regenerate.unwrap(),
                 Some(self.reverse.clone().unwrap()),
                 Some(self.browsing_enabled.clone().unwrap()),
+                self.navigation_mode
+                    .clone()
+                    .map(|s| s.to_numbas(&locale).unwrap()),
                 Some(self.allow_steps.clone().unwrap()),
                 self.show_frontpage.unwrap(),
                 self.show_results_page
@@ -42,6 +46,25 @@ impl ToNumbas for Navigation {
         }
     }
 }
+
+#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ExamNavigationMode {
+    Sequence,
+    Menu,
+}
+impl_optional_overwrite!(ExamNavigationMode);
+
+impl ToNumbas for ExamNavigationMode {
+    type NumbasType = numbas::exam::ExamNavigationMode;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(match self {
+            ExamNavigationMode::Sequence => numbas::exam::ExamNavigationMode::Sequence,
+            ExamNavigationMode::Menu => numbas::exam::ExamNavigationMode::Menu,
+        })
+    }
+}
+
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
