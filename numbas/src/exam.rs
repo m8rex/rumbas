@@ -220,6 +220,8 @@ pub struct BasicExamSettings {
     show_question_group_names: Option<bool>,
     #[serde(rename = "showstudentname")]
     show_student_name: Option<bool>,
+    #[serde(rename = "allowPrinting")]
+    allow_printing: Option<bool>,
 }
 
 impl BasicExamSettings {
@@ -229,6 +231,7 @@ impl BasicExamSettings {
         percentage_needed_to_pass: Option<f64>,
         show_question_group_names: Option<bool>,
         show_student_name: Option<bool>,
+        allow_printing: Option<bool>,
     ) -> BasicExamSettings {
         BasicExamSettings {
             name,
@@ -236,6 +239,7 @@ impl BasicExamSettings {
             percentage_needed_to_pass,
             show_question_group_names,
             show_student_name,
+            allow_printing,
         }
     }
 }

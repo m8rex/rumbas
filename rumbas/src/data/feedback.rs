@@ -8,6 +8,7 @@ optional_overwrite! {
     Feedback,
     percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
     show_name_of_student: bool,
+    allow_printing: bool, // better in review ...? Should map to allowPrinting in exam.json....
     show_current_marks: bool, // Whether current marks are shown during exam or not (show_actual_mark in numbas)
     show_maximum_marks: bool, // Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
     show_answer_state: bool, // Whether answer feedback is shown (right or wrong etc)

@@ -54,6 +54,7 @@ impl ToNumbas for Exam {
                         .unwrap(),
                 ),
                 Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
+                Some(self.feedback.clone().unwrap().allow_printing.unwrap()),
             );
 
             //TODO
