@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["rumbas"] = [{"text":"impl Display for YamlError","synthetic":false,"types":[]}];
+implementors["rumbas"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"struct\" href=\"rumbas/data/yaml/struct.YamlError.html\" title=\"struct rumbas::data::yaml::YamlError\">YamlError</a>","synthetic":false,"types":["rumbas::data::yaml::YamlError"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
