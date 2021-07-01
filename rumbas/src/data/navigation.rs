@@ -42,31 +42,31 @@ impl NormalNavigation {
     }
     pub fn can_move_to_previous(&self) -> Option<bool> {
         match self {
-            NormalNavigation::Menu(m) => Some(false),
+            NormalNavigation::Menu(_m) => Some(false),
             NormalNavigation::Sequential(m) => Some(m.can_move_to_previous.clone().unwrap()),
         }
     }
     pub fn to_navigation_mode(&self) -> numbas::exam::ExamNavigationMode {
         match self {
-            NormalNavigation::Menu(m) => numbas::exam::ExamNavigationMode::Menu,
-            NormalNavigation::Sequential(m) => numbas::exam::ExamNavigationMode::Sequence,
+            NormalNavigation::Menu(_m) => numbas::exam::ExamNavigationMode::Menu,
+            NormalNavigation::Sequential(_m) => numbas::exam::ExamNavigationMode::Sequence,
         }
     }
     pub fn browsing_enabled(&self) -> bool {
         match self {
-            NormalNavigation::Menu(m) => false,
+            NormalNavigation::Menu(_m) => false,
             NormalNavigation::Sequential(m) => m.browsing_enabled.clone().unwrap(),
         }
     }
     pub fn show_results_page(&self) -> Option<ShowResultsPage> {
         match self {
-            NormalNavigation::Menu(m) => None,
+            NormalNavigation::Menu(_m) => None,
             NormalNavigation::Sequential(m) => Some(m.show_results_page.clone().unwrap()),
         }
     }
     pub fn on_leave(&self) -> Option<LeaveAction> {
         match self {
-            NormalNavigation::Menu(m) => None,
+            NormalNavigation::Menu(_m) => None,
             NormalNavigation::Sequential(m) => Some(m.on_leave.clone().unwrap()),
         }
     }

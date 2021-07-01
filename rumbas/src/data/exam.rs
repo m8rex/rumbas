@@ -1,16 +1,9 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
-use crate::data::extension::Extensions;
-use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
-use crate::data::navigation::Navigation;
 use crate::data::normal_exam::NormalExam;
-use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
-use crate::data::question_group::QuestionGroup;
 use crate::data::template::{ExamFileType, TemplateData, Value, ValueType, TEMPLATE_EXAMS_FOLDER};
-use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
-use crate::data::translatable::TranslatableString;
 use crate::data::yaml::{YamlError, YamlResult};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -22,6 +15,7 @@ pub enum Exam {
     Normal(NormalExam),
     Diagnostic(DiagnosticExam),
 }
+impl_optional_overwrite!(Exam); // TODO?
 
 impl ToNumbas for Exam {
     type NumbasType = numbas::exam::Exam;
@@ -34,6 +28,20 @@ impl ToNumbas for Exam {
 }
 
 impl Exam {
+    pub fn locales(&self) -> Value<Vec<Value<Locale>>> {
+        match self {
+            Exam::Normal(n) => n.locales.clone(),
+            Exam::Diagnostic(n) => n.locales.clone(),
+        }
+    }
+
+    pub fn numbas_settings(&self) -> Value<super::numbas_settings::NumbasSettings> {
+        match self {
+            Exam::Normal(n) => n.numbas_settings.clone(),
+            Exam::Diagnostic(n) => n.numbas_settings.clone(),
+        }
+    }
+
     pub fn from_file(file: &Path) -> YamlResult<Exam> {
         use ExamFileType::*;
         let input: std::result::Result<ExamFileType, serde_yaml::Error> =
