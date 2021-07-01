@@ -1,4 +1,5 @@
-use crate::data::exam::Exam;
+use crate::data::diagnostic_exam::DiagnosticExam;
+use crate::data::normal_exam::NormalExam;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
@@ -21,7 +22,8 @@ pub struct TemplateData {
 #[serde(tag = "type")]
 pub enum ExamFileType {
     Template(TemplateData),
-    Normal(Exam),
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
 }
 
 #[derive(Serialize, Deserialize, Debug)]

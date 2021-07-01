@@ -152,6 +152,7 @@ pub struct Exam {
     question_groups: Vec<ExamQuestionGroup>,
     //contributors TODO
     //metadata TODO
+    diagnostic: Option<ExamDiagnostic>,
 }
 
 impl Exam {
@@ -175,6 +176,7 @@ impl Exam {
         functions: Option<HashMap<String, ExamFunction>>,
         variables: Option<HashMap<String, ExamVariable>>,
         question_groups: Vec<ExamQuestionGroup>,
+        diagnostic: Option<ExamDiagnostic>,
     ) -> Exam {
         Exam {
             basic_settings,
@@ -187,6 +189,7 @@ impl Exam {
             functions,
             variables,
             question_groups,
+            diagnostic,
         }
     }
 
@@ -220,6 +223,9 @@ pub struct BasicExamSettings {
     show_question_group_names: Option<bool>,
     #[serde(rename = "showstudentname")]
     show_student_name: Option<bool>,
+    #[serde(rename = "allowPrinting")]
+    /// Whether students are ammpwed to print an exam transcript
+    allow_printing: Option<bool>,
 }
 
 impl BasicExamSettings {
@@ -229,6 +235,7 @@ impl BasicExamSettings {
         percentage_needed_to_pass: Option<f64>,
         show_question_group_names: Option<bool>,
         show_student_name: Option<bool>,
+        allow_printing: Option<bool>,
     ) -> BasicExamSettings {
         BasicExamSettings {
             name,
@@ -236,6 +243,7 @@ impl BasicExamSettings {
             percentage_needed_to_pass,
             show_question_group_names,
             show_student_name,
+            allow_printing,
         }
     }
 }
@@ -249,6 +257,8 @@ pub struct CustomPartType {} //TODO: add fields
 pub struct ExamNavigation {
     #[serde(rename = "allowregen")]
     allow_regenerate: bool,
+    #[serde(rename = "navigatemode")]
+    navigation_mode: ExamNavigationMode,
     reverse: Option<bool>,
     #[serde(rename = "browse")]
     browsing_enabled: Option<bool>,
@@ -269,6 +279,7 @@ pub struct ExamNavigation {
 impl ExamNavigation {
     pub fn new(
         allow_regenerate: bool,
+        navigation_mode: ExamNavigationMode,
         reverse: Option<bool>,
         browsing_enabled: Option<bool>,
         allow_steps: Option<bool>,
@@ -280,6 +291,7 @@ impl ExamNavigation {
     ) -> ExamNavigation {
         ExamNavigation {
             allow_regenerate,
+            navigation_mode,
             reverse,
             browsing_enabled,
             allow_steps,
@@ -290,6 +302,14 @@ impl ExamNavigation {
             start_password,
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum ExamNavigationMode {
+    Sequence,
+    Menu,
+    Diagnostic,
 }
 
 #[skip_serializing_none]
@@ -1359,4 +1379,40 @@ pub struct ExamQuestionPartInformation {
 pub struct ExamQuestionPartExtension {
     #[serde(flatten)]
     part_data: ExamQuestionPartSharedData,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamDiagnostic {
+    pub knowledge_graph: ExamDiagnosticKnowledgeGraph,
+    pub script: ExamDiagnosticScript,
+    #[serde(rename = "customScript")]
+    pub custom_script: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamDiagnosticKnowledgeGraph {
+    pub topics: Vec<ExamDiagnosticKnowledgeGraphTopic>,
+    pub learning_objectives: Vec<ExamDiagnosticKnowledgeGraphLearningObjective>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamDiagnosticKnowledgeGraphTopic {
+    pub name: String,
+    pub description: String,
+    pub learning_objectives: Vec<String>,
+    pub depends_on: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamDiagnosticKnowledgeGraphLearningObjective {
+    pub name: String,
+    pub description: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum ExamDiagnosticScript {
+    Mastery,
+    Diagnosys,
+    Custom,
 }

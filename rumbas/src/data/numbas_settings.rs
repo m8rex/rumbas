@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 optional_overwrite! {
     pub struct NumbasSettings {
         locale: SupportedLocale,
-        theme: String //TODO: check if valid theme? Or is numbas error ok?
+        theme: String, //TODO: check if valid theme? Or is numbas error ok?
+        /// Whether the student is allowed to print the exam
+        allow_printing: bool
     }
 }
