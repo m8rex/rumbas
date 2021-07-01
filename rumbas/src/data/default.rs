@@ -6,7 +6,9 @@ use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
-use crate::data::navigation::Navigation;
+use crate::data::navigation::NavigationSharedData;
+use crate::data::navigation::NormalNavigation;
+use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::OptionalOverwrite;
@@ -52,7 +54,7 @@ pub enum QuestionPartType {
 }
 
 pub enum DefaultData {
-    Navigation(Navigation),
+    Navigation(NavigationSharedData), // TODO: also for other types...
     Timing(Timing),
     Feedback(Feedback),
     NumbasSettings(NumbasSettings),
@@ -125,7 +127,7 @@ impl DefaultFileType {
         let yaml = fs::read_to_string(path).unwrap();
         match self {
             DefaultFileType::Navigation => {
-                let n: Navigation = serde_yaml::from_str(&yaml)?;
+                let n: NavigationSharedData = serde_yaml::from_str(&yaml)?;
                 Ok(DefaultData::Navigation(n))
             }
             DefaultFileType::Timing => {
@@ -282,7 +284,12 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     result.into_iter().collect::<Vec<PathBuf>>()
 }
 
-pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
+macro_rules! handle {
+    ($path: expr, $exam: expr) => {
+{
+    let path = $path;
+    let exam = $exam;
+    // TODO: diagnostic
     let default_files = default_files(path);
     //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
@@ -291,7 +298,18 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {
-                DefaultData::Navigation(n) => exam.navigation.overwrite(&Value::Normal(n)),
+                DefaultData::Navigation(n) => {
+                /*    exam.navigation
+                        .overwrite(&Value::Normal(NormalNavigation::Sequential(
+                            crate::data::navigation::SequentialNavigation {
+                                shared_data: n,
+                                can_move_to_previous: Value::None(),
+                                browsing_enabled: Value::None(),
+                                show_results_page: Value::None(),
+                                on_leave: Value::None(),
+                            },
+                        ))) */
+                } // TODO: BAD
                 DefaultData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
                 DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
                 DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
@@ -557,5 +575,15 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
                 }
             }
         }
+    }
+}
+}
+}
+
+pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
+    if let Exam::Normal(ref mut e) = exam {
+        handle!(path, e);
+    } else if let Exam::Diagnostic(ref mut e) = exam {
+        handle!(path, e);
     }
 }

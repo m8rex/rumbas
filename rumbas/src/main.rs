@@ -59,10 +59,10 @@ fn main() {
     match exam_result {
         Ok(mut exam) => {
             combine_with_default_files(path, &mut exam);
-            if exam.locales.0.is_none() {
+            if exam.locales().0.is_none() {
                 eprintln!("Locales not set!");
             } else {
-                for locale_item in exam.locales.clone().unwrap().iter() {
+                for locale_item in exam.locales().clone().unwrap().iter() {
                     let locale = locale_item.clone().unwrap().name.unwrap();
                     let numbas = exam.to_numbas(&locale);
                     match numbas {
@@ -96,7 +96,7 @@ fn main() {
 
                             res.write(&numbas_exam_path.to_str().unwrap());
 
-                            let numbas_settings = exam.numbas_settings.clone().unwrap();
+                            let numbas_settings = exam.numbas_settings().clone().unwrap();
 
                             let output = std::process::Command::new("python3")
                                 .current_dir(numbas_path.clone())
