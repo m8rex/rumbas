@@ -1,3 +1,4 @@
+use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::exam::Exam;
 use crate::data::feedback::Feedback;
 use crate::data::gapfill::QuestionPartGapFill;
@@ -6,7 +7,10 @@ use crate::data::jme::QuestionPartJME;
 use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
-use crate::data::navigation::NavigationSharedData;
+use crate::data::navigation::{
+    DiagnosticNavigation, MenuNavigation, NormalNavigation, SequentialNavigation,
+};
+use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::OptionalOverwrite;
@@ -73,7 +77,9 @@ macro_rules! create_enum_structs {
 }
 
 create_enum_structs!(
-Navigation, NavigationSharedData, "navigation";
+SequentialNavigation, SequentialNavigation, "navigation";
+MenuNavigation, MenuNavigation, "navigation.menu";
+DiagnosticNavigation, DiagnosticNavigation, "navigation.diagnostic";
 Timing, Timing, "timing";
 Feedback, Feedback, "feedback";
 NumbasSettings, NumbasSettings, "numbas_settings";
@@ -237,7 +243,7 @@ macro_rules! handle_question_parts {
 }
 
 macro_rules! handle {
-    ($path: expr, $exam: expr) => {
+    ($path: expr, $exam: expr, $handle_seq: expr, $handle_menu: expr, $handle_diag: expr) => {
 {
     let path = $path;
     let exam = $exam;
@@ -250,18 +256,15 @@ macro_rules! handle {
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {
-                DefaultData::Navigation(n) => {
-                /*    exam.navigation
-                        .overwrite(&Value::Normal(NormalNavigation::Sequential(
-                            crate::data::navigation::SequentialNavigation {
-                                shared_data: n,
-                                can_move_to_previous: Value::None(),
-                                browsing_enabled: Value::None(),
-                                show_results_page: Value::None(),
-                                on_leave: Value::None(),
-                            },
-                        ))) */
-                } // TODO: BAD
+                DefaultData::SequentialNavigation(n) => {
+                    $handle_seq(&n, exam)
+                }
+                DefaultData::MenuNavigation(n) => {
+                    $handle_menu(&n, exam)
+                }
+                DefaultData::DiagnosticNavigation(n) => {
+                    $handle_diag(&n, exam)
+                }
                 DefaultData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
                 DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
                 DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
@@ -311,8 +314,26 @@ macro_rules! handle {
 
 pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
     if let Exam::Normal(ref mut e) = exam {
-        handle!(path, e);
+        handle!(
+            path,
+            e,
+            |n: &SequentialNavigation, e: &mut NormalExam| e
+                .navigation
+                .overwrite(&Value::Normal(NormalNavigation::Sequential(n.clone()))),
+            |n: &MenuNavigation, e: &mut NormalExam| e
+                .navigation
+                .overwrite(&Value::Normal(NormalNavigation::Menu(n.clone()))),
+            |n: &DiagnosticNavigation, e: &mut NormalExam| ()
+        );
     } else if let Exam::Diagnostic(ref mut e) = exam {
-        handle!(path, e);
+        handle!(
+            path,
+            e,
+            |n: &SequentialNavigation, e: &mut DiagnosticExam| (),
+            |n: &MenuNavigation, e: &mut DiagnosticExam| (),
+            |n: &DiagnosticNavigation, e: &mut DiagnosticExam| e
+                .navigation
+                .overwrite(&Value::Normal(n.clone()))
+        );
     }
 }
