@@ -1,4 +1,4 @@
-FROM rust:1.43.1-slim-stretch as builder
+FROM rust:1.53.0-slim as builder
 
 WORKDIR /usr/app
 RUN rustup target add x86_64-unknown-linux-musl
@@ -23,7 +23,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
-RUN git fetch && git checkout 89643bd0737730fc34711fee921af906af31ba04
+RUN git fetch && git checkout v6.0
 
 # Fetch jsx graph extension
 FROM alpine as jsxgraph_fetcher
