@@ -323,14 +323,14 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
             |n: &MenuNavigation, e: &mut NormalExam| e
                 .navigation
                 .overwrite(&Value::Normal(NormalNavigation::Menu(n.clone()))),
-            |n: &DiagnosticNavigation, e: &mut NormalExam| ()
+            |_n: &DiagnosticNavigation, _e: &mut NormalExam| ()
         );
     } else if let Exam::Diagnostic(ref mut e) = exam {
         handle!(
             path,
             e,
-            |n: &SequentialNavigation, e: &mut DiagnosticExam| (),
-            |n: &MenuNavigation, e: &mut DiagnosticExam| (),
+            |_n: &SequentialNavigation, _e: &mut DiagnosticExam| (),
+            |_n: &MenuNavigation, _e: &mut DiagnosticExam| (),
             |n: &DiagnosticNavigation, e: &mut DiagnosticExam| e
                 .navigation
                 .overwrite(&Value::Normal(n.clone()))
