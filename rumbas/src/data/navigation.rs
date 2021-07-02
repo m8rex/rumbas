@@ -24,14 +24,14 @@ optional_overwrite! {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "mode")]
-pub enum NormalNavigation {
-    Sequential(SequentialNavigation),
-    Menu(MenuNavigation),
+optional_overwrite_enum! {
+    #[serde(rename_all = "snake_case")]
+    #[serde(tag = "mode")]
+    pub enum NormalNavigation {
+        Sequential(SequentialNavigation),
+        Menu(MenuNavigation)
+    }
 }
-impl_optional_overwrite!(NormalNavigation);
 
 impl NormalNavigation {
     pub fn to_shared_data(&self) -> NavigationSharedData {
