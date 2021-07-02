@@ -7,8 +7,6 @@ use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::navigation::NavigationSharedData;
-use crate::data::navigation::NormalNavigation;
-use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::OptionalOverwrite;
@@ -30,210 +28,72 @@ pub struct DefaultFile {
     path: PathBuf,
 }
 
-#[derive(Debug)]
-pub enum DefaultFileType {
-    Navigation,
-    Timing,
-    Feedback,
-    NumbasSettings,
-    Question,
-    QuestionPart(QuestionPartType),
-    QuestionPartGapFillGap(QuestionPartType),
-}
-
-#[derive(Debug)]
-pub enum QuestionPartType {
-    JME,
-    GapFill,
-    ChooseOne,
-    ChooseMultiple,
-    MatchAnswersWithItems,
-    NumberEntry,
-    PatternMatch,
-    Information,
-}
-
-pub enum DefaultData {
-    Navigation(NavigationSharedData), // TODO: also for other types...
-    Timing(Timing),
-    Feedback(Feedback),
-    NumbasSettings(NumbasSettings),
-    Question(Question),
-    QuestionPart(QuestionPart),
-    QuestionPartGapFillGap(QuestionPart),
-}
-
-impl DefaultFileType {
-    fn from(path: &Path) -> Option<DefaultFileType> {
-        let file_name = path.file_stem();
-        match file_name {
-            Some(f) => match f.to_str() {
-                Some("navigation") => Some(DefaultFileType::Navigation),
-                Some("timing") => Some(DefaultFileType::Timing),
-                Some("feedback") => Some(DefaultFileType::Feedback),
-                Some("numbas_settings") => Some(DefaultFileType::NumbasSettings),
-                Some("question") => Some(DefaultFileType::Question),
-                Some("questionpart.gapfill") => {
-                    //TODO others etc
-                    Some(DefaultFileType::QuestionPart(QuestionPartType::GapFill))
-                }
-                Some("questionpart.choose_one") => {
-                    Some(DefaultFileType::QuestionPart(QuestionPartType::ChooseOne))
-                }
-                Some("questionpart.choose_multiple") => Some(DefaultFileType::QuestionPart(
-                    QuestionPartType::ChooseMultiple,
-                )),
-                Some("questionpart.match_answers") => Some(DefaultFileType::QuestionPart(
-                    QuestionPartType::MatchAnswersWithItems,
-                )),
-                Some("questionpart.number_entry") => {
-                    Some(DefaultFileType::QuestionPart(QuestionPartType::NumberEntry))
-                }
-                Some("questionpart.jme") => {
-                    Some(DefaultFileType::QuestionPart(QuestionPartType::JME))
-                }
-                Some("questionpart.pattern_match") => Some(DefaultFileType::QuestionPart(
-                    QuestionPartType::PatternMatch,
-                )),
-                Some("questionpart.information") => {
-                    Some(DefaultFileType::QuestionPart(QuestionPartType::Information))
-                }
-                Some("questionpart.gapfill.gap.jme") => {
-                    //TODO others etc
-                    Some(DefaultFileType::QuestionPartGapFillGap(
-                        QuestionPartType::JME,
-                    ))
-                }
-                Some("questionpart.gapfill.gap.number_entry") => Some(
-                    DefaultFileType::QuestionPartGapFillGap(QuestionPartType::NumberEntry),
-                ),
-                Some("questionpart.gapfill.gap.pattern_match") => Some(
-                    DefaultFileType::QuestionPartGapFillGap(QuestionPartType::PatternMatch),
-                ),
-                Some("questionpart.gapfill.gap.choose_one") => Some(
-                    DefaultFileType::QuestionPartGapFillGap(QuestionPartType::ChooseOne),
-                ),
-                Some("questionpart.gapfill.gap.match_answers") => {
-                    Some(DefaultFileType::QuestionPartGapFillGap(
-                        QuestionPartType::MatchAnswersWithItems,
-                    ))
-                }
-                _ => None,
-            },
-            None => None,
+macro_rules! create_enum_structs {
+    ( $($file_type:ident$([$file_type_data: ty])?, $data_type: ty, $file_name: literal);* ) => {
+        #[derive(Debug)]
+        pub enum DefaultFileType {
+            $(
+                $file_type $(($file_type_data))?
+            ),*
         }
-    }
-    fn read_as_data(&self, path: &PathBuf) -> serde_yaml::Result<DefaultData> {
-        let yaml = fs::read_to_string(path).unwrap();
-        match self {
-            DefaultFileType::Navigation => {
-                let n: NavigationSharedData = serde_yaml::from_str(&yaml)?;
-                Ok(DefaultData::Navigation(n))
+
+        pub enum DefaultData {
+            $(
+                $file_type($data_type)
+            ),*
+        }
+
+        impl DefaultFileType {
+            fn from(path: &Path) -> Option<DefaultFileType> {
+                let file_name = path.file_stem();
+                match file_name {
+                    Some(f) => match f.to_str() {
+                    $(
+                        Some($file_name) => Some(DefaultFileType::$file_type),
+                    )*
+                    _ => None
+                    }
+                    _ => None
+                }
             }
-            DefaultFileType::Timing => {
-                let t: Timing = serde_yaml::from_str(&yaml)?;
-                Ok(DefaultData::Timing(t))
+
+            fn read_as_data(&self, path: &PathBuf) -> serde_yaml::Result<DefaultData> {
+                let yaml = fs::read_to_string(path).unwrap();
+                match self {
+                    $(
+                    DefaultFileType::$file_type => {
+                        let n: $data_type = serde_yaml::from_str(&yaml)?;
+                        Ok(DefaultData::$file_type(n))
+                    }
+                    )*
+                }
             }
-            DefaultFileType::Feedback => {
-                let f: Feedback = serde_yaml::from_str(&yaml)?;
-                Ok(DefaultData::Feedback(f))
-            }
-            DefaultFileType::NumbasSettings => {
-                let f: NumbasSettings = serde_yaml::from_str(&yaml)?;
-                Ok(DefaultData::NumbasSettings(f))
-            }
-            DefaultFileType::Question => {
-                let q: Question = serde_yaml::from_str(&yaml)?;
-                Ok(DefaultData::Question(q))
-            }
-            DefaultFileType::QuestionPart(question_part_type) => match question_part_type {
-                QuestionPartType::GapFill => {
-                    let q: QuestionPartGapFill = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::GapFill(q)))
-                }
-                QuestionPartType::JME => {
-                    let q: QuestionPartJME = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::JME(q)))
-                }
-                QuestionPartType::ChooseOne => {
-                    let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseOne(q)))
-                }
-                QuestionPartType::ChooseMultiple => {
-                    let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::ChooseMultiple(q)))
-                }
-                QuestionPartType::MatchAnswersWithItems => {
-                    let q: QuestionPartMatchAnswersWithItems = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(
-                        QuestionPart::MatchAnswersWithItems(q),
-                    ))
-                }
-                QuestionPartType::NumberEntry => {
-                    let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::NumberEntry(q)))
-                }
-                QuestionPartType::PatternMatch => {
-                    let q: QuestionPartPatternMatch = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::PatternMatch(q)))
-                }
-                QuestionPartType::Information => {
-                    let q: QuestionPartInformation = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPart(QuestionPart::Information(q)))
-                }
-            }, //TODO: reduce duplicate
-            DefaultFileType::QuestionPartGapFillGap(question_part_type) => match question_part_type
-            {
-                QuestionPartType::GapFill => {
-                    let q: QuestionPartGapFill = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::GapFill(
-                        q,
-                    )))
-                }
-                QuestionPartType::JME => {
-                    let q: QuestionPartJME = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(QuestionPart::JME(q)))
-                }
-                QuestionPartType::ChooseOne => {
-                    let q: QuestionPartChooseOne = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::ChooseOne(q),
-                    ))
-                }
-                QuestionPartType::ChooseMultiple => {
-                    let q: QuestionPartChooseMultiple = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::ChooseMultiple(q),
-                    ))
-                }
-                QuestionPartType::MatchAnswersWithItems => {
-                    let q: QuestionPartMatchAnswersWithItems = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::MatchAnswersWithItems(q),
-                    ))
-                }
-                QuestionPartType::NumberEntry => {
-                    let q: QuestionPartNumberEntry = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::NumberEntry(q),
-                    ))
-                }
-                QuestionPartType::PatternMatch => {
-                    let q: QuestionPartPatternMatch = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::PatternMatch(q),
-                    ))
-                }
-                QuestionPartType::Information => {
-                    let q: QuestionPartInformation = serde_yaml::from_str(&yaml)?;
-                    Ok(DefaultData::QuestionPartGapFillGap(
-                        QuestionPart::Information(q),
-                    ))
-                }
-            },
         }
     }
 }
+
+create_enum_structs!(
+Navigation, NavigationSharedData, "navigation";
+Timing, Timing, "timing";
+Feedback, Feedback, "feedback";
+NumbasSettings, NumbasSettings, "numbas_settings";
+Question, Question, "question";
+QuestionPartJME, QuestionPartJME, "questionpart.jme";
+QuestionPartGapFill, QuestionPartGapFill, "questionpart.gapfill";
+QuestionPartChooseOne, QuestionPartChooseOne, "questionpart.choose_one";
+QuestionPartChooseMultiple, QuestionPartChooseMultiple, "questionpart.choose_multiple";
+QuestionPartMatchAnswersWithItems, QuestionPartMatchAnswersWithItems, "questionpart.match_answers";
+QuestionPartNumberEntry, QuestionPartNumberEntry, "questionpart.number_entry";
+QuestionPartPatternMatch, QuestionPartPatternMatch, "questionpart.pattern_match";
+QuestionPartInformation, QuestionPartInformation, "questionpart.information";
+QuestionPartGapFillGapJME, QuestionPartJME, "questionpart.gapfill.gap.jme";
+QuestionPartGapFillGapChooseOne, QuestionPartChooseOne, "questionpart.gapfill.gap.choose_one";
+QuestionPartGapFillGapChooseMultiple, QuestionPartChooseMultiple, "questionpart.gapfill.gap.choose_multiple";
+QuestionPartGapFillGapMatchAnswersWithItems, QuestionPartMatchAnswersWithItems, "questionpart.gapfill.gap.match_answers";
+QuestionPartGapFillGapNumberEntry, QuestionPartNumberEntry, "questionpart.gapfill.gap.number_entry";
+QuestionPartGapFillGapPatternMatch, QuestionPartPatternMatch, "questionpart.gapfill.gap.pattern_match";
+QuestionPartGapFillGapInformation, QuestionPartInformation, "questionpart.gapfill.gap.information"
+);
 
 impl DefaultFile {
     fn from(path: &Path) -> Option<DefaultFile> {
@@ -282,6 +142,98 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     }
 
     result.into_iter().collect::<Vec<PathBuf>>()
+}
+
+macro_rules! handle_question_parts {
+    ($exam: expr, $p: expr, $type: ident) => {
+        if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
+            groups.iter_mut().for_each(|qg_value| {
+                if let Some(ValueType::Normal(ref mut qg)) = &mut qg_value.0 {
+                    if let Some(ValueType::Normal(ref mut questions)) = &mut qg.questions.0 {
+                        questions.iter_mut().for_each(|question_value| {
+                            if let Some(ValueType::Normal(ref mut question)) = &mut question_value.0
+                            {
+                                if let Some(ValueType::Normal(ref mut question_data)) =
+                                    question.question_data.0
+                                {
+                                    if let Some(ValueType::Normal(ref mut parts)) =
+                                        question_data.parts.0
+                                    {
+                                        //TODO: others etc
+                                        parts.iter_mut().for_each(|part_value| {
+                                            if let Some(ValueType::Normal(ref mut part)) =
+                                                &mut part_value.0
+                                            {
+                                                if let QuestionPart::$type(_) = &part {
+                                                    part.overwrite(&QuestionPart::$type($p.clone()))
+                                                }
+                                                if let Value(Some(ValueType::Normal(
+                                                    ref mut steps,
+                                                ))) = &mut part.get_steps()
+                                                {
+                                                    steps.iter_mut().for_each(|part| {
+                                                        if let QuestionPart::$type(_) = &part {
+                                                            part.overwrite(&QuestionPart::$type(
+                                                                $p.clone(),
+                                                            ))
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    };
+    (gap $exam: expr, $p: expr, $type: ident) => {
+        if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
+            groups.iter_mut().for_each(|qg_value| {
+                if let Some(ValueType::Normal(ref mut qg)) = &mut qg_value.0 {
+                    if let Some(ValueType::Normal(ref mut questions)) = &mut qg.questions.0 {
+                        questions.iter_mut().for_each(|question_value| {
+                            if let Some(ValueType::Normal(ref mut question)) = &mut question_value.0
+                            {
+                                if let Some(ValueType::Normal(ref mut question_data)) =
+                                    question.question_data.0
+                                {
+                                    if let Some(ValueType::Normal(ref mut parts)) =
+                                        question_data.parts.0
+                                    {
+                                        parts.iter_mut().for_each(|part_value| {
+                                            if let Some(ValueType::Normal(ref mut part)) =
+                                                &mut part_value.0
+                                            {
+                                                if let QuestionPart::GapFill(ref mut gap_fill) =
+                                                    part
+                                                {
+                                                    if let Some(ValueType::Normal(ref mut gaps)) =
+                                                        gap_fill.gaps.0
+                                                    {
+                                                        gaps.iter_mut().for_each(|gap| {
+                                                            if let QuestionPart::$type(_) = &gap {
+                                                                gap.overwrite(&QuestionPart::$type(
+                                                                    $p.clone(),
+                                                                ))
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    };
 }
 
 macro_rules! handle {
@@ -334,245 +286,22 @@ macro_rules! handle {
                         });
                     }
                 }
-                DefaultData::QuestionPart(p) => {
-                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg_value| {
-                            if let Some(ValueType::Normal(ref mut qg)) = &mut qg_value.0 {
-                                if let Some(ValueType::Normal(ref mut questions)) =
-                                    &mut qg.questions.0
-                                {
-                                    questions.iter_mut().for_each(|question_value| {
-                                        if let Some(ValueType::Normal(ref mut question)) =
-                                            &mut question_value.0
-                                        {
-                                            if let Some(ValueType::Normal(ref mut question_data)) =
-                                                question.question_data.0
-                                            {
-                                                if let Some(ValueType::Normal(ref mut parts)) =
-                                                    question_data.parts.0
-                                                {
-                                                    //TODO: others etc
-                                                    parts.iter_mut().for_each(|part_value| {
-                                                        if let Some(ValueType::Normal(
-                                                            ref mut part,
-                                                        )) = &mut part_value.0
-                                                        {
-                                                            if let (
-                                                                QuestionPart::GapFill(_),
-                                                                QuestionPart::GapFill(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::JME(_),
-                                                                QuestionPart::JME(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::ChooseOne(_),
-                                                                QuestionPart::ChooseOne(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::ChooseMultiple(_),
-                                                                QuestionPart::ChooseMultiple(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::MatchAnswersWithItems(
-                                                                    _,
-                                                                ),
-                                                                QuestionPart::MatchAnswersWithItems(
-                                                                    _,
-                                                                ),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::NumberEntry(_),
-                                                                QuestionPart::NumberEntry(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::PatternMatch(_),
-                                                                QuestionPart::PatternMatch(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::Information(_),
-                                                                QuestionPart::Information(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            }
-                                                            if let Value(Some(ValueType::Normal(
-                                                                ref mut steps,
-                                                            ))) = &mut part.get_steps()
-                                                            {
-                                                                steps.iter_mut().for_each(|part| {
-                                                                    //TODO; do this much better
-                                                                    //TODO: part_value
-                                                                    /*if let Some(
-                                                                        ValueType::Normal(
-                                                                            ref mut part,
-                                                                        ),
-                                                                    ) = &mut part_value
-                                                                    {*/
-                                                                    if let (
-                                                                QuestionPart::GapFill(_),
-                                                                QuestionPart::GapFill(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::JME(_),
-                                                                QuestionPart::JME(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::ChooseOne(_),
-                                                                QuestionPart::ChooseOne(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::ChooseMultiple(_),
-                                                                QuestionPart::ChooseMultiple(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::MatchAnswersWithItems(_),
-                                                                QuestionPart::MatchAnswersWithItems(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::NumberEntry(_),
-                                                                QuestionPart::NumberEntry(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::PatternMatch(_),
-                                                                QuestionPart::PatternMatch(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            } else if let (
-                                                                QuestionPart::Information(_),
-                                                                QuestionPart::Information(_),
-                                                            ) = (&p, &part)
-                                                            {
-                                                                part.overwrite(&p.clone())
-                                                            }
-                                                                })
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                        })
-                    }
-                } //TODO: cleanup...
-                DefaultData::QuestionPartGapFillGap(p) => {
-                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg_value| {
-                            if let Some(ValueType::Normal(ref mut qg)) = &mut qg_value.0 {
-                                if let Some(ValueType::Normal(ref mut questions)) =
-                                    &mut qg.questions.0
-                                {
-                                    questions.iter_mut().for_each(|question_value| {
-                                        if let Some(ValueType::Normal(ref mut question)) =
-                                            &mut question_value.0
-                                        {
-                                            if let Some(ValueType::Normal(ref mut question_data)) =
-                                                question.question_data.0
-                                            {
-                                                if let Some(ValueType::Normal(ref mut parts)) =
-                                                    question_data.parts.0
-                                                {
-                                                    parts.iter_mut().for_each(|part_value| {
-                                                        if let Some(ValueType::Normal(
-                                                            ref mut part,
-                                                        )) = &mut part_value.0
-                                                        {
-                                                            if let QuestionPart::GapFill(
-                                                                ref mut gap_fill,
-                                                            ) = part
-                                                            {
-                                                                if let Some(ValueType::Normal(
-                                                                    ref mut gaps,
-                                                                )) = gap_fill.gaps.0
-                                                                {
-                                                                    gaps.iter_mut().for_each(
-                                                                        |gap| {
-                                                                            if let (
-                                                                                QuestionPart::JME(
-                                                                                    _,
-                                                                                ),
-                                                                                QuestionPart::JME(
-                                                                                    _,
-                                                                                ),
-                                                                            ) = (&p, &gap)
-                                                                            {
-                                                                                gap.overwrite(
-                                                                                    &p.clone(),
-                                                                                )
-                                                                            }
-                                                                            if let (
-                                                                                QuestionPart::NumberEntry(_),
-                                                                                QuestionPart::NumberEntry(_),
-                                                                            ) = (&p, &gap)
-                                                                            {
-                                                                                gap.overwrite(&p.clone())
-                                                                            }
-                                                                                        if let (
-                                                                                QuestionPart::PatternMatch(_),
-                                                                                QuestionPart::PatternMatch(_),
-                                                                            ) = (&p, &gap)
-                                                                            {
-                                                                                gap.overwrite(&p.clone())
-                                                                            }
-                                                                                        if let (
-                                                                                QuestionPart::ChooseOne(_),
-                                                                                QuestionPart::ChooseOne(_),
-                                                                            ) = (&p, &gap)
-                                                                            {
-                                                                                gap.overwrite(&p.clone())
-                                                                            }
-                                                                                        if let (
-                                                                                QuestionPart::MatchAnswersWithItems(_),
-                                                                                QuestionPart::MatchAnswersWithItems(_),
-                                                                            ) = (&p, &gap)
-                                                                            {
-                                                                                gap.overwrite(&p.clone())
-                                                                            }
-                                                                        },
-                                                                    )
-                                                                }
-                                                            }
-                                                        }
-                                                    })
-                                                }
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                        })
-                    }
-                }
+                DefaultData::QuestionPartJME(p) => handle_question_parts!(exam, p, JME),
+                DefaultData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap exam, p, JME),
+                DefaultData::QuestionPartGapFill(p) => handle_question_parts!(exam, p, GapFill),
+                DefaultData::QuestionPartChooseOne(p) => handle_question_parts!(exam, p, ChooseOne),
+                DefaultData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap exam, p, ChooseOne),
+                DefaultData::QuestionPartChooseMultiple(p) => handle_question_parts!(exam, p, ChooseMultiple),
+                DefaultData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap exam, p, ChooseMultiple),
+                DefaultData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(exam, p, MatchAnswersWithItems),
+                DefaultData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap exam, p, MatchAnswersWithItems),
+                DefaultData::QuestionPartNumberEntry(p) => handle_question_parts!(exam, p, NumberEntry),
+                DefaultData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap exam, p, NumberEntry),
+                DefaultData::QuestionPartPatternMatch(p) => handle_question_parts!(exam, p, PatternMatch),
+                DefaultData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap exam, p, PatternMatch),
+                DefaultData::QuestionPartInformation(p) => handle_question_parts!(exam, p, Information),
+                DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, p, Information),
+
             }
         }
     }
