@@ -5,7 +5,7 @@ use crate::data::navigation::NormalNavigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
-use crate::data::template::{Value, ValueType, TEMPLATE_EXAMS_FOLDER};
+use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;

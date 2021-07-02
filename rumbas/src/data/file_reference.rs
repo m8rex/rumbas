@@ -119,7 +119,7 @@ impl FileString {
         if let Some(c) = &self.content {
             return c.0.clone();
         }
-        panic!(format!("Missing translation for locale {}", locale)); //TODO
+        panic!("Missing translation for locale {}", locale); //TODO
     }
 
     pub fn s(content: &String) -> FileString {
