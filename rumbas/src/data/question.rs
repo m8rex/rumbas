@@ -22,6 +22,8 @@ optional_overwrite! {
         statement: TranslatableString,
         advice: TranslatableString,
         parts: Vec<Value<QuestionPart>>,
+        builtin_constants: BuiltinConstants,
+        custom_constants: Vec<CustomConstant>,
         variables: HashMap<String, Value<VariableRepresentation>>,
         variables_test: VariablesTest,
         functions: HashMap<String, Value<Function>>,
@@ -56,6 +58,17 @@ impl ToNumbas for Question {
                 self.statement.clone().unwrap().to_string(&locale).unwrap(),
                 self.advice.clone().unwrap().to_string(&locale).unwrap(),
                 self.parts
+                    .clone()
+                    .unwrap()
+                    .iter()
+                    .map(|p| p.to_numbas(&locale).unwrap())
+                    .collect(),
+                self.builtin_constants
+                    .clone()
+                    .unwrap()
+                    .to_numbas(&locale)
+                    .unwrap(),
+                self.custom_constants
                     .clone()
                     .unwrap()
                     .iter()
@@ -159,6 +172,63 @@ impl ToNumbas for VariablesTest {
                 self.condition.clone().unwrap(),
                 self.max_runs.clone().unwrap(),
             ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    /// Specify which builtin constants should be enabled
+    pub struct BuiltinConstants {
+        /// Whether the constant e is enabled
+        e: bool,
+        /// Whether the constant pi is enabled
+        pi: bool,
+        /// Whether the constant i is enabled-
+        i: bool
+    }
+}
+
+impl ToNumbas for BuiltinConstants {
+    type NumbasType = std::collections::HashMap<String, bool>;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            let mut builtin = std::collections::HashMap::new();
+            // TODO: use macro to make sure that this list always remains up to date
+            builtin.insert("e".to_string(), self.e.unwrap());
+            builtin.insert("pi,\u{03c0}".to_string(), self.pi.unwrap());
+            builtin.insert("i".to_string(), self.i.unwrap());
+            Ok(builtin)
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    /// A custom constant
+    pub struct CustomConstant {
+        /// The name of the constant
+        name: String,
+        /// The value of the constant
+        value: String,
+        /// The tex code use to display the constant
+        tex: String
+    }
+}
+
+impl ToNumbas for CustomConstant {
+    type NumbasType = numbas::exam::ExamQuestionConstant;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(Self::NumbasType {
+                name: self.name.clone().unwrap(),
+                value: self.value.clone().unwrap(),
+                tex: self.tex.clone().unwrap(),
+            })
         } else {
             Err(empty_fields)
         }

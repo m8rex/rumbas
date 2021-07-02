@@ -639,6 +639,8 @@ pub struct ExamQuestion {
     statement: String,
     advice: String,
     parts: Vec<ExamQuestionPart>,
+    builtin_constants: std::collections::HashMap<String, bool>,
+    constants: Vec<ExamQuestionConstant>,
     variables: HashMap<String, ExamVariable>,
     #[serde(rename = "variablesTest")]
     variables_test: ExamQuestionVariablesTest,
@@ -662,6 +664,8 @@ impl ExamQuestion {
         statement: String,
         advice: String,
         parts: Vec<ExamQuestionPart>,
+        builtin_constants: std::collections::HashMap<String, bool>,
+        constants: Vec<ExamQuestionConstant>,
         variables: HashMap<String, ExamVariable>,
         variables_test: ExamQuestionVariablesTest,
         functions: HashMap<String, ExamFunction>,
@@ -677,6 +681,8 @@ impl ExamQuestion {
             statement,
             advice,
             parts,
+            builtin_constants,
+            constants,
             variables,
             variables_test,
             functions,
@@ -701,6 +707,13 @@ impl Preamble {
     pub fn new(js: String, css: String) -> Preamble {
         Preamble { js, css }
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamQuestionConstant {
+    pub name: String,
+    pub value: String,
+    pub tex: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
