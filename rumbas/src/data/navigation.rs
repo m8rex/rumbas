@@ -20,7 +20,9 @@ optional_overwrite! {
         show_title_page: bool,
         /// Whether the student will be asked to confirm when leaving the exam.
         prevent_leaving: bool,
-        show_names_of_question_groups: bool
+        show_names_of_question_groups: bool,
+        /// Whether the student is allowed to print the exam
+        allow_printing: bool
     }
 }
 

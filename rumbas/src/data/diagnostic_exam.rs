@@ -65,7 +65,10 @@ impl ToNumbas for DiagnosticExam {
                 ),
                 Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
                 Some(
-                    self.numbas_settings
+                    self.navigation
+                        .clone()
+                        .unwrap()
+                        .shared_data
                         .clone()
                         .unwrap()
                         .allow_printing

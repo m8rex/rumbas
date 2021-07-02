@@ -61,9 +61,10 @@ impl ToNumbas for NormalExam {
                 ),
                 Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
                 Some(
-                    self.numbas_settings
+                    self.navigation
                         .clone()
                         .unwrap()
+                        .to_shared_data()
                         .allow_printing
                         .unwrap(),
                 ),
