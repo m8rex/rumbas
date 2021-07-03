@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -129,73 +129,75 @@ impl ToNumbas for JMEAnswerSimplification {
         if empty_fields.is_empty() {
             let mut v = Vec::new();
             if self.simplify_basic.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Basic);
+                v.push(numbas::exam::AnswerSimplificationType::Basic(true));
             }
             if self.simplify_unit_factor.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitFactor);
+                v.push(numbas::exam::AnswerSimplificationType::UnitFactor(true));
             }
             if self.simplify_unit_power.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitPower);
+                v.push(numbas::exam::AnswerSimplificationType::UnitPower(true));
             }
             if self.simplify_unit_denominator.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitDenominator);
+                v.push(numbas::exam::AnswerSimplificationType::UnitDenominator(
+                    true,
+                ));
             }
             if self.simplify_zero_factor.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroFactor);
+                v.push(numbas::exam::AnswerSimplificationType::ZeroFactor(true));
             }
             if self.simplify_zero_term.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroTerm);
+                v.push(numbas::exam::AnswerSimplificationType::ZeroTerm(true));
             }
             if self.simplify_zero_power.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroPower);
+                v.push(numbas::exam::AnswerSimplificationType::ZeroPower(true));
             }
             if self.simplify_zero_base.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroBase);
+                v.push(numbas::exam::AnswerSimplificationType::ZeroBase(true));
             }
             if self.collect_numbers.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CollectNumbers);
+                v.push(numbas::exam::AnswerSimplificationType::CollectNumbers(true));
             }
             if self.constants_first.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ConstantsFirst);
+                v.push(numbas::exam::AnswerSimplificationType::ConstantsFirst(true));
             }
             if self.simplify_sqrt_products.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtProduct);
+                v.push(numbas::exam::AnswerSimplificationType::SqrtProduct(true));
             }
             if self.simplify_sqrt_division.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtDivision);
+                v.push(numbas::exam::AnswerSimplificationType::SqrtDivision(true));
             }
             if self.simplify_sqrt_square.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtSquare);
+                v.push(numbas::exam::AnswerSimplificationType::SqrtSquare(true));
             }
             if self.simplify_other_numbers.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::OtherNumbers);
+                v.push(numbas::exam::AnswerSimplificationType::OtherNumbers(true));
             }
             if self.simplify_no_leading_minus.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::NoLeadingMinus);
+                v.push(numbas::exam::AnswerSimplificationType::NoLeadingMinus(true));
             }
             if self.simplify_fractions.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Fractions);
+                v.push(numbas::exam::AnswerSimplificationType::Fractions(true));
             }
             if self.simplify_trigonometric.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Trigonometric);
+                v.push(numbas::exam::AnswerSimplificationType::Trigonometric(true));
             }
             if self.cancel_terms.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CancelTerms);
+                v.push(numbas::exam::AnswerSimplificationType::CancelTerms(true));
             }
             if self.cancel_factors.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CancelFactors);
+                v.push(numbas::exam::AnswerSimplificationType::CancelFactors(true));
             }
             if self.collect_like_fractions.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CollectLikeFractions);
+                v.push(numbas::exam::AnswerSimplificationType::CollectLikeFractions(true));
             }
             if self.order_canonical.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CanonicalOrder);
+                v.push(numbas::exam::AnswerSimplificationType::CanonicalOrder(true));
             }
             if self.use_times_dot.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::TimesDot);
+                v.push(numbas::exam::AnswerSimplificationType::TimesDot(true));
             }
             if self.expand_brackets.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ExpandBrackets);
+                v.push(numbas::exam::AnswerSimplificationType::ExpandBrackets(true));
             }
             Ok(v)
         } else {
@@ -313,8 +315,8 @@ impl ToNumbas for JMEStringRestriction {
 
 optional_overwrite! {
     pub struct JMEPatternRestriction {
-        #[serde(flatten)]
-        restriction: JMERestriction,
+        partial_credit: f64, //TODO, is number, so maybe usize?
+        message: TranslatableString,
         pattern: String, //TODO type? If string -> InputString?
         name_to_compare: String //TODO, translateable?
     }
@@ -326,11 +328,8 @@ impl ToNumbas for JMEPatternRestriction {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::JMEPatternRestriction::new(
-                self.restriction
-                    .clone()
-                    .unwrap()
-                    .to_numbas(&locale)
-                    .unwrap(),
+                self.partial_credit.clone().unwrap(),
+                self.message.clone().unwrap().to_string(&locale).unwrap(),
                 self.pattern.clone().unwrap(),
                 self.name_to_compare.clone().unwrap(),
             ))

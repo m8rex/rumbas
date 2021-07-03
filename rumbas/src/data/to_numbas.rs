@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable};
 use crate::data::template::{Value, ValueType};
 
 pub type NumbasResult<T> = Result<T, Vec<String>>;
@@ -15,7 +15,7 @@ pub trait ToNumbas: Clone {
     }
 }
 
-impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Value<T> {
+impl<T: ToNumbas + EmptyFields> ToNumbas for Value<T> {
     type NumbasType = <T as ToNumbas>::NumbasType;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match &self.0 {
@@ -33,7 +33,7 @@ impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Value<T> {
     }
 }
 
-impl<T: ToNumbas + OptionalOverwrite> ToNumbas for Noneable<T> {
+impl<T: ToNumbas + EmptyFields> ToNumbas for Noneable<T> {
     type NumbasType = Option<<T as ToNumbas>::NumbasType>;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match self {

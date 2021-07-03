@@ -13,7 +13,7 @@ use crate::data::navigation::{
 use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
-use crate::data::optional_overwrite::OptionalOverwrite;
+use crate::data::optional_overwrite::{EmptyFields, OptionalOverwrite};
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;

@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -98,8 +98,7 @@ pub enum VariableRepresentation {
     Other(Value<VariableStringRepresentation>),
 }
 
-impl OptionalOverwrite for VariableRepresentation {
-    type Item = Self;
+impl EmptyFields for VariableRepresentation {
     fn empty_fields(&self) -> Vec<String> {
         match self {
             VariableRepresentation::ListOfStrings(_) => Vec::new(),
@@ -109,7 +108,9 @@ impl OptionalOverwrite for VariableRepresentation {
             VariableRepresentation::Other(_) => Vec::new(),
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {
+}
+impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
+    fn overwrite(&mut self, _other: &VariableRepresentation) {
         //TODO?
     }
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {

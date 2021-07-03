@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Numbas version (v6.0)
 
+### Removed
+
+- `checking_type` option in `number_entry` questionparts
+- `name` and `strings` options in `must_match_pattern` option of `jme` questionparts
+
 ## [0.3.0] - 2020-12-17
 
 ### Changed

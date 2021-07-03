@@ -5,7 +5,7 @@ use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::number_entry::QuestionPartNumberEntry;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -126,7 +126,7 @@ macro_rules! question_part_type {
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
-            Some(self.marks.clone().unwrap()),
+            Some(self.marks.clone().unwrap().into()),
             self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
             Some(self.use_custom_name.clone().unwrap()),
             Some(self.custom_name.clone().unwrap()),

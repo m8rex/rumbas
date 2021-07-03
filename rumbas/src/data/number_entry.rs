@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -37,15 +37,14 @@ impl ToNumbas for QuestionPartNumberEntry {
                 allow_fractions: self.allow_fractions.unwrap(),
                 notation_styles: Some(self.allowed_notation_styles.clone().unwrap()),
                 fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
-                partial_credit_if_fraction_not_reduced: Some(
+                partial_credit_if_fraction_not_reduced: Some(numbas::exam::Primitive::Float(
                     self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
-                ),
+                )),
                 precision: None,           //TODO
                 show_precision_hint: None, //TODO
                 show_fraction_hint: Some(self.hint_fraction.clone().unwrap()),
                 answer: self.answer.to_numbas(locale).unwrap(),
-
-                checking_type: Some(numbas::exam::CheckingType::Range), //TODO
+                // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
             })
         } else {
             Err(empty_fields)

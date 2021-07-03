@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;

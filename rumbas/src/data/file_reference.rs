@@ -1,5 +1,5 @@
 use crate::data::input_string::InputString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
@@ -20,8 +20,7 @@ pub struct FileString {
     translated_content: HashMap<String, InputString>,
     error_message: Option<String>,
 }
-impl OptionalOverwrite for FileString {
-    type Item = FileString;
+impl EmptyFields for FileString {
     fn empty_fields(&self) -> Vec<String> {
         if let Some(e) = &self.error_message {
             vec![e.clone()]
@@ -29,7 +28,9 @@ impl OptionalOverwrite for FileString {
             Vec::new()
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
+}
+impl OptionalOverwrite<FileString> for FileString {
+    fn overwrite(&mut self, _other: &FileString) {}
     fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(FileString);

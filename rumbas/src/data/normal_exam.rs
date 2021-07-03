@@ -3,7 +3,7 @@ use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
 use crate::data::navigation::NormalNavigation;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question_group::QuestionGroup;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
