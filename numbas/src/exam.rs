@@ -656,6 +656,8 @@ pub struct ExamQuestion {
     //metadata TODO
     //resources TODO
     //TODO type: question?
+    /// Tags starting with 'skill: ' are used in diagnostic mode to specify a topic
+    tags: Vec<String>,
 }
 
 impl ExamQuestion {
@@ -675,6 +677,7 @@ impl ExamQuestion {
         preamble: Preamble,
         navigation: QuestionNavigation,
         extensions: Vec<String>,
+        tags: Vec<String>,
     ) -> ExamQuestion {
         ExamQuestion {
             name,
@@ -692,6 +695,7 @@ impl ExamQuestion {
             preamble,
             navigation,
             extensions,
+            tags,
         }
     }
 }
