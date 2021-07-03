@@ -1,13 +1,15 @@
 use crate::data::template::{Value, ValueType};
+use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
 
-pub trait OptionalOverwrite: Clone + DeserializeOwned {
-    type Item;
-
+pub trait EmptyFields {
     fn empty_fields(&self) -> Vec<String>;
-    fn overwrite(&mut self, other: &Self::Item);
+}
+
+pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + EmptyFields {
+    fn overwrite(&mut self, other: &Item);
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value);
 }
 
@@ -23,8 +25,7 @@ pub enum Noneable<T> {
 macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-        impl$(< $($gen: OptionalOverwrite + DeserializeOwned ),* >)? OptionalOverwrite for Value<$type> {
-            type Item = Value<$type>;
+        impl$(< $($gen: EmptyFields ),* >)? EmptyFields for Value<$type> {
             fn empty_fields(&self) -> Vec<String> {
                 if let Some(ValueType::Normal(val)) = &self.0 {
                     val.empty_fields()
@@ -36,7 +37,9 @@ macro_rules! impl_optional_overwrite_value_only {
                     vec!["".to_string()]
                 }
             }
-            fn overwrite(&mut self, other: &Self::Item) {
+        }
+        impl$(< $($gen: OptionalOverwrite<$gen> + DeserializeOwned ),* >)? OptionalOverwrite<Value<$type>> for Value<$type> {
+            fn overwrite(&mut self, other: &Value<$type>) {
                 if let Some(ValueType::Normal(ref mut val)) = self.0 {
                     if let Some(ValueType::Normal(other_val)) = &other.0 {
                         val.overwrite(&other_val);
@@ -64,8 +67,7 @@ macro_rules! impl_optional_overwrite_value {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
         impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
-        impl$(< $($gen: OptionalOverwrite ),* >)? OptionalOverwrite for Noneable<$type> {
-            type Item = Noneable<$type>;
+        impl$(< $($gen: EmptyFields ),* >)? EmptyFields for Noneable<$type> {
             fn empty_fields(&self) -> Vec<String> {
                 if let Noneable::NotNone(val) = &self {
                     return val.empty_fields()
@@ -74,7 +76,9 @@ macro_rules! impl_optional_overwrite_value {
                     return vec![]
                 }
             }
-            fn overwrite(&mut self, other: &Self::Item) {
+        }
+        impl$(< $($gen: OptionalOverwrite<$gen> ),* >)? OptionalOverwrite<Noneable<$type>> for Noneable<$type> {
+            fn overwrite(&mut self, other: &Noneable<$type>) {
                 if let Noneable::NotNone(ref mut val) = self {
                     if let Noneable::NotNone(other_val) = &other {
                         val.overwrite(&other_val);
@@ -94,8 +98,7 @@ macro_rules! impl_optional_overwrite_value {
     };
 }
 
-impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
-    type Item = Vec<O>;
+impl<O: EmptyFields> EmptyFields for Vec<O> {
     fn empty_fields(&self) -> Vec<String> {
         let mut empty = Vec::new();
         for (i, item) in self.iter().enumerate() {
@@ -106,7 +109,9 @@ impl<O: OptionalOverwrite> OptionalOverwrite for Vec<O> {
         }
         empty
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
+}
+impl<O: OptionalOverwrite<O>> OptionalOverwrite<Vec<O>> for Vec<O> {
+    fn overwrite(&mut self, _other: &Vec<O>) {}
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
         for (_i, item) in self.iter_mut().enumerate() {
             item.insert_template_value(&key, &val);
@@ -118,12 +123,13 @@ impl_optional_overwrite_value!(Vec<U>[U]);
 macro_rules! impl_optional_overwrite {
     ($($type: ty), *) => {
         $(
-        impl OptionalOverwrite for $type {
-            type Item = $type;
+        impl EmptyFields for $type {
             fn empty_fields(&self) -> Vec<String> {
                 Vec::new()
             }
-            fn overwrite(&mut self, _other: &Self::Item) {}
+        }
+        impl OptionalOverwrite<$type> for $type {
+            fn overwrite(&mut self, _other: &$type) {}
             fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
         }
         impl_optional_overwrite_value!($type);
@@ -132,8 +138,7 @@ macro_rules! impl_optional_overwrite {
 }
 impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 
-impl<T: OptionalOverwrite> OptionalOverwrite for HashMap<String, T> {
-    type Item = HashMap<String, T>;
+impl<T: EmptyFields> EmptyFields for HashMap<String, T> {
     fn empty_fields(&self) -> Vec<String> {
         let mut empty = Vec::new();
         // Key is not displayable, so show an index, just to differentiate
@@ -145,7 +150,9 @@ impl<T: OptionalOverwrite> OptionalOverwrite for HashMap<String, T> {
         }
         empty
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
+}
+impl<T: OptionalOverwrite<T>> OptionalOverwrite<HashMap<String, T>> for HashMap<String, T> {
+    fn overwrite(&mut self, _other: &HashMap<String, T>) {}
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
         for (_i, (_key, item)) in self.iter_mut().enumerate() {
             item.insert_template_value(&key, &val);
@@ -177,8 +184,7 @@ macro_rules! optional_overwrite {
                 pub $field: Value<$type>
             ),*
         }
-        impl OptionalOverwrite for $struct {
-            type Item = $struct;
+        impl EmptyFields for $struct {
             fn empty_fields(&self) -> Vec<String> {
                 let mut empty = Vec::new();
                 $(
@@ -194,7 +200,9 @@ macro_rules! optional_overwrite {
                 )*
                 empty
             }
-            fn overwrite(&mut self, other: &Self::Item) {
+        }
+        impl OptionalOverwrite<$struct> for $struct {
+            fn overwrite(&mut self, other: &$struct) {
                 $(
                     self.$field.overwrite(&other.$field);
                 )*
@@ -238,8 +246,7 @@ macro_rules! optional_overwrite_enum {
                 $field($type)
             ),*
         }
-        impl OptionalOverwrite for $enum {
-            type Item = $enum;
+        impl EmptyFields for $enum {
             fn empty_fields(&self) -> Vec<String> {
                 match self {
                 $(
@@ -247,7 +254,9 @@ macro_rules! optional_overwrite_enum {
                 ),*
                 }
             }
-            fn overwrite(&mut self, other: &Self::Item) {
+        }
+        impl OptionalOverwrite<$enum> for $enum {
+            fn overwrite(&mut self, other: &$enum) {
                 match (self, other) {
                 $(
                     (&mut $enum::$field(ref mut val), &$enum::$field(ref valo)) => val.overwrite(&valo)
@@ -449,5 +458,69 @@ mod test {
             v.empty_fields(),
             vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
         );
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+pub enum VariableValued<T> {
+    Variable(String),
+    Value(T),
+}
+
+impl<T: EmptyFields> EmptyFields for VariableValued<T> {
+    fn empty_fields(&self) -> Vec<String> {
+        match self {
+            VariableValued::Variable(s) => s.empty_fields(),
+            VariableValued::Value(v) => v.empty_fields(),
+        }
+    }
+}
+impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValued<T>>
+    for VariableValued<T>
+{
+    fn overwrite(&mut self, other: &VariableValued<T>) {
+        match (self, other) {
+            (&mut VariableValued::Variable(ref mut val), &VariableValued::Variable(ref valo)) => {
+                val.overwrite(&valo)
+            }
+            (&mut VariableValued::Value(ref mut val), &VariableValued::Value(ref valo)) => {
+                val.overwrite(&valo)
+            }
+            _ => (),
+        };
+    }
+    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+        match self {
+            &mut VariableValued::Variable(ref mut s) => s.insert_template_value(&key, &val),
+            &mut VariableValued::Value(ref mut v) => v.insert_template_value(&key, &val),
+        };
+    }
+}
+impl_optional_overwrite_value!(VariableValued<T>[T]);
+
+impl<T: ToNumbas + EmptyFields> ToNumbas for VariableValued<T> {
+    type NumbasType = numbas::exam::VariableValued<T::NumbasType>;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(match self {
+                VariableValued::Variable(v) => numbas::exam::VariableValued::Variable(v.clone()),
+                VariableValued::Value(v) => {
+                    numbas::exam::VariableValued::Value(v.to_numbas(locale).unwrap())
+                }
+            })
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+impl<T> VariableValued<T> {
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> VariableValued<U> {
+        match self {
+            VariableValued::Variable(x) => VariableValued::Variable(x),
+            VariableValued::Value(x) => VariableValued::Value(f(x)),
+        }
     }
 }

@@ -1,7 +1,7 @@
 use crate::data::extension::Extensions;
 use crate::data::function::Function;
 use crate::data::navigation::QuestionNavigation;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
 use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};

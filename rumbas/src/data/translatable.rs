@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
@@ -21,8 +21,7 @@ pub enum TranslatableString {
     NotTranslated(Value<FileString>),
 }
 
-impl OptionalOverwrite for TranslatableString {
-    type Item = TranslatableString;
+impl EmptyFields for TranslatableString {
     fn empty_fields(&self) -> Vec<String> {
         match self {
             TranslatableString::Translated(m_value) => {
@@ -41,7 +40,9 @@ impl OptionalOverwrite for TranslatableString {
             TranslatableString::NotTranslated(f) => f.empty_fields(),
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {
+}
+impl OptionalOverwrite<TranslatableString> for TranslatableString {
+    fn overwrite(&mut self, _other: &TranslatableString) {
         //TODO: Maybe add languages of other that are missing in self?
         // These default values should be read before language is interpreted
     }

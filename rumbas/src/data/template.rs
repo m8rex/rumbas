@@ -1,6 +1,6 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::normal_exam::NormalExam;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -40,8 +40,7 @@ pub struct TemplateString {
     pub key: Option<String>,
     pub error_message: Option<String>,
 }
-impl OptionalOverwrite for TemplateString {
-    type Item = TemplateString;
+impl EmptyFields for TemplateString {
     fn empty_fields(&self) -> Vec<String> {
         if let Some(e) = &self.error_message {
             vec![e.clone()]
@@ -49,7 +48,9 @@ impl OptionalOverwrite for TemplateString {
             Vec::new()
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
+}
+impl OptionalOverwrite<TemplateString> for TemplateString {
+    fn overwrite(&mut self, _other: &TemplateString) {}
     fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(TemplateString);

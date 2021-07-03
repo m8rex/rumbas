@@ -1,14 +1,16 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::VariableValued;
+use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
+use std::convert::Into;
 
 //TODO: defaults
 question_part_type! {
     pub struct QuestionPartChooseOne {
-        answers: Vec<MultipleChoiceAnswer>,
+        answers: VariableValued<Vec<MultipleChoiceAnswer>>,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
         should_select_at_least: usize, // TODO 0 or 1?
@@ -19,6 +21,66 @@ question_part_type! {
     }
 }
 
+#[derive(Debug, Deserialize, Clone, PartialEq)]
+struct MatrixRowPrimitive(Vec<numbas::exam::Primitive>);
+impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
+
+impl ToNumbas for MatrixRowPrimitive {
+    type NumbasType = numbas::exam::MultipleChoiceMatrix;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::MultipleChoiceMatrix::Row(self.0.clone()))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Clone, PartialEq)]
+struct MatrixRow(Vec<TranslatableString>);
+impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
+
+impl ToNumbas for MatrixRow {
+    type NumbasType = numbas::exam::MultipleChoiceMatrix;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::MultipleChoiceMatrix::Row(
+                self.0
+                    .to_numbas(locale)
+                    .unwrap()
+                    .into_iter()
+                    .map(|a| a.into())
+                    .collect(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Clone, PartialEq)]
+struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::exam::Primitive>>>);
+impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
+
+impl ToNumbas for MatrixPrimitive {
+    type NumbasType = numbas::exam::MultipleChoiceMatrix;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::MultipleChoiceMatrix::Matrix(
+                self.0
+                    .clone()
+                    .into_iter()
+                    .map(|r| r.to_numbas(&locale).unwrap())
+                    .collect(),
+            ))
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
 impl ToNumbas for QuestionPartChooseOne {
     type NumbasType = numbas::exam::ExamQuestionPartChooseOne;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
@@ -30,26 +92,43 @@ impl ToNumbas for QuestionPartChooseOne {
                 min_answers: Some(self.should_select_at_least.clone().unwrap()),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 answers: answers
-                    .iter()
-                    .map(|a| a.statement.clone().unwrap().to_string(&locale).unwrap())
-                    .collect(),
+                    .clone()
+                    .map(|aa| {
+                        aa.iter()
+                            .map(|a| a.statement.clone().unwrap())
+                            .collect::<Vec<_>>()
+                    })
+                    .to_numbas(&locale)
+                    .unwrap(),
                 display_type: self.display.unwrap().to_numbas_type(),
-                columns: self.display.unwrap().to_nb_columns(),
+                columns: self.display.unwrap().to_nb_columns().into(),
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
-                marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Row(
-                    answers.iter().map(|a| a.marks.clone().unwrap()).collect(),
-                )),
-                distractors: Some(numbas::exam::MultipleChoiceMatrix::Row(
+                marking_matrix: Some(
                     answers
-                        .iter()
-                        .map(|a| {
-                            numbas::exam::Primitive::String(
-                                a.feedback.clone().unwrap().to_string(&locale).unwrap(), //TODO
+                        .clone()
+                        .map(|aa| {
+                            MatrixRowPrimitive(
+                                aa.iter().map(|a| a.marks.clone().unwrap()).collect(),
                             )
                         })
-                        .collect(),
-                )),
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
+                distractors: Some(
+                    answers
+                        .map(|aa| {
+                            MatrixRow(
+                                aa.iter()
+                                    .map(|a| {
+                                        a.feedback.clone().unwrap() //TODO
+                                    })
+                                    .collect(),
+                            )
+                        })
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
             })
         } else {
             Err(empty_fields)
@@ -63,7 +142,7 @@ pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
     DropDown,
     #[serde(rename = "radio")]
-    Radio { columns: u8 },
+    Radio { columns: usize },
 }
 impl_optional_overwrite!(ChooseOneDisplay);
 
@@ -75,7 +154,7 @@ impl ChooseOneDisplay {
         }
     }
 
-    pub fn to_nb_columns(&self) -> u8 {
+    pub fn to_nb_columns(&self) -> usize {
         match self {
             ChooseOneDisplay::DropDown => 0,
             ChooseOneDisplay::Radio { columns } => *columns,
@@ -83,6 +162,19 @@ impl ChooseOneDisplay {
     }
 }
 
+impl ToNumbas for numbas::exam::MultipleChoiceMatrix {
+    type NumbasType = Self;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(self.clone())
+    }
+}
+impl_optional_overwrite!(numbas::exam::MultipleChoiceMatrix);
+impl ToNumbas for numbas::exam::Primitive {
+    type NumbasType = Self;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(self.clone())
+    }
+}
 impl_optional_overwrite!(numbas::exam::Primitive);
 optional_overwrite! {
     pub struct MultipleChoiceAnswer {
@@ -94,7 +186,7 @@ optional_overwrite! {
 
 question_part_type! {
     pub struct QuestionPartChooseMultiple {
-        answers: Vec<MultipleChoiceAnswer>,
+        answers: VariableValued<Vec<MultipleChoiceAnswer>>,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
         should_select_at_least: usize,
@@ -116,29 +208,47 @@ impl ToNumbas for QuestionPartChooseMultiple {
                 part_data: self.to_numbas_shared_data(&locale),
                 min_answers: Some(self.should_select_at_least.clone().unwrap()),
                 max_answers: Some(self.should_select_at_most.clone().unwrap()),
-                min_marks: Some(0),
-                max_marks: Some(0),
+                min_marks: Some(0usize.into()),
+                max_marks: Some(0usize.into()),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 choices: answers
-                    .iter()
-                    .map(|a| a.statement.clone().unwrap().to_string(&locale).unwrap())
-                    .collect(),
-                display_columns: self.columns.unwrap(),
+                    .clone()
+                    .map(|aa| {
+                        aa.iter()
+                            .map(|a| a.statement.clone().unwrap())
+                            .collect::<Vec<_>>()
+                    })
+                    .to_numbas(&locale)
+                    .unwrap(),
+                display_columns: self.columns.unwrap().into(),
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
-                marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Row(
-                    answers.iter().map(|a| a.marks.clone().unwrap()).collect(),
-                )),
-                distractors: Some(numbas::exam::MultipleChoiceMatrix::Row(
+                marking_matrix: Some(
                     answers
-                        .iter()
-                        .map(|a| {
-                            numbas::exam::Primitive::String(
-                                a.feedback.clone().unwrap().to_string(&locale).unwrap(), //TODO
+                        .clone()
+                        .map(|aa| {
+                            MatrixRowPrimitive(
+                                aa.iter().map(|a| a.marks.clone().unwrap()).collect(),
                             )
                         })
-                        .collect(),
-                )),
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
+                distractors: Some(
+                    answers
+                        .clone()
+                        .map(|aa| {
+                            MatrixRow(
+                                aa.iter()
+                                    .map(|a| {
+                                        a.feedback.clone().unwrap() //TODO
+                                    })
+                                    .collect(),
+                            )
+                        })
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
             })
         } else {
             Err(empty_fields)
@@ -163,8 +273,8 @@ optional_overwrite! {
 
 question_part_type! {
     pub struct QuestionPartMatchAnswersWithItems {
-        answers: Vec<Value<TranslatableString>>,  // Values of the answers
-        items: Vec<Value<MatchAnswersItem>>, // Items for which the answer can be selected
+        answers: VariableValued<Vec<Value<TranslatableString>>>,  // Values of the answers
+        items: VariableValued<Vec<Value<MatchAnswersItem>>>, // Items for which the answer can be selected
         shuffle_answers: bool,
         shuffle_items: bool,
         show_cell_answer_state: bool,
@@ -184,6 +294,20 @@ impl_optional_overwrite!(
     numbas::exam::MatchAnswersWithChoicesDisplayType
 );
 
+// TODO move
+impl ToNumbas for TranslatableString {
+    type NumbasType = String;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<String> {
+        // TODO: check if translation exists?
+        Ok(self.clone().to_string(&locale).unwrap())
+        /*self
+        .iter()
+        .map(|a| a.clone().unwrap().to_string(&locale).unwrap())
+        .collect()
+            */
+    }
+}
+
 impl ToNumbas for QuestionPartMatchAnswersWithItems {
     type NumbasType = numbas::exam::ExamQuestionPartMatchAnswersWithChoices;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
@@ -199,46 +323,54 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
                 max_marks: Some(0),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 shuffle_choices: self.shuffle_items.unwrap(),
-                answers: answers
-                    .iter()
-                    .map(|a| a.clone().unwrap().to_string(&locale).unwrap())
-                    .collect(),
+                answers: answers.clone().to_numbas(&locale).unwrap(),
                 choices: items
-                    .iter()
-                    .map(|a| {
-                        a.clone()
-                            .unwrap()
-                            .statement
-                            .clone()
-                            .unwrap()
-                            .to_string(&locale)
-                            .unwrap()
+                    .clone()
+                    .map(|v| {
+                        v.iter()
+                            .map(|a| a.clone().unwrap().statement.clone())
+                            .collect::<Vec<_>>()
                     })
-                    .collect(),
+                    .to_numbas(&locale)
+                    .unwrap(),
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 layout: self.layout.clone().unwrap(),
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
-                marking_matrix: Some(numbas::exam::MultipleChoiceMatrix::Matrix(
-                    items
-                        .iter()
-                        .map(|i| {
-                            answers
-                                .iter()
-                                .map(|a| {
-                                    i.unwrap()
-                                        .answer_marks
-                                        .unwrap()
-                                        .iter()
-                                        .find(|am| am.answer.unwrap() == a.unwrap())
-                                        .map_or_else(
-                                            || numbas::exam::Primitive::Integer(0),
-                                            |v| v.marks.unwrap(),
-                                        )
-                                })
-                                .collect()
+                marking_matrix: Some(
+                    items // TODO: better handling
+                        .clone()
+                        .map(|v| {
+                            {
+                                MatrixPrimitive(
+                                    v.iter()
+                                        .map(|i| {
+                                            answers.clone().map(|aa| {
+                                                aa.iter()
+                                                    .map(|a| {
+                                                        i.unwrap()
+                                                            .answer_marks
+                                                            .unwrap()
+                                                            .iter()
+                                                            .find(|am| {
+                                                                am.answer.unwrap() == a.unwrap()
+                                                            })
+                                                            .map_or_else(
+                                                                || 0usize.into(),
+                                                                |v| v.marks.unwrap(),
+                                                            )
+                                                    })
+                                                    .collect()
+                                            })
+                                        })
+                                        .collect(),
+                                )
+                            }
+                            .to_numbas(&locale)
+                            .unwrap()
                         })
-                        .collect(),
-                )),
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
                 display_type: self.display.unwrap().to_numbas_type(),
             })
         } else {

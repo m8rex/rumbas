@@ -556,7 +556,7 @@ pub enum ExamFunctionType {
     #[serde(rename = "html")]
     HTML,
     #[serde(rename = "integer")]
-    Integer,
+    Natural,
     #[serde(rename = "keypair")]
     KeyPair,
     #[serde(rename = "list")]
@@ -1289,10 +1289,16 @@ impl std::convert::TryFrom<Primitive> for SaveNatural {
     type Error = String;
     fn try_from(p: Primitive) -> Result<Self, Self::Error> {
         match p {
-            Primitive::Integer(n) => Ok(SaveNatural(n)),
+            Primitive::Natural(n) => Ok(SaveNatural(n)),
             Primitive::Float(_n) => Err("Please use an unsigned integer.".to_string()),
             Primitive::String(n) => n.parse().map(|n| SaveNatural(n)).map_err(|e| e.to_string()),
         }
+    }
+}
+
+impl std::convert::From<usize> for SaveNatural {
+    fn from(u: usize) -> Self {
+        SaveNatural(u)
     }
 }
 
@@ -1325,7 +1331,8 @@ pub struct ExamQuestionPartChooseOne {
     pub show_cell_answer_state: bool,
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    pub distractors: Option<MultipleChoiceMatrix>, //TODO: type (contains only strings...)
+    //TODO: type (contains only strings...)
+    pub distractors: Option<VariableValued<MultipleChoiceMatrix>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1361,7 +1368,7 @@ pub struct ExamQuestionPartChooseMultiple {
     pub choices: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    pub distractors: Option<MultipleChoiceMatrix>,
+    pub distractors: Option<VariableValued<MultipleChoiceMatrix>>,
 }
 
 #[skip_serializing_none]
@@ -1391,10 +1398,10 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     pub layout: MatchAnswersWithChoicesLayout,
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: Vec<String>,
-    pub answers: Vec<String>,
+    pub choices: VariableValued<Vec<String>>,
+    pub answers: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1430,15 +1437,33 @@ pub enum MultipleChoiceMatrix {
     //TODO use specific type for the three types
     Item(Primitive),
     Row(Vec<Primitive>),
-    Matrix(Vec<Vec<Primitive>>),
+    Matrix(Vec<VariableValued<Vec<Primitive>>>),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum Primitive {
     String(String),
-    Integer(usize),
+    Natural(usize),
     Float(f64),
+}
+
+impl std::convert::From<usize> for Primitive {
+    fn from(u: usize) -> Self {
+        Primitive::Natural(u)
+    }
+}
+
+impl std::convert::From<f64> for Primitive {
+    fn from(f: f64) -> Self {
+        Primitive::Float(f)
+    }
+}
+
+impl std::convert::From<String> for Primitive {
+    fn from(s: String) -> Self {
+        Primitive::String(s)
+    }
 }
 
 #[skip_serializing_none]
