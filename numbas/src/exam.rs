@@ -45,31 +45,41 @@ where
     match deser_res {
         Ok(serde_json::Value::String(s)) => {
             let mut r = Vec::new();
-            for item in s.split(',') {
-                let new_item = match item {
-                    "basic" => Ok(AnswerSimplificationType::Basic),
-                    "unitFactor" => Ok(AnswerSimplificationType::UnitFactor),
-                    "unitPower" => Ok(AnswerSimplificationType::UnitPower),
-                    "unitDenominator" => Ok(AnswerSimplificationType::UnitDenominator),
-                    "zeroFactor" => Ok(AnswerSimplificationType::ZeroFactor),
-                    "zeroTerm" => Ok(AnswerSimplificationType::ZeroTerm),
-                    "zeroPower" => Ok(AnswerSimplificationType::ZeroPower),
-                    "collectNumbers" => Ok(AnswerSimplificationType::CollectNumbers),
-                    "zeroBase" => Ok(AnswerSimplificationType::ZeroBase),
-                    "constantsFirst" => Ok(AnswerSimplificationType::ConstantsFirst),
-                    "sqrtProduct" => Ok(AnswerSimplificationType::SqrtProduct),
-                    "sqrtDivision" => Ok(AnswerSimplificationType::SqrtDivision),
-                    "sqrtSquare" => Ok(AnswerSimplificationType::SqrtSquare),
-                    "otherNumbers" => Ok(AnswerSimplificationType::OtherNumbers),
-                    "timesDot" => Ok(AnswerSimplificationType::TimesDot),
-                    "expandBrackets" => Ok(AnswerSimplificationType::ExpandBrackets),
-                    "noLeadingMinus" => Ok(AnswerSimplificationType::NoLeadingMinus),
-                    "trig" => Ok(AnswerSimplificationType::Trigonometric),
-                    "collectLikeFractions" => Ok(AnswerSimplificationType::CollectLikeFractions),
-                    "canonicalOrder" => Ok(AnswerSimplificationType::CanonicalOrder),
-                    "cancelFactors" => Ok(AnswerSimplificationType::CancelFactors),
-                    "cancelTerms" => Ok(AnswerSimplificationType::CancelTerms),
-                    "simplifyFractions" => Ok(AnswerSimplificationType::Fractions),
+            for whole_item in s.split(',') {
+                let (item, value) = if whole_item.starts_with("!") {
+                    let mut chars = whole_item.chars();
+                    chars.next();
+                    (chars.as_str(), false)
+                } else {
+                    (whole_item, true)
+                };
+                let new_item = match item.to_lowercase().as_ref() {
+                    "all" => Ok(AnswerSimplificationType::All(value)),
+                    "basic" => Ok(AnswerSimplificationType::Basic(value)),
+                    "unitfactor" => Ok(AnswerSimplificationType::UnitFactor(value)),
+                    "unitpower" => Ok(AnswerSimplificationType::UnitPower(value)),
+                    "unitdenominator" => Ok(AnswerSimplificationType::UnitDenominator(value)),
+                    "zerofactor" => Ok(AnswerSimplificationType::ZeroFactor(value)),
+                    "zeroterm" => Ok(AnswerSimplificationType::ZeroTerm(value)),
+                    "zeropower" => Ok(AnswerSimplificationType::ZeroPower(value)),
+                    "collectnumbers" => Ok(AnswerSimplificationType::CollectNumbers(value)),
+                    "zerobase" => Ok(AnswerSimplificationType::ZeroBase(value)),
+                    "constantsfirst" => Ok(AnswerSimplificationType::ConstantsFirst(value)),
+                    "sqrtproduct" => Ok(AnswerSimplificationType::SqrtProduct(value)),
+                    "sqrtfivision" => Ok(AnswerSimplificationType::SqrtDivision(value)),
+                    "sqrtdquare" => Ok(AnswerSimplificationType::SqrtSquare(value)),
+                    "othernumbers" => Ok(AnswerSimplificationType::OtherNumbers(value)),
+                    "timesdot" => Ok(AnswerSimplificationType::TimesDot(value)),
+                    "expandbrackets" => Ok(AnswerSimplificationType::ExpandBrackets(value)),
+                    "noleadingminus" => Ok(AnswerSimplificationType::NoLeadingMinus(value)),
+                    "trig" => Ok(AnswerSimplificationType::Trigonometric(value)),
+                    "collectlikefractions" => {
+                        Ok(AnswerSimplificationType::CollectLikeFractions(value))
+                    }
+                    "canonicalorder" => Ok(AnswerSimplificationType::CanonicalOrder(value)),
+                    "cancelfactors" => Ok(AnswerSimplificationType::CancelFactors(value)),
+                    "cancelterms" => Ok(AnswerSimplificationType::CancelTerms(value)),
+                    "simplifyfractions" => Ok(AnswerSimplificationType::Fractions(value)),
                     _ => Err(serde::de::Error::custom(format!(
                         "unknown answer simplification type {}",
                         item
@@ -101,29 +111,54 @@ where
         let mut parts: Vec<String> = Vec::new();
         for value in values {
             let new_item = match value {
-                AnswerSimplificationType::Basic => "basic",
-                AnswerSimplificationType::UnitFactor => "unitFactor",
-                AnswerSimplificationType::UnitPower => "unitPower",
-                AnswerSimplificationType::UnitDenominator => "unitDenominator",
-                AnswerSimplificationType::ZeroFactor => "zeroFactor",
-                AnswerSimplificationType::ZeroTerm => "zeroTerm",
-                AnswerSimplificationType::ZeroPower => "zeroPower",
-                AnswerSimplificationType::CollectNumbers => "collectNumbers",
-                AnswerSimplificationType::ZeroBase => "zeroBase",
-                AnswerSimplificationType::ConstantsFirst => "constantsFirst",
-                AnswerSimplificationType::SqrtProduct => "sqrtProduct",
-                AnswerSimplificationType::SqrtDivision => "sqrtDivision",
-                AnswerSimplificationType::SqrtSquare => "sqrtSquare",
-                AnswerSimplificationType::OtherNumbers => "otherNumbers",
-                AnswerSimplificationType::TimesDot => "timesDot",
-                AnswerSimplificationType::ExpandBrackets => "expandBrackets",
-                AnswerSimplificationType::NoLeadingMinus => "noLeadingMinus",
-                AnswerSimplificationType::Trigonometric => "trig",
-                AnswerSimplificationType::CollectLikeFractions => "collectLikeFractions",
-                AnswerSimplificationType::CanonicalOrder => "canonicalOrder",
-                AnswerSimplificationType::CancelFactors => "cancelFactors",
-                AnswerSimplificationType::CancelTerms => "cancelTerms",
-                AnswerSimplificationType::Fractions => "simplifyFractions",
+                AnswerSimplificationType::All(true) => "all",
+                AnswerSimplificationType::All(false) => "!all",
+                AnswerSimplificationType::Basic(true) => "basic",
+                AnswerSimplificationType::Basic(false) => "!basic",
+                AnswerSimplificationType::UnitFactor(true) => "unitFactor",
+                AnswerSimplificationType::UnitFactor(false) => "!unitFactor",
+                AnswerSimplificationType::UnitPower(true) => "unitPower",
+                AnswerSimplificationType::UnitPower(false) => "!unitPower",
+                AnswerSimplificationType::UnitDenominator(true) => "unitDenominator",
+                AnswerSimplificationType::UnitDenominator(false) => "!unitDenominator",
+                AnswerSimplificationType::ZeroFactor(true) => "zeroFactor",
+                AnswerSimplificationType::ZeroFactor(false) => "!zeroFactor",
+                AnswerSimplificationType::ZeroTerm(true) => "zeroTerm",
+                AnswerSimplificationType::ZeroTerm(false) => "!zeroTerm",
+                AnswerSimplificationType::ZeroPower(true) => "zeroPower",
+                AnswerSimplificationType::ZeroPower(false) => "!zeroPower",
+                AnswerSimplificationType::CollectNumbers(true) => "collectNumbers",
+                AnswerSimplificationType::CollectNumbers(false) => "!collectNumbers",
+                AnswerSimplificationType::ZeroBase(true) => "zeroBase",
+                AnswerSimplificationType::ZeroBase(false) => "!zeroBase",
+                AnswerSimplificationType::ConstantsFirst(true) => "constantsFirst",
+                AnswerSimplificationType::ConstantsFirst(false) => "!constantsFirst",
+                AnswerSimplificationType::SqrtProduct(true) => "sqrtProduct",
+                AnswerSimplificationType::SqrtProduct(false) => "!sqrtProduct",
+                AnswerSimplificationType::SqrtDivision(true) => "sqrtDivision",
+                AnswerSimplificationType::SqrtDivision(false) => "!sqrtDivision",
+                AnswerSimplificationType::SqrtSquare(true) => "sqrtSquare",
+                AnswerSimplificationType::SqrtSquare(false) => "!sqrtSquare",
+                AnswerSimplificationType::OtherNumbers(true) => "otherNumbers",
+                AnswerSimplificationType::OtherNumbers(false) => "!otherNumbers",
+                AnswerSimplificationType::TimesDot(true) => "timesDot",
+                AnswerSimplificationType::TimesDot(false) => "!timesDot",
+                AnswerSimplificationType::ExpandBrackets(true) => "expandBrackets",
+                AnswerSimplificationType::ExpandBrackets(false) => "!expandBrackets",
+                AnswerSimplificationType::NoLeadingMinus(true) => "noLeadingMinus",
+                AnswerSimplificationType::NoLeadingMinus(false) => "!noLeadingMinus",
+                AnswerSimplificationType::Trigonometric(true) => "trig",
+                AnswerSimplificationType::Trigonometric(false) => "!trig",
+                AnswerSimplificationType::CollectLikeFractions(true) => "collectLikeFractions",
+                AnswerSimplificationType::CollectLikeFractions(false) => "!collectLikeFractions",
+                AnswerSimplificationType::CanonicalOrder(true) => "canonicalOrder",
+                AnswerSimplificationType::CanonicalOrder(false) => "!canonicalOrder",
+                AnswerSimplificationType::CancelFactors(true) => "cancelFactors",
+                AnswerSimplificationType::CancelFactors(false) => "!cancelFactors",
+                AnswerSimplificationType::CancelTerms(true) => "cancelTerms",
+                AnswerSimplificationType::CancelTerms(false) => "!cancelTerms",
+                AnswerSimplificationType::Fractions(true) => "simplifyFractions",
+                AnswerSimplificationType::Fractions(false) => "!simplifyFractions",
             };
             parts.push(new_item.to_string());
         }
@@ -631,6 +666,23 @@ pub enum ExamQuestionGroupPickingStrategy {
     },
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct BuiltinConstants(std::collections::HashMap<String, bool>);
+
+impl Default for BuiltinConstants {
+    fn default() -> Self {
+        BuiltinConstants(
+            vec![
+                ("e".to_string(), true),
+                ("pi,\u{03c0}".to_string(), true),
+                ("i".to_string(), true),
+            ]
+            .into_iter()
+            .collect(),
+        )
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestion {
@@ -639,7 +691,9 @@ pub struct ExamQuestion {
     statement: String,
     advice: String,
     parts: Vec<ExamQuestionPart>,
-    builtin_constants: std::collections::HashMap<String, bool>,
+    #[serde(default)]
+    builtin_constants: BuiltinConstants,
+    #[serde(default)]
     constants: Vec<ExamQuestionConstant>,
     variables: HashMap<String, ExamVariable>,
     #[serde(rename = "variablesTest")]
@@ -684,7 +738,7 @@ impl ExamQuestion {
             statement,
             advice,
             parts,
-            builtin_constants,
+            builtin_constants: BuiltinConstants(builtin_constants),
             constants,
             variables,
             variables_test,
@@ -749,7 +803,7 @@ pub enum ExamQuestionPart {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartSharedData {
-    marks: Option<usize>,
+    marks: Option<Primitive>,
     prompt: Option<String>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
     #[serde(rename = "useCustomName")]
     use_custom_name: Option<bool>,
@@ -784,7 +838,7 @@ pub struct ExamQuestionPartSharedData {
 
 impl ExamQuestionPartSharedData {
     pub fn new(
-        marks: Option<usize>,
+        marks: Option<Primitive>,
         prompt: Option<String>,
         use_custom_name: Option<bool>,
         custom_name: Option<String>,
@@ -921,29 +975,30 @@ impl ExamQuestionPartJME {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerSimplificationType {
     //TODO casing?
-    Basic,
-    UnitFactor,
-    UnitPower,
-    UnitDenominator,
-    ZeroFactor,
-    ZeroTerm,
-    ZeroPower,
-    CollectNumbers,
-    ZeroBase,
-    ConstantsFirst,
-    SqrtProduct,
-    SqrtDivision,
-    SqrtSquare,
-    OtherNumbers,
-    TimesDot,
-    ExpandBrackets,
-    CollectLikeFractions,
-    CanonicalOrder,
-    NoLeadingMinus,
-    Fractions,
-    Trigonometric,
-    CancelTerms,
-    CancelFactors,
+    All(bool),
+    Basic(bool),
+    UnitFactor(bool),
+    UnitPower(bool),
+    UnitDenominator(bool),
+    ZeroFactor(bool),
+    ZeroTerm(bool),
+    ZeroPower(bool),
+    CollectNumbers(bool),
+    ZeroBase(bool),
+    ConstantsFirst(bool),
+    SqrtProduct(bool),
+    SqrtDivision(bool),
+    SqrtSquare(bool),
+    OtherNumbers(bool),
+    TimesDot(bool),
+    ExpandBrackets(bool),
+    CollectLikeFractions(bool),
+    CanonicalOrder(bool),
+    NoLeadingMinus(bool),
+    Fractions(bool),
+    Trigonometric(bool),
+    CancelTerms(bool),
+    CancelFactors(bool),
 }
 
 #[skip_serializing_none]
@@ -1024,8 +1079,9 @@ impl JMEStringRestriction {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEPatternRestriction {
-    #[serde(flatten)]
-    restriction: JMERestriction,
+    #[serde(rename = "partialCredit")]
+    partial_credit: f64, //TODO: maybe usize?
+    message: String,
     pattern: String, //TODO type?
     #[serde(rename = "nameToCompare")]
     name_to_compare: String,
@@ -1033,12 +1089,14 @@ pub struct JMEPatternRestriction {
 
 impl JMEPatternRestriction {
     pub fn new(
-        restriction: JMERestriction,
+        partial_credit: f64,
+        message: String,
         pattern: String,
         name_to_compare: String,
     ) -> JMEPatternRestriction {
         JMEPatternRestriction {
-            restriction,
+            partial_credit,
+            message,
             pattern,
             name_to_compare,
         }
@@ -1063,14 +1121,14 @@ impl JMEValueGenerator {
 pub struct ExamQuestionVariablesTest {
     condition: String,
     #[serde(rename = "maxRuns")]
-    max_runs: usize,
+    max_runs: SaveNatural,
 }
 
 impl ExamQuestionVariablesTest {
     pub fn new(condition: String, max_runs: usize) -> ExamQuestionVariablesTest {
         ExamQuestionVariablesTest {
             condition,
-            max_runs,
+            max_runs: SaveNatural(max_runs),
         }
     }
 }
@@ -1089,14 +1147,14 @@ pub struct ExamQuestionPartNumberEntry {
     pub allow_fractions: bool,
     #[serde(rename = "notationStyles")]
     pub notation_styles: Option<Vec<AnswerStyle>>,
-    #[serde(rename = "checkingType")]
-    pub checking_type: Option<CheckingType>, //TODO: check if being used
+    /*#[serde(rename = "checkingType")]
+    pub checking_type: Option<CheckingType>,*/ //TODO: check if being used
     /*#[serde(rename = "inputStep")]
     pub input_step: Option<usize>,*/ //TODO: check if being used
     #[serde(rename = "mustBeReduced")]
     pub fractions_must_be_reduced: Option<bool>,
     #[serde(rename = "mustBeReducedPC")]
-    pub partial_credit_if_fraction_not_reduced: Option<f64>,
+    pub partial_credit_if_fraction_not_reduced: Option<Primitive>,
     #[serde(flatten)]
     pub precision: Option<QuestionPrecision>,
     #[serde(rename = "showPrecisionHint")]
@@ -1131,9 +1189,9 @@ pub enum CheckingType {
 #[serde(untagged)]
 pub enum NumberEntryAnswerType {
     MinMax {
-        #[serde(rename = "minvalue")]
+        #[serde(rename = "minValue")]
         min_value: Primitive,
-        #[serde(rename = "maxvalue")]
+        #[serde(rename = "maxValue")]
         max_value: Primitive,
     },
     Answer {
@@ -1222,6 +1280,29 @@ pub enum PatternMatchMode {
     Exact, //TODO: check all options
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(try_from = "Primitive")]
+/// A natural number (unsigned int) that can be parsed from primitive
+pub struct SaveNatural(usize);
+
+impl std::convert::TryFrom<Primitive> for SaveNatural {
+    type Error = String;
+    fn try_from(p: Primitive) -> Result<Self, Self::Error> {
+        match p {
+            Primitive::Integer(n) => Ok(SaveNatural(n)),
+            Primitive::Float(_n) => Err("Please use an unsigned integer.".to_string()),
+            Primitive::String(n) => n.parse().map(|n| SaveNatural(n)).map_err(|e| e.to_string()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+pub enum VariableValued<T> {
+    Variable(String),
+    Value(T),
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartChooseOne {
@@ -1231,19 +1312,19 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "choices")]
-    pub answers: Vec<String>,
+    pub answers: VariableValued<Vec<String>>,
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayType")]
     pub display_type: ChooseOneDisplayType, // How to display the response selectors
     #[serde(rename = "displayColumns")]
-    pub columns: u8, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
+    pub columns: SaveNatural, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
     #[serde(rename = "warningType")]
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     pub distractors: Option<MultipleChoiceMatrix>, //TODO: type (contains only strings...)
 }
 
@@ -1264,7 +1345,7 @@ pub struct ExamQuestionPartChooseMultiple {
     #[serde(rename = "minMarks")]
     pub min_marks: Option<usize>, //TODO; what is difference with minimum_marks?
     #[serde(rename = "maxMarks")]
-    pub max_marks: Option<usize>, // Is there a maximum number of marks the student can get?
+    pub max_marks: Option<SaveNatural>, // Is there a maximum number of marks the student can get?
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
@@ -1272,14 +1353,14 @@ pub struct ExamQuestionPartChooseMultiple {
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayColumns")]
-    pub display_columns: usize, // How many columns to use to display the choices.
+    pub display_columns: SaveNatural, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: Vec<String>,
+    pub choices: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<MultipleChoiceMatrix>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     pub distractors: Option<MultipleChoiceMatrix>,
 }
 
