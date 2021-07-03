@@ -29,7 +29,9 @@ optional_overwrite! {
         functions: HashMap<String, Value<Function>>,
         preamble: Preamble,
         navigation: QuestionNavigation,
-        extensions: Extensions
+        extensions: Extensions,
+        /// The names of the topics used in diagnostic exams that this question belongs to
+        diagnostic_topic_names: Vec<TranslatableString> // TODO: validate? / warnings?
         //TODO al lot of options
     }
 }
@@ -113,6 +115,12 @@ impl ToNumbas for Question {
                 self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
                 self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
                 self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
+                self.diagnostic_topic_names
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|t| format!("skill: {}", t.to_string(&locale).unwrap()))
+                    .collect(),
             ))
         } else {
             Err(empty_fields)
