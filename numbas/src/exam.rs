@@ -632,10 +632,10 @@ pub enum ExamVariableTemplateType {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionGroup {
     //TODO
-    name: Option<String>,
+    pub name: Option<String>,
     #[serde(flatten)]
-    picking_strategy: ExamQuestionGroupPickingStrategy,
-    questions: Vec<ExamQuestion>,
+    pub picking_strategy: ExamQuestionGroupPickingStrategy,
+    pub questions: Vec<ExamQuestion>,
 }
 
 impl ExamQuestionGroup {
