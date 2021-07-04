@@ -351,11 +351,11 @@ pub enum ExamNavigationMode {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct QuestionNavigation {
     #[serde(rename = "allowregen")]
-    allow_regenerate: bool,
+    pub allow_regenerate: bool,
     #[serde(rename = "showfrontpage")]
-    show_frontpage: bool,
+    pub show_frontpage: bool,
     #[serde(rename = "preventleave")]
-    prevent_leaving: Option<bool>,
+    pub prevent_leaving: Option<bool>,
 }
 
 impl QuestionNavigation {
@@ -582,12 +582,12 @@ pub enum ExamFunctionType {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamVariable {
-    name: String,
-    definition: String,
-    description: String,
+    pub name: String,
+    pub definition: String,
+    pub description: String,
     #[serde(rename = "templateType")]
-    template_type: ExamVariableTemplateType,
-    group: String,
+    pub template_type: ExamVariableTemplateType,
+    pub group: String,
 }
 
 impl ExamVariable {
@@ -667,7 +667,7 @@ pub enum ExamQuestionGroupPickingStrategy {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct BuiltinConstants(std::collections::HashMap<String, bool>);
+pub struct BuiltinConstants(pub std::collections::HashMap<String, bool>);
 
 impl Default for BuiltinConstants {
     fn default() -> Self {
@@ -687,31 +687,31 @@ impl Default for BuiltinConstants {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestion {
     //TODO
-    name: String,
-    statement: String,
-    advice: String,
-    parts: Vec<ExamQuestionPart>,
+    pub name: String,
+    pub statement: String,
+    pub advice: String,
+    pub parts: Vec<ExamQuestionPart>,
     #[serde(default)]
-    builtin_constants: BuiltinConstants,
+    pub builtin_constants: BuiltinConstants,
     #[serde(default)]
-    constants: Vec<ExamQuestionConstant>,
-    variables: HashMap<String, ExamVariable>,
+    pub constants: Vec<ExamQuestionConstant>,
+    pub variables: HashMap<String, ExamVariable>,
     #[serde(rename = "variablesTest")]
-    variables_test: ExamQuestionVariablesTest,
-    functions: HashMap<String, ExamFunction>,
-    ungrouped_variables: Vec<String>,
-    variable_groups: Vec<String>,      //TODO: type
-    rulesets: HashMap<String, String>, //TODO Type
-    preamble: Preamble,
+    pub variables_test: ExamQuestionVariablesTest,
+    pub functions: HashMap<String, ExamFunction>,
+    pub ungrouped_variables: Vec<String>,
+    pub variable_groups: Vec<String>,      //TODO: type
+    pub rulesets: HashMap<String, String>, //TODO Type
+    pub preamble: Preamble,
     //contributors TODO
-    navigation: QuestionNavigation,
+    pub navigation: QuestionNavigation,
     //custom part types TODO
-    extensions: Vec<String>,
+    pub extensions: Vec<String>,
     //metadata TODO
     //resources TODO
     //TODO type: question?
     /// Tags starting with 'skill: ' are used in diagnostic mode to specify a topic
-    tags: Vec<String>,
+    pub tags: Vec<String>,
 }
 
 impl ExamQuestion {
@@ -757,8 +757,8 @@ impl ExamQuestion {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Preamble {
-    js: String,
-    css: String,
+    pub js: String,
+    pub css: String,
 }
 
 impl Preamble {
@@ -1119,9 +1119,9 @@ impl JMEValueGenerator {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariablesTest {
-    condition: String,
+    pub condition: String,
     #[serde(rename = "maxRuns")]
-    max_runs: SaveNatural,
+    pub max_runs: SaveNatural,
 }
 
 impl ExamQuestionVariablesTest {
@@ -1283,7 +1283,7 @@ pub enum PatternMatchMode {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
-pub struct SaveNatural(usize);
+pub struct SaveNatural(pub usize);
 
 impl std::convert::TryFrom<Primitive> for SaveNatural {
     type Error = String;

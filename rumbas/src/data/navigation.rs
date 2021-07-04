@@ -230,8 +230,10 @@ impl ToNumbas for LeaveAction {
 
 optional_overwrite! {
     pub struct QuestionNavigation {
-        allow_regenerate: bool,
-        show_frontpage: bool,
+        #[serde(alias = "allow_regenerate")]
+        can_regenerate: bool,
+        #[serde(alias = "show_frontpage")]
+        show_title_page: bool,
         prevent_leaving: bool
     }
 }
@@ -242,8 +244,8 @@ impl ToNumbas for QuestionNavigation {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
             Ok(numbas::exam::QuestionNavigation::new(
-                self.allow_regenerate.unwrap(),
-                self.show_frontpage.unwrap(),
+                self.can_regenerate.unwrap(),
+                self.show_title_page.unwrap(),
                 Some(self.prevent_leaving.clone().unwrap()),
             ))
         } else {
