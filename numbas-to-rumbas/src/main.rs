@@ -6,6 +6,7 @@ use rumbas::data::exam::Exam as RExam;
 use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
+use rumbas::data::function::Function;
 use rumbas::data::locale::{Locale, SupportedLocale};
 use rumbas::data::navigation::{
     DiagnosticNavigation, LeaveAction, NavigationSharedData, QuestionNavigation,
@@ -15,6 +16,7 @@ use rumbas::data::optional_overwrite::Noneable;
 use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
+use rumbas::data::question_part::QuestionPart;
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::translatable::TranslatableString;
@@ -234,6 +236,65 @@ fn extract_variable_template_type(
     }
 }
 
+fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
+    QuestionPart::JME(None) // TODO
+}
+
+fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> QuestionPart {
+    QuestionPart::NumberEntry(None) // TODO
+}
+
+fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
+    QuestionPart::Matrix(None) // TODO
+}
+
+fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
+    QuestionPart::PatternMatch(None) // TODO
+}
+
+fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> QuestionPart {
+    QuestionPart::ChooseOne(None) // TODO
+}
+
+fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
+    QuestionPart::ChooseMultiple(None) // TODO
+}
+
+fn extract_match_answers_with_choices_part(
+    qp: &numbas::exam::ExamQuestionPartMatchAnswersWithChoices,
+) -> QuestionPart {
+    QuestionPart::MatchAnswersWithItems(None) // TODO
+}
+
+fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPart {
+    QuestionPart::GapFill(None) // TODO
+}
+
+fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPart {
+    QuestionPart::Information(None) // TODO
+}
+
+fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
+    QuestionPart::Extension(None) // TODO
+}
+
+fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
+    match qp {
+        numbas::exam::ExamQuestionPart::JME(p) => extract_jme_part(p),
+        numbas::exam::ExamQuestionPart::NumberEntry(p) => extract_number_entry_part(p),
+        numbas::exam::ExamQuestionPart::Matrix(p) => extract_matrix_part(p),
+        numbas::exam::ExamQuestionPart::PatternMatch(p) => extract_pattern_match_part(p),
+        numbas::exam::ExamQuestionPart::ChooseOne(p) => extract_choose_one_part(p),
+        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => extract_choose_multiple_part(p),
+        numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => {
+            extract_match_answers_with_choices_part(p)
+        }
+        numbas::exam::ExamQuestionPart::GapFill(p) => extract_gapfill_part(p),
+        numbas::exam::ExamQuestionPart::Information(p) => extract_information_part(p),
+        numbas::exam::ExamQuestionPart::Extension(p) => extract_extension_part(p),
+    }
+}
+
 fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
     exam.clone()
         .question_groups
@@ -264,7 +325,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),
-                                parts: v!(vec![]), // TODO
+                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()), // TODO
                                 builtin_constants: v!(extract_builtin_constants(
                                     q.builtin_constants
                                 )),
@@ -296,7 +357,24 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                     condition: v!(q.variables_test.condition.clone()),
                                     max_runs: v!(q.variables_test.max_runs.0)
                                 }),
-                                functions: v!(std::collections::HashMap::new()), //TOOD
+                                functions: v!(q
+                                    .functions
+                                    .iter()
+                                    .map(|(k, f)| (
+                                        k.clone(),
+                                        v!(Function {
+                                            definition: v!(FileString::s(&f.definition)),
+                                            output_type: v!(f.output_type),
+                                            language: v!(f.language),
+                                            parameters: v!(f
+                                                .parameters
+                                                .clone()
+                                                .into_iter()
+                                                .map(|a| a)
+                                                .collect())
+                                        })
+                                    ))
+                                    .collect::<std::collections::HashMap<_, _>>()),
                                 preamble: v!(Preamble {
                                     js: v!(FileString::s(&q.preamble.js)),
                                     css: v!(FileString::s(&q.preamble.css)),
@@ -312,12 +390,19 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                 extensions: v!(Extensions {
                                     jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),
                                     stats: v!(q.extensions.contains(&"stats".to_string())),
-                                }), // TODO
-                                diagnostic_topic_names: v!(Vec::new()), // TODO
+                                }),
+                                diagnostic_topic_names: v!(q
+                                    .tags
+                                    .iter()
+                                    .filter(|t| t.starts_with("skill: "))
+                                    .map(|t| ts!(
+                                        t.splitn(2, ":").collect::<Vec<_>>()[1].to_string()
+                                    ))
+                                    .collect()),
                             })
                         })
                     })
-                    .collect()) // TODO
+                    .collect())
             })
         })
         .collect()

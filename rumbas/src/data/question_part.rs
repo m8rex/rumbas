@@ -30,6 +30,7 @@ optional_overwrite_enum! {
         PatternMatch(QuestionPartPatternMatch),
         #[serde(rename = "information")]
         Information(QuestionPartInformation)
+        // TODO: matrix & extension
     }
 }
 
