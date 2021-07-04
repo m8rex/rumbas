@@ -510,11 +510,11 @@ impl ExamFeedbackMessage {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFunction {
     //TODO
-    parameters: Vec<ExamFunctionParameter>,
+    pub parameters: Vec<ExamFunctionParameter>,
     #[serde(rename = "type")]
-    output_type: ExamFunctionType,
-    definition: String,
-    language: ExamFunctionLanguage,
+    pub output_type: ExamFunctionType,
+    pub definition: String,
+    pub language: ExamFunctionLanguage,
 }
 
 impl ExamFunction {
@@ -535,7 +535,7 @@ impl ExamFunction {
 
 pub type ExamFunctionParameter = (String, ExamFunctionType);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
 pub enum ExamFunctionLanguage {
     #[serde(rename = "jme")]
     JME,
@@ -543,7 +543,7 @@ pub enum ExamFunctionLanguage {
     JavaScript,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
 pub enum ExamFunctionType {
     #[serde(rename = "boolean")]
     Boolean,
