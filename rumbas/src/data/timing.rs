@@ -8,7 +8,9 @@ optional_overwrite! {
     pub struct Timing {
         duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
         allow_pause: bool,
+        /// Action to do on timeout
         on_timeout: TimeoutAction,
+        /// Action to do five minutes before timeout
         timed_warning: TimeoutAction
     }
 }

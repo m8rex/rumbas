@@ -172,22 +172,22 @@ where
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Exam {
     #[serde(flatten)]
-    basic_settings: BasicExamSettings,
-    resources: Vec<[String; 2]>,
-    extensions: Vec<String>,
-    custom_part_types: Vec<CustomPartType>,
+    pub basic_settings: BasicExamSettings,
+    pub resources: Vec<[String; 2]>,
+    pub extensions: Vec<String>,
+    pub custom_part_types: Vec<CustomPartType>,
 
-    navigation: ExamNavigation,
-    timing: ExamTiming,
-    feedback: ExamFeedback,
+    pub navigation: ExamNavigation,
+    pub timing: ExamTiming,
+    pub feedback: ExamFeedback,
 
     //rulesets: HashMap<String, String>, //TODO + Type
-    functions: Option<HashMap<String, ExamFunction>>,
-    variables: Option<HashMap<String, ExamVariable>>,
-    question_groups: Vec<ExamQuestionGroup>,
+    pub functions: Option<HashMap<String, ExamFunction>>,
+    pub variables: Option<HashMap<String, ExamVariable>>,
+    pub question_groups: Vec<ExamQuestionGroup>,
     //contributors TODO
     //metadata TODO
-    diagnostic: Option<ExamDiagnostic>,
+    pub diagnostic: Option<ExamDiagnostic>,
 }
 
 impl Exam {
@@ -249,18 +249,18 @@ impl Exam {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct BasicExamSettings {
-    name: String,
+    pub name: String,
     #[serde(rename = "duration")]
-    duration_in_seconds: Option<usize>,
+    pub duration_in_seconds: Option<usize>,
     #[serde(rename = "percentPass", deserialize_with = "from_str_optional")]
-    percentage_needed_to_pass: Option<f64>,
+    pub percentage_needed_to_pass: Option<f64>,
     #[serde(rename = "showQuestionGroupNames")]
-    show_question_group_names: Option<bool>,
+    pub show_question_group_names: Option<bool>,
     #[serde(rename = "showstudentname")]
-    show_student_name: Option<bool>,
+    pub show_student_name: Option<bool>,
     #[serde(rename = "allowPrinting")]
     /// Whether students are ammpwed to print an exam transcript
-    allow_printing: Option<bool>,
+    pub allow_printing: Option<bool>,
 }
 
 impl BasicExamSettings {
@@ -291,24 +291,24 @@ pub struct CustomPartType {} //TODO: add fields
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamNavigation {
     #[serde(rename = "allowregen")]
-    allow_regenerate: bool,
+    pub allow_regenerate: bool,
     #[serde(rename = "navigatemode")]
-    navigation_mode: ExamNavigationMode,
-    reverse: Option<bool>,
+    pub navigation_mode: ExamNavigationMode,
+    pub reverse: Option<bool>,
     #[serde(rename = "browse")]
-    browsing_enabled: Option<bool>,
+    pub browsing_enabled: Option<bool>,
     #[serde(rename = "allowsteps")]
-    allow_steps: Option<bool>,
+    pub allow_steps: Option<bool>,
     #[serde(rename = "showfrontpage")]
-    show_frontpage: bool,
+    pub show_frontpage: bool,
     #[serde(rename = "showresultspage")]
-    show_results_page: Option<ExamShowResultsPage>,
+    pub show_results_page: Option<ExamShowResultsPage>,
     #[serde(rename = "preventleave")]
-    prevent_leaving: Option<bool>,
+    pub prevent_leaving: Option<bool>,
     #[serde(rename = "onleave")]
-    on_leave: Option<ExamLeaveAction>,
+    pub on_leave: Option<ExamLeaveAction>,
     #[serde(rename = "startpassword")]
-    start_password: Option<String>, //TODO: if empty string -> also None
+    pub start_password: Option<String>, //TODO: if empty string -> also None
 }
 
 impl ExamNavigation {
@@ -401,10 +401,10 @@ pub enum ExamShowResultsPage {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamTiming {
     #[serde(rename = "allowPause")]
-    allow_pause: bool,
-    timeout: ExamTimeoutAction, // Action to do on timeout
+    pub allow_pause: bool,
+    pub timeout: ExamTimeoutAction, // Action to do on timeout
     #[serde(rename = "timedwarning")]
-    timed_warning: ExamTimeoutAction, // Action to do five minutes before timeout
+    pub timed_warning: ExamTimeoutAction, // Action to do five minutes before timeout
 }
 
 impl ExamTiming {
@@ -425,19 +425,19 @@ impl ExamTiming {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedback {
     #[serde(rename = "showactualmark")]
-    show_actual_mark: bool, // show student's score
+    pub show_actual_mark: bool, // show student's score
     #[serde(rename = "showtotalmark")]
-    show_total_mark: bool, // show total marks available
+    pub show_total_mark: bool, // show total marks available
     #[serde(rename = "showanswerstate")]
-    show_answer_state: bool, // Show whether answer was correct
+    pub show_answer_state: bool, // Show whether answer was correct
     #[serde(rename = "allowrevealanswer")]
-    allow_reveal_answer: bool,
+    pub allow_reveal_answer: bool,
     #[serde(flatten)]
-    review: Option<ExamReview>,
-    advice: Option<String>,
-    intro: String,
+    pub review: Option<ExamReview>,
+    pub advice: Option<String>,
+    pub intro: String,
     #[serde(rename = "feedbackmessages")]
-    feedback_messages: Vec<ExamFeedbackMessage>,
+    pub feedback_messages: Vec<ExamFeedbackMessage>,
 }
 
 impl ExamFeedback {
@@ -468,13 +468,13 @@ impl ExamFeedback {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamReview {
     #[serde(rename = "reviewshowscore")]
-    show_score: Option<bool>,
+    pub show_score: Option<bool>,
     #[serde(rename = "reviewshowfeedback")]
-    show_feedback: Option<bool>,
+    pub show_feedback: Option<bool>,
     #[serde(rename = "reviewshowexpectedanswer")]
-    show_expected_answer: Option<bool>,
+    pub show_expected_answer: Option<bool>,
     #[serde(rename = "reviewshowadvice")]
-    show_advice: Option<bool>,
+    pub show_advice: Option<bool>,
 }
 
 impl ExamReview {
@@ -496,8 +496,8 @@ impl ExamReview {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedbackMessage {
-    message: String,
-    threshold: String, //TODO type
+    pub message: String,
+    pub threshold: String, //TODO type
 }
 
 impl ExamFeedbackMessage {

@@ -1,12 +1,10 @@
-use crate::data::default::combine_with_default_files;
-use crate::data::to_numbas::ToNumbas;
+use rumbas::data::default::combine_with_default_files;
+use rumbas::data::to_numbas::ToNumbas;
 use std::env;
 use std::path::Path;
 #[macro_use]
 extern crate clap;
 use clap::{crate_version, App};
-
-mod data;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
@@ -55,7 +53,7 @@ fn main() {
         _ => 3,
     };*/
 
-    let exam_result = data::exam::Exam::from_file(path);
+    let exam_result = rumbas::data::exam::Exam::from_file(path);
     match exam_result {
         Ok(mut exam) => {
             combine_with_default_files(path, &mut exam);
