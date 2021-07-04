@@ -1,5 +1,7 @@
 use numbas::exam::Exam as NExam;
-use rumbas::data::diagnostic_exam::{Diagnostic, DiagnosticExam, DiagnosticScript};
+use rumbas::data::diagnostic_exam::{
+    Diagnostic, DiagnosticExam, DiagnosticScript, LearningObjective, LearningTopic,
+};
 use rumbas::data::exam::Exam as RExam;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
@@ -9,7 +11,7 @@ use rumbas::data::navigation::LeaveAction;
 use rumbas::data::navigation::NavigationSharedData;
 use rumbas::data::numbas_settings::NumbasSettings;
 use rumbas::data::optional_overwrite::Noneable;
-use rumbas::data::question_group::QuestionGroup;
+use rumbas::data::question_group::{PickingStrategy, QuestionGroup};
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::translatable::TranslatableString;
@@ -202,7 +204,29 @@ fn extract_feedback(exam: &NExam) -> Feedback {
 }
 
 fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
-    vec![] // TODO
+    exam.clone()
+        .question_groups
+        .into_iter()
+        .map(|q| {
+            v!(QuestionGroup {
+                name: v!(ts!(q.name.unwrap_or(String::new()))),
+                picking_strategy: v!(match q.picking_strategy {
+                    numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
+                        PickingStrategy::AllOrdered
+                    }
+                    numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled => {
+                        PickingStrategy::AllShuffled
+                    }
+                    numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset {
+                        pick_questions,
+                    } => {
+                        PickingStrategy::RandomSubset { pick_questions }
+                    }
+                }),
+                questions: v!(vec![]) // TODO
+            })
+        })
+        .collect()
 }
 
 fn extract_diagnostic(exam: &NExam) -> Diagnostic {
@@ -215,7 +239,32 @@ fn extract_diagnostic(exam: &NExam) -> Diagnostic {
                 DiagnosticScript::Custom(ts!(diagnostic.custom_script))
             }
         }),
-        objectives: v!(vec![]), // TODO
-        topics: v!(vec![]),     // TODO
+        objectives: v!(diagnostic
+            .knowledge_graph
+            .clone()
+            .learning_objectives
+            .into_iter()
+            .map(|l| LearningObjective {
+                name: v!(ts!(l.name)),
+                description: v!(ts!(l.description))
+            })
+            .collect()),
+        topics: v!(diagnostic
+            .knowledge_graph
+            .clone()
+            .topics
+            .into_iter()
+            .map(|l| LearningTopic {
+                name: v!(ts!(l.name)),
+                description: v!(ts!(l.description)),
+                objectives: v!(l
+                    .learning_objectives
+                    .clone()
+                    .into_iter()
+                    .map(|o| ts!(o))
+                    .collect()),
+                depends_on: v!(l.depends_on.clone().into_iter().map(|o| ts!(o)).collect()),
+            })
+            .collect()), // TODO
     }
 }
