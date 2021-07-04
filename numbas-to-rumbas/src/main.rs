@@ -3,18 +3,22 @@ use rumbas::data::diagnostic_exam::{
     Diagnostic, DiagnosticExam, DiagnosticScript, LearningObjective, LearningTopic,
 };
 use rumbas::data::exam::Exam as RExam;
+use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
 use rumbas::data::locale::{Locale, SupportedLocale};
-use rumbas::data::navigation::DiagnosticNavigation;
-use rumbas::data::navigation::LeaveAction;
-use rumbas::data::navigation::NavigationSharedData;
+use rumbas::data::navigation::{
+    DiagnosticNavigation, LeaveAction, NavigationSharedData, QuestionNavigation,
+};
 use rumbas::data::numbas_settings::NumbasSettings;
 use rumbas::data::optional_overwrite::Noneable;
-use rumbas::data::question_group::{PickingStrategy, QuestionGroup};
+use rumbas::data::preamble::Preamble;
+use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
+use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::translatable::TranslatableString;
+use rumbas::data::variable::{Variable, VariableRepresentation, VariableTemplateType};
 
 macro_rules! read {
     ($file_name: expr) => {{
@@ -203,6 +207,33 @@ fn extract_feedback(exam: &NExam) -> Feedback {
     }
 }
 
+fn extract_builtin_constants(bc: numbas::exam::BuiltinConstants) -> BuiltinConstants {
+    BuiltinConstants {
+        e: v!(*bc.0.get(&"e".to_string()).unwrap_or(&false)),
+        pi: v!(*bc.0.get(&"pi,\u{03c0}".to_string()).unwrap_or(&false)),
+        i: v!(*bc.0.get(&"i".to_string()).unwrap_or(&false)),
+    }
+}
+
+fn extract_variable_template_type(
+    tt: numbas::exam::ExamVariableTemplateType,
+) -> VariableTemplateType {
+    match tt {
+        numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
+        numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
+            VariableTemplateType::ListOfNumbers
+        }
+        numbas::exam::ExamVariableTemplateType::ListOfStrings => {
+            VariableTemplateType::ListOfStrings
+        }
+        numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
+        numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
+        numbas::exam::ExamVariableTemplateType::RandomRange => VariableTemplateType::RandomRange,
+        numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
+        numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
+    }
+}
+
 fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
     exam.clone()
         .question_groups
@@ -223,7 +254,70 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                         PickingStrategy::RandomSubset { pick_questions }
                     }
                 }),
-                questions: v!(vec![]) // TODO
+                questions: v!(q
+                    .questions
+                    .clone()
+                    .into_iter()
+                    .map(|q| {
+                        v!(QuestionPath {
+                            question_name: v!(q.name),
+                            question_data: v!(Question {
+                                statement: v!(ts!(q.statement)),
+                                advice: v!(ts!(q.advice)),
+                                parts: v!(vec![]), // TODO
+                                builtin_constants: v!(extract_builtin_constants(
+                                    q.builtin_constants
+                                )),
+                                custom_constants: v!(q
+                                    .constants
+                                    .iter()
+                                    .map(|cc| CustomConstant {
+                                        name: v!(cc.name.clone()),
+                                        value: v!(cc.value.clone()),
+                                        tex: v!(cc.tex.clone()),
+                                    })
+                                    .collect()),
+                                variables: v!(q
+                                    .variables
+                                    .iter()
+                                    .map(|(k, v)| (
+                                        k.clone(),
+                                        v!(VariableRepresentation::Long(v!(Variable {
+                                            definition: v!(FileString::s(&v.definition)),
+                                            description: v!(v.description.clone()),
+                                            template_type: v!(extract_variable_template_type(
+                                                v.template_type.clone()
+                                            )),
+                                            group: v!(v.group.clone()),
+                                        })))
+                                    ))
+                                    .collect::<std::collections::HashMap<_, _>>()),
+                                variables_test: v!(VariablesTest {
+                                    condition: v!(q.variables_test.condition.clone()),
+                                    max_runs: v!(q.variables_test.max_runs.0)
+                                }),
+                                functions: v!(std::collections::HashMap::new()), //TOOD
+                                preamble: v!(Preamble {
+                                    js: v!(FileString::s(&q.preamble.js)),
+                                    css: v!(FileString::s(&q.preamble.css)),
+                                }), // TODO
+                                navigation: v!(QuestionNavigation {
+                                    can_regenerate: v!(q.navigation.allow_regenerate),
+                                    show_title_page: v!(q.navigation.show_frontpage),
+                                    prevent_leaving: v!(q
+                                        .navigation
+                                        .prevent_leaving
+                                        .unwrap_or(false)), // TODO: check default
+                                }),
+                                extensions: v!(Extensions {
+                                    jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),
+                                    stats: v!(q.extensions.contains(&"stats".to_string())),
+                                }), // TODO
+                                diagnostic_topic_names: v!(Vec::new()), // TODO
+                            })
+                        })
+                    })
+                    .collect()) // TODO
             })
         })
         .collect()
@@ -265,6 +359,6 @@ fn extract_diagnostic(exam: &NExam) -> Diagnostic {
                     .collect()),
                 depends_on: v!(l.depends_on.clone().into_iter().map(|o| ts!(o)).collect()),
             })
-            .collect()), // TODO
+            .collect()),
     }
 }
