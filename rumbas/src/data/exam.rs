@@ -99,4 +99,8 @@ impl Exam {
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
             .map_err(|e| YamlError::from(e, file.to_path_buf()))
     }
+
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
 }

@@ -14,7 +14,7 @@ optional_overwrite! {
         show_maximum_marks: bool,
         /// Whether answer feedback is shown (right or wrong etc)
         show_answer_state: bool,
-        // Whether the 'reveal answer' button is present
+        /// Whether the 'reveal answer' button is present
         allow_reveal_answer: bool,
         review: Review, // If none, everything is true???
         advice: TranslatableString,
@@ -81,8 +81,8 @@ impl ToNumbas for Review {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct FeedbackMessage {
-    message: String,   //TODO: inputstring or filestring?
-    threshold: String, //TODO type
+    pub message: String,   //TODO: inputstring or filestring?
+    pub threshold: String, //TODO type
 }
 impl_optional_overwrite!(FeedbackMessage);
 
