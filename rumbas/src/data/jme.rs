@@ -12,7 +12,6 @@ question_part_type! {
         answer_simplification: JMEAnswerSimplification,
         show_preview: bool,
         checking_type: CheckingType,
-        checking_accuracy: f64,
         failure_rate: f64,
         vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
         vset_range_points: usize,
@@ -50,7 +49,6 @@ impl ToNumbas for QuestionPartJME {
                     .unwrap()
                     .to_numbas(&locale)
                     .unwrap(),
-                self.checking_accuracy.unwrap(),
                 self.failure_rate.unwrap(),
                 self.vset_range.unwrap(),
                 self.vset_range_points.unwrap(),
@@ -206,25 +204,81 @@ impl ToNumbas for JMEAnswerSimplification {
     }
 }
 
+optional_overwrite! {
+    pub struct CheckingTypeDataFloat {
+        checking_accuracy: f64
+    }
+}
+
+impl ToNumbas for CheckingTypeDataFloat {
+    type NumbasType = numbas::exam::JMECheckingTypeData<f64>;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        // TODO: check empty?
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMECheckingTypeData {
+                checking_accuracy: self.checking_accuracy.unwrap(),
+            })
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
+optional_overwrite! {
+    pub struct CheckingTypeDataNatural {
+        checking_accuracy: usize
+    }
+}
+
+impl ToNumbas for CheckingTypeDataNatural {
+    type NumbasType = numbas::exam::JMECheckingTypeData<usize>;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        // TODO: check empty?
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(numbas::exam::JMECheckingTypeData {
+                checking_accuracy: self.checking_accuracy.unwrap(),
+            })
+        } else {
+            Err(empty_fields)
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
+#[serde(tag = "checking_type")]
 pub enum CheckingType {
-    RelativeDifference,
-    AbsoluteDifference,
-    DecimalPlaces,
-    SignificantFigures,
+    RelativeDifference(CheckingTypeDataFloat),
+    AbsoluteDifference(CheckingTypeDataFloat),
+    DecimalPlaces(CheckingTypeDataNatural),
+    SignificantFigures(CheckingTypeDataNatural),
 }
 impl_optional_overwrite!(CheckingType);
 
 impl ToNumbas for CheckingType {
     type NumbasType = numbas::exam::JMECheckingType;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
-            CheckingType::RelativeDifference => numbas::exam::JMECheckingType::RelativeDifference,
-            CheckingType::AbsoluteDifference => numbas::exam::JMECheckingType::AbsoluteDifference,
-            CheckingType::DecimalPlaces => numbas::exam::JMECheckingType::DecimalPlaces,
-            CheckingType::SignificantFigures => numbas::exam::JMECheckingType::SignificantFigures,
-        })
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let empty_fields = self.empty_fields();
+        if empty_fields.is_empty() {
+            Ok(match self {
+                CheckingType::RelativeDifference(f) => {
+                    numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(&locale).unwrap())
+                }
+                CheckingType::AbsoluteDifference(f) => {
+                    numbas::exam::JMECheckingType::AbsoluteDifference(f.to_numbas(&locale).unwrap())
+                }
+                CheckingType::DecimalPlaces(f) => {
+                    numbas::exam::JMECheckingType::DecimalPlaces(f.to_numbas(&locale).unwrap())
+                }
+                CheckingType::SignificantFigures(f) => {
+                    numbas::exam::JMECheckingType::SignificantFigures(f.to_numbas(&locale).unwrap())
+                }
+            })
+        } else {
+            Err(empty_fields)
+        }
     }
 }
 

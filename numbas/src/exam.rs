@@ -803,35 +803,35 @@ pub enum ExamQuestionPart {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartSharedData {
-    marks: Option<Primitive>,
-    prompt: Option<String>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
+    pub marks: Option<Primitive>,
+    pub prompt: Option<String>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
     #[serde(rename = "useCustomName")]
-    use_custom_name: Option<bool>,
+    pub use_custom_name: Option<bool>,
     #[serde(rename = "customName")]
-    custom_name: Option<String>,
+    pub custom_name: Option<String>,
     #[serde(
         rename = "stepsPenalty",
         default,
         deserialize_with = "from_str_optional"
     )]
-    steps_penalty: Option<usize>,
+    pub steps_penalty: Option<usize>,
     #[serde(rename = "enableMinimumMarks")]
-    enable_minimum_marks: Option<bool>,
+    pub enable_minimum_marks: Option<bool>,
     #[serde(rename = "minimumMarks")]
-    minimum_marks: Option<usize>,
+    pub minimum_marks: Option<usize>,
     #[serde(rename = "showCorrectAnswer")]
-    show_correct_answer: bool,
+    pub show_correct_answer: bool,
     #[serde(rename = "showFeedbackIcon")]
-    show_feedback_icon: Option<bool>,
+    pub show_feedback_icon: Option<bool>,
     #[serde(rename = "variableReplacementStrategy")]
-    variable_replacement_strategy: VariableReplacementStrategy,
+    pub variable_replacement_strategy: VariableReplacementStrategy,
     #[serde(rename = "adaptiveMarkingPenalty")]
-    adaptive_marking_penalty: Option<usize>,
+    pub adaptive_marking_penalty: Option<usize>,
     #[serde(rename = "customMarkingAlgorithm")]
-    custom_marking_algorithm: Option<String>,
+    pub custom_marking_algorithm: Option<String>,
     #[serde(rename = "extendBaseMarkingAlgorithm")]
-    extend_base_marking_algorithm: Option<bool>,
-    steps: Option<Vec<ExamQuestionPart>>,
+    pub extend_base_marking_algorithm: Option<bool>,
+    pub steps: Option<Vec<ExamQuestionPart>>,
     //scripts TODO
     //[serde(rename= "variableReplacements")]
 }
@@ -882,47 +882,46 @@ pub enum VariableReplacementStrategy {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartJME {
     #[serde(flatten)]
-    part_data: ExamQuestionPartSharedData,
-    answer: String,
+    pub part_data: ExamQuestionPartSharedData,
+    pub answer: String,
     #[serde(
         rename = "answerSimplification",
         default,
         deserialize_with = "answer_simplification_deserialize",
         serialize_with = "answer_simplification_serialize"
     )]
-    answer_simplification: Option<Vec<AnswerSimplificationType>>, //comma separated list
+    pub answer_simplification: Option<Vec<AnswerSimplificationType>>, //comma separated list
     #[serde(rename = "showPreview")]
-    show_preview: bool,
+    pub show_preview: bool,
     #[serde(rename = "checkingType")]
-    checking_type: JMECheckingType,
-    #[serde(rename = "checkingAccuracy")]
-    checking_accuracy: f64,
+    #[serde(flatten)]
+    pub checking_type: JMECheckingType,
     #[serde(rename = "failureRate")]
-    failure_rate: f64,
+    pub failure_rate: f64,
     #[serde(rename = "vsetRange")]
-    vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+    pub vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
     #[serde(rename = "vsetRangePoints")]
-    vset_range_points: usize,
+    pub vset_range_points: usize,
     #[serde(rename = "checkVariableNames")]
-    check_variable_names: bool,
+    pub check_variable_names: bool,
     #[serde(rename = "singleLetterVariables")]
-    single_letter_variables: Option<bool>,
+    pub single_letter_variables: Option<bool>,
     #[serde(rename = "allowUnknownFunctions")]
-    allow_unknown_functions: Option<bool>,
+    pub allow_unknown_functions: Option<bool>,
     #[serde(rename = "implicitFunctionComposition")]
-    implicit_function_composition: Option<bool>,
+    pub implicit_function_composition: Option<bool>,
     #[serde(rename = "maxlength")]
-    max_length: Option<JMELengthRestriction>, // TODO: all restrictions to one flattended struct?
+    pub max_length: Option<JMELengthRestriction>, // TODO: all restrictions to one flattended struct?
     #[serde(rename = "minlength")]
-    min_length: Option<JMELengthRestriction>,
+    pub min_length: Option<JMELengthRestriction>,
     #[serde(rename = "musthave")]
-    must_have: Option<JMEStringRestriction>,
+    pub must_have: Option<JMEStringRestriction>,
     #[serde(rename = "notallowed")]
-    may_not_have: Option<JMEStringRestriction>,
+    pub may_not_have: Option<JMEStringRestriction>,
     #[serde(rename = "mustmatchpattern")]
-    must_match_pattern: Option<JMEPatternRestriction>,
+    pub must_match_pattern: Option<JMEPatternRestriction>,
     #[serde(rename = "valuegenerators")]
-    value_generators: Option<Vec<JMEValueGenerator>>,
+    pub value_generators: Option<Vec<JMEValueGenerator>>,
 }
 
 impl ExamQuestionPartJME {
@@ -932,7 +931,6 @@ impl ExamQuestionPartJME {
         answer_simplification: Option<Vec<AnswerSimplificationType>>,
         show_preview: bool,
         checking_type: JMECheckingType,
-        checking_accuracy: f64,
         failure_rate: f64,
         vset_range: [f64; 2],
         vset_range_points: usize,
@@ -953,7 +951,6 @@ impl ExamQuestionPartJME {
             answer_simplification,
             show_preview,
             checking_type,
-            checking_accuracy,
             failure_rate,
             vset_range,
             vset_range_points,
@@ -1001,18 +998,24 @@ pub enum AnswerSimplificationType {
     CancelFactors(bool),
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct JMECheckingTypeData<T> {
+    #[serde(rename = "checkingAccuracy")]
+    pub checking_accuracy: T,
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "checkingType")]
 pub enum JMECheckingType {
-    //TODO: other items (dp and sigfig)
     #[serde(rename = "reldiff")]
-    RelativeDifference,
+    RelativeDifference(JMECheckingTypeData<f64>),
     #[serde(rename = "absdiff")]
-    AbsoluteDifference,
+    AbsoluteDifference(JMECheckingTypeData<f64>),
     #[serde(rename = "dp")]
-    DecimalPlaces,
+    DecimalPlaces(JMECheckingTypeData<usize>),
     #[serde(rename = "sigfig")]
-    SignificantFigures,
+    SignificantFigures(JMECheckingTypeData<usize>),
 }
 
 #[skip_serializing_none]
