@@ -597,7 +597,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                     .iter()
                                     .filter(|t| t.starts_with("skill: "))
                                     .map(|t| ts!(
-                                        t.splitn(2, ":").collect::<Vec<_>>()[1].to_string()
+                                        t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string()
                                     ))
                                     .collect()),
                             })
