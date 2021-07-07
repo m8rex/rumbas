@@ -7,6 +7,10 @@ use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
 use rumbas::data::function::Function;
+use rumbas::data::jme::{
+    CheckingType, CheckingTypeDataFloat, CheckingTypeDataNatural, JMEAnswerSimplification,
+    QuestionPartJME,
+};
 use rumbas::data::locale::{Locale, SupportedLocale};
 use rumbas::data::navigation::{
     DiagnosticNavigation, LeaveAction, NavigationSharedData, QuestionNavigation,
@@ -16,7 +20,7 @@ use rumbas::data::optional_overwrite::Noneable;
 use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
-use rumbas::data::question_part::QuestionPart;
+use rumbas::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::translatable::TranslatableString;
@@ -236,18 +240,211 @@ fn extract_variable_template_type(
     }
 }
 
-fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
-    QuestionPart::JME(None) // TODO
+fn extract_jme_answer_simplification(
+    ov: &Option<Vec<numbas::exam::AnswerSimplificationType>>,
+) -> JMEAnswerSimplification {
+    let mut result = JMEAnswerSimplification {
+        simplify_basic: v!(true),
+        simplify_unit_factor: v!(true),
+        simplify_unit_power: v!(true),
+        simplify_unit_denominator: v!(true),
+        simplify_zero_factor: v!(true),
+        simplify_zero_term: v!(true),
+        simplify_zero_power: v!(true),
+        simplify_zero_base: v!(true),
+        collect_numbers: v!(true),
+        constants_first: v!(true),
+        simplify_sqrt_products: v!(true),
+        simplify_sqrt_division: v!(true),
+        simplify_sqrt_square: v!(true),
+        simplify_other_numbers: v!(true),
+        simplify_no_leading_minus: v!(true),
+        simplify_fractions: v!(true),
+        simplify_trigonometric: v!(true),
+        cancel_terms: v!(true),
+        cancel_factors: v!(true),
+        collect_like_fractions: v!(true),
+        order_canonical: v!(false),
+        use_times_dot: v!(true),
+        expand_brackets: v!(false),
+    }; // Numbas default
+    if let Some(v) = ov {
+        for a in v.iter() {
+            match a {
+                numbas::exam::AnswerSimplificationType::All(b) => {
+                    result.simplify_basic = v!(*b);
+                    result.simplify_unit_factor = v!(*b);
+                    result.simplify_unit_power = v!(*b);
+                    result.simplify_unit_denominator = v!(*b);
+                    result.simplify_zero_factor = v!(*b);
+                    result.simplify_zero_term = v!(*b);
+                    result.simplify_zero_power = v!(*b);
+                    result.simplify_zero_base = v!(*b);
+                    result.collect_numbers = v!(*b);
+                    result.constants_first = v!(*b);
+                    result.simplify_sqrt_products = v!(*b);
+                    result.simplify_sqrt_division = v!(*b);
+                    result.simplify_sqrt_square = v!(*b);
+                    result.simplify_other_numbers = v!(*b);
+                    result.simplify_no_leading_minus = v!(*b);
+                    result.simplify_fractions = v!(*b);
+                    result.simplify_trigonometric = v!(*b);
+                    result.cancel_terms = v!(*b);
+                    result.cancel_factors = v!(*b);
+                    result.collect_like_fractions = v!(*b);
+                    result.use_times_dot = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::Basic(b) => {
+                    result.simplify_basic = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::UnitFactor(b) => {
+                    result.simplify_unit_factor = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::UnitPower(b) => {
+                    result.simplify_unit_power = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::UnitDenominator(b) => {
+                    result.simplify_unit_denominator = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ZeroFactor(b) => {
+                    result.simplify_zero_factor = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ZeroTerm(b) => {
+                    result.simplify_zero_term = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ZeroPower(b) => {
+                    result.simplify_zero_power = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::CollectNumbers(b) => {
+                    result.collect_numbers = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ZeroBase(b) => {
+                    result.simplify_zero_base = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ConstantsFirst(b) => {
+                    result.constants_first = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::SqrtProduct(b) => {
+                    result.simplify_sqrt_products = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::SqrtDivision(b) => {
+                    result.simplify_sqrt_division = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::SqrtSquare(b) => {
+                    result.simplify_sqrt_square = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::OtherNumbers(b) => {
+                    result.simplify_other_numbers = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::NoLeadingMinus(b) => {
+                    result.simplify_no_leading_minus = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::Fractions(b) => {
+                    result.simplify_fractions = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::Trigonometric(b) => {
+                    result.simplify_trigonometric = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::CancelTerms(b) => {
+                    result.cancel_terms = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::CancelFactors(b) => {
+                    result.cancel_factors = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::CollectLikeFractions(b) => {
+                    result.collect_like_fractions = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::TimesDot(b) => {
+                    result.use_times_dot = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::ExpandBrackets(b) => {
+                    result.expand_brackets = v!(*b);
+                }
+                numbas::exam::AnswerSimplificationType::CanonicalOrder(b) => {
+                    result.order_canonical = v!(*b);
+                }
+            }
+        }
+    }
+
+    result
 }
 
+fn extract_checking_type(ct: &numbas::exam::JMECheckingType) -> CheckingType {
+    // TODO
+    CheckingType::DecimalPlaces(CheckingTypeDataNatural {
+        checking_accuracy: v!(0),
+    })
+}
+
+fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
+    QuestionPart::JME(QuestionPartJME {
+        // Default section
+        marks: v!(qp
+            .part_data
+            .marks
+            .clone()
+            .unwrap_or(numbas::exam::Primitive::Natural(0))), // TODO
+        prompt: v!(ts!(qp.part_data.prompt.clone().unwrap_or(String::new()))), // TODO
+        use_custom_name: v!(qp.part_data.use_custom_name.unwrap_or(false)),    // TODO default
+        custom_name: v!(qp.part_data.custom_name.clone().unwrap_or(String::new())), // TODO
+        steps_penalty: v!(qp.part_data.steps_penalty.unwrap_or(0)),            // TODO
+        enable_minimum_marks: v!(qp.part_data.enable_minimum_marks.unwrap_or(false)), // TODO: default
+        minimum_marks: v!(qp.part_data.minimum_marks.unwrap_or(0)),                   // TODO
+        show_correct_answer: v!(qp.part_data.show_correct_answer),
+        show_feedback_icon: v!(qp.part_data.show_feedback_icon.unwrap_or(false)),
+        variable_replacement_strategy: v!(VariableReplacementStrategy::OriginalFirst), // TODO
+        adaptive_marking_penalty: v!(qp.part_data.adaptive_marking_penalty.unwrap_or(0)), // TODO
+        custom_marking_algorithm: v!(qp
+            .part_data
+            .custom_marking_algorithm
+            .clone()
+            .unwrap_or(String::new())), // TODO? empty string -> none?, from file?
+        extend_base_marking_algorithm: v!(qp
+            .part_data
+            .extend_base_marking_algorithm
+            .unwrap_or(false)), // TODO numbas default
+        steps: v!(qp
+            .part_data
+            .steps
+            .clone()
+            .unwrap_or(vec![])
+            .into_iter()
+            .map(|s| extract_part(&s))
+            .filter(|s| s.is_some())
+            .map(|s| s.unwrap())
+            .collect()), // TODO
+
+        answer: v!(ts!(qp.answer)),
+        answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
+        show_preview: v!(qp.show_preview),
+        checking_type: v!(extract_checking_type(&qp.checking_type)), // TODO
+        failure_rate: v!(qp.failure_rate),
+        vset_range: v!(qp.vset_range),
+        vset_range_points: v!(qp.vset_range_points),
+        check_variable_names: v!(qp.check_variable_names),
+        single_letter_variables: v!(qp.single_letter_variables.unwrap_or(false)), // TODO numbas default
+        allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // TODO numbas default
+        implicit_function_composition: v!(qp.implicit_function_composition.unwrap_or(false)), // TODO: numbas default
+
+        // TODO all below
+        max_length: v!(Noneable::None(String::new())),
+        min_length: v!(Noneable::None(String::new())),
+        must_have: v!(Noneable::None(String::new())),
+        may_not_have: v!(Noneable::None(String::new())),
+        must_match_pattern: v!(Noneable::None(String::new())),
+        value_generators: v!(Noneable::None(String::new())),
+    }) // TODO
+}
+/*
 fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> QuestionPart {
     QuestionPart::NumberEntry(None) // TODO
-}
-
+}*/
+/* TODO
 fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
     QuestionPart::Matrix(None) // TODO
-}
-
+}*/
+/*
 fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
     QuestionPart::PatternMatch(None) // TODO
 }
@@ -272,26 +469,24 @@ fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionP
 
 fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPart {
     QuestionPart::Information(None) // TODO
-}
-
+}*/
+/* TODO
 fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
     QuestionPart::Extension(None) // TODO
-}
+}*/
 
-fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
+fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
     match qp {
-        numbas::exam::ExamQuestionPart::JME(p) => extract_jme_part(p),
-        numbas::exam::ExamQuestionPart::NumberEntry(p) => extract_number_entry_part(p),
-        numbas::exam::ExamQuestionPart::Matrix(p) => extract_matrix_part(p),
-        numbas::exam::ExamQuestionPart::PatternMatch(p) => extract_pattern_match_part(p),
-        numbas::exam::ExamQuestionPart::ChooseOne(p) => extract_choose_one_part(p),
-        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => extract_choose_multiple_part(p),
-        numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => {
-            extract_match_answers_with_choices_part(p)
-        }
-        numbas::exam::ExamQuestionPart::GapFill(p) => extract_gapfill_part(p),
-        numbas::exam::ExamQuestionPart::Information(p) => extract_information_part(p),
-        numbas::exam::ExamQuestionPart::Extension(p) => extract_extension_part(p),
+        numbas::exam::ExamQuestionPart::JME(p) => Some(extract_jme_part(p)),
+        numbas::exam::ExamQuestionPart::NumberEntry(p) => None, //extract_number_entry_part(p),
+        numbas::exam::ExamQuestionPart::Matrix(p) => None,      //extract_matrix_part(p),
+        numbas::exam::ExamQuestionPart::PatternMatch(p) => None, //extract_pattern_match_part(p),
+        numbas::exam::ExamQuestionPart::ChooseOne(p) => None,   //extract_choose_one_part(p),
+        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => None, //extract_choose_multiple_part(p),
+        numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
+        numbas::exam::ExamQuestionPart::GapFill(p) => None, //extract_gapfill_part(p),
+        numbas::exam::ExamQuestionPart::Information(p) => None, //extract_information_part(p),
+        numbas::exam::ExamQuestionPart::Extension(p) => None, // extract_extension_part(p),
     }
 }
 
@@ -325,7 +520,13 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),
-                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()), // TODO
+                                parts: v!(q
+                                    .parts
+                                    .iter()
+                                    .map(|p| extract_part(p))
+                                    .filter(|p| p.is_some())
+                                    .map(|p| v!(p.unwrap()))
+                                    .collect()), // TODO remove unwrap (remove option above)
                                 builtin_constants: v!(extract_builtin_constants(
                                     q.builtin_constants
                                 )),

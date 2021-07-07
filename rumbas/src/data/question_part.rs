@@ -88,7 +88,7 @@ impl QuestionPart {
         }
     }
 }
-
+// TODO major refactor: add types that are used to right ones
 macro_rules! question_part_type {
     (
         $(#[$outer:meta])*
@@ -101,8 +101,8 @@ macro_rules! question_part_type {
     )=> {
         optional_overwrite! {
             $(#[$outer])*
-            pub struct $struct {
-                marks: usize,
+            pub struct $struct { // TODO: check which are usefull where (for which part type)
+                marks: numbas::exam::Primitive, // TODO: strict?
                 prompt: TranslatableString,
                 use_custom_name: bool,
                 custom_name: String, //Translatable?
