@@ -14,6 +14,7 @@ const FILE_PREFIX: &'static str = "file:";
 /// Specified by a string starting with [FILE_PREFIX].
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
+#[serde(into = "String")]
 pub struct FileString {
     file_name: Option<String>,
     content: Option<InputString>,
@@ -109,6 +110,17 @@ impl std::convert::From<String> for FileString {
         } else {
             FileString::s(&s)
         }
+    }
+}
+
+// Currently only implemented for conversion from numbas to rumbas: so not with translations or
+// file references
+impl std::convert::From<FileString> for String {
+    fn from(fs: FileString) -> Self {
+        if fs.file_name.is_some() || fs.translated_content.len() > 0 || fs.content.is_none() {
+            panic!("Deserializing FileString only supported when plain InputString")
+        }
+        fs.content.clone().unwrap().into()
     }
 }
 
