@@ -7,6 +7,7 @@ use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
 use rumbas::data::function::Function;
+use rumbas::data::information::QuestionPartInformation;
 use rumbas::data::jme::{
     CheckingType, CheckingTypeDataFloat, CheckingTypeDataNatural, JMEAnswerSimplification,
     JMELengthRestriction, JMEPatternRestriction, JMERestriction, JMEStringRestriction,
@@ -817,6 +818,7 @@ fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultipl
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
+
         answer_data,
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
@@ -839,10 +841,29 @@ fn extract_match_answers_with_choices_part(
 fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPart {
     QuestionPart::GapFill(None) // TODO
 }
-
+*/
 fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPart {
-    QuestionPart::Information(None) // TODO
-}*/
+    QuestionPart::Information(QuestionPartInformation {
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+    }) // TODO
+}
 /* TODO
 fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
     QuestionPart::Extension(None) // TODO
@@ -858,7 +879,7 @@ fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
         numbas::exam::ExamQuestionPart::ChooseMultiple(p) => Some(extract_choose_multiple_part(p)),
         numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
         numbas::exam::ExamQuestionPart::GapFill(p) => None, //extract_gapfill_part(p),
-        numbas::exam::ExamQuestionPart::Information(p) => None, //extract_information_part(p),
+        numbas::exam::ExamQuestionPart::Information(p) => Some(extract_information_part(p)),
         numbas::exam::ExamQuestionPart::Extension(p) => None, // extract_extension_part(p),
     }
 }
