@@ -654,28 +654,60 @@ fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -
 }
 
 fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> QuestionPart {
-    // TODO: prettier if not NumbasLike is needed
-    /*    let answer_options = match qp.answers {
-        numbas::exam::VariableValued::Variable(s) => vec![s], // TODO
-        numbas::exam::VariableValued::Value(v) => v,          //
+    let answer_data = if let (
+        numbas::exam::VariableValued::Value(answer_options),
+        Some(numbas::exam::VariableValued::Value(marking_matrix)),
+    ) = (qp.answers.clone(), qp.marking_matrix.clone())
+    {
+        let answers_data: Vec<_> = match qp.distractors.clone() {
+            None => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .map(|(a, b)| (a, b, "".to_string()))
+                .collect(),
+            Some(d) => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .zip(d.into_iter())
+                .map(|((a, b), c)| (a, b, c))
+                .collect(),
+        };
+        v!(MultipleChoiceAnswerData::ItemBased(
+            answers_data
+                .into_iter()
+                .map(|(a, b, c)| MultipleChoiceAnswer {
+                    statement: v!(ts!(a)),
+                    marks: v!(b),
+                    feedback: v!(ts!(c))
+                })
+                .collect()
+        ))
+    } else {
+        v!(MultipleChoiceAnswerData::NumbasLike(
+            MultipleChoiceAnswerDataNumbasLike {
+                answers: v!(qp
+                    .answers
+                    .clone()
+                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
+                    .to_rumbas()),
+                marks: v!(qp
+                    .marking_matrix
+                    .clone()
+                    .map(|m| m.to_rumbas())
+                    .expect("How can the marking matrix be optional?")),
+                feedback: v!(qp
+                    .distractors
+                    .clone()
+                    .map(|v| Noneable::NotNone(
+                        v.iter()
+                            .map(|f| ts!(f).clone())
+                            .collect::<Vec<_>>()
+                            .to_rumbas()
+                    ))
+                    .unwrap_or(nn()))
+            }
+        ))
     };
-    let marking_matrix = match qp.marking_matrix {
-        None => vec![],
-        Some(numbas::exam::VariableValued::Variable(s)) => vec![s],
-        Some(numbas::exam::VariableValued::Value(v)) => v,
-    };
-    let answers_zip = match qp.distractors {
-        None => answer_options
-            .into_iter()
-            .zip(marking_matrix.into_iter())
-            .map(|(a, b)| (a, b, "".to_string())),
-        Some(d) => answer_options
-            .into_iter()
-            .zip(marking_matrix.into_iter())
-            .zip(d.into_iter())
-            .map(|((a, b), c)| (a, b, c)),
-    }
-    .collect(); */
     QuestionPart::ChooseOne(QuestionPartChooseOne {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
@@ -696,15 +728,56 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
-        answer_data: v!(MultipleChoiceAnswerData::NumbasLike(
+        answer_data,
+        display: v!(match qp.display_type {
+            numbas::exam::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
+                columns: qp.columns.0,
+            },
+            numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
+        }),
+        shuffle_answers: v!(qp.shuffle_answers),
+        show_cell_answer_state: v!(qp.show_cell_answer_state),
+        has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // TODO: default
+    })
+}
+
+fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
+    // TODO: less duplicate code?: Extract following as function
+    let answer_data = if let (
+        numbas::exam::VariableValued::Value(answer_options),
+        Some(numbas::exam::VariableValued::Value(marking_matrix)),
+    ) = (qp.choices.clone(), qp.marking_matrix.clone())
+    {
+        let answers_data: Vec<_> = match qp.distractors.clone() {
+            None => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .map(|(a, b)| (a, b, "".to_string()))
+                .collect(),
+            Some(d) => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .zip(d.into_iter())
+                .map(|((a, b), c)| (a, b, c))
+                .collect(),
+        };
+        v!(MultipleChoiceAnswerData::ItemBased(
+            answers_data
+                .into_iter()
+                .map(|(a, b, c)| MultipleChoiceAnswer {
+                    statement: v!(ts!(a)),
+                    marks: v!(b),
+                    feedback: v!(ts!(c))
+                })
+                .collect()
+        ))
+    } else {
+        v!(MultipleChoiceAnswerData::NumbasLike(
             MultipleChoiceAnswerDataNumbasLike {
                 answers: v!(qp
-                    .answers
+                    .choices
                     .clone()
-                    .map(|v| v
-                        .iter()
-                        .map(|vv| vv.clone().map(|vvv| ts!(vvv.clone())))
-                        .collect::<Vec<_>>())
+                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
                     .to_rumbas()),
                 marks: v!(qp
                     .marking_matrix
@@ -722,21 +795,8 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
                     ))
                     .unwrap_or(nn()))
             }
-        )),
-        display: v!(match qp.display_type {
-            numbas::exam::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
-                columns: qp.columns.0,
-            },
-            numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
-        }),
-        shuffle_answers: v!(qp.shuffle_answers),
-        show_cell_answer_state: v!(qp.show_cell_answer_state),
-        has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // TODO: default
-    })
-}
-
-fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
-    // TODO: prettier if not NumbasLike is needed
+        ))
+    };
     QuestionPart::ChooseMultiple(QuestionPartChooseMultiple {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
@@ -757,33 +817,7 @@ fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultipl
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
-        answer_data: v!(MultipleChoiceAnswerData::NumbasLike(
-            MultipleChoiceAnswerDataNumbasLike {
-                answers: v!(qp
-                    .choices
-                    .clone()
-                    .map(|v| v
-                        .iter()
-                        .map(|vv| vv.clone().map(|vvv| ts!(vvv.clone())))
-                        .collect::<Vec<_>>())
-                    .to_rumbas()),
-                marks: v!(qp
-                    .marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?")),
-                feedback: v!(qp
-                    .distractors
-                    .clone()
-                    .map(|v| Noneable::NotNone(
-                        v.iter()
-                            .map(|f| ts!(f).clone())
-                            .collect::<Vec<_>>()
-                            .to_rumbas()
-                    ))
-                    .unwrap_or(nn()))
-            }
-        )),
+        answer_data,
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
         should_select_at_least: v!(qp.min_answers.unwrap_or(0)),
