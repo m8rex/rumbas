@@ -19,6 +19,7 @@ use rumbas::data::navigation::{
 use rumbas::data::numbas_settings::NumbasSettings;
 use rumbas::data::number_entry::{NumberEntryAnswer, QuestionPartNumberEntry};
 use rumbas::data::optional_overwrite::Noneable;
+use rumbas::data::pattern_match::QuestionPartPatternMatch;
 use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
@@ -611,11 +612,41 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
 fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
     QuestionPart::Matrix(None) // TODO
 }*/
-/*
-fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
-    QuestionPart::PatternMatch(None) // TODO
-}
 
+fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
+    QuestionPart::PatternMatch(QuestionPartPatternMatch {
+        // Default section
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+
+        case_sensitive: v!(qp.case_sensitive),
+        partial_credit: v!(qp.partial_credit),
+        pattern: v!(ts!(qp.answer.to_string())),
+        display_answer: v!(ts!(qp
+            .display_answer
+            .clone()
+            .map(|d| d.to_string())
+            .unwrap_or(qp.answer.to_string()))), // TDDO: check default
+        match_mode: v!(qp.match_mode),
+    })
+}
+/*
 fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> QuestionPart {
     QuestionPart::ChooseOne(None) // TODO
 }
@@ -647,7 +678,7 @@ fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
         numbas::exam::ExamQuestionPart::JME(p) => Some(extract_jme_part(p)),
         numbas::exam::ExamQuestionPart::NumberEntry(p) => Some(extract_number_entry_part(p)),
         numbas::exam::ExamQuestionPart::Matrix(p) => None, //extract_matrix_part(p),
-        numbas::exam::ExamQuestionPart::PatternMatch(p) => None, //extract_pattern_match_part(p),
+        numbas::exam::ExamQuestionPart::PatternMatch(p) => Some(extract_pattern_match_part(p)),
         numbas::exam::ExamQuestionPart::ChooseOne(p) => None, //extract_choose_one_part(p),
         numbas::exam::ExamQuestionPart::ChooseMultiple(p) => None, //extract_choose_multiple_part(p),
         numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
