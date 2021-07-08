@@ -5,6 +5,8 @@ pub mod optional_overwrite;
 #[macro_use]
 pub mod to_numbas;
 #[macro_use]
+pub mod to_rumbas;
+#[macro_use]
 pub mod question_part;
 pub mod default;
 pub mod diagnostic_exam;

@@ -1,5 +1,6 @@
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
@@ -521,6 +522,16 @@ impl<T> VariableValued<T> {
         match self {
             VariableValued::Variable(x) => VariableValued::Variable(x),
             VariableValued::Value(x) => VariableValued::Value(f(x)),
+        }
+    }
+}
+
+impl<T: ToRumbas> ToRumbas for numbas::exam::VariableValued<T> {
+    type RumbasType = VariableValued<T::RumbasType>;
+    fn to_rumbas(&self) -> Self::RumbasType {
+        match self {
+            numbas::exam::VariableValued::Variable(v) => VariableValued::Variable(v.clone()),
+            numbas::exam::VariableValued::Value(v) => VariableValued::Value(v.to_rumbas()),
         }
     }
 }

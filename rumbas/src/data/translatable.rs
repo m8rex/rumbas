@@ -1,6 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::template::{Value, ValueType};
+use crate::data::to_rumbas::ToRumbas;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -20,6 +21,8 @@ pub enum TranslatableString {
     /// A file reference or string
     NotTranslated(Value<FileString>),
 }
+
+impl_to_rumbas!(TranslatableString);
 
 impl EmptyFields for TranslatableString {
     fn empty_fields(&self) -> Vec<String> {

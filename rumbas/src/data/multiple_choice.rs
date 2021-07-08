@@ -10,14 +10,31 @@ use std::convert::Into;
 //TODO: defaults
 question_part_type! {
     pub struct QuestionPartChooseOne {
-        answers: VariableValued<Vec<MultipleChoiceAnswer>>,
+        answer_data: MultipleChoiceAnswerData,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
-        should_select_at_least: usize, // TODO 0 or 1?
+        /// Whether the student has to select an option (if false: can submit without selecting)
+        has_to_select_option: bool,
         /// !FLATTENED: all its attributes should be added to [QuestionPartChooseOne]
         #[serde(flatten)]
         display: ChooseOneDisplay
         //TODO wrong_nb_choices_warning:
+    }
+}
+
+optional_overwrite_enum! {
+    #[serde(untagged)]
+    pub enum MultipleChoiceAnswerData {
+        ItemBased(Vec<MultipleChoiceAnswer>),
+        NumbasLike(MultipleChoiceAnswerDataNumbasLike)
+    }
+}
+
+optional_overwrite! {
+    pub struct MultipleChoiceAnswerDataNumbasLike {
+        answers: VariableValued<Vec<VariableValued<TranslatableString>>>,
+        marks: VariableValued<Vec<VariableValued<numbas::exam::Primitive>>>,
+        feedback: Noneable<Vec<TranslatableString>>
     }
 }
 
@@ -86,49 +103,60 @@ impl ToNumbas for QuestionPartChooseOne {
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
-            let answers = self.answers.unwrap();
-            Ok(numbas::exam::ExamQuestionPartChooseOne {
-                part_data: self.to_numbas_shared_data(&locale),
-                min_answers: Some(self.should_select_at_least.clone().unwrap()),
-                shuffle_answers: self.shuffle_answers.unwrap(),
-                answers: answers
-                    .clone()
-                    .map(|aa| {
-                        aa.iter()
-                            .map(|a| a.statement.clone().unwrap())
-                            .collect::<Vec<_>>()
-                    })
+            let (answers, marking_matrix, distractors) = match self.answer_data.unwrap() {
+                MultipleChoiceAnswerData::ItemBased(answers) => (
+                    VariableValued::Value(
+                        answers
+                            .iter()
+                            .map(|a| VariableValued::Value(a.statement.clone().unwrap()))
+                            .collect::<Vec<_>>(),
+                    )
                     .to_numbas(&locale)
                     .unwrap(),
+                    Some(
+                        VariableValued::Value(
+                            answers
+                                .iter()
+                                .map(|a| VariableValued::Value(a.marks.clone().unwrap()))
+                                .collect::<Vec<_>>(),
+                        )
+                        .to_numbas(&locale)
+                        .unwrap(),
+                    ),
+                    Some(
+                        answers
+                            .iter()
+                            .map(|a| {
+                                a.feedback.clone().unwrap() //TODO
+                            })
+                            .collect::<Vec<_>>()
+                            .to_numbas(&locale)
+                            .unwrap(),
+                    ),
+                ),
+                MultipleChoiceAnswerData::NumbasLike(data) => (
+                    data.answers.to_numbas(&locale).unwrap(),
+                    Some(data.marks.to_numbas(&locale).unwrap()),
+                    data.feedback
+                        .map(|f| f.to_numbas(&locale).unwrap())
+                        .flatten(),
+                ),
+            };
+            Ok(numbas::exam::ExamQuestionPartChooseOne {
+                part_data: self.to_numbas_shared_data(&locale),
+                min_answers: Some(if self.has_to_select_option.unwrap() {
+                    1
+                } else {
+                    0
+                }),
+                shuffle_answers: self.shuffle_answers.unwrap(),
+                answers,
                 display_type: self.display.unwrap().to_numbas_type(),
                 columns: self.display.unwrap().to_nb_columns().into(),
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
-                marking_matrix: Some(
-                    answers
-                        .clone()
-                        .map(|aa| {
-                            MatrixRowPrimitive(
-                                aa.iter().map(|a| a.marks.clone().unwrap()).collect(),
-                            )
-                        })
-                        .to_numbas(&locale)
-                        .unwrap(),
-                ),
-                distractors: Some(
-                    answers
-                        .map(|aa| {
-                            MatrixRow(
-                                aa.iter()
-                                    .map(|a| {
-                                        a.feedback.clone().unwrap() //TODO
-                                    })
-                                    .collect(),
-                            )
-                        })
-                        .to_numbas(&locale)
-                        .unwrap(),
-                ),
+                marking_matrix,
+                distractors,
             })
         } else {
             Err(empty_fields)
@@ -180,7 +208,7 @@ optional_overwrite! {
     pub struct MultipleChoiceAnswer {
         statement: TranslatableString,
         feedback: TranslatableString,
-        marks: numbas::exam::Primitive
+        marks: numbas::exam::Primitive // TODO: variable valued?
     }
 }
 
