@@ -1330,7 +1330,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "choices")]
-    pub answers: VariableValued<Vec<VariableValued<String>>>,
+    pub answers: VariableValued<Vec<String>>,
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayType")]
@@ -1342,7 +1342,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<Vec<VariableValued<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<Vec<Primitive>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     //TODO: type (contains only strings...)
     pub distractors: Option<Vec<String>>,
 }
@@ -1377,9 +1377,9 @@ pub struct ExamQuestionPartChooseMultiple {
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: VariableValued<Vec<VariableValued<String>>>,
+    pub choices: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<Vec<VariableValued<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<Vec<Primitive>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     pub distractors: Option<Vec<String>>,
 }
 

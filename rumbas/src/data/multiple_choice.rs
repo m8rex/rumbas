@@ -32,8 +32,8 @@ optional_overwrite_enum! {
 
 optional_overwrite! {
     pub struct MultipleChoiceAnswerDataNumbasLike {
-        answers: VariableValued<Vec<VariableValued<TranslatableString>>>,
-        marks: VariableValued<Vec<VariableValued<numbas::exam::Primitive>>>,
+        answers: VariableValued<Vec<TranslatableString>>,
+        marks: VariableValued<Vec<numbas::exam::Primitive>>,
         feedback: Noneable<Vec<TranslatableString>>
     }
 }
@@ -108,7 +108,7 @@ impl ToNumbas for QuestionPartChooseOne {
                     VariableValued::Value(
                         answers
                             .iter()
-                            .map(|a| VariableValued::Value(a.statement.clone().unwrap()))
+                            .map(|a| a.statement.clone().unwrap())
                             .collect::<Vec<_>>(),
                     )
                     .to_numbas(&locale)
@@ -117,7 +117,7 @@ impl ToNumbas for QuestionPartChooseOne {
                         VariableValued::Value(
                             answers
                                 .iter()
-                                .map(|a| VariableValued::Value(a.marks.clone().unwrap()))
+                                .map(|a| a.marks.clone().unwrap())
                                 .collect::<Vec<_>>(),
                         )
                         .to_numbas(&locale)
@@ -237,7 +237,7 @@ impl ToNumbas for QuestionPartChooseMultiple {
                     VariableValued::Value(
                         answers
                             .iter()
-                            .map(|a| VariableValued::Value(a.statement.clone().unwrap()))
+                            .map(|a| a.statement.clone().unwrap())
                             .collect::<Vec<_>>(),
                     )
                     .to_numbas(&locale)
@@ -246,7 +246,7 @@ impl ToNumbas for QuestionPartChooseMultiple {
                         VariableValued::Value(
                             answers
                                 .iter()
-                                .map(|a| VariableValued::Value(a.marks.clone().unwrap()))
+                                .map(|a| a.marks.clone().unwrap())
                                 .collect::<Vec<_>>(),
                         )
                         .to_numbas(&locale)
