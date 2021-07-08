@@ -1312,6 +1312,15 @@ pub enum VariableValued<T> {
     Value(T),
 }
 
+impl<T> VariableValued<T> {
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> VariableValued<U> {
+        match self {
+            VariableValued::Variable(x) => VariableValued::Variable(x),
+            VariableValued::Value(x) => VariableValued::Value(f(x)),
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartChooseOne {
@@ -1321,7 +1330,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "choices")]
-    pub answers: VariableValued<Vec<String>>,
+    pub answers: VariableValued<Vec<VariableValued<String>>>,
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayType")]
@@ -1333,9 +1342,9 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<Vec<VariableValued<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     //TODO: type (contains only strings...)
-    pub distractors: Option<VariableValued<MultipleChoiceMatrix>>,
+    pub distractors: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

@@ -14,10 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `value_generators` support in JME
 - Support for diagnostic exams
 - `builtin_constants` and `custom_constants` in question description
+- Support for `NumbasLike` answers field for ChooseOne part
 
 ### Changed
 
 - Numbas version (v6.0)
+- `should_select_at_least` in `QuestionPartChooseOne` is changed to a boolean `has_to_select_option`
 
 ### Removed
 
