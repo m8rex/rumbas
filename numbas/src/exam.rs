@@ -1377,10 +1377,10 @@ pub struct ExamQuestionPartChooseMultiple {
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: VariableValued<Vec<String>>,
+    pub choices: VariableValued<Vec<VariableValued<String>>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    pub distractors: Option<VariableValued<MultipleChoiceMatrix>>,
+    pub marking_matrix: Option<VariableValued<Vec<VariableValued<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub distractors: Option<Vec<String>>,
 }
 
 #[skip_serializing_none]
