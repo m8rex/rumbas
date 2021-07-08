@@ -1124,14 +1124,14 @@ impl JMEValueGenerator {
 pub struct ExamQuestionVariablesTest {
     pub condition: String,
     #[serde(rename = "maxRuns")]
-    pub max_runs: SaveNatural,
+    pub max_runs: SafeNatural,
 }
 
 impl ExamQuestionVariablesTest {
     pub fn new(condition: String, max_runs: usize) -> ExamQuestionVariablesTest {
         ExamQuestionVariablesTest {
             condition,
-            max_runs: SaveNatural(max_runs),
+            max_runs: SafeNatural(max_runs),
         }
     }
 }
@@ -1286,22 +1286,22 @@ pub enum PatternMatchMode {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
-pub struct SaveNatural(pub usize);
+pub struct SafeNatural(pub usize);
 
-impl std::convert::TryFrom<Primitive> for SaveNatural {
+impl std::convert::TryFrom<Primitive> for SafeNatural {
     type Error = String;
     fn try_from(p: Primitive) -> Result<Self, Self::Error> {
         match p {
-            Primitive::Natural(n) => Ok(SaveNatural(n)),
+            Primitive::Natural(n) => Ok(SafeNatural(n)),
             Primitive::Float(_n) => Err("Please use an unsigned integer.".to_string()),
-            Primitive::String(n) => n.parse().map(|n| SaveNatural(n)).map_err(|e| e.to_string()),
+            Primitive::String(n) => n.parse().map(|n| SafeNatural(n)).map_err(|e| e.to_string()),
         }
     }
 }
 
-impl std::convert::From<usize> for SaveNatural {
+impl std::convert::From<usize> for SafeNatural {
     fn from(u: usize) -> Self {
-        SaveNatural(u)
+        SafeNatural(u)
     }
 }
 
@@ -1336,7 +1336,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "displayType")]
     pub display_type: ChooseOneDisplayType, // How to display the response selectors
     #[serde(rename = "displayColumns")]
-    pub columns: SaveNatural, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
+    pub columns: SafeNatural, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
     #[serde(rename = "warningType")]
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
@@ -1364,7 +1364,7 @@ pub struct ExamQuestionPartChooseMultiple {
     #[serde(rename = "minMarks")]
     pub min_marks: Option<usize>, //TODO; what is difference with minimum_marks?
     #[serde(rename = "maxMarks")]
-    pub max_marks: Option<SaveNatural>, // Is there a maximum number of marks the student can get?
+    pub max_marks: Option<SafeNatural>, // Is there a maximum number of marks the student can get?
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
@@ -1372,7 +1372,7 @@ pub struct ExamQuestionPartChooseMultiple {
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayColumns")]
-    pub display_columns: SaveNatural, // How many columns to use to display the choices.
+    pub display_columns: SafeNatural, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
     pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
