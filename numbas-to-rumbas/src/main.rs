@@ -7,6 +7,7 @@ use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
 use rumbas::data::function::Function;
+use rumbas::data::gapfill::QuestionPartGapFill;
 use rumbas::data::information::QuestionPartInformation;
 use rumbas::data::jme::{
     CheckingType, CheckingTypeDataFloat, CheckingTypeDataNatural, JMEAnswerSimplification,
@@ -836,12 +837,41 @@ fn extract_match_answers_with_choices_part(
     qp: &numbas::exam::ExamQuestionPartMatchAnswersWithChoices,
 ) -> QuestionPart {
     QuestionPart::MatchAnswersWithItems(None) // TODO
-}
+}*/
 
 fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPart {
-    QuestionPart::GapFill(None) // TODO
+    QuestionPart::GapFill(QuestionPartGapFill {
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+
+        sort_answers: v!(qp.sort_answers.unwrap_or(false)), // TODO default
+
+        gaps: v!(qp
+            .gaps
+            .iter()
+            .map(|s| extract_part(&s))
+            .filter(|s| s.is_some()) // TODO
+            .map(|s| s.unwrap())
+            .collect()),
+    })
 }
-*/
+
 fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPart {
     QuestionPart::Information(QuestionPartInformation {
         marks: v!(extract_part_common_marks(&qp.part_data)),
@@ -878,7 +908,7 @@ fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
         numbas::exam::ExamQuestionPart::ChooseOne(p) => Some(extract_choose_one_part(p)),
         numbas::exam::ExamQuestionPart::ChooseMultiple(p) => Some(extract_choose_multiple_part(p)),
         numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
-        numbas::exam::ExamQuestionPart::GapFill(p) => None, //extract_gapfill_part(p),
+        numbas::exam::ExamQuestionPart::GapFill(p) => Some(extract_gapfill_part(p)),
         numbas::exam::ExamQuestionPart::Information(p) => Some(extract_information_part(p)),
         numbas::exam::ExamQuestionPart::Extension(p) => None, // extract_extension_part(p),
     }

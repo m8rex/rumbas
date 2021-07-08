@@ -1492,10 +1492,10 @@ impl std::fmt::Display for Primitive {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartGapFill {
     #[serde(flatten)]
-    part_data: ExamQuestionPartSharedData,
+    pub part_data: ExamQuestionPartSharedData,
     #[serde(rename = "sortAnswers")]
-    sort_answers: Option<bool>,
-    gaps: Vec<ExamQuestionPart>,
+    pub sort_answers: Option<bool>,
+    pub gaps: Vec<ExamQuestionPart>,
 }
 
 impl ExamQuestionPartGapFill {
