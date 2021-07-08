@@ -1021,11 +1021,11 @@ pub enum JMECheckingType {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMERestriction {
-    name: String,
-    strings: Vec<String>,
+    pub name: String,
+    pub strings: Vec<String>,
     #[serde(rename = "partialCredit")]
-    partial_credit: f64, //TODO: maybe usize?
-    message: String,
+    pub partial_credit: f64, //TODO: maybe usize?
+    pub message: String,
 }
 
 impl JMERestriction {
@@ -1048,8 +1048,8 @@ impl JMERestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
-    restriction: JMERestriction,
-    length: Option<usize>,
+    pub restriction: JMERestriction,
+    pub length: Option<usize>,
 }
 
 impl JMELengthRestriction {
@@ -1065,9 +1065,9 @@ impl JMELengthRestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEStringRestriction {
     #[serde(flatten)]
-    restriction: JMERestriction,
+    pub restriction: JMERestriction,
     #[serde(rename = "showStrings")]
-    show_strings: bool,
+    pub show_strings: bool,
 }
 
 impl JMEStringRestriction {
@@ -1083,11 +1083,11 @@ impl JMEStringRestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEPatternRestriction {
     #[serde(rename = "partialCredit")]
-    partial_credit: f64, //TODO: maybe usize?
-    message: String,
-    pattern: String, //TODO type?
+    pub partial_credit: f64, //TODO: maybe usize?
+    pub message: String,
+    pub pattern: String, //TODO type?
     #[serde(rename = "nameToCompare")]
-    name_to_compare: String,
+    pub name_to_compare: String,
 }
 
 impl JMEPatternRestriction {
@@ -1109,8 +1109,8 @@ impl JMEPatternRestriction {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEValueGenerator {
-    name: String,
-    value: String,
+    pub name: String,
+    pub value: String,
 }
 
 impl JMEValueGenerator {
