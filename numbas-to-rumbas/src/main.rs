@@ -732,13 +732,70 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
         has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // TODO: default
-    }) // TODO
-}
-/*
-fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
-    QuestionPart::ChooseMultiple(None) // TODO
+    })
 }
 
+fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
+    // TODO: prettier if not NumbasLike is needed
+    QuestionPart::ChooseMultiple(QuestionPartChooseMultiple {
+        // Default section
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+        answer_data: v!(MultipleChoiceAnswerData::NumbasLike(
+            MultipleChoiceAnswerDataNumbasLike {
+                answers: v!(qp
+                    .choices
+                    .clone()
+                    .map(|v| v
+                        .iter()
+                        .map(|vv| vv.clone().map(|vvv| ts!(vvv.clone())))
+                        .collect::<Vec<_>>())
+                    .to_rumbas()),
+                marks: v!(qp
+                    .marking_matrix
+                    .clone()
+                    .map(|m| m.to_rumbas())
+                    .expect("How can the marking matrix be optional?")),
+                feedback: v!(qp
+                    .distractors
+                    .clone()
+                    .map(|v| Noneable::NotNone(
+                        v.iter()
+                            .map(|f| ts!(f).clone())
+                            .collect::<Vec<_>>()
+                            .to_rumbas()
+                    ))
+                    .unwrap_or(nn()))
+            }
+        )),
+        shuffle_answers: v!(qp.shuffle_answers),
+        show_cell_answer_state: v!(qp.show_cell_answer_state),
+        should_select_at_least: v!(qp.min_answers.unwrap_or(0)),
+        should_select_at_most: v!(qp
+            .max_answers
+            .map(|ma| Noneable::NotNone(ma))
+            .unwrap_or(nn())),
+        columns: v!(qp.display_columns.0),
+    })
+}
+
+/*
 fn extract_match_answers_with_choices_part(
     qp: &numbas::exam::ExamQuestionPartMatchAnswersWithChoices,
 ) -> QuestionPart {
@@ -764,7 +821,7 @@ fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
         numbas::exam::ExamQuestionPart::Matrix(p) => None, //extract_matrix_part(p),
         numbas::exam::ExamQuestionPart::PatternMatch(p) => Some(extract_pattern_match_part(p)),
         numbas::exam::ExamQuestionPart::ChooseOne(p) => Some(extract_choose_one_part(p)),
-        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => None, //extract_choose_multiple_part(p),
+        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => Some(extract_choose_multiple_part(p)),
         numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
         numbas::exam::ExamQuestionPart::GapFill(p) => None, //extract_gapfill_part(p),
         numbas::exam::ExamQuestionPart::Information(p) => None, //extract_information_part(p),
