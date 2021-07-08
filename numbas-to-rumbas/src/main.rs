@@ -9,7 +9,8 @@ use rumbas::data::file_reference::FileString;
 use rumbas::data::function::Function;
 use rumbas::data::jme::{
     CheckingType, CheckingTypeDataFloat, CheckingTypeDataNatural, JMEAnswerSimplification,
-    QuestionPartJME,
+    JMELengthRestriction, JMEPatternRestriction, JMERestriction, JMEStringRestriction,
+    JMEValueGenerator, QuestionPartJME,
 };
 use rumbas::data::locale::{Locale, SupportedLocale};
 use rumbas::data::navigation::{
@@ -43,6 +44,10 @@ macro_rules! ts {
     ($s: expr) => {
         TranslatableString::NotTranslated(v!(FileString::s(&$s)))
     };
+}
+
+fn nn<T>() -> Noneable<T> {
+    Noneable::None("none".to_string())
 }
 
 fn main() {
@@ -150,7 +155,7 @@ fn extract_timing(exam: &NExam) -> Timing {
             .basic_settings
             .duration_in_seconds
             .map(|s| Noneable::NotNone(s))
-            .unwrap_or(Noneable::None(String::new()))),
+            .unwrap_or(nn())),
         allow_pause: v!(exam.timing.allow_pause),
         on_timeout: v!(extract_timeout_action(&exam.timing.timeout)),
         timed_warning: v!(extract_timeout_action(&exam.timing.timed_warning)),
@@ -164,7 +169,7 @@ fn extract_feedback(exam: &NExam) -> Feedback {
             .basic_settings
             .percentage_needed_to_pass
             .map(|p| Noneable::NotNone(p))
-            .unwrap_or(Noneable::None(String::new()))),
+            .unwrap_or(nn())),
         show_name_of_student: v!(exam.basic_settings.show_student_name.unwrap_or(true)),
         show_current_marks: v!(exam.feedback.show_actual_mark),
         show_maximum_marks: v!(exam.feedback.show_total_mark),
@@ -441,6 +446,45 @@ fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> V
         .collect()
 }
 
+fn extract_restriction(r: &numbas::exam::JMERestriction) -> JMERestriction {
+    JMERestriction {
+        name: v!(ts!(r.name)),
+        strings: v!(r.strings.clone().into_iter().map(|s| ts!(s)).collect()),
+        partial_credit: v!(r.partial_credit),
+        message: v!(ts!(r.message)),
+    }
+}
+
+fn extract_length_restriction(r: &numbas::exam::JMELengthRestriction) -> JMELengthRestriction {
+    JMELengthRestriction {
+        restriction: v!(extract_restriction(&r.restriction)),
+        length: v!(r.length.unwrap_or(0)), // TODO?
+    }
+}
+
+fn extract_string_restriction(r: &numbas::exam::JMEStringRestriction) -> JMEStringRestriction {
+    JMEStringRestriction {
+        restriction: v!(extract_restriction(&r.restriction)),
+        show_strings: v!(r.show_strings),
+    }
+}
+
+fn extract_pattern_restriction(r: &numbas::exam::JMEPatternRestriction) -> JMEPatternRestriction {
+    JMEPatternRestriction {
+        partial_credit: v!(r.partial_credit),
+        message: v!(ts!(r.message.clone())),
+        pattern: v!(r.pattern.clone()),
+        name_to_compare: v!(r.name_to_compare.clone()),
+    }
+}
+
+fn extract_value_generator(g: &numbas::exam::JMEValueGenerator) -> JMEValueGenerator {
+    JMEValueGenerator {
+        name: v!(FileString::s(&g.name)),
+        value: v!(FileString::s(&g.value)),
+    }
+}
+
 fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
     QuestionPart::JME(QuestionPartJME {
         // Default section
@@ -474,14 +518,37 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
         allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // TODO numbas default
         implicit_function_composition: v!(qp.implicit_function_composition.unwrap_or(false)), // TODO: numbas default
 
-        // TODO all below
-        max_length: v!(Noneable::None(String::new())),
-        min_length: v!(Noneable::None(String::new())),
-        must_have: v!(Noneable::None(String::new())),
-        may_not_have: v!(Noneable::None(String::new())),
-        must_match_pattern: v!(Noneable::None(String::new())),
-        value_generators: v!(Noneable::None(String::new())),
-    }) // TODO
+        max_length: v!(qp
+            .max_length
+            .clone()
+            .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
+            .unwrap_or(nn())),
+        min_length: v!(qp
+            .min_length
+            .clone()
+            .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
+            .unwrap_or(nn())),
+        must_have: v!(qp
+            .must_have
+            .clone()
+            .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
+            .unwrap_or(nn())),
+        may_not_have: v!(qp
+            .may_not_have
+            .clone()
+            .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
+            .unwrap_or(nn())),
+        must_match_pattern: v!(qp
+            .must_match_pattern
+            .clone()
+            .map(|r| Noneable::NotNone(extract_pattern_restriction(&r)))
+            .unwrap_or(nn())),
+        value_generators: v!(qp
+            .value_generators
+            .clone()
+            .map(|v| Noneable::NotNone(v.iter().map(|g| extract_value_generator(&g)).collect()))
+            .unwrap_or(nn())),
+    })
 }
 /*
 fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> QuestionPart {
