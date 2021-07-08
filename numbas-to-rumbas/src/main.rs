@@ -377,44 +377,91 @@ fn extract_checking_type(ct: &numbas::exam::JMECheckingType) -> CheckingType {
     })
 }
 
+fn extract_part_common_marks(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> numbas::exam::Primitive {
+    pd.marks
+        .clone()
+        .unwrap_or(numbas::exam::Primitive::Natural(0)) // TODO
+}
+
+fn extract_part_common_prompt(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
+    pd.prompt.clone().unwrap_or(String::new()) //TODO
+}
+
+fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
+    pd.use_custom_name.unwrap_or(false) // TODO
+}
+fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
+    pd.custom_name.clone().unwrap_or(String::new()) // TODO
+}
+fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
+    pd.steps_penalty.unwrap_or(0) // TODO
+}
+fn extract_part_common_enable_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
+    pd.enable_minimum_marks.unwrap_or(false) // TODO
+}
+fn extract_part_common_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
+    pd.minimum_marks.unwrap_or(0) // TODO
+}
+fn extract_part_common_show_correct_answer(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
+    pd.show_correct_answer // TODO
+}
+fn extract_part_common_show_feedback_icon(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
+    pd.show_feedback_icon.unwrap_or(false) // TODO
+}
+fn extract_part_common_variable_replacement_strategy(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> VariableReplacementStrategy {
+    VariableReplacementStrategy::OriginalFirst // TODO
+}
+fn extract_part_common_adaptive_marking_penalty(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> usize {
+    pd.adaptive_marking_penalty.unwrap_or(0) // TODO
+}
+fn extract_part_common_custom_marking_algorithm(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> String {
+    pd.custom_marking_algorithm.clone().unwrap_or(String::new()) // TODO
+}
+fn extract_part_common_extend_base_marking_algorithm(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> bool {
+    pd.extend_base_marking_algorithm.unwrap_or(false) // TODO
+}
+fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> Vec<QuestionPart> {
+    pd.steps
+        .clone()
+        .unwrap_or(vec![])
+        .into_iter()
+        .map(|s| extract_part(&s))
+        .filter(|s| s.is_some()) // TODO
+        .map(|s| s.unwrap())
+        .collect()
+}
+
 fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
     QuestionPart::JME(QuestionPartJME {
         // Default section
-        marks: v!(qp
-            .part_data
-            .marks
-            .clone()
-            .unwrap_or(numbas::exam::Primitive::Natural(0))), // TODO
-        prompt: v!(ts!(qp.part_data.prompt.clone().unwrap_or(String::new()))), // TODO
-        use_custom_name: v!(qp.part_data.use_custom_name.unwrap_or(false)),    // TODO default
-        custom_name: v!(qp.part_data.custom_name.clone().unwrap_or(String::new())), // TODO
-        steps_penalty: v!(qp.part_data.steps_penalty.unwrap_or(0)),            // TODO
-        enable_minimum_marks: v!(qp.part_data.enable_minimum_marks.unwrap_or(false)), // TODO: default
-        minimum_marks: v!(qp.part_data.minimum_marks.unwrap_or(0)),                   // TODO
-        show_correct_answer: v!(qp.part_data.show_correct_answer),
-        show_feedback_icon: v!(qp.part_data.show_feedback_icon.unwrap_or(false)),
-        variable_replacement_strategy: v!(VariableReplacementStrategy::OriginalFirst), // TODO
-        adaptive_marking_penalty: v!(qp.part_data.adaptive_marking_penalty.unwrap_or(0)), // TODO
-        custom_marking_algorithm: v!(qp
-            .part_data
-            .custom_marking_algorithm
-            .clone()
-            .unwrap_or(String::new())), // TODO? empty string -> none?, from file?
-        extend_base_marking_algorithm: v!(qp
-            .part_data
-            .extend_base_marking_algorithm
-            .unwrap_or(false)), // TODO numbas default
-        steps: v!(qp
-            .part_data
-            .steps
-            .clone()
-            .unwrap_or(vec![])
-            .into_iter()
-            .map(|s| extract_part(&s))
-            .filter(|s| s.is_some())
-            .map(|s| s.unwrap())
-            .collect()), // TODO
-
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
         answer: v!(ts!(qp.answer)),
         answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
         show_preview: v!(qp.show_preview),
