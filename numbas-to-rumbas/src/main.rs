@@ -17,6 +17,7 @@ use rumbas::data::navigation::{
     DiagnosticNavigation, LeaveAction, NavigationSharedData, QuestionNavigation,
 };
 use rumbas::data::numbas_settings::NumbasSettings;
+use rumbas::data::number_entry::{NumberEntryAnswer, QuestionPartNumberEntry};
 use rumbas::data::optional_overwrite::Noneable;
 use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
@@ -506,6 +507,7 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
+
         answer: v!(ts!(qp.answer)),
         answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
         show_preview: v!(qp.show_preview),
@@ -550,10 +552,61 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
             .unwrap_or(nn())),
     })
 }
-/*
+
+fn extract_number_entry_answer(a: &numbas::exam::NumberEntryAnswerType) -> NumberEntryAnswer {
+    match a {
+        numbas::exam::NumberEntryAnswerType::MinMax {
+            min_value,
+            max_value,
+        } => NumberEntryAnswer::Range {
+            from: FileString::s(&min_value.to_string()),
+            to: FileString::s(&max_value.to_string()),
+        },
+        numbas::exam::NumberEntryAnswerType::Answer { answer } => {
+            NumberEntryAnswer::Normal(FileString::s(&answer.to_string()))
+        }
+    }
+}
+
 fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> QuestionPart {
-    QuestionPart::NumberEntry(None) // TODO
-}*/
+    QuestionPart::NumberEntry(QuestionPartNumberEntry {
+        // Default section
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+
+        answer: v!(extract_number_entry_answer(&qp.answer)),
+        display_correct_as_fraction: v!(qp.correct_answer_fraction),
+        allow_fractions: v!(qp.allow_fractions),
+        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or(vec![])),
+        display_correct_in_style: v!(qp
+            .correct_answer_style
+            .clone()
+            .unwrap_or(numbas::exam::AnswerStyle::Plain)), // TODO default
+
+        fractions_must_be_reduced: v!(qp.fractions_must_be_reduced.unwrap_or(true)), // TODO: default
+        partial_credit_if_fraction_not_reduced: v!(qp
+            .partial_credit_if_fraction_not_reduced
+            .clone()
+            .unwrap_or(numbas::exam::Primitive::Natural(0))), // TODO: default
+        hint_fraction: v!(qp.show_fraction_hint.unwrap_or(true)), // TODO: default
+    })
+}
 /* TODO
 fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
     QuestionPart::Matrix(None) // TODO
@@ -592,10 +645,10 @@ fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
 fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
     match qp {
         numbas::exam::ExamQuestionPart::JME(p) => Some(extract_jme_part(p)),
-        numbas::exam::ExamQuestionPart::NumberEntry(p) => None, //extract_number_entry_part(p),
-        numbas::exam::ExamQuestionPart::Matrix(p) => None,      //extract_matrix_part(p),
+        numbas::exam::ExamQuestionPart::NumberEntry(p) => Some(extract_number_entry_part(p)),
+        numbas::exam::ExamQuestionPart::Matrix(p) => None, //extract_matrix_part(p),
         numbas::exam::ExamQuestionPart::PatternMatch(p) => None, //extract_pattern_match_part(p),
-        numbas::exam::ExamQuestionPart::ChooseOne(p) => None,   //extract_choose_one_part(p),
+        numbas::exam::ExamQuestionPart::ChooseOne(p) => None, //extract_choose_one_part(p),
         numbas::exam::ExamQuestionPart::ChooseMultiple(p) => None, //extract_choose_multiple_part(p),
         numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => None, //extract_match_answers_with_choices_part(p)
         numbas::exam::ExamQuestionPart::GapFill(p) => None, //extract_gapfill_part(p),

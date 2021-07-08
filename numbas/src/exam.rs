@@ -1469,6 +1469,16 @@ impl std::convert::From<String> for Primitive {
     }
 }
 
+impl std::fmt::Display for Primitive {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Primitive::String(s) => write!(f, "{}", s),
+            Primitive::Natural(n) => write!(f, "{}", n),
+            Primitive::Float(fl) => write!(f, "{}", fl),
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartGapFill {

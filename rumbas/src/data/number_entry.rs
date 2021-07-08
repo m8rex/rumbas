@@ -15,7 +15,7 @@ question_part_type! {
 
         display_correct_in_style: numbas::exam::AnswerStyle,
         fractions_must_be_reduced: bool,
-        partial_credit_if_fraction_not_reduced: f64,
+        partial_credit_if_fraction_not_reduced: numbas::exam::Primitive,
 
         hint_fraction: bool
 
@@ -37,9 +37,9 @@ impl ToNumbas for QuestionPartNumberEntry {
                 allow_fractions: self.allow_fractions.unwrap(),
                 notation_styles: Some(self.allowed_notation_styles.clone().unwrap()),
                 fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
-                partial_credit_if_fraction_not_reduced: Some(numbas::exam::Primitive::Float(
+                partial_credit_if_fraction_not_reduced: Some(
                     self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
-                )),
+                ),
                 precision: None,           //TODO
                 show_precision_hint: None, //TODO
                 show_fraction_hint: Some(self.hint_fraction.clone().unwrap()),
