@@ -1,5 +1,5 @@
 use crate::data::input_string::InputString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
@@ -21,12 +21,12 @@ pub struct FileString {
     translated_content: HashMap<String, InputString>,
     error_message: Option<String>,
 }
-impl EmptyFields for FileString {
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for FileString {
+    fn check(&self) -> RumbasCheckResult {
         if let Some(e) = &self.error_message {
-            vec![e.clone()]
+            RumbasCheckResult::from_missing(Some(e.clone()))
         } else {
-            Vec::new()
+            RumbasCheckResult::empty()
         }
     }
 }

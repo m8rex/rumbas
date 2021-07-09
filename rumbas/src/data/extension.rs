@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
@@ -16,8 +16,8 @@ optional_overwrite! {
 impl ToNumbas for Extensions {
     type NumbasType = Vec<String>;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Vec<String>> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let mut extensions = Vec::new();
             if self.jsx_graph.unwrap() {
                 extensions.push("jsx_graph".to_string());
@@ -27,7 +27,7 @@ impl ToNumbas for Extensions {
             }
             Ok(extensions)
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

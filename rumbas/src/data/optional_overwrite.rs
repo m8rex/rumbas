@@ -5,11 +5,123 @@ use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
 
-pub trait EmptyFields {
-    fn empty_fields(&self) -> Vec<String>;
+#[derive(Debug, Clone, PartialEq)]
+pub struct RumbasCheckPath {
+    parts: Vec<String>,
+    last_part: Option<String>,
 }
 
-pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + EmptyFields {
+impl RumbasCheckPath {
+    pub fn with_last(os: Option<String>) -> Self {
+        RumbasCheckPath {
+            parts: vec![],
+            last_part: os,
+        }
+    }
+    pub fn without_last() -> Self {
+        Self::with_last(None)
+    }
+    pub fn add(&mut self, s: String) {
+        self.parts.insert(0, s)
+    }
+    pub fn to_string(&self) -> String {
+        let base = self.parts.join(".");
+        if let Some(ref e) = self.last_part {
+            format!("{}.{}", base, e)
+        } else {
+            base
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RumbasCheckMissingData {
+    path: RumbasCheckPath,
+}
+
+impl RumbasCheckMissingData {
+    pub fn to_string(&self) -> String {
+        self.path.to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RumbasCheckInvalidData {
+    path: RumbasCheckPath,
+    data: serde_yaml::Value,
+}
+
+impl RumbasCheckInvalidData {
+    pub fn to_string(&self) -> String {
+        let p = self.path.to_string();
+        if let Ok(s) = serde_yaml::to_string(&self.data) {
+            format!("{}\n With yaml:\n{}", p, s)
+        } else {
+            format!("{}", p)
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RumbasCheckResult {
+    // When adding a field, do also add it to is_empty
+    missing_values: Vec<RumbasCheckMissingData>,
+    invalid_values: Vec<RumbasCheckInvalidData>,
+}
+
+impl RumbasCheckResult {
+    pub fn from_missing(os: Option<String>) -> RumbasCheckResult {
+        RumbasCheckResult {
+            missing_values: vec![RumbasCheckMissingData {
+                path: RumbasCheckPath::with_last(os),
+            }],
+            invalid_values: vec![],
+        }
+    }
+    pub fn from_invalid(v: &serde_yaml::Value) -> RumbasCheckResult {
+        RumbasCheckResult {
+            missing_values: vec![],
+            invalid_values: vec![RumbasCheckInvalidData {
+                path: RumbasCheckPath::without_last(),
+                data: v.clone(),
+            }],
+        }
+    }
+    pub fn empty() -> RumbasCheckResult {
+        RumbasCheckResult {
+            missing_values: vec![],
+            invalid_values: vec![],
+        }
+    }
+    pub fn is_empty(&self) -> bool {
+        self.missing_values.len() == 0 && self.invalid_values.len() == 0
+    }
+    pub fn extend_path(&mut self, s: String) {
+        for missing_value in self.missing_values.iter_mut() {
+            missing_value.path.add(s.clone());
+        }
+        for invalid_value in self.invalid_values.iter_mut() {
+            invalid_value.path.add(s.clone());
+        }
+    }
+    pub fn union(&mut self, other: &Self) {
+        self.missing_values.extend(other.missing_values.clone());
+        self.invalid_values.extend(other.invalid_values.clone());
+    }
+    pub fn missing_fields(&self) -> Vec<RumbasCheckMissingData> {
+        self.missing_values.clone()
+    }
+    pub fn invalid_fields(&self) -> Vec<RumbasCheckInvalidData> {
+        self.invalid_values.clone()
+    }
+}
+
+pub trait RumbasCheck {
+    /// Check the read rumbas data
+    fn check(&self) -> RumbasCheckResult;
+}
+
+pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + RumbasCheck {
     fn overwrite(&mut self, other: &Item);
     fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value);
 }
@@ -26,20 +138,19 @@ pub enum Noneable<T> {
 macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-        impl$(< $($gen: EmptyFields ),* >)? EmptyFields for Value<$type> {
-            fn empty_fields(&self) -> Vec<String> {
+        impl$(< $($gen: RumbasCheck ),* >)? RumbasCheck for Value<$type> {
+            fn check(&self) -> RumbasCheckResult {
                 match &self.0 {
                     Some(ValueType::Normal(val)) => {
-                        val.empty_fields()
+                        val.check()
                     },
                     Some(ValueType::Template(ts)) => {
-                        vec![ts.yaml()]
+                        RumbasCheckResult::from_missing(Some(ts.yaml()))
                     },
-                    Some(ValueType::Invalid(_v)) => { // TODO: report
-                        vec!["(invalid)".to_string()]
+                    Some(ValueType::Invalid(v)) => { // TODO: report
+                        RumbasCheckResult::from_invalid(v)
                     },
-                    None => {
-                        vec!["".to_string()]
+                        None => { RumbasCheckResult::from_missing(None)
                     }
                 }
             }
@@ -73,13 +184,13 @@ macro_rules! impl_optional_overwrite_value {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
         impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
-        impl$(< $($gen: EmptyFields ),* >)? EmptyFields for Noneable<$type> {
-            fn empty_fields(&self) -> Vec<String> {
+        impl$(< $($gen: RumbasCheck ),* >)? RumbasCheck for Noneable<$type> {
+            fn check(&self) -> RumbasCheckResult {
                 if let Noneable::NotNone(val) = &self {
-                    return val.empty_fields()
+                    val.check()
                 }
                 else {
-                    return vec![]
+                    RumbasCheckResult::empty()
                 }
             }
         }
@@ -104,16 +215,15 @@ macro_rules! impl_optional_overwrite_value {
     };
 }
 
-impl<O: EmptyFields> EmptyFields for Vec<O> {
-    fn empty_fields(&self) -> Vec<String> {
-        let mut empty = Vec::new();
+impl<O: RumbasCheck> RumbasCheck for Vec<O> {
+    fn check(&self) -> RumbasCheckResult {
+        let mut result = RumbasCheckResult::empty();
         for (i, item) in self.iter().enumerate() {
-            let extra_empty = item.empty_fields();
-            for extra in extra_empty.iter() {
-                empty.push(format!("{}.{}", i, extra));
-            }
+            let mut previous_result = item.check();
+            previous_result.extend_path(i.to_string());
+            result.union(&previous_result)
         }
-        empty
+        result
     }
 }
 impl<O: OptionalOverwrite<O>> OptionalOverwrite<Vec<O>> for Vec<O> {
@@ -129,9 +239,9 @@ impl_optional_overwrite_value!(Vec<U>[U]);
 macro_rules! impl_optional_overwrite {
     ($($type: ty), *) => {
         $(
-        impl EmptyFields for $type {
-            fn empty_fields(&self) -> Vec<String> {
-                Vec::new()
+        impl RumbasCheck for $type {
+            fn check(&self) -> RumbasCheckResult {
+                RumbasCheckResult::empty()
             }
         }
         impl OptionalOverwrite<$type> for $type {
@@ -144,17 +254,16 @@ macro_rules! impl_optional_overwrite {
 }
 impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 
-impl<T: EmptyFields> EmptyFields for HashMap<String, T> {
-    fn empty_fields(&self) -> Vec<String> {
-        let mut empty = Vec::new();
+impl<T: RumbasCheck> RumbasCheck for HashMap<String, T> {
+    fn check(&self) -> RumbasCheckResult {
+        let mut result = RumbasCheckResult::empty();
         // Key is not displayable, so show an index, just to differentiate
         for (i, (_key, item)) in self.iter().enumerate() {
-            let extra_empty = item.empty_fields();
-            for extra in extra_empty.iter() {
-                empty.push(format!("{}.{}", i, extra));
-            }
+            let mut previous_result = item.check();
+            previous_result.extend_path(i.to_string());
+            result.union(&previous_result)
         }
-        empty
+        result
     }
 }
 impl<T: OptionalOverwrite<T>> OptionalOverwrite<HashMap<String, T>> for HashMap<String, T> {
@@ -190,21 +299,17 @@ macro_rules! optional_overwrite {
                 pub $field: Value<$type>
             ),*
         }
-        impl EmptyFields for $struct {
-            fn empty_fields(&self) -> Vec<String> {
-                let mut empty = Vec::new();
+        impl RumbasCheck for $struct {
+            fn check(&self) -> RumbasCheckResult {
+                let mut result = RumbasCheckResult::empty();
                 $(
-                    let extra_empty = &self.$field.empty_fields();
-                    if extra_empty.len() == 1 && extra_empty[0] == "" {
-                        empty.push(stringify!($field).to_string());
-                    }
-                    else {
-                        for extra in extra_empty.iter() {
-                            empty.push(format!("{}.{}", stringify!($field), extra));
-                        }
+                    {
+                    let mut previous_result = self.$field.check();
+                    previous_result.extend_path(stringify!($field).to_string());
+                    result.union(&previous_result);
                     }
                 )*
-                empty
+                result
             }
         }
         impl OptionalOverwrite<$struct> for $struct {
@@ -252,11 +357,11 @@ macro_rules! optional_overwrite_enum {
                 $field($type)
             ),*
         }
-        impl EmptyFields for $enum {
-            fn empty_fields(&self) -> Vec<String> {
+        impl RumbasCheck for $enum {
+            fn check(&self) -> RumbasCheckResult {
                 match self {
                 $(
-                    $enum::$field(val) => val.empty_fields()
+                    $enum::$field(val) => val.check() // TODO: stringify field or something? (to better show what failed)
                 ),*
                 }
             }
@@ -302,26 +407,26 @@ mod test {
     }
     //TODO: template
     #[test]
-    fn empty_fields_simple_structs() {
+    fn check_simple_structs() {
         let t = Temp {
             name: Value::Normal("test".to_string()),
             test: Value::None(),
         };
-        assert_eq!(t.empty_fields(), vec!["test"]);
+        assert_eq!(t.check(), vec!["test"]);
         let t = Temp {
             name: Value::Normal("test2".to_string()),
             test: Value::Normal("name".to_string()),
         };
-        assert_eq!(t.empty_fields().len(), 0);
+        assert_eq!(t.check().len(), 0);
         let t = Temp {
             name: Value::None(),
             test: Value::None(),
         };
-        assert_eq!(t.empty_fields(), vec!["name", "test"]);
+        assert_eq!(t.check(), vec!["name", "test"]);
     }
 
     #[test]
-    fn empty_fields_complex_structs() {
+    fn check_complex_structs() {
         let t = Temp2 {
             other: Value::Normal("val".to_string()),
             t: Value::Normal(Temp {
@@ -329,7 +434,7 @@ mod test {
                 test: Value::Normal("name".to_string()),
             }),
         };
-        assert_eq!(t.empty_fields().len(), 0);
+        assert_eq!(t.check().len(), 0);
         let t = Temp2 {
             other: Value::None(),
             t: Value::Normal(Temp {
@@ -337,12 +442,12 @@ mod test {
                 test: Value::Normal("name".to_string()),
             }),
         };
-        assert_eq!(t.empty_fields(), vec!["other", "t.name"]);
+        assert_eq!(t.check(), vec!["other", "t.name"]);
         let t = Temp2 {
             other: Value::None(),
             t: Value::None(),
         };
-        assert_eq!(t.empty_fields(), vec!["other", "t"]);
+        assert_eq!(t.check(), vec!["other", "t"]);
         let t = Temp2 {
             other: Value::None(),
             t: Value::Normal(Temp {
@@ -350,7 +455,7 @@ mod test {
                 test: Value::None(),
             }),
         };
-        assert_eq!(t.empty_fields(), vec!["other", "t.name", "t.test"]);
+        assert_eq!(t.check(), vec!["other", "t.name", "t.test"]);
     }
 
     #[test]
@@ -415,7 +520,7 @@ mod test {
     }
 
     #[test]
-    fn empty_fields_vec_of_simple_structs() {
+    fn check_vec_of_simple_structs() {
         let t1 = Temp {
             name: Value::Normal("test".to_string()),
             test: Value::None(),
@@ -429,11 +534,11 @@ mod test {
             test: Value::None(),
         };
         let v = vec![t1, t2, t3];
-        assert_eq!(v.empty_fields(), vec!["0.test", "2.name", "2.test"]);
+        assert_eq!(v.check(), vec!["0.test", "2.name", "2.test"]);
     }
 
     #[test]
-    fn empty_fields_vec_ofcomplex_structs() {
+    fn check_vec_ofcomplex_structs() {
         let t1 = Temp2 {
             other: Value::Normal("val".to_string()),
             t: Value::Normal(Temp {
@@ -461,7 +566,7 @@ mod test {
         };
         let v = vec![t1, t2, t3, t4];
         assert_eq!(
-            v.empty_fields(),
+            v.check(),
             vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
         );
     }
@@ -474,11 +579,11 @@ pub enum VariableValued<T> {
     Value(T),
 }
 
-impl<T: EmptyFields> EmptyFields for VariableValued<T> {
-    fn empty_fields(&self) -> Vec<String> {
+impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
+    fn check(&self) -> RumbasCheckResult {
         match self {
-            VariableValued::Variable(s) => s.empty_fields(),
-            VariableValued::Value(v) => v.empty_fields(),
+            VariableValued::Variable(s) => s.check(),
+            VariableValued::Value(v) => v.check(),
         }
     }
 }
@@ -505,11 +610,11 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValue
 }
 impl_optional_overwrite_value!(VariableValued<T>[T]);
 
-impl<T: ToNumbas + EmptyFields> ToNumbas for VariableValued<T> {
+impl<T: ToNumbas + RumbasCheck> ToNumbas for VariableValued<T> {
     type NumbasType = numbas::exam::VariableValued<T::NumbasType>;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(match self {
                 VariableValued::Variable(v) => numbas::exam::VariableValued::Variable(v.clone()),
                 VariableValued::Value(v) => {
@@ -517,7 +622,7 @@ impl<T: ToNumbas + EmptyFields> ToNumbas for VariableValued<T> {
                 }
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

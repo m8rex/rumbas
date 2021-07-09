@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -102,8 +102,8 @@ optional_overwrite! {
 impl ToNumbas for NormalNavigation {
     type NumbasType = numbas::exam::ExamNavigation;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamNavigation> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
                 self.to_shared_data().can_regenerate.unwrap(),
                 self.to_navigation_mode(),
@@ -124,7 +124,7 @@ impl ToNumbas for NormalNavigation {
                     .map(|s| s.get_content(&locale)),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -142,8 +142,8 @@ optional_overwrite! {
 impl ToNumbas for DiagnosticNavigation {
     type NumbasType = numbas::exam::ExamNavigation;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamNavigation> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
                 self.shared_data.clone().unwrap().can_regenerate.unwrap(),
                 numbas::exam::ExamNavigationMode::Diagnostic,
@@ -174,7 +174,7 @@ impl ToNumbas for DiagnosticNavigation {
                     .map(|s| s.get_content(&locale)),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -241,15 +241,15 @@ optional_overwrite! {
 impl ToNumbas for QuestionNavigation {
     type NumbasType = numbas::exam::QuestionNavigation;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::QuestionNavigation> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::QuestionNavigation::new(
                 self.can_regenerate.unwrap(),
                 self.show_title_page.unwrap(),
                 Some(self.prevent_leaving.clone().unwrap()),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

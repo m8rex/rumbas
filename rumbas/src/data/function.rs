@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use serde::{Deserialize, Serialize};
@@ -17,8 +17,8 @@ impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFunction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamFunction::new(
                 self.parameters
                     .clone()
@@ -31,7 +31,7 @@ impl ToNumbas for Function {
                 self.language.clone().unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

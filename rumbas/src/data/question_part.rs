@@ -5,7 +5,7 @@ use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::number_entry::QuestionPartNumberEntry;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};

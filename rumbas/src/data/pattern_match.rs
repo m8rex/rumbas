@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -19,8 +19,8 @@ impl_optional_overwrite!(numbas::exam::PatternMatchMode);
 impl ToNumbas for QuestionPartPatternMatch {
     type NumbasType = numbas::exam::ExamQuestionPartPatternMatch;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
                 part_data: self.to_numbas_shared_data(&locale),
                 case_sensitive: self.case_sensitive.unwrap(),
@@ -38,7 +38,7 @@ impl ToNumbas for QuestionPartPatternMatch {
                 match_mode: self.match_mode.unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -26,8 +26,8 @@ optional_overwrite! {
 impl ToNumbas for Feedback {
     type NumbasType = numbas::exam::ExamFeedback;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFeedback> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamFeedback::new(
                 self.show_current_marks.unwrap(),
                 self.show_maximum_marks.unwrap(),
@@ -44,7 +44,7 @@ impl ToNumbas for Feedback {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -65,8 +65,8 @@ optional_overwrite! {
 impl ToNumbas for Review {
     type NumbasType = numbas::exam::ExamReview;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamReview> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamReview::new(
                 Some(self.show_score.clone().unwrap()),
                 Some(self.show_feedback.clone().unwrap()),
@@ -74,7 +74,7 @@ impl ToNumbas for Review {
                 Some(self.show_advice.clone().unwrap()),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

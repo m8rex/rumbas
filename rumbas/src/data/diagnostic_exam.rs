@@ -3,7 +3,7 @@ use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
 use crate::data::navigation::DiagnosticNavigation;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_group::QuestionGroup;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
@@ -37,8 +37,8 @@ optional_overwrite! {
 impl ToNumbas for DiagnosticExam {
     type NumbasType = numbas::exam::Exam;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
                 self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
                 self.timing
@@ -139,7 +139,7 @@ impl ToNumbas for DiagnosticExam {
                 diagnostic,
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -155,15 +155,15 @@ impl_optional_overwrite!(DiagnosticScript);
 impl ToNumbas for DiagnosticScript {
     type NumbasType = numbas::exam::ExamDiagnosticScript;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(match self {
                 DiagnosticScript::Mastery => Self::NumbasType::Mastery,
                 DiagnosticScript::Custom(_) => Self::NumbasType::Custom,
                 DiagnosticScript::Diagnosys => Self::NumbasType::Diagnosys,
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -193,8 +193,8 @@ optional_overwrite! {
 impl ToNumbas for Diagnostic {
     type NumbasType = numbas::exam::ExamDiagnostic;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let knowledge_graph = numbas::exam::ExamDiagnosticKnowledgeGraph {
                 topics: self
                     .topics
@@ -218,7 +218,7 @@ impl ToNumbas for Diagnostic {
                 custom_script: self.script.clone().unwrap().to_custom_script(&locale),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -236,8 +236,8 @@ optional_overwrite! {
 impl ToNumbas for LearningObjective {
     type NumbasType = numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
                 name: self.name.clone().unwrap().to_string(&locale).unwrap(),
                 description: self
@@ -248,7 +248,7 @@ impl ToNumbas for LearningObjective {
                     .unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -270,8 +270,8 @@ optional_overwrite! {
 impl ToNumbas for LearningTopic {
     type NumbasType = numbas::exam::ExamDiagnosticKnowledgeGraphTopic;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
                 name: self.name.clone().unwrap().to_string(&locale).unwrap(),
                 description: self
@@ -296,7 +296,7 @@ impl ToNumbas for LearningTopic {
                     .collect(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
