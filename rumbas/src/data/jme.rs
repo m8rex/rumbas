@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -31,8 +31,8 @@ question_part_type! {
 impl ToNumbas for QuestionPartJME {
     type NumbasType = numbas::exam::ExamQuestionPartJME;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamQuestionPartJME::new(
                 self.to_numbas_shared_data(&locale),
                 self.answer.clone().unwrap().to_string(&locale).unwrap(),
@@ -82,7 +82,7 @@ impl ToNumbas for QuestionPartJME {
                     .flatten(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -123,8 +123,8 @@ impl ToNumbas for JMEAnswerSimplification {
         &self,
         _locale: &String,
     ) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let mut v = Vec::new();
             if self.simplify_basic.unwrap() {
                 v.push(numbas::exam::AnswerSimplificationType::Basic(true));
@@ -199,7 +199,7 @@ impl ToNumbas for JMEAnswerSimplification {
             }
             Ok(v)
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -214,13 +214,13 @@ impl ToNumbas for CheckingTypeDataFloat {
     type NumbasType = numbas::exam::JMECheckingTypeData<f64>;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         // TODO: check empty?
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
                 checking_accuracy: self.checking_accuracy.unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -235,13 +235,13 @@ impl ToNumbas for CheckingTypeDataNatural {
     type NumbasType = numbas::exam::JMECheckingTypeData<usize>;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         // TODO: check empty?
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
                 checking_accuracy: self.checking_accuracy.unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -260,8 +260,8 @@ impl_optional_overwrite!(CheckingType);
 impl ToNumbas for CheckingType {
     type NumbasType = numbas::exam::JMECheckingType;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(match self {
                 CheckingType::RelativeDifference(f) => {
                     numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(&locale).unwrap())
@@ -277,7 +277,7 @@ impl ToNumbas for CheckingType {
                 }
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -294,8 +294,8 @@ optional_overwrite! {
 impl ToNumbas for JMERestriction {
     type NumbasType = numbas::exam::JMERestriction;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMERestriction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMERestriction::new(
                 self.name.clone().unwrap().to_string(&locale).unwrap(),
                 self.strings
@@ -308,7 +308,7 @@ impl ToNumbas for JMERestriction {
                 self.message.clone().unwrap().to_string(&locale).unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -324,8 +324,8 @@ optional_overwrite! {
 impl ToNumbas for JMELengthRestriction {
     type NumbasType = numbas::exam::JMELengthRestriction;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMELengthRestriction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMELengthRestriction::new(
                 self.restriction
                     .clone()
@@ -335,7 +335,7 @@ impl ToNumbas for JMELengthRestriction {
                 Some(self.length.clone().unwrap()),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -351,8 +351,8 @@ optional_overwrite! {
 impl ToNumbas for JMEStringRestriction {
     type NumbasType = numbas::exam::JMEStringRestriction;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEStringRestriction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMEStringRestriction::new(
                 self.restriction
                     .clone()
@@ -362,7 +362,7 @@ impl ToNumbas for JMEStringRestriction {
                 self.show_strings.clone().unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -379,8 +379,8 @@ optional_overwrite! {
 impl ToNumbas for JMEPatternRestriction {
     type NumbasType = numbas::exam::JMEPatternRestriction;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMEPatternRestriction::new(
                 self.partial_credit.clone().unwrap(),
                 self.message.clone().unwrap().to_string(&locale).unwrap(),
@@ -388,7 +388,7 @@ impl ToNumbas for JMEPatternRestriction {
                 self.name_to_compare.clone().unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -403,14 +403,14 @@ optional_overwrite! {
 impl ToNumbas for JMEValueGenerator {
     type NumbasType = numbas::exam::JMEValueGenerator;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEValueGenerator> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::JMEValueGenerator::new(
                 self.name.clone().unwrap().get_content(&locale),
                 self.value.clone().unwrap().get_content(&locale),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::data::extension::Extensions;
 use crate::data::function::Function;
 use crate::data::navigation::QuestionNavigation;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
 use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};
@@ -40,9 +40,10 @@ impl ToNumbas for Question {
     type NumbasType = numbas::exam::ExamQuestion;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         //TODO?
-        Err(vec![
+        panic!(
+            "{}",
             "Should not happen, don't call this method Missing name".to_string(),
-        ])
+        )
     }
     //TODO: add to_numbas on Option's to reduce burden?
     fn to_numbas_with_name(
@@ -50,8 +51,8 @@ impl ToNumbas for Question {
         locale: &String,
         name: String,
     ) -> NumbasResult<numbas::exam::ExamQuestion> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             if self.variables.unwrap().contains_key("e") {
                 panic!("e is not allowed as a variable name"); //TODO
             }
@@ -123,7 +124,7 @@ impl ToNumbas for Question {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -174,14 +175,14 @@ optional_overwrite! {
 impl ToNumbas for VariablesTest {
     type NumbasType = numbas::exam::ExamQuestionVariablesTest;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamQuestionVariablesTest::new(
                 self.condition.clone().unwrap(),
                 self.max_runs.clone().unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -201,8 +202,8 @@ optional_overwrite! {
 impl ToNumbas for BuiltinConstants {
     type NumbasType = std::collections::HashMap<String, bool>;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let mut builtin = std::collections::HashMap::new();
             // TODO: use macro to make sure that this list always remains up to date
             builtin.insert("e".to_string(), self.e.unwrap());
@@ -210,7 +211,7 @@ impl ToNumbas for BuiltinConstants {
             builtin.insert("i".to_string(), self.i.unwrap());
             Ok(builtin)
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -230,15 +231,15 @@ optional_overwrite! {
 impl ToNumbas for CustomConstant {
     type NumbasType = numbas::exam::ExamQuestionConstant;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
                 name: self.name.clone().unwrap(),
                 value: self.value.clone().unwrap(),
                 tex: self.tex.clone().unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

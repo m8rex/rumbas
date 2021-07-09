@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::translatable::TranslatableString;
@@ -18,8 +18,8 @@ optional_overwrite! {
 impl ToNumbas for Timing {
     type NumbasType = numbas::exam::ExamTiming;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamTiming> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamTiming::new(
                 self.allow_pause.unwrap(),
                 self.on_timeout.clone().unwrap().to_numbas(&locale).unwrap(),
@@ -30,7 +30,7 @@ impl ToNumbas for Timing {
                     .unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

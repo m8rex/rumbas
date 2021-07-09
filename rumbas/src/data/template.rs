@@ -1,6 +1,6 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::normal_exam::NormalExam;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -46,12 +46,12 @@ pub struct TemplateString {
     pub key: Option<String>,
     pub error_message: Option<String>,
 }
-impl EmptyFields for TemplateString {
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for TemplateString {
+    fn check(&self) -> RumbasCheckResult {
         if let Some(e) = &self.error_message {
-            vec![e.clone()]
+            RumbasCheckResult::from_missing(Some(e.clone())) // TODO: seperate missing files? (also see FileString)
         } else {
-            Vec::new()
+            RumbasCheckResult::empty()
         }
     }
 }

@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -18,8 +18,8 @@ optional_overwrite! {
 impl ToNumbas for Variable {
     type NumbasType = numbas::exam::ExamVariable;
     fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamVariable::new(
                 name,
                 self.definition.clone().unwrap().get_content(&locale),
@@ -32,14 +32,15 @@ impl ToNumbas for Variable {
                 self.group.clone().unwrap(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
         //TODO?
-        Err(vec![
+        panic!(
+            "{}",
             "Should not happen, don't call this method Missing name".to_string(),
-        ])
+        )
     }
 }
 
@@ -98,14 +99,14 @@ pub enum VariableRepresentation {
     Other(Value<VariableStringRepresentation>),
 }
 
-impl EmptyFields for VariableRepresentation {
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for VariableRepresentation {
+    fn check(&self) -> RumbasCheckResult {
         match self {
-            VariableRepresentation::ListOfStrings(_) => Vec::new(),
-            VariableRepresentation::ListOfNumbers(_) => Vec::new(),
-            VariableRepresentation::Long(v) => v.empty_fields(),
-            VariableRepresentation::Number(_) => Vec::new(),
-            VariableRepresentation::Other(_) => Vec::new(),
+            VariableRepresentation::ListOfStrings(_) => RumbasCheckResult::empty(),
+            VariableRepresentation::ListOfNumbers(_) => RumbasCheckResult::empty(),
+            VariableRepresentation::Long(v) => v.check(),
+            VariableRepresentation::Number(_) => RumbasCheckResult::empty(),
+            VariableRepresentation::Other(_) => RumbasCheckResult::empty(),
         }
     }
 }

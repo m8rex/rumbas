@@ -13,7 +13,7 @@ use crate::data::navigation::{
 use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::number_entry::QuestionPartNumberEntry;
-use crate::data::optional_overwrite::{EmptyFields, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
 use crate::data::question_part::QuestionPart;
@@ -251,7 +251,7 @@ macro_rules! handle {
     let default_files = default_files(path);
     //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
-        if !exam.empty_fields().is_empty() {
+        if !exam.check().is_empty() {
             println!("Reading {}", default_file.get_path().display()); //TODO: debug
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite

@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -28,8 +28,8 @@ impl_optional_overwrite!(numbas::exam::AnswerStyle);
 impl ToNumbas for QuestionPartNumberEntry {
     type NumbasType = numbas::exam::ExamQuestionPartNumberEntry;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
                 part_data: self.to_numbas_shared_data(&locale),
                 correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
@@ -47,7 +47,7 @@ impl ToNumbas for QuestionPartNumberEntry {
                 // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

@@ -1,5 +1,5 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_rumbas::ToRumbas;
 use serde::Deserialize;
@@ -24,17 +24,17 @@ pub enum TranslatableString {
 
 impl_to_rumbas!(TranslatableString);
 
-impl EmptyFields for TranslatableString {
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for TranslatableString {
+    fn check(&self) -> RumbasCheckResult {
         match self {
             TranslatableString::Translated(m) => {
-                let mut empty = Vec::new();
+                let mut empty = RumbasCheckResult::empty();
                 for (_, v) in m.iter() {
-                    empty.extend(v.empty_fields().iter().cloned());
+                    empty.union(&v.check());
                 }
                 empty
             }
-            TranslatableString::NotTranslated(f) => f.empty_fields(),
+            TranslatableString::NotTranslated(f) => f.check(),
         }
     }
 }

@@ -1,5 +1,5 @@
 use crate::data::optional_overwrite::VariableValued;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -46,11 +46,11 @@ impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it need
 impl ToNumbas for MatrixRowPrimitive {
     type NumbasType = numbas::exam::MultipleChoiceMatrix;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::MultipleChoiceMatrix::Row(self.0.clone()))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -62,8 +62,8 @@ impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 impl ToNumbas for MatrixRow {
     type NumbasType = numbas::exam::MultipleChoiceMatrix;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::MultipleChoiceMatrix::Row(
                 self.0
                     .to_numbas(locale)
@@ -73,7 +73,7 @@ impl ToNumbas for MatrixRow {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -85,8 +85,8 @@ impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs t
 impl ToNumbas for MatrixPrimitive {
     type NumbasType = numbas::exam::MultipleChoiceMatrix;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::MultipleChoiceMatrix::Matrix(
                 self.0
                     .clone()
@@ -95,15 +95,15 @@ impl ToNumbas for MatrixPrimitive {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
 impl ToNumbas for QuestionPartChooseOne {
     type NumbasType = numbas::exam::ExamQuestionPartChooseOne;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let (answers, marking_matrix, distractors) = match self.answer_data.unwrap() {
                 MultipleChoiceAnswerData::ItemBased(answers) => (
                     VariableValued::Value(
@@ -160,7 +160,7 @@ impl ToNumbas for QuestionPartChooseOne {
                 distractors,
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -230,8 +230,8 @@ question_part_type! {
 impl ToNumbas for QuestionPartChooseMultiple {
     type NumbasType = numbas::exam::ExamQuestionPartChooseMultiple;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             // TODO: below is duplicated in CHooseOne
             let (choices, marking_matrix, distractors) = match self.answer_data.unwrap() {
                 MultipleChoiceAnswerData::ItemBased(answers) => (
@@ -293,7 +293,7 @@ impl ToNumbas for QuestionPartChooseMultiple {
                 distractors,
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -352,8 +352,8 @@ impl ToNumbas for TranslatableString {
 impl ToNumbas for QuestionPartMatchAnswersWithItems {
     type NumbasType = numbas::exam::ExamQuestionPartMatchAnswersWithChoices;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let (answers, choices, marking_matrix) = match self.answer_data.unwrap() {
                 MultipleChoiceMatchAnswerData::ItemBased(data) => (
                     VariableValued::Value(data.answers.clone())
@@ -427,7 +427,7 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
                 display_type: self.display.unwrap().to_numbas(&locale).unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

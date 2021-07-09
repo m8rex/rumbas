@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -18,8 +18,8 @@ question_part_type! {
 impl ToNumbas for QuestionPartGapFill {
     type NumbasType = numbas::exam::ExamQuestionPartGapFill;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamQuestionPartGapFill::new(
                 self.to_numbas_shared_data(&locale),
                 Some(self.sort_answers.clone().unwrap()),
@@ -31,7 +31,7 @@ impl ToNumbas for QuestionPartGapFill {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

@@ -3,7 +3,7 @@ use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
 use crate::data::navigation::NormalNavigation;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_group::QuestionGroup;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
@@ -35,8 +35,8 @@ optional_overwrite! {
 impl ToNumbas for NormalExam {
     type NumbasType = numbas::exam::Exam;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
                 self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
                 self.timing
@@ -131,7 +131,7 @@ impl ToNumbas for NormalExam {
                 None,
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }

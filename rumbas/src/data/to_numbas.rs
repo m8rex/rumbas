@@ -1,7 +1,7 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 
-pub type NumbasResult<T> = Result<T, Vec<String>>;
+pub type NumbasResult<T> = Result<T, RumbasCheckResult>;
 
 pub trait ToNumbas: Clone {
     type NumbasType;
@@ -15,35 +15,35 @@ pub trait ToNumbas: Clone {
     }
 }
 
-impl<T: ToNumbas + EmptyFields> ToNumbas for Value<T> {
+impl<T: ToNumbas + RumbasCheck> ToNumbas for Value<T> {
     type NumbasType = <T as ToNumbas>::NumbasType;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match &self.0 {
             Some(ValueType::Normal(val)) => {
-                let empty_fields = val.empty_fields();
-                if empty_fields.is_empty() {
+                let check = val.check();
+                if check.is_empty() {
                     Ok(val.to_numbas(&locale).unwrap())
                 } else {
-                    Err(empty_fields)
+                    Err(check)
                 }
             }
-            Some(ValueType::Template(ts)) => Err(vec![ts.yaml()]),
-            Some(ValueType::Invalid(_v)) => Err(vec!["".to_string()]), // TODO: use v?
-            None => Err(vec!["".to_string()]),
+            Some(ValueType::Template(ts)) => Err(RumbasCheckResult::from_missing(Some(ts.yaml()))),
+            Some(ValueType::Invalid(v)) => Err(RumbasCheckResult::from_invalid(&v)),
+            None => Err(RumbasCheckResult::from_missing(None)),
         }
     }
 }
 
-impl<T: ToNumbas + EmptyFields> ToNumbas for Noneable<T> {
+impl<T: ToNumbas + RumbasCheck> ToNumbas for Noneable<T> {
     type NumbasType = Option<<T as ToNumbas>::NumbasType>;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         match self {
             Noneable::NotNone(val) => {
-                let empty_fields = val.empty_fields();
-                if empty_fields.is_empty() {
+                let check = val.check();
+                if check.is_empty() {
                     Ok(Some(val.clone().to_numbas(&locale).unwrap()))
                 } else {
-                    Err(empty_fields)
+                    Err(check)
                 }
             }
             _ => Ok(None),

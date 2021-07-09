@@ -117,11 +117,24 @@ fn main() {
                                 eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
                             }
                         }
-                        Err(missing_fields) => {
+                        Err(check_result) => {
+                            let missing_fields = check_result.missing_fields();
+                            let invalid_fields = check_result.invalid_fields();
                             println!(
-                                "Missing fields ({}):\n{}",
+                                "Error when processing locale {}.\nFound {} missing fields:\n{}\nFound {} invalid fields:\n{}",
                                 locale,
-                                missing_fields.join("\n")
+                                missing_fields.len(),
+                                missing_fields
+                                    .iter()
+                                    .map(|f| f.to_string())
+                                    .collect::<Vec<_>>()
+                                    .join("\n"),
+                                invalid_fields.len(),
+                                invalid_fields
+                                    .iter()
+                                    .map(|f| f.to_string())
+                                    .collect::<Vec<_>>()
+                                    .join("\n")
                             );
                         }
                     }

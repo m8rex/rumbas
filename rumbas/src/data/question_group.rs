@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -21,8 +21,8 @@ optional_overwrite! {
 impl ToNumbas for QuestionGroup {
     type NumbasType = numbas::exam::ExamQuestionGroup;
     fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(numbas::exam::ExamQuestionGroup::new(
                 self.name.clone().map(|s| s.to_string(&locale)).flatten(),
                 self.picking_strategy
@@ -38,7 +38,7 @@ impl ToNumbas for QuestionGroup {
                     .collect(),
             ))
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
@@ -103,8 +103,8 @@ impl std::convert::TryFrom<String> for QuestionPath {
 impl ToNumbas for QuestionPath {
     type NumbasType = numbas::exam::ExamQuestion;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+        let check = self.check();
+        if check.is_empty() {
             Ok(self
                 .question_data
                 .clone()
@@ -112,7 +112,7 @@ impl ToNumbas for QuestionPath {
                 .to_numbas_with_name(&locale, self.question_name.clone().unwrap())
                 .unwrap())
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
 }
