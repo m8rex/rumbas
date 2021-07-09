@@ -3,6 +3,7 @@ use crate::data::optional_overwrite::{EmptyFields, Noneable, OptionalOverwrite};
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -314,13 +315,12 @@ optional_overwrite! {
 
 question_part_type! {
     pub struct QuestionPartMatchAnswersWithItems {
-        answers: VariableValued<Vec<Value<TranslatableString>>>,  // Values of the answers
-        items: VariableValued<Vec<Value<MatchAnswersItem>>>, // Items for which the answer can be selected
+        answer_data: MultipleChoiceMatchAnswerData,
         shuffle_answers: bool,
         shuffle_items: bool,
         show_cell_answer_state: bool,
         should_select_at_least: usize,
-        should_select_at_most: usize,
+        should_select_at_most: Noneable<usize>,
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
@@ -354,65 +354,77 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         let empty_fields = self.empty_fields();
         if empty_fields.is_empty() {
-            let answers = self.answers.unwrap();
-            let items = self.items.unwrap();
+            let (answers, choices, marking_matrix) = match self.answer_data.unwrap() {
+                MultipleChoiceMatchAnswerData::ItemBased(data) => (
+                    VariableValued::Value(data.answers.clone())
+                        .to_numbas(&locale)
+                        .unwrap(),
+                    VariableValued::Value(
+                        data.items
+                            .clone()
+                            .map(|v| {
+                                v.iter()
+                                    .map(|a| a.clone().unwrap().statement.clone())
+                                    .collect::<Vec<_>>()
+                            })
+                            .unwrap(),
+                    )
+                    .to_numbas(&locale)
+                    .unwrap(),
+                    Some(
+                        VariableValued::Value(
+                            data.items // TODO: better handling
+                                .clone()
+                                .unwrap(),
+                        )
+                        .map(|v| {
+                            v.iter()
+                                .map(|i| {
+                                    data.answers
+                                        .clone()
+                                        .unwrap()
+                                        .iter()
+                                        .map(|a| {
+                                            i.unwrap()
+                                                .answer_marks
+                                                .unwrap()
+                                                .iter()
+                                                .find(|am| am.answer.unwrap() == a.unwrap())
+                                                .map_or_else(|| 0usize.into(), |v| v.marks.unwrap())
+                                        })
+                                        .collect::<Vec<_>>()
+                                })
+                                .collect::<Vec<_>>()
+                        })
+                        .to_numbas(&locale)
+                        .unwrap(),
+                    ),
+                ),
+                MultipleChoiceMatchAnswerData::NumbasLike(data) => (
+                    data.answers.to_numbas(&locale).unwrap(),
+                    data.choices.to_numbas(&locale).unwrap(),
+                    Some(data.marks.to_numbas(&locale).unwrap()),
+                ),
+            };
             Ok(numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
                 part_data: self.to_numbas_shared_data(&locale),
                 min_answers: Some(self.should_select_at_least.clone().unwrap()),
-                max_answers: Some(self.should_select_at_most.clone().unwrap()),
+                max_answers: self
+                    .should_select_at_most
+                    .clone()
+                    .map(|s| s.to_numbas(&locale).unwrap())
+                    .flatten(),
                 min_marks: Some(0),
                 max_marks: Some(0),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 shuffle_choices: self.shuffle_items.unwrap(),
-                answers: answers.clone().to_numbas(&locale).unwrap(),
-                choices: items
-                    .clone()
-                    .map(|v| {
-                        v.iter()
-                            .map(|a| a.clone().unwrap().statement.clone())
-                            .collect::<Vec<_>>()
-                    })
-                    .to_numbas(&locale)
-                    .unwrap(),
+                answers,
+                choices,
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
                 layout: self.layout.clone().unwrap(),
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
-                marking_matrix: Some(
-                    items // TODO: better handling
-                        .clone()
-                        .map(|v| {
-                            {
-                                MatrixPrimitive(
-                                    v.iter()
-                                        .map(|i| {
-                                            answers.clone().map(|aa| {
-                                                aa.iter()
-                                                    .map(|a| {
-                                                        i.unwrap()
-                                                            .answer_marks
-                                                            .unwrap()
-                                                            .iter()
-                                                            .find(|am| {
-                                                                am.answer.unwrap() == a.unwrap()
-                                                            })
-                                                            .map_or_else(
-                                                                || 0usize.into(),
-                                                                |v| v.marks.unwrap(),
-                                                            )
-                                                    })
-                                                    .collect()
-                                            })
-                                        })
-                                        .collect(),
-                                )
-                            }
-                            .to_numbas(&locale)
-                            .unwrap()
-                        })
-                        .to_numbas(&locale)
-                        .unwrap(),
-                ),
-                display_type: self.display.unwrap().to_numbas_type(),
+                marking_matrix,
+                display_type: self.display.unwrap().to_numbas(&locale).unwrap(),
             })
         } else {
             Err(empty_fields)
@@ -430,15 +442,55 @@ pub enum MatchAnswerWithItemsDisplay {
 }
 impl_optional_overwrite!(MatchAnswerWithItemsDisplay);
 
-impl MatchAnswerWithItemsDisplay {
-    pub fn to_numbas_type(&self) -> numbas::exam::MatchAnswersWithChoicesDisplayType {
-        match self {
+impl ToNumbas for MatchAnswerWithItemsDisplay {
+    type NumbasType = numbas::exam::MatchAnswersWithChoicesDisplayType;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(match self {
             MatchAnswerWithItemsDisplay::Check => {
                 numbas::exam::MatchAnswersWithChoicesDisplayType::Check
             }
             MatchAnswerWithItemsDisplay::Radio => {
                 numbas::exam::MatchAnswersWithChoicesDisplayType::Radio
             }
+        })
+    }
+}
+
+impl ToRumbas for numbas::exam::MatchAnswersWithChoicesDisplayType {
+    type RumbasType = MatchAnswerWithItemsDisplay;
+    fn to_rumbas(&self) -> Self::RumbasType {
+        match self {
+            numbas::exam::MatchAnswersWithChoicesDisplayType::Check => {
+                MatchAnswerWithItemsDisplay::Check
+            }
+            numbas::exam::MatchAnswersWithChoicesDisplayType::Radio => {
+                MatchAnswerWithItemsDisplay::Radio
+            }
         }
+    }
+}
+
+optional_overwrite_enum! {
+    #[serde(untagged)]
+    pub enum MultipleChoiceMatchAnswerData {
+        ItemBased(MultipleChoiceMatchAnswers),
+        NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike)
+    }
+}
+
+optional_overwrite! {
+    pub struct MultipleChoiceMatchAnswerDataNumbasLike {
+        answers: VariableValued<Vec<TranslatableString>>,
+        choices: VariableValued<Vec<TranslatableString>>,
+        marks: VariableValued<Vec<Vec<numbas::exam::Primitive>>>
+    }
+}
+
+optional_overwrite! {
+    pub struct MultipleChoiceMatchAnswers {
+        /// Values of the answers
+        answers: Vec<Value<TranslatableString>>,
+        /// Items for which the answer can be selected
+        items: Vec<Value<MatchAnswersItem>>
     }
 }

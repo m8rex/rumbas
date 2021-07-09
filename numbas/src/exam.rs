@@ -1413,7 +1413,7 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     pub choices: VariableValued<Vec<String>>,
     pub answers: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<MultipleChoiceMatrix>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<Vec<Vec<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1443,6 +1443,7 @@ pub struct MatchAnswersWithChoicesLayout {
     expression: String,
 }
 
+/* TODO: remove */
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceMatrix {
