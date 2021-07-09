@@ -90,7 +90,7 @@ impl std::convert::TryFrom<String> for QuestionPath {
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let question_data = Question::from_name(&s).map_err(|e| {
-            println!("{}", e);
+            println!("Reading question {}", e);
             e
         })?;
         Ok(QuestionPath {
