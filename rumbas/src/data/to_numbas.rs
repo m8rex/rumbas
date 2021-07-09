@@ -28,6 +28,7 @@ impl<T: ToNumbas + EmptyFields> ToNumbas for Value<T> {
                 }
             }
             Some(ValueType::Template(ts)) => Err(vec![ts.yaml()]),
+            Some(ValueType::Invalid(_v)) => Err(vec!["".to_string()]), // TODO: use v?
             None => Err(vec!["".to_string()]),
         }
     }

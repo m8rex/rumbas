@@ -17,9 +17,9 @@ use std::collections::HashMap;
 pub enum TranslatableString {
     //TODO: custom reader that checks for missing values etc?
     /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-    Translated(Value<HashMap<String, Value<TranslatableString>>>),
+    Translated(HashMap<String, Value<TranslatableString>>),
     /// A file reference or string
-    NotTranslated(Value<FileString>),
+    NotTranslated(FileString),
 }
 
 impl_to_rumbas!(TranslatableString);
@@ -27,16 +27,10 @@ impl_to_rumbas!(TranslatableString);
 impl EmptyFields for TranslatableString {
     fn empty_fields(&self) -> Vec<String> {
         match self {
-            TranslatableString::Translated(m_value) => {
+            TranslatableString::Translated(m) => {
                 let mut empty = Vec::new();
-                match &m_value.0 {
-                    Some(ValueType::Normal(m)) => {
-                        for (_, v) in m.iter() {
-                            empty.extend(v.empty_fields().iter().cloned());
-                        }
-                    }
-                    Some(ValueType::Template(ts)) => empty.push(ts.yaml()),
-                    None => empty.push("".to_string()),
+                for (_, v) in m.iter() {
+                    empty.extend(v.empty_fields().iter().cloned());
                 }
                 empty
             }
@@ -62,24 +56,16 @@ impl TranslatableString {
     pub fn to_string(&self, locale: &String) -> Option<String> {
         match self {
             //TODO: just use unwrap on values?
-            TranslatableString::NotTranslated(Value(None)) => {
-                panic!("Should not happen: Missing value.")
-            }
-            TranslatableString::NotTranslated(Value(Some(ValueType::Normal(s)))) => {
-                Some(s.get_content(&locale))
-            }
-            TranslatableString::NotTranslated(Value(Some(ValueType::Template(ts)))) => {
-                panic!("Should not happen: Missing value for {}.", ts.yaml())
-            }
+            TranslatableString::NotTranslated(s) => Some(s.get_content(&locale)),
             TranslatableString::Translated(m_value) => {
-                let m = m_value.unwrap();
+                let m = m_value.clone();
                 m.get(locale)
                     .or(m.get("content")) //TODO
                     .map(|t_value| {
                         let t = t_value.unwrap();
                         match t {
                             TranslatableString::NotTranslated(s) => {
-                                substitute(&s.unwrap().get_content(&locale), &locale, &m)
+                                substitute(&s.get_content(&locale), &locale, &m)
                             }
                             _ => t.to_string(&locale),
                         }

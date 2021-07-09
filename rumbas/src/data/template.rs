@@ -26,6 +26,12 @@ pub enum ExamFileType {
     Diagnostic(DiagnosticExam),
 }
 
+impl ExamFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
@@ -93,6 +99,7 @@ impl std::convert::TryFrom<String> for TemplateString {
 pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
+    Invalid(serde_yaml::Value),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -134,6 +141,10 @@ impl<T: std::clone::Clone> ValueType<T> {
             ValueType::Template(ts) => {
                 panic!("missing value for template key {}", ts.clone().key.unwrap())
             }
+            ValueType::Invalid(v) => match serde_yaml::to_string(v) {
+                Ok(s) => panic!("invalid yaml in part {}", s),
+                _ => panic!("invalid yaml"),
+            },
         }
     }
 }
@@ -151,6 +162,10 @@ impl<T: std::clone::Clone> ValueType<T> {
         match self {
             ValueType::Normal(val) => Some(f(val)),
             ValueType::Template(ts) => panic!("missing value for template key {}", ts.key.unwrap()),
+            ValueType::Invalid(v) => match serde_yaml::to_string(&v) {
+                Ok(s) => panic!("invalid yaml in part {}", s),
+                _ => panic!("invalid yaml"),
+            },
         }
     }
 }

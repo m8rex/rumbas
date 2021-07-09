@@ -28,14 +28,19 @@ macro_rules! impl_optional_overwrite_value_only {
         $(
         impl$(< $($gen: EmptyFields ),* >)? EmptyFields for Value<$type> {
             fn empty_fields(&self) -> Vec<String> {
-                if let Some(ValueType::Normal(val)) = &self.0 {
-                    val.empty_fields()
-                }
-                else if let Some(ValueType::Template(ts)) = &self.0 {
-                    vec![ts.yaml()]
-                }
-                else {
-                    vec!["".to_string()]
+                match &self.0 {
+                    Some(ValueType::Normal(val)) => {
+                        val.empty_fields()
+                    },
+                    Some(ValueType::Template(ts)) => {
+                        vec![ts.yaml()]
+                    },
+                    Some(ValueType::Invalid(_v)) => { // TODO: report
+                        vec!["(invalid)".to_string()]
+                    },
+                    None => {
+                        vec!["".to_string()]
+                    }
                 }
             }
         }

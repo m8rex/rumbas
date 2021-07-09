@@ -32,6 +32,7 @@ use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
 use rumbas::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use rumbas::data::template::ExamFileType;
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::to_rumbas::ToRumbas;
@@ -75,9 +76,9 @@ fn main() {
     }
 }
 
-fn convert_exam(exam: NExam) -> RExam {
+fn convert_exam(exam: NExam) -> ExamFileType {
     // TODO: check diagnostic vs normal
-    RExam::Diagnostic(convert_diagnostic_exam(exam))
+    ExamFileType::Diagnostic(convert_diagnostic_exam(exam))
 }
 /*
 fn convert_normal_exam(exam: Exam) {
