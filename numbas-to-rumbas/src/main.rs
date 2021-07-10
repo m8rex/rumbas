@@ -67,13 +67,20 @@ fn main() {
     match exam_res {
         Ok(exam) => {
             //println!("{:?}", exam);
-            let (rumbas_exam, qs) = convert_exam(exam);
-            for q in qs.into_iter() {
-                let q_yaml = QuestionFileType::Normal(q).to_yaml().unwrap();
-                println!("{}", q_yaml);
+            let (name, rumbas_exam, qs) = convert_exam(exam);
+            for qp in qs.into_iter() {
+                let q_name = qp.question_name.clone().unwrap();
+                let q_yaml = QuestionFileType::Normal(qp.question_data.unwrap())
+                    .to_yaml()
+                    .unwrap();
+                let file = format!("output/questions/{}.yaml", q_name);
+                println!("Writing to {}", file);
+                std::fs::write(file, q_yaml).unwrap();
+                // TODO
             }
             let exam_yaml = rumbas_exam.to_yaml().unwrap();
-            println!("{}", exam_yaml);
+            std::fs::write(format!("output/exams/{}.yaml", name), exam_yaml).unwrap();
+            // TODO
         }
         Err(e) => {
             eprintln!("Error: {:?}", e);
@@ -81,17 +88,27 @@ fn main() {
     }
 }
 
-fn convert_exam(exam: NExam) -> (ExamFileType, Vec<Question>) {
+fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
     // TODO: check diagnostic vs normal
     let (exam, qgs) = convert_diagnostic_exam(exam);
-    (ExamFileType::Diagnostic(exam), qgs)
+    (
+        {
+            if let TranslatableString::NotTranslated(n) = exam.name.clone().unwrap() {
+                n.get_content(&String::new())
+            } else {
+                panic!("Should not happen");
+            }
+        },
+        ExamFileType::Diagnostic(exam),
+        qgs,
+    )
 }
 /*
 fn convert_normal_exam(exam: Exam) {
 
 }*/
 
-fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<Question>) {
+fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
     let question_groups = extract_question_groups(&exam);
     (
         DiagnosticExam {
@@ -117,7 +134,7 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<Question>) {
                     .questions
                     .unwrap()
                     .into_iter()
-                    .map(|q| q.unwrap().question_data.unwrap())
+                    .map(|q| q.unwrap())
             })
             .collect(),
     )
@@ -1066,7 +1083,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                     .into_iter()
                     .map(|q| {
                         v!(QuestionPath {
-                            question_name: v!(q.name),
+                            question_name: v!(q.name), // TODO: remove characters that are not allowed? (e.g. \)
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),
