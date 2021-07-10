@@ -2,7 +2,6 @@ use numbas::exam::Exam as NExam;
 use rumbas::data::diagnostic_exam::{
     Diagnostic, DiagnosticExam, DiagnosticScript, LearningObjective, LearningTopic,
 };
-use rumbas::data::exam::Exam as RExam;
 use rumbas::data::extension::Extensions;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
@@ -54,7 +53,7 @@ macro_rules! v {
 
 macro_rules! ts {
     ($s: expr) => {
-        TranslatableString::NotTranslated(v!(FileString::s(&$s)))
+        TranslatableString::NotTranslated(FileString::s(&$s))
     };
 }
 
