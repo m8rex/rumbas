@@ -40,6 +40,12 @@ pub enum QuestionFileType {
     Normal(Question),
 }
 
+impl QuestionFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 pub struct TemplateString {
