@@ -38,6 +38,7 @@ use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::to_rumbas::ToRumbas;
 use rumbas::data::translatable::TranslatableString;
 use rumbas::data::variable::{Variable, VariableRepresentation, VariableTemplateType};
+use sanitize_filename::sanitize;
 
 macro_rules! read {
     ($file_name: expr) => {{
@@ -1083,7 +1084,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                     .into_iter()
                     .map(|q| {
                         v!(QuestionPath {
-                            question_name: v!(q.name), // TODO: remove characters that are not allowed? (e.g. \)
+                            question_name: v!(sanitize(q.name)),
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),

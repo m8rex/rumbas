@@ -8,3 +8,4 @@ edition = "2018"
 [dependencies]
 numbas = {path="../numbas"}
 rumbas = {path="../rumbas"}
+sanitize-filename = "0.3.0"
