@@ -79,6 +79,7 @@ impl ToNumbas for PickingStrategy {
 
 optional_overwrite! {
     #[serde(try_from = "String")]
+    #[serde(into = "String")]
     pub struct QuestionPath {
         question_name: String,
         question_data: Question
@@ -97,6 +98,12 @@ impl std::convert::TryFrom<String> for QuestionPath {
             question_name: Value::Normal(s),
             question_data: Value::Normal(question_data),
         })
+    }
+}
+
+impl std::convert::From<QuestionPath> for String {
+    fn from(q: QuestionPath) -> Self {
+        q.question_name.unwrap()
     }
 }
 

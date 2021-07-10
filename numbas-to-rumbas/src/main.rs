@@ -32,6 +32,7 @@ use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, Variabl
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
 use rumbas::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use rumbas::data::template::ExamFileType;
+use rumbas::data::template::QuestionFileType;
 use rumbas::data::template::Value;
 use rumbas::data::timing::{TimeoutAction, Timing};
 use rumbas::data::to_rumbas::ToRumbas;
@@ -66,8 +67,13 @@ fn main() {
     match exam_res {
         Ok(exam) => {
             //println!("{:?}", exam);
-            let rumbas_exam = convert_exam(exam);
-            println!("{}", rumbas_exam.to_yaml().unwrap());
+            let (rumbas_exam, qs) = convert_exam(exam);
+            for q in qs.into_iter() {
+                let q_yaml = QuestionFileType::Normal(q).to_yaml().unwrap();
+                println!("{}", q_yaml);
+            }
+            let exam_yaml = rumbas_exam.to_yaml().unwrap();
+            println!("{}", exam_yaml);
         }
         Err(e) => {
             eprintln!("Error: {:?}", e);
@@ -75,32 +81,46 @@ fn main() {
     }
 }
 
-fn convert_exam(exam: NExam) -> ExamFileType {
+fn convert_exam(exam: NExam) -> (ExamFileType, Vec<Question>) {
     // TODO: check diagnostic vs normal
-    ExamFileType::Diagnostic(convert_diagnostic_exam(exam))
+    let (exam, qgs) = convert_diagnostic_exam(exam);
+    (ExamFileType::Diagnostic(exam), qgs)
 }
 /*
 fn convert_normal_exam(exam: Exam) {
 
 }*/
 
-fn convert_diagnostic_exam(exam: NExam) -> DiagnosticExam {
-    DiagnosticExam {
-        locales: v!(vec![v!(Locale {
-            name: v!("en".to_string()),
-            numbas_locale: v!(SupportedLocale::EnGB)
-        })]), // TODO: argument?
-        name: v![ts!("todo".to_string())], // TODO: argument
-        navigation: v![extract_diagnostic_navigation(&exam)],
-        timing: v![extract_timing(&exam)],
-        feedback: v![extract_feedback(&exam)],
-        question_groups: v![extract_question_groups(&exam)],
-        numbas_settings: v![NumbasSettings {
-            locale: v!(SupportedLocale::EnGB),
-            theme: v!("default".to_string())
-        }], // TODO: argument?
-        diagnostic: v![extract_diagnostic(&exam)],
-    }
+fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<Question>) {
+    let question_groups = extract_question_groups(&exam);
+    (
+        DiagnosticExam {
+            locales: v!(vec![v!(Locale {
+                name: v!("en".to_string()),
+                numbas_locale: v!(SupportedLocale::EnGB)
+            })]), // TODO: argument?
+            name: v![ts!("todo".to_string())], // TODO: argument
+            navigation: v![extract_diagnostic_navigation(&exam)],
+            timing: v![extract_timing(&exam)],
+            feedback: v![extract_feedback(&exam)],
+            question_groups: v![question_groups.clone()],
+            numbas_settings: v![NumbasSettings {
+                locale: v!(SupportedLocale::EnGB),
+                theme: v!("default".to_string())
+            }], // TODO: argument?
+            diagnostic: v![extract_diagnostic(&exam)],
+        },
+        question_groups
+            .into_iter()
+            .flat_map(|qg| {
+                qg.unwrap()
+                    .questions
+                    .unwrap()
+                    .into_iter()
+                    .map(|q| q.unwrap().question_data.unwrap())
+            })
+            .collect(),
+    )
 }
 
 fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
