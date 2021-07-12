@@ -83,5 +83,5 @@ jobs:
           rustup +nightly component add rustfmt
         working-directory: numbas-to-rumbas
       - name: Check todo's
-        run: cargo +nightly fmt --all -- --check src/*
+        run: cargo +nightly fmt --all -- --check
         working-directory: numbas-to-rumbas
