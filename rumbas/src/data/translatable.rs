@@ -111,7 +111,7 @@ mod test {
     #[test]
     fn no_translation() {
         let val = "some string".to_string();
-        let t = NotTranslated(Value::Normal(FileString::s(&val)));
+        let t = NotTranslated(FileString::s(&val));
         assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
     }
 
@@ -122,13 +122,13 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+            Value::Normal(NotTranslated(FileString::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+            Value::Normal(NotTranslated(FileString::s(&val_en))),
         );
-        let t = Translated(Value::Normal(m));
+        let t = Translated(m);
         assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
         assert_eq!(t.to_string(&"en".to_string()), Some(val_en));
     }
@@ -140,27 +140,23 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+            Value::Normal(NotTranslated(FileString::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+            Value::Normal(NotTranslated(FileString::s(&val_en))),
         );
         let val1 = "x^2";
         let val2 = "e^x";
         m.insert(
             "{0}".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
-                &val1.to_string(),
-            )))),
+            Value::Normal(NotTranslated(FileString::s(&val1.to_string()))),
         );
         m.insert(
             "{func}".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
-                &val2.to_string(),
-            )))),
+            Value::Normal(NotTranslated(FileString::s(&val2.to_string()))),
         );
-        let t = Translated(Value::Normal(m.clone()));
+        let t = Translated(m.clone());
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!("een string met functie {} en {}", val2, val1))
@@ -178,51 +174,41 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_nl)))),
+            Value::Normal(NotTranslated(FileString::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(&val_en)))),
+            Value::Normal(NotTranslated(FileString::s(&val_en))),
         );
         let val1 = "x^2";
         let val2 = "e^x ({cond})";
         m.insert(
             "{0}".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
-                &val1.to_string(),
-            )))),
+            Value::Normal(NotTranslated(FileString::s(&val1.to_string()))),
         );
         let mut m2 = HashMap::new();
         m2.insert(
             "content".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
-                &val2.to_string(),
-            )))),
+            Value::Normal(NotTranslated(FileString::s(&val2.to_string()))),
         );
 
         let mut m3 = HashMap::new();
         m3.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+            Value::Normal(NotTranslated(FileString::s(
                 &"met x groter dan 0".to_string(),
-            )))),
+            ))),
         );
         m3.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(Value::Normal(FileString::s(
+            Value::Normal(NotTranslated(FileString::s(
                 &"with x larger than 0".to_string(),
-            )))),
+            ))),
         );
-        m2.insert(
-            "{cond}".to_string(),
-            Value::Normal(Translated(Value::Normal(m3))),
-        );
+        m2.insert("{cond}".to_string(), Value::Normal(Translated(m3)));
 
-        m.insert(
-            "{func}".to_string(),
-            Value::Normal(Translated(Value::Normal(m2))),
-        );
-        let t = Translated(Value::Normal(m.clone()));
+        m.insert("{func}".to_string(), Value::Normal(Translated(m2)));
+        let t = Translated(m.clone());
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!(

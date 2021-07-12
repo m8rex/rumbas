@@ -412,17 +412,35 @@ mod test {
             name: Value::Normal("test".to_string()),
             test: Value::None(),
         };
-        assert_eq!(t.check(), vec!["test"]);
+        let check = t.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["test"],
+        );
+        assert_eq!(check.invalid_values.len(), 0);
         let t = Temp {
             name: Value::Normal("test2".to_string()),
             test: Value::Normal("name".to_string()),
         };
-        assert_eq!(t.check().len(), 0);
+        assert_eq!(t.check().is_empty(), true);
         let t = Temp {
             name: Value::None(),
             test: Value::None(),
         };
-        assert_eq!(t.check(), vec!["name", "test"]);
+        let check = t.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["name", "test"],
+        );
+        assert_eq!(check.invalid_values.len(), 0);
     }
 
     #[test]
@@ -434,7 +452,7 @@ mod test {
                 test: Value::Normal("name".to_string()),
             }),
         };
-        assert_eq!(t.check().len(), 0);
+        assert_eq!(t.check().is_empty(), true);
         let t = Temp2 {
             other: Value::None(),
             t: Value::Normal(Temp {
@@ -442,12 +460,30 @@ mod test {
                 test: Value::Normal("name".to_string()),
             }),
         };
-        assert_eq!(t.check(), vec!["other", "t.name"]);
+        let check = t.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["other", "t.name"],
+        );
+        assert_eq!(check.invalid_values.is_empty(), true);
         let t = Temp2 {
             other: Value::None(),
             t: Value::None(),
         };
-        assert_eq!(t.check(), vec!["other", "t"]);
+        let check = t.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["other", "t"],
+        );
+        assert_eq!(check.invalid_values.len(), 0);
         let t = Temp2 {
             other: Value::None(),
             t: Value::Normal(Temp {
@@ -455,7 +491,16 @@ mod test {
                 test: Value::None(),
             }),
         };
-        assert_eq!(t.check(), vec!["other", "t.name", "t.test"]);
+        let check = t.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["other", "t.name", "t.test"],
+        );
+        assert_eq!(check.invalid_values.len(), 0);
     }
 
     #[test]
@@ -534,7 +579,16 @@ mod test {
             test: Value::None(),
         };
         let v = vec![t1, t2, t3];
-        assert_eq!(v.check(), vec!["0.test", "2.name", "2.test"]);
+        let check = v.check();
+        assert_eq!(
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            vec!["0.test", "2.name", "2.test"],
+        );
+        assert_eq!(check.invalid_values.len(), 0);
     }
 
     #[test]
@@ -565,10 +619,16 @@ mod test {
             }),
         };
         let v = vec![t1, t2, t3, t4];
+        let check = v.check();
         assert_eq!(
-            v.check(),
+            check
+                .missing_values
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
             vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
         );
+        assert_eq!(check.invalid_values.len(), 0);
     }
 }
 
