@@ -76,12 +76,11 @@ fn main() {
                     .unwrap();
                 let file = format!("output/questions/{}.yaml", q_name);
                 println!("Writing to {}", file);
-                std::fs::write(file, q_yaml).unwrap();
-                // TODO
+                std::fs::write(file, q_yaml).unwrap(); //fix handle result
             }
             let exam_yaml = rumbas_exam.to_yaml().unwrap();
             std::fs::write(format!("output/exams/{}.yaml", name), exam_yaml).unwrap();
-            // TODO
+            //fix handle result
         }
         Err(e) => {
             eprintln!("Error: {:?}", e);
@@ -90,7 +89,7 @@ fn main() {
 }
 
 fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
-    // TODO: check diagnostic vs normal
+    // todo: check diagnostic vs normal
     let (exam, qgs) = convert_diagnostic_exam(exam);
     (
         {
@@ -116,8 +115,8 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
             locales: v!(vec![v!(Locale {
                 name: v!("en".to_string()),
                 numbas_locale: v!(SupportedLocale::EnGB)
-            })]), // TODO: argument?
-            name: v![ts!("todo".to_string())], // TODO: argument
+            })]), // todo: argument?
+            name: v![ts!("todo".to_string())], // todo: argument
             navigation: v![extract_diagnostic_navigation(&exam)],
             timing: v![extract_timing(&exam)],
             feedback: v![extract_feedback(&exam)],
@@ -125,7 +124,7 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
             numbas_settings: v![NumbasSettings {
                 locale: v!(SupportedLocale::EnGB),
                 theme: v!("default".to_string())
-            }], // TODO: argument?
+            }], // todo: argument?
             diagnostic: v![extract_diagnostic(&exam)],
         },
         question_groups
@@ -143,7 +142,7 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
 
 fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
     NavigationSharedData {
-        // TODO: fix numbas defaults
+        // todo fix numbas defaults
         start_password: v!(FileString::s(
             &exam
                 .navigation
@@ -213,7 +212,7 @@ fn extract_timing(exam: &NExam) -> Timing {
 
 fn extract_feedback(exam: &NExam) -> Feedback {
     Feedback {
-        // TODO: fix numbas defaults
+        // todo: fix numbas defaults
         percentage_needed_to_pass: v!(exam
             .basic_settings
             .percentage_needed_to_pass
@@ -425,7 +424,7 @@ fn extract_jme_answer_simplification(
 }
 
 fn extract_checking_type(ct: &numbas::exam::JMECheckingType) -> CheckingType {
-    // TODO
+    // todo
     CheckingType::DecimalPlaces(CheckingTypeDataNatural {
         checking_accuracy: v!(0),
     })
@@ -436,53 +435,53 @@ fn extract_part_common_marks(
 ) -> numbas::exam::Primitive {
     pd.marks
         .clone()
-        .unwrap_or(numbas::exam::Primitive::Natural(0)) // TODO
+        .unwrap_or(numbas::exam::Primitive::Natural(0)) // todo
 }
 
 fn extract_part_common_prompt(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.prompt.clone().unwrap_or(String::new()) //TODO
+    pd.prompt.clone().unwrap_or(String::new()) //todo
 }
 
 fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.use_custom_name.unwrap_or(false) // TODO
+    pd.use_custom_name.unwrap_or(false) // todo
 }
 fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.custom_name.clone().unwrap_or(String::new()) // TODO
+    pd.custom_name.clone().unwrap_or(String::new()) // todo
 }
 fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
-    pd.steps_penalty.unwrap_or(0) // TODO
+    pd.steps_penalty.unwrap_or(0) // todo
 }
 fn extract_part_common_enable_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.enable_minimum_marks.unwrap_or(false) // TODO
+    pd.enable_minimum_marks.unwrap_or(false) // todo
 }
 fn extract_part_common_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
-    pd.minimum_marks.unwrap_or(0) // TODO
+    pd.minimum_marks.unwrap_or(0) // todo
 }
 fn extract_part_common_show_correct_answer(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.show_correct_answer // TODO
+    pd.show_correct_answer // todo
 }
 fn extract_part_common_show_feedback_icon(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.show_feedback_icon.unwrap_or(false) // TODO
+    pd.show_feedback_icon.unwrap_or(false) // todo
 }
 fn extract_part_common_variable_replacement_strategy(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> VariableReplacementStrategy {
-    VariableReplacementStrategy::OriginalFirst // TODO
+    VariableReplacementStrategy::OriginalFirst // todo
 }
 fn extract_part_common_adaptive_marking_penalty(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> usize {
-    pd.adaptive_marking_penalty.unwrap_or(0) // TODO
+    pd.adaptive_marking_penalty.unwrap_or(0) // todo
 }
 fn extract_part_common_custom_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> String {
-    pd.custom_marking_algorithm.clone().unwrap_or(String::new()) // TODO
+    pd.custom_marking_algorithm.clone().unwrap_or(String::new()) // todo
 }
 fn extract_part_common_extend_base_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> bool {
-    pd.extend_base_marking_algorithm.unwrap_or(false) // TODO
+    pd.extend_base_marking_algorithm.unwrap_or(false) // todo
 }
 fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> Vec<QuestionPart> {
     pd.steps
@@ -490,7 +489,7 @@ fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> V
         .unwrap_or(vec![])
         .into_iter()
         .map(|s| extract_part(&s))
-        .filter(|s| s.is_some()) // TODO
+        .filter(|s| s.is_some()) // todo
         .map(|s| s.unwrap())
         .collect()
 }
@@ -507,7 +506,7 @@ fn extract_restriction(r: &numbas::exam::JMERestriction) -> JMERestriction {
 fn extract_length_restriction(r: &numbas::exam::JMELengthRestriction) -> JMELengthRestriction {
     JMELengthRestriction {
         restriction: v!(extract_restriction(&r.restriction)),
-        length: v!(r.length.unwrap_or(0)), // TODO?
+        length: v!(r.length.unwrap_or(0)), // todo?
     }
 }
 
@@ -559,14 +558,14 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
         answer: v!(ts!(qp.answer)),
         answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
         show_preview: v!(qp.show_preview),
-        checking_type: v!(extract_checking_type(&qp.checking_type)), // TODO
+        checking_type: v!(extract_checking_type(&qp.checking_type)), // todo
         failure_rate: v!(qp.failure_rate),
         vset_range: v!(qp.vset_range),
         vset_range_points: v!(qp.vset_range_points),
         check_variable_names: v!(qp.check_variable_names),
-        single_letter_variables: v!(qp.single_letter_variables.unwrap_or(false)), // TODO numbas default
-        allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // TODO numbas default
-        implicit_function_composition: v!(qp.implicit_function_composition.unwrap_or(false)), // TODO: numbas default
+        single_letter_variables: v!(qp.single_letter_variables.unwrap_or(false)), // todo numbas default
+        allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // todo numbas default
+        implicit_function_composition: v!(qp.implicit_function_composition.unwrap_or(false)), // todo: numbas default
 
         max_length: v!(qp
             .max_length
@@ -645,19 +644,20 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
         display_correct_in_style: v!(qp
             .correct_answer_style
             .clone()
-            .unwrap_or(numbas::exam::AnswerStyle::Plain)), // TODO default
+            .unwrap_or(numbas::exam::AnswerStyle::Plain)), // todo default
 
-        fractions_must_be_reduced: v!(qp.fractions_must_be_reduced.unwrap_or(true)), // TODO: default
+        fractions_must_be_reduced: v!(qp.fractions_must_be_reduced.unwrap_or(true)), // todo: default
         partial_credit_if_fraction_not_reduced: v!(qp
             .partial_credit_if_fraction_not_reduced
             .clone()
-            .unwrap_or(numbas::exam::Primitive::Natural(0))), // TODO: default
-        hint_fraction: v!(qp.show_fraction_hint.unwrap_or(true)), // TODO: default
+            .unwrap_or(numbas::exam::Primitive::Natural(0))), // todo: default
+        hint_fraction: v!(qp.show_fraction_hint.unwrap_or(true)), // todo: default
     })
 }
-/* TODO
+// todo
+/*
 fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
-    QuestionPart::Matrix(None) // TODO
+    QuestionPart::Matrix(None)
 }*/
 
 fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
@@ -778,12 +778,12 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
         }),
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
-        has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // TODO: default
+        has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // todo: default
     })
 }
 
 fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
-    // TODO: less duplicate code?: Extract following as function
+    // todo: less duplicate code?: Extract following as function
     let answer_data = if let (
         numbas::exam::VariableValued::Value(answer_options),
         Some(numbas::exam::VariableValued::Value(marking_matrix)),
@@ -978,7 +978,7 @@ fn extract_match_answers_with_choices_part(
             .unwrap_or(nn())),
         display: v!(qp.display_type.to_rumbas()),
         layout: v!(qp.layout.clone()),
-    }) // TODO
+    }) // todo
 }
 
 fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPart {
@@ -1002,13 +1002,13 @@ fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionP
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
 
-        sort_answers: v!(qp.sort_answers.unwrap_or(false)), // TODO default
+        sort_answers: v!(qp.sort_answers.unwrap_or(false)), // todo default
 
         gaps: v!(qp
             .gaps
             .iter()
             .map(|s| extract_part(&s))
-            .filter(|s| s.is_some()) // TODO
+            .filter(|s| s.is_some()) // todo
             .map(|s| s.unwrap())
             .collect()),
     })
@@ -1034,11 +1034,12 @@ fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> Q
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
-    }) // TODO
+    }) // todo
 }
-/* TODO
+// todo
+/*
 fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
-    QuestionPart::Extension(None) // TODO
+    QuestionPart::Extension(None)
 }*/
 
 fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
@@ -1094,7 +1095,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                     .map(|p| extract_part(p))
                                     .filter(|p| p.is_some())
                                     .map(|p| v!(p.unwrap()))
-                                    .collect()), // TODO remove unwrap (remove option above)
+                                    .collect()), // todo remove unwrap (remove option above)
                                 builtin_constants: v!(extract_builtin_constants(
                                     q.builtin_constants
                                 )),
@@ -1147,14 +1148,14 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                 preamble: v!(Preamble {
                                     js: v!(FileString::s(&q.preamble.js)),
                                     css: v!(FileString::s(&q.preamble.css)),
-                                }), // TODO
+                                }), // todo
                                 navigation: v!(QuestionNavigation {
                                     can_regenerate: v!(q.navigation.allow_regenerate),
                                     show_title_page: v!(q.navigation.show_frontpage),
                                     prevent_leaving: v!(q
                                         .navigation
                                         .prevent_leaving
-                                        .unwrap_or(false)), // TODO: check default
+                                        .unwrap_or(false)), // todo: check default
                                 }),
                                 extensions: v!(Extensions {
                                     jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),

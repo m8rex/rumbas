@@ -2,34 +2,82 @@ name: Rust
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    types: [assigned]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  check_numbas:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          numbas/target
-          rumbas/target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - name: Build
-      run: cargo build --verbose
-      working-directory: rumbas
-    - name: Run tests
-      run: cargo test --verbose
-      working-directory: rumbas
-    - name: Run doc
-      run: cargo doc --no-deps
-      working-directory: rumbas
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: numbas
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: numbas
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: numbas
+
+  check_rumbas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: rumbas
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: rumbas
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: rumbas
+
+  check_numbas_to_rumbas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+            numbas_to_rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: numbas-to-rumbas
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: numbas-to-rumbas
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: numbas-to-rumbas
+      - name: Check todo's
+        run: cargo +nightly fmt --all -- --check src/*
+        working-directory: numbas-to-rumbas
