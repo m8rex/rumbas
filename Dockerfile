@@ -11,6 +11,7 @@ COPY numbas/src numbas/src
 RUN mkdir -p rumbas/src
 COPY rumbas/Cargo* rumbas/
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/main.rs
+RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/lib.rs
 RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
 RUN rm -f rumbas/target/x86_64-unknown-linux-musl/release/deps/rumbas*
 
