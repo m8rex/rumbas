@@ -78,6 +78,11 @@ jobs:
       - name: Run doc
         run: cargo doc --no-deps
         working-directory: numbas-to-rumbas
+      - name: Add nightly
+        run: |-
+          rustup install nightly
+          rustup +nightly component add rustfmt
+        working-directory: numbas-to-rumbas
       - name: Check todo's
         run: cargo +nightly fmt --all -- --check src/*
         working-directory: numbas-to-rumbas
