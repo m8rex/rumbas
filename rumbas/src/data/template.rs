@@ -1,4 +1,5 @@
-use crate::data::exam::Exam;
+use crate::data::diagnostic_exam::DiagnosticExam;
+use crate::data::normal_exam::NormalExam;
 use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
@@ -21,7 +22,8 @@ pub struct TemplateData {
 #[serde(tag = "type")]
 pub enum ExamFileType {
     Template(TemplateData),
-    Normal(Exam),
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -128,10 +130,9 @@ impl<T: std::clone::Clone> ValueType<T> {
     pub fn unwrap(&self) -> T {
         match self {
             ValueType::Normal(val) => val.to_owned(),
-            ValueType::Template(ts) => panic!(format!(
-                "missing value for template key {}",
-                ts.clone().key.unwrap()
-            )),
+            ValueType::Template(ts) => {
+                panic!("missing value for template key {}", ts.clone().key.unwrap())
+            }
         }
     }
 }
@@ -148,10 +149,7 @@ impl<T: std::clone::Clone> ValueType<T> {
     pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U> {
         match self {
             ValueType::Normal(val) => Some(f(val)),
-            ValueType::Template(ts) => panic!(format!(
-                "missing value for template key {}",
-                ts.key.unwrap()
-            )),
+            ValueType::Template(ts) => panic!("missing value for template key {}", ts.key.unwrap()),
         }
     }
 }

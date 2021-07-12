@@ -59,14 +59,14 @@ impl TranslatableString {
         match self {
             //TODO: just use unwrap on values?
             TranslatableString::NotTranslated(Value(None)) => {
-                panic!(format!("Should not happen: Missing value."))
+                panic!("Should not happen: Missing value.")
             }
             TranslatableString::NotTranslated(Value(Some(ValueType::Normal(s)))) => {
                 Some(s.get_content(&locale))
             }
-            TranslatableString::NotTranslated(Value(Some(ValueType::Template(ts)))) => panic!(
-                format!("Should not happen: Missing value for {}.", ts.yaml())
-            ),
+            TranslatableString::NotTranslated(Value(Some(ValueType::Template(ts)))) => {
+                panic!("Should not happen: Missing value for {}.", ts.yaml())
+            }
             TranslatableString::Translated(m_value) => {
                 let m = m_value.unwrap();
                 m.get(locale)

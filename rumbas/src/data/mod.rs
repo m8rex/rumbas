@@ -7,6 +7,7 @@ pub mod to_numbas;
 #[macro_use]
 pub mod question_part;
 pub mod default;
+pub mod diagnostic_exam;
 pub mod exam;
 pub mod extension;
 pub mod feedback;
@@ -19,6 +20,7 @@ pub mod jme;
 pub mod locale;
 pub mod multiple_choice;
 pub mod navigation;
+pub mod normal_exam;
 pub mod numbas_settings;
 pub mod number_entry;
 pub mod pattern_match;
