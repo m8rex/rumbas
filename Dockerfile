@@ -42,7 +42,15 @@ WORKDIR /usr/app
 RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-stats.git stats
 WORKDIR /usr/app/stats
-RUN git fetch && git checkout  62ed29f8ef06dafef7b9fc47dc843d668e119966
+RUN git fetch && git checkout 62ed29f8ef06dafef7b9fc47dc843d668e119966
+
+# Fetch euklides extension
+FROM alpine as eukleides_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/numbas/numbas-extension-eukleides.git eukleides
+WORKDIR /usr/app/eukleides
+RUN git fetch && git checkout bac3d060cd70d79fb6f897f0a54076ec916b8e14
 
 # Main image
 FROM python:3.6.10-alpine 
@@ -54,7 +62,9 @@ RUN pip install -r requirements.txt
 RUN mkdir -p extensions
 COPY --from=jsxgraph_fetcher /usr/app/jsxgraph /usr/app/Numbas/extensions/jsxgraph
 COPY --from=stats_fetcher /usr/app/stats /usr/app/Numbas/extensions/stats
-
+RUN mkdir -p extensions/eukleides
+ # For now just use the js file in dist instead of using make
+COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numbas/extensions/eukleides
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
 COPY --from=builder /usr/app/rumbas/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas
