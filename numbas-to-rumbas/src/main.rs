@@ -21,8 +21,10 @@ use rumbas::data::multiple_choice::{
     QuestionPartChooseMultiple, QuestionPartChooseOne, QuestionPartMatchAnswersWithItems,
 };
 use rumbas::data::navigation::{
-    DiagnosticNavigation, LeaveAction, NavigationSharedData, QuestionNavigation,
+    DiagnosticNavigation, LeaveAction, MenuNavigation, NavigationSharedData, NormalNavigation,
+    QuestionNavigation, SequentialNavigation, ShowResultsPage,
 };
+use rumbas::data::normal_exam::NormalExam;
 use rumbas::data::numbas_settings::NumbasSettings;
 use rumbas::data::number_entry::{NumberEntryAnswer, QuestionPartNumberEntry};
 use rumbas::data::optional_overwrite::Noneable;
@@ -90,23 +92,63 @@ fn main() {
 
 fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
     // todo: check diagnostic vs normal
-    let (exam, qgs) = convert_diagnostic_exam(exam);
+    let (name, exam, qgs) = match exam.navigation.navigation_mode {
+        numbas::exam::ExamNavigationMode::Diagnostic => {
+            let (exam, qgs) = convert_diagnostic_exam(exam);
+            (
+                exam.name.clone().unwrap(),
+                ExamFileType::Diagnostic(exam),
+                qgs,
+            )
+        }
+        _ => {
+            let (exam, qgs) = convert_normal_exam(exam);
+            (exam.name.clone().unwrap(), ExamFileType::Normal(exam), qgs)
+        }
+    };
     (
         {
-            if let TranslatableString::NotTranslated(n) = exam.name.clone().unwrap() {
+            if let TranslatableString::NotTranslated(n) = name {
                 n.get_content(&String::new())
             } else {
                 panic!("Should not happen");
             }
         },
-        ExamFileType::Diagnostic(exam),
+        exam,
         qgs,
     )
 }
-/*
-fn convert_normal_exam(exam: Exam) {
 
-}*/
+fn convert_normal_exam(exam: NExam) -> (NormalExam, Vec<QuestionPath>) {
+    let question_groups = extract_question_groups(&exam);
+    (
+        NormalExam {
+            locales: v!(vec![v!(Locale {
+                name: v!("en".to_string()),
+                numbas_locale: v!(SupportedLocale::EnGB)
+            })]), // todo: argument?
+            name: v![ts!("todo".to_string())], // todo: argument
+            navigation: v![extract_normal_navigation(&exam).unwrap()], // TODO?
+            timing: v![extract_timing(&exam)],
+            feedback: v![extract_feedback(&exam)],
+            question_groups: v![question_groups.clone()],
+            numbas_settings: v![NumbasSettings {
+                locale: v!(SupportedLocale::EnGB),
+                theme: v!("default".to_string())
+            }], // todo: argument?
+        },
+        question_groups
+            .into_iter()
+            .flat_map(|qg| {
+                qg.unwrap()
+                    .questions
+                    .unwrap()
+                    .into_iter()
+                    .map(|q| q.unwrap())
+            })
+            .collect(),
+    )
+}
 
 fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
     let question_groups = extract_question_groups(&exam);
@@ -159,6 +201,54 @@ fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
             .show_question_group_names
             .unwrap_or(true)),
         allow_printing: v!(exam.basic_settings.allow_printing.unwrap_or(true)),
+    }
+}
+
+fn extract_sequential_navigation_show_results_page(
+    v: numbas::exam::ExamShowResultsPage,
+) -> ShowResultsPage {
+    match v {
+        numbas::exam::ExamShowResultsPage::Never => ShowResultsPage::Never,
+        numbas::exam::ExamShowResultsPage::OnCompletion => ShowResultsPage::OnCompletion,
+    }
+}
+
+fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
+    match exam.navigation.navigation_mode {
+        numbas::exam::ExamNavigationMode::Sequence => {
+            Some(NormalNavigation::Sequential(SequentialNavigation {
+                shared_data: v!(extract_shared_navigation(exam)),
+                can_move_to_previous: v!(exam.navigation.reverse.unwrap_or(true)), // todo default
+                browsing_enabled: v!(exam.navigation.browsing_enabled.unwrap_or(true)), // todo default
+                show_results_page: v!(extract_sequential_navigation_show_results_page(
+                    exam.navigation.show_results_page.clone().unwrap() // todo?
+                )),
+                on_leave: v!(exam
+                    .navigation
+                    .on_leave
+                    .clone()
+                    .map(|ol| {
+                        match ol {
+                            numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
+                            numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
+                                LeaveAction::WarnIfNotAttempted {
+                                    message: ts!(message),
+                                }
+                            }
+                            numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
+                                LeaveAction::PreventIfNotAttempted {
+                                    message: ts!(message),
+                                }
+                            }
+                        }
+                    })
+                    .unwrap_or(LeaveAction::None)),
+            }))
+        }
+        numbas::exam::ExamNavigationMode::Menu => Some(NormalNavigation::Menu(MenuNavigation {
+            shared_data: v!(extract_shared_navigation(exam)),
+        })),
+        numbas::exam::ExamNavigationMode::Diagnostic => None,
     }
 }
 
