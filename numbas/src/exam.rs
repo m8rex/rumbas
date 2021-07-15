@@ -706,7 +706,7 @@ pub struct ExamQuestion {
     //contributors TODO
     pub navigation: QuestionNavigation,
     //custom part types TODO
-    pub extensions: Vec<String>,
+    pub extensions: Vec<String>, // todo: enum
     //metadata TODO
     //resources TODO
     //TODO type: question?
@@ -899,9 +899,9 @@ pub struct ExamQuestionPartJME {
     #[serde(rename = "failureRate")]
     pub failure_rate: f64,
     #[serde(rename = "vsetRange")]
-    pub vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+    pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
     #[serde(rename = "vsetRangePoints")]
-    pub vset_range_points: usize,
+    pub vset_range_points: SafeNatural,
     #[serde(rename = "checkVariableNames")]
     pub check_variable_names: bool,
     #[serde(rename = "singleLetterVariables")]
@@ -952,8 +952,8 @@ impl ExamQuestionPartJME {
             show_preview,
             checking_type,
             failure_rate,
-            vset_range,
-            vset_range_points,
+            vset_range: [vset_range[0].into(), vset_range[1].into()],
+            vset_range_points: vset_range_points.into(),
             check_variable_names,
             single_letter_variables,
             allow_unknown_functions,
@@ -1168,18 +1168,36 @@ pub struct ExamQuestionPartNumberEntry {
     pub answer: NumberEntryAnswerType,
 }
 
+// See https://github.com/numbas/Numbas/blob/26e5c25be75f5bb1a7d6b625bc8ed0c6a59224e5/runtime/scripts/util.js#L1259
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerStyle {
-    #[serde(rename = "plain")]
-    Plain,
+    /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "en")]
-    En,
-    #[serde(rename = "eu")]
-    Eu,
+    English,
+    /// Plain English style - no thousands separator, dot for decimal point
+    #[serde(rename = "plain")]
+    EnglishPlain,
+    /// English SI style - spaces separate thousands, dot for decimal point
     #[serde(rename = "si-en")]
-    SiEn,
+    EnglishSI,
+    /// Continental European style - dots separate thousands, comma for decimal poin
+    #[serde(rename = "eu")]
+    European,
+    /// Plain French style - no thousands separator, comma for decimal point
+    #[serde(rename = "plain-eu")]
+    EuropeanPlain,
+    /// French SI style - spaces separate thousands, comma for decimal point
     #[serde(rename = "si-fr")]
-    SiFr,
+    FrenchSI,
+    /// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.
+    #[serde(rename = "in")]
+    Indian,
+    /// Significand-exponent ("scientific") style
+    #[serde(rename = "scientific")]
+    Scientific,
+    /// Swiss style - apostrophes separate thousands, dot for decimal point
+    #[serde(rename = "ch")]
+    Swiss,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1302,6 +1320,28 @@ impl std::convert::TryFrom<Primitive> for SafeNatural {
 impl std::convert::From<usize> for SafeNatural {
     fn from(u: usize) -> Self {
         SafeNatural(u)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(try_from = "Primitive")]
+/// A decimal number (float) that can be parsed from primitive
+pub struct SafeFloat(pub f64);
+
+impl std::convert::TryFrom<Primitive> for SafeFloat {
+    type Error = String;
+    fn try_from(p: Primitive) -> Result<Self, Self::Error> {
+        match p {
+            Primitive::Natural(n) => Ok(SafeFloat(n as f64)),
+            Primitive::Float(n) => Ok(SafeFloat(n)),
+            Primitive::String(n) => n.parse().map(|n| SafeFloat(n)).map_err(|e| e.to_string()),
+        }
+    }
+}
+
+impl std::convert::From<f64> for SafeFloat {
+    fn from(v: f64) -> Self {
+        SafeFloat(v)
     }
 }
 

@@ -650,8 +650,8 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
         show_preview: v!(qp.show_preview),
         checking_type: v!(extract_checking_type(&qp.checking_type)), // todo
         failure_rate: v!(qp.failure_rate),
-        vset_range: v!(qp.vset_range),
-        vset_range_points: v!(qp.vset_range_points),
+        vset_range: v!([qp.vset_range[0].0, qp.vset_range[1].0]),
+        vset_range_points: v!(qp.vset_range_points.0),
         check_variable_names: v!(qp.check_variable_names),
         single_letter_variables: v!(qp.single_letter_variables.unwrap_or(false)), // todo numbas default
         allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // todo numbas default
@@ -734,7 +734,7 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
         display_correct_in_style: v!(qp
             .correct_answer_style
             .clone()
-            .unwrap_or(numbas::exam::AnswerStyle::Plain)), // todo default
+            .unwrap_or(numbas::exam::AnswerStyle::EnglishPlain)), // todo default
 
         fractions_must_be_reduced: v!(qp.fractions_must_be_reduced.unwrap_or(true)), // todo: default
         partial_credit_if_fraction_not_reduced: v!(qp
@@ -1250,6 +1250,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                 extensions: v!(Extensions {
                                     jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),
                                     stats: v!(q.extensions.contains(&"stats".to_string())),
+                                    eukleides: v!(q.extensions.contains(&"eukleides".to_string())),
                                 }),
                                 diagnostic_topic_names: v!(q
                                     .tags

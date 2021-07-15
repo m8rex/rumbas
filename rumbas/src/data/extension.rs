@@ -9,11 +9,14 @@ optional_overwrite! {
         /// Whether the jsx_graph extension is enabled
         jsx_graph: bool,
         /// Whether the stats extension is enabled
-        stats: bool
+        stats: bool,
+        /// Whether the eukleides extension is enabled
+        eukleides: bool
     }
 }
 
 impl ToNumbas for Extensions {
+    // TODO: create macro
     type NumbasType = Vec<String>;
     fn to_numbas(&self, _locale: &String) -> NumbasResult<Vec<String>> {
         let check = self.check();
@@ -24,6 +27,9 @@ impl ToNumbas for Extensions {
             }
             if self.stats.unwrap() {
                 extensions.push("stats".to_string());
+            }
+            if self.eukleides.unwrap() {
+                extensions.push("eukleides".to_string());
             }
             Ok(extensions)
         } else {
@@ -37,6 +43,7 @@ impl Extensions {
         Extensions {
             jsx_graph: Value::Normal(false),
             stats: Value::Normal(false),
+            eukleides: Value::Normal(false),
         }
     }
 
@@ -44,6 +51,7 @@ impl Extensions {
         Extensions {
             jsx_graph: Value::Normal(e.jsx_graph.unwrap() || f.jsx_graph.unwrap()),
             stats: Value::Normal(e.stats.unwrap() || f.stats.unwrap()),
+            eukleides: Value::Normal(e.eukleides.unwrap() || f.eukleides.unwrap()),
         }
     }
 
@@ -55,6 +63,9 @@ impl Extensions {
         }
         if self.stats.unwrap() {
             paths.push("stats");
+        }
+        if self.eukleides.unwrap() {
+            paths.push("eukleides");
         }
         paths
             .into_iter()
