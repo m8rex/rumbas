@@ -47,6 +47,7 @@ pub struct NumbasDefaults {
     navigation_browsing_enabled: bool,
     navigation_allow_steps: bool,
     navigation_prevent_leaving: bool,
+    navigation_show_results_page: numbas::exam::ExamShowResultsPage,
     navigation_show_names_of_question_groups: bool,
     navigation_start_password: String,
     navigation_on_leave: LeaveAction,
@@ -113,6 +114,7 @@ const DEFAULTS: NumbasDefaults = NumbasDefaults {
     navigation_browsing_enabled: true,
     navigation_allow_steps: true,
     navigation_prevent_leaving: true,
+    navigation_show_results_page: numbas::exam::ExamShowResultsPage::Never,
     navigation_show_names_of_question_groups: true,
     navigation_start_password: String::new(),
     navigation_on_leave: LeaveAction::None,
@@ -223,7 +225,6 @@ fn main() {
 }
 
 fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
-    // todo: check diagnostic vs normal
     let (name, exam, qgs) = match exam.navigation.navigation_mode {
         numbas::exam::ExamNavigationMode::Diagnostic => {
             let (exam, qgs) = convert_diagnostic_exam(exam);
@@ -367,7 +368,10 @@ fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
                     .browsing_enabled
                     .unwrap_or(DEFAULTS.navigation_browsing_enabled)),
                 show_results_page: v!(extract_sequential_navigation_show_results_page(
-                    exam.navigation.show_results_page.clone().unwrap() // todo?
+                    exam.navigation
+                        .show_results_page
+                        .clone()
+                        .unwrap_or(DEFAULTS.navigation_show_results_page)
                 )),
                 on_leave: v!(exam
                     .navigation
@@ -677,10 +681,28 @@ fn extract_jme_answer_simplification(
 }
 
 fn extract_checking_type(ct: &numbas::exam::JMECheckingType) -> CheckingType {
-    // todo
-    CheckingType::DecimalPlaces(CheckingTypeDataNatural {
-        checking_accuracy: v!(0),
-    })
+    match ct {
+        numbas::exam::JMECheckingType::RelativeDifference(v) => {
+            CheckingType::RelativeDifference(CheckingTypeDataFloat {
+                checking_accuracy: v!(v.checking_accuracy),
+            })
+        }
+        numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
+            CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
+                checking_accuracy: v!(v.checking_accuracy),
+            })
+        }
+        numbas::exam::JMECheckingType::DecimalPlaces(v) => {
+            CheckingType::DecimalPlaces(CheckingTypeDataNatural {
+                checking_accuracy: v!(v.checking_accuracy),
+            })
+        }
+        numbas::exam::JMECheckingType::SignificantFigures(v) => {
+            CheckingType::SignificantFigures(CheckingTypeDataNatural {
+                checking_accuracy: v!(v.checking_accuracy),
+            })
+        }
+    }
 }
 
 fn extract_part_common_marks(
@@ -700,7 +722,7 @@ fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartShared
         .unwrap_or(DEFAULTS.part_common_use_custom_name)
 }
 fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.custom_name.clone().unwrap_or(String::new()) // todo
+    pd.custom_name.clone().unwrap_or(String::new())
 }
 fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
     pd.steps_penalty
@@ -724,7 +746,11 @@ fn extract_part_common_show_feedback_icon(pd: &numbas::exam::ExamQuestionPartSha
 fn extract_part_common_variable_replacement_strategy(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> VariableReplacementStrategy {
-    VariableReplacementStrategy::OriginalFirst // todo
+    match pd.variable_replacement_strategy {
+        numbas::exam::VariableReplacementStrategy::OriginalFirst => {
+            VariableReplacementStrategy::OriginalFirst
+        }
+    }
 }
 fn extract_part_common_adaptive_marking_penalty(
     pd: &numbas::exam::ExamQuestionPartSharedData,
@@ -735,7 +761,7 @@ fn extract_part_common_adaptive_marking_penalty(
 fn extract_part_common_custom_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> String {
-    pd.custom_marking_algorithm.clone().unwrap_or(String::new()) // todo
+    pd.custom_marking_algorithm.clone().unwrap_or(String::new())
 }
 fn extract_part_common_extend_base_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
