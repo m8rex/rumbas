@@ -1,8 +1,10 @@
 use numbas::exam::Exam as NExam;
+use rumbas::data::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::data::diagnostic_exam::{
     Diagnostic, DiagnosticExam, DiagnosticScript, LearningObjective, LearningTopic,
 };
 use rumbas::data::extension::Extensions;
+use rumbas::data::extension::QuestionPartExtension;
 use rumbas::data::feedback::{Feedback, FeedbackMessage, Review};
 use rumbas::data::file_reference::FileString;
 use rumbas::data::function::Function;
@@ -14,6 +16,9 @@ use rumbas::data::jme::{
     JMEValueGenerator, QuestionPartJME,
 };
 use rumbas::data::locale::{Locale, SupportedLocale};
+use rumbas::data::matrix::{
+    QuestionPartMatrix, QuestionPartMatrixDimension, QuestionPartMatrixDimensions,
+};
 use rumbas::data::multiple_choice::{
     ChooseOneDisplay, MatchAnswersItem, MatchAnswersItemMarks, MultipleChoiceAnswer,
     MultipleChoiceAnswerData, MultipleChoiceAnswerDataNumbasLike, MultipleChoiceMatchAnswerData,
@@ -33,6 +38,7 @@ use rumbas::data::preamble::Preamble;
 use rumbas::data::question::{BuiltinConstants, CustomConstant, Question, VariablesTest};
 use rumbas::data::question_group::{PickingStrategy, QuestionGroup, QuestionPath};
 use rumbas::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use rumbas::data::question_part::{QuestionPartBuiltin, QuestionPartCustom};
 use rumbas::data::template::ExamFileType;
 use rumbas::data::template::QuestionFileType;
 use rumbas::data::template::Value;
@@ -76,6 +82,7 @@ pub struct NumbasDefaults {
     number_entry_hint_fraction: bool,
 
     choose_one_has_to_select_option: bool,
+    choose_one_show_cell_answer_state: bool,
     gapfill_sort_answers: bool,
     match_answers_with_items_min_answers: usize,
     choose_multiple_min_answers: usize,
@@ -140,6 +147,7 @@ const DEFAULTS: NumbasDefaults = NumbasDefaults {
     length_restriction_length: 0,
 
     choose_one_has_to_select_option: true,
+    choose_one_show_cell_answer_state: true,
     gapfill_sort_answers: true,
     match_answers_with_items_min_answers: 0,
     choose_multiple_min_answers: 0,
@@ -204,7 +212,7 @@ fn main() {
     match exam_res {
         Ok(exam) => {
             //println!("{:?}", exam);
-            let (name, rumbas_exam, qs) = convert_exam(exam);
+            let (name, rumbas_exam, qs, cpts) = convert_exam(exam);
             for qp in qs.into_iter() {
                 let q_name = qp.question_name.clone().unwrap();
                 let q_yaml = QuestionFileType::Normal(qp.question_data.unwrap())
@@ -213,6 +221,13 @@ fn main() {
                 let file = format!("output/questions/{}.yaml", q_name);
                 println!("Writing to {}", file);
                 std::fs::write(file, q_yaml).unwrap(); //fix handle result
+            }
+            for cpt in cpts.into_iter() {
+                let c_name = cpt.custom_part_type_name.clone();
+                let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
+                let file = format!("output/custom_part_types/{}.yaml", c_name);
+                println!("Writing to {}", file);
+                std::fs::write(file, c_yaml).unwrap(); //fix handle result
             }
             let exam_yaml = rumbas_exam.to_yaml().unwrap();
             std::fs::write(format!("output/exams/{}.yaml", name), exam_yaml).unwrap();
@@ -224,19 +239,32 @@ fn main() {
     }
 }
 
-fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
-    let (name, exam, qgs) = match exam.navigation.navigation_mode {
+fn convert_exam(
+    exam: NExam,
+) -> (
+    String,
+    ExamFileType,
+    Vec<QuestionPath>,
+    Vec<CustomPartTypeDefinitionPath>,
+) {
+    let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
         numbas::exam::ExamNavigationMode::Diagnostic => {
-            let (exam, qgs) = convert_diagnostic_exam(exam);
+            let (exam, qgs, cpts) = convert_diagnostic_exam(exam);
             (
                 exam.name.clone().unwrap(),
                 ExamFileType::Diagnostic(exam),
                 qgs,
+                cpts,
             )
         }
         _ => {
-            let (exam, qgs) = convert_normal_exam(exam);
-            (exam.name.clone().unwrap(), ExamFileType::Normal(exam), qgs)
+            let (exam, qgs, cpts) = convert_normal_exam(exam);
+            (
+                exam.name.clone().unwrap(),
+                ExamFileType::Normal(exam),
+                qgs,
+                cpts,
+            )
         }
     };
     (
@@ -249,11 +277,19 @@ fn convert_exam(exam: NExam) -> (String, ExamFileType, Vec<QuestionPath>) {
         },
         exam,
         qgs,
+        cpts,
     )
 }
 
-fn convert_normal_exam(exam: NExam) -> (NormalExam, Vec<QuestionPath>) {
+fn convert_normal_exam(
+    exam: NExam,
+) -> (
+    NormalExam,
+    Vec<QuestionPath>,
+    Vec<CustomPartTypeDefinitionPath>,
+) {
     let question_groups = extract_question_groups(&exam);
+    let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         NormalExam {
             locales: v!(vec![v!(Locale {
@@ -269,6 +305,7 @@ fn convert_normal_exam(exam: NExam) -> (NormalExam, Vec<QuestionPath>) {
                 locale: v!(SupportedLocale::EnGB),
                 theme: v!("default".to_string())
             }], // todo: argument?
+            custom_part_types: v!(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
@@ -280,11 +317,19 @@ fn convert_normal_exam(exam: NExam) -> (NormalExam, Vec<QuestionPath>) {
                     .map(|q| q.unwrap())
             })
             .collect(),
+        custom_part_types,
     )
 }
 
-fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
+fn convert_diagnostic_exam(
+    exam: NExam,
+) -> (
+    DiagnosticExam,
+    Vec<QuestionPath>,
+    Vec<CustomPartTypeDefinitionPath>,
+) {
     let question_groups = extract_question_groups(&exam);
+    let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         DiagnosticExam {
             locales: v!(vec![v!(Locale {
@@ -301,6 +346,7 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
                 theme: v!("default".to_string())
             }], // todo: argument?
             diagnostic: v![extract_diagnostic(&exam)],
+            custom_part_types: v!(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
@@ -312,6 +358,7 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
                     .map(|q| q.unwrap())
             })
             .collect(),
+        custom_part_types,
     )
 }
 
@@ -775,8 +822,6 @@ fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> V
         .unwrap_or(vec![])
         .into_iter()
         .map(|s| extract_part(&s))
-        .filter(|s| s.is_some()) // todo
-        .map(|s| s.unwrap())
         .collect()
 }
 
@@ -819,8 +864,8 @@ fn extract_value_generator(g: &numbas::exam::JMEValueGenerator) -> JMEValueGener
     }
 }
 
-fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
-    QuestionPart::JME(QuestionPartJME {
+fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::JME(QuestionPartJME {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -907,8 +952,10 @@ fn extract_number_entry_answer(a: &numbas::exam::NumberEntryAnswerType) -> Numbe
     }
 }
 
-fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> QuestionPart {
-    QuestionPart::NumberEntry(QuestionPartNumberEntry {
+fn extract_number_entry_part(
+    qp: &numbas::exam::ExamQuestionPartNumberEntry,
+) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::NumberEntry(QuestionPartNumberEntry {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -932,11 +979,12 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
         answer: v!(extract_number_entry_answer(&qp.answer)),
         display_correct_as_fraction: v!(qp.correct_answer_fraction),
         allow_fractions: v!(qp.allow_fractions),
-        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or(vec![])),
+        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or(vec![]).to_rumbas()),
         display_correct_in_style: v!(qp
             .correct_answer_style
             .clone()
-            .unwrap_or(DEFAULTS.number_entry_correct_answer_style)),
+            .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
+            .to_rumbas()),
 
         fractions_must_be_reduced: v!(qp
             .fractions_must_be_reduced
@@ -950,14 +998,63 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
             .unwrap_or(DEFAULTS.number_entry_hint_fraction)),
     })
 }
-// todo
-/*
-fn extract_matrix_part(qp: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPart {
-    QuestionPart::Matrix(None)
-}*/
 
-fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -> QuestionPart {
-    QuestionPart::PatternMatch(QuestionPartPatternMatch {
+/*impl ToRumbas for numbas::exam::ExamQuestionPartMatrix {
+type RumbasType = QuestionPartMatrix;
+fn to_rumbas(&self) -> Self::RumbasType {*/
+fn extract_matrix_part(sel: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::Matrix({
+        let rows = v!(QuestionPartMatrixDimension::from_range(
+            sel.num_rows.0,
+            sel.min_rows,
+            sel.max_rows
+        ));
+        let columns = v!(QuestionPartMatrixDimension::from_range(
+            sel.num_columns.0,
+            sel.min_columns,
+            sel.max_columns,
+        ));
+        let dimensions = QuestionPartMatrixDimensions { rows, columns };
+        QuestionPartMatrix {
+            // Default section
+            marks: v!(extract_part_common_marks(&sel.part_data)),
+            prompt: v!(ts!(extract_part_common_prompt(&sel.part_data))),
+            use_custom_name: v!(extract_part_common_use_custom_name(&sel.part_data)),
+            custom_name: v!(extract_part_common_custom_name(&sel.part_data)),
+            steps_penalty: v!(extract_part_common_steps_penalty(&sel.part_data)),
+            enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&sel.part_data)),
+            minimum_marks: v!(extract_part_common_minimum_marks(&sel.part_data)),
+            show_correct_answer: v!(extract_part_common_show_correct_answer(&sel.part_data)),
+            show_feedback_icon: v!(extract_part_common_show_feedback_icon(&sel.part_data)),
+            variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+                &sel.part_data
+            )),
+            adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(
+                &sel.part_data
+            )),
+            custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(
+                &sel.part_data
+            )),
+            extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+                &sel.part_data
+            )),
+            steps: v!(extract_part_common_steps(&sel.part_data)),
+
+            correct_answer: v!(sel.correct_answer.clone()),
+            display_correct_as_fraction: v!(sel.correct_answer_fractions),
+            dimensions: v!(dimensions),
+            max_absolute_deviation: v!(sel.tolerance),
+            mark_partial_by_cells: v!(sel.mark_per_cell),
+            allow_fractions: v!(sel.allow_fractions),
+        }
+    })
+}
+//}
+
+fn extract_pattern_match_part(
+    qp: &numbas::exam::ExamQuestionPartPatternMatch,
+) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::PatternMatch(QuestionPartPatternMatch {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -990,7 +1087,7 @@ fn extract_pattern_match_part(qp: &numbas::exam::ExamQuestionPartPatternMatch) -
     })
 }
 
-fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> QuestionPart {
+fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> QuestionPartBuiltin {
     let answer_data = if let (
         numbas::exam::VariableValued::Value(answer_options),
         Some(numbas::exam::VariableValued::Value(marking_matrix)),
@@ -1045,7 +1142,7 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
             }
         ))
     };
-    QuestionPart::ChooseOne(QuestionPartChooseOne {
+    QuestionPartBuiltin::ChooseOne(QuestionPartChooseOne {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -1073,7 +1170,9 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
             numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
         }),
         shuffle_answers: v!(qp.shuffle_answers),
-        show_cell_answer_state: v!(qp.show_cell_answer_state),
+        show_cell_answer_state: v!(qp
+            .show_cell_answer_state
+            .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state)),
         has_to_select_option: v!(qp
             .min_answers
             .map(|v| v == 1)
@@ -1081,7 +1180,9 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
     })
 }
 
-fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultiple) -> QuestionPart {
+fn extract_choose_multiple_part(
+    qp: &numbas::exam::ExamQuestionPartChooseMultiple,
+) -> QuestionPartBuiltin {
     // todo: less duplicate code?: Extract following as function
     let answer_data = if let (
         numbas::exam::VariableValued::Value(answer_options),
@@ -1137,7 +1238,7 @@ fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultipl
             }
         ))
     };
-    QuestionPart::ChooseMultiple(QuestionPartChooseMultiple {
+    QuestionPartBuiltin::ChooseMultiple(QuestionPartChooseMultiple {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -1174,7 +1275,7 @@ fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultipl
 
 fn extract_match_answers_with_choices_part(
     qp: &numbas::exam::ExamQuestionPartMatchAnswersWithChoices,
-) -> QuestionPart {
+) -> QuestionPartBuiltin {
     let answer_data = if let (
         numbas::exam::VariableValued::Value(answer_options),
         numbas::exam::VariableValued::Value(choice_options),
@@ -1247,7 +1348,7 @@ fn extract_match_answers_with_choices_part(
             }
         ))
     };
-    QuestionPart::MatchAnswersWithItems(QuestionPartMatchAnswersWithItems {
+    QuestionPartBuiltin::MatchAnswersWithItems(QuestionPartMatchAnswersWithItems {
         // Default section
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
@@ -1284,8 +1385,8 @@ fn extract_match_answers_with_choices_part(
     }) // todo
 }
 
-fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPart {
-    QuestionPart::GapFill(QuestionPartGapFill {
+fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::GapFill(QuestionPartGapFill {
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
         use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
@@ -1307,18 +1408,12 @@ fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionP
 
         sort_answers: v!(qp.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
 
-        gaps: v!(qp
-            .gaps
-            .iter()
-            .map(|s| extract_part(&s))
-            .filter(|s| s.is_some()) // todo
-            .map(|s| s.unwrap())
-            .collect()),
+        gaps: v!(qp.gaps.iter().map(|s| extract_part(&s)).collect()),
     })
 }
 
-fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPart {
-    QuestionPart::Information(QuestionPartInformation {
+fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::Information(QuestionPartInformation {
         marks: v!(extract_part_common_marks(&qp.part_data)),
         prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
         use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
@@ -1339,26 +1434,82 @@ fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> Q
         steps: v!(extract_part_common_steps(&qp.part_data)),
     }) // todo
 }
-// todo
-/*
-fn extract_extension_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
-    QuestionPart::Extension(None)
-}*/
+fn extract_extension_part(qp: &numbas::exam::ExamQuestionPartExtension) -> QuestionPartBuiltin {
+    QuestionPartBuiltin::Extension(QuestionPartExtension {
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+    }) // todo
+}
 
-fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> Option<QuestionPart> {
+fn extract_custom_part(qp: &numbas::exam::ExamQuestionPartCustom) -> QuestionPartCustom {
+    QuestionPartCustom {
+        // Default section
+        marks: v!(extract_part_common_marks(&qp.part_data)),
+        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
+        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
+        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
+            &qp.part_data
+        )),
+        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
+        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
+        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
+            &qp.part_data
+        )),
+        steps: v!(extract_part_common_steps(&qp.part_data)),
+
+        r#type: v!(qp.r#type.clone()),
+        settings: v!(qp
+            .settings
+            .clone()
+            .into_iter()
+            .map(|(k, v)| (k, v.to_rumbas()))
+            .collect()),
+    }
+}
+
+fn extract_part(qp: &numbas::exam::ExamQuestionPart) -> QuestionPart {
     match qp {
-        numbas::exam::ExamQuestionPart::JME(p) => Some(extract_jme_part(p)),
-        numbas::exam::ExamQuestionPart::NumberEntry(p) => Some(extract_number_entry_part(p)),
-        numbas::exam::ExamQuestionPart::Matrix(p) => None, //extract_matrix_part(p),
-        numbas::exam::ExamQuestionPart::PatternMatch(p) => Some(extract_pattern_match_part(p)),
-        numbas::exam::ExamQuestionPart::ChooseOne(p) => Some(extract_choose_one_part(p)),
-        numbas::exam::ExamQuestionPart::ChooseMultiple(p) => Some(extract_choose_multiple_part(p)),
-        numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(p) => {
-            Some(extract_match_answers_with_choices_part(p))
+        numbas::exam::ExamQuestionPart::Builtin(bqp) => QuestionPart::Builtin(match bqp {
+            numbas::exam::ExamQuestionPartBuiltin::JME(p) => extract_jme_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::NumberEntry(p) => extract_number_entry_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::Matrix(p) => extract_matrix_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::PatternMatch(p) => extract_pattern_match_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::ChooseOne(p) => extract_choose_one_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(p) => {
+                extract_choose_multiple_part(p)
+            }
+            numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(p) => {
+                extract_match_answers_with_choices_part(p)
+            }
+            numbas::exam::ExamQuestionPartBuiltin::GapFill(p) => extract_gapfill_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::Information(p) => extract_information_part(p),
+            numbas::exam::ExamQuestionPartBuiltin::Extension(p) => extract_extension_part(p),
+        }),
+        numbas::exam::ExamQuestionPart::Custom(cqp) => {
+            QuestionPart::Custom(extract_custom_part(cqp))
         }
-        numbas::exam::ExamQuestionPart::GapFill(p) => Some(extract_gapfill_part(p)),
-        numbas::exam::ExamQuestionPart::Information(p) => Some(extract_information_part(p)),
-        numbas::exam::ExamQuestionPart::Extension(p) => None, // extract_extension_part(p),
     }
 }
 
@@ -1392,13 +1543,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),
-                                parts: v!(q
-                                    .parts
-                                    .iter()
-                                    .map(|p| extract_part(p))
-                                    .filter(|p| p.is_some())
-                                    .map(|p| v!(p.unwrap()))
-                                    .collect()), // todo remove unwrap (remove option above)
+                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()), // todo remove unwrap (remove option above)
                                 builtin_constants: v!(extract_builtin_constants(
                                     q.builtin_constants
                                 )),
@@ -1460,11 +1605,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                         .prevent_leaving
                                         .unwrap_or(DEFAULTS.question_navigation_prevent_leaving)),
                                 }),
-                                extensions: v!(Extensions {
-                                    jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),
-                                    stats: v!(q.extensions.contains(&"stats".to_string())),
-                                    eukleides: v!(q.extensions.contains(&"eukleides".to_string())),
-                                }),
+                                extensions: v!(Extensions::from(&q.extensions)),
                                 diagnostic_topic_names: v!(q
                                     .tags
                                     .iter()
