@@ -90,10 +90,7 @@ impl std::convert::TryFrom<String> for QuestionPath {
     type Error = YamlError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = Question::from_name(&s).map_err(|e| {
-            println!("Reading question {}", e);
-            e
-        })?;
+        let question_data = Question::from_name(&s).map_err(|e| e)?;
         Ok(QuestionPath {
             question_name: Value::Normal(s),
             question_data: Value::Normal(question_data),

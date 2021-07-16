@@ -52,6 +52,14 @@ RUN git clone https://github.com/numbas/numbas-extension-eukleides.git eukleides
 WORKDIR /usr/app/eukleides
 RUN git fetch && git checkout bac3d060cd70d79fb6f897f0a54076ec916b8e14
 
+# Fetch geogebra extension
+FROM alpine as geogebra_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/numbas/numbas-extension-geogebra.git stats
+WORKDIR /usr/app/stats
+RUN git fetch && git checkout 14fdb023341357134b6376f5f6084834587d6f8f
+
 # Main image
 FROM python:3.6.10-alpine 
 WORKDIR /usr/app/Numbas
@@ -62,6 +70,7 @@ RUN pip install -r requirements.txt
 RUN mkdir -p extensions
 COPY --from=jsxgraph_fetcher /usr/app/jsxgraph /usr/app/Numbas/extensions/jsxgraph
 COPY --from=stats_fetcher /usr/app/stats /usr/app/Numbas/extensions/stats
+COPY --from=geogebra_fetcher /usr/app/geogebra /usr/app/Numbas/extensions/geogebra
 RUN mkdir -p extensions/eukleides
  # For now just use the js file in dist instead of using make
 COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numbas/extensions/eukleides

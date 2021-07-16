@@ -1,6 +1,8 @@
+use crate::data::extension::QuestionPartExtension;
 use crate::data::gapfill::QuestionPartGapFill;
 use crate::data::information::QuestionPartInformation;
 use crate::data::jme::QuestionPartJME;
+use crate::data::matrix::QuestionPartMatrix;
 use crate::data::multiple_choice::QuestionPartChooseMultiple;
 use crate::data::multiple_choice::QuestionPartChooseOne;
 use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
@@ -9,11 +11,44 @@ use crate::data::optional_overwrite::*;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
+use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite_enum! {
-    #[serde(tag="type")]
+    #[serde(untagged)]
     pub enum QuestionPart {
+        Builtin(QuestionPartBuiltin),
+        Custom(QuestionPartCustom)
+    }
+}
+
+impl ToNumbas for QuestionPart {
+    type NumbasType = numbas::exam::ExamQuestionPart;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPart> {
+        match self {
+            QuestionPart::Builtin(b) => b
+                .to_numbas(&locale)
+                .map(|c| numbas::exam::ExamQuestionPart::Builtin(c)),
+            QuestionPart::Custom(b) => b
+                .to_numbas(&locale)
+                .map(|c| numbas::exam::ExamQuestionPart::Custom(c)),
+        }
+    }
+}
+
+impl QuestionPart {
+    pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
+        match self {
+            QuestionPart::Builtin(b) => b.get_steps(),
+            QuestionPart::Custom(b) => b.get_steps(),
+        }
+    }
+}
+
+optional_overwrite_enum! {
+    #[serde(tag="type")]
+    pub enum QuestionPartBuiltin {
         #[serde(rename = "jme")]
         JME(QuestionPartJME),
         #[serde(rename = "gapfill")]
@@ -29,65 +64,79 @@ optional_overwrite_enum! {
         #[serde(rename = "pattern_match")]
         PatternMatch(QuestionPartPatternMatch),
         #[serde(rename = "information")]
-        Information(QuestionPartInformation)
-        // TODO: matrix & extension
+        Information(QuestionPartInformation),
+        #[serde(rename = "extension")]
+        Extension(QuestionPartExtension),
+        #[serde(rename = "matrix")]
+        Matrix(QuestionPartMatrix)
     }
 }
 
-impl ToNumbas for QuestionPart {
-    type NumbasType = numbas::exam::ExamQuestionPart;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPart> {
-        match self {
-            QuestionPart::JME(d) => {
+impl ToNumbas for QuestionPartBuiltin {
+    type NumbasType = numbas::exam::ExamQuestionPartBuiltin;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartBuiltin> {
+        Ok(match self {
+            QuestionPartBuiltin::JME(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::JME(n))
+                numbas::exam::ExamQuestionPartBuiltin::JME(n)
             }
-            QuestionPart::GapFill(d) => {
+            QuestionPartBuiltin::GapFill(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::GapFill(n))
+                numbas::exam::ExamQuestionPartBuiltin::GapFill(n)
             }
-            QuestionPart::ChooseOne(d) => {
+            QuestionPartBuiltin::ChooseOne(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::ChooseOne(n))
+                numbas::exam::ExamQuestionPartBuiltin::ChooseOne(n)
             }
-            QuestionPart::ChooseMultiple(d) => {
+            QuestionPartBuiltin::ChooseMultiple(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::ChooseMultiple(n))
+                numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(n)
             }
-            QuestionPart::MatchAnswersWithItems(d) => {
+            QuestionPartBuiltin::MatchAnswersWithItems(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::MatchAnswersWithChoices(n))
+                numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(n)
             }
-            QuestionPart::NumberEntry(d) => {
+            QuestionPartBuiltin::NumberEntry(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::NumberEntry(n))
+                numbas::exam::ExamQuestionPartBuiltin::NumberEntry(n)
             }
-            QuestionPart::PatternMatch(d) => {
+            QuestionPartBuiltin::PatternMatch(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::PatternMatch(n))
+                numbas::exam::ExamQuestionPartBuiltin::PatternMatch(n)
             }
-            QuestionPart::Information(d) => {
+            QuestionPartBuiltin::Information(d) => {
                 let n = d.to_numbas(&locale)?;
-                Ok(numbas::exam::ExamQuestionPart::Information(n))
+                numbas::exam::ExamQuestionPartBuiltin::Information(n)
             }
-        }
+            QuestionPartBuiltin::Extension(d) => {
+                let n = d.to_numbas(&locale)?;
+                numbas::exam::ExamQuestionPartBuiltin::Extension(n)
+            }
+            QuestionPartBuiltin::Matrix(d) => {
+                let n = d.to_numbas(&locale)?;
+                numbas::exam::ExamQuestionPartBuiltin::Matrix(n)
+            }
+        })
     }
 }
 
-impl QuestionPart {
+impl QuestionPartBuiltin {
     pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
         match self {
-            QuestionPart::JME(d) => d.get_steps(),
-            QuestionPart::GapFill(d) => d.get_steps(),
-            QuestionPart::ChooseOne(d) => d.get_steps(),
-            QuestionPart::ChooseMultiple(d) => d.get_steps(),
-            QuestionPart::MatchAnswersWithItems(d) => d.get_steps(),
-            QuestionPart::NumberEntry(d) => d.get_steps(),
-            QuestionPart::PatternMatch(d) => d.get_steps(),
-            QuestionPart::Information(d) => d.get_steps(),
+            QuestionPartBuiltin::JME(d) => d.get_steps(),
+            QuestionPartBuiltin::GapFill(d) => d.get_steps(),
+            QuestionPartBuiltin::ChooseOne(d) => d.get_steps(),
+            QuestionPartBuiltin::ChooseMultiple(d) => d.get_steps(),
+            QuestionPartBuiltin::MatchAnswersWithItems(d) => d.get_steps(),
+            QuestionPartBuiltin::NumberEntry(d) => d.get_steps(),
+            QuestionPartBuiltin::PatternMatch(d) => d.get_steps(),
+            QuestionPartBuiltin::Information(d) => d.get_steps(),
+            QuestionPartBuiltin::Extension(d) => d.get_steps(),
+            QuestionPartBuiltin::Matrix(d) => d.get_steps(),
         }
     }
 }
+
 // TODO major refactor: add types that are used to right ones
 macro_rules! question_part_type {
     (
@@ -147,6 +196,76 @@ macro_rules! question_part_type {
             pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
                 &mut self.steps
             }
+        }
+    }
+}
+
+question_part_type! {
+    pub struct QuestionPartCustom {
+        r#type: String,
+        settings: std::collections::HashMap<String, TranslatableString> //CustomPartInputTypeValue> // TODO
+    }
+}
+
+optional_overwrite_enum! {
+    #[serde(untagged)]
+    pub enum CustomPartInputTypeValue {
+        CheckBox(bool),
+        Code(String)
+    }
+}
+
+impl ToNumbas for CustomPartInputTypeValue {
+    type NumbasType = numbas::exam::CustomPartInputTypeValue;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(match self {
+                CustomPartInputTypeValue::CheckBox(v) => {
+                    numbas::exam::CustomPartInputTypeValue::CheckBox((*v).into())
+                }
+                CustomPartInputTypeValue::Code(v) => {
+                    numbas::exam::CustomPartInputTypeValue::Code(v.clone().into())
+                }
+            })
+        } else {
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas for numbas::exam::CustomPartInputTypeValue {
+    type RumbasType = CustomPartInputTypeValue;
+    fn to_rumbas(&self) -> Self::RumbasType {
+        match self {
+            numbas::exam::CustomPartInputTypeValue::CheckBox(v) => {
+                CustomPartInputTypeValue::CheckBox(v.0)
+            }
+            numbas::exam::CustomPartInputTypeValue::Code(v) => {
+                CustomPartInputTypeValue::Code(v.to_string())
+            }
+        }
+    }
+}
+
+impl ToNumbas for QuestionPartCustom {
+    type NumbasType = numbas::exam::ExamQuestionPartCustom;
+    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(Self::NumbasType {
+                part_data: self.to_numbas_shared_data(&locale),
+                r#type: self.r#type.unwrap(),
+                settings: self
+                    .settings
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
+                    .collect(),
+            })
+        } else {
+            Err(check)
         }
     }
 }

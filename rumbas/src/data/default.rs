@@ -16,7 +16,7 @@ use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::*;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
-use crate::data::question_part::QuestionPart;
+use crate::data::question_part::{QuestionPart, QuestionPartBuiltin};
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use std::collections::HashSet;
@@ -167,20 +167,28 @@ macro_rules! handle_question_parts {
                                     {
                                         //TODO: others etc
                                         parts.iter_mut().for_each(|part_value| {
-                                            if let Some(ValueType::Normal(ref mut part)) =
-                                                &mut part_value.0
+                                            if let Some(ValueType::Normal(QuestionPart::Builtin(
+                                                ref mut part,
+                                            ))) = &mut part_value.0
                                             {
-                                                if let QuestionPart::$type(_) = &part {
-                                                    part.overwrite(&QuestionPart::$type($p.clone()))
+                                                if let QuestionPartBuiltin::$type(_) = &part {
+                                                    part.overwrite(&QuestionPartBuiltin::$type(
+                                                        $p.clone(),
+                                                    ))
                                                 }
                                                 if let Value(Some(ValueType::Normal(
                                                     ref mut steps,
                                                 ))) = &mut part.get_steps()
                                                 {
                                                     steps.iter_mut().for_each(|part| {
-                                                        if let QuestionPart::$type(_) = &part {
-                                                            part.overwrite(&QuestionPart::$type(
-                                                                $p.clone(),
+                                                        if let QuestionPart::Builtin(
+                                                            QuestionPartBuiltin::$type(_),
+                                                        ) = &part
+                                                        {
+                                                            part.overwrite(&QuestionPart::Builtin(
+                                                                QuestionPartBuiltin::$type(
+                                                                    $p.clone(),
+                                                                ),
                                                             ))
                                                         }
                                                     })
@@ -214,17 +222,25 @@ macro_rules! handle_question_parts {
                                             if let Some(ValueType::Normal(ref mut part)) =
                                                 &mut part_value.0
                                             {
-                                                if let QuestionPart::GapFill(ref mut gap_fill) =
-                                                    part
+                                                if let QuestionPart::Builtin(
+                                                    QuestionPartBuiltin::GapFill(ref mut gap_fill),
+                                                ) = part
                                                 {
                                                     if let Some(ValueType::Normal(ref mut gaps)) =
                                                         gap_fill.gaps.0
                                                     {
                                                         gaps.iter_mut().for_each(|gap| {
-                                                            if let QuestionPart::$type(_) = &gap {
-                                                                gap.overwrite(&QuestionPart::$type(
-                                                                    $p.clone(),
-                                                                ))
+                                                            if let QuestionPart::Builtin(
+                                                                QuestionPartBuiltin::$type(_),
+                                                            ) = &gap
+                                                            {
+                                                                gap.overwrite(
+                                                                    &QuestionPart::Builtin(
+                                                                        QuestionPartBuiltin::$type(
+                                                                            $p.clone(),
+                                                                        ),
+                                                                    ),
+                                                                )
                                                             }
                                                         })
                                                     }

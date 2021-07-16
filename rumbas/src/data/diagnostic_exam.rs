@@ -1,3 +1,4 @@
+use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::extension::Extensions;
 use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
@@ -29,6 +30,8 @@ optional_overwrite! {
         question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
         /// The settings to set for numbas
         numbas_settings: NumbasSettings,
+        /// The custom part types used in this exam
+        custom_part_types: Vec<CustomPartTypeDefinitionPath>,
         /// The diagnostic data
         diagnostic: Diagnostic
     }
@@ -120,8 +123,17 @@ impl ToNumbas for DiagnosticExam {
                 .fold(Extensions::new(), |a, b| Extensions::combine(a, b))
                 .to_paths();
 
-            //TODO
-            let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
+            let custom_part_types = self
+                .custom_part_types
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|c| {
+                    c.custom_part_type_data
+                        .to_numbas_with_name(&locale, c.custom_part_type_name)
+                        .unwrap()
+                })
+                .collect();
 
             let diagnostic = Some(self.diagnostic.clone().unwrap().to_numbas(&locale).unwrap());
 

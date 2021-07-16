@@ -3,6 +3,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
@@ -11,9 +12,9 @@ question_part_type! {
         answer: NumberEntryAnswer,
         display_correct_as_fraction: bool,
         allow_fractions: bool,
-        allowed_notation_styles: Vec<numbas::exam::AnswerStyle>,
+        allowed_notation_styles: Vec<AnswerStyle>,
 
-        display_correct_in_style: numbas::exam::AnswerStyle,
+        display_correct_in_style: AnswerStyle,
         fractions_must_be_reduced: bool,
         partial_credit_if_fraction_not_reduced: numbas::exam::Primitive,
 
@@ -33,9 +34,21 @@ impl ToNumbas for QuestionPartNumberEntry {
             Ok(Self::NumbasType {
                 part_data: self.to_numbas_shared_data(&locale),
                 correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
-                correct_answer_style: Some(self.display_correct_in_style.clone().unwrap()),
+                correct_answer_style: Some(
+                    self.display_correct_in_style
+                        .clone()
+                        .map(|a| a.to_numbas(&locale).unwrap())
+                        .unwrap(),
+                ),
                 allow_fractions: self.allow_fractions.unwrap(),
-                notation_styles: Some(self.allowed_notation_styles.clone().unwrap()),
+                notation_styles: Some(
+                    self.allowed_notation_styles
+                        .clone()
+                        .unwrap()
+                        .into_iter()
+                        .map(|a| a.to_numbas(&locale).unwrap())
+                        .collect(),
+                ),
                 fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
                 partial_credit_if_fraction_not_reduced: Some(
                     self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
@@ -72,5 +85,71 @@ impl ToNumbas for NumberEntryAnswer {
                 max_value: numbas::exam::Primitive::String(to.get_content(&locale)),
             },
         })
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum AnswerStyle {
+    /// English style - commas separate thousands, dot for decimal point
+    #[serde(rename = "english")]
+    English,
+    /// Plain English style - no thousands separator, dot for decimal point
+    #[serde(rename = "english-plain")]
+    EnglishPlain,
+    /// English SI style - spaces separate thousands, dot for decimal point
+    #[serde(rename = "english-si")]
+    EnglishSI,
+    /// Continental European style - dots separate thousands, comma for decimal poin
+    #[serde(rename = "european")]
+    European,
+    /// Plain French style - no thousands separator, comma for decimal point
+    #[serde(rename = "european-plain")]
+    EuropeanPlain,
+    /// French SI style - spaces separate thousands, comma for decimal point
+    #[serde(rename = "french-si")]
+    FrenchSI,
+    /// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.
+    #[serde(rename = "indian")]
+    Indian,
+    /// Significand-exponent ("scientific") style
+    #[serde(rename = "scientific")]
+    Scientific,
+    /// Swiss style - apostrophes separate thousands, dot for decimal point
+    #[serde(rename = "swiss")]
+    Swiss,
+}
+impl_optional_overwrite!(AnswerStyle);
+
+impl ToNumbas for AnswerStyle {
+    type NumbasType = numbas::exam::AnswerStyle;
+    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+        Ok(match self {
+            AnswerStyle::English => numbas::exam::AnswerStyle::English,
+            AnswerStyle::EnglishPlain => numbas::exam::AnswerStyle::EnglishPlain,
+            AnswerStyle::EnglishSI => numbas::exam::AnswerStyle::EnglishSI,
+            AnswerStyle::European => numbas::exam::AnswerStyle::European,
+            AnswerStyle::EuropeanPlain => numbas::exam::AnswerStyle::EuropeanPlain,
+            AnswerStyle::FrenchSI => numbas::exam::AnswerStyle::FrenchSI,
+            AnswerStyle::Indian => numbas::exam::AnswerStyle::Indian,
+            AnswerStyle::Scientific => numbas::exam::AnswerStyle::Scientific,
+            AnswerStyle::Swiss => numbas::exam::AnswerStyle::Swiss,
+        })
+    }
+}
+
+impl ToRumbas for numbas::exam::AnswerStyle {
+    type RumbasType = AnswerStyle;
+    fn to_rumbas(&self) -> Self::RumbasType {
+        match self {
+            numbas::exam::AnswerStyle::English => AnswerStyle::English,
+            numbas::exam::AnswerStyle::EnglishPlain => AnswerStyle::EnglishPlain,
+            numbas::exam::AnswerStyle::EnglishSI => AnswerStyle::EnglishSI,
+            numbas::exam::AnswerStyle::European => AnswerStyle::European,
+            numbas::exam::AnswerStyle::EuropeanPlain => AnswerStyle::EuropeanPlain,
+            numbas::exam::AnswerStyle::FrenchSI => AnswerStyle::FrenchSI,
+            numbas::exam::AnswerStyle::Indian => AnswerStyle::Indian,
+            numbas::exam::AnswerStyle::Scientific => AnswerStyle::Scientific,
+            numbas::exam::AnswerStyle::Swiss => AnswerStyle::Swiss,
+        }
     }
 }

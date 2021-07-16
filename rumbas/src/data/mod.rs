@@ -8,6 +8,7 @@ pub mod to_numbas;
 pub mod to_rumbas;
 #[macro_use]
 pub mod question_part;
+pub mod custom_part_type;
 pub mod default;
 pub mod diagnostic_exam;
 pub mod exam;
@@ -20,6 +21,7 @@ pub mod information;
 pub mod input_string;
 pub mod jme;
 pub mod locale;
+pub mod matrix;
 pub mod multiple_choice;
 pub mod navigation;
 pub mod normal_exam;

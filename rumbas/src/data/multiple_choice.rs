@@ -155,7 +155,7 @@ impl ToNumbas for QuestionPartChooseOne {
                 display_type: self.display.unwrap().to_numbas_type(),
                 columns: self.display.unwrap().to_nb_columns().into(),
                 wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
-                show_cell_answer_state: self.show_cell_answer_state.unwrap(),
+                show_cell_answer_state: Some(self.show_cell_answer_state.unwrap()),
                 marking_matrix,
                 distractors,
             })
