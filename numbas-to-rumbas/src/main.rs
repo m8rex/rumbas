@@ -42,6 +42,138 @@ use rumbas::data::translatable::TranslatableString;
 use rumbas::data::variable::{Variable, VariableRepresentation, VariableTemplateType};
 use sanitize_filename::sanitize;
 
+pub struct NumbasDefaults {
+    navigation_reverse: bool,
+    navigation_browsing_enabled: bool,
+    navigation_allow_steps: bool,
+    navigation_prevent_leaving: bool,
+    navigation_show_names_of_question_groups: bool,
+    navigation_start_password: String,
+    navigation_on_leave: LeaveAction,
+    question_navigation_prevent_leaving: bool,
+    basic_settings_show_student_name: bool,
+    basic_settings_allow_printing: bool,
+    feedback_review_show_score: bool,
+    feedback_review_show_feedback: bool,
+    feedback_review_show_expected_answer: bool,
+    feedback_review_show_advice: bool,
+    builtin_constants_e: bool,
+    builtin_constants_i: bool,
+    builtin_constants_pi: bool,
+    part_common_marks: usize,
+    part_common_use_custom_name: bool,
+    part_common_steps_penalty: usize,
+    part_common_enable_minimum_marks: bool,
+    part_common_minimum_marks: usize,
+    part_common_show_feedback_icon: bool,
+    part_common_adaptive_marking_penalty: usize,
+    part_common_extend_base_marking_algorithm: bool,
+    number_entry_correct_answer_style: numbas::exam::AnswerStyle,
+    length_restriction_length: usize,
+    number_entry_fractions_must_be_reduced: bool,
+    number_entry_partial_credit_if_fraction_not_reduced: numbas::exam::Primitive,
+    number_entry_hint_fraction: bool,
+
+    choose_one_has_to_select_option: bool,
+    gapfill_sort_answers: bool,
+    match_answers_with_items_min_answers: usize,
+    choose_multiple_min_answers: usize,
+
+    jme_single_letter_variables: bool,
+    jme_allow_unknown_functions: bool,
+    jme_implicit_function_composition: bool,
+    jme_simplification_simplify_basic: bool,
+    jme_simplification_simplify_unit_factor: bool,
+    jme_simplification_simplify_unit_power: bool,
+    jme_simplification_simplify_unit_denominator: bool,
+    jme_simplification_simplify_zero_factor: bool,
+    jme_simplification_simplify_zero_term: bool,
+    jme_simplification_simplify_zero_power: bool,
+    jme_simplification_simplify_zero_base: bool,
+    jme_simplification_collect_numbers: bool,
+    jme_simplification_constants_first: bool,
+    jme_simplification_simplify_sqrt_products: bool,
+    jme_simplification_simplify_sqrt_division: bool,
+    jme_simplification_simplify_sqrt_square: bool,
+    jme_simplification_simplify_other_numbers: bool,
+    jme_simplification_simplify_no_leading_minus: bool,
+    jme_simplification_simplify_fractions: bool,
+    jme_simplification_simplify_trigonometric: bool,
+    jme_simplification_cancel_terms: bool,
+    jme_simplification_cancel_factors: bool,
+    jme_simplification_collect_like_fractions: bool,
+    jme_simplification_order_canonical: bool,
+    jme_simplification_use_times_dot: bool,
+    jme_simplification_expand_brackets: bool,
+}
+
+// TODO default values
+const DEFAULTS: NumbasDefaults = NumbasDefaults {
+    navigation_reverse: true,
+    navigation_browsing_enabled: true,
+    navigation_allow_steps: true,
+    navigation_prevent_leaving: true,
+    navigation_show_names_of_question_groups: true,
+    navigation_start_password: String::new(),
+    navigation_on_leave: LeaveAction::None,
+    question_navigation_prevent_leaving: true,
+    basic_settings_show_student_name: true,
+    basic_settings_allow_printing: true,
+    feedback_review_show_score: true,
+    feedback_review_show_feedback: true,
+    feedback_review_show_expected_answer: true,
+    feedback_review_show_advice: true,
+    builtin_constants_e: false,
+    builtin_constants_i: false,
+    builtin_constants_pi: false,
+    part_common_marks: 0,
+    part_common_use_custom_name: false,
+    part_common_steps_penalty: 0,
+    part_common_enable_minimum_marks: true,
+    part_common_minimum_marks: 0,
+    part_common_show_feedback_icon: true,
+    part_common_adaptive_marking_penalty: 0,
+    part_common_extend_base_marking_algorithm: true,
+    number_entry_correct_answer_style: numbas::exam::AnswerStyle::EnglishPlain,
+    length_restriction_length: 0,
+
+    choose_one_has_to_select_option: true,
+    gapfill_sort_answers: true,
+    match_answers_with_items_min_answers: 0,
+    choose_multiple_min_answers: 0,
+
+    number_entry_fractions_must_be_reduced: false,
+    number_entry_partial_credit_if_fraction_not_reduced: numbas::exam::Primitive::Natural(0),
+    number_entry_hint_fraction: true,
+
+    jme_single_letter_variables: false,
+    jme_allow_unknown_functions: false,
+    jme_implicit_function_composition: false,
+    jme_simplification_simplify_basic: true,
+    jme_simplification_simplify_unit_factor: true,
+    jme_simplification_simplify_unit_power: true,
+    jme_simplification_simplify_unit_denominator: true,
+    jme_simplification_simplify_zero_factor: true,
+    jme_simplification_simplify_zero_term: true,
+    jme_simplification_simplify_zero_power: true,
+    jme_simplification_simplify_zero_base: true,
+    jme_simplification_collect_numbers: true,
+    jme_simplification_constants_first: true,
+    jme_simplification_simplify_sqrt_products: true,
+    jme_simplification_simplify_sqrt_division: true,
+    jme_simplification_simplify_sqrt_square: true,
+    jme_simplification_simplify_other_numbers: true,
+    jme_simplification_simplify_no_leading_minus: true,
+    jme_simplification_simplify_fractions: true,
+    jme_simplification_simplify_trigonometric: true,
+    jme_simplification_cancel_terms: true,
+    jme_simplification_cancel_factors: true,
+    jme_simplification_collect_like_fractions: true,
+    jme_simplification_order_canonical: false,
+    jme_simplification_use_times_dot: true,
+    jme_simplification_expand_brackets: false,
+};
+
 macro_rules! read {
     ($file_name: expr) => {{
         let content = std::fs::read_to_string($file_name).expect("Invalid file path");
@@ -184,23 +316,31 @@ fn convert_diagnostic_exam(exam: NExam) -> (DiagnosticExam, Vec<QuestionPath>) {
 
 fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
     NavigationSharedData {
-        // todo fix numbas defaults
         start_password: v!(FileString::s(
             &exam
                 .navigation
                 .start_password
                 .clone()
-                .unwrap_or("".to_string())
+                .unwrap_or(DEFAULTS.navigation_start_password.clone())
         )),
         can_regenerate: v!(exam.navigation.allow_regenerate),
-        show_steps: v!(exam.navigation.allow_steps.unwrap_or(true)),
+        show_steps: v!(exam
+            .navigation
+            .allow_steps
+            .unwrap_or(DEFAULTS.navigation_allow_steps)),
         show_title_page: v!(exam.navigation.show_frontpage),
-        prevent_leaving: v!(exam.navigation.prevent_leaving.unwrap_or(true)),
+        prevent_leaving: v!(exam
+            .navigation
+            .prevent_leaving
+            .unwrap_or(DEFAULTS.navigation_prevent_leaving)),
         show_names_of_question_groups: v!(exam
             .basic_settings
             .show_question_group_names
-            .unwrap_or(true)),
-        allow_printing: v!(exam.basic_settings.allow_printing.unwrap_or(true)),
+            .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups)),
+        allow_printing: v!(exam
+            .basic_settings
+            .allow_printing
+            .unwrap_or(DEFAULTS.basic_settings_allow_printing)),
     }
 }
 
@@ -218,8 +358,14 @@ fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
         numbas::exam::ExamNavigationMode::Sequence => {
             Some(NormalNavigation::Sequential(SequentialNavigation {
                 shared_data: v!(extract_shared_navigation(exam)),
-                can_move_to_previous: v!(exam.navigation.reverse.unwrap_or(true)), // todo default
-                browsing_enabled: v!(exam.navigation.browsing_enabled.unwrap_or(true)), // todo default
+                can_move_to_previous: v!(exam
+                    .navigation
+                    .reverse
+                    .unwrap_or(DEFAULTS.navigation_reverse)),
+                browsing_enabled: v!(exam
+                    .navigation
+                    .browsing_enabled
+                    .unwrap_or(DEFAULTS.navigation_browsing_enabled)),
                 show_results_page: v!(extract_sequential_navigation_show_results_page(
                     exam.navigation.show_results_page.clone().unwrap() // todo?
                 )),
@@ -242,7 +388,7 @@ fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
                             }
                         }
                     })
-                    .unwrap_or(LeaveAction::None)),
+                    .unwrap_or(DEFAULTS.navigation_on_leave)),
             }))
         }
         numbas::exam::ExamNavigationMode::Menu => Some(NormalNavigation::Menu(MenuNavigation {
@@ -274,7 +420,7 @@ fn extract_diagnostic_navigation(exam: &NExam) -> DiagnosticNavigation {
                     }
                 }
             })
-            .unwrap_or(LeaveAction::None)),
+            .unwrap_or(DEFAULTS.navigation_on_leave)),
     }
 }
 
@@ -302,13 +448,15 @@ fn extract_timing(exam: &NExam) -> Timing {
 
 fn extract_feedback(exam: &NExam) -> Feedback {
     Feedback {
-        // todo: fix numbas defaults
         percentage_needed_to_pass: v!(exam
             .basic_settings
             .percentage_needed_to_pass
             .map(|p| Noneable::NotNone(p))
             .unwrap_or(nn())),
-        show_name_of_student: v!(exam.basic_settings.show_student_name.unwrap_or(true)),
+        show_name_of_student: v!(exam
+            .basic_settings
+            .show_student_name
+            .unwrap_or(DEFAULTS.basic_settings_show_student_name)),
         show_current_marks: v!(exam.feedback.show_actual_mark),
         show_maximum_marks: v!(exam.feedback.show_total_mark),
         show_answer_state: v!(exam.feedback.show_answer_state),
@@ -318,25 +466,31 @@ fn extract_feedback(exam: &NExam) -> Feedback {
                 .feedback
                 .review
                 .clone()
-                .map(|r| r.show_score.unwrap_or(true))
+                .map(|r| r.show_score.unwrap_or(DEFAULTS.feedback_review_show_score))
                 .unwrap()),
             show_feedback: v!(exam
                 .feedback
                 .review
                 .clone()
-                .map(|r| r.show_feedback.unwrap_or(true))
+                .map(|r| r
+                    .show_feedback
+                    .unwrap_or(DEFAULTS.feedback_review_show_feedback))
                 .unwrap()),
             show_expected_answer: v!(exam
                 .feedback
                 .review
                 .clone()
-                .map(|r| r.show_expected_answer.unwrap_or(true))
+                .map(|r| r
+                    .show_expected_answer
+                    .unwrap_or(DEFAULTS.feedback_review_show_expected_answer))
                 .unwrap()),
             show_advice: v!(exam
                 .feedback
                 .review
                 .clone()
-                .map(|r| r.show_advice.unwrap_or(true))
+                .map(|r| r
+                    .show_advice
+                    .unwrap_or(DEFAULTS.feedback_review_show_advice))
                 .unwrap()),
         }),
         advice: v!(ts!(exam.feedback.advice.clone().unwrap_or(String::new()))),
@@ -358,9 +512,18 @@ fn extract_feedback(exam: &NExam) -> Feedback {
 
 fn extract_builtin_constants(bc: numbas::exam::BuiltinConstants) -> BuiltinConstants {
     BuiltinConstants {
-        e: v!(*bc.0.get(&"e".to_string()).unwrap_or(&false)),
-        pi: v!(*bc.0.get(&"pi,\u{03c0}".to_string()).unwrap_or(&false)),
-        i: v!(*bc.0.get(&"i".to_string()).unwrap_or(&false)),
+        e: v!(*bc
+            .0
+            .get(&"e".to_string())
+            .unwrap_or(&DEFAULTS.builtin_constants_e)),
+        pi: v!(*bc
+            .0
+            .get(&"pi,\u{03c0}".to_string())
+            .unwrap_or(&DEFAULTS.builtin_constants_pi)),
+        i: v!(*bc
+            .0
+            .get(&"i".to_string())
+            .unwrap_or(&DEFAULTS.builtin_constants_i)),
     }
 }
 
@@ -387,29 +550,29 @@ fn extract_jme_answer_simplification(
     ov: &Option<Vec<numbas::exam::AnswerSimplificationType>>,
 ) -> JMEAnswerSimplification {
     let mut result = JMEAnswerSimplification {
-        simplify_basic: v!(true),
-        simplify_unit_factor: v!(true),
-        simplify_unit_power: v!(true),
-        simplify_unit_denominator: v!(true),
-        simplify_zero_factor: v!(true),
-        simplify_zero_term: v!(true),
-        simplify_zero_power: v!(true),
-        simplify_zero_base: v!(true),
-        collect_numbers: v!(true),
-        constants_first: v!(true),
-        simplify_sqrt_products: v!(true),
-        simplify_sqrt_division: v!(true),
-        simplify_sqrt_square: v!(true),
-        simplify_other_numbers: v!(true),
-        simplify_no_leading_minus: v!(true),
-        simplify_fractions: v!(true),
-        simplify_trigonometric: v!(true),
-        cancel_terms: v!(true),
-        cancel_factors: v!(true),
-        collect_like_fractions: v!(true),
-        order_canonical: v!(false),
-        use_times_dot: v!(true),
-        expand_brackets: v!(false),
+        simplify_basic: v!(DEFAULTS.jme_simplification_simplify_basic),
+        simplify_unit_factor: v!(DEFAULTS.jme_simplification_simplify_unit_factor),
+        simplify_unit_power: v!(DEFAULTS.jme_simplification_simplify_unit_power),
+        simplify_unit_denominator: v!(DEFAULTS.jme_simplification_simplify_unit_denominator),
+        simplify_zero_factor: v!(DEFAULTS.jme_simplification_simplify_zero_factor),
+        simplify_zero_term: v!(DEFAULTS.jme_simplification_simplify_zero_term),
+        simplify_zero_power: v!(DEFAULTS.jme_simplification_simplify_zero_power),
+        simplify_zero_base: v!(DEFAULTS.jme_simplification_simplify_zero_base),
+        collect_numbers: v!(DEFAULTS.jme_simplification_collect_numbers),
+        constants_first: v!(DEFAULTS.jme_simplification_constants_first),
+        simplify_sqrt_products: v!(DEFAULTS.jme_simplification_simplify_sqrt_products),
+        simplify_sqrt_division: v!(DEFAULTS.jme_simplification_simplify_sqrt_division),
+        simplify_sqrt_square: v!(DEFAULTS.jme_simplification_simplify_sqrt_square),
+        simplify_other_numbers: v!(DEFAULTS.jme_simplification_simplify_other_numbers),
+        simplify_no_leading_minus: v!(DEFAULTS.jme_simplification_simplify_no_leading_minus),
+        simplify_fractions: v!(DEFAULTS.jme_simplification_simplify_fractions),
+        simplify_trigonometric: v!(DEFAULTS.jme_simplification_simplify_trigonometric),
+        cancel_terms: v!(DEFAULTS.jme_simplification_cancel_terms),
+        cancel_factors: v!(DEFAULTS.jme_simplification_cancel_factors),
+        collect_like_fractions: v!(DEFAULTS.jme_simplification_collect_like_fractions),
+        order_canonical: v!(DEFAULTS.jme_simplification_order_canonical),
+        use_times_dot: v!(DEFAULTS.jme_simplification_use_times_dot),
+        expand_brackets: v!(DEFAULTS.jme_simplification_expand_brackets),
     }; // Numbas default
     if let Some(v) = ov {
         for a in v.iter() {
@@ -525,33 +688,38 @@ fn extract_part_common_marks(
 ) -> numbas::exam::Primitive {
     pd.marks
         .clone()
-        .unwrap_or(numbas::exam::Primitive::Natural(0)) // todo
+        .unwrap_or(numbas::exam::Primitive::Natural(DEFAULTS.part_common_marks))
 }
 
 fn extract_part_common_prompt(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.prompt.clone().unwrap_or(String::new()) //todo
+    pd.prompt.clone().unwrap_or(String::new())
 }
 
 fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.use_custom_name.unwrap_or(false) // todo
+    pd.use_custom_name
+        .unwrap_or(DEFAULTS.part_common_use_custom_name)
 }
 fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
     pd.custom_name.clone().unwrap_or(String::new()) // todo
 }
 fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
-    pd.steps_penalty.unwrap_or(0) // todo
+    pd.steps_penalty
+        .unwrap_or(DEFAULTS.part_common_steps_penalty)
 }
 fn extract_part_common_enable_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.enable_minimum_marks.unwrap_or(false) // todo
+    pd.enable_minimum_marks
+        .unwrap_or(DEFAULTS.part_common_enable_minimum_marks)
 }
 fn extract_part_common_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
-    pd.minimum_marks.unwrap_or(0) // todo
+    pd.minimum_marks
+        .unwrap_or(DEFAULTS.part_common_minimum_marks)
 }
 fn extract_part_common_show_correct_answer(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.show_correct_answer // todo
+    pd.show_correct_answer
 }
 fn extract_part_common_show_feedback_icon(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
-    pd.show_feedback_icon.unwrap_or(false) // todo
+    pd.show_feedback_icon
+        .unwrap_or(DEFAULTS.part_common_show_feedback_icon)
 }
 fn extract_part_common_variable_replacement_strategy(
     pd: &numbas::exam::ExamQuestionPartSharedData,
@@ -561,7 +729,8 @@ fn extract_part_common_variable_replacement_strategy(
 fn extract_part_common_adaptive_marking_penalty(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> usize {
-    pd.adaptive_marking_penalty.unwrap_or(0) // todo
+    pd.adaptive_marking_penalty
+        .unwrap_or(DEFAULTS.part_common_adaptive_marking_penalty)
 }
 fn extract_part_common_custom_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
@@ -571,7 +740,8 @@ fn extract_part_common_custom_marking_algorithm(
 fn extract_part_common_extend_base_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> bool {
-    pd.extend_base_marking_algorithm.unwrap_or(false) // todo
+    pd.extend_base_marking_algorithm
+        .unwrap_or(DEFAULTS.part_common_extend_base_marking_algorithm)
 }
 fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> Vec<QuestionPart> {
     pd.steps
@@ -596,7 +766,7 @@ fn extract_restriction(r: &numbas::exam::JMERestriction) -> JMERestriction {
 fn extract_length_restriction(r: &numbas::exam::JMELengthRestriction) -> JMELengthRestriction {
     JMELengthRestriction {
         restriction: v!(extract_restriction(&r.restriction)),
-        length: v!(r.length.unwrap_or(0)), // todo?
+        length: v!(r.length.unwrap_or(DEFAULTS.length_restriction_length)),
     }
 }
 
@@ -648,14 +818,20 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPart {
         answer: v!(ts!(qp.answer)),
         answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
         show_preview: v!(qp.show_preview),
-        checking_type: v!(extract_checking_type(&qp.checking_type)), // todo
+        checking_type: v!(extract_checking_type(&qp.checking_type)),
         failure_rate: v!(qp.failure_rate),
         vset_range: v!([qp.vset_range[0].0, qp.vset_range[1].0]),
         vset_range_points: v!(qp.vset_range_points.0),
         check_variable_names: v!(qp.check_variable_names),
-        single_letter_variables: v!(qp.single_letter_variables.unwrap_or(false)), // todo numbas default
-        allow_unknown_functions: v!(qp.allow_unknown_functions.unwrap_or(false)), // todo numbas default
-        implicit_function_composition: v!(qp.implicit_function_composition.unwrap_or(false)), // todo: numbas default
+        single_letter_variables: v!(qp
+            .single_letter_variables
+            .unwrap_or(DEFAULTS.jme_single_letter_variables)),
+        allow_unknown_functions: v!(qp
+            .allow_unknown_functions
+            .unwrap_or(DEFAULTS.jme_allow_unknown_functions)),
+        implicit_function_composition: v!(qp
+            .implicit_function_composition
+            .unwrap_or(DEFAULTS.jme_implicit_function_composition)),
 
         max_length: v!(qp
             .max_length
@@ -734,14 +910,18 @@ fn extract_number_entry_part(qp: &numbas::exam::ExamQuestionPartNumberEntry) -> 
         display_correct_in_style: v!(qp
             .correct_answer_style
             .clone()
-            .unwrap_or(numbas::exam::AnswerStyle::EnglishPlain)), // todo default
+            .unwrap_or(DEFAULTS.number_entry_correct_answer_style)),
 
-        fractions_must_be_reduced: v!(qp.fractions_must_be_reduced.unwrap_or(true)), // todo: default
+        fractions_must_be_reduced: v!(qp
+            .fractions_must_be_reduced
+            .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced)),
         partial_credit_if_fraction_not_reduced: v!(qp
             .partial_credit_if_fraction_not_reduced
             .clone()
-            .unwrap_or(numbas::exam::Primitive::Natural(0))), // todo: default
-        hint_fraction: v!(qp.show_fraction_hint.unwrap_or(true)), // todo: default
+            .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced)),
+        hint_fraction: v!(qp
+            .show_fraction_hint
+            .unwrap_or(DEFAULTS.number_entry_hint_fraction)),
     })
 }
 // todo
@@ -868,7 +1048,10 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
         }),
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
-        has_to_select_option: v!(qp.min_answers.map(|v| v == 1).unwrap_or(false)), // todo: default
+        has_to_select_option: v!(qp
+            .min_answers
+            .map(|v| v == 1)
+            .unwrap_or(DEFAULTS.choose_one_has_to_select_option)),
     })
 }
 
@@ -952,7 +1135,9 @@ fn extract_choose_multiple_part(qp: &numbas::exam::ExamQuestionPartChooseMultipl
         answer_data,
         shuffle_answers: v!(qp.shuffle_answers),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
-        should_select_at_least: v!(qp.min_answers.unwrap_or(0)),
+        should_select_at_least: v!(qp
+            .min_answers
+            .unwrap_or(DEFAULTS.choose_multiple_min_answers)),
         should_select_at_most: v!(qp
             .max_answers
             .map(|ma| Noneable::NotNone(ma))
@@ -1061,7 +1246,9 @@ fn extract_match_answers_with_choices_part(
         shuffle_answers: v!(qp.shuffle_answers),
         shuffle_items: v!(qp.shuffle_choices),
         show_cell_answer_state: v!(qp.show_cell_answer_state),
-        should_select_at_least: v!(qp.min_answers.unwrap_or(0)),
+        should_select_at_least: v!(qp
+            .min_answers
+            .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)),
         should_select_at_most: v!(qp
             .max_answers
             .map(|ma| Noneable::NotNone(ma))
@@ -1092,7 +1279,7 @@ fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionP
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
 
-        sort_answers: v!(qp.sort_answers.unwrap_or(false)), // todo default
+        sort_answers: v!(qp.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
 
         gaps: v!(qp
             .gaps
@@ -1245,7 +1432,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                     prevent_leaving: v!(q
                                         .navigation
                                         .prevent_leaving
-                                        .unwrap_or(false)), // todo: check default
+                                        .unwrap_or(DEFAULTS.question_navigation_prevent_leaving)),
                                 }),
                                 extensions: v!(Extensions {
                                     jsx_graph: v!(q.extensions.contains(&"jsx_graph".to_string())),
