@@ -97,9 +97,23 @@ impl ToNumbas for NormalExam {
                 .map(|qg| qg.clone().to_numbas(&locale).unwrap())
                 .collect();
 
-            // Below from questions
-            //TODO
-            let resources: Vec<[String; 2]> = Vec::new();
+            let resources: Vec<numbas::exam::Resource> = self
+                .question_groups
+                .clone()
+                .unwrap()
+                .iter()
+                .flat_map(|qg| {
+                    qg.clone()
+                        .unwrap()
+                        .questions
+                        .unwrap()
+                        .into_iter()
+                        .flat_map(|q| q.unwrap().question_data.unwrap().resources.unwrap())
+                })
+                .map(|r| r.unwrap())
+                .collect::<Vec<_>>()
+                .to_numbas(&locale)
+                .unwrap(); // TODO: remove duplicates?
 
             let extensions: Vec<String> = self
                 .question_groups

@@ -173,7 +173,7 @@ where
 pub struct Exam {
     #[serde(flatten)]
     pub basic_settings: BasicExamSettings,
-    pub resources: Vec<[String; 2]>,
+    pub resources: Vec<Resource>,
     pub extensions: Vec<String>,
     pub custom_part_types: Vec<CustomPartType>,
 
@@ -202,7 +202,7 @@ impl Exam {
 
     pub fn new(
         basic_settings: BasicExamSettings,
-        resources: Vec<[String; 2]>,
+        resources: Vec<Resource>,
         extensions: Vec<String>,
         custom_part_types: Vec<CustomPartType>,
         navigation: ExamNavigation,
@@ -865,50 +865,10 @@ pub struct ExamQuestion {
     //custom part types TODO
     pub extensions: Vec<String>, // todo: enum
     //metadata TODO
-    //resources TODO
+    pub resources: Vec<Resource>,
     //TODO type: question?
     /// Tags starting with 'skill: ' are used in diagnostic mode to specify a topic
     pub tags: Vec<String>,
-}
-
-impl ExamQuestion {
-    pub fn new(
-        name: String,
-        statement: String,
-        advice: String,
-        parts: Vec<ExamQuestionPart>,
-        builtin_constants: std::collections::HashMap<String, bool>,
-        constants: Vec<ExamQuestionConstant>,
-        variables: HashMap<String, ExamVariable>,
-        variables_test: ExamQuestionVariablesTest,
-        functions: HashMap<String, ExamFunction>,
-        ungrouped_variables: Vec<String>,
-        variable_groups: Vec<ExamQuestionVariableGroup>,
-        rulesets: HashMap<String, String>,
-        preamble: Preamble,
-        navigation: QuestionNavigation,
-        extensions: Vec<String>,
-        tags: Vec<String>,
-    ) -> ExamQuestion {
-        ExamQuestion {
-            name,
-            statement,
-            advice,
-            parts,
-            builtin_constants: BuiltinConstants(builtin_constants),
-            constants,
-            variables,
-            variables_test,
-            functions,
-            ungrouped_variables,
-            variable_groups,
-            rulesets,
-            preamble,
-            navigation,
-            extensions,
-            tags,
-        }
-    }
 }
 
 #[skip_serializing_none]
@@ -1820,3 +1780,6 @@ pub enum ExamDiagnosticScript {
     Diagnosys,
     Custom,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Resource(pub [String; 2]);
