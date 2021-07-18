@@ -61,7 +61,6 @@ impl ToNumbas for DiagnosticExam {
                         .clone()
                         .unwrap()
                         .shared_data
-                        .clone()
                         .unwrap()
                         .show_names_of_question_groups
                         .unwrap(),
@@ -72,7 +71,6 @@ impl ToNumbas for DiagnosticExam {
                         .clone()
                         .unwrap()
                         .shared_data
-                        .clone()
                         .unwrap()
                         .allow_printing
                         .unwrap(),
@@ -134,7 +132,7 @@ impl ToNumbas for DiagnosticExam {
                         .into_iter()
                         .map(|q| q.unwrap().question_data.unwrap().extensions.unwrap())
                 })
-                .fold(Extensions::new(), |a, b| Extensions::combine(a, b))
+                .fold(Extensions::new(), Extensions::combine)
                 .to_paths();
 
             let custom_part_types = self
@@ -311,14 +309,14 @@ impl ToNumbas for LearningTopic {
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|s| s.clone().to_string(&locale).unwrap())
+                    .map(|s| s.to_string(&locale).unwrap())
                     .collect(),
                 depends_on: self
                     .depends_on
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|s| s.clone().to_string(&locale).unwrap())
+                    .map(|s| s.to_string(&locale).unwrap())
                     .collect(),
             })
         } else {

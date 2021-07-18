@@ -8,10 +8,10 @@ use clap::{crate_version, App};
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
-const CACHE_FOLDER: &'static str = ".rumbas";
+const CACHE_FOLDER: &str = ".rumbas";
 
 /// The name of the local folder used for the output.
-const OUTPUT_FOLDER: &'static str = "_output";
+const OUTPUT_FOLDER: &str = "_output";
 
 /// The main cli function
 /// # Requirements
@@ -60,7 +60,7 @@ fn main() {
             if exam.locales().0.is_none() {
                 eprintln!("Locales not set!");
             } else {
-                for locale_item in exam.locales().clone().unwrap().iter() {
+                for locale_item in exam.locales().unwrap().iter() {
                     let locale = locale_item.clone().unwrap().name.unwrap();
                     let numbas = exam.to_numbas(&locale);
                     match numbas {
@@ -78,18 +78,17 @@ fn main() {
                                 .canonicalize()
                                 .unwrap()
                                 .join(path.with_extension(output_extension));
-                            let numbas_output_path = if output_extension == "" {
+                            if output_extension.is_empty() {
                                 // Remove current folder
                                 std::fs::remove_dir_all(&absolute_path).unwrap_or(()); //If error, don't mind
                                                                                        // Create folder
                                 std::fs::create_dir_all(&absolute_path)
                                     .expect("Failed creating folder for output");
-                                absolute_path
                             } else {
                                 std::fs::create_dir_all(&absolute_path.parent().unwrap())
                                     .expect("Failed creating folder for output");
-                                absolute_path
                             };
+                            let numbas_output_path = absolute_path;
                             //println!("{}", numbas_output_path.display());
 
                             res.write(&numbas_exam_path.to_str().unwrap());
@@ -110,10 +109,10 @@ fn main() {
                                 .arg(numbas_exam_path.canonicalize().unwrap()) //TODO?
                                 .output()
                                 .expect("failed to execute numbas process");
-                            if output.stdout.len() > 0 {
+                            if !output.stdout.is_empty() {
                                 println!("{}", std::str::from_utf8(&output.stdout).unwrap());
                             }
-                            if output.stderr.len() > 0 {
+                            if !output.stderr.is_empty() {
                                 eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
                             }
                         }

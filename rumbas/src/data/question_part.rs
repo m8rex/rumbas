@@ -29,10 +29,10 @@ impl ToNumbas for QuestionPart {
         match self {
             QuestionPart::Builtin(b) => b
                 .to_numbas(&locale)
-                .map(|c| numbas::exam::ExamQuestionPart::Builtin(c)),
+                .map(numbas::exam::ExamQuestionPart::Builtin),
             QuestionPart::Custom(b) => b
                 .to_numbas(&locale)
-                .map(|c| numbas::exam::ExamQuestionPart::Custom(c)),
+                .map(numbas::exam::ExamQuestionPart::Custom),
         }
     }
 }

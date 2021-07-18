@@ -302,7 +302,7 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
         let custom_part_type_data = CustomPartTypeDefinition::from_name(&s).map_err(|e| e)?;
         Ok(CustomPartTypeDefinitionPath {
             custom_part_type_name: s,
-            custom_part_type_data: custom_part_type_data,
+            custom_part_type_data,
         })
     }
 }

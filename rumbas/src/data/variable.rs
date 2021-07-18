@@ -211,7 +211,7 @@ impl RangeData {
         format!("{} .. {}#{}", self.from, self.to, self.step)
     }
     pub fn try_from_random_range(s: &String) -> Option<RangeData> {
-        if s.starts_with("random(") && s.ends_with(")") {
+        if s.starts_with("random(") && s.ends_with(')') {
             return RangeData::try_from_range(&s[7..s.len() - 1].to_string());
         }
         None

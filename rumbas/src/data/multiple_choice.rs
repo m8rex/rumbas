@@ -364,7 +364,7 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
                             .clone()
                             .map(|v| {
                                 v.iter()
-                                    .map(|a| a.clone().unwrap().statement.clone())
+                                    .map(|a| a.clone().unwrap().statement)
                                     .collect::<Vec<_>>()
                             })
                             .unwrap(),
@@ -374,7 +374,6 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
                     Some(
                         VariableValued::Value(
                             data.items // TODO: better handling
-                                .clone()
                                 .unwrap(),
                         )
                         .map(|v| {

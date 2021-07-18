@@ -70,7 +70,7 @@ impl<O: ToNumbas> ToNumbas for Vec<O> {
     type NumbasType = Vec<O::NumbasType>;
     fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
         let mut v = Vec::new();
-        for item in self.into_iter() {
+        for item in self.iter() {
             v.push(item.to_numbas(&locale)?);
         }
         Ok(v)
