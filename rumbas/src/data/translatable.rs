@@ -60,7 +60,7 @@ impl TranslatableString {
             TranslatableString::Translated(m_value) => {
                 let m = m_value.clone();
                 m.get(locale)
-                    .or(m.get("content")) //TODO
+                    .or_else(|| m.get("content")) //TODO
                     .map(|t_value| {
                         let t = t_value.unwrap();
                         match t {
@@ -86,7 +86,7 @@ fn substitute(
     let mut result = pattern.clone();
     let mut substituted = false;
     for (key, val) in map.iter() {
-        if key.starts_with("{") && key.ends_with("}") {
+        if key.starts_with('{') && key.ends_with('}') {
             let before = result.clone();
             if let Some(v) = val.unwrap().to_string(&locale) {
                 result = result.replace(key, &v);

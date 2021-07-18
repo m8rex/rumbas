@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 /// The prefix used to specify a file reference
-const FILE_PREFIX: &'static str = "file:";
+const FILE_PREFIX: &str = "file:";
 
 /// A string that has to be read from a file.
 ///
@@ -81,7 +81,7 @@ impl std::convert::From<String> for FileString {
                     }
 
                     let content = std::fs::read_to_string(&file_path)
-                        .map(|s| InputString::from(s.clone()))
+                        .map(InputString::from)
                         .ok();
                     if content.is_none() && translated_content.len() == 0 {
                         FileString {
@@ -117,10 +117,10 @@ impl std::convert::From<String> for FileString {
 // file references
 impl std::convert::From<FileString> for String {
     fn from(fs: FileString) -> Self {
-        if fs.file_name.is_some() || fs.translated_content.len() > 0 || fs.content.is_none() {
+        if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
             panic!("Deserializing FileString only supported when plain InputString")
         }
-        fs.content.clone().unwrap().into()
+        fs.content.unwrap().into()
     }
 }
 

@@ -109,18 +109,14 @@ impl ToNumbas for NormalNavigation {
                 self.to_navigation_mode(),
                 self.can_move_to_previous(),
                 Some(self.browsing_enabled()),
-                Some(self.to_shared_data().show_steps.clone().unwrap()),
-                self.to_shared_data().show_title_page.clone().unwrap(),
+                Some(self.to_shared_data().show_steps.unwrap()),
+                self.to_shared_data().show_title_page.unwrap(),
                 self.show_results_page() // TODO
-                    .clone()
                     .map(|s| s.to_numbas(&locale).unwrap()),
-                Some(self.to_shared_data().prevent_leaving.clone().unwrap()),
-                self.on_leave()
-                    .clone()
-                    .map(|s| s.to_numbas(&locale).unwrap()),
+                Some(self.to_shared_data().prevent_leaving.unwrap()),
+                self.on_leave().map(|s| s.to_numbas(&locale).unwrap()),
                 self.to_shared_data()
                     .start_password
-                    .clone()
                     .map(|s| s.get_content(&locale)),
             ))
         } else {
@@ -150,27 +146,14 @@ impl ToNumbas for DiagnosticNavigation {
                 None,
                 None,
                 Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
-                self.shared_data
-                    .clone()
-                    .unwrap()
-                    .show_title_page
-                    .clone()
-                    .unwrap(),
+                self.shared_data.clone().unwrap().show_title_page.unwrap(),
                 None,
-                Some(
-                    self.shared_data
-                        .clone()
-                        .unwrap()
-                        .prevent_leaving
-                        .clone()
-                        .unwrap(),
-                ),
+                Some(self.shared_data.clone().unwrap().prevent_leaving.unwrap()),
                 self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
                 self.shared_data
                     .clone()
                     .unwrap()
                     .start_password
-                    .clone()
                     .map(|s| s.get_content(&locale)),
             ))
         } else {

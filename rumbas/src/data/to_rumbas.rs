@@ -25,7 +25,7 @@ impl_to_rumbas!(numbas::exam::Primitive);
 impl<O: ToRumbas> ToRumbas for Vec<O> {
     type RumbasType = Vec<O::RumbasType>;
     fn to_rumbas(&self) -> Self::RumbasType {
-        self.into_iter().map(|item| item.to_rumbas()).collect()
+        self.iter().map(|item| item.to_rumbas()).collect()
     }
 }
 

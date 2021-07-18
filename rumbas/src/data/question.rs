@@ -16,7 +16,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-pub const UNGROUPED_GROUP: &'static str = "Ungrouped variables";
+pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 optional_overwrite! {
     pub struct Question {
@@ -117,7 +117,7 @@ impl ToNumbas for Question {
                     .unwrap()
                     .into_iter()
                     .filter(|(_k, v)| {
-                        &v.unwrap().to_variable().group.clone().unwrap()[..] == UNGROUPED_GROUP
+                        &v.unwrap().to_variable().group.unwrap()[..] == UNGROUPED_GROUP
                     })
                     .map(|(k, _)| k)
                     .collect(),

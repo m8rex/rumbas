@@ -25,7 +25,7 @@ impl std::convert::TryFrom<String> for ResourcePath {
         if path.exists() {
             Ok(ResourcePath {
                 resource_name: s,
-                resource_path: path.to_path_buf(),
+                resource_path: path,
             })
         } else {
             Err(format!("Missing resource {}", path.display()))

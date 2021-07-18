@@ -57,7 +57,7 @@ impl RumbasCheckInvalidData {
         if let Ok(s) = serde_yaml::to_string(&self.data) {
             format!("{}\n With yaml:\n{}", p, s)
         } else {
-            format!("{}", p)
+            p
         }
     }
 }
