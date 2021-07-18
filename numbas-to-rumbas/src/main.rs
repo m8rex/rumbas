@@ -297,7 +297,7 @@ fn convert_normal_exam(
                 numbas_locale: v!(SupportedLocale::EnGB)
             })]), // todo: argument?
             name: v![ts!("todo".to_string())], // todo: argument
-            navigation: v![extract_normal_navigation(&exam).unwrap()], // TODO?
+            navigation: v![extract_normal_navigation(&exam).unwrap()],
             timing: v![extract_timing(&exam)],
             feedback: v![extract_feedback(&exam)],
             question_groups: v![question_groups.clone()],
@@ -1382,7 +1382,7 @@ fn extract_match_answers_with_choices_part(
             .unwrap_or(nn())),
         display: v!(qp.display_type.to_rumbas()),
         layout: v!(qp.layout.clone()),
-    }) // todo
+    })
 }
 
 fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPartBuiltin {
@@ -1432,7 +1432,7 @@ fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> Q
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
-    }) // todo
+    })
 }
 fn extract_extension_part(qp: &numbas::exam::ExamQuestionPartExtension) -> QuestionPartBuiltin {
     QuestionPartBuiltin::Extension(QuestionPartExtension {
@@ -1454,7 +1454,7 @@ fn extract_extension_part(qp: &numbas::exam::ExamQuestionPartExtension) -> Quest
             &qp.part_data
         )),
         steps: v!(extract_part_common_steps(&qp.part_data)),
-    }) // todo
+    })
 }
 
 fn extract_custom_part(qp: &numbas::exam::ExamQuestionPartCustom) -> QuestionPartCustom {
@@ -1543,7 +1543,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                             question_data: v!(Question {
                                 statement: v!(ts!(q.statement)),
                                 advice: v!(ts!(q.advice)),
-                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()), // todo remove unwrap (remove option above)
+                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()),
                                 builtin_constants: v!(extract_builtin_constants(
                                     q.builtin_constants
                                 )),
@@ -1596,7 +1596,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                 preamble: v!(Preamble {
                                     js: v!(FileString::s(&q.preamble.js)),
                                     css: v!(FileString::s(&q.preamble.css)),
-                                }), // todo
+                                }),
                                 navigation: v!(QuestionNavigation {
                                     can_regenerate: v!(q.navigation.allow_regenerate),
                                     show_title_page: v!(q.navigation.show_frontpage),
@@ -1614,6 +1614,12 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                         t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string()
                                     ))
                                     .collect()),
+                                resources: v!(q
+                                    .resources
+                                    .to_rumbas()
+                                    .into_iter()
+                                    .map(|r| v!(r))
+                                    .collect())
                             })
                         })
                     })

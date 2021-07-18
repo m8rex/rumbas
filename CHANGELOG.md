@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for diagnostic exams
 - `builtin_constants` and `custom_constants` in question description
 - Support for `NumbasLike` answers field for ChooseOne part
+- Support for resources
 
 ### Changed
 

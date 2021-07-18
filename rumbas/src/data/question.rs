@@ -4,6 +4,7 @@ use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::*;
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
+use crate::data::resource::ResourcePath;
 use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -31,8 +32,9 @@ optional_overwrite! {
         navigation: QuestionNavigation,
         extensions: Extensions,
         /// The names of the topics used in diagnostic exams that this question belongs to
-        diagnostic_topic_names: Vec<TranslatableString> // TODO: validate? / warnings?
-        //TODO al lot of options
+        diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
+        resources: Vec<Value<ResourcePath>>
+        //TODO a lot of options
     }
 }
 
@@ -56,28 +58,33 @@ impl ToNumbas for Question {
             if self.variables.unwrap().contains_key("e") {
                 panic!("e is not allowed as a variable name"); //TODO
             }
-            Ok(numbas::exam::ExamQuestion::new(
+            Ok(numbas::exam::ExamQuestion {
                 name,
-                self.statement.clone().unwrap().to_string(&locale).unwrap(),
-                self.advice.clone().unwrap().to_string(&locale).unwrap(),
-                self.parts
+                statement: self.statement.clone().unwrap().to_string(&locale).unwrap(),
+                advice: self.advice.clone().unwrap().to_string(&locale).unwrap(),
+                parts: self
+                    .parts
                     .clone()
                     .unwrap()
                     .iter()
                     .map(|p| p.to_numbas(&locale).unwrap())
                     .collect(),
-                self.builtin_constants
-                    .clone()
-                    .unwrap()
-                    .to_numbas(&locale)
-                    .unwrap(),
-                self.custom_constants
+                builtin_constants: numbas::exam::BuiltinConstants(
+                    self.builtin_constants
+                        .clone()
+                        .unwrap()
+                        .to_numbas(&locale)
+                        .unwrap(),
+                ),
+                constants: self
+                    .custom_constants
                     .clone()
                     .unwrap()
                     .iter()
                     .map(|p| p.to_numbas(&locale).unwrap())
                     .collect(),
-                self.variables
+                variables: self
+                    .variables
                     .clone()
                     .unwrap()
                     .into_iter()
@@ -91,18 +98,21 @@ impl ToNumbas for Question {
                         )
                     })
                     .collect(),
-                self.variables_test
+                variables_test: self
+                    .variables_test
                     .clone()
                     .unwrap()
                     .to_numbas(&locale)
                     .unwrap(),
-                self.functions
+                functions: self
+                    .functions
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
                     .collect(),
-                self.variables
+                ungrouped_variables: self
+                    .variables
                     .clone()
                     .unwrap()
                     .into_iter()
@@ -111,18 +121,20 @@ impl ToNumbas for Question {
                     })
                     .map(|(k, _)| k)
                     .collect(),
-                Vec::new(),     // Don't add variable groups
-                HashMap::new(), //TODO: add to Question type ?
-                self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
-                self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
-                self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
-                self.diagnostic_topic_names
+                variable_groups: Vec::new(), // Don't add variable groups
+                rulesets: HashMap::new(),    //TODO: add to Question type ?
+                preamble: self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
+                navigation: self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
+                extensions: self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
+                tags: self
+                    .diagnostic_topic_names
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|t| format!("skill: {}", t.to_string(&locale).unwrap()))
                     .collect(),
-            ))
+                resources: self.resources.clone().unwrap().to_numbas(&locale).unwrap(),
+            })
         } else {
             Err(check)
         }
