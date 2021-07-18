@@ -28,16 +28,16 @@ impl_optional_overwrite!(numbas::exam::AnswerStyle);
 
 impl ToNumbas for QuestionPartNumberEntry {
     type NumbasType = numbas::exam::ExamQuestionPartNumberEntry;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
                 correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
                 correct_answer_style: Some(
                     self.display_correct_in_style
                         .clone()
-                        .map(|a| a.to_numbas(&locale).unwrap())
+                        .map(|a| a.to_numbas(locale).unwrap())
                         .unwrap(),
                 ),
                 allow_fractions: self.allow_fractions.unwrap(),
@@ -46,7 +46,7 @@ impl ToNumbas for QuestionPartNumberEntry {
                         .clone()
                         .unwrap()
                         .into_iter()
-                        .map(|a| a.to_numbas(&locale).unwrap())
+                        .map(|a| a.to_numbas(locale).unwrap())
                         .collect(),
                 ),
                 fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
@@ -75,14 +75,14 @@ impl_optional_overwrite!(NumberEntryAnswer);
 
 impl ToNumbas for NumberEntryAnswer {
     type NumbasType = numbas::exam::NumberEntryAnswerType;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             NumberEntryAnswer::Normal(f) => numbas::exam::NumberEntryAnswerType::Answer {
-                answer: numbas::exam::Primitive::String(f.get_content(&locale)),
+                answer: numbas::exam::Primitive::String(f.get_content(locale)),
             },
             NumberEntryAnswer::Range { from, to } => numbas::exam::NumberEntryAnswerType::MinMax {
-                min_value: numbas::exam::Primitive::String(from.get_content(&locale)),
-                max_value: numbas::exam::Primitive::String(to.get_content(&locale)),
+                min_value: numbas::exam::Primitive::String(from.get_content(locale)),
+                max_value: numbas::exam::Primitive::String(to.get_content(locale)),
             },
         })
     }
@@ -122,7 +122,7 @@ impl_optional_overwrite!(AnswerStyle);
 
 impl ToNumbas for AnswerStyle {
     type NumbasType = numbas::exam::AnswerStyle;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             AnswerStyle::English => numbas::exam::AnswerStyle::English,
             AnswerStyle::EnglishPlain => numbas::exam::AnswerStyle::EnglishPlain,

@@ -24,13 +24,20 @@ impl RumbasCheckPath {
     pub fn add(&mut self, s: String) {
         self.parts.insert(0, s)
     }
-    pub fn to_string(&self) -> String {
+}
+
+impl std::fmt::Display for RumbasCheckPath {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let base = self.parts.join(".");
-        if let Some(ref e) = self.last_part {
-            format!("{}.{}", base, e)
-        } else {
-            base
-        }
+        write!(
+            f,
+            "{}",
+            if let Some(ref e) = self.last_part {
+                format!("{}.{}", base, e)
+            } else {
+                base
+            }
+        )
     }
 }
 
@@ -39,9 +46,9 @@ pub struct RumbasCheckMissingData {
     path: RumbasCheckPath,
 }
 
-impl RumbasCheckMissingData {
-    pub fn to_string(&self) -> String {
-        self.path.to_string()
+impl std::fmt::Display for RumbasCheckMissingData {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.path.to_string())
     }
 }
 
@@ -51,14 +58,18 @@ pub struct RumbasCheckInvalidData {
     data: serde_yaml::Value,
 }
 
-impl RumbasCheckInvalidData {
-    pub fn to_string(&self) -> String {
+impl std::fmt::Display for RumbasCheckInvalidData {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let p = self.path.to_string();
-        if let Ok(s) = serde_yaml::to_string(&self.data) {
-            format!("{}\n With yaml:\n{}", p, s)
-        } else {
-            p
-        }
+        write!(
+            f,
+            "{}",
+            if let Ok(s) = serde_yaml::to_string(&self.data) {
+                format!("{}\n With yaml:\n{}", p, s)
+            } else {
+                p
+            }
+        )
     }
 }
 
@@ -123,7 +134,7 @@ pub trait RumbasCheck {
 
 pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + RumbasCheck {
     fn overwrite(&mut self, other: &Item);
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value);
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -165,9 +176,9 @@ macro_rules! impl_optional_overwrite_value_only {
                     *self = other.clone();
                 }
             }
-            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 if let Some(ValueType::Template(ts)) = &self.0 {
-                    if ts.key == Some(key.clone()) {
+                    if ts.key == Some(key.to_string()) {
                         *self=Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
                     }
                 } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
@@ -204,7 +215,7 @@ macro_rules! impl_optional_overwrite_value {
                     // Do nothing, none is a valid value
                 }
             }
-            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 if let Noneable::NotNone(item) = self {
                     item.insert_template_value(&key, &val);
                 }
@@ -228,9 +239,9 @@ impl<O: RumbasCheck> RumbasCheck for Vec<O> {
 }
 impl<O: OptionalOverwrite<O>> OptionalOverwrite<Vec<O>> for Vec<O> {
     fn overwrite(&mut self, _other: &Vec<O>) {}
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         for (_i, item) in self.iter_mut().enumerate() {
-            item.insert_template_value(&key, &val);
+            item.insert_template_value(key, val);
         }
     }
 }
@@ -246,7 +257,7 @@ macro_rules! impl_optional_overwrite {
         }
         impl OptionalOverwrite<$type> for $type {
             fn overwrite(&mut self, _other: &$type) {}
-            fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
+            fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
         }
         impl_optional_overwrite_value!($type);
         )*
@@ -268,9 +279,9 @@ impl<T: RumbasCheck> RumbasCheck for HashMap<String, T> {
 }
 impl<T: OptionalOverwrite<T>> OptionalOverwrite<HashMap<String, T>> for HashMap<String, T> {
     fn overwrite(&mut self, _other: &HashMap<String, T>) {}
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         for (_i, (_key, item)) in self.iter_mut().enumerate() {
-            item.insert_template_value(&key, &val);
+            item.insert_template_value(key, val);
         }
     }
 }
@@ -318,7 +329,7 @@ macro_rules! optional_overwrite {
                     self.$field.overwrite(&other.$field);
                 )*
             }
-            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 $(
                     self.$field.insert_template_value(&key, &val);
                 )*
@@ -375,7 +386,7 @@ macro_rules! optional_overwrite_enum {
                     , _ => ()
                 };
             }
-            fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value){
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 match self {
                 $(
                     &mut $enum::$field(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
@@ -518,7 +529,7 @@ mod test {
             t,
             Temp {
                 name: t.clone().name,
-                test: t2.clone().test,
+                test: t2.test,
             }
         );
     }
@@ -653,18 +664,18 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValue
     fn overwrite(&mut self, other: &VariableValued<T>) {
         match (self, other) {
             (&mut VariableValued::Variable(ref mut val), &VariableValued::Variable(ref valo)) => {
-                val.overwrite(&valo)
+                val.overwrite(valo)
             }
             (&mut VariableValued::Value(ref mut val), &VariableValued::Value(ref valo)) => {
-                val.overwrite(&valo)
+                val.overwrite(valo)
             }
             _ => (),
         };
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
-        match self {
-            &mut VariableValued::Variable(ref mut s) => s.insert_template_value(&key, &val),
-            &mut VariableValued::Value(ref mut v) => v.insert_template_value(&key, &val),
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match *self {
+            VariableValued::Variable(ref mut s) => s.insert_template_value(key, val),
+            VariableValued::Value(ref mut v) => v.insert_template_value(key, val),
         };
     }
 }
@@ -672,7 +683,7 @@ impl_optional_overwrite_value!(VariableValued<T>[T]);
 
 impl<T: ToNumbas + RumbasCheck> ToNumbas for VariableValued<T> {
     type NumbasType = numbas::exam::VariableValued<T::NumbasType>;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(match self {

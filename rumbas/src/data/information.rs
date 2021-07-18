@@ -11,11 +11,11 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartInformation {
     type NumbasType = numbas::exam::ExamQuestionPartInformation;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
             })
         } else {
             Err(check)

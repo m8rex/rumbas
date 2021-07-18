@@ -101,7 +101,7 @@ optional_overwrite! {
 
 impl ToNumbas for NormalNavigation {
     type NumbasType = numbas::exam::ExamNavigation;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamNavigation> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
@@ -112,12 +112,12 @@ impl ToNumbas for NormalNavigation {
                 Some(self.to_shared_data().show_steps.unwrap()),
                 self.to_shared_data().show_title_page.unwrap(),
                 self.show_results_page() // TODO
-                    .map(|s| s.to_numbas(&locale).unwrap()),
+                    .map(|s| s.to_numbas(locale).unwrap()),
                 Some(self.to_shared_data().prevent_leaving.unwrap()),
-                self.on_leave().map(|s| s.to_numbas(&locale).unwrap()),
+                self.on_leave().map(|s| s.to_numbas(locale).unwrap()),
                 self.to_shared_data()
                     .start_password
-                    .map(|s| s.get_content(&locale)),
+                    .map(|s| s.get_content(locale)),
             ))
         } else {
             Err(check)
@@ -137,7 +137,7 @@ optional_overwrite! {
 
 impl ToNumbas for DiagnosticNavigation {
     type NumbasType = numbas::exam::ExamNavigation;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamNavigation> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamNavigation::new(
@@ -149,12 +149,12 @@ impl ToNumbas for DiagnosticNavigation {
                 self.shared_data.clone().unwrap().show_title_page.unwrap(),
                 None,
                 Some(self.shared_data.clone().unwrap().prevent_leaving.unwrap()),
-                self.on_leave.clone().map(|s| s.to_numbas(&locale).unwrap()),
+                self.on_leave.clone().map(|s| s.to_numbas(locale).unwrap()),
                 self.shared_data
                     .clone()
                     .unwrap()
                     .start_password
-                    .map(|s| s.get_content(&locale)),
+                    .map(|s| s.get_content(locale)),
             ))
         } else {
             Err(check)
@@ -172,7 +172,7 @@ impl_optional_overwrite!(ShowResultsPage);
 
 impl ToNumbas for ShowResultsPage {
     type NumbasType = numbas::exam::ExamShowResultsPage;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
             ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
@@ -192,19 +192,19 @@ impl_optional_overwrite!(LeaveAction);
 
 impl ToNumbas for LeaveAction {
     type NumbasType = numbas::exam::ExamLeaveAction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             LeaveAction::None => numbas::exam::ExamLeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             LeaveAction::WarnIfNotAttempted { message } => {
                 numbas::exam::ExamLeaveAction::WarnIfNotAttempted {
-                    message: message.to_string(&locale).unwrap(),
+                    message: message.to_string(locale).unwrap(),
                 }
             }
             LeaveAction::PreventIfNotAttempted { message } => {
                 numbas::exam::ExamLeaveAction::PreventIfNotAttempted {
-                    message: message.to_string(&locale).unwrap(),
+                    message: message.to_string(locale).unwrap(),
                 }
             }
         })
@@ -223,7 +223,7 @@ optional_overwrite! {
 
 impl ToNumbas for QuestionNavigation {
     type NumbasType = numbas::exam::QuestionNavigation;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::QuestionNavigation> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::QuestionNavigation> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::QuestionNavigation::new(

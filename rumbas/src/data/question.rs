@@ -40,7 +40,7 @@ optional_overwrite! {
 
 impl ToNumbas for Question {
     type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         //TODO?
         panic!(
             "{}",
@@ -50,7 +50,7 @@ impl ToNumbas for Question {
     //TODO: add to_numbas on Option's to reduce burden?
     fn to_numbas_with_name(
         &self,
-        locale: &String,
+        locale: &str,
         name: String,
     ) -> NumbasResult<numbas::exam::ExamQuestion> {
         let check = self.check();
@@ -60,20 +60,20 @@ impl ToNumbas for Question {
             }
             Ok(numbas::exam::ExamQuestion {
                 name,
-                statement: self.statement.clone().unwrap().to_string(&locale).unwrap(),
-                advice: self.advice.clone().unwrap().to_string(&locale).unwrap(),
+                statement: self.statement.clone().unwrap().to_string(locale).unwrap(),
+                advice: self.advice.clone().unwrap().to_string(locale).unwrap(),
                 parts: self
                     .parts
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|p| p.to_numbas(&locale).unwrap())
+                    .map(|p| p.to_numbas(locale).unwrap())
                     .collect(),
                 builtin_constants: numbas::exam::BuiltinConstants(
                     self.builtin_constants
                         .clone()
                         .unwrap()
-                        .to_numbas(&locale)
+                        .to_numbas(locale)
                         .unwrap(),
                 ),
                 constants: self
@@ -81,7 +81,7 @@ impl ToNumbas for Question {
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|p| p.to_numbas(&locale).unwrap())
+                    .map(|p| p.to_numbas(locale).unwrap())
                     .collect(),
                 variables: self
                     .variables
@@ -93,7 +93,7 @@ impl ToNumbas for Question {
                             k.clone(),
                             v.unwrap()
                                 .to_variable()
-                                .to_numbas_with_name(&locale, k)
+                                .to_numbas_with_name(locale, k)
                                 .unwrap(),
                         )
                     })
@@ -102,14 +102,14 @@ impl ToNumbas for Question {
                     .variables_test
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 functions: self
                     .functions
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
+                    .map(|(k, v)| (k, v.to_numbas(locale).unwrap()))
                     .collect(),
                 ungrouped_variables: self
                     .variables
@@ -123,17 +123,17 @@ impl ToNumbas for Question {
                     .collect(),
                 variable_groups: Vec::new(), // Don't add variable groups
                 rulesets: HashMap::new(),    //TODO: add to Question type ?
-                preamble: self.preamble.clone().unwrap().to_numbas(&locale).unwrap(),
-                navigation: self.navigation.clone().unwrap().to_numbas(&locale).unwrap(),
-                extensions: self.extensions.clone().unwrap().to_numbas(&locale).unwrap(),
+                preamble: self.preamble.clone().unwrap().to_numbas(locale).unwrap(),
+                navigation: self.navigation.clone().unwrap().to_numbas(locale).unwrap(),
+                extensions: self.extensions.clone().unwrap().to_numbas(locale).unwrap(),
                 tags: self
                     .diagnostic_topic_names
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|t| format!("skill: {}", t.to_string(&locale).unwrap()))
+                    .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
                     .collect(),
-                resources: self.resources.clone().unwrap().to_numbas(&locale).unwrap(),
+                resources: self.resources.clone().unwrap().to_numbas(locale).unwrap(),
             })
         } else {
             Err(check)
@@ -142,7 +142,7 @@ impl ToNumbas for Question {
 }
 
 impl Question {
-    pub fn from_name(name: &String) -> YamlResult<Question> {
+    pub fn from_name(name: &str) -> YamlResult<Question> {
         use QuestionFileType::*;
         let file = Path::new("questions").join(format!("{}.yaml", name));
         let yaml = fs::read_to_string(&file).expect(
@@ -155,7 +155,7 @@ impl Question {
             serde_yaml::from_str(&yaml);
         input
             .map(|e| match e {
-                Normal(e) => Ok(e),
+                Normal(e) => Ok(*e),
                 Template(t) => {
                     let template_file = Path::new(TEMPLATE_QUESTIONS_FOLDER)
                         .join(format!("{}.yaml", t.relative_template_path));
@@ -186,7 +186,7 @@ optional_overwrite! {
 
 impl ToNumbas for VariablesTest {
     type NumbasType = numbas::exam::ExamQuestionVariablesTest;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamQuestionVariablesTest::new(
@@ -213,7 +213,7 @@ optional_overwrite! {
 
 impl ToNumbas for BuiltinConstants {
     type NumbasType = std::collections::HashMap<String, bool>;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             let mut builtin = std::collections::HashMap::new();
@@ -242,7 +242,7 @@ optional_overwrite! {
 
 impl ToNumbas for CustomConstant {
     type NumbasType = numbas::exam::ExamQuestionConstant;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {

@@ -17,16 +17,16 @@ optional_overwrite! {
 
 impl ToNumbas for Timing {
     type NumbasType = numbas::exam::ExamTiming;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamTiming> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamTiming> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamTiming::new(
                 self.allow_pause.unwrap(),
-                self.on_timeout.clone().unwrap().to_numbas(&locale).unwrap(),
+                self.on_timeout.clone().unwrap().to_numbas(locale).unwrap(),
                 self.timed_warning
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
             ))
         } else {
@@ -46,13 +46,13 @@ impl_optional_overwrite!(TimeoutAction);
 
 impl ToNumbas for TimeoutAction {
     type NumbasType = numbas::exam::ExamTimeoutAction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
-                message: message.to_string(&locale).unwrap(),
+                message: message.to_string(locale).unwrap(),
             },
         })
     }

@@ -61,7 +61,7 @@ macro_rules! create_enum_structs {
                 }
             }
 
-            fn read_as_data(&self, path: &PathBuf) -> serde_yaml::Result<DefaultData> {
+            fn read_as_data(&self, path: &Path) -> serde_yaml::Result<DefaultData> {
                 let yaml = fs::read_to_string(path).unwrap();
                 match self {
                     $(
@@ -103,7 +103,7 @@ QuestionPartGapFillGapInformation, QuestionPartInformation, "questionpart.gapfil
 
 impl DefaultFile {
     fn from(path: &Path) -> Option<DefaultFile> {
-        let default_type: Option<DefaultFileType> = DefaultFileType::from(&path);
+        let default_type: Option<DefaultFileType> = DefaultFileType::from(path);
         if let Some(t) = default_type {
             return Some(DefaultFile {
                 r#type: t,
@@ -138,11 +138,14 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     for a in ancestors {
         let defaults_path = a.with_file_name("defaults");
         if defaults_path.is_dir() {
-            for entry in defaults_path.read_dir().expect("read_dir call failed") {
-                if let Ok(entry) = entry {
-                    result.insert(entry.path()); //TODO: order files from the folder
-                                                 //println!("{:?}", entry.path());
-                }
+            for entry in defaults_path
+                .read_dir()
+                .expect("read_dir call failed")
+                .flatten()
+            // We only care about the ones that are 'Ok'
+            {
+                result.insert(entry.path()); //TODO: order files from the folder
+                                             //println!("{:?}", entry.path());
             }
         }
     }
@@ -219,31 +222,25 @@ macro_rules! handle_question_parts {
                                         question_data.parts.0
                                     {
                                         parts.iter_mut().for_each(|part_value| {
-                                            if let Some(ValueType::Normal(ref mut part)) =
-                                                &mut part_value.0
+                                            if let Some(ValueType::Normal(QuestionPart::Builtin(
+                                                QuestionPartBuiltin::GapFill(ref mut gap_fill),
+                                            ))) = &mut part_value.0
                                             {
-                                                if let QuestionPart::Builtin(
-                                                    QuestionPartBuiltin::GapFill(ref mut gap_fill),
-                                                ) = part
+                                                if let Some(ValueType::Normal(ref mut gaps)) =
+                                                    gap_fill.gaps.0
                                                 {
-                                                    if let Some(ValueType::Normal(ref mut gaps)) =
-                                                        gap_fill.gaps.0
-                                                    {
-                                                        gaps.iter_mut().for_each(|gap| {
-                                                            if let QuestionPart::Builtin(
-                                                                QuestionPartBuiltin::$type(_),
-                                                            ) = &gap
-                                                            {
-                                                                gap.overwrite(
-                                                                    &QuestionPart::Builtin(
-                                                                        QuestionPartBuiltin::$type(
-                                                                            $p.clone(),
-                                                                        ),
-                                                                    ),
-                                                                )
-                                                            }
-                                                        })
-                                                    }
+                                                    gaps.iter_mut().for_each(|gap| {
+                                                        if let QuestionPart::Builtin(
+                                                            QuestionPartBuiltin::$type(_),
+                                                        ) = &gap
+                                                        {
+                                                            gap.overwrite(&QuestionPart::Builtin(
+                                                                QuestionPartBuiltin::$type(
+                                                                    $p.clone(),
+                                                                ),
+                                                            ))
+                                                        }
+                                                    })
                                                 }
                                             }
                                         })

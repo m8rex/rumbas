@@ -20,21 +20,21 @@ optional_overwrite! {
 
 impl ToNumbas for QuestionGroup {
     type NumbasType = numbas::exam::ExamQuestionGroup;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamQuestionGroup::new(
-                self.name.clone().map(|s| s.to_string(&locale)).flatten(),
+                self.name.clone().map(|s| s.to_string(locale)).flatten(),
                 self.picking_strategy
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 self.questions //TODO: add ToNumbas to QuestionPath?
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|q| q.to_numbas(&locale).unwrap())
+                    .map(|q| q.to_numbas(locale).unwrap())
                     .collect(),
             ))
         } else {
@@ -59,7 +59,7 @@ impl ToNumbas for PickingStrategy {
     type NumbasType = numbas::exam::ExamQuestionGroupPickingStrategy;
     fn to_numbas(
         &self,
-        _locale: &String,
+        _locale: &str,
     ) -> NumbasResult<numbas::exam::ExamQuestionGroupPickingStrategy> {
         Ok(match self {
             PickingStrategy::AllOrdered => {
@@ -106,14 +106,14 @@ impl std::convert::From<QuestionPath> for String {
 
 impl ToNumbas for QuestionPath {
     type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(self
                 .question_data
                 .clone()
                 .unwrap()
-                .to_numbas_with_name(&locale, self.question_name.clone().unwrap())
+                .to_numbas_with_name(locale, self.question_name.clone().unwrap())
                 .unwrap())
         } else {
             Err(check)

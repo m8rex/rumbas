@@ -17,17 +17,17 @@ optional_overwrite! {
 
 impl ToNumbas for Variable {
     type NumbasType = numbas::exam::ExamVariable;
-    fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamVariable::new(
                 name,
-                self.definition.clone().unwrap().get_content(&locale),
+                self.definition.clone().unwrap().get_content(locale),
                 self.description.clone().unwrap(),
                 self.template_type
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 self.group.clone().unwrap(),
             ))
@@ -35,7 +35,7 @@ impl ToNumbas for Variable {
             Err(check)
         }
     }
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         //TODO?
         panic!(
             "{}",
@@ -68,7 +68,7 @@ pub enum VariableTemplateType {
 
 impl ToNumbas for VariableTemplateType {
     type NumbasType = numbas::exam::ExamVariableTemplateType;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
             VariableTemplateType::ListOfNumbers => {
@@ -94,7 +94,7 @@ impl_optional_overwrite!(VariableTemplateType);
 pub enum VariableRepresentation {
     ListOfStrings(Vec<Value<String>>),
     ListOfNumbers(Vec<Value<f64>>),
-    Long(Value<Variable>),
+    Long(Box<Value<Variable>>),
     Number(Value<f64>),
     Other(Value<VariableStringRepresentation>),
 }
@@ -114,7 +114,7 @@ impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
     fn overwrite(&mut self, _other: &VariableRepresentation) {
         //TODO?
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         match self {
             VariableRepresentation::ListOfStrings(v) => v.insert_template_value(key, val),
             VariableRepresentation::ListOfNumbers(v) => v.insert_template_value(key, val),
@@ -126,10 +126,10 @@ impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
 }
 impl_optional_overwrite_value!(VariableRepresentation);
 
-fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &String) -> Variable {
+fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &str) -> Variable {
     Variable {
         template_type: Value::Normal(template_type),
-        definition: Value::Normal(FileString::s(definition)),
+        definition: Value::Normal(FileString::s(&definition.to_owned())),
         description: Value::Normal("".to_string()),
         group: Value::Normal(UNGROUPED_GROUP.to_string()),
     }
@@ -195,7 +195,7 @@ pub struct RangeData {
 }
 
 impl RangeData {
-    pub fn try_from_range(s: &String) -> Option<RangeData> {
+    pub fn try_from_range(s: &str) -> Option<RangeData> {
         let re = Regex::new(r"^(\d+(?:\.\d*)?) \.\. (\d+(?:\.\d*)?)\#(\d+(?:\.\d*)?)$")
             .expect("It to be a valid regex");
         if let Some(c) = re.captures(s) {
@@ -207,16 +207,16 @@ impl RangeData {
         }
         None
     }
-    pub fn to_range(&self) -> String {
+    pub fn to_range(self) -> String {
         format!("{} .. {}#{}", self.from, self.to, self.step)
     }
-    pub fn try_from_random_range(s: &String) -> Option<RangeData> {
+    pub fn try_from_random_range(s: &str) -> Option<RangeData> {
         if s.starts_with("random(") && s.ends_with(')') {
             return RangeData::try_from_range(&s[7..s.len() - 1].to_string());
         }
         None
     }
-    pub fn to_random_range(&self) -> String {
+    pub fn to_random_range(self) -> String {
         format!("random({})", self.to_range())
     }
 }
