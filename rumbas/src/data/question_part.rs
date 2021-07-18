@@ -25,13 +25,13 @@ optional_overwrite_enum! {
 
 impl ToNumbas for QuestionPart {
     type NumbasType = numbas::exam::ExamQuestionPart;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPart> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPart> {
         match self {
             QuestionPart::Builtin(b) => b
-                .to_numbas(&locale)
+                .to_numbas(locale)
                 .map(numbas::exam::ExamQuestionPart::Builtin),
             QuestionPart::Custom(b) => b
-                .to_numbas(&locale)
+                .to_numbas(locale)
                 .map(numbas::exam::ExamQuestionPart::Custom),
         }
     }
@@ -74,46 +74,46 @@ optional_overwrite_enum! {
 
 impl ToNumbas for QuestionPartBuiltin {
     type NumbasType = numbas::exam::ExamQuestionPartBuiltin;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartBuiltin> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartBuiltin> {
         Ok(match self {
             QuestionPartBuiltin::JME(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::JME(n)
             }
             QuestionPartBuiltin::GapFill(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::GapFill(n)
             }
             QuestionPartBuiltin::ChooseOne(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::ChooseOne(n)
             }
             QuestionPartBuiltin::ChooseMultiple(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(n)
             }
             QuestionPartBuiltin::MatchAnswersWithItems(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(n)
             }
             QuestionPartBuiltin::NumberEntry(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::NumberEntry(n)
             }
             QuestionPartBuiltin::PatternMatch(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::PatternMatch(n)
             }
             QuestionPartBuiltin::Information(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::Information(n)
             }
             QuestionPartBuiltin::Extension(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::Extension(n)
             }
             QuestionPartBuiltin::Matrix(d) => {
-                let n = d.to_numbas(&locale)?;
+                let n = d.to_numbas(locale)?;
                 numbas::exam::ExamQuestionPartBuiltin::Matrix(n)
             }
         })
@@ -174,7 +174,7 @@ macro_rules! question_part_type {
             }
         }
         impl $struct {
-            fn to_numbas_shared_data(&self, locale: &String) -> numbas::exam::ExamQuestionPartSharedData {
+            fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData::new(
             Some(self.marks.clone().unwrap().into()),
             self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
@@ -217,7 +217,7 @@ optional_overwrite_enum! {
 
 impl ToNumbas for CustomPartInputTypeValue {
     type NumbasType = numbas::exam::CustomPartInputTypeValue;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(match self {
@@ -250,18 +250,18 @@ impl ToRumbas for numbas::exam::CustomPartInputTypeValue {
 
 impl ToNumbas for QuestionPartCustom {
     type NumbasType = numbas::exam::ExamQuestionPartCustom;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
                 r#type: self.r#type.unwrap(),
                 settings: self
                     .settings
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|(k, v)| (k, v.to_numbas(&locale).unwrap()))
+                    .map(|(k, v)| (k, v.to_numbas(locale).unwrap()))
                     .collect(),
             })
         } else {
@@ -279,7 +279,7 @@ impl_optional_overwrite!(VariableReplacementStrategy);
 
 impl ToNumbas for VariableReplacementStrategy {
     type NumbasType = numbas::exam::VariableReplacementStrategy;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             VariableReplacementStrategy::OriginalFirst => {
                 numbas::exam::VariableReplacementStrategy::OriginalFirst

@@ -41,7 +41,7 @@ impl std::convert::From<ResourcePath> for String {
 
 impl ToNumbas for ResourcePath {
     type NumbasType = numbas::exam::Resource;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::Resource([

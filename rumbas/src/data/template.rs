@@ -37,7 +37,7 @@ impl ExamFileType {
 #[serde(tag = "type")]
 pub enum QuestionFileType {
     Template(TemplateData),
-    Normal(Question),
+    Normal(Box<Question>),
 }
 
 impl QuestionFileType {
@@ -63,7 +63,7 @@ impl RumbasCheck for TemplateString {
 }
 impl OptionalOverwrite<TemplateString> for TemplateString {
     fn overwrite(&mut self, _other: &TemplateString) {}
-    fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(TemplateString);
 
@@ -79,7 +79,7 @@ impl std::convert::TryFrom<String> for TemplateString {
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let mut prefix = TEMPLATE_PREFIX.to_owned();
-        prefix.push_str(":");
+        prefix.push(':');
         if s.starts_with(&prefix) {
             if s == prefix {
                 Ok(TemplateString {

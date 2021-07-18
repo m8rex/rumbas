@@ -43,7 +43,7 @@ impl OptionalOverwrite<TranslatableString> for TranslatableString {
         //TODO: Maybe add languages of other that are missing in self?
         // These default values should be read before language is interpreted
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         match self {
             TranslatableString::Translated(m) => m.insert_template_value(key, val),
             TranslatableString::NotTranslated(f) => f.insert_template_value(key, val),
@@ -53,10 +53,10 @@ impl OptionalOverwrite<TranslatableString> for TranslatableString {
 impl_optional_overwrite_value!(TranslatableString);
 
 impl TranslatableString {
-    pub fn to_string(&self, locale: &String) -> Option<String> {
+    pub fn to_string(&self, locale: &str) -> Option<String> {
         match self {
             //TODO: just use unwrap on values?
-            TranslatableString::NotTranslated(s) => Some(s.get_content(&locale)),
+            TranslatableString::NotTranslated(s) => Some(s.get_content(locale)),
             TranslatableString::Translated(m_value) => {
                 let m = m_value.clone();
                 m.get(locale)
@@ -65,9 +65,9 @@ impl TranslatableString {
                         let t = t_value.unwrap();
                         match t {
                             TranslatableString::NotTranslated(s) => {
-                                substitute(&s.get_content(&locale), &locale, &m)
+                                substitute(&s.get_content(locale), locale, &m)
                             }
-                            _ => t.to_string(&locale),
+                            _ => t.to_string(locale),
                         }
                     })
                     .flatten()
@@ -79,16 +79,16 @@ impl TranslatableString {
 //TODO: check for infinite loops / recursion? -> don't substitute something that is already
 //substituted
 fn substitute(
-    pattern: &String,
-    locale: &String,
+    pattern: &str,
+    locale: &str,
     map: &HashMap<String, Value<TranslatableString>>,
 ) -> Option<String> {
-    let mut result = pattern.clone();
+    let mut result = pattern.to_string();
     let mut substituted = false;
     for (key, val) in map.iter() {
         if key.starts_with('{') && key.ends_with('}') {
             let before = result.clone();
-            if let Some(v) = val.unwrap().to_string(&locale) {
+            if let Some(v) = val.unwrap().to_string(locale) {
                 result = result.replace(key, &v);
                 substituted = substituted || before != result;
             } else {
@@ -97,7 +97,7 @@ fn substitute(
         }
     }
     if substituted {
-        return substitute(&result, &locale, &map);
+        return substitute(&result, locale, map);
     }
     Some(result)
 }
@@ -156,7 +156,7 @@ mod test {
             "{func}".to_string(),
             Value::Normal(NotTranslated(FileString::s(&val2.to_string()))),
         );
-        let t = Translated(m.clone());
+        let t = Translated(m);
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!("een string met functie {} en {}", val2, val1))
@@ -208,7 +208,7 @@ mod test {
         m2.insert("{cond}".to_string(), Value::Normal(Translated(m3)));
 
         m.insert("{func}".to_string(), Value::Normal(Translated(m2)));
-        let t = Translated(m.clone());
+        let t = Translated(m);
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!(

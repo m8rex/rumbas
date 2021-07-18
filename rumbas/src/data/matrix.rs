@@ -24,14 +24,14 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartMatrix {
     type NumbasType = numbas::exam::ExamQuestionPartMatrix;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             let dimensions = self.dimensions.unwrap();
             let rows = dimensions.rows.unwrap();
             let columns = dimensions.columns.unwrap();
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
                 correct_answer: self.correct_answer.unwrap(),
                 correct_answer_fractions: self.display_correct_as_fraction.unwrap(),
                 num_rows: rows.default().into(),
@@ -67,7 +67,7 @@ impl QuestionPartMatrixDimensions {
 optional_overwrite_enum! {
     pub enum QuestionPartMatrixDimension {
         Fixed(usize),
-        Resizable(QuestionPartMatrixRangedDimension)
+        Resizable(Box<QuestionPartMatrixRangedDimension>)
     }
 }
 
@@ -100,7 +100,7 @@ impl QuestionPartMatrixDimension {
         if min == default && default == max {
             Self::Fixed(min)
         } else {
-            Self::Resizable(QuestionPartMatrixRangedDimension {
+            Self::Resizable(Box::new(QuestionPartMatrixRangedDimension {
                 default: Value::Normal(default),
                 min: Value::Normal(min),
                 max: Value::Normal(if max == 0 {
@@ -108,7 +108,7 @@ impl QuestionPartMatrixDimension {
                 } else {
                     Noneable::NotNone(max)
                 }),
-            })
+            }))
         }
     }
 }

@@ -19,7 +19,7 @@ impl_optional_overwrite!(Exam); // TODO?
 
 impl ToNumbas for Exam {
     type NumbasType = numbas::exam::Exam;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Exam> {
         match self {
             Exam::Normal(n) => n.to_numbas(locale),
             Exam::Diagnostic(n) => n.to_numbas(locale),

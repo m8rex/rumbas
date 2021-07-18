@@ -30,24 +30,24 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartJME {
     type NumbasType = numbas::exam::ExamQuestionPartJME;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamQuestionPartJME::new(
-                self.to_numbas_shared_data(&locale),
-                self.answer.clone().unwrap().to_string(&locale).unwrap(),
+                self.to_numbas_shared_data(locale),
+                self.answer.clone().unwrap().to_string(locale).unwrap(),
                 Some(
                     self.answer_simplification
                         .clone()
                         .unwrap()
-                        .to_numbas(&locale)
+                        .to_numbas(locale)
                         .unwrap(),
                 ),
                 self.show_preview.clone().unwrap(),
                 self.checking_type
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 self.failure_rate.unwrap(),
                 self.vset_range.unwrap(),
@@ -58,27 +58,27 @@ impl ToNumbas for QuestionPartJME {
                 Some(self.implicit_function_composition.clone().unwrap()),
                 self.max_length
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
                 self.min_length
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
                 self.must_have
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
                 self.may_not_have
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
                 self.must_match_pattern
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
                 self.value_generators
                     .clone()
-                    .map(|v| v.to_numbas(&locale).unwrap())
+                    .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
             ))
         } else {
@@ -121,7 +121,7 @@ impl ToNumbas for JMEAnswerSimplification {
     type NumbasType = Vec<numbas::exam::AnswerSimplificationType>;
     fn to_numbas(
         &self,
-        _locale: &String,
+        _locale: &str,
     ) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
         let check = self.check();
         if check.is_empty() {
@@ -212,7 +212,7 @@ optional_overwrite! {
 
 impl ToNumbas for CheckingTypeDataFloat {
     type NumbasType = numbas::exam::JMECheckingTypeData<f64>;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         // TODO: check empty?
         let check = self.check();
         if check.is_empty() {
@@ -233,7 +233,7 @@ optional_overwrite! {
 
 impl ToNumbas for CheckingTypeDataNatural {
     type NumbasType = numbas::exam::JMECheckingTypeData<usize>;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         // TODO: check empty?
         let check = self.check();
         if check.is_empty() {
@@ -259,21 +259,21 @@ impl_optional_overwrite!(CheckingType);
 
 impl ToNumbas for CheckingType {
     type NumbasType = numbas::exam::JMECheckingType;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(match self {
                 CheckingType::RelativeDifference(f) => {
-                    numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(&locale).unwrap())
+                    numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(locale).unwrap())
                 }
                 CheckingType::AbsoluteDifference(f) => {
-                    numbas::exam::JMECheckingType::AbsoluteDifference(f.to_numbas(&locale).unwrap())
+                    numbas::exam::JMECheckingType::AbsoluteDifference(f.to_numbas(locale).unwrap())
                 }
                 CheckingType::DecimalPlaces(f) => {
-                    numbas::exam::JMECheckingType::DecimalPlaces(f.to_numbas(&locale).unwrap())
+                    numbas::exam::JMECheckingType::DecimalPlaces(f.to_numbas(locale).unwrap())
                 }
                 CheckingType::SignificantFigures(f) => {
-                    numbas::exam::JMECheckingType::SignificantFigures(f.to_numbas(&locale).unwrap())
+                    numbas::exam::JMECheckingType::SignificantFigures(f.to_numbas(locale).unwrap())
                 }
             })
         } else {
@@ -293,19 +293,19 @@ optional_overwrite! {
 
 impl ToNumbas for JMERestriction {
     type NumbasType = numbas::exam::JMERestriction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMERestriction> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMERestriction> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMERestriction::new(
-                self.name.clone().unwrap().to_string(&locale).unwrap(),
+                self.name.clone().unwrap().to_string(locale).unwrap(),
                 self.strings
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|s| s.to_string(&locale).unwrap())
+                    .map(|s| s.to_string(locale).unwrap())
                     .collect(),
                 self.partial_credit.clone().unwrap(),
-                self.message.clone().unwrap().to_string(&locale).unwrap(),
+                self.message.clone().unwrap().to_string(locale).unwrap(),
             ))
         } else {
             Err(check)
@@ -323,15 +323,11 @@ optional_overwrite! {
 
 impl ToNumbas for JMELengthRestriction {
     type NumbasType = numbas::exam::JMELengthRestriction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMELengthRestriction> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMELengthRestriction> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMELengthRestriction::new(
-                self.restriction
-                    .clone()
-                    .unwrap()
-                    .to_numbas(&locale)
-                    .unwrap(),
+                self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
                 Some(self.length.clone().unwrap()),
             ))
         } else {
@@ -350,15 +346,11 @@ optional_overwrite! {
 
 impl ToNumbas for JMEStringRestriction {
     type NumbasType = numbas::exam::JMEStringRestriction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEStringRestriction> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEStringRestriction> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMEStringRestriction::new(
-                self.restriction
-                    .clone()
-                    .unwrap()
-                    .to_numbas(&locale)
-                    .unwrap(),
+                self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
                 self.show_strings.clone().unwrap(),
             ))
         } else {
@@ -378,12 +370,12 @@ optional_overwrite! {
 
 impl ToNumbas for JMEPatternRestriction {
     type NumbasType = numbas::exam::JMEPatternRestriction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMEPatternRestriction::new(
                 self.partial_credit.clone().unwrap(),
-                self.message.clone().unwrap().to_string(&locale).unwrap(),
+                self.message.clone().unwrap().to_string(locale).unwrap(),
                 self.pattern.clone().unwrap(),
                 self.name_to_compare.clone().unwrap(),
             ))
@@ -402,12 +394,12 @@ optional_overwrite! {
 
 impl ToNumbas for JMEValueGenerator {
     type NumbasType = numbas::exam::JMEValueGenerator;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::JMEValueGenerator> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEValueGenerator> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMEValueGenerator::new(
-                self.name.clone().unwrap().get_content(&locale),
-                self.value.clone().unwrap().get_content(&locale),
+                self.name.clone().unwrap().get_content(locale),
+                self.value.clone().unwrap().get_content(locale),
             ))
         } else {
             Err(check)

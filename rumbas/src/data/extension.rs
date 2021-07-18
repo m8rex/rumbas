@@ -23,7 +23,7 @@ optional_overwrite! {
 impl ToNumbas for Extensions {
     // TODO: create macro
     type NumbasType = Vec<String>;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Vec<String>> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Vec<String>> {
         let check = self.check();
         if check.is_empty() {
             let mut extensions = Vec::new();
@@ -47,7 +47,7 @@ impl ToNumbas for Extensions {
 }
 
 impl Extensions {
-    pub fn from(v: &Vec<String>) -> Self {
+    pub fn from(v: &[String]) -> Self {
         Extensions {
             jsx_graph: Value::Normal(v.contains(&"jsx_graph".to_string())),
             stats: Value::Normal(v.contains(&"stats".to_string())),
@@ -57,8 +57,8 @@ impl Extensions {
     }
 }
 
-impl Extensions {
-    pub fn new() -> Extensions {
+impl Default for Extensions {
+    fn default() -> Extensions {
         Extensions {
             jsx_graph: Value::Normal(false),
             stats: Value::Normal(false),
@@ -66,7 +66,8 @@ impl Extensions {
             geogebra: Value::Normal(false),
         }
     }
-
+}
+impl Extensions {
     pub fn combine(e: Extensions, f: Extensions) -> Extensions {
         Extensions {
             jsx_graph: Value::Normal(e.jsx_graph.unwrap() || f.jsx_graph.unwrap()),
@@ -104,11 +105,11 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartExtension {
     type NumbasType = numbas::exam::ExamQuestionPartExtension;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
             })
         } else {
             Err(check)

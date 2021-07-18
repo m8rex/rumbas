@@ -91,7 +91,7 @@ fn main() {
                             let numbas_output_path = absolute_path;
                             //println!("{}", numbas_output_path.display());
 
-                            res.write(&numbas_exam_path.to_str().unwrap());
+                            res.write(numbas_exam_path.to_str().unwrap());
 
                             let numbas_settings = exam.numbas_settings().clone().unwrap();
 

@@ -16,7 +16,7 @@ impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFunction> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFunction> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamFunction::new(
@@ -27,7 +27,7 @@ impl ToNumbas for Function {
                     .map(|(a, b)| (a, b))
                     .collect(),
                 self.output_type.clone().unwrap(),
-                self.definition.clone().unwrap().get_content(&locale),
+                self.definition.clone().unwrap().get_content(locale),
                 self.language.clone().unwrap(),
             ))
         } else {

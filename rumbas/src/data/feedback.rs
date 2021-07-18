@@ -25,7 +25,7 @@ optional_overwrite! {
 
 impl ToNumbas for Feedback {
     type NumbasType = numbas::exam::ExamFeedback;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFeedback> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFeedback> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamFeedback::new(
@@ -33,14 +33,14 @@ impl ToNumbas for Feedback {
                 self.show_maximum_marks.unwrap(),
                 self.show_answer_state.unwrap(),
                 self.allow_reveal_answer.unwrap(),
-                self.review.clone().map(|o| o.to_numbas(&locale).unwrap()),
-                self.advice.clone().map(|o| o.to_string(&locale)).flatten(),
-                self.intro.clone().unwrap().to_string(&locale).unwrap(),
+                self.review.clone().map(|o| o.to_numbas(locale).unwrap()),
+                self.advice.clone().map(|o| o.to_string(locale)).flatten(),
+                self.intro.clone().unwrap().to_string(locale).unwrap(),
                 self.feedback_messages
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|s| s.to_numbas(&locale).unwrap())
+                    .map(|s| s.to_numbas(locale).unwrap())
                     .collect(),
             ))
         } else {
@@ -64,7 +64,7 @@ optional_overwrite! {
 
 impl ToNumbas for Review {
     type NumbasType = numbas::exam::ExamReview;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamReview> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamReview> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamReview::new(
@@ -88,7 +88,7 @@ impl_optional_overwrite!(FeedbackMessage);
 
 impl ToNumbas for FeedbackMessage {
     type NumbasType = numbas::exam::ExamFeedbackMessage;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
         Ok(numbas::exam::ExamFeedbackMessage::new(
             self.message.clone(),
             self.threshold.clone(),

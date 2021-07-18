@@ -17,17 +17,17 @@ question_part_type! {
 
 impl ToNumbas for QuestionPartGapFill {
     type NumbasType = numbas::exam::ExamQuestionPartGapFill;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::ExamQuestionPartGapFill::new(
-                self.to_numbas_shared_data(&locale),
+                self.to_numbas_shared_data(locale),
                 Some(self.sort_answers.clone().unwrap()),
                 self.gaps
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|g| g.to_numbas(&locale).unwrap())
+                    .map(|g| g.to_numbas(locale).unwrap())
                     .collect(),
             ))
         } else {

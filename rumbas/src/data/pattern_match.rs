@@ -18,21 +18,21 @@ impl_optional_overwrite!(numbas::exam::PatternMatchMode);
 
 impl ToNumbas for QuestionPartPatternMatch {
     type NumbasType = numbas::exam::ExamQuestionPartPatternMatch;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(&locale),
+                part_data: self.to_numbas_shared_data(locale),
                 case_sensitive: self.case_sensitive.unwrap(),
                 partial_credit: self.partial_credit.unwrap(),
                 answer: numbas::exam::Primitive::String(
-                    self.pattern.clone().unwrap().to_string(&locale).unwrap(),
+                    self.pattern.clone().unwrap().to_string(locale).unwrap(),
                 ),
                 display_answer: Some(numbas::exam::Primitive::String(
                     self.display_answer
                         .clone()
                         .unwrap()
-                        .to_string(&locale)
+                        .to_string(locale)
                         .unwrap(),
                 )),
                 match_mode: self.match_mode.unwrap(),

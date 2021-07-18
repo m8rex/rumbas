@@ -13,6 +13,7 @@ use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+// TODO: remove duplication of NormalExam & Diagnostic Exam?
 optional_overwrite! {
     /// An Exam
     pub struct NormalExam {
@@ -37,7 +38,7 @@ optional_overwrite! {
 
 impl ToNumbas for NormalExam {
     type NumbasType = numbas::exam::Exam;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Exam> {
         let check = self.check();
         if check.is_empty() {
             let basic_settings = numbas::exam::BasicExamSettings::new(
@@ -46,13 +47,13 @@ impl ToNumbas for NormalExam {
                     .clone()
                     .unwrap()
                     .duration_in_seconds
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 self.feedback
                     .clone()
                     .unwrap()
                     .percentage_needed_to_pass
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
                 Some(
                     self.navigation
@@ -74,13 +75,13 @@ impl ToNumbas for NormalExam {
             );
 
             //TODO
-            let navigation = self.navigation.clone().unwrap().to_numbas(&locale).unwrap();
+            let navigation = self.navigation.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
-            let timing = self.timing.clone().unwrap().to_numbas(&locale).unwrap();
+            let timing = self.timing.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
-            let feedback = self.feedback.clone().unwrap().to_numbas(&locale).unwrap();
+            let feedback = self.feedback.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
             let functions = Value::Normal(HashMap::new());
@@ -94,7 +95,7 @@ impl ToNumbas for NormalExam {
                 .clone()
                 .unwrap()
                 .iter()
-                .map(|qg| qg.clone().to_numbas(&locale).unwrap())
+                .map(|qg| qg.clone().to_numbas(locale).unwrap())
                 .collect();
 
             let resources: Vec<numbas::exam::Resource> = self
@@ -112,7 +113,7 @@ impl ToNumbas for NormalExam {
                 })
                 .map(|r| r.unwrap())
                 .collect::<Vec<_>>()
-                .to_numbas(&locale)
+                .to_numbas(locale)
                 .unwrap(); // TODO: remove duplicates?
 
             let extensions: Vec<String> = self
@@ -128,7 +129,7 @@ impl ToNumbas for NormalExam {
                         .into_iter()
                         .map(|q| q.unwrap().question_data.unwrap().extensions.unwrap())
                 })
-                .fold(Extensions::new(), |a, b| Extensions::combine(a, b))
+                .fold(Extensions::default(), Extensions::combine)
                 .to_paths();
 
             let custom_part_types = self
@@ -138,7 +139,7 @@ impl ToNumbas for NormalExam {
                 .into_iter()
                 .map(|c| {
                     c.custom_part_type_data
-                        .to_numbas_with_name(&locale, c.custom_part_type_name)
+                        .to_numbas_with_name(locale, c.custom_part_type_name)
                         .unwrap()
                 })
                 .collect();

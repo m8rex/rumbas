@@ -40,9 +40,9 @@ where
     <T as ToNumbas>::NumbasType: Clone,
 {
     type NumbasType = numbas::exam::CustomPartInputOptionValue<<T as ToNumbas>::NumbasType>;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartInputOptionValue {
-            value: self.value.clone().to_numbas(&locale).unwrap(),
+            value: self.value.clone().to_numbas(locale).unwrap(),
             is_static: self.is_static,
         })
     }
@@ -77,18 +77,18 @@ pub enum CustomPartInputWidget {
 
 impl ToNumbas for CustomPartInputWidget {
     type NumbasType = numbas::exam::CustomPartInputWidget;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         /*let check = self.check();
         if check.is_empty() { */
         Ok(match self {
             CustomPartInputWidget::String(s) => {
-                numbas::exam::CustomPartInputWidget::String(s.to_numbas(&locale).unwrap())
+                numbas::exam::CustomPartInputWidget::String(s.to_numbas(locale).unwrap())
             }
             CustomPartInputWidget::Number(s) => {
-                numbas::exam::CustomPartInputWidget::Number(s.to_numbas(&locale).unwrap())
+                numbas::exam::CustomPartInputWidget::Number(s.to_numbas(locale).unwrap())
             }
             CustomPartInputWidget::RadioGroup(s) => {
-                numbas::exam::CustomPartInputWidget::RadioButtons(s.to_numbas(&locale).unwrap())
+                numbas::exam::CustomPartInputWidget::RadioButtons(s.to_numbas(locale).unwrap())
             }
         })
         /*} else {
@@ -127,11 +127,11 @@ pub struct CustomPartStringInputOptions {
 
 impl ToNumbas for CustomPartStringInputOptions {
     type NumbasType = numbas::exam::CustomPartStringInputOptions;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartStringInputOptions {
-            hint: self.hint.to_numbas(&locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(&locale).unwrap(),
-            allow_empty: self.allow_empty.to_numbas(&locale).unwrap(),
+            hint: self.hint.to_numbas(locale).unwrap(),
+            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            allow_empty: self.allow_empty.to_numbas(locale).unwrap(),
         })
     }
 }
@@ -162,12 +162,12 @@ pub struct CustomPartNumberInputOptions {
 
 impl ToNumbas for CustomPartNumberInputOptions {
     type NumbasType = numbas::exam::CustomPartNumberInputOptions;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartNumberInputOptions {
-            hint: self.hint.to_numbas(&locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(&locale).unwrap(),
-            allow_fractions: self.allow_fractions.to_numbas(&locale).unwrap(),
-            allowed_notation_styles: self.allowed_notation_styles.to_numbas(&locale).unwrap(),
+            hint: self.hint.to_numbas(locale).unwrap(),
+            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            allow_fractions: self.allow_fractions.to_numbas(locale).unwrap(),
+            allowed_notation_styles: self.allowed_notation_styles.to_numbas(locale).unwrap(),
         })
     }
 }
@@ -197,11 +197,11 @@ pub struct CustomPartRadioGroupInputOptions {
 
 impl ToNumbas for CustomPartRadioGroupInputOptions {
     type NumbasType = numbas::exam::CustomPartRadioButtonsInputOptions;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartRadioButtonsInputOptions {
-            hint: self.hint.to_numbas(&locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(&locale).unwrap(),
-            choices: self.choices.to_numbas(&locale).unwrap(),
+            hint: self.hint.to_numbas(locale).unwrap(),
+            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            choices: self.choices.to_numbas(locale).unwrap(),
         })
     }
 }
@@ -218,7 +218,7 @@ impl ToRumbas for numbas::exam::CustomPartRadioButtonsInputOptions {
 }
 
 impl CustomPartTypeDefinition {
-    pub fn from_name(name: &String) -> YamlResult<Self> {
+    pub fn from_name(name: &str) -> YamlResult<Self> {
         let file = std::path::Path::new("custom_part_types").join(format!("{}.yaml", name));
         let yaml = std::fs::read_to_string(&file).expect(
             &format!(
@@ -232,30 +232,30 @@ impl CustomPartTypeDefinition {
 
 impl ToNumbas for CustomPartTypeDefinition {
     type NumbasType = numbas::exam::CustomPartType;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         //TODO?
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
         )
     }
-    fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> NumbasResult<Self::NumbasType> {
         /*let check = self.check();
         if check.is_empty() { */
         Ok(numbas::exam::CustomPartType {
             short_name: name,
-            name: self.type_name.clone().to_string(&locale).unwrap(),
-            description: self.description.clone().to_string(&locale).unwrap(),
+            name: self.type_name.clone().to_string(locale).unwrap(),
+            description: self.description.clone().to_string(locale).unwrap(),
             settings: self.settings.clone(), // .to_numbas(&locale).unwrap(),
-            help_url: self.help_url.clone().to_string(&locale).unwrap(),
+            help_url: self.help_url.clone().to_string(locale).unwrap(),
             public_availability: numbas::exam::CustomPartAvailability::Always,
-            marking_script: self.marking_script.clone().to_string(&locale).unwrap(),
+            marking_script: self.marking_script.clone().to_string(locale).unwrap(),
             can_be_gap: self.can_be_gap,
             can_be_step: self.can_be_step,
             marking_notes: self.marking_notes.clone(),
             published: self.published,
-            extensions: self.extensions.to_numbas(&locale).unwrap(),
-            input_widget: self.input_widget.to_numbas(&locale).unwrap(),
+            extensions: self.extensions.to_numbas(locale).unwrap(),
+            input_widget: self.input_widget.to_numbas(locale).unwrap(),
         })
         /*} else {
             Err(check)
@@ -315,13 +315,13 @@ impl std::convert::From<CustomPartTypeDefinitionPath> for String {
 
 impl ToNumbas for CustomPartTypeDefinitionPath {
     type NumbasType = numbas::exam::CustomPartType;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         /*let check = self.check();
         if check.is_empty() { */
         Ok(self
             .custom_part_type_data
             .clone()
-            .to_numbas_with_name(&locale, self.custom_part_type_name.clone())
+            .to_numbas_with_name(locale, self.custom_part_type_name.clone())
             .unwrap())
         /*} else {
             Err(check)
