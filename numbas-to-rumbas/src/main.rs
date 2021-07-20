@@ -1,3 +1,4 @@
+use numbas::defaults::DEFAULTS;
 use numbas::exam::Exam as NExam;
 use rumbas::data::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::data::diagnostic_exam::{
@@ -48,163 +49,11 @@ use rumbas::data::translatable::TranslatableString;
 use rumbas::data::variable::{Variable, VariableRepresentation, VariableTemplateType};
 use sanitize_filename::sanitize;
 
-pub struct NumbasDefaults {
-    navigation_reverse: bool,
-    navigation_browsing_enabled: bool,
-    navigation_allow_steps: bool,
-    navigation_prevent_leaving: bool,
-    navigation_show_results_page: numbas::exam::ExamShowResultsPage,
-    navigation_show_names_of_question_groups: bool,
-    navigation_start_password: String,
-    navigation_on_leave: LeaveAction,
-    question_navigation_prevent_leaving: bool,
-    basic_settings_show_student_name: bool,
-    basic_settings_allow_printing: bool,
-    feedback_review_show_score: bool,
-    feedback_review_show_feedback: bool,
-    feedback_review_show_expected_answer: bool,
-    feedback_review_show_advice: bool,
-    builtin_constants_e: bool,
-    builtin_constants_i: bool,
-    builtin_constants_pi: bool,
-    part_common_marks: usize,
-    part_common_use_custom_name: bool,
-    part_common_steps_penalty: usize,
-    part_common_enable_minimum_marks: bool,
-    part_common_minimum_marks: usize,
-    part_common_show_feedback_icon: bool,
-    part_common_adaptive_marking_penalty: usize,
-    part_common_extend_base_marking_algorithm: bool,
-    number_entry_correct_answer_style: numbas::exam::AnswerStyle,
-    length_restriction_length: usize,
-    number_entry_fractions_must_be_reduced: bool,
-    number_entry_partial_credit_if_fraction_not_reduced: numbas::exam::Primitive,
-    number_entry_hint_fraction: bool,
-
-    choose_one_has_to_select_option: bool,
-    choose_one_show_cell_answer_state: bool,
-    gapfill_sort_answers: bool,
-    match_answers_with_items_min_answers: usize,
-    choose_multiple_min_answers: usize,
-
-    jme_single_letter_variables: bool,
-    jme_allow_unknown_functions: bool,
-    jme_implicit_function_composition: bool,
-    jme_simplification_simplify_basic: bool,
-    jme_simplification_simplify_unit_factor: bool,
-    jme_simplification_simplify_unit_power: bool,
-    jme_simplification_simplify_unit_denominator: bool,
-    jme_simplification_simplify_zero_factor: bool,
-    jme_simplification_simplify_zero_term: bool,
-    jme_simplification_simplify_zero_power: bool,
-    jme_simplification_simplify_zero_base: bool,
-    jme_simplification_collect_numbers: bool,
-    jme_simplification_constants_first: bool,
-    jme_simplification_simplify_sqrt_products: bool,
-    jme_simplification_simplify_sqrt_division: bool,
-    jme_simplification_simplify_sqrt_square: bool,
-    jme_simplification_simplify_other_numbers: bool,
-    jme_simplification_simplify_no_leading_minus: bool,
-    jme_simplification_simplify_fractions: bool,
-    jme_simplification_simplify_trigonometric: bool,
-    jme_simplification_cancel_terms: bool,
-    jme_simplification_cancel_factors: bool,
-    jme_simplification_collect_like_fractions: bool,
-    jme_simplification_order_canonical: bool,
-    jme_simplification_use_times_dot: bool,
-    jme_simplification_expand_brackets: bool,
-}
-
-// TODO default values
-const DEFAULTS: NumbasDefaults = NumbasDefaults {
-    navigation_reverse: true,
-    navigation_browsing_enabled: true,
-    navigation_allow_steps: true,
-    navigation_prevent_leaving: true,
-    navigation_show_results_page: numbas::exam::ExamShowResultsPage::Never,
-    navigation_show_names_of_question_groups: true,
-    navigation_start_password: String::new(),
-    navigation_on_leave: LeaveAction::None,
-    question_navigation_prevent_leaving: true,
-    basic_settings_show_student_name: true,
-    basic_settings_allow_printing: true,
-    feedback_review_show_score: true,
-    feedback_review_show_feedback: true,
-    feedback_review_show_expected_answer: true,
-    feedback_review_show_advice: true,
-    builtin_constants_e: false,
-    builtin_constants_i: false,
-    builtin_constants_pi: false,
-    part_common_marks: 0,
-    part_common_use_custom_name: false,
-    part_common_steps_penalty: 0,
-    part_common_enable_minimum_marks: true,
-    part_common_minimum_marks: 0,
-    part_common_show_feedback_icon: true,
-    part_common_adaptive_marking_penalty: 0,
-    part_common_extend_base_marking_algorithm: true,
-    number_entry_correct_answer_style: numbas::exam::AnswerStyle::EnglishPlain,
-    length_restriction_length: 0,
-
-    choose_one_has_to_select_option: true,
-    choose_one_show_cell_answer_state: true,
-    gapfill_sort_answers: true,
-    match_answers_with_items_min_answers: 0,
-    choose_multiple_min_answers: 0,
-
-    number_entry_fractions_must_be_reduced: false,
-    number_entry_partial_credit_if_fraction_not_reduced: numbas::exam::Primitive::Natural(0),
-    number_entry_hint_fraction: true,
-
-    jme_single_letter_variables: false,
-    jme_allow_unknown_functions: false,
-    jme_implicit_function_composition: false,
-    jme_simplification_simplify_basic: true,
-    jme_simplification_simplify_unit_factor: true,
-    jme_simplification_simplify_unit_power: true,
-    jme_simplification_simplify_unit_denominator: true,
-    jme_simplification_simplify_zero_factor: true,
-    jme_simplification_simplify_zero_term: true,
-    jme_simplification_simplify_zero_power: true,
-    jme_simplification_simplify_zero_base: true,
-    jme_simplification_collect_numbers: true,
-    jme_simplification_constants_first: true,
-    jme_simplification_simplify_sqrt_products: true,
-    jme_simplification_simplify_sqrt_division: true,
-    jme_simplification_simplify_sqrt_square: true,
-    jme_simplification_simplify_other_numbers: true,
-    jme_simplification_simplify_no_leading_minus: true,
-    jme_simplification_simplify_fractions: true,
-    jme_simplification_simplify_trigonometric: true,
-    jme_simplification_cancel_terms: true,
-    jme_simplification_cancel_factors: true,
-    jme_simplification_collect_like_fractions: true,
-    jme_simplification_order_canonical: false,
-    jme_simplification_use_times_dot: true,
-    jme_simplification_expand_brackets: false,
-};
-
 macro_rules! read {
     ($file_name: expr) => {{
         let content = std::fs::read_to_string($file_name).expect("Invalid file path");
         NExam::from_exam_str(content.as_ref())
     }};
-}
-
-macro_rules! v {
-    ($e: expr) => {
-        Value::Normal($e)
-    };
-}
-
-macro_rules! ts {
-    ($s: expr) => {
-        TranslatableString::NotTranslated(FileString::s(&$s))
-    };
-}
-
-fn nn<T>() -> Noneable<T> {
-    Noneable::None("none".to_string())
 }
 
 fn main() {
@@ -292,20 +141,20 @@ fn convert_normal_exam(
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         NormalExam {
-            locales: v!(vec![v!(Locale {
-                name: v!("en".to_string()),
-                numbas_locale: v!(SupportedLocale::EnGB)
+            locales: Value::Normal(vec![Value::Normal(Locale {
+                name: Value::Normal("en".to_string()),
+                numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: v![ts!("todo".to_string())], // todo: argument
-            navigation: v![extract_normal_navigation(&exam).unwrap()],
-            timing: v![extract_timing(&exam)],
-            feedback: v![extract_feedback(&exam)],
-            question_groups: v![question_groups.clone()],
-            numbas_settings: v![NumbasSettings {
-                locale: v!(SupportedLocale::EnGB),
-                theme: v!("default".to_string())
-            }], // todo: argument?
-            custom_part_types: v!(custom_part_types.clone()),
+            name: Value::Normal(TranslatableString::s(&"todo".to_string())), // todo: argument
+            navigation: Value::Normal(extract_normal_navigation(&exam).unwrap()),
+            timing: Value::Normal(extract_timing(&exam)),
+            feedback: Value::Normal(extract_feedback(&exam)),
+            question_groups: Value::Normal(question_groups.clone()),
+            numbas_settings: Value::Normal(NumbasSettings {
+                locale: Value::Normal(SupportedLocale::EnGB),
+                theme: Value::Normal("default".to_string()),
+            }), // todo: argument?
+            custom_part_types: Value::Normal(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
@@ -332,21 +181,21 @@ fn convert_diagnostic_exam(
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         DiagnosticExam {
-            locales: v!(vec![v!(Locale {
-                name: v!("en".to_string()),
-                numbas_locale: v!(SupportedLocale::EnGB)
+            locales: Value::Normal(vec![Value::Normal(Locale {
+                name: Value::Normal("en".to_string()),
+                numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: v![ts!("todo".to_string())], // todo: argument
-            navigation: v![extract_diagnostic_navigation(&exam)],
-            timing: v![extract_timing(&exam)],
-            feedback: v![extract_feedback(&exam)],
-            question_groups: v![question_groups.clone()],
-            numbas_settings: v![NumbasSettings {
-                locale: v!(SupportedLocale::EnGB),
-                theme: v!("default".to_string())
-            }], // todo: argument?
-            diagnostic: v![extract_diagnostic(&exam)],
-            custom_part_types: v!(custom_part_types.clone()),
+            name: Value::Normal(TranslatableString::s(&"todo".to_string())), // todo: argument
+            navigation: Value::Normal(extract_diagnostic_navigation(&exam)),
+            timing: Value::Normal(extract_timing(&exam)),
+            feedback: Value::Normal(extract_feedback(&exam)),
+            question_groups: Value::Normal(question_groups.clone()),
+            numbas_settings: Value::Normal(NumbasSettings {
+                locale: Value::Normal(SupportedLocale::EnGB),
+                theme: Value::Normal("default".to_string()),
+            }), // todo: argument?
+            diagnostic: Value::Normal(extract_diagnostic(&exam)),
+            custom_part_types: Value::Normal(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
@@ -364,31 +213,35 @@ fn convert_diagnostic_exam(
 
 fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
     NavigationSharedData {
-        start_password: v!(FileString::s(
+        start_password: Value::Normal(FileString::s(
             &exam
                 .navigation
                 .start_password
                 .clone()
-                .unwrap_or(DEFAULTS.navigation_start_password)
+                .unwrap_or(DEFAULTS.navigation_start_password),
         )),
-        can_regenerate: v!(exam.navigation.allow_regenerate),
-        show_steps: v!(exam
-            .navigation
-            .allow_steps
-            .unwrap_or(DEFAULTS.navigation_allow_steps)),
-        show_title_page: v!(exam.navigation.show_frontpage),
-        prevent_leaving: v!(exam
-            .navigation
-            .prevent_leaving
-            .unwrap_or(DEFAULTS.navigation_prevent_leaving)),
-        show_names_of_question_groups: v!(exam
-            .basic_settings
-            .show_question_group_names
-            .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups)),
-        allow_printing: v!(exam
-            .basic_settings
-            .allow_printing
-            .unwrap_or(DEFAULTS.basic_settings_allow_printing)),
+        can_regenerate: Value::Normal(exam.navigation.allow_regenerate),
+        show_steps: Value::Normal(
+            exam.navigation
+                .allow_steps
+                .unwrap_or(DEFAULTS.navigation_allow_steps),
+        ),
+        show_title_page: Value::Normal(exam.navigation.show_frontpage),
+        prevent_leaving: Value::Normal(
+            exam.navigation
+                .prevent_leaving
+                .unwrap_or(DEFAULTS.navigation_prevent_leaving),
+        ),
+        show_names_of_question_groups: Value::Normal(
+            exam.basic_settings
+                .show_question_group_names
+                .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups),
+        ),
+        allow_printing: Value::Normal(
+            exam.basic_settings
+                .allow_printing
+                .unwrap_or(DEFAULTS.basic_settings_allow_printing),
+        ),
     }
 }
 
@@ -405,45 +258,47 @@ fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
     match exam.navigation.navigation_mode {
         numbas::exam::ExamNavigationMode::Sequence => {
             Some(NormalNavigation::Sequential(SequentialNavigation {
-                shared_data: v!(extract_shared_navigation(exam)),
-                can_move_to_previous: v!(exam
-                    .navigation
-                    .reverse
-                    .unwrap_or(DEFAULTS.navigation_reverse)),
-                browsing_enabled: v!(exam
-                    .navigation
-                    .browsing_enabled
-                    .unwrap_or(DEFAULTS.navigation_browsing_enabled)),
-                show_results_page: v!(extract_sequential_navigation_show_results_page(
+                shared_data: Value::Normal(extract_shared_navigation(exam)),
+                can_move_to_previous: Value::Normal(
+                    exam.navigation
+                        .reverse
+                        .unwrap_or(DEFAULTS.navigation_reverse),
+                ),
+                browsing_enabled: Value::Normal(
+                    exam.navigation
+                        .browsing_enabled
+                        .unwrap_or(DEFAULTS.navigation_browsing_enabled),
+                ),
+                show_results_page: Value::Normal(extract_sequential_navigation_show_results_page(
                     exam.navigation
                         .show_results_page
                         .clone()
-                        .unwrap_or(DEFAULTS.navigation_show_results_page)
+                        .unwrap_or(DEFAULTS.navigation_show_results_page),
                 )),
-                on_leave: v!(exam
-                    .navigation
-                    .on_leave
-                    .clone()
-                    .map(|ol| {
-                        match ol {
-                            numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
-                            numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
-                                LeaveAction::WarnIfNotAttempted {
-                                    message: ts!(message),
-                                }
-                            }
-                            numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
-                                LeaveAction::PreventIfNotAttempted {
-                                    message: ts!(message),
-                                }
+                on_leave: Value::Normal(
+                    match exam
+                        .navigation
+                        .on_leave
+                        .clone()
+                        .unwrap_or(DEFAULTS.navigation_on_leave)
+                    {
+                        numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
+                        numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
+                            LeaveAction::WarnIfNotAttempted {
+                                message: TranslatableString::s(&message),
                             }
                         }
-                    })
-                    .unwrap_or(DEFAULTS.navigation_on_leave)),
+                        numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
+                            LeaveAction::PreventIfNotAttempted {
+                                message: TranslatableString::s(&message),
+                            }
+                        }
+                    },
+                ),
             }))
         }
         numbas::exam::ExamNavigationMode::Menu => Some(NormalNavigation::Menu(MenuNavigation {
-            shared_data: v!(extract_shared_navigation(exam)),
+            shared_data: Value::Normal(extract_shared_navigation(exam)),
         })),
         numbas::exam::ExamNavigationMode::Diagnostic => None,
     }
@@ -451,27 +306,27 @@ fn extract_normal_navigation(exam: &NExam) -> Option<NormalNavigation> {
 
 fn extract_diagnostic_navigation(exam: &NExam) -> DiagnosticNavigation {
     DiagnosticNavigation {
-        shared_data: v!(extract_shared_navigation(exam)),
-        on_leave: v!(exam
-            .navigation
-            .on_leave
-            .clone()
-            .map(|ol| {
-                match ol {
-                    numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
-                    numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
-                        LeaveAction::WarnIfNotAttempted {
-                            message: ts!(message),
-                        }
-                    }
-                    numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
-                        LeaveAction::PreventIfNotAttempted {
-                            message: ts!(message),
-                        }
+        shared_data: Value::Normal(extract_shared_navigation(exam)),
+        on_leave: Value::Normal(
+            match exam
+                .navigation
+                .on_leave
+                .clone()
+                .unwrap_or(DEFAULTS.navigation_on_leave)
+            {
+                numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
+                numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
+                    LeaveAction::WarnIfNotAttempted {
+                        message: TranslatableString::s(&message),
                     }
                 }
-            })
-            .unwrap_or(DEFAULTS.navigation_on_leave)),
+                numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
+                    LeaveAction::PreventIfNotAttempted {
+                        message: TranslatableString::s(&message),
+                    }
+                }
+            },
+        ),
     }
 }
 
@@ -479,102 +334,118 @@ fn extract_timeout_action(action: &numbas::exam::ExamTimeoutAction) -> TimeoutAc
     match action {
         numbas::exam::ExamTimeoutAction::None { message: _ } => TimeoutAction::None,
         numbas::exam::ExamTimeoutAction::Warn { message } => TimeoutAction::Warn {
-            message: ts!(message),
+            message: TranslatableString::s(&message),
         },
     }
 }
 
 fn extract_timing(exam: &NExam) -> Timing {
     Timing {
-        duration_in_seconds: v!(exam
-            .basic_settings
-            .duration_in_seconds
-            .map(Noneable::NotNone)
-            .unwrap_or_else(nn)),
-        allow_pause: v!(exam.timing.allow_pause),
-        on_timeout: v!(extract_timeout_action(&exam.timing.timeout)),
-        timed_warning: v!(extract_timeout_action(&exam.timing.timed_warning)),
+        duration_in_seconds: Value::Normal(
+            exam.basic_settings
+                .duration_in_seconds
+                .map(Noneable::NotNone)
+                .unwrap_or_else(Noneable::nn),
+        ),
+        allow_pause: Value::Normal(exam.timing.allow_pause),
+        on_timeout: Value::Normal(extract_timeout_action(&exam.timing.timeout)),
+        timed_warning: Value::Normal(extract_timeout_action(&exam.timing.timed_warning)),
     }
 }
 
 fn extract_feedback(exam: &NExam) -> Feedback {
     Feedback {
-        percentage_needed_to_pass: v!(exam
-            .basic_settings
-            .percentage_needed_to_pass
-            .map(Noneable::NotNone)
-            .unwrap_or_else(nn)),
-        show_name_of_student: v!(exam
-            .basic_settings
-            .show_student_name
-            .unwrap_or(DEFAULTS.basic_settings_show_student_name)),
-        show_current_marks: v!(exam.feedback.show_actual_mark),
-        show_maximum_marks: v!(exam.feedback.show_total_mark),
-        show_answer_state: v!(exam.feedback.show_answer_state),
-        allow_reveal_answer: v!(exam.feedback.allow_reveal_answer),
-        review: v!(Review {
-            show_score: v!(exam
-                .feedback
-                .review
-                .clone()
-                .map(|r| r.show_score.unwrap_or(DEFAULTS.feedback_review_show_score))
-                .unwrap()),
-            show_feedback: v!(exam
-                .feedback
-                .review
-                .clone()
-                .map(|r| r
-                    .show_feedback
-                    .unwrap_or(DEFAULTS.feedback_review_show_feedback))
-                .unwrap()),
-            show_expected_answer: v!(exam
-                .feedback
-                .review
-                .clone()
-                .map(|r| r
-                    .show_expected_answer
-                    .unwrap_or(DEFAULTS.feedback_review_show_expected_answer))
-                .unwrap()),
-            show_advice: v!(exam
-                .feedback
-                .review
-                .clone()
-                .map(|r| r
-                    .show_advice
-                    .unwrap_or(DEFAULTS.feedback_review_show_advice))
-                .unwrap()),
+        percentage_needed_to_pass: Value::Normal(
+            exam.basic_settings
+                .percentage_needed_to_pass
+                .map(Noneable::NotNone)
+                .unwrap_or_else(Noneable::nn),
+        ),
+        show_name_of_student: Value::Normal(
+            exam.basic_settings
+                .show_student_name
+                .unwrap_or(DEFAULTS.basic_settings_show_student_name),
+        ),
+        show_current_marks: Value::Normal(exam.feedback.show_actual_mark),
+        show_maximum_marks: Value::Normal(exam.feedback.show_total_mark),
+        show_answer_state: Value::Normal(exam.feedback.show_answer_state),
+        allow_reveal_answer: Value::Normal(exam.feedback.allow_reveal_answer),
+        review: Value::Normal(Review {
+            show_score: Value::Normal(
+                exam.feedback
+                    .review
+                    .clone()
+                    .map(|r| r.show_score.unwrap_or(DEFAULTS.feedback_review_show_score))
+                    .unwrap(),
+            ),
+            show_feedback: Value::Normal(
+                exam.feedback
+                    .review
+                    .clone()
+                    .map(|r| {
+                        r.show_feedback
+                            .unwrap_or(DEFAULTS.feedback_review_show_feedback)
+                    })
+                    .unwrap(),
+            ),
+            show_expected_answer: Value::Normal(
+                exam.feedback
+                    .review
+                    .clone()
+                    .map(|r| {
+                        r.show_expected_answer
+                            .unwrap_or(DEFAULTS.feedback_review_show_expected_answer)
+                    })
+                    .unwrap(),
+            ),
+            show_advice: Value::Normal(
+                exam.feedback
+                    .review
+                    .clone()
+                    .map(|r| {
+                        r.show_advice
+                            .unwrap_or(DEFAULTS.feedback_review_show_advice)
+                    })
+                    .unwrap(),
+            ),
         }),
-        advice: v!(ts!(exam.feedback.advice.clone().unwrap_or_default())),
-        intro: v!(ts!(exam.feedback.intro)),
-        feedback_messages: v!(exam
-            .feedback
-            .feedback_messages
-            .clone()
-            .into_iter()
-            .map(|m| {
-                v!(FeedbackMessage {
-                    message: m.message,
-                    threshold: m.threshold
+        advice: Value::Normal(TranslatableString::s(
+            &exam.feedback.advice.clone().unwrap_or_default(),
+        )),
+        intro: Value::Normal(TranslatableString::s(&exam.feedback.intro)),
+        feedback_messages: Value::Normal(
+            exam.feedback
+                .feedback_messages
+                .clone()
+                .into_iter()
+                .map(|m| {
+                    Value::Normal(FeedbackMessage {
+                        message: m.message,
+                        threshold: m.threshold,
+                    })
                 })
-            })
-            .collect()),
+                .collect(),
+        ),
     }
 }
 
 fn extract_builtin_constants(bc: numbas::exam::BuiltinConstants) -> BuiltinConstants {
     BuiltinConstants {
-        e: v!(*bc
-            .0
-            .get(&"e".to_string())
-            .unwrap_or(&DEFAULTS.builtin_constants_e)),
-        pi: v!(*bc
-            .0
-            .get(&"pi,\u{03c0}".to_string())
-            .unwrap_or(&DEFAULTS.builtin_constants_pi)),
-        i: v!(*bc
-            .0
-            .get(&"i".to_string())
-            .unwrap_or(&DEFAULTS.builtin_constants_i)),
+        e: Value::Normal(
+            *bc.0
+                .get(&"e".to_string())
+                .unwrap_or(&DEFAULTS.builtin_constants_e),
+        ),
+        pi: Value::Normal(
+            *bc.0
+                .get(&"pi,\u{03c0}".to_string())
+                .unwrap_or(&DEFAULTS.builtin_constants_pi),
+        ),
+        i: Value::Normal(
+            *bc.0
+                .get(&"i".to_string())
+                .unwrap_or(&DEFAULTS.builtin_constants_i),
+        ),
     }
 }
 
@@ -601,124 +472,128 @@ fn extract_jme_answer_simplification(
     ov: &Option<Vec<numbas::exam::AnswerSimplificationType>>,
 ) -> JMEAnswerSimplification {
     let mut result = JMEAnswerSimplification {
-        simplify_basic: v!(DEFAULTS.jme_simplification_simplify_basic),
-        simplify_unit_factor: v!(DEFAULTS.jme_simplification_simplify_unit_factor),
-        simplify_unit_power: v!(DEFAULTS.jme_simplification_simplify_unit_power),
-        simplify_unit_denominator: v!(DEFAULTS.jme_simplification_simplify_unit_denominator),
-        simplify_zero_factor: v!(DEFAULTS.jme_simplification_simplify_zero_factor),
-        simplify_zero_term: v!(DEFAULTS.jme_simplification_simplify_zero_term),
-        simplify_zero_power: v!(DEFAULTS.jme_simplification_simplify_zero_power),
-        simplify_zero_base: v!(DEFAULTS.jme_simplification_simplify_zero_base),
-        collect_numbers: v!(DEFAULTS.jme_simplification_collect_numbers),
-        constants_first: v!(DEFAULTS.jme_simplification_constants_first),
-        simplify_sqrt_products: v!(DEFAULTS.jme_simplification_simplify_sqrt_products),
-        simplify_sqrt_division: v!(DEFAULTS.jme_simplification_simplify_sqrt_division),
-        simplify_sqrt_square: v!(DEFAULTS.jme_simplification_simplify_sqrt_square),
-        simplify_other_numbers: v!(DEFAULTS.jme_simplification_simplify_other_numbers),
-        simplify_no_leading_minus: v!(DEFAULTS.jme_simplification_simplify_no_leading_minus),
-        simplify_fractions: v!(DEFAULTS.jme_simplification_simplify_fractions),
-        simplify_trigonometric: v!(DEFAULTS.jme_simplification_simplify_trigonometric),
-        cancel_terms: v!(DEFAULTS.jme_simplification_cancel_terms),
-        cancel_factors: v!(DEFAULTS.jme_simplification_cancel_factors),
-        collect_like_fractions: v!(DEFAULTS.jme_simplification_collect_like_fractions),
-        order_canonical: v!(DEFAULTS.jme_simplification_order_canonical),
-        use_times_dot: v!(DEFAULTS.jme_simplification_use_times_dot),
-        expand_brackets: v!(DEFAULTS.jme_simplification_expand_brackets),
+        simplify_basic: Value::Normal(DEFAULTS.jme_simplification_simplify_basic),
+        simplify_unit_factor: Value::Normal(DEFAULTS.jme_simplification_simplify_unit_factor),
+        simplify_unit_power: Value::Normal(DEFAULTS.jme_simplification_simplify_unit_power),
+        simplify_unit_denominator: Value::Normal(
+            DEFAULTS.jme_simplification_simplify_unit_denominator,
+        ),
+        simplify_zero_factor: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_factor),
+        simplify_zero_term: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_term),
+        simplify_zero_power: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_power),
+        simplify_zero_base: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_base),
+        collect_numbers: Value::Normal(DEFAULTS.jme_simplification_collect_numbers),
+        constants_first: Value::Normal(DEFAULTS.jme_simplification_constants_first),
+        simplify_sqrt_products: Value::Normal(DEFAULTS.jme_simplification_simplify_sqrt_products),
+        simplify_sqrt_division: Value::Normal(DEFAULTS.jme_simplification_simplify_sqrt_division),
+        simplify_sqrt_square: Value::Normal(DEFAULTS.jme_simplification_simplify_sqrt_square),
+        simplify_other_numbers: Value::Normal(DEFAULTS.jme_simplification_simplify_other_numbers),
+        simplify_no_leading_minus: Value::Normal(
+            DEFAULTS.jme_simplification_simplify_no_leading_minus,
+        ),
+        simplify_fractions: Value::Normal(DEFAULTS.jme_simplification_simplify_fractions),
+        simplify_trigonometric: Value::Normal(DEFAULTS.jme_simplification_simplify_trigonometric),
+        cancel_terms: Value::Normal(DEFAULTS.jme_simplification_cancel_terms),
+        cancel_factors: Value::Normal(DEFAULTS.jme_simplification_cancel_factors),
+        collect_like_fractions: Value::Normal(DEFAULTS.jme_simplification_collect_like_fractions),
+        order_canonical: Value::Normal(DEFAULTS.jme_simplification_order_canonical),
+        use_times_dot: Value::Normal(DEFAULTS.jme_simplification_use_times_dot),
+        expand_brackets: Value::Normal(DEFAULTS.jme_simplification_expand_brackets),
     }; // Numbas default
     if let Some(v) = ov {
         for a in v.iter() {
             match a {
                 numbas::exam::AnswerSimplificationType::All(b) => {
-                    result.simplify_basic = v!(*b);
-                    result.simplify_unit_factor = v!(*b);
-                    result.simplify_unit_power = v!(*b);
-                    result.simplify_unit_denominator = v!(*b);
-                    result.simplify_zero_factor = v!(*b);
-                    result.simplify_zero_term = v!(*b);
-                    result.simplify_zero_power = v!(*b);
-                    result.simplify_zero_base = v!(*b);
-                    result.collect_numbers = v!(*b);
-                    result.constants_first = v!(*b);
-                    result.simplify_sqrt_products = v!(*b);
-                    result.simplify_sqrt_division = v!(*b);
-                    result.simplify_sqrt_square = v!(*b);
-                    result.simplify_other_numbers = v!(*b);
-                    result.simplify_no_leading_minus = v!(*b);
-                    result.simplify_fractions = v!(*b);
-                    result.simplify_trigonometric = v!(*b);
-                    result.cancel_terms = v!(*b);
-                    result.cancel_factors = v!(*b);
-                    result.collect_like_fractions = v!(*b);
-                    result.use_times_dot = v!(*b);
+                    result.simplify_basic = Value::Normal(*b);
+                    result.simplify_unit_factor = Value::Normal(*b);
+                    result.simplify_unit_power = Value::Normal(*b);
+                    result.simplify_unit_denominator = Value::Normal(*b);
+                    result.simplify_zero_factor = Value::Normal(*b);
+                    result.simplify_zero_term = Value::Normal(*b);
+                    result.simplify_zero_power = Value::Normal(*b);
+                    result.simplify_zero_base = Value::Normal(*b);
+                    result.collect_numbers = Value::Normal(*b);
+                    result.constants_first = Value::Normal(*b);
+                    result.simplify_sqrt_products = Value::Normal(*b);
+                    result.simplify_sqrt_division = Value::Normal(*b);
+                    result.simplify_sqrt_square = Value::Normal(*b);
+                    result.simplify_other_numbers = Value::Normal(*b);
+                    result.simplify_no_leading_minus = Value::Normal(*b);
+                    result.simplify_fractions = Value::Normal(*b);
+                    result.simplify_trigonometric = Value::Normal(*b);
+                    result.cancel_terms = Value::Normal(*b);
+                    result.cancel_factors = Value::Normal(*b);
+                    result.collect_like_fractions = Value::Normal(*b);
+                    result.use_times_dot = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::Basic(b) => {
-                    result.simplify_basic = v!(*b);
+                    result.simplify_basic = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::UnitFactor(b) => {
-                    result.simplify_unit_factor = v!(*b);
+                    result.simplify_unit_factor = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::UnitPower(b) => {
-                    result.simplify_unit_power = v!(*b);
+                    result.simplify_unit_power = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::UnitDenominator(b) => {
-                    result.simplify_unit_denominator = v!(*b);
+                    result.simplify_unit_denominator = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ZeroFactor(b) => {
-                    result.simplify_zero_factor = v!(*b);
+                    result.simplify_zero_factor = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ZeroTerm(b) => {
-                    result.simplify_zero_term = v!(*b);
+                    result.simplify_zero_term = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ZeroPower(b) => {
-                    result.simplify_zero_power = v!(*b);
+                    result.simplify_zero_power = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::CollectNumbers(b) => {
-                    result.collect_numbers = v!(*b);
+                    result.collect_numbers = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ZeroBase(b) => {
-                    result.simplify_zero_base = v!(*b);
+                    result.simplify_zero_base = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ConstantsFirst(b) => {
-                    result.constants_first = v!(*b);
+                    result.constants_first = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::SqrtProduct(b) => {
-                    result.simplify_sqrt_products = v!(*b);
+                    result.simplify_sqrt_products = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::SqrtDivision(b) => {
-                    result.simplify_sqrt_division = v!(*b);
+                    result.simplify_sqrt_division = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::SqrtSquare(b) => {
-                    result.simplify_sqrt_square = v!(*b);
+                    result.simplify_sqrt_square = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::OtherNumbers(b) => {
-                    result.simplify_other_numbers = v!(*b);
+                    result.simplify_other_numbers = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::NoLeadingMinus(b) => {
-                    result.simplify_no_leading_minus = v!(*b);
+                    result.simplify_no_leading_minus = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::Fractions(b) => {
-                    result.simplify_fractions = v!(*b);
+                    result.simplify_fractions = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::Trigonometric(b) => {
-                    result.simplify_trigonometric = v!(*b);
+                    result.simplify_trigonometric = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::CancelTerms(b) => {
-                    result.cancel_terms = v!(*b);
+                    result.cancel_terms = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::CancelFactors(b) => {
-                    result.cancel_factors = v!(*b);
+                    result.cancel_factors = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::CollectLikeFractions(b) => {
-                    result.collect_like_fractions = v!(*b);
+                    result.collect_like_fractions = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::TimesDot(b) => {
-                    result.use_times_dot = v!(*b);
+                    result.use_times_dot = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::ExpandBrackets(b) => {
-                    result.expand_brackets = v!(*b);
+                    result.expand_brackets = Value::Normal(*b);
                 }
                 numbas::exam::AnswerSimplificationType::CanonicalOrder(b) => {
-                    result.order_canonical = v!(*b);
+                    result.order_canonical = Value::Normal(*b);
                 }
             }
         }
@@ -731,22 +606,22 @@ fn extract_checking_type(ct: &numbas::exam::JMECheckingType) -> CheckingType {
     match ct {
         numbas::exam::JMECheckingType::RelativeDifference(v) => {
             CheckingType::RelativeDifference(CheckingTypeDataFloat {
-                checking_accuracy: v!(v.checking_accuracy),
+                checking_accuracy: Value::Normal(v.checking_accuracy),
             })
         }
         numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
             CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
-                checking_accuracy: v!(v.checking_accuracy),
+                checking_accuracy: Value::Normal(v.checking_accuracy),
             })
         }
         numbas::exam::JMECheckingType::DecimalPlaces(v) => {
             CheckingType::DecimalPlaces(CheckingTypeDataNatural {
-                checking_accuracy: v!(v.checking_accuracy),
+                checking_accuracy: Value::Normal(v.checking_accuracy),
             })
         }
         numbas::exam::JMECheckingType::SignificantFigures(v) => {
             CheckingType::SignificantFigures(CheckingTypeDataNatural {
-                checking_accuracy: v!(v.checking_accuracy),
+                checking_accuracy: Value::Normal(v.checking_accuracy),
             })
         }
     }
@@ -827,113 +702,138 @@ fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> V
 
 fn extract_restriction(r: &numbas::exam::JMERestriction) -> JMERestriction {
     JMERestriction {
-        name: v!(ts!(r.name)),
-        strings: v!(r.strings.clone().into_iter().map(|s| ts!(s)).collect()),
-        partial_credit: v!(r.partial_credit),
-        message: v!(ts!(r.message)),
+        name: Value::Normal(TranslatableString::s(&r.name)),
+        strings: Value::Normal(
+            r.strings
+                .clone()
+                .into_iter()
+                .map(|s| TranslatableString::s(&s))
+                .collect(),
+        ),
+        partial_credit: Value::Normal(r.partial_credit),
+        message: Value::Normal(TranslatableString::s(&r.message)),
     }
 }
 
 fn extract_length_restriction(r: &numbas::exam::JMELengthRestriction) -> JMELengthRestriction {
     JMELengthRestriction {
-        restriction: v!(extract_restriction(&r.restriction)),
-        length: v!(r.length.unwrap_or(DEFAULTS.length_restriction_length)),
+        restriction: Value::Normal(extract_restriction(&r.restriction)),
+        length: Value::Normal(r.length.unwrap_or(DEFAULTS.length_restriction_length)),
     }
 }
 
 fn extract_string_restriction(r: &numbas::exam::JMEStringRestriction) -> JMEStringRestriction {
     JMEStringRestriction {
-        restriction: v!(extract_restriction(&r.restriction)),
-        show_strings: v!(r.show_strings),
+        restriction: Value::Normal(extract_restriction(&r.restriction)),
+        show_strings: Value::Normal(r.show_strings),
     }
 }
 
 fn extract_pattern_restriction(r: &numbas::exam::JMEPatternRestriction) -> JMEPatternRestriction {
     JMEPatternRestriction {
-        partial_credit: v!(r.partial_credit),
-        message: v!(ts!(r.message.clone())),
-        pattern: v!(r.pattern.clone()),
-        name_to_compare: v!(r.name_to_compare.clone()),
+        partial_credit: Value::Normal(r.partial_credit),
+        message: Value::Normal(TranslatableString::s(&r.message.clone())),
+        pattern: Value::Normal(r.pattern.clone()),
+        name_to_compare: Value::Normal(r.name_to_compare.clone()),
     }
 }
 
 fn extract_value_generator(g: &numbas::exam::JMEValueGenerator) -> JMEValueGenerator {
     JMEValueGenerator {
-        name: v!(FileString::s(&g.name)),
-        value: v!(FileString::s(&g.value)),
+        name: Value::Normal(FileString::s(&g.name)),
+        value: Value::Normal(FileString::s(&g.value)),
     }
 }
 
 fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPartBuiltin {
     QuestionPartBuiltin::JME(QuestionPartJME {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
-        answer: v!(ts!(qp.answer)),
-        answer_simplification: v!(extract_jme_answer_simplification(&qp.answer_simplification)),
-        show_preview: v!(qp.show_preview),
-        checking_type: v!(extract_checking_type(&qp.checking_type)),
-        failure_rate: v!(qp.failure_rate),
-        vset_range: v!([qp.vset_range[0].0, qp.vset_range[1].0]),
-        vset_range_points: v!(qp.vset_range_points.0),
-        check_variable_names: v!(qp.check_variable_names),
-        single_letter_variables: v!(qp
-            .single_letter_variables
-            .unwrap_or(DEFAULTS.jme_single_letter_variables)),
-        allow_unknown_functions: v!(qp
-            .allow_unknown_functions
-            .unwrap_or(DEFAULTS.jme_allow_unknown_functions)),
-        implicit_function_composition: v!(qp
-            .implicit_function_composition
-            .unwrap_or(DEFAULTS.jme_implicit_function_composition)),
+        answer: Value::Normal(TranslatableString::s(&qp.answer)),
+        answer_simplification: Value::Normal(extract_jme_answer_simplification(
+            &qp.answer_simplification,
+        )),
+        show_preview: Value::Normal(qp.show_preview),
+        checking_type: Value::Normal(extract_checking_type(&qp.checking_type)),
+        failure_rate: Value::Normal(qp.failure_rate),
+        vset_range: Value::Normal([qp.vset_range[0].0, qp.vset_range[1].0]),
+        vset_range_points: Value::Normal(qp.vset_range_points.0),
+        check_variable_names: Value::Normal(qp.check_variable_names),
+        single_letter_variables: Value::Normal(
+            qp.single_letter_variables
+                .unwrap_or(DEFAULTS.jme_single_letter_variables),
+        ),
+        allow_unknown_functions: Value::Normal(
+            qp.allow_unknown_functions
+                .unwrap_or(DEFAULTS.jme_allow_unknown_functions),
+        ),
+        implicit_function_composition: Value::Normal(
+            qp.implicit_function_composition
+                .unwrap_or(DEFAULTS.jme_implicit_function_composition),
+        ),
 
-        max_length: v!(qp
-            .max_length
-            .clone()
-            .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
-            .unwrap_or_else(nn)),
-        min_length: v!(qp
-            .min_length
-            .clone()
-            .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
-            .unwrap_or_else(nn)),
-        must_have: v!(qp
-            .must_have
-            .clone()
-            .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
-            .unwrap_or_else(nn)),
-        may_not_have: v!(qp
-            .may_not_have
-            .clone()
-            .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
-            .unwrap_or_else(nn)),
-        must_match_pattern: v!(qp
-            .must_match_pattern
-            .clone()
-            .map(|r| Noneable::NotNone(extract_pattern_restriction(&r)))
-            .unwrap_or_else(nn)),
-        value_generators: v!(qp
-            .value_generators
-            .clone()
-            .map(|v| Noneable::NotNone(v.iter().map(|g| extract_value_generator(&g)).collect()))
-            .unwrap_or_else(nn)),
+        max_length: Value::Normal(
+            qp.max_length
+                .clone()
+                .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
+                .unwrap_or_else(Noneable::nn),
+        ),
+        min_length: Value::Normal(
+            qp.min_length
+                .clone()
+                .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
+                .unwrap_or_else(Noneable::nn),
+        ),
+        must_have: Value::Normal(
+            qp.must_have
+                .clone()
+                .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
+                .unwrap_or_else(Noneable::nn),
+        ),
+        may_not_have: Value::Normal(
+            qp.may_not_have
+                .clone()
+                .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
+                .unwrap_or_else(Noneable::nn),
+        ),
+        must_match_pattern: Value::Normal(
+            qp.must_match_pattern
+                .clone()
+                .map(|r| Noneable::NotNone(extract_pattern_restriction(&r)))
+                .unwrap_or_else(Noneable::nn),
+        ),
+        value_generators: Value::Normal(
+            qp.value_generators
+                .clone()
+                .map(|v| Noneable::NotNone(v.iter().map(|g| extract_value_generator(&g)).collect()))
+                .unwrap_or_else(Noneable::nn),
+        ),
     })
 }
 
@@ -957,45 +857,59 @@ fn extract_number_entry_part(
 ) -> QuestionPartBuiltin {
     QuestionPartBuiltin::NumberEntry(QuestionPartNumberEntry {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
-        answer: v!(extract_number_entry_answer(&qp.answer)),
-        display_correct_as_fraction: v!(qp.correct_answer_fraction),
-        allow_fractions: v!(qp.allow_fractions),
-        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or_default().to_rumbas()),
-        display_correct_in_style: v!(qp
-            .correct_answer_style
-            .clone()
-            .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
-            .to_rumbas()),
+        answer: Value::Normal(extract_number_entry_answer(&qp.answer)),
+        display_correct_as_fraction: Value::Normal(qp.correct_answer_fraction),
+        allow_fractions: Value::Normal(qp.allow_fractions),
+        allowed_notation_styles: Value::Normal(
+            qp.notation_styles.clone().unwrap_or_default().to_rumbas(),
+        ),
+        display_correct_in_style: Value::Normal(
+            qp.correct_answer_style
+                .clone()
+                .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
+                .to_rumbas(),
+        ),
 
-        fractions_must_be_reduced: v!(qp
-            .fractions_must_be_reduced
-            .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced)),
-        partial_credit_if_fraction_not_reduced: v!(qp
-            .partial_credit_if_fraction_not_reduced
-            .clone()
-            .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced)),
-        hint_fraction: v!(qp
-            .show_fraction_hint
-            .unwrap_or(DEFAULTS.number_entry_hint_fraction)),
+        fractions_must_be_reduced: Value::Normal(
+            qp.fractions_must_be_reduced
+                .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced),
+        ),
+        partial_credit_if_fraction_not_reduced: Value::Normal(
+            qp.partial_credit_if_fraction_not_reduced
+                .clone()
+                .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced),
+        ),
+        hint_fraction: Value::Normal(
+            qp.show_fraction_hint
+                .unwrap_or(DEFAULTS.number_entry_hint_fraction),
+        ),
     })
 }
 
@@ -1004,12 +918,12 @@ type RumbasType = QuestionPartMatrix;
 fn to_rumbas(&self) -> Self::RumbasType {*/
 fn extract_matrix_part(sel: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPartBuiltin {
     QuestionPartBuiltin::Matrix({
-        let rows = v!(QuestionPartMatrixDimension::from_range(
+        let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
             sel.num_rows.0,
             sel.min_rows,
-            sel.max_rows
+            sel.max_rows,
         ));
-        let columns = v!(QuestionPartMatrixDimension::from_range(
+        let columns = Value::Normal(QuestionPartMatrixDimension::from_range(
             sel.num_columns.0,
             sel.min_columns,
             sel.max_columns,
@@ -1017,35 +931,43 @@ fn extract_matrix_part(sel: &numbas::exam::ExamQuestionPartMatrix) -> QuestionPa
         let dimensions = QuestionPartMatrixDimensions { rows, columns };
         QuestionPartMatrix {
             // Default section
-            marks: v!(extract_part_common_marks(&sel.part_data)),
-            prompt: v!(ts!(extract_part_common_prompt(&sel.part_data))),
-            use_custom_name: v!(extract_part_common_use_custom_name(&sel.part_data)),
-            custom_name: v!(extract_part_common_custom_name(&sel.part_data)),
-            steps_penalty: v!(extract_part_common_steps_penalty(&sel.part_data)),
-            enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&sel.part_data)),
-            minimum_marks: v!(extract_part_common_minimum_marks(&sel.part_data)),
-            show_correct_answer: v!(extract_part_common_show_correct_answer(&sel.part_data)),
-            show_feedback_icon: v!(extract_part_common_show_feedback_icon(&sel.part_data)),
-            variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-                &sel.part_data
+            marks: Value::Normal(extract_part_common_marks(&sel.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &sel.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&sel.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&sel.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&sel.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &sel.part_data,
             )),
-            adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(
-                &sel.part_data
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&sel.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &sel.part_data,
             )),
-            custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(
-                &sel.part_data
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &sel.part_data,
             )),
-            extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-                &sel.part_data
+            variable_replacement_strategy: Value::Normal(
+                extract_part_common_variable_replacement_strategy(&sel.part_data),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &sel.part_data,
             )),
-            steps: v!(extract_part_common_steps(&sel.part_data)),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &sel.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&sel.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&sel.part_data)),
 
-            correct_answer: v!(sel.correct_answer.clone()),
-            display_correct_as_fraction: v!(sel.correct_answer_fractions),
-            dimensions: v!(dimensions),
-            max_absolute_deviation: v!(sel.tolerance),
-            mark_partial_by_cells: v!(sel.mark_per_cell),
-            allow_fractions: v!(sel.allow_fractions),
+            correct_answer: Value::Normal(sel.correct_answer.clone()),
+            display_correct_as_fraction: Value::Normal(sel.correct_answer_fractions),
+            dimensions: Value::Normal(dimensions),
+            max_absolute_deviation: Value::Normal(sel.tolerance),
+            mark_partial_by_cells: Value::Normal(sel.mark_per_cell),
+            allow_fractions: Value::Normal(sel.allow_fractions),
         }
     })
 }
@@ -1056,34 +978,43 @@ fn extract_pattern_match_part(
 ) -> QuestionPartBuiltin {
     QuestionPartBuiltin::PatternMatch(QuestionPartPatternMatch {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
-        case_sensitive: v!(qp.case_sensitive),
-        partial_credit: v!(qp.partial_credit),
-        pattern: v!(ts!(qp.answer.to_string())),
-        display_answer: v!(ts!(qp
-            .display_answer
-            .clone()
-            .map(|d| d.to_string())
-            .unwrap_or_else(|| qp.answer.to_string()))), // TDDO: check default
-        match_mode: v!(qp.match_mode),
+        case_sensitive: Value::Normal(qp.case_sensitive),
+        partial_credit: Value::Normal(qp.partial_credit),
+        pattern: Value::Normal(TranslatableString::s(&qp.answer.to_string())),
+        display_answer: Value::Normal(TranslatableString::s(
+            &qp.display_answer
+                .clone()
+                .map(|d| d.to_string())
+                .unwrap_or_else(|| qp.answer.to_string()),
+        )), // TDDO: check default
+        match_mode: Value::Normal(qp.match_mode),
     })
 }
 
@@ -1106,74 +1037,96 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
                 .map(|((a, b), c)| (a, b, c))
                 .collect(),
         };
-        v!(MultipleChoiceAnswerData::ItemBased(
+        Value::Normal(MultipleChoiceAnswerData::ItemBased(
             answers_data
                 .into_iter()
                 .map(|(a, b, c)| MultipleChoiceAnswer {
-                    statement: v!(ts!(a)),
-                    marks: v!(b),
-                    feedback: v!(ts!(c))
+                    statement: Value::Normal(TranslatableString::s(&a)),
+                    marks: Value::Normal(b),
+                    feedback: Value::Normal(TranslatableString::s(&c)),
                 })
-                .collect()
+                .collect(),
         ))
     } else {
-        v!(MultipleChoiceAnswerData::NumbasLike(Box::new(
+        Value::Normal(MultipleChoiceAnswerData::NumbasLike(Box::new(
             MultipleChoiceAnswerDataNumbasLike {
-                answers: v!(qp
-                    .answers
-                    .clone()
-                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
-                    .to_rumbas()),
-                marks: v!(qp
-                    .marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?")),
-                feedback: v!(qp
-                    .distractors
-                    .clone()
-                    .map(|v| Noneable::NotNone(
-                        v.iter().map(|f| ts!(f)).collect::<Vec<_>>().to_rumbas()
-                    ))
-                    .unwrap_or_else(nn))
-            }
+                answers: Value::Normal(
+                    qp.answers
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                marks: Value::Normal(
+                    qp.marking_matrix
+                        .clone()
+                        .map(|m| m.to_rumbas())
+                        .expect("How can the marking matrix be optional?"),
+                ),
+                feedback: Value::Normal(
+                    qp.distractors
+                        .clone()
+                        .map(|v| {
+                            Noneable::NotNone(
+                                v.iter()
+                                    .map(|f| TranslatableString::s(&f))
+                                    .collect::<Vec<_>>()
+                                    .to_rumbas(),
+                            )
+                        })
+                        .unwrap_or_else(Noneable::nn),
+                ),
+            },
         )))
     };
     QuestionPartBuiltin::ChooseOne(QuestionPartChooseOne {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
         answer_data,
-        display: v!(match qp.display_type {
+        display: Value::Normal(match qp.display_type {
             numbas::exam::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
                 columns: qp.columns.0,
             },
             numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
         }),
-        shuffle_answers: v!(qp.shuffle_answers),
-        show_cell_answer_state: v!(qp
-            .show_cell_answer_state
-            .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state)),
-        has_to_select_option: v!(qp
-            .min_answers
-            .map(|v| v == 1)
-            .unwrap_or(DEFAULTS.choose_one_has_to_select_option)),
+        shuffle_answers: Value::Normal(qp.shuffle_answers),
+        show_cell_answer_state: Value::Normal(
+            qp.show_cell_answer_state
+                .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state),
+        ),
+        has_to_select_option: Value::Normal(
+            qp.min_answers
+                .map(|v| v == 1)
+                .unwrap_or(DEFAULTS.choose_one_has_to_select_option),
+        ),
     })
 }
 
@@ -1199,68 +1152,93 @@ fn extract_choose_multiple_part(
                 .map(|((a, b), c)| (a, b, c))
                 .collect(),
         };
-        v!(MultipleChoiceAnswerData::ItemBased(
+        Value::Normal(MultipleChoiceAnswerData::ItemBased(
             answers_data
                 .into_iter()
                 .map(|(a, b, c)| MultipleChoiceAnswer {
-                    statement: v!(ts!(a)),
-                    marks: v!(b),
-                    feedback: v!(ts!(c))
+                    statement: Value::Normal(TranslatableString::s(&a)),
+                    marks: Value::Normal(b),
+                    feedback: Value::Normal(TranslatableString::s(&c)),
                 })
-                .collect()
+                .collect(),
         ))
     } else {
-        v!(MultipleChoiceAnswerData::NumbasLike(Box::new(
+        Value::Normal(MultipleChoiceAnswerData::NumbasLike(Box::new(
             MultipleChoiceAnswerDataNumbasLike {
-                answers: v!(qp
-                    .choices
-                    .clone()
-                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
-                    .to_rumbas()),
-                marks: v!(qp
-                    .marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?")),
-                feedback: v!(qp
-                    .distractors
-                    .clone()
-                    .map(|v| Noneable::NotNone(
-                        v.iter().map(|f| ts!(f)).collect::<Vec<_>>().to_rumbas()
-                    ))
-                    .unwrap_or_else(nn))
-            }
+                answers: Value::Normal(
+                    qp.choices
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                marks: Value::Normal(
+                    qp.marking_matrix
+                        .clone()
+                        .map(|m| m.to_rumbas())
+                        .expect("How can the marking matrix be optional?"),
+                ),
+                feedback: Value::Normal(
+                    qp.distractors
+                        .clone()
+                        .map(|v| {
+                            Noneable::NotNone(
+                                v.iter()
+                                    .map(|f| TranslatableString::s(&f))
+                                    .collect::<Vec<_>>()
+                                    .to_rumbas(),
+                            )
+                        })
+                        .unwrap_or_else(Noneable::nn),
+                ),
+            },
         )))
     };
     QuestionPartBuiltin::ChooseMultiple(QuestionPartChooseMultiple {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
         answer_data,
-        shuffle_answers: v!(qp.shuffle_answers),
-        show_cell_answer_state: v!(qp.show_cell_answer_state),
-        should_select_at_least: v!(qp
-            .min_answers
-            .unwrap_or(DEFAULTS.choose_multiple_min_answers)),
-        should_select_at_most: v!(qp.max_answers.map(Noneable::NotNone).unwrap_or_else(nn)),
-        columns: v!(qp.display_columns.0),
+        shuffle_answers: Value::Normal(qp.shuffle_answers),
+        show_cell_answer_state: Value::Normal(qp.show_cell_answer_state),
+        should_select_at_least: Value::Normal(
+            qp.min_answers
+                .unwrap_or(DEFAULTS.choose_multiple_min_answers),
+        ),
+        should_select_at_most: Value::Normal(
+            qp.max_answers
+                .map(Noneable::NotNone)
+                .unwrap_or_else(Noneable::nn),
+        ),
+        columns: Value::Normal(qp.display_columns.0),
     })
 }
 
@@ -1296,184 +1274,248 @@ fn extract_match_answers_with_choices_part(
             .zip(inverted_matrix.into_iter())
             .collect();
 
-        v!(MultipleChoiceMatchAnswerData::ItemBased({
-            let answers: Vec<_> = answer_options.iter().map(|a| v!(ts!(a.clone()))).collect();
+        Value::Normal(MultipleChoiceMatchAnswerData::ItemBased({
+            let answers: Vec<_> = answer_options
+                .iter()
+                .map(|a| Value::Normal(TranslatableString::s(&a.clone())))
+                .collect();
             MultipleChoiceMatchAnswers {
-                answers: v!(answers.clone()),
-                items: v!(items_data
-                    .into_iter()
-                    .map(|(statement, marks)| v!(MatchAnswersItem {
-                        statement: v!(ts!(statement)),
-                        answer_marks: v!(marks
-                            .into_iter()
-                            .enumerate()
-                            .map(|(i, m)| {
-                                MatchAnswersItemMarks {
-                                    marks: v!(m),
-                                    answer: answers.get(i).unwrap().clone(),
-                                }
+                answers: Value::Normal(answers.clone()),
+                items: Value::Normal(
+                    items_data
+                        .into_iter()
+                        .map(|(statement, marks)| {
+                            Value::Normal(MatchAnswersItem {
+                                statement: Value::Normal(TranslatableString::s(&statement)),
+                                answer_marks: Value::Normal(
+                                    marks
+                                        .into_iter()
+                                        .enumerate()
+                                        .map(|(i, m)| MatchAnswersItemMarks {
+                                            marks: Value::Normal(m),
+                                            answer: answers.get(i).unwrap().clone(),
+                                        })
+                                        .collect(),
+                                ),
                             })
-                            .collect()),
-                    }))
-                    .collect()),
+                        })
+                        .collect(),
+                ),
             }
         }))
     } else {
-        v!(MultipleChoiceMatchAnswerData::NumbasLike(
+        Value::Normal(MultipleChoiceMatchAnswerData::NumbasLike(
             MultipleChoiceMatchAnswerDataNumbasLike {
-                answers: v!(qp
-                    .answers
-                    .clone()
-                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
-                    .to_rumbas()),
-                choices: v!(qp
-                    .choices
-                    .clone()
-                    .map(|v| v.iter().map(|vv| ts!(vv.clone())).collect::<Vec<_>>())
-                    .to_rumbas()),
-                marks: v!(qp
-                    .marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?")),
-            }
+                answers: Value::Normal(
+                    qp.answers
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                choices: Value::Normal(
+                    qp.choices
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                marks: Value::Normal(
+                    qp.marking_matrix
+                        .clone()
+                        .map(|m| m.to_rumbas())
+                        .expect("How can the marking matrix be optional?"),
+                ),
+            },
         ))
     };
     QuestionPartBuiltin::MatchAnswersWithItems(QuestionPartMatchAnswersWithItems {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
         answer_data,
-        shuffle_answers: v!(qp.shuffle_answers),
-        shuffle_items: v!(qp.shuffle_choices),
-        show_cell_answer_state: v!(qp.show_cell_answer_state),
-        should_select_at_least: v!(qp
-            .min_answers
-            .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)),
-        should_select_at_most: v!(qp.max_answers.map(Noneable::NotNone).unwrap_or_else(nn)),
-        display: v!(qp.display_type.to_rumbas()),
-        layout: v!(qp.layout.clone()),
+        shuffle_answers: Value::Normal(qp.shuffle_answers),
+        shuffle_items: Value::Normal(qp.shuffle_choices),
+        show_cell_answer_state: Value::Normal(qp.show_cell_answer_state),
+        should_select_at_least: Value::Normal(
+            qp.min_answers
+                .unwrap_or(DEFAULTS.match_answers_with_items_min_answers),
+        ),
+        should_select_at_most: Value::Normal(
+            qp.max_answers
+                .map(Noneable::NotNone)
+                .unwrap_or_else(Noneable::nn),
+        ),
+        display: Value::Normal(qp.display_type.to_rumbas()),
+        layout: Value::Normal(qp.layout.clone()),
     })
 }
 
 fn extract_gapfill_part(qp: &numbas::exam::ExamQuestionPartGapFill) -> QuestionPartBuiltin {
     QuestionPartBuiltin::GapFill(QuestionPartGapFill {
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
-        sort_answers: v!(qp.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
+        sort_answers: Value::Normal(qp.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
 
-        gaps: v!(qp.gaps.iter().map(|s| extract_part(&s)).collect()),
+        gaps: Value::Normal(qp.gaps.iter().map(|s| extract_part(&s)).collect()),
     })
 }
 
 fn extract_information_part(qp: &numbas::exam::ExamQuestionPartInformation) -> QuestionPartBuiltin {
     QuestionPartBuiltin::Information(QuestionPartInformation {
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
     })
 }
 fn extract_extension_part(qp: &numbas::exam::ExamQuestionPartExtension) -> QuestionPartBuiltin {
     QuestionPartBuiltin::Extension(QuestionPartExtension {
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
     })
 }
 
 fn extract_custom_part(qp: &numbas::exam::ExamQuestionPartCustom) -> QuestionPartCustom {
     QuestionPartCustom {
         // Default section
-        marks: v!(extract_part_common_marks(&qp.part_data)),
-        prompt: v!(ts!(extract_part_common_prompt(&qp.part_data))),
-        use_custom_name: v!(extract_part_common_use_custom_name(&qp.part_data)),
-        custom_name: v!(extract_part_common_custom_name(&qp.part_data)),
-        steps_penalty: v!(extract_part_common_steps_penalty(&qp.part_data)),
-        enable_minimum_marks: v!(extract_part_common_enable_minimum_marks(&qp.part_data)),
-        minimum_marks: v!(extract_part_common_minimum_marks(&qp.part_data)),
-        show_correct_answer: v!(extract_part_common_show_correct_answer(&qp.part_data)),
-        show_feedback_icon: v!(extract_part_common_show_feedback_icon(&qp.part_data)),
-        variable_replacement_strategy: v!(extract_part_common_variable_replacement_strategy(
-            &qp.part_data
+        marks: Value::Normal(extract_part_common_marks(&qp.part_data)),
+        prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+            &qp.part_data,
+        ))),
+        use_custom_name: Value::Normal(extract_part_common_use_custom_name(&qp.part_data)),
+        custom_name: Value::Normal(extract_part_common_custom_name(&qp.part_data)),
+        steps_penalty: Value::Normal(extract_part_common_steps_penalty(&qp.part_data)),
+        enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+            &qp.part_data,
         )),
-        adaptive_marking_penalty: v!(extract_part_common_adaptive_marking_penalty(&qp.part_data)),
-        custom_marking_algorithm: v!(extract_part_common_custom_marking_algorithm(&qp.part_data)),
-        extend_base_marking_algorithm: v!(extract_part_common_extend_base_marking_algorithm(
-            &qp.part_data
+        minimum_marks: Value::Normal(extract_part_common_minimum_marks(&qp.part_data)),
+        show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(&qp.part_data)),
+        show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(&qp.part_data)),
+        variable_replacement_strategy: Value::Normal(
+            extract_part_common_variable_replacement_strategy(&qp.part_data),
+        ),
+        adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            &qp.part_data,
         )),
-        steps: v!(extract_part_common_steps(&qp.part_data)),
+        custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+            &qp.part_data,
+        )),
+        extend_base_marking_algorithm: Value::Normal(
+            extract_part_common_extend_base_marking_algorithm(&qp.part_data),
+        ),
+        steps: Value::Normal(extract_part_common_steps(&qp.part_data)),
 
-        r#type: v!(qp.r#type.clone()),
-        settings: v!(qp
-            .settings
-            .clone()
-            .into_iter()
-            .map(|(k, v)| (k, v.to_rumbas()))
-            .collect()),
+        r#type: Value::Normal(qp.r#type.clone()),
+        settings: Value::Normal(
+            qp.settings
+                .clone()
+                .into_iter()
+                .map(|(k, v)| (k, v.to_rumbas()))
+                .collect(),
+        ),
     }
 }
 
@@ -1506,9 +1548,9 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
         .question_groups
         .into_iter()
         .map(|q| {
-            v!(QuestionGroup {
-                name: v!(ts!(q.name.unwrap_or_default())),
-                picking_strategy: v!(match q.picking_strategy {
+            Value::Normal(QuestionGroup {
+                name: Value::Normal(TranslatableString::s(&q.name.unwrap_or_default())),
+                picking_strategy: Value::Normal(match q.picking_strategy {
                     numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
                         PickingStrategy::AllOrdered
                     }
@@ -1517,99 +1559,131 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                     }
                     numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset {
                         pick_questions,
-                    } => {
-                        PickingStrategy::RandomSubset { pick_questions }
-                    }
+                    } => PickingStrategy::RandomSubset { pick_questions },
                 }),
-                questions: v!(q
-                    .questions
-                    .into_iter()
-                    .map(|q| {
-                        v!(QuestionPath {
-                            question_name: v!(sanitize(q.name)),
-                            question_data: v!(Question {
-                                statement: v!(ts!(q.statement)),
-                                advice: v!(ts!(q.advice)),
-                                parts: v!(q.parts.iter().map(|p| v!(extract_part(p))).collect()),
-                                builtin_constants: v!(extract_builtin_constants(
-                                    q.builtin_constants
-                                )),
-                                custom_constants: v!(q
-                                    .constants
-                                    .iter()
-                                    .map(|cc| CustomConstant {
-                                        name: v!(cc.name.clone()),
-                                        value: v!(cc.value.clone()),
-                                        tex: v!(cc.tex.clone()),
-                                    })
-                                    .collect()),
-                                variables: v!(q
-                                    .variables
-                                    .iter()
-                                    .map(|(k, v)| (
-                                        k.clone(),
-                                        v!(VariableRepresentation::Long(Box::new(v!(Variable {
-                                            definition: v!(FileString::s(&v.definition)),
-                                            description: v!(v.description.clone()),
-                                            template_type: v!(extract_variable_template_type(
-                                                v.template_type.clone()
-                                            )),
-                                            group: v!(v.group.clone()),
-                                        }))))
-                                    ))
-                                    .collect::<std::collections::HashMap<_, _>>()),
-                                variables_test: v!(VariablesTest {
-                                    condition: v!(q.variables_test.condition.clone()),
-                                    max_runs: v!(q.variables_test.max_runs.0)
+                questions: Value::Normal(
+                    q.questions
+                        .into_iter()
+                        .map(|q| {
+                            Value::Normal(QuestionPath {
+                                question_name: Value::Normal(sanitize(q.name)),
+                                question_data: Value::Normal(Question {
+                                    statement: Value::Normal(TranslatableString::s(&q.statement)),
+                                    advice: Value::Normal(TranslatableString::s(&q.advice)),
+                                    parts: Value::Normal(
+                                        q.parts
+                                            .iter()
+                                            .map(|p| Value::Normal(extract_part(p)))
+                                            .collect(),
+                                    ),
+                                    builtin_constants: Value::Normal(extract_builtin_constants(
+                                        q.builtin_constants,
+                                    )),
+                                    custom_constants: Value::Normal(
+                                        q.constants
+                                            .iter()
+                                            .map(|cc| CustomConstant {
+                                                name: Value::Normal(cc.name.clone()),
+                                                value: Value::Normal(cc.value.clone()),
+                                                tex: Value::Normal(cc.tex.clone()),
+                                            })
+                                            .collect(),
+                                    ),
+                                    variables: Value::Normal(
+                                        q.variables
+                                            .iter()
+                                            .map(|(k, v)| {
+                                                (
+                                                    k.clone(),
+                                                    Value::Normal(VariableRepresentation::Long(
+                                                        Box::new(Value::Normal(Variable {
+                                                            definition: Value::Normal(
+                                                                FileString::s(&v.definition),
+                                                            ),
+                                                            description: Value::Normal(
+                                                                v.description.clone(),
+                                                            ),
+                                                            template_type: Value::Normal(
+                                                                extract_variable_template_type(
+                                                                    v.template_type.clone(),
+                                                                ),
+                                                            ),
+                                                            group: Value::Normal(v.group.clone()),
+                                                        })),
+                                                    )),
+                                                )
+                                            })
+                                            .collect::<std::collections::HashMap<_, _>>(),
+                                    ),
+                                    variables_test: Value::Normal(VariablesTest {
+                                        condition: Value::Normal(
+                                            q.variables_test.condition.clone(),
+                                        ),
+                                        max_runs: Value::Normal(q.variables_test.max_runs.0),
+                                    }),
+                                    functions: Value::Normal(
+                                        q.functions
+                                            .iter()
+                                            .map(|(k, f)| {
+                                                (
+                                                    k.clone(),
+                                                    Value::Normal(Function {
+                                                        definition: Value::Normal(FileString::s(
+                                                            &f.definition,
+                                                        )),
+                                                        output_type: Value::Normal(f.output_type),
+                                                        language: Value::Normal(f.language),
+                                                        parameters: Value::Normal(
+                                                            f.parameters
+                                                                .clone()
+                                                                .into_iter()
+                                                                .collect(),
+                                                        ),
+                                                    }),
+                                                )
+                                            })
+                                            .collect::<std::collections::HashMap<_, _>>(),
+                                    ),
+                                    preamble: Value::Normal(Preamble {
+                                        js: Value::Normal(FileString::s(&q.preamble.js)),
+                                        css: Value::Normal(FileString::s(&q.preamble.css)),
+                                    }),
+                                    navigation: Value::Normal(QuestionNavigation {
+                                        can_regenerate: Value::Normal(
+                                            q.navigation.allow_regenerate,
+                                        ),
+                                        show_title_page: Value::Normal(q.navigation.show_frontpage),
+                                        prevent_leaving: Value::Normal(
+                                            q.navigation.prevent_leaving.unwrap_or(
+                                                DEFAULTS.question_navigation_prevent_leaving,
+                                            ),
+                                        ),
+                                    }),
+                                    extensions: Value::Normal(Extensions::from(&q.extensions)),
+                                    diagnostic_topic_names: Value::Normal(
+                                        q.tags
+                                            .iter()
+                                            .filter(|t| t.starts_with("skill: "))
+                                            .map(|t| {
+                                                TranslatableString::s(
+                                                    &t.splitn(2, ": ").collect::<Vec<_>>()[1]
+                                                        .to_string(),
+                                                )
+                                            })
+                                            .collect(),
+                                    ),
+                                    resources: Value::Normal(
+                                        q.resources
+                                            .to_rumbas()
+                                            .into_iter()
+                                            .map(|r| Value::Normal(r))
+                                            .collect(),
+                                    ),
                                 }),
-                                functions: v!(q
-                                    .functions
-                                    .iter()
-                                    .map(|(k, f)| (
-                                        k.clone(),
-                                        v!(Function {
-                                            definition: v!(FileString::s(&f.definition)),
-                                            output_type: v!(f.output_type),
-                                            language: v!(f.language),
-                                            parameters: v!(f
-                                                .parameters
-                                                .clone()
-                                                .into_iter()
-                                                .collect())
-                                        })
-                                    ))
-                                    .collect::<std::collections::HashMap<_, _>>()),
-                                preamble: v!(Preamble {
-                                    js: v!(FileString::s(&q.preamble.js)),
-                                    css: v!(FileString::s(&q.preamble.css)),
-                                }),
-                                navigation: v!(QuestionNavigation {
-                                    can_regenerate: v!(q.navigation.allow_regenerate),
-                                    show_title_page: v!(q.navigation.show_frontpage),
-                                    prevent_leaving: v!(q
-                                        .navigation
-                                        .prevent_leaving
-                                        .unwrap_or(DEFAULTS.question_navigation_prevent_leaving)),
-                                }),
-                                extensions: v!(Extensions::from(&q.extensions)),
-                                diagnostic_topic_names: v!(q
-                                    .tags
-                                    .iter()
-                                    .filter(|t| t.starts_with("skill: "))
-                                    .map(|t| ts!(
-                                        t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string()
-                                    ))
-                                    .collect()),
-                                resources: v!(q
-                                    .resources
-                                    .to_rumbas()
-                                    .into_iter()
-                                    .map(|r| v!(r))
-                                    .collect())
                             })
                         })
-                    })
-                    .collect())
+                        .collect(),
+                ),
             })
         })
         .collect()
@@ -1618,38 +1692,49 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
 fn extract_diagnostic(exam: &NExam) -> Diagnostic {
     let diagnostic = exam.diagnostic.clone().unwrap();
     Diagnostic {
-        script: v!(match diagnostic.script {
+        script: Value::Normal(match diagnostic.script {
             numbas::exam::ExamDiagnosticScript::Mastery => DiagnosticScript::Mastery,
             numbas::exam::ExamDiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
             numbas::exam::ExamDiagnosticScript::Custom => {
-                DiagnosticScript::Custom(ts!(diagnostic.custom_script))
+                DiagnosticScript::Custom(TranslatableString::s(&diagnostic.custom_script))
             }
         }),
-        objectives: v!(diagnostic
-            .knowledge_graph
-            .clone()
-            .learning_objectives
-            .into_iter()
-            .map(|l| LearningObjective {
-                name: v!(ts!(l.name)),
-                description: v!(ts!(l.description))
-            })
-            .collect()),
-        topics: v!(diagnostic
-            .knowledge_graph
-            .topics
-            .into_iter()
-            .map(|l| LearningTopic {
-                name: v!(ts!(l.name)),
-                description: v!(ts!(l.description)),
-                objectives: v!(l
-                    .learning_objectives
-                    .clone()
-                    .into_iter()
-                    .map(|o| ts!(o))
-                    .collect()),
-                depends_on: v!(l.depends_on.clone().into_iter().map(|o| ts!(o)).collect()),
-            })
-            .collect()),
+        objectives: Value::Normal(
+            diagnostic
+                .knowledge_graph
+                .clone()
+                .learning_objectives
+                .into_iter()
+                .map(|l| LearningObjective {
+                    name: Value::Normal(TranslatableString::s(&l.name)),
+                    description: Value::Normal(TranslatableString::s(&l.description)),
+                })
+                .collect(),
+        ),
+        topics: Value::Normal(
+            diagnostic
+                .knowledge_graph
+                .topics
+                .into_iter()
+                .map(|l| LearningTopic {
+                    name: Value::Normal(TranslatableString::s(&l.name)),
+                    description: Value::Normal(TranslatableString::s(&l.description)),
+                    objectives: Value::Normal(
+                        l.learning_objectives
+                            .clone()
+                            .into_iter()
+                            .map(|o| TranslatableString::s(&o))
+                            .collect(),
+                    ),
+                    depends_on: Value::Normal(
+                        l.depends_on
+                            .clone()
+                            .into_iter()
+                            .map(|o| TranslatableString::s(&o))
+                            .collect(),
+                    ),
+                })
+                .collect(),
+        ),
     }
 }
