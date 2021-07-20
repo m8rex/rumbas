@@ -33,54 +33,66 @@ impl ToNumbas for QuestionPartJME {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionPartJME::new(
-                self.to_numbas_shared_data(locale),
-                self.answer.clone().unwrap().to_string(locale).unwrap(),
-                Some(
+            Ok(numbas::exam::ExamQuestionPartJME {
+                part_data: self.to_numbas_shared_data(locale),
+                answer: self.answer.clone().unwrap().to_string(locale).unwrap(),
+                answer_simplification: Some(
                     self.answer_simplification
                         .clone()
                         .unwrap()
                         .to_numbas(locale)
                         .unwrap(),
                 ),
-                self.show_preview.clone().unwrap(),
-                self.checking_type
+                show_preview: self.show_preview.clone().unwrap(),
+                checking_type: self
+                    .checking_type
                     .clone()
                     .unwrap()
                     .to_numbas(locale)
                     .unwrap(),
-                self.failure_rate.unwrap(),
-                self.vset_range.unwrap(),
-                self.vset_range_points.unwrap(),
-                self.check_variable_names.unwrap(),
-                Some(self.single_letter_variables.clone().unwrap()),
-                Some(self.allow_unknown_functions.clone().unwrap()),
-                Some(self.implicit_function_composition.clone().unwrap()),
-                self.max_length
+                failure_rate: self.failure_rate.unwrap(),
+                vset_range: [
+                    self.vset_range.unwrap()[0].into(),
+                    self.vset_range.unwrap()[1].into(),
+                ],
+                vset_range_points: self.vset_range_points.unwrap().into(),
+                check_variable_names: self.check_variable_names.unwrap(),
+                single_letter_variables: Some(self.single_letter_variables.clone().unwrap()),
+                allow_unknown_functions: Some(self.allow_unknown_functions.clone().unwrap()),
+                implicit_function_composition: Some(
+                    self.implicit_function_composition.clone().unwrap(),
+                ),
+                max_length: self
+                    .max_length
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-                self.min_length
+                min_length: self
+                    .min_length
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-                self.must_have
+                must_have: self
+                    .must_have
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-                self.may_not_have
+                may_not_have: self
+                    .may_not_have
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-                self.must_match_pattern
+                must_match_pattern: self
+                    .must_match_pattern
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-                self.value_generators
+                value_generators: self
+                    .value_generators
                     .clone()
                     .map(|v| v.to_numbas(locale).unwrap())
                     .flatten(),
-            ))
+            })
         } else {
             Err(check)
         }
@@ -296,17 +308,18 @@ impl ToNumbas for JMERestriction {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMERestriction> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::JMERestriction::new(
-                self.name.clone().unwrap().to_string(locale).unwrap(),
-                self.strings
+            Ok(numbas::exam::JMERestriction {
+                name: self.name.clone().unwrap().to_string(locale).unwrap(),
+                strings: self
+                    .strings
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|s| s.to_string(locale).unwrap())
                     .collect(),
-                self.partial_credit.clone().unwrap(),
-                self.message.clone().unwrap().to_string(locale).unwrap(),
-            ))
+                partial_credit: self.partial_credit.clone().unwrap(),
+                message: self.message.clone().unwrap().to_string(locale).unwrap(),
+            })
         } else {
             Err(check)
         }
@@ -326,10 +339,10 @@ impl ToNumbas for JMELengthRestriction {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMELengthRestriction> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::JMELengthRestriction::new(
-                self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
-                Some(self.length.clone().unwrap()),
-            ))
+            Ok(numbas::exam::JMELengthRestriction {
+                restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
+                length: Some(self.length.clone().unwrap()),
+            })
         } else {
             Err(check)
         }
@@ -349,10 +362,10 @@ impl ToNumbas for JMEStringRestriction {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEStringRestriction> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::JMEStringRestriction::new(
-                self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
-                self.show_strings.clone().unwrap(),
-            ))
+            Ok(numbas::exam::JMEStringRestriction {
+                restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
+                show_strings: self.show_strings.clone().unwrap(),
+            })
         } else {
             Err(check)
         }
@@ -373,12 +386,12 @@ impl ToNumbas for JMEPatternRestriction {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::JMEPatternRestriction::new(
-                self.partial_credit.clone().unwrap(),
-                self.message.clone().unwrap().to_string(locale).unwrap(),
-                self.pattern.clone().unwrap(),
-                self.name_to_compare.clone().unwrap(),
-            ))
+            Ok(numbas::exam::JMEPatternRestriction {
+                partial_credit: self.partial_credit.clone().unwrap(),
+                message: self.message.clone().unwrap().to_string(locale).unwrap(),
+                pattern: self.pattern.clone().unwrap(),
+                name_to_compare: self.name_to_compare.clone().unwrap(),
+            })
         } else {
             Err(check)
         }
@@ -397,10 +410,10 @@ impl ToNumbas for JMEValueGenerator {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEValueGenerator> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::JMEValueGenerator::new(
-                self.name.clone().unwrap().get_content(locale),
-                self.value.clone().unwrap().get_content(locale),
-            ))
+            Ok(numbas::exam::JMEValueGenerator {
+                name: self.name.clone().unwrap().get_content(locale),
+                value: self.value.clone().unwrap().get_content(locale),
+            })
         } else {
             Err(check)
         }

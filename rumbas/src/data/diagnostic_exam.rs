@@ -42,21 +42,23 @@ impl ToNumbas for DiagnosticExam {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Exam> {
         let check = self.check();
         if check.is_empty() {
-            let basic_settings = numbas::exam::BasicExamSettings::new(
-                self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
-                self.timing
+            let basic_settings = numbas::exam::BasicExamSettings {
+                name: self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
+                duration_in_seconds: self
+                    .timing
                     .clone()
                     .unwrap()
                     .duration_in_seconds
                     .to_numbas(locale)
                     .unwrap(),
-                self.feedback
+                percentage_needed_to_pass: self
+                    .feedback
                     .clone()
                     .unwrap()
                     .percentage_needed_to_pass
                     .to_numbas(locale)
                     .unwrap(),
-                Some(
+                show_question_group_names: Some(
                     self.navigation
                         .clone()
                         .unwrap()
@@ -65,8 +67,10 @@ impl ToNumbas for DiagnosticExam {
                         .show_names_of_question_groups
                         .unwrap(),
                 ),
-                Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
-                Some(
+                show_student_name: Some(
+                    self.feedback.clone().unwrap().show_name_of_student.unwrap(),
+                ),
+                allow_printing: Some(
                     self.navigation
                         .clone()
                         .unwrap()
@@ -75,7 +79,7 @@ impl ToNumbas for DiagnosticExam {
                         .allow_printing
                         .unwrap(),
                 ),
-            );
+            };
 
             //TODO
             let navigation = self.navigation.clone().unwrap().to_numbas(locale).unwrap();
@@ -149,7 +153,7 @@ impl ToNumbas for DiagnosticExam {
 
             let diagnostic = Some(self.diagnostic.clone().unwrap().to_numbas(locale).unwrap());
 
-            Ok(numbas::exam::Exam::new(
+            Ok(numbas::exam::Exam {
                 basic_settings,
                 resources,
                 extensions,
@@ -157,11 +161,11 @@ impl ToNumbas for DiagnosticExam {
                 navigation,
                 timing,
                 feedback,
-                Some(functions.unwrap()),
-                Some(variables.unwrap()),
+                functions: Some(functions.unwrap()),
+                variables: Some(variables.unwrap()),
                 question_groups,
                 diagnostic,
-            ))
+            })
         } else {
             Err(check)
         }

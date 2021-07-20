@@ -175,22 +175,23 @@ macro_rules! question_part_type {
         }
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
-                numbas::exam::ExamQuestionPartSharedData::new(
-            Some(self.marks.clone().unwrap().into()),
-            self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
-            Some(self.use_custom_name.clone().unwrap()),
-            Some(self.custom_name.clone().unwrap()),
-            Some(self.steps_penalty.clone().unwrap()),
-            Some(self.enable_minimum_marks.clone().unwrap()),
-            Some(self.minimum_marks.clone().unwrap()),
-            self.show_correct_answer.clone().unwrap(),
-            Some(self.show_feedback_icon.clone().unwrap()),
-            self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
-            Some(self.adaptive_marking_penalty.clone().unwrap()),
-            Some(self.custom_marking_algorithm.clone().unwrap()),
-            Some(self.extend_base_marking_algorithm.clone().unwrap()),
-            self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
-                )
+                numbas::exam::ExamQuestionPartSharedData {
+                    marks: Some(self.marks.clone().unwrap().into()),
+                    prompt: self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
+                    use_custom_name: Some(self.use_custom_name.clone().unwrap()),
+                    custom_name: Some(self.custom_name.clone().unwrap()),
+                    steps_penalty: Some(self.steps_penalty.clone().unwrap()),
+                    enable_minimum_marks:Some(self.enable_minimum_marks.clone().unwrap()),
+                    minimum_marks: Some(self.minimum_marks.clone().unwrap()),
+                    show_correct_answer: self.show_correct_answer.clone().unwrap(),
+                    show_feedback_icon: Some(self.show_feedback_icon.clone().unwrap()),
+                    variable_replacement_strategy: self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
+                    adaptive_marking_penalty:Some(self.adaptive_marking_penalty.clone().unwrap()),
+                    custom_marking_algorithm: Some(self.custom_marking_algorithm.clone().unwrap()),
+                    extend_base_marking_algorithm: Some(self.extend_base_marking_algorithm.clone().unwrap()),
+                    steps: self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
+                }
+
             }
 
             pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {

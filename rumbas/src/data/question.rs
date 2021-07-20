@@ -189,10 +189,10 @@ impl ToNumbas for VariablesTest {
     fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionVariablesTest::new(
-                self.condition.clone().unwrap(),
-                self.max_runs.clone().unwrap(),
-            ))
+            Ok(numbas::exam::ExamQuestionVariablesTest {
+                condition: self.condition.clone().unwrap(),
+                max_runs: self.max_runs.clone().unwrap().into(),
+            })
         } else {
             Err(check)
         }

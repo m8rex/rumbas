@@ -19,17 +19,18 @@ impl ToNumbas for Function {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFunction> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamFunction::new(
-                self.parameters
+            Ok(numbas::exam::ExamFunction {
+                parameters: self
+                    .parameters
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|(a, b)| (a, b))
                     .collect(),
-                self.output_type.clone().unwrap(),
-                self.definition.clone().unwrap().get_content(locale),
-                self.language.clone().unwrap(),
-            ))
+                output_type: self.output_type.clone().unwrap(),
+                definition: self.definition.clone().unwrap().get_content(locale),
+                language: self.language.clone().unwrap(),
+            })
         } else {
             Err(check)
         }

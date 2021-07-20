@@ -104,21 +104,23 @@ impl ToNumbas for NormalNavigation {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamNavigation::new(
-                self.to_shared_data().can_regenerate.unwrap(),
-                self.to_navigation_mode(),
-                self.can_move_to_previous(),
-                Some(self.browsing_enabled()),
-                Some(self.to_shared_data().show_steps.unwrap()),
-                self.to_shared_data().show_title_page.unwrap(),
-                self.show_results_page() // TODO
+            Ok(numbas::exam::ExamNavigation {
+                allow_regenerate: self.to_shared_data().can_regenerate.unwrap(),
+                navigation_mode: self.to_navigation_mode(),
+                reverse: self.can_move_to_previous(),
+                browsing_enabled: Some(self.browsing_enabled()),
+                allow_steps: Some(self.to_shared_data().show_steps.unwrap()),
+                show_frontpage: self.to_shared_data().show_title_page.unwrap(),
+                show_results_page: self
+                    .show_results_page() // TODO
                     .map(|s| s.to_numbas(locale).unwrap()),
-                Some(self.to_shared_data().prevent_leaving.unwrap()),
-                self.on_leave().map(|s| s.to_numbas(locale).unwrap()),
-                self.to_shared_data()
+                prevent_leaving: Some(self.to_shared_data().prevent_leaving.unwrap()),
+                on_leave: self.on_leave().map(|s| s.to_numbas(locale).unwrap()),
+                start_password: self
+                    .to_shared_data()
                     .start_password
                     .map(|s| s.get_content(locale)),
-            ))
+            })
         } else {
             Err(check)
         }
@@ -140,22 +142,23 @@ impl ToNumbas for DiagnosticNavigation {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamNavigation::new(
-                self.shared_data.clone().unwrap().can_regenerate.unwrap(),
-                numbas::exam::ExamNavigationMode::Diagnostic,
-                None,
-                None,
-                Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
-                self.shared_data.clone().unwrap().show_title_page.unwrap(),
-                None,
-                Some(self.shared_data.clone().unwrap().prevent_leaving.unwrap()),
-                self.on_leave.clone().map(|s| s.to_numbas(locale).unwrap()),
-                self.shared_data
+            Ok(numbas::exam::ExamNavigation {
+                allow_regenerate: self.shared_data.clone().unwrap().can_regenerate.unwrap(),
+                navigation_mode: numbas::exam::ExamNavigationMode::Diagnostic,
+                reverse: None,
+                browsing_enabled: None,
+                allow_steps: Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
+                show_frontpage: self.shared_data.clone().unwrap().show_title_page.unwrap(),
+                show_results_page: None,
+                prevent_leaving: Some(self.shared_data.clone().unwrap().prevent_leaving.unwrap()),
+                on_leave: self.on_leave.clone().map(|s| s.to_numbas(locale).unwrap()),
+                start_password: self
+                    .shared_data
                     .clone()
                     .unwrap()
                     .start_password
                     .map(|s| s.get_content(locale)),
-            ))
+            })
         } else {
             Err(check)
         }
@@ -226,11 +229,11 @@ impl ToNumbas for QuestionNavigation {
     fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::QuestionNavigation> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::QuestionNavigation::new(
-                self.can_regenerate.unwrap(),
-                self.show_title_page.unwrap(),
-                Some(self.prevent_leaving.clone().unwrap()),
-            ))
+            Ok(numbas::exam::QuestionNavigation {
+                allow_regenerate: self.can_regenerate.unwrap(),
+                show_frontpage: self.show_title_page.unwrap(),
+                prevent_leaving: Some(self.prevent_leaving.clone().unwrap()),
+            })
         } else {
             Err(check)
         }

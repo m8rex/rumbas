@@ -20,16 +20,17 @@ impl ToNumbas for QuestionPartGapFill {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionPartGapFill::new(
-                self.to_numbas_shared_data(locale),
-                Some(self.sort_answers.clone().unwrap()),
-                self.gaps
+            Ok(numbas::exam::ExamQuestionPartGapFill {
+                part_data: self.to_numbas_shared_data(locale),
+                sort_answers: Some(self.sort_answers.clone().unwrap()),
+                gaps: self
+                    .gaps
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|g| g.to_numbas(locale).unwrap())
                     .collect(),
-            ))
+            })
         } else {
             Err(check)
         }
