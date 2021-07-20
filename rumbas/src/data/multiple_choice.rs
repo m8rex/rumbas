@@ -3,8 +3,9 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
-use crate::data::to_rumbas::ToRumbas;
+use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 
@@ -165,6 +166,130 @@ impl ToNumbas for QuestionPartChooseOne {
     }
 }
 
+fn extract_multiple_choice_answer_data(
+    answers: &numbas::exam::VariableValued<Vec<String>>,
+    marking_matrix: &Option<numbas::exam::VariableValued<Vec<numbas::exam::Primitive>>>,
+    distractors: &Option<Vec<String>>,
+) -> MultipleChoiceAnswerData {
+    if let (
+        numbas::exam::VariableValued::Value(answer_options),
+        Some(numbas::exam::VariableValued::Value(marking_matrix)),
+    ) = (answers.clone(), marking_matrix.clone())
+    {
+        let answers_data: Vec<_> = match distractors.clone() {
+            None => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .map(|(a, b)| (a, b, "".to_string()))
+                .collect(),
+            Some(d) => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .zip(d.into_iter())
+                .map(|((a, b), c)| (a, b, c))
+                .collect(),
+        };
+        MultipleChoiceAnswerData::ItemBased(
+            answers_data
+                .into_iter()
+                .map(|(a, b, c)| MultipleChoiceAnswer {
+                    statement: Value::Normal(TranslatableString::s(&a)),
+                    marks: Value::Normal(b),
+                    feedback: Value::Normal(TranslatableString::s(&c)),
+                })
+                .collect(),
+        )
+    } else {
+        MultipleChoiceAnswerData::NumbasLike(Box::new(MultipleChoiceAnswerDataNumbasLike {
+            answers: Value::Normal(
+                answers
+                    .clone()
+                    .map(|v| {
+                        v.iter()
+                            .map(|vv| TranslatableString::s(&vv.clone()))
+                            .collect::<Vec<_>>()
+                    })
+                    .to_rumbas(),
+            ),
+            marks: Value::Normal(
+                marking_matrix
+                    .clone()
+                    .map(|m| m.to_rumbas())
+                    .expect("How can the marking matrix be optional?"),
+            ),
+            feedback: Value::Normal(
+                distractors
+                    .clone()
+                    .map(|v| {
+                        Noneable::NotNone(
+                            v.iter()
+                                .map(|f| TranslatableString::s(&f))
+                                .collect::<Vec<_>>()
+                                .to_rumbas(),
+                        )
+                    })
+                    .unwrap_or_else(Noneable::nn),
+            ),
+        }))
+    }
+}
+
+impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseOne {
+    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
+        extract_multiple_choice_answer_data(&self.answers, &self.marking_matrix, &self.distractors)
+    }
+}
+
+impl ToRumbas<QuestionPartChooseOne> for numbas::exam::ExamQuestionPartChooseOne {
+    fn to_rumbas(&self) -> QuestionPartChooseOne {
+        QuestionPartChooseOne {
+            // Default section
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+            answer_data: Value::Normal(self.to_rumbas()),
+            display: Value::Normal(self.to_rumbas()),
+            shuffle_answers: Value::Normal(self.shuffle_answers),
+            show_cell_answer_state: Value::Normal(
+                self.show_cell_answer_state
+                    .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state),
+            ),
+            has_to_select_option: Value::Normal(
+                self.min_answers
+                    .map(|v| v == 1)
+                    .unwrap_or(DEFAULTS.choose_one_has_to_select_option),
+            ),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum ChooseOneDisplay {
@@ -187,6 +312,17 @@ impl ChooseOneDisplay {
         match self {
             ChooseOneDisplay::DropDown => 0,
             ChooseOneDisplay::Radio { columns } => *columns,
+        }
+    }
+}
+
+impl ToRumbas<ChooseOneDisplay> for numbas::exam::ExamQuestionPartChooseOne {
+    fn to_rumbas(&self) -> ChooseOneDisplay {
+        match self.display_type {
+            numbas::exam::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
+                columns: self.columns.0,
+            },
+            numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
         }
     }
 }
@@ -294,6 +430,64 @@ impl ToNumbas for QuestionPartChooseMultiple {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseMultiple {
+    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
+        extract_multiple_choice_answer_data(&self.choices, &self.marking_matrix, &self.distractors)
+    }
+}
+
+impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChooseMultiple {
+    fn to_rumbas(&self) -> QuestionPartChooseMultiple {
+        QuestionPartChooseMultiple {
+            // Default section
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            answer_data: Value::Normal(self.to_rumbas()),
+            shuffle_answers: Value::Normal(self.shuffle_answers),
+            show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
+            should_select_at_least: Value::Normal(
+                self.min_answers
+                    .unwrap_or(DEFAULTS.choose_multiple_min_answers),
+            ),
+            should_select_at_most: Value::Normal(
+                self.max_answers
+                    .map(Noneable::NotNone)
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            columns: Value::Normal(self.display_columns.0),
         }
     }
 }
@@ -431,6 +625,157 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
     }
 }
 
+impl ToRumbas<MultipleChoiceMatchAnswerData>
+    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
+{
+    fn to_rumbas(&self) -> MultipleChoiceMatchAnswerData {
+        if let (
+            numbas::exam::VariableValued::Value(answer_options),
+            numbas::exam::VariableValued::Value(choice_options),
+            Some(numbas::exam::VariableValued::Value(marking_matrix)),
+        ) = (
+            self.answers.clone(),
+            self.choices.clone(),
+            self.marking_matrix.clone(),
+        ) {
+            // inverted_matrix[choice][answer]
+            let inverted_matrix: Vec<Vec<_>> = (0..choice_options.len())
+                .map(|choice_idx| {
+                    marking_matrix
+                        .clone()
+                        .into_iter()
+                        .map(|m| {
+                            m.get(choice_idx)
+                                .expect("marking_matrix does not have enough columns?")
+                                .clone()
+                        })
+                        .collect()
+                })
+                .collect();
+
+            let items_data: Vec<_> = choice_options
+                .into_iter()
+                .zip(inverted_matrix.into_iter())
+                .collect();
+
+            MultipleChoiceMatchAnswerData::ItemBased({
+                let answers: Vec<_> = answer_options
+                    .iter()
+                    .map(|a| Value::Normal(TranslatableString::s(&a.clone())))
+                    .collect();
+                MultipleChoiceMatchAnswers {
+                    answers: Value::Normal(answers.clone()),
+                    items: Value::Normal(
+                        items_data
+                            .into_iter()
+                            .map(|(statement, marks)| {
+                                Value::Normal(MatchAnswersItem {
+                                    statement: Value::Normal(TranslatableString::s(&statement)),
+                                    answer_marks: Value::Normal(
+                                        marks
+                                            .into_iter()
+                                            .enumerate()
+                                            .map(|(i, m)| MatchAnswersItemMarks {
+                                                marks: Value::Normal(m),
+                                                answer: answers.get(i).unwrap().clone(),
+                                            })
+                                            .collect(),
+                                    ),
+                                })
+                            })
+                            .collect(),
+                    ),
+                }
+            })
+        } else {
+            MultipleChoiceMatchAnswerData::NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike {
+                answers: Value::Normal(
+                    self.answers
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                choices: Value::Normal(
+                    self.choices
+                        .clone()
+                        .map(|v| {
+                            v.iter()
+                                .map(|vv| TranslatableString::s(&vv.clone()))
+                                .collect::<Vec<_>>()
+                        })
+                        .to_rumbas(),
+                ),
+                marks: Value::Normal(
+                    self.marking_matrix
+                        .clone()
+                        .map(|m| m.to_rumbas())
+                        .expect("How can the marking matrix be optional?"),
+                ),
+            })
+        }
+    }
+}
+
+impl ToRumbas<QuestionPartMatchAnswersWithItems>
+    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
+{
+    fn to_rumbas(&self) -> QuestionPartMatchAnswersWithItems {
+        QuestionPartMatchAnswersWithItems {
+            // Default section
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            answer_data: Value::Normal(self.to_rumbas()),
+            shuffle_answers: Value::Normal(self.shuffle_answers),
+            shuffle_items: Value::Normal(self.shuffle_choices),
+            show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
+            should_select_at_least: Value::Normal(
+                self.min_answers
+                    .unwrap_or(DEFAULTS.match_answers_with_items_min_answers),
+            ),
+            should_select_at_most: Value::Normal(
+                self.max_answers
+                    .map(Noneable::NotNone)
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            display: Value::Normal(self.display_type.to_rumbas()),
+            layout: Value::Normal(self.layout.clone()),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum MatchAnswerWithItemsDisplay {
@@ -455,9 +800,8 @@ impl ToNumbas for MatchAnswerWithItemsDisplay {
     }
 }
 
-impl ToRumbas for numbas::exam::MatchAnswersWithChoicesDisplayType {
-    type RumbasType = MatchAnswerWithItemsDisplay;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<MatchAnswerWithItemsDisplay> for numbas::exam::MatchAnswersWithChoicesDisplayType {
+    fn to_rumbas(&self) -> MatchAnswerWithItemsDisplay {
         match self {
             numbas::exam::MatchAnswersWithChoicesDisplayType::Check => {
                 MatchAnswerWithItemsDisplay::Check

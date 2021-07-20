@@ -3,6 +3,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
@@ -90,6 +91,27 @@ impl ToNumbas for VariableTemplateType {
 }
 impl_optional_overwrite!(VariableTemplateType);
 
+impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
+    fn to_rumbas(&self) -> VariableTemplateType {
+        match self {
+            numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
+            numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
+                VariableTemplateType::ListOfNumbers
+            }
+            numbas::exam::ExamVariableTemplateType::ListOfStrings => {
+                VariableTemplateType::ListOfStrings
+            }
+            numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
+            numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
+            numbas::exam::ExamVariableTemplateType::RandomRange => {
+                VariableTemplateType::RandomRange
+            }
+            numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
+            numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
@@ -164,6 +186,17 @@ impl VariableRepresentation {
                 ),
             },
         }
+    }
+}
+
+impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
+    fn to_rumbas(&self) -> VariableRepresentation {
+        VariableRepresentation::Long(Box::new(Value::Normal(Variable {
+            definition: Value::Normal(FileString::s(&self.definition)),
+            description: Value::Normal(self.description.clone()),
+            template_type: Value::Normal(self.template_type.to_rumbas()),
+            group: Value::Normal(self.group.clone()),
+        })))
     }
 }
 

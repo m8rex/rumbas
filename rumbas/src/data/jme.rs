@@ -3,7 +3,10 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
+use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
@@ -95,6 +98,102 @@ impl ToNumbas for QuestionPartJME {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
+    fn to_rumbas(&self) -> QuestionPartJME {
+        QuestionPartJME {
+            // Default section
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            answer: Value::Normal(TranslatableString::s(&self.answer)),
+            answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
+            show_preview: Value::Normal(self.show_preview),
+            checking_type: Value::Normal(self.checking_type.to_rumbas()),
+            failure_rate: Value::Normal(self.failure_rate),
+            vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
+            vset_range_points: Value::Normal(self.vset_range_points.0),
+            check_variable_names: Value::Normal(self.check_variable_names),
+            single_letter_variables: Value::Normal(
+                self.single_letter_variables
+                    .unwrap_or(DEFAULTS.jme_single_letter_variables),
+            ),
+            allow_unknown_functions: Value::Normal(
+                self.allow_unknown_functions
+                    .unwrap_or(DEFAULTS.jme_allow_unknown_functions),
+            ),
+            implicit_function_composition: Value::Normal(
+                self.implicit_function_composition
+                    .unwrap_or(DEFAULTS.jme_implicit_function_composition),
+            ),
+
+            max_length: Value::Normal(
+                self.max_length
+                    .clone()
+                    .map(|r| Noneable::NotNone(r.to_rumbas()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            min_length: Value::Normal(
+                self.min_length
+                    .clone()
+                    .map(|r| Noneable::NotNone(r.to_rumbas()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            must_have: Value::Normal(
+                self.must_have
+                    .clone()
+                    .map(|r| Noneable::NotNone(r.to_rumbas()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            may_not_have: Value::Normal(
+                self.may_not_have
+                    .clone()
+                    .map(|r| Noneable::NotNone(r.to_rumbas()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            must_match_pattern: Value::Normal(
+                self.must_match_pattern
+                    .clone()
+                    .map(|r| Noneable::NotNone(r.to_rumbas()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            value_generators: Value::Normal(
+                self.value_generators
+                    .clone()
+                    .map(|v| Noneable::NotNone(v.iter().map(|g| g.to_rumbas()).collect()))
+                    .unwrap_or_else(Noneable::nn),
+            ),
         }
     }
 }
@@ -216,6 +315,157 @@ impl ToNumbas for JMEAnswerSimplification {
     }
 }
 
+impl ToRumbas<JMEAnswerSimplification> for Option<Vec<numbas::exam::AnswerSimplificationType>> {
+    fn to_rumbas(&self) -> JMEAnswerSimplification {
+        let mut result = JMEAnswerSimplification {
+            simplify_basic: Value::Normal(DEFAULTS.jme_simplification_simplify_basic),
+            simplify_unit_factor: Value::Normal(DEFAULTS.jme_simplification_simplify_unit_factor),
+            simplify_unit_power: Value::Normal(DEFAULTS.jme_simplification_simplify_unit_power),
+            simplify_unit_denominator: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_unit_denominator,
+            ),
+            simplify_zero_factor: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_factor),
+            simplify_zero_term: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_term),
+            simplify_zero_power: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_power),
+            simplify_zero_base: Value::Normal(DEFAULTS.jme_simplification_simplify_zero_base),
+            collect_numbers: Value::Normal(DEFAULTS.jme_simplification_collect_numbers),
+            constants_first: Value::Normal(DEFAULTS.jme_simplification_constants_first),
+            simplify_sqrt_products: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_sqrt_products,
+            ),
+            simplify_sqrt_division: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_sqrt_division,
+            ),
+            simplify_sqrt_square: Value::Normal(DEFAULTS.jme_simplification_simplify_sqrt_square),
+            simplify_other_numbers: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_other_numbers,
+            ),
+            simplify_no_leading_minus: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_no_leading_minus,
+            ),
+            simplify_fractions: Value::Normal(DEFAULTS.jme_simplification_simplify_fractions),
+            simplify_trigonometric: Value::Normal(
+                DEFAULTS.jme_simplification_simplify_trigonometric,
+            ),
+            cancel_terms: Value::Normal(DEFAULTS.jme_simplification_cancel_terms),
+            cancel_factors: Value::Normal(DEFAULTS.jme_simplification_cancel_factors),
+            collect_like_fractions: Value::Normal(
+                DEFAULTS.jme_simplification_collect_like_fractions,
+            ),
+            order_canonical: Value::Normal(DEFAULTS.jme_simplification_order_canonical),
+            use_times_dot: Value::Normal(DEFAULTS.jme_simplification_use_times_dot),
+            expand_brackets: Value::Normal(DEFAULTS.jme_simplification_expand_brackets),
+        }; // Numbas default
+        if let Some(v) = self {
+            for a in v.iter() {
+                match a {
+                    numbas::exam::AnswerSimplificationType::All(b) => {
+                        result.simplify_basic = Value::Normal(*b);
+                        result.simplify_unit_factor = Value::Normal(*b);
+                        result.simplify_unit_power = Value::Normal(*b);
+                        result.simplify_unit_denominator = Value::Normal(*b);
+                        result.simplify_zero_factor = Value::Normal(*b);
+                        result.simplify_zero_term = Value::Normal(*b);
+                        result.simplify_zero_power = Value::Normal(*b);
+                        result.simplify_zero_base = Value::Normal(*b);
+                        result.collect_numbers = Value::Normal(*b);
+                        result.constants_first = Value::Normal(*b);
+                        result.simplify_sqrt_products = Value::Normal(*b);
+                        result.simplify_sqrt_division = Value::Normal(*b);
+                        result.simplify_sqrt_square = Value::Normal(*b);
+                        result.simplify_other_numbers = Value::Normal(*b);
+                        result.simplify_no_leading_minus = Value::Normal(*b);
+                        result.simplify_fractions = Value::Normal(*b);
+                        result.simplify_trigonometric = Value::Normal(*b);
+                        result.cancel_terms = Value::Normal(*b);
+                        result.cancel_factors = Value::Normal(*b);
+                        result.collect_like_fractions = Value::Normal(*b);
+                        result.use_times_dot = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::Basic(b) => {
+                        result.simplify_basic = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::UnitFactor(b) => {
+                        result.simplify_unit_factor = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::UnitPower(b) => {
+                        result.simplify_unit_power = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::UnitDenominator(b) => {
+                        result.simplify_unit_denominator = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ZeroFactor(b) => {
+                        result.simplify_zero_factor = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ZeroTerm(b) => {
+                        result.simplify_zero_term = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ZeroPower(b) => {
+                        result.simplify_zero_power = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::CollectNumbers(b) => {
+                        result.collect_numbers = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ZeroBase(b) => {
+                        result.simplify_zero_base = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ConstantsFirst(b) => {
+                        result.constants_first = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::SqrtProduct(b) => {
+                        result.simplify_sqrt_products = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::SqrtDivision(b) => {
+                        result.simplify_sqrt_division = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::SqrtSquare(b) => {
+                        result.simplify_sqrt_square = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::OtherNumbers(b) => {
+                        result.simplify_other_numbers = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::NoLeadingMinus(b) => {
+                        result.simplify_no_leading_minus = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::Fractions(b) => {
+                        result.simplify_fractions = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::Trigonometric(b) => {
+                        result.simplify_trigonometric = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::CancelTerms(b) => {
+                        result.cancel_terms = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::CancelFactors(b) => {
+                        result.cancel_factors = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::CollectLikeFractions(b) => {
+                        result.collect_like_fractions = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::TimesDot(b) => {
+                        result.use_times_dot = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::ExpandBrackets(b) => {
+                        result.expand_brackets = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::CanonicalOrder(b) => {
+                        result.order_canonical = Value::Normal(*b);
+                    }
+                    numbas::exam::AnswerSimplificationType::Unknown((name, val)) => {
+                        println!(
+                            "Found unknown answer simplification type {}{}",
+                            if *val { "!" } else { "" },
+                            name
+                        )
+                    }
+                }
+            }
+        }
+
+        result
+    }
+}
+
 optional_overwrite! {
     pub struct CheckingTypeDataFloat {
         checking_accuracy: f64
@@ -294,6 +544,33 @@ impl ToNumbas for CheckingType {
     }
 }
 
+impl ToRumbas<CheckingType> for numbas::exam::JMECheckingType {
+    fn to_rumbas(&self) -> CheckingType {
+        match self {
+            numbas::exam::JMECheckingType::RelativeDifference(v) => {
+                CheckingType::RelativeDifference(CheckingTypeDataFloat {
+                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                })
+            }
+            numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
+                CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
+                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                })
+            }
+            numbas::exam::JMECheckingType::DecimalPlaces(v) => {
+                CheckingType::DecimalPlaces(CheckingTypeDataNatural {
+                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                })
+            }
+            numbas::exam::JMECheckingType::SignificantFigures(v) => {
+                CheckingType::SignificantFigures(CheckingTypeDataNatural {
+                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                })
+            }
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct JMERestriction {
         name: TranslatableString,
@@ -326,6 +603,23 @@ impl ToNumbas for JMERestriction {
     }
 }
 
+impl ToRumbas<JMERestriction> for numbas::exam::JMERestriction {
+    fn to_rumbas(&self) -> JMERestriction {
+        JMERestriction {
+            name: Value::Normal(TranslatableString::s(&self.name)),
+            strings: Value::Normal(
+                self.strings
+                    .clone()
+                    .into_iter()
+                    .map(|s| TranslatableString::s(&s))
+                    .collect(),
+            ),
+            partial_credit: Value::Normal(self.partial_credit),
+            message: Value::Normal(TranslatableString::s(&self.message)),
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct JMELengthRestriction {
         #[serde(flatten)]
@@ -349,6 +643,15 @@ impl ToNumbas for JMELengthRestriction {
     }
 }
 
+impl ToRumbas<JMELengthRestriction> for numbas::exam::JMELengthRestriction {
+    fn to_rumbas(&self) -> JMELengthRestriction {
+        JMELengthRestriction {
+            restriction: Value::Normal(self.restriction.to_rumbas()),
+            length: Value::Normal(self.length.unwrap_or(DEFAULTS.length_restriction_length)),
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct JMEStringRestriction {
         #[serde(flatten)]
@@ -368,6 +671,15 @@ impl ToNumbas for JMEStringRestriction {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<JMEStringRestriction> for numbas::exam::JMEStringRestriction {
+    fn to_rumbas(&self) -> JMEStringRestriction {
+        JMEStringRestriction {
+            restriction: Value::Normal(self.restriction.to_rumbas()),
+            show_strings: Value::Normal(self.show_strings),
         }
     }
 }
@@ -398,6 +710,17 @@ impl ToNumbas for JMEPatternRestriction {
     }
 }
 
+impl ToRumbas<JMEPatternRestriction> for numbas::exam::JMEPatternRestriction {
+    fn to_rumbas(&self) -> JMEPatternRestriction {
+        JMEPatternRestriction {
+            partial_credit: Value::Normal(self.partial_credit),
+            message: Value::Normal(TranslatableString::s(&self.message.clone())),
+            pattern: Value::Normal(self.pattern.clone()),
+            name_to_compare: Value::Normal(self.name_to_compare.clone()),
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct JMEValueGenerator {
         name: FileString,
@@ -416,6 +739,15 @@ impl ToNumbas for JMEValueGenerator {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<JMEValueGenerator> for numbas::exam::JMEValueGenerator {
+    fn to_rumbas(&self) -> JMEValueGenerator {
+        JMEValueGenerator {
+            name: Value::Normal(FileString::s(&self.name)),
+            value: Value::Normal(FileString::s(&self.value)),
         }
     }
 }
