@@ -24,6 +24,12 @@ pub enum TranslatableString {
 
 impl_to_rumbas!(TranslatableString);
 
+impl TranslatableString {
+    pub fn s(s: &str) -> Self {
+        TranslatableString::NotTranslated(FileString::s(s))
+    }
+}
+
 impl RumbasCheck for TranslatableString {
     fn check(&self) -> RumbasCheckResult {
         match self {

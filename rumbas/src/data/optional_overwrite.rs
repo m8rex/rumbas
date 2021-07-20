@@ -146,6 +146,13 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
+impl<T> Noneable<T> {
+    // Create a None with string "none"
+    pub fn nn() -> Self {
+        Self::None("none".to_string())
+    }
+}
+
 macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(

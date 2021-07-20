@@ -1,3 +1,4 @@
+pub mod defaults;
 pub mod exam;
 
 #[cfg(test)]
