@@ -1,7 +1,9 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -36,16 +38,50 @@ impl ToNumbas for Feedback {
                 review: self.review.clone().map(|o| o.to_numbas(locale).unwrap()),
                 advice: self.advice.clone().map(|o| o.to_string(locale)).flatten(),
                 intro: self.intro.clone().unwrap().to_string(locale).unwrap(),
-                feedback_messages: self
-                    .feedback_messages
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .map(|s| s.to_numbas(locale).unwrap())
-                    .collect(),
+                feedback_messages: self.feedback_messages.to_numbas(locale).unwrap(),
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Feedback> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> Feedback {
+        Feedback {
+            percentage_needed_to_pass: Value::Normal(
+                self.basic_settings
+                    .percentage_needed_to_pass
+                    .map(Noneable::NotNone)
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            show_name_of_student: Value::Normal(
+                self.basic_settings
+                    .show_student_name
+                    .unwrap_or(DEFAULTS.basic_settings_show_student_name),
+            ),
+            show_current_marks: Value::Normal(self.feedback.show_actual_mark),
+            show_maximum_marks: Value::Normal(self.feedback.show_total_mark),
+            show_answer_state: Value::Normal(self.feedback.show_answer_state),
+            allow_reveal_answer: Value::Normal(self.feedback.allow_reveal_answer),
+            review: Value::Normal(self.feedback.review.to_rumbas().unwrap()),
+            advice: Value::Normal(TranslatableString::s(
+                &self.feedback.advice.clone().unwrap_or_default(),
+            )),
+            intro: Value::Normal(TranslatableString::s(&self.feedback.intro)),
+            feedback_messages: Value::Normal(
+                self.feedback
+                    .feedback_messages
+                    .clone()
+                    .into_iter()
+                    .map(|m| {
+                        Value::Normal(FeedbackMessage {
+                            message: m.message,
+                            threshold: m.threshold,
+                        })
+                    })
+                    .collect(),
+            ),
         }
     }
 }
@@ -76,6 +112,29 @@ impl ToNumbas for Review {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Review> for numbas::exam::ExamReview {
+    fn to_rumbas(&self) -> Review {
+        Review {
+            show_score: Value::Normal(
+                self.show_score
+                    .unwrap_or(DEFAULTS.feedback_review_show_score),
+            ),
+            show_feedback: Value::Normal(
+                self.show_feedback
+                    .unwrap_or(DEFAULTS.feedback_review_show_feedback),
+            ),
+            show_expected_answer: Value::Normal(
+                self.show_expected_answer
+                    .unwrap_or(DEFAULTS.feedback_review_show_expected_answer),
+            ),
+            show_advice: Value::Normal(
+                self.show_advice
+                    .unwrap_or(DEFAULTS.feedback_review_show_advice),
+            ),
         }
     }
 }

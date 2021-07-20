@@ -11,7 +11,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
-use crate::data::to_rumbas::ToRumbas;
+use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
@@ -33,6 +33,15 @@ impl ToNumbas for QuestionPart {
             QuestionPart::Custom(b) => b
                 .to_numbas(locale)
                 .map(numbas::exam::ExamQuestionPart::Custom),
+        }
+    }
+}
+
+impl ToRumbas<QuestionPart> for numbas::exam::ExamQuestionPart {
+    fn to_rumbas(&self) -> QuestionPart {
+        match self {
+            numbas::exam::ExamQuestionPart::Builtin(bqp) => QuestionPart::Builtin(bqp.to_rumbas()),
+            numbas::exam::ExamQuestionPart::Custom(cqp) => QuestionPart::Custom(cqp.to_rumbas()),
         }
     }
 }
@@ -117,6 +126,43 @@ impl ToNumbas for QuestionPartBuiltin {
                 numbas::exam::ExamQuestionPartBuiltin::Matrix(n)
             }
         })
+    }
+}
+
+impl ToRumbas<QuestionPartBuiltin> for numbas::exam::ExamQuestionPartBuiltin {
+    fn to_rumbas(&self) -> QuestionPartBuiltin {
+        match self {
+            numbas::exam::ExamQuestionPartBuiltin::JME(p) => {
+                QuestionPartBuiltin::JME(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::NumberEntry(p) => {
+                QuestionPartBuiltin::NumberEntry(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::Matrix(p) => {
+                QuestionPartBuiltin::Matrix(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::PatternMatch(p) => {
+                QuestionPartBuiltin::PatternMatch(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::ChooseOne(p) => {
+                QuestionPartBuiltin::ChooseOne(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(p) => {
+                QuestionPartBuiltin::ChooseMultiple(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(p) => {
+                QuestionPartBuiltin::MatchAnswersWithItems(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::GapFill(p) => {
+                QuestionPartBuiltin::GapFill(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::Information(p) => {
+                QuestionPartBuiltin::Information(p.to_rumbas())
+            }
+            numbas::exam::ExamQuestionPartBuiltin::Extension(p) => {
+                QuestionPartBuiltin::Extension(p.to_rumbas())
+            }
+        }
     }
 }
 
@@ -235,9 +281,8 @@ impl ToNumbas for CustomPartInputTypeValue {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartInputTypeValue {
-    type RumbasType = CustomPartInputTypeValue;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartInputTypeValue> for numbas::exam::CustomPartInputTypeValue {
+    fn to_rumbas(&self) -> CustomPartInputTypeValue {
         match self {
             numbas::exam::CustomPartInputTypeValue::CheckBox(v) => {
                 CustomPartInputTypeValue::CheckBox(v.0)
@@ -271,6 +316,53 @@ impl ToNumbas for QuestionPartCustom {
     }
 }
 
+impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
+    fn to_rumbas(&self) -> QuestionPartCustom {
+        QuestionPartCustom {
+            // Default section
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            r#type: Value::Normal(self.r#type.clone()),
+            settings: Value::Normal(
+                self.settings
+                    .clone()
+                    .into_iter()
+                    .map(|(k, v)| (k, v.to_rumbas()))
+                    .collect(),
+            ),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
@@ -286,5 +378,15 @@ impl ToNumbas for VariableReplacementStrategy {
                 numbas::exam::VariableReplacementStrategy::OriginalFirst
             }
         })
+    }
+}
+
+impl ToRumbas<VariableReplacementStrategy> for numbas::exam::VariableReplacementStrategy {
+    fn to_rumbas(&self) -> VariableReplacementStrategy {
+        match self {
+            numbas::exam::VariableReplacementStrategy::OriginalFirst => {
+                VariableReplacementStrategy::OriginalFirst
+            }
+        }
     }
 }

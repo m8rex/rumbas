@@ -9,6 +9,7 @@ use crate::data::question_group::QuestionGroup;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -172,40 +173,6 @@ impl ToNumbas for DiagnosticExam {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(rename_all = "lowercase")]
-pub enum DiagnosticScript {
-    Mastery,
-    Diagnosys,
-    Custom(TranslatableString),
-}
-impl_optional_overwrite!(DiagnosticScript);
-impl ToNumbas for DiagnosticScript {
-    type NumbasType = numbas::exam::ExamDiagnosticScript;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(match self {
-                DiagnosticScript::Mastery => Self::NumbasType::Mastery,
-                DiagnosticScript::Custom(_) => Self::NumbasType::Custom,
-                DiagnosticScript::Diagnosys => Self::NumbasType::Diagnosys,
-            })
-        } else {
-            Err(check)
-        }
-    }
-}
-
-impl DiagnosticScript {
-    pub fn to_custom_script(&self, locale: &str) -> String {
-        match self {
-            DiagnosticScript::Custom(s) => s.clone().to_string(locale).unwrap(),
-            DiagnosticScript::Diagnosys => String::new(),
-            DiagnosticScript::Mastery => String::new(),
-        }
-    }
-}
-
 optional_overwrite! {
     /// Information needed for a diagnostic test
     pub struct Diagnostic {
@@ -251,6 +218,62 @@ impl ToNumbas for Diagnostic {
     }
 }
 
+impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
+    fn to_rumbas(&self) -> Diagnostic {
+        Diagnostic {
+            script: Value::Normal(self.to_rumbas()),
+            objectives: Value::Normal(self.knowledge_graph.clone().learning_objectives.to_rumbas()),
+            topics: Value::Normal(self.knowledge_graph.topics.to_rumbas()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum DiagnosticScript {
+    Mastery,
+    Diagnosys,
+    Custom(TranslatableString),
+}
+impl_optional_overwrite!(DiagnosticScript);
+impl ToNumbas for DiagnosticScript {
+    type NumbasType = numbas::exam::ExamDiagnosticScript;
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(match self {
+                DiagnosticScript::Mastery => Self::NumbasType::Mastery,
+                DiagnosticScript::Custom(_) => Self::NumbasType::Custom,
+                DiagnosticScript::Diagnosys => Self::NumbasType::Diagnosys,
+            })
+        } else {
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<DiagnosticScript> for numbas::exam::ExamDiagnostic {
+    fn to_rumbas(&self) -> DiagnosticScript {
+        match self.script {
+            numbas::exam::ExamDiagnosticScript::Mastery => DiagnosticScript::Mastery,
+            numbas::exam::ExamDiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
+            numbas::exam::ExamDiagnosticScript::Custom => {
+                DiagnosticScript::Custom(TranslatableString::s(&self.custom_script))
+            }
+        }
+    }
+}
+
+impl DiagnosticScript {
+    pub fn to_custom_script(&self, locale: &str) -> String {
+        match self {
+            DiagnosticScript::Custom(s) => s.clone().to_string(locale).unwrap(),
+            DiagnosticScript::Diagnosys => String::new(),
+            DiagnosticScript::Mastery => String::new(),
+        }
+    }
+}
+
 optional_overwrite! {
     /// A Learning Objective
     pub struct LearningObjective {
@@ -272,6 +295,15 @@ impl ToNumbas for LearningObjective {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<LearningObjective> for numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
+    fn to_rumbas(&self) -> LearningObjective {
+        LearningObjective {
+            name: Value::Normal(TranslatableString::s(&self.name)),
+            description: Value::Normal(TranslatableString::s(&self.description)),
         }
     }
 }
@@ -315,6 +347,29 @@ impl ToNumbas for LearningTopic {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
+    fn to_rumbas(&self) -> LearningTopic {
+        LearningTopic {
+            name: Value::Normal(TranslatableString::s(&self.name)),
+            description: Value::Normal(TranslatableString::s(&self.description)),
+            objectives: Value::Normal(
+                self.learning_objectives
+                    .clone()
+                    .into_iter()
+                    .map(|o| TranslatableString::s(&o))
+                    .collect(),
+            ),
+            depends_on: Value::Normal(
+                self.depends_on
+                    .clone()
+                    .into_iter()
+                    .map(|o| TranslatableString::s(&o))
+                    .collect(),
+            ),
         }
     }
 }

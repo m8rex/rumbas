@@ -3,8 +3,9 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
-use crate::data::to_rumbas::ToRumbas;
+use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
@@ -65,6 +66,70 @@ impl ToNumbas for QuestionPartNumberEntry {
     }
 }
 
+impl ToRumbas<QuestionPartNumberEntry> for numbas::exam::ExamQuestionPartNumberEntry {
+    fn to_rumbas(&self) -> QuestionPartNumberEntry {
+        QuestionPartNumberEntry {
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            answer: Value::Normal(self.answer.to_rumbas()),
+            display_correct_as_fraction: Value::Normal(self.correct_answer_fraction),
+            allow_fractions: Value::Normal(self.allow_fractions),
+            allowed_notation_styles: Value::Normal(
+                self.notation_styles.clone().unwrap_or_default().to_rumbas(),
+            ),
+            display_correct_in_style: Value::Normal(
+                self.correct_answer_style
+                    .clone()
+                    .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
+                    .to_rumbas(),
+            ),
+
+            fractions_must_be_reduced: Value::Normal(
+                self.fractions_must_be_reduced
+                    .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced),
+            ),
+            partial_credit_if_fraction_not_reduced: Value::Normal(
+                self.partial_credit_if_fraction_not_reduced
+                    .clone()
+                    .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced),
+            ),
+            hint_fraction: Value::Normal(
+                self.show_fraction_hint
+                    .unwrap_or(DEFAULTS.number_entry_hint_fraction),
+            ),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
@@ -85,6 +150,23 @@ impl ToNumbas for NumberEntryAnswer {
                 max_value: numbas::exam::Primitive::String(to.get_content(locale)),
             },
         })
+    }
+}
+
+impl ToRumbas<NumberEntryAnswer> for numbas::exam::NumberEntryAnswerType {
+    fn to_rumbas(&self) -> NumberEntryAnswer {
+        match self {
+            numbas::exam::NumberEntryAnswerType::MinMax {
+                min_value,
+                max_value,
+            } => NumberEntryAnswer::Range {
+                from: FileString::s(&min_value.to_string()),
+                to: FileString::s(&max_value.to_string()),
+            },
+            numbas::exam::NumberEntryAnswerType::Answer { answer } => {
+                NumberEntryAnswer::Normal(FileString::s(&answer.to_string()))
+            }
+        }
     }
 }
 
@@ -137,9 +219,8 @@ impl ToNumbas for AnswerStyle {
     }
 }
 
-impl ToRumbas for numbas::exam::AnswerStyle {
-    type RumbasType = AnswerStyle;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<AnswerStyle> for numbas::exam::AnswerStyle {
+    fn to_rumbas(&self) -> AnswerStyle {
         match self {
             numbas::exam::AnswerStyle::English => AnswerStyle::English,
             numbas::exam::AnswerStyle::EnglishPlain => AnswerStyle::EnglishPlain,

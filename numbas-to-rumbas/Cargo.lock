@@ -160,7 +160,6 @@ version = "0.1.0"
 dependencies = [
  "numbas",
  "rumbas",
- "sanitize-filename",
 ]
 
 [[package]]
@@ -205,6 +204,7 @@ dependencies = [
  "clap",
  "numbas",
  "regex",
+ "sanitize-filename",
  "serde",
  "serde_json",
  "serde_yaml",

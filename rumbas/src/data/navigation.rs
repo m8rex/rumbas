@@ -2,7 +2,9 @@ use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -23,6 +25,42 @@ optional_overwrite! {
         show_names_of_question_groups: bool,
         /// Whether the student is allowed to print the exam
         allow_printing: bool
+    }
+}
+
+impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> NavigationSharedData {
+        NavigationSharedData {
+            start_password: Value::Normal(FileString::s(
+                &self
+                    .navigation
+                    .start_password
+                    .clone()
+                    .unwrap_or(DEFAULTS.navigation_start_password),
+            )),
+            can_regenerate: Value::Normal(self.navigation.allow_regenerate),
+            show_steps: Value::Normal(
+                self.navigation
+                    .allow_steps
+                    .unwrap_or(DEFAULTS.navigation_allow_steps),
+            ),
+            show_title_page: Value::Normal(self.navigation.show_frontpage),
+            prevent_leaving: Value::Normal(
+                self.navigation
+                    .prevent_leaving
+                    .unwrap_or(DEFAULTS.navigation_prevent_leaving),
+            ),
+            show_names_of_question_groups: Value::Normal(
+                self.basic_settings
+                    .show_question_group_names
+                    .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups),
+            ),
+            allow_printing: Value::Normal(
+                self.basic_settings
+                    .allow_printing
+                    .unwrap_or(DEFAULTS.basic_settings_allow_printing),
+            ),
+        }
     }
 }
 
@@ -127,6 +165,51 @@ impl ToNumbas for NormalNavigation {
     }
 }
 
+impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> NormalNavigation {
+        match self.navigation.navigation_mode {
+            numbas::exam::ExamNavigationMode::Sequence => {
+                NormalNavigation::Sequential(SequentialNavigation {
+                    shared_data: Value::Normal(self.to_rumbas()),
+                    can_move_to_previous: Value::Normal(
+                        self.navigation
+                            .reverse
+                            .unwrap_or(DEFAULTS.navigation_reverse),
+                    ),
+                    browsing_enabled: Value::Normal(
+                        self.navigation
+                            .browsing_enabled
+                            .unwrap_or(DEFAULTS.navigation_browsing_enabled),
+                    ),
+                    show_results_page: Value::Normal(
+                        self.navigation
+                            .show_results_page
+                            .clone()
+                            .unwrap_or(DEFAULTS.navigation_show_results_page)
+                            .to_rumbas(),
+                    ),
+                    on_leave: Value::Normal(
+                        self.navigation
+                            .on_leave
+                            .clone()
+                            .unwrap_or(DEFAULTS.navigation_on_leave)
+                            .to_rumbas(),
+                    ),
+                })
+            }
+            numbas::exam::ExamNavigationMode::Menu => NormalNavigation::Menu(MenuNavigation {
+                shared_data: Value::Normal(self.to_rumbas()),
+            }),
+            numbas::exam::ExamNavigationMode::Diagnostic => {
+                panic!(
+                    "{}",
+                    "Bug in rumbas: can' create normal exam from diagnostic one."
+                )
+            }
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct DiagnosticNavigation {
         /// (flattened field) The data shared between all types of navigation
@@ -165,6 +248,21 @@ impl ToNumbas for DiagnosticNavigation {
     }
 }
 
+impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> DiagnosticNavigation {
+        DiagnosticNavigation {
+            shared_data: Value::Normal(self.to_rumbas()),
+            on_leave: Value::Normal(
+                self.navigation
+                    .on_leave
+                    .clone()
+                    .unwrap_or(DEFAULTS.navigation_on_leave)
+                    .to_rumbas(),
+            ),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowResultsPage {
@@ -180,6 +278,15 @@ impl ToNumbas for ShowResultsPage {
             ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
             ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
         })
+    }
+}
+
+impl ToRumbas<ShowResultsPage> for numbas::exam::ExamShowResultsPage {
+    fn to_rumbas(&self) -> ShowResultsPage {
+        match self {
+            numbas::exam::ExamShowResultsPage::Never => ShowResultsPage::Never,
+            numbas::exam::ExamShowResultsPage::OnCompletion => ShowResultsPage::OnCompletion,
+        }
     }
 }
 
@@ -214,6 +321,24 @@ impl ToNumbas for LeaveAction {
     }
 }
 
+impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
+    fn to_rumbas(&self) -> LeaveAction {
+        match self {
+            numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
+            numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
+                LeaveAction::WarnIfNotAttempted {
+                    message: TranslatableString::s(&message),
+                }
+            }
+            numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
+                LeaveAction::PreventIfNotAttempted {
+                    message: TranslatableString::s(&message),
+                }
+            }
+        }
+    }
+}
+
 optional_overwrite! {
     pub struct QuestionNavigation {
         #[serde(alias = "allow_regenerate")]
@@ -236,6 +361,19 @@ impl ToNumbas for QuestionNavigation {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionNavigation> for numbas::exam::QuestionNavigation {
+    fn to_rumbas(&self) -> QuestionNavigation {
+        QuestionNavigation {
+            can_regenerate: Value::Normal(self.allow_regenerate),
+            show_title_page: Value::Normal(self.show_frontpage),
+            prevent_leaving: Value::Normal(
+                self.prevent_leaving
+                    .unwrap_or(DEFAULTS.question_navigation_prevent_leaving),
+            ),
         }
     }
 }

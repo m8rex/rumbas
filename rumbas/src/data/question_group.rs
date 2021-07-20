@@ -2,8 +2,10 @@ use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
+use sanitize_filename::sanitize;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -45,6 +47,24 @@ impl ToNumbas for QuestionGroup {
     }
 }
 
+impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
+    fn to_rumbas(&self) -> QuestionGroup {
+        QuestionGroup {
+            name: Value::Normal(TranslatableString::s(
+                &self.name.clone().unwrap_or_default(),
+            )),
+            picking_strategy: Value::Normal(self.picking_strategy.to_rumbas()),
+            questions: Value::Normal(
+                self.questions
+                    .to_rumbas()
+                    .into_iter()
+                    .map(|q| Value::Normal(q))
+                    .collect(),
+            ),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
@@ -76,6 +96,24 @@ impl ToNumbas for PickingStrategy {
                 }
             }
         })
+    }
+}
+
+impl ToRumbas<PickingStrategy> for numbas::exam::ExamQuestionGroupPickingStrategy {
+    fn to_rumbas(&self) -> PickingStrategy {
+        match self {
+            numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
+                PickingStrategy::AllOrdered
+            }
+            numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled => {
+                PickingStrategy::AllShuffled
+            }
+            numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset { pick_questions } => {
+                PickingStrategy::RandomSubset {
+                    pick_questions: *pick_questions,
+                }
+            }
+        }
     }
 }
 
@@ -119,6 +157,15 @@ impl ToNumbas for QuestionPath {
                 .unwrap())
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
+    fn to_rumbas(&self) -> QuestionPath {
+        QuestionPath {
+            question_name: Value::Normal(sanitize(&self.name)),
+            question_data: Value::Normal(self.to_rumbas()),
         }
     }
 }

@@ -59,9 +59,8 @@ impl ToNumbas for ResourcePath {
     }
 }
 
-impl ToRumbas for numbas::exam::Resource {
-    type RumbasType = ResourcePath;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<ResourcePath> for numbas::exam::Resource {
+    fn to_rumbas(&self) -> ResourcePath {
         ResourcePath {
             resource_name: self.0[0].clone(),
             resource_path: std::path::Path::new(&self.0[1]).to_path_buf(),

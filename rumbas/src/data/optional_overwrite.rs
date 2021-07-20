@@ -714,9 +714,8 @@ impl<T> VariableValued<T> {
     }
 }
 
-impl<T: ToRumbas> ToRumbas for numbas::exam::VariableValued<T> {
-    type RumbasType = VariableValued<T::RumbasType>;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl<O, T: ToRumbas<O>> ToRumbas<VariableValued<O>> for numbas::exam::VariableValued<T> {
+    fn to_rumbas(&self) -> VariableValued<O> {
         match self {
             numbas::exam::VariableValued::Variable(v) => VariableValued::Variable(v.clone()),
             numbas::exam::VariableValued::Value(v) => VariableValued::Value(v.to_rumbas()),

@@ -2,6 +2,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
@@ -47,6 +48,61 @@ impl ToNumbas for QuestionPartMatrix {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
+    fn to_rumbas(&self) -> QuestionPartMatrix {
+        let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
+            self.num_rows.0,
+            self.min_rows,
+            self.max_rows,
+        ));
+        let columns = Value::Normal(QuestionPartMatrixDimension::from_range(
+            self.num_columns.0,
+            self.min_columns,
+            self.max_columns,
+        ));
+        let dimensions = QuestionPartMatrixDimensions { rows, columns };
+        QuestionPartMatrix {
+            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
+            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
+                &self.part_data,
+            ))),
+            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
+            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
+            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
+            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
+                &self.part_data,
+            )),
+            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
+            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
+                &self.part_data,
+            )),
+            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
+                &self.part_data,
+            )),
+            variable_replacement_strategy: Value::Normal(
+                self.part_data.variable_replacement_strategy.to_rumbas(),
+            ),
+            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+                &self.part_data,
+            )),
+            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
+                &self.part_data,
+            )),
+            extend_base_marking_algorithm: Value::Normal(
+                extract_part_common_extend_base_marking_algorithm(&self.part_data),
+            ),
+            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+
+            correct_answer: Value::Normal(self.correct_answer.clone()),
+            display_correct_as_fraction: Value::Normal(self.correct_answer_fractions),
+            dimensions: Value::Normal(dimensions),
+            max_absolute_deviation: Value::Normal(self.tolerance),
+            mark_partial_by_cells: Value::Normal(self.mark_per_cell),
+            allow_fractions: Value::Normal(self.allow_fractions),
         }
     }
 }

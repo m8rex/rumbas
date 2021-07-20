@@ -1,4 +1,5 @@
 use crate::data::extension::Extensions;
+use crate::data::file_reference::FileString;
 use crate::data::function::Function;
 use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::*;
@@ -8,9 +9,11 @@ use crate::data::resource::ResourcePath;
 use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
 use crate::data::yaml::{YamlError, YamlResult};
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -141,6 +144,60 @@ impl ToNumbas for Question {
     }
 }
 
+impl ToRumbas<Question> for numbas::exam::ExamQuestion {
+    fn to_rumbas(&self) -> Question {
+        Question {
+            statement: Value::Normal(TranslatableString::s(&self.statement)),
+            advice: Value::Normal(TranslatableString::s(&self.advice)),
+            parts: Value::Normal(
+                self.parts
+                    .iter()
+                    .map(|p| Value::Normal(p.to_rumbas()))
+                    .collect(),
+            ),
+            builtin_constants: Value::Normal(self.builtin_constants.to_rumbas()),
+            custom_constants: Value::Normal(
+                self.constants.iter().map(|cc| cc.to_rumbas()).collect(),
+            ),
+            variables: Value::Normal(
+                self.variables
+                    .iter()
+                    .map(|(k, v)| (k.clone(), Value::Normal(v.to_rumbas())))
+                    .collect::<std::collections::HashMap<_, _>>(),
+            ),
+            variables_test: Value::Normal(self.variables_test.to_rumbas()),
+            functions: Value::Normal(
+                self.functions
+                    .iter()
+                    .map(|(k, f)| (k.clone(), Value::Normal(f.to_rumbas())))
+                    .collect::<std::collections::HashMap<_, _>>(),
+            ),
+            preamble: Value::Normal(Preamble {
+                js: Value::Normal(FileString::s(&self.preamble.js)),
+                css: Value::Normal(FileString::s(&self.preamble.css)),
+            }),
+            navigation: Value::Normal(self.navigation.to_rumbas()),
+            extensions: Value::Normal(Extensions::from(&self.extensions)),
+            diagnostic_topic_names: Value::Normal(
+                self.tags
+                    .iter()
+                    .filter(|t| t.starts_with("skill: "))
+                    .map(|t| {
+                        TranslatableString::s(&t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string())
+                    })
+                    .collect(),
+            ),
+            resources: Value::Normal(
+                self.resources
+                    .to_rumbas()
+                    .into_iter()
+                    .map(|r| Value::Normal(r))
+                    .collect(),
+            ),
+        }
+    }
+}
+
 impl Question {
     pub fn from_name(name: &str) -> YamlResult<Question> {
         use QuestionFileType::*;
@@ -199,6 +256,15 @@ impl ToNumbas for VariablesTest {
     }
 }
 
+impl ToRumbas<VariablesTest> for numbas::exam::ExamQuestionVariablesTest {
+    fn to_rumbas(&self) -> VariablesTest {
+        VariablesTest {
+            condition: Value::Normal(self.condition.clone()),
+            max_runs: Value::Normal(self.max_runs.0),
+        }
+    }
+}
+
 optional_overwrite! {
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
@@ -228,6 +294,31 @@ impl ToNumbas for BuiltinConstants {
     }
 }
 
+impl ToRumbas<BuiltinConstants> for numbas::exam::BuiltinConstants {
+    fn to_rumbas(&self) -> BuiltinConstants {
+        BuiltinConstants {
+            e: Value::Normal(
+                *self
+                    .0
+                    .get(&"e".to_string())
+                    .unwrap_or(&DEFAULTS.builtin_constants_e),
+            ),
+            pi: Value::Normal(
+                *self
+                    .0
+                    .get(&"pi,\u{03c0}".to_string())
+                    .unwrap_or(&DEFAULTS.builtin_constants_pi),
+            ),
+            i: Value::Normal(
+                *self
+                    .0
+                    .get(&"i".to_string())
+                    .unwrap_or(&DEFAULTS.builtin_constants_i),
+            ),
+        }
+    }
+}
+
 optional_overwrite! {
     /// A custom constant
     pub struct CustomConstant {
@@ -252,6 +343,16 @@ impl ToNumbas for CustomConstant {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<CustomConstant> for numbas::exam::ExamQuestionConstant {
+    fn to_rumbas(&self) -> CustomConstant {
+        CustomConstant {
+            name: Value::Normal(self.name.clone()),
+            value: Value::Normal(self.value.clone()),
+            tex: Value::Normal(self.tex.clone()),
         }
     }
 }

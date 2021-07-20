@@ -2,6 +2,7 @@ use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -33,6 +34,17 @@ impl ToNumbas for Function {
             })
         } else {
             Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Function> for numbas::exam::ExamFunction {
+    fn to_rumbas(&self) -> Function {
+        Function {
+            definition: Value::Normal(FileString::s(&self.definition)),
+            output_type: Value::Normal(self.output_type),
+            language: Value::Normal(self.language),
+            parameters: Value::Normal(self.parameters.clone().into_iter().collect()),
         }
     }
 }

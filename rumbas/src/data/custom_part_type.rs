@@ -48,12 +48,12 @@ where
     }
 }
 
-impl<T: Clone + ToRumbas> ToRumbas for numbas::exam::CustomPartInputOptionValue<T>
+impl<V, T: Clone + ToRumbas<V>> ToRumbas<CustomPartInputOptionValue<V>>
+    for numbas::exam::CustomPartInputOptionValue<T>
 where
-    <T as ToRumbas>::RumbasType: Clone,
+    V: Clone,
 {
-    type RumbasType = CustomPartInputOptionValue<<T as ToRumbas>::RumbasType>;
-    fn to_rumbas(&self) -> Self::RumbasType {
+    fn to_rumbas(&self) -> CustomPartInputOptionValue<V> {
         CustomPartInputOptionValue {
             value: self.value.clone().to_rumbas(),
             is_static: self.is_static,
@@ -97,9 +97,8 @@ impl ToNumbas for CustomPartInputWidget {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartInputWidget {
-    type RumbasType = CustomPartInputWidget;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartInputWidget> for numbas::exam::CustomPartInputWidget {
+    fn to_rumbas(&self) -> CustomPartInputWidget {
         match self {
             numbas::exam::CustomPartInputWidget::String(s) => {
                 CustomPartInputWidget::String(s.to_rumbas())
@@ -136,9 +135,8 @@ impl ToNumbas for CustomPartStringInputOptions {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartStringInputOptions {
-    type RumbasType = CustomPartStringInputOptions;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartStringInputOptions> for numbas::exam::CustomPartStringInputOptions {
+    fn to_rumbas(&self) -> CustomPartStringInputOptions {
         CustomPartStringInputOptions {
             hint: self.hint.to_rumbas(),
             correct_answer: self.correct_answer.to_rumbas(),
@@ -172,9 +170,8 @@ impl ToNumbas for CustomPartNumberInputOptions {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartNumberInputOptions {
-    type RumbasType = CustomPartNumberInputOptions;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartNumberInputOptions> for numbas::exam::CustomPartNumberInputOptions {
+    fn to_rumbas(&self) -> CustomPartNumberInputOptions {
         CustomPartNumberInputOptions {
             hint: self.hint.to_rumbas(),
             correct_answer: self.correct_answer.to_rumbas(),
@@ -206,9 +203,10 @@ impl ToNumbas for CustomPartRadioGroupInputOptions {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartRadioButtonsInputOptions {
-    type RumbasType = CustomPartRadioGroupInputOptions;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartRadioGroupInputOptions>
+    for numbas::exam::CustomPartRadioButtonsInputOptions
+{
+    fn to_rumbas(&self) -> CustomPartRadioGroupInputOptions {
         CustomPartRadioGroupInputOptions {
             hint: self.hint.to_rumbas(),
             correct_answer: self.correct_answer.to_rumbas(),
@@ -263,9 +261,8 @@ impl ToNumbas for CustomPartTypeDefinition {
     }
 }
 
-impl ToRumbas for numbas::exam::CustomPartType {
-    type RumbasType = CustomPartTypeDefinitionPath;
-    fn to_rumbas(&self) -> Self::RumbasType {
+impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
+    fn to_rumbas(&self) -> CustomPartTypeDefinitionPath {
         CustomPartTypeDefinitionPath {
             custom_part_type_data: CustomPartTypeDefinition {
                 type_name: self.name.to_rumbas(),
