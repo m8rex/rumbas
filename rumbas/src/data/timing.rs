@@ -20,15 +20,16 @@ impl ToNumbas for Timing {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamTiming> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamTiming::new(
-                self.allow_pause.unwrap(),
-                self.on_timeout.clone().unwrap().to_numbas(locale).unwrap(),
-                self.timed_warning
+            Ok(numbas::exam::ExamTiming {
+                allow_pause: self.allow_pause.unwrap(),
+                timeout: self.on_timeout.clone().unwrap().to_numbas(locale).unwrap(),
+                timed_warning: self
+                    .timed_warning
                     .clone()
                     .unwrap()
                     .to_numbas(locale)
                     .unwrap(),
-            ))
+            })
         } else {
             Err(check)
         }

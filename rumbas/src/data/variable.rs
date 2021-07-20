@@ -20,17 +20,18 @@ impl ToNumbas for Variable {
     fn to_numbas_with_name(&self, locale: &str, name: String) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamVariable::new(
+            Ok(numbas::exam::ExamVariable {
                 name,
-                self.definition.clone().unwrap().get_content(locale),
-                self.description.clone().unwrap(),
-                self.template_type
+                definition: self.definition.clone().unwrap().get_content(locale),
+                description: self.description.clone().unwrap(),
+                template_type: self
+                    .template_type
                     .clone()
                     .unwrap()
                     .to_numbas(locale)
                     .unwrap(),
-                self.group.clone().unwrap(),
-            ))
+                group: self.group.clone().unwrap(),
+            })
         } else {
             Err(check)
         }

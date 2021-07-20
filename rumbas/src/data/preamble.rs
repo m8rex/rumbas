@@ -19,10 +19,10 @@ impl ToNumbas for Preamble {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Preamble> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::Preamble::new(
-                self.js.clone().unwrap().get_content(locale),
-                self.css.clone().unwrap().get_content(locale),
-            ))
+            Ok(numbas::exam::Preamble {
+                js: self.js.clone().unwrap().get_content(locale),
+                css: self.css.clone().unwrap().get_content(locale),
+            })
         } else {
             Err(check)
         }

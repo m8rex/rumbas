@@ -187,7 +187,7 @@ const DEFAULTS: NumbasDefaults = NumbasDefaults {
 macro_rules! read {
     ($file_name: expr) => {{
         let content = std::fs::read_to_string($file_name).expect("Invalid file path");
-        NExam::from_str(content.as_ref())
+        NExam::from_exam_str(content.as_ref())
     }};
 }
 
@@ -215,7 +215,7 @@ fn main() {
             let (name, rumbas_exam, qs, cpts) = convert_exam(exam);
             for qp in qs.into_iter() {
                 let q_name = qp.question_name.clone().unwrap();
-                let q_yaml = QuestionFileType::Normal(qp.question_data.unwrap())
+                let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
                     .to_yaml()
                     .unwrap();
                 let file = format!("output/questions/{}.yaml", q_name);
@@ -369,7 +369,7 @@ fn extract_shared_navigation(exam: &NExam) -> NavigationSharedData {
                 .navigation
                 .start_password
                 .clone()
-                .unwrap_or(DEFAULTS.navigation_start_password.clone())
+                .unwrap_or(DEFAULTS.navigation_start_password)
         )),
         can_regenerate: v!(exam.navigation.allow_regenerate),
         show_steps: v!(exam
@@ -489,8 +489,8 @@ fn extract_timing(exam: &NExam) -> Timing {
         duration_in_seconds: v!(exam
             .basic_settings
             .duration_in_seconds
-            .map(|s| Noneable::NotNone(s))
-            .unwrap_or(nn())),
+            .map(Noneable::NotNone)
+            .unwrap_or_else(nn)),
         allow_pause: v!(exam.timing.allow_pause),
         on_timeout: v!(extract_timeout_action(&exam.timing.timeout)),
         timed_warning: v!(extract_timeout_action(&exam.timing.timed_warning)),
@@ -502,8 +502,8 @@ fn extract_feedback(exam: &NExam) -> Feedback {
         percentage_needed_to_pass: v!(exam
             .basic_settings
             .percentage_needed_to_pass
-            .map(|p| Noneable::NotNone(p))
-            .unwrap_or(nn())),
+            .map(Noneable::NotNone)
+            .unwrap_or_else(nn)),
         show_name_of_student: v!(exam
             .basic_settings
             .show_student_name
@@ -544,7 +544,7 @@ fn extract_feedback(exam: &NExam) -> Feedback {
                     .unwrap_or(DEFAULTS.feedback_review_show_advice))
                 .unwrap()),
         }),
-        advice: v!(ts!(exam.feedback.advice.clone().unwrap_or(String::new()))),
+        advice: v!(ts!(exam.feedback.advice.clone().unwrap_or_default())),
         intro: v!(ts!(exam.feedback.intro)),
         feedback_messages: v!(exam
             .feedback
@@ -761,7 +761,7 @@ fn extract_part_common_marks(
 }
 
 fn extract_part_common_prompt(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.prompt.clone().unwrap_or(String::new())
+    pd.prompt.clone().unwrap_or_default()
 }
 
 fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
@@ -769,7 +769,7 @@ fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartShared
         .unwrap_or(DEFAULTS.part_common_use_custom_name)
 }
 fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.custom_name.clone().unwrap_or(String::new())
+    pd.custom_name.clone().unwrap_or_default()
 }
 fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
     pd.steps_penalty
@@ -808,7 +808,7 @@ fn extract_part_common_adaptive_marking_penalty(
 fn extract_part_common_custom_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> String {
-    pd.custom_marking_algorithm.clone().unwrap_or(String::new())
+    pd.custom_marking_algorithm.clone().unwrap_or_default()
 }
 fn extract_part_common_extend_base_marking_algorithm(
     pd: &numbas::exam::ExamQuestionPartSharedData,
@@ -819,7 +819,7 @@ fn extract_part_common_extend_base_marking_algorithm(
 fn extract_part_common_steps(pd: &numbas::exam::ExamQuestionPartSharedData) -> Vec<QuestionPart> {
     pd.steps
         .clone()
-        .unwrap_or(vec![])
+        .unwrap_or_default()
         .into_iter()
         .map(|s| extract_part(&s))
         .collect()
@@ -908,32 +908,32 @@ fn extract_jme_part(qp: &numbas::exam::ExamQuestionPartJME) -> QuestionPartBuilt
             .max_length
             .clone()
             .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
         min_length: v!(qp
             .min_length
             .clone()
             .map(|r| Noneable::NotNone(extract_length_restriction(&r)))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
         must_have: v!(qp
             .must_have
             .clone()
             .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
         may_not_have: v!(qp
             .may_not_have
             .clone()
             .map(|r| Noneable::NotNone(extract_string_restriction(&r)))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
         must_match_pattern: v!(qp
             .must_match_pattern
             .clone()
             .map(|r| Noneable::NotNone(extract_pattern_restriction(&r)))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
         value_generators: v!(qp
             .value_generators
             .clone()
             .map(|v| Noneable::NotNone(v.iter().map(|g| extract_value_generator(&g)).collect()))
-            .unwrap_or(nn())),
+            .unwrap_or_else(nn)),
     })
 }
 
@@ -979,7 +979,7 @@ fn extract_number_entry_part(
         answer: v!(extract_number_entry_answer(&qp.answer)),
         display_correct_as_fraction: v!(qp.correct_answer_fraction),
         allow_fractions: v!(qp.allow_fractions),
-        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or(vec![]).to_rumbas()),
+        allowed_notation_styles: v!(qp.notation_styles.clone().unwrap_or_default().to_rumbas()),
         display_correct_in_style: v!(qp
             .correct_answer_style
             .clone()
@@ -1082,7 +1082,7 @@ fn extract_pattern_match_part(
             .display_answer
             .clone()
             .map(|d| d.to_string())
-            .unwrap_or(qp.answer.to_string()))), // TDDO: check default
+            .unwrap_or_else(|| qp.answer.to_string()))), // TDDO: check default
         match_mode: v!(qp.match_mode),
     })
 }
@@ -1117,7 +1117,7 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
                 .collect()
         ))
     } else {
-        v!(MultipleChoiceAnswerData::NumbasLike(
+        v!(MultipleChoiceAnswerData::NumbasLike(Box::new(
             MultipleChoiceAnswerDataNumbasLike {
                 answers: v!(qp
                     .answers
@@ -1133,14 +1133,11 @@ fn extract_choose_one_part(qp: &numbas::exam::ExamQuestionPartChooseOne) -> Ques
                     .distractors
                     .clone()
                     .map(|v| Noneable::NotNone(
-                        v.iter()
-                            .map(|f| ts!(f).clone())
-                            .collect::<Vec<_>>()
-                            .to_rumbas()
+                        v.iter().map(|f| ts!(f)).collect::<Vec<_>>().to_rumbas()
                     ))
-                    .unwrap_or(nn()))
+                    .unwrap_or_else(nn))
             }
-        ))
+        )))
     };
     QuestionPartBuiltin::ChooseOne(QuestionPartChooseOne {
         // Default section
@@ -1213,7 +1210,7 @@ fn extract_choose_multiple_part(
                 .collect()
         ))
     } else {
-        v!(MultipleChoiceAnswerData::NumbasLike(
+        v!(MultipleChoiceAnswerData::NumbasLike(Box::new(
             MultipleChoiceAnswerDataNumbasLike {
                 answers: v!(qp
                     .choices
@@ -1229,14 +1226,11 @@ fn extract_choose_multiple_part(
                     .distractors
                     .clone()
                     .map(|v| Noneable::NotNone(
-                        v.iter()
-                            .map(|f| ts!(f).clone())
-                            .collect::<Vec<_>>()
-                            .to_rumbas()
+                        v.iter().map(|f| ts!(f)).collect::<Vec<_>>().to_rumbas()
                     ))
-                    .unwrap_or(nn()))
+                    .unwrap_or_else(nn))
             }
-        ))
+        )))
     };
     QuestionPartBuiltin::ChooseMultiple(QuestionPartChooseMultiple {
         // Default section
@@ -1265,10 +1259,7 @@ fn extract_choose_multiple_part(
         should_select_at_least: v!(qp
             .min_answers
             .unwrap_or(DEFAULTS.choose_multiple_min_answers)),
-        should_select_at_most: v!(qp
-            .max_answers
-            .map(|ma| Noneable::NotNone(ma))
-            .unwrap_or(nn())),
+        should_select_at_most: v!(qp.max_answers.map(Noneable::NotNone).unwrap_or_else(nn)),
         columns: v!(qp.display_columns.0),
     })
 }
@@ -1376,10 +1367,7 @@ fn extract_match_answers_with_choices_part(
         should_select_at_least: v!(qp
             .min_answers
             .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)),
-        should_select_at_most: v!(qp
-            .max_answers
-            .map(|ma| Noneable::NotNone(ma))
-            .unwrap_or(nn())),
+        should_select_at_most: v!(qp.max_answers.map(Noneable::NotNone).unwrap_or_else(nn)),
         display: v!(qp.display_type.to_rumbas()),
         layout: v!(qp.layout.clone()),
     })
@@ -1519,7 +1507,7 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
         .into_iter()
         .map(|q| {
             v!(QuestionGroup {
-                name: v!(ts!(q.name.unwrap_or(String::new()))),
+                name: v!(ts!(q.name.unwrap_or_default())),
                 picking_strategy: v!(match q.picking_strategy {
                     numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
                         PickingStrategy::AllOrdered
@@ -1535,7 +1523,6 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                 }),
                 questions: v!(q
                     .questions
-                    .clone()
                     .into_iter()
                     .map(|q| {
                         v!(QuestionPath {
@@ -1561,14 +1548,14 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                     .iter()
                                     .map(|(k, v)| (
                                         k.clone(),
-                                        v!(VariableRepresentation::Long(v!(Variable {
+                                        v!(VariableRepresentation::Long(Box::new(v!(Variable {
                                             definition: v!(FileString::s(&v.definition)),
                                             description: v!(v.description.clone()),
                                             template_type: v!(extract_variable_template_type(
                                                 v.template_type.clone()
                                             )),
                                             group: v!(v.group.clone()),
-                                        })))
+                                        }))))
                                     ))
                                     .collect::<std::collections::HashMap<_, _>>()),
                                 variables_test: v!(VariablesTest {
@@ -1588,7 +1575,6 @@ fn extract_question_groups(exam: &NExam) -> Vec<Value<QuestionGroup>> {
                                                 .parameters
                                                 .clone()
                                                 .into_iter()
-                                                .map(|a| a)
                                                 .collect())
                                         })
                                     ))
@@ -1651,7 +1637,6 @@ fn extract_diagnostic(exam: &NExam) -> Diagnostic {
             .collect()),
         topics: v!(diagnostic
             .knowledge_graph
-            .clone()
             .topics
             .into_iter()
             .map(|l| LearningTopic {

@@ -28,21 +28,22 @@ impl ToNumbas for Feedback {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFeedback> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamFeedback::new(
-                self.show_current_marks.unwrap(),
-                self.show_maximum_marks.unwrap(),
-                self.show_answer_state.unwrap(),
-                self.allow_reveal_answer.unwrap(),
-                self.review.clone().map(|o| o.to_numbas(locale).unwrap()),
-                self.advice.clone().map(|o| o.to_string(locale)).flatten(),
-                self.intro.clone().unwrap().to_string(locale).unwrap(),
-                self.feedback_messages
+            Ok(numbas::exam::ExamFeedback {
+                show_actual_mark: self.show_current_marks.unwrap(),
+                show_total_mark: self.show_maximum_marks.unwrap(),
+                show_answer_state: self.show_answer_state.unwrap(),
+                allow_reveal_answer: self.allow_reveal_answer.unwrap(),
+                review: self.review.clone().map(|o| o.to_numbas(locale).unwrap()),
+                advice: self.advice.clone().map(|o| o.to_string(locale)).flatten(),
+                intro: self.intro.clone().unwrap().to_string(locale).unwrap(),
+                feedback_messages: self
+                    .feedback_messages
                     .clone()
                     .unwrap()
                     .iter()
                     .map(|s| s.to_numbas(locale).unwrap())
                     .collect(),
-            ))
+            })
         } else {
             Err(check)
         }
@@ -67,12 +68,12 @@ impl ToNumbas for Review {
     fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamReview> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamReview::new(
-                Some(self.show_score.clone().unwrap()),
-                Some(self.show_feedback.clone().unwrap()),
-                Some(self.show_expected_answer.clone().unwrap()),
-                Some(self.show_advice.clone().unwrap()),
-            ))
+            Ok(numbas::exam::ExamReview {
+                show_score: Some(self.show_score.clone().unwrap()),
+                show_feedback: Some(self.show_feedback.clone().unwrap()),
+                show_expected_answer: Some(self.show_expected_answer.clone().unwrap()),
+                show_advice: Some(self.show_advice.clone().unwrap()),
+            })
         } else {
             Err(check)
         }
@@ -89,9 +90,9 @@ impl_optional_overwrite!(FeedbackMessage);
 impl ToNumbas for FeedbackMessage {
     type NumbasType = numbas::exam::ExamFeedbackMessage;
     fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
-        Ok(numbas::exam::ExamFeedbackMessage::new(
-            self.message.clone(),
-            self.threshold.clone(),
-        ))
+        Ok(numbas::exam::ExamFeedbackMessage {
+            message: self.message.clone(),
+            threshold: self.threshold.clone(),
+        })
     }
 }

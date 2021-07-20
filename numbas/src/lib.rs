@@ -7,7 +7,7 @@ mod tests {
     use std::fs;
     fn exam_from_file(file: &str) -> Result<exam::Exam> {
         let s = fs::read_to_string(file).expect(&format!("Failed to read {}", file)[..]);
-        exam::Exam::from_str(&s)
+        exam::Exam::from_exam_str(&s)
     }
     #[test]
     #[ignore]

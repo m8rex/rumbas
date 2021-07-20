@@ -22,10 +22,9 @@ where
             .map(Option::from),
         Ok(serde_json::Value::Number(n)) => {
             let s = n.to_string();
-            let r = T::from_str(&s)
+            T::from_str(&s)
                 .map_err(serde::de::Error::custom)
-                .map(Option::from);
-            r
+                .map(Option::from)
         }
         Ok(v) => Err(serde::de::Error::custom(format!(
             "string or number expected but found something else: {}",
@@ -46,7 +45,7 @@ where
         Ok(serde_json::Value::String(s)) => {
             let mut r = Vec::new();
             for whole_item in s.split(',') {
-                let (item, value) = if whole_item.starts_with("!") {
+                let (item, value) = if whole_item.starts_with('!') {
                     let mut chars = whole_item.chars();
                     chars.next();
                     (chars.as_str(), false)
@@ -191,41 +190,13 @@ pub struct Exam {
 }
 
 impl Exam {
-    pub fn from_str(s: &str) -> serde_json::Result<Exam> {
+    pub fn from_exam_str(s: &str) -> serde_json::Result<Exam> {
         let json = if s.starts_with("// Numbas version: exam_results_page_options") {
-            s.splitn(2, "\n").collect::<Vec<_>>()[1]
+            s.splitn(2, '\n').collect::<Vec<_>>()[1]
         } else {
             s
         };
         serde_json::from_str(json)
-    }
-
-    pub fn new(
-        basic_settings: BasicExamSettings,
-        resources: Vec<Resource>,
-        extensions: Vec<String>,
-        custom_part_types: Vec<CustomPartType>,
-        navigation: ExamNavigation,
-        timing: ExamTiming,
-        feedback: ExamFeedback,
-        functions: Option<HashMap<String, ExamFunction>>,
-        variables: Option<HashMap<String, ExamVariable>>,
-        question_groups: Vec<ExamQuestionGroup>,
-        diagnostic: Option<ExamDiagnostic>,
-    ) -> Exam {
-        Exam {
-            basic_settings,
-            resources,
-            extensions,
-            custom_part_types,
-            navigation,
-            timing,
-            feedback,
-            functions,
-            variables,
-            question_groups,
-            diagnostic,
-        }
     }
 
     //TODO: return Result type instead of printing errors
@@ -261,26 +232,6 @@ pub struct BasicExamSettings {
     #[serde(rename = "allowPrinting")]
     /// Whether students are ammpwed to print an exam transcript
     pub allow_printing: Option<bool>,
-}
-
-impl BasicExamSettings {
-    pub fn new(
-        name: String,
-        duration_in_seconds: Option<usize>,
-        percentage_needed_to_pass: Option<f64>,
-        show_question_group_names: Option<bool>,
-        show_student_name: Option<bool>,
-        allow_printing: Option<bool>,
-    ) -> BasicExamSettings {
-        BasicExamSettings {
-            name,
-            duration_in_seconds,
-            percentage_needed_to_pass,
-            show_question_group_names,
-            show_student_name,
-            allow_printing,
-        }
-    }
 }
 
 #[skip_serializing_none]
@@ -466,34 +417,6 @@ pub struct ExamNavigation {
     pub start_password: Option<String>, //TODO: if empty string -> also None
 }
 
-impl ExamNavigation {
-    pub fn new(
-        allow_regenerate: bool,
-        navigation_mode: ExamNavigationMode,
-        reverse: Option<bool>,
-        browsing_enabled: Option<bool>,
-        allow_steps: Option<bool>,
-        show_frontpage: bool,
-        show_results_page: Option<ExamShowResultsPage>,
-        prevent_leaving: Option<bool>,
-        on_leave: Option<ExamLeaveAction>,
-        start_password: Option<String>,
-    ) -> ExamNavigation {
-        ExamNavigation {
-            allow_regenerate,
-            navigation_mode,
-            reverse,
-            browsing_enabled,
-            allow_steps,
-            show_frontpage,
-            show_results_page,
-            prevent_leaving,
-            on_leave,
-            start_password,
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ExamNavigationMode {
@@ -511,20 +434,6 @@ pub struct QuestionNavigation {
     pub show_frontpage: bool,
     #[serde(rename = "preventleave")]
     pub prevent_leaving: Option<bool>,
-}
-
-impl QuestionNavigation {
-    pub fn new(
-        allow_regenerate: bool,
-        show_frontpage: bool,
-        prevent_leaving: Option<bool>,
-    ) -> QuestionNavigation {
-        QuestionNavigation {
-            allow_regenerate,
-            show_frontpage,
-            prevent_leaving,
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -562,20 +471,6 @@ pub struct ExamTiming {
     pub timed_warning: ExamTimeoutAction, // Action to do five minutes before timeout
 }
 
-impl ExamTiming {
-    pub fn new(
-        allow_pause: bool,
-        timeout: ExamTimeoutAction,
-        timed_warning: ExamTimeoutAction,
-    ) -> ExamTiming {
-        ExamTiming {
-            allow_pause,
-            timeout,
-            timed_warning,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedback {
@@ -595,30 +490,6 @@ pub struct ExamFeedback {
     pub feedback_messages: Vec<ExamFeedbackMessage>,
 }
 
-impl ExamFeedback {
-    pub fn new(
-        show_actual_mark: bool,
-        show_total_mark: bool,
-        show_answer_state: bool,
-        allow_reveal_answer: bool,
-        review: Option<ExamReview>,
-        advice: Option<String>,
-        intro: String,
-        feedback_messages: Vec<ExamFeedbackMessage>,
-    ) -> ExamFeedback {
-        ExamFeedback {
-            show_actual_mark,
-            show_total_mark,
-            show_answer_state,
-            allow_reveal_answer,
-            review,
-            advice,
-            intro,
-            feedback_messages,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamReview {
@@ -632,33 +503,11 @@ pub struct ExamReview {
     pub show_advice: Option<bool>,
 }
 
-impl ExamReview {
-    pub fn new(
-        show_score: Option<bool>,
-        show_feedback: Option<bool>,
-        show_expected_answer: Option<bool>,
-        show_advice: Option<bool>,
-    ) -> ExamReview {
-        ExamReview {
-            show_score,
-            show_feedback,
-            show_expected_answer,
-            show_advice,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamFeedbackMessage {
     pub message: String,
     pub threshold: String, //TODO type
-}
-
-impl ExamFeedbackMessage {
-    pub fn new(message: String, threshold: String) -> ExamFeedbackMessage {
-        ExamFeedbackMessage { message, threshold }
-    }
 }
 
 #[skip_serializing_none]
@@ -670,22 +519,6 @@ pub struct ExamFunction {
     pub output_type: ExamFunctionType,
     pub definition: String,
     pub language: ExamFunctionLanguage,
-}
-
-impl ExamFunction {
-    pub fn new(
-        parameters: Vec<ExamFunctionParameter>,
-        output_type: ExamFunctionType,
-        definition: String,
-        language: ExamFunctionLanguage,
-    ) -> ExamFunction {
-        ExamFunction {
-            parameters,
-            output_type,
-            definition,
-            language,
-        }
-    }
 }
 
 pub type ExamFunctionParameter = (String, ExamFunctionType);
@@ -747,24 +580,6 @@ pub struct ExamVariable {
     pub group: String,
 }
 
-impl ExamVariable {
-    pub fn new(
-        name: String,
-        definition: String,
-        description: String,
-        template_type: ExamVariableTemplateType,
-        group: String,
-    ) -> ExamVariable {
-        ExamVariable {
-            name,
-            definition,
-            description,
-            template_type,
-            group,
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum ExamVariableTemplateType {
     #[serde(rename = "anything")]
@@ -793,20 +608,6 @@ pub struct ExamQuestionGroup {
     #[serde(flatten)]
     pub picking_strategy: ExamQuestionGroupPickingStrategy,
     pub questions: Vec<ExamQuestion>,
-}
-
-impl ExamQuestionGroup {
-    pub fn new(
-        name: Option<String>,
-        picking_strategy: ExamQuestionGroupPickingStrategy,
-        questions: Vec<ExamQuestion>,
-    ) -> ExamQuestionGroup {
-        ExamQuestionGroup {
-            name,
-            picking_strategy,
-            questions,
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -876,12 +677,6 @@ pub struct ExamQuestion {
 pub struct Preamble {
     pub js: String,
     pub css: String,
-}
-
-impl Preamble {
-    pub fn new(js: String, css: String) -> Preamble {
-        Preamble { js, css }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -959,42 +754,6 @@ pub struct ExamQuestionPartSharedData {
     //[serde(rename= "variableReplacements")]
 }
 
-impl ExamQuestionPartSharedData {
-    pub fn new(
-        marks: Option<Primitive>,
-        prompt: Option<String>,
-        use_custom_name: Option<bool>,
-        custom_name: Option<String>,
-        steps_penalty: Option<usize>,
-        enable_minimum_marks: Option<bool>,
-        minimum_marks: Option<usize>,
-        show_correct_answer: bool,
-        show_feedback_icon: Option<bool>,
-        variable_replacement_strategy: VariableReplacementStrategy,
-        adaptive_marking_penalty: Option<usize>,
-        custom_marking_algorithm: Option<String>,
-        extend_base_marking_algorithm: Option<bool>,
-        steps: Option<Vec<ExamQuestionPart>>,
-    ) -> ExamQuestionPartSharedData {
-        ExamQuestionPartSharedData {
-            marks,
-            prompt,
-            use_custom_name,
-            custom_name,
-            steps_penalty,
-            enable_minimum_marks,
-            minimum_marks,
-            show_correct_answer,
-            show_feedback_icon,
-            variable_replacement_strategy,
-            adaptive_marking_penalty,
-            custom_marking_algorithm,
-            extend_base_marking_algorithm,
-            steps,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartCustom {
@@ -1064,50 +823,6 @@ pub struct ExamQuestionPartJME {
     pub value_generators: Option<Vec<JMEValueGenerator>>,
 }
 
-impl ExamQuestionPartJME {
-    pub fn new(
-        part_data: ExamQuestionPartSharedData,
-        answer: String,
-        answer_simplification: Option<Vec<AnswerSimplificationType>>,
-        show_preview: bool,
-        checking_type: JMECheckingType,
-        failure_rate: f64,
-        vset_range: [f64; 2],
-        vset_range_points: usize,
-        check_variable_names: bool,
-        single_letter_variables: Option<bool>,
-        allow_unknown_functions: Option<bool>,
-        implicit_function_composition: Option<bool>,
-        max_length: Option<JMELengthRestriction>,
-        min_length: Option<JMELengthRestriction>,
-        must_have: Option<JMEStringRestriction>,
-        may_not_have: Option<JMEStringRestriction>,
-        must_match_pattern: Option<JMEPatternRestriction>,
-        value_generators: Option<Vec<JMEValueGenerator>>,
-    ) -> ExamQuestionPartJME {
-        ExamQuestionPartJME {
-            part_data,
-            answer,
-            answer_simplification,
-            show_preview,
-            checking_type,
-            failure_rate,
-            vset_range: [vset_range[0].into(), vset_range[1].into()],
-            vset_range_points: vset_range_points.into(),
-            check_variable_names,
-            single_letter_variables,
-            allow_unknown_functions,
-            implicit_function_composition,
-            max_length,
-            min_length,
-            must_have,
-            may_not_have,
-            must_match_pattern,
-            value_generators,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum AnswerSimplificationType {
@@ -1168,37 +883,12 @@ pub struct JMERestriction {
     pub message: String,
 }
 
-impl JMERestriction {
-    pub fn new(
-        name: String,
-        strings: Vec<String>,
-        partial_credit: f64,
-        message: String,
-    ) -> JMERestriction {
-        JMERestriction {
-            name,
-            strings,
-            partial_credit,
-            message,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
     pub length: Option<usize>,
-}
-
-impl JMELengthRestriction {
-    pub fn new(restriction: JMERestriction, length: Option<usize>) -> JMELengthRestriction {
-        JMELengthRestriction {
-            restriction,
-            length,
-        }
-    }
 }
 
 #[skip_serializing_none]
@@ -1208,15 +898,6 @@ pub struct JMEStringRestriction {
     pub restriction: JMERestriction,
     #[serde(rename = "showStrings")]
     pub show_strings: bool,
-}
-
-impl JMEStringRestriction {
-    pub fn new(restriction: JMERestriction, show_strings: bool) -> JMEStringRestriction {
-        JMEStringRestriction {
-            restriction,
-            show_strings,
-        }
-    }
 }
 
 #[skip_serializing_none]
@@ -1230,33 +911,11 @@ pub struct JMEPatternRestriction {
     pub name_to_compare: String,
 }
 
-impl JMEPatternRestriction {
-    pub fn new(
-        partial_credit: f64,
-        message: String,
-        pattern: String,
-        name_to_compare: String,
-    ) -> JMEPatternRestriction {
-        JMEPatternRestriction {
-            partial_credit,
-            message,
-            pattern,
-            name_to_compare,
-        }
-    }
-}
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEValueGenerator {
     pub name: String,
     pub value: String,
-}
-
-impl JMEValueGenerator {
-    pub fn new(name: String, value: String) -> Self {
-        Self { name, value }
-    }
 }
 
 #[skip_serializing_none]
@@ -1265,15 +924,6 @@ pub struct ExamQuestionVariablesTest {
     pub condition: String,
     #[serde(rename = "maxRuns")]
     pub max_runs: SafeNatural,
-}
-
-impl ExamQuestionVariablesTest {
-    pub fn new(condition: String, max_runs: usize) -> ExamQuestionVariablesTest {
-        ExamQuestionVariablesTest {
-            condition,
-            max_runs: SafeNatural(max_runs),
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1458,7 +1108,7 @@ impl std::convert::TryFrom<Primitive> for SafeNatural {
         match p {
             Primitive::Natural(n) => Ok(SafeNatural(n)),
             Primitive::Float(_n) => Err("Please use an unsigned integer.".to_string()),
-            Primitive::String(n) => n.parse().map(|n| SafeNatural(n)).map_err(|e| e.to_string()),
+            Primitive::String(n) => n.parse().map(SafeNatural).map_err(|e| e.to_string()),
         }
     }
 }
@@ -1480,7 +1130,7 @@ impl std::convert::TryFrom<Primitive> for SafeFloat {
         match p {
             Primitive::Natural(n) => Ok(SafeFloat(n as f64)),
             Primitive::Float(n) => Ok(SafeFloat(n)),
-            Primitive::String(n) => n.parse().map(|n| SafeFloat(n)).map_err(|e| e.to_string()),
+            Primitive::String(n) => n.parse().map(SafeFloat).map_err(|e| e.to_string()),
         }
     }
 }
@@ -1502,7 +1152,7 @@ impl std::convert::TryFrom<BooledPrimitive> for SafeBool {
         match p {
             BooledPrimitive::Natural(_n) => Err("Please use a boolean value.".to_string()),
             BooledPrimitive::Float(_n) => Err("Please use a boolean value.".to_string()),
-            BooledPrimitive::String(n) => n.parse().map(|n| SafeBool(n)).map_err(|e| e.to_string()),
+            BooledPrimitive::String(n) => n.parse().map(SafeBool).map_err(|e| e.to_string()),
             BooledPrimitive::Bool(b) => Ok(SafeBool(b)),
         }
     }
@@ -1715,20 +1365,6 @@ pub struct ExamQuestionPartGapFill {
     #[serde(rename = "sortAnswers")]
     pub sort_answers: Option<bool>,
     pub gaps: Vec<ExamQuestionPart>,
-}
-
-impl ExamQuestionPartGapFill {
-    pub fn new(
-        part_data: ExamQuestionPartSharedData,
-        sort_answers: Option<bool>,
-        gaps: Vec<ExamQuestionPart>,
-    ) -> ExamQuestionPartGapFill {
-        ExamQuestionPartGapFill {
-            part_data,
-            sort_answers,
-            gaps,
-        }
-    }
 }
 
 #[skip_serializing_none]

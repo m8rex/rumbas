@@ -23,20 +23,22 @@ impl ToNumbas for QuestionGroup {
     fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
         let check = self.check();
         if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionGroup::new(
-                self.name.clone().map(|s| s.to_string(locale)).flatten(),
-                self.picking_strategy
+            Ok(numbas::exam::ExamQuestionGroup {
+                name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
+                picking_strategy: self
+                    .picking_strategy
                     .clone()
                     .unwrap()
                     .to_numbas(locale)
                     .unwrap(),
-                self.questions //TODO: add ToNumbas to QuestionPath?
+                questions: self
+                    .questions //TODO: add ToNumbas to QuestionPath?
                     .clone()
                     .unwrap()
                     .iter()
                     .map(|q| q.to_numbas(locale).unwrap())
                     .collect(),
-            ))
+            })
         } else {
             Err(check)
         }
