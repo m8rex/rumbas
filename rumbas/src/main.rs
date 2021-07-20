@@ -5,6 +5,9 @@ use std::path::Path;
 #[macro_use]
 extern crate clap;
 use clap::{crate_version, App};
+mod import;
+
+use import::import;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
@@ -23,10 +26,17 @@ const OUTPUT_FOLDER: &str = "_output";
 /// The `_output` folder will contain the generated HTML files.
 /// Host these with a webserver.
 fn main() {
-    let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let yaml = load_yaml!("cli.yml");
     let matches = App::from_yaml(yaml).version(crate_version!()).get_matches();
 
+    if let Some(matches) = matches.subcommand_matches("import") {
+        import(&matches)
+    } else if let Some(matches) = matches.subcommand_matches("compile") {
+        compile(&matches)
+    }
+}
+fn compile(matches: &clap::ArgMatches) {
+    let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
     let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
     println!("{:?}", path.display());
     if path.is_absolute() {

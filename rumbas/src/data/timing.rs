@@ -1,6 +1,7 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
@@ -36,6 +37,22 @@ impl ToNumbas for Timing {
     }
 }
 
+impl ToRumbas<Timing> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> Timing {
+        Timing {
+            duration_in_seconds: Value::Normal(
+                self.basic_settings
+                    .duration_in_seconds
+                    .map(Noneable::NotNone)
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            allow_pause: Value::Normal(self.timing.allow_pause),
+            on_timeout: Value::Normal(self.timing.timeout.to_rumbas()),
+            timed_warning: Value::Normal(self.timing.timed_warning.to_rumbas()),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
@@ -56,5 +73,16 @@ impl ToNumbas for TimeoutAction {
                 message: message.to_string(locale).unwrap(),
             },
         })
+    }
+}
+
+impl ToRumbas<TimeoutAction> for numbas::exam::ExamTimeoutAction {
+    fn to_rumbas(&self) -> TimeoutAction {
+        match self {
+            numbas::exam::ExamTimeoutAction::None { message: _ } => TimeoutAction::None,
+            numbas::exam::ExamTimeoutAction::Warn { message } => TimeoutAction::Warn {
+                message: TranslatableString::s(&message),
+            },
+        }
     }
 }

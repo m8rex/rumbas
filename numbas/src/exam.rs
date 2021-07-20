@@ -79,10 +79,13 @@ where
                     "cancelfactors" => Ok(AnswerSimplificationType::CancelFactors(value)),
                     "cancelterms" => Ok(AnswerSimplificationType::CancelTerms(value)),
                     "simplifyfractions" => Ok(AnswerSimplificationType::Fractions(value)),
-                    _ => Err(serde::de::Error::custom(format!(
-                        "unknown answer simplification type {}",
-                        item
-                    ))),
+                    _ => {
+                        /*       Err(serde::de::Error::custom(format!(
+                            "unknown answer simplification type {}",
+                            item
+                        )))*/
+                        Ok(AnswerSimplificationType::Unknown((item.to_string(), value)))
+                    }
                 };
                 match new_item {
                     Ok(a) => r.push(a),
@@ -110,54 +113,60 @@ where
         let mut parts: Vec<String> = Vec::new();
         for value in values {
             let new_item = match value {
-                AnswerSimplificationType::All(true) => "all",
-                AnswerSimplificationType::All(false) => "!all",
-                AnswerSimplificationType::Basic(true) => "basic",
-                AnswerSimplificationType::Basic(false) => "!basic",
-                AnswerSimplificationType::UnitFactor(true) => "unitFactor",
-                AnswerSimplificationType::UnitFactor(false) => "!unitFactor",
-                AnswerSimplificationType::UnitPower(true) => "unitPower",
-                AnswerSimplificationType::UnitPower(false) => "!unitPower",
-                AnswerSimplificationType::UnitDenominator(true) => "unitDenominator",
-                AnswerSimplificationType::UnitDenominator(false) => "!unitDenominator",
-                AnswerSimplificationType::ZeroFactor(true) => "zeroFactor",
-                AnswerSimplificationType::ZeroFactor(false) => "!zeroFactor",
-                AnswerSimplificationType::ZeroTerm(true) => "zeroTerm",
-                AnswerSimplificationType::ZeroTerm(false) => "!zeroTerm",
-                AnswerSimplificationType::ZeroPower(true) => "zeroPower",
-                AnswerSimplificationType::ZeroPower(false) => "!zeroPower",
-                AnswerSimplificationType::CollectNumbers(true) => "collectNumbers",
-                AnswerSimplificationType::CollectNumbers(false) => "!collectNumbers",
-                AnswerSimplificationType::ZeroBase(true) => "zeroBase",
-                AnswerSimplificationType::ZeroBase(false) => "!zeroBase",
-                AnswerSimplificationType::ConstantsFirst(true) => "constantsFirst",
-                AnswerSimplificationType::ConstantsFirst(false) => "!constantsFirst",
-                AnswerSimplificationType::SqrtProduct(true) => "sqrtProduct",
-                AnswerSimplificationType::SqrtProduct(false) => "!sqrtProduct",
-                AnswerSimplificationType::SqrtDivision(true) => "sqrtDivision",
-                AnswerSimplificationType::SqrtDivision(false) => "!sqrtDivision",
-                AnswerSimplificationType::SqrtSquare(true) => "sqrtSquare",
-                AnswerSimplificationType::SqrtSquare(false) => "!sqrtSquare",
-                AnswerSimplificationType::OtherNumbers(true) => "otherNumbers",
-                AnswerSimplificationType::OtherNumbers(false) => "!otherNumbers",
-                AnswerSimplificationType::TimesDot(true) => "timesDot",
-                AnswerSimplificationType::TimesDot(false) => "!timesDot",
-                AnswerSimplificationType::ExpandBrackets(true) => "expandBrackets",
-                AnswerSimplificationType::ExpandBrackets(false) => "!expandBrackets",
-                AnswerSimplificationType::NoLeadingMinus(true) => "noLeadingMinus",
-                AnswerSimplificationType::NoLeadingMinus(false) => "!noLeadingMinus",
-                AnswerSimplificationType::Trigonometric(true) => "trig",
-                AnswerSimplificationType::Trigonometric(false) => "!trig",
-                AnswerSimplificationType::CollectLikeFractions(true) => "collectLikeFractions",
-                AnswerSimplificationType::CollectLikeFractions(false) => "!collectLikeFractions",
-                AnswerSimplificationType::CanonicalOrder(true) => "canonicalOrder",
-                AnswerSimplificationType::CanonicalOrder(false) => "!canonicalOrder",
-                AnswerSimplificationType::CancelFactors(true) => "cancelFactors",
-                AnswerSimplificationType::CancelFactors(false) => "!cancelFactors",
-                AnswerSimplificationType::CancelTerms(true) => "cancelTerms",
-                AnswerSimplificationType::CancelTerms(false) => "!cancelTerms",
-                AnswerSimplificationType::Fractions(true) => "simplifyFractions",
-                AnswerSimplificationType::Fractions(false) => "!simplifyFractions",
+                AnswerSimplificationType::All(true) => "all".to_string(),
+                AnswerSimplificationType::All(false) => "!all".to_string(),
+                AnswerSimplificationType::Basic(true) => "basic".to_string(),
+                AnswerSimplificationType::Basic(false) => "!basic".to_string(),
+                AnswerSimplificationType::UnitFactor(true) => "unitFactor".to_string(),
+                AnswerSimplificationType::UnitFactor(false) => "!unitFactor".to_string(),
+                AnswerSimplificationType::UnitPower(true) => "unitPower".to_string(),
+                AnswerSimplificationType::UnitPower(false) => "!unitPower".to_string(),
+                AnswerSimplificationType::UnitDenominator(true) => "unitDenominator".to_string(),
+                AnswerSimplificationType::UnitDenominator(false) => "!unitDenominator".to_string(),
+                AnswerSimplificationType::ZeroFactor(true) => "zeroFactor".to_string(),
+                AnswerSimplificationType::ZeroFactor(false) => "!zeroFactor".to_string(),
+                AnswerSimplificationType::ZeroTerm(true) => "zeroTerm".to_string(),
+                AnswerSimplificationType::ZeroTerm(false) => "!zeroTerm".to_string(),
+                AnswerSimplificationType::ZeroPower(true) => "zeroPower".to_string(),
+                AnswerSimplificationType::ZeroPower(false) => "!zeroPower".to_string(),
+                AnswerSimplificationType::CollectNumbers(true) => "collectNumbers".to_string(),
+                AnswerSimplificationType::CollectNumbers(false) => "!collectNumbers".to_string(),
+                AnswerSimplificationType::ZeroBase(true) => "zeroBase".to_string(),
+                AnswerSimplificationType::ZeroBase(false) => "!zeroBase".to_string(),
+                AnswerSimplificationType::ConstantsFirst(true) => "constantsFirst".to_string(),
+                AnswerSimplificationType::ConstantsFirst(false) => "!constantsFirst".to_string(),
+                AnswerSimplificationType::SqrtProduct(true) => "sqrtProduct".to_string(),
+                AnswerSimplificationType::SqrtProduct(false) => "!sqrtProduct".to_string(),
+                AnswerSimplificationType::SqrtDivision(true) => "sqrtDivision".to_string(),
+                AnswerSimplificationType::SqrtDivision(false) => "!sqrtDivision".to_string(),
+                AnswerSimplificationType::SqrtSquare(true) => "sqrtSquare".to_string(),
+                AnswerSimplificationType::SqrtSquare(false) => "!sqrtSquare".to_string(),
+                AnswerSimplificationType::OtherNumbers(true) => "otherNumbers".to_string(),
+                AnswerSimplificationType::OtherNumbers(false) => "!otherNumbers".to_string(),
+                AnswerSimplificationType::TimesDot(true) => "timesDot".to_string(),
+                AnswerSimplificationType::TimesDot(false) => "!timesDot".to_string(),
+                AnswerSimplificationType::ExpandBrackets(true) => "expandBrackets".to_string(),
+                AnswerSimplificationType::ExpandBrackets(false) => "!expandBrackets".to_string(),
+                AnswerSimplificationType::NoLeadingMinus(true) => "noLeadingMinus".to_string(),
+                AnswerSimplificationType::NoLeadingMinus(false) => "!noLeadingMinus".to_string(),
+                AnswerSimplificationType::Trigonometric(true) => "trig".to_string(),
+                AnswerSimplificationType::Trigonometric(false) => "!trig".to_string(),
+                AnswerSimplificationType::CollectLikeFractions(true) => {
+                    "collectLikeFractions".to_string()
+                }
+                AnswerSimplificationType::CollectLikeFractions(false) => {
+                    "!collectLikeFractions".to_string()
+                }
+                AnswerSimplificationType::CanonicalOrder(true) => "canonicalOrder".to_string(),
+                AnswerSimplificationType::CanonicalOrder(false) => "!canonicalOrder".to_string(),
+                AnswerSimplificationType::CancelFactors(true) => "cancelFactors".to_string(),
+                AnswerSimplificationType::CancelFactors(false) => "!cancelFactors".to_string(),
+                AnswerSimplificationType::CancelTerms(true) => "cancelTerms".to_string(),
+                AnswerSimplificationType::CancelTerms(false) => "!cancelTerms".to_string(),
+                AnswerSimplificationType::Fractions(true) => "simplifyFractions".to_string(),
+                AnswerSimplificationType::Fractions(false) => "!simplifyFractions".to_string(),
+                AnswerSimplificationType::Unknown((n, true)) => n.to_string(),
+                AnswerSimplificationType::Unknown((n, false)) => format!("!{}", n),
             };
             parts.push(new_item.to_string());
         }
@@ -851,6 +860,7 @@ pub enum AnswerSimplificationType {
     Trigonometric(bool),
     CancelTerms(bool),
     CancelFactors(bool),
+    Unknown((String, bool)),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

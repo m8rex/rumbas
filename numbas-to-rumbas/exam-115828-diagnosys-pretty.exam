@@ -8364,7 +8364,7 @@
               "exploreObjective": null,
               "prompt": "<p>If $\\frac{\\mathrm{d}y}{\\mathrm{d}t} = \\simplify{ {a}t^{b} }$ find $y$, given $y=0$ when $t=0$.</p>\n<p>Enter $y$.</p>",
               "answer": "{a}/{(b+1)}*t^{b+1}",
-              "answerSimplification": "all",
+              "answerSimplification": "all,fractionnumbers",
               "showPreview": true,
               "checkingType": "absdiff",
               "checkingAccuracy": 0.001,
