@@ -5,6 +5,7 @@ rumbas init
 
 # Set resources
 mkdir resources/question-resources
+cp 640px-Numbat.jpg resources/question-resources
 cp material-dw4n67kf_vCI9659.ggb resources/question-resources
 
 import_and_compile(){
