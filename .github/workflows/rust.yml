@@ -53,15 +53,29 @@ jobs:
       - name: Run doc
         run: cargo doc --no-deps
         working-directory: rumbas
+  check_cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Install rumbas
         run: cargo install --path .
         working-directory: rumbas
       - name: Clone Numbas
         run: |-
           git clone https://github.com/numbas/Numbas.git ~/NUMBAS
-          export NUMBAS_FOLDER=~/NUMBAS
       - name: Run cli-tests
-        run: ./test.sh
+        run: |-
+          export NUMBAS_FOLDER=~/NUMBAS
+          ./test.sh
         working-directory: cli-tests
   check_todos:
     runs-on: ubuntu-latest
