@@ -15,7 +15,7 @@ pub fn init(_matches: &clap::ArgMatches) {
         .collect::<Vec<_>>();
     let existing_paths = paths.iter().filter(|p| p.exists()).collect::<Vec<_>>();
 
-    if existing_paths.len() > 0 {
+    if !existing_paths.is_empty() {
         eprintln!(
             "Aborting, some folder do already exists: {}",
             existing_paths

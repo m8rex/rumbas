@@ -128,6 +128,7 @@ fn compile(matches: &clap::ArgMatches) {
                             }
                             if !output.stderr.is_empty() {
                                 eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
+                                std::process::exit(1)
                             }
                         }
                         Err(check_result) => {
@@ -149,6 +150,7 @@ fn compile(matches: &clap::ArgMatches) {
                                     .collect::<Vec<_>>()
                                     .join("\n")
                             );
+                            std::process::exit(1)
                         }
                     }
                 }
