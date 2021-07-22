@@ -58,7 +58,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
                 self.questions
                     .to_rumbas()
                     .into_iter()
-                    .map(|q| Value::Normal(q))
+                    .map(Value::Normal)
                     .collect(),
             ),
         }

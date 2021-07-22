@@ -104,7 +104,7 @@ fn convert_normal_exam(
         .question_groups
         .to_rumbas()
         .into_iter()
-        .map(|q| Value::Normal(q))
+        .map(Value::Normal)
         .collect::<Vec<_>>();
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
@@ -149,7 +149,7 @@ fn convert_diagnostic_exam(
         .question_groups
         .to_rumbas()
         .into_iter()
-        .map(|q| Value::Normal(q))
+        .map(Value::Normal)
         .collect::<Vec<_>>();
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
