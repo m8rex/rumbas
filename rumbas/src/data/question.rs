@@ -191,7 +191,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                 self.resources
                     .to_rumbas()
                     .into_iter()
-                    .map(|r| Value::Normal(r))
+                    .map(Value::Normal)
                     .collect(),
             ),
         }
