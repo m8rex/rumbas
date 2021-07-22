@@ -56,8 +56,8 @@ RUN git fetch && git checkout bac3d060cd70d79fb6f897f0a54076ec916b8e14
 FROM alpine as geogebra_fetcher
 WORKDIR /usr/app
 RUN apk add git
-RUN git clone https://github.com/numbas/numbas-extension-geogebra.git stats
-WORKDIR /usr/app/stats
+RUN git clone https://github.com/numbas/numbas-extension-geogebra.git geogebra
+WORKDIR /usr/app/geogebra
 RUN git fetch && git checkout 14fdb023341357134b6376f5f6084834587d6f8f
 
 # Main image

@@ -69,9 +69,14 @@ jobs:
       - name: Install rumbas
         run: cargo install --path .
         working-directory: rumbas
-      - name: Clone Numbas
+      - name: Clone Numbas & extensions
         run: |-
           git clone https://github.com/numbas/Numbas.git ~/NUMBAS
+          mkdir ~/NUMBAS/extensions
+          git clone https://github.com/numbas/numbas-extension-jsxgraph.git ~/NUMBAS/extensions/jsxgraph
+          git clone https://github.com/numbas/numbas-extension-stats.git ~/NUMBAS/extensions/stats
+          git clone https://github.com/numbas/numbas-extension-eukleides.git ~/NUMBAS/extensions/eukleides
+          git clone https://github.com/numbas/numbas-extension-geogebra.git ~/NUMBAS/extensions/geogebra # TODO: build the right js files?
       - name: Run cli-tests
         run: |-
           export NUMBAS_FOLDER=~/NUMBAS
