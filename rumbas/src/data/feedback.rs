@@ -1,7 +1,9 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -14,7 +16,7 @@ optional_overwrite! {
         show_maximum_marks: bool,
         /// Whether answer feedback is shown (right or wrong etc)
         show_answer_state: bool,
-        // Whether the 'reveal answer' button is present
+        /// Whether the 'reveal answer' button is present
         allow_reveal_answer: bool,
         review: Review, // If none, everything is true???
         advice: TranslatableString,
@@ -25,26 +27,61 @@ optional_overwrite! {
 
 impl ToNumbas for Feedback {
     type NumbasType = numbas::exam::ExamFeedback;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFeedback> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(numbas::exam::ExamFeedback::new(
-                self.show_current_marks.unwrap(),
-                self.show_maximum_marks.unwrap(),
-                self.show_answer_state.unwrap(),
-                self.allow_reveal_answer.unwrap(),
-                self.review.clone().map(|o| o.to_numbas(&locale).unwrap()),
-                self.advice.clone().map(|o| o.to_string(&locale)).flatten(),
-                self.intro.clone().unwrap().to_string(&locale).unwrap(),
-                self.feedback_messages
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .map(|s| s.to_numbas(&locale).unwrap())
-                    .collect(),
-            ))
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFeedback> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::ExamFeedback {
+                show_actual_mark: self.show_current_marks.unwrap(),
+                show_total_mark: self.show_maximum_marks.unwrap(),
+                show_answer_state: self.show_answer_state.unwrap(),
+                allow_reveal_answer: self.allow_reveal_answer.unwrap(),
+                review: self.review.clone().map(|o| o.to_numbas(locale).unwrap()),
+                advice: self.advice.clone().map(|o| o.to_string(locale)).flatten(),
+                intro: self.intro.clone().unwrap().to_string(locale).unwrap(),
+                feedback_messages: self.feedback_messages.to_numbas(locale).unwrap(),
+            })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Feedback> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> Feedback {
+        Feedback {
+            percentage_needed_to_pass: Value::Normal(
+                self.basic_settings
+                    .percentage_needed_to_pass
+                    .map(Noneable::NotNone)
+                    .unwrap_or_else(Noneable::nn),
+            ),
+            show_name_of_student: Value::Normal(
+                self.basic_settings
+                    .show_student_name
+                    .unwrap_or(DEFAULTS.basic_settings_show_student_name),
+            ),
+            show_current_marks: Value::Normal(self.feedback.show_actual_mark),
+            show_maximum_marks: Value::Normal(self.feedback.show_total_mark),
+            show_answer_state: Value::Normal(self.feedback.show_answer_state),
+            allow_reveal_answer: Value::Normal(self.feedback.allow_reveal_answer),
+            review: Value::Normal(self.feedback.review.to_rumbas().unwrap()),
+            advice: Value::Normal(TranslatableString::s(
+                &self.feedback.advice.clone().unwrap_or_default(),
+            )),
+            intro: Value::Normal(TranslatableString::s(&self.feedback.intro)),
+            feedback_messages: Value::Normal(
+                self.feedback
+                    .feedback_messages
+                    .clone()
+                    .into_iter()
+                    .map(|m| {
+                        Value::Normal(FeedbackMessage {
+                            message: m.message,
+                            threshold: m.threshold,
+                        })
+                    })
+                    .collect(),
+            ),
         }
     }
 }
@@ -64,34 +101,57 @@ optional_overwrite! {
 
 impl ToNumbas for Review {
     type NumbasType = numbas::exam::ExamReview;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamReview> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(numbas::exam::ExamReview::new(
-                Some(self.show_score.clone().unwrap()),
-                Some(self.show_feedback.clone().unwrap()),
-                Some(self.show_expected_answer.clone().unwrap()),
-                Some(self.show_advice.clone().unwrap()),
-            ))
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamReview> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::ExamReview {
+                show_score: Some(self.show_score.clone().unwrap()),
+                show_feedback: Some(self.show_feedback.clone().unwrap()),
+                show_expected_answer: Some(self.show_expected_answer.clone().unwrap()),
+                show_advice: Some(self.show_advice.clone().unwrap()),
+            })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Review> for numbas::exam::ExamReview {
+    fn to_rumbas(&self) -> Review {
+        Review {
+            show_score: Value::Normal(
+                self.show_score
+                    .unwrap_or(DEFAULTS.feedback_review_show_score),
+            ),
+            show_feedback: Value::Normal(
+                self.show_feedback
+                    .unwrap_or(DEFAULTS.feedback_review_show_feedback),
+            ),
+            show_expected_answer: Value::Normal(
+                self.show_expected_answer
+                    .unwrap_or(DEFAULTS.feedback_review_show_expected_answer),
+            ),
+            show_advice: Value::Normal(
+                self.show_advice
+                    .unwrap_or(DEFAULTS.feedback_review_show_advice),
+            ),
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct FeedbackMessage {
-    message: String,   //TODO: inputstring or filestring?
-    threshold: String, //TODO type
+    pub message: String,   //TODO: inputstring or filestring?
+    pub threshold: String, //TODO type
 }
 impl_optional_overwrite!(FeedbackMessage);
 
 impl ToNumbas for FeedbackMessage {
     type NumbasType = numbas::exam::ExamFeedbackMessage;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
-        Ok(numbas::exam::ExamFeedbackMessage::new(
-            self.message.clone(),
-            self.threshold.clone(),
-        ))
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamFeedbackMessage> {
+        Ok(numbas::exam::ExamFeedbackMessage {
+            message: self.message.clone(),
+            threshold: self.threshold.clone(),
+        })
     }
 }

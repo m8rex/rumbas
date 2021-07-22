@@ -9,15 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Better messages when the yaml is invalid. The specific part that is invalid, is shown.
 - Support for `stats` extension (you will need to add a default value to `defauls/question.yaml` for the `stats` extension)
 - Support for `simplify_no_leading_minus`, `simplify_fractions`, `simplify_trigonometric`, `cancel_terms`, `cancel_factors`, `collect_like_fractions`, `order_canonical`, `use_times_dot` and `expand_brackets` in answer simplification.
 - `value_generators` support in JME
 - Support for diagnostic exams
 - `builtin_constants` and `custom_constants` in question description
+- Support for `NumbasLike` answers field for ChooseOne part
+- Support for resources
 
 ### Changed
 
 - Numbas version (v6.0)
+- `should_select_at_least` in `QuestionPartChooseOne` is changed to a boolean `has_to_select_option`
+
+### Removed
+
+- `checking_type` option in `number_entry` questionparts
+- `name` and `strings` options in `must_match_pattern` option of `jme` questionparts
 
 ## [0.3.0] - 2020-12-17
 

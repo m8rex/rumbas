@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// It supports the shorthand § for \simplify
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
+#[serde(into = "String")]
 pub struct InputString(pub String);
 
 impl std::convert::From<String> for InputString {
@@ -17,6 +18,13 @@ impl std::convert::From<String> for InputString {
         let re_simplify = Regex::new(r"§\{(?P<v>.*?)\}").unwrap();
         let after_simplify = re_simplify.replace_all(&after_var, r"\simplify{$v}");
         InputString(after_simplify.to_string())
+    }
+}
+
+// Currently implemented simply, without simplification
+impl std::convert::From<InputString> for String {
+    fn from(is: InputString) -> Self {
+        is.0
     }
 }
 

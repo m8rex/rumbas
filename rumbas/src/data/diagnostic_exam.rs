@@ -1,13 +1,15 @@
+use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::extension::Extensions;
 use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
 use crate::data::navigation::DiagnosticNavigation;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question_group::QuestionGroup;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -29,6 +31,8 @@ optional_overwrite! {
         question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
         /// The settings to set for numbas
         numbas_settings: NumbasSettings,
+        /// The custom part types used in this exam
+        custom_part_types: Vec<CustomPartTypeDefinitionPath>,
         /// The diagnostic data
         diagnostic: Diagnostic
     }
@@ -36,54 +40,56 @@ optional_overwrite! {
 
 impl ToNumbas for DiagnosticExam {
     type NumbasType = numbas::exam::Exam;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::Exam> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            let basic_settings = numbas::exam::BasicExamSettings::new(
-                self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
-                self.timing
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Exam> {
+        let check = self.check();
+        if check.is_empty() {
+            let basic_settings = numbas::exam::BasicExamSettings {
+                name: self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
+                duration_in_seconds: self
+                    .timing
                     .clone()
                     .unwrap()
                     .duration_in_seconds
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
-                self.feedback
+                percentage_needed_to_pass: self
+                    .feedback
                     .clone()
                     .unwrap()
                     .percentage_needed_to_pass
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
-                Some(
+                show_question_group_names: Some(
                     self.navigation
                         .clone()
                         .unwrap()
                         .shared_data
-                        .clone()
                         .unwrap()
                         .show_names_of_question_groups
                         .unwrap(),
                 ),
-                Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
-                Some(
+                show_student_name: Some(
+                    self.feedback.clone().unwrap().show_name_of_student.unwrap(),
+                ),
+                allow_printing: Some(
                     self.navigation
                         .clone()
                         .unwrap()
                         .shared_data
-                        .clone()
                         .unwrap()
                         .allow_printing
                         .unwrap(),
                 ),
-            );
+            };
 
             //TODO
-            let navigation = self.navigation.clone().unwrap().to_numbas(&locale).unwrap();
+            let navigation = self.navigation.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
-            let timing = self.timing.clone().unwrap().to_numbas(&locale).unwrap();
+            let timing = self.timing.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
-            let feedback = self.feedback.clone().unwrap().to_numbas(&locale).unwrap();
+            let feedback = self.feedback.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
             let functions = Value::Normal(HashMap::new());
@@ -97,12 +103,26 @@ impl ToNumbas for DiagnosticExam {
                 .clone()
                 .unwrap()
                 .iter()
-                .map(|qg| qg.clone().to_numbas(&locale).unwrap())
+                .map(|qg| qg.clone().to_numbas(locale).unwrap())
                 .collect();
 
-            // Below from questions
-            //TODO
-            let resources: Vec<[String; 2]> = Vec::new();
+            let resources: Vec<numbas::exam::Resource> = self
+                .question_groups
+                .clone()
+                .unwrap()
+                .iter()
+                .flat_map(|qg| {
+                    qg.clone()
+                        .unwrap()
+                        .questions
+                        .unwrap()
+                        .into_iter()
+                        .flat_map(|q| q.unwrap().question_data.unwrap().resources.unwrap())
+                })
+                .map(|r| r.unwrap())
+                .collect::<Vec<_>>()
+                .to_numbas(locale)
+                .unwrap(); // TODO: remove duplicates?
 
             let extensions: Vec<String> = self
                 .question_groups
@@ -117,15 +137,24 @@ impl ToNumbas for DiagnosticExam {
                         .into_iter()
                         .map(|q| q.unwrap().question_data.unwrap().extensions.unwrap())
                 })
-                .fold(Extensions::new(), |a, b| Extensions::combine(a, b))
+                .fold(Extensions::default(), Extensions::combine)
                 .to_paths();
 
-            //TODO
-            let custom_part_types: Vec<numbas::exam::CustomPartType> = Vec::new();
+            let custom_part_types = self
+                .custom_part_types
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|c| {
+                    c.custom_part_type_data
+                        .to_numbas_with_name(locale, c.custom_part_type_name)
+                        .unwrap()
+                })
+                .collect();
 
-            let diagnostic = Some(self.diagnostic.clone().unwrap().to_numbas(&locale).unwrap());
+            let diagnostic = Some(self.diagnostic.clone().unwrap().to_numbas(locale).unwrap());
 
-            Ok(numbas::exam::Exam::new(
+            Ok(numbas::exam::Exam {
                 basic_settings,
                 resources,
                 extensions,
@@ -133,47 +162,13 @@ impl ToNumbas for DiagnosticExam {
                 navigation,
                 timing,
                 feedback,
-                Some(functions.unwrap()),
-                Some(variables.unwrap()),
+                functions: Some(functions.unwrap()),
+                variables: Some(variables.unwrap()),
                 question_groups,
                 diagnostic,
-            ))
-        } else {
-            Err(empty_fields)
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(rename_all = "lowercase")]
-pub enum DiagnosticScript {
-    Mastery,
-    Diagnosys,
-    Custom(TranslatableString),
-}
-impl_optional_overwrite!(DiagnosticScript);
-impl ToNumbas for DiagnosticScript {
-    type NumbasType = numbas::exam::ExamDiagnosticScript;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(match self {
-                DiagnosticScript::Mastery => Self::NumbasType::Mastery,
-                DiagnosticScript::Custom(_) => Self::NumbasType::Custom,
-                DiagnosticScript::Diagnosys => Self::NumbasType::Diagnosys,
             })
         } else {
-            Err(empty_fields)
-        }
-    }
-}
-
-impl DiagnosticScript {
-    pub fn to_custom_script(&self, locale: &String) -> String {
-        match self {
-            DiagnosticScript::Custom(s) => s.clone().to_string(&locale).unwrap(),
-            DiagnosticScript::Diagnosys => String::new(),
-            DiagnosticScript::Mastery => String::new(),
+            Err(check)
         }
     }
 }
@@ -192,33 +187,89 @@ optional_overwrite! {
 
 impl ToNumbas for Diagnostic {
     type NumbasType = numbas::exam::ExamDiagnostic;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
             let knowledge_graph = numbas::exam::ExamDiagnosticKnowledgeGraph {
                 topics: self
                     .topics
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|t| t.to_numbas(&locale).unwrap())
+                    .map(|t| t.to_numbas(locale).unwrap())
                     .collect(),
                 learning_objectives: self
                     .objectives
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|t| t.to_numbas(&locale).unwrap())
+                    .map(|t| t.to_numbas(locale).unwrap())
                     .collect(),
             };
 
             Ok(Self::NumbasType {
                 knowledge_graph,
-                script: self.script.to_numbas(&locale).unwrap(),
-                custom_script: self.script.clone().unwrap().to_custom_script(&locale),
+                script: self.script.to_numbas(locale).unwrap(),
+                custom_script: self.script.clone().unwrap().to_custom_script(locale),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
+    fn to_rumbas(&self) -> Diagnostic {
+        Diagnostic {
+            script: Value::Normal(self.to_rumbas()),
+            objectives: Value::Normal(self.knowledge_graph.clone().learning_objectives.to_rumbas()),
+            topics: Value::Normal(self.knowledge_graph.topics.to_rumbas()),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum DiagnosticScript {
+    Mastery,
+    Diagnosys,
+    Custom(TranslatableString),
+}
+impl_optional_overwrite!(DiagnosticScript);
+impl ToNumbas for DiagnosticScript {
+    type NumbasType = numbas::exam::ExamDiagnosticScript;
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(match self {
+                DiagnosticScript::Mastery => Self::NumbasType::Mastery,
+                DiagnosticScript::Custom(_) => Self::NumbasType::Custom,
+                DiagnosticScript::Diagnosys => Self::NumbasType::Diagnosys,
+            })
+        } else {
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<DiagnosticScript> for numbas::exam::ExamDiagnostic {
+    fn to_rumbas(&self) -> DiagnosticScript {
+        match self.script {
+            numbas::exam::ExamDiagnosticScript::Mastery => DiagnosticScript::Mastery,
+            numbas::exam::ExamDiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
+            numbas::exam::ExamDiagnosticScript::Custom => {
+                DiagnosticScript::Custom(TranslatableString::s(&self.custom_script))
+            }
+        }
+    }
+}
+
+impl DiagnosticScript {
+    pub fn to_custom_script(&self, locale: &str) -> String {
+        match self {
+            DiagnosticScript::Custom(s) => s.clone().to_string(locale).unwrap(),
+            DiagnosticScript::Diagnosys => String::new(),
+            DiagnosticScript::Mastery => String::new(),
         }
     }
 }
@@ -235,20 +286,24 @@ optional_overwrite! {
 
 impl ToNumbas for LearningObjective {
     type NumbasType = numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
-                name: self.name.clone().unwrap().to_string(&locale).unwrap(),
-                description: self
-                    .description
-                    .clone()
-                    .unwrap()
-                    .to_string(&locale)
-                    .unwrap(),
+                name: self.name.clone().unwrap().to_string(locale).unwrap(),
+                description: self.description.clone().unwrap().to_string(locale).unwrap(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<LearningObjective> for numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
+    fn to_rumbas(&self) -> LearningObjective {
+        LearningObjective {
+            name: Value::Normal(TranslatableString::s(&self.name)),
+            description: Value::Normal(TranslatableString::s(&self.description)),
         }
     }
 }
@@ -269,34 +324,52 @@ optional_overwrite! {
 
 impl ToNumbas for LearningTopic {
     type NumbasType = numbas::exam::ExamDiagnosticKnowledgeGraphTopic;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
             Ok(Self::NumbasType {
-                name: self.name.clone().unwrap().to_string(&locale).unwrap(),
-                description: self
-                    .description
-                    .clone()
-                    .unwrap()
-                    .to_string(&locale)
-                    .unwrap(),
+                name: self.name.clone().unwrap().to_string(locale).unwrap(),
+                description: self.description.clone().unwrap().to_string(locale).unwrap(),
                 learning_objectives: self
                     .objectives
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|s| s.clone().to_string(&locale).unwrap())
+                    .map(|s| s.to_string(locale).unwrap())
                     .collect(),
                 depends_on: self
                     .depends_on
                     .clone()
                     .unwrap()
                     .into_iter()
-                    .map(|s| s.clone().to_string(&locale).unwrap())
+                    .map(|s| s.to_string(locale).unwrap())
                     .collect(),
             })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
+    fn to_rumbas(&self) -> LearningTopic {
+        LearningTopic {
+            name: Value::Normal(TranslatableString::s(&self.name)),
+            description: Value::Normal(TranslatableString::s(&self.description)),
+            objectives: Value::Normal(
+                self.learning_objectives
+                    .clone()
+                    .into_iter()
+                    .map(|o| TranslatableString::s(&o))
+                    .collect(),
+            ),
+            depends_on: Value::Normal(
+                self.depends_on
+                    .clone()
+                    .into_iter()
+                    .map(|o| TranslatableString::s(&o))
+                    .collect(),
+            ),
         }
     }
 }

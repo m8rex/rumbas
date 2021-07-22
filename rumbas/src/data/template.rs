@@ -1,13 +1,13 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::normal_exam::NormalExam;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-pub const TEMPLATE_EXAMS_FOLDER: &'static str = "template_exams";
-pub const TEMPLATE_QUESTIONS_FOLDER: &'static str = "template_questions";
-pub const TEMPLATE_PREFIX: &'static str = "template";
+pub const TEMPLATE_EXAMS_FOLDER: &str = "template_exams";
+pub const TEMPLATE_QUESTIONS_FOLDER: &str = "template_questions";
+pub const TEMPLATE_PREFIX: &str = "template";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateData {
@@ -26,12 +26,24 @@ pub enum ExamFileType {
     Diagnostic(DiagnosticExam),
 }
 
+impl ExamFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum QuestionFileType {
     Template(TemplateData),
-    Normal(Question),
+    Normal(Box<Question>),
+}
+
+impl QuestionFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -40,17 +52,18 @@ pub struct TemplateString {
     pub key: Option<String>,
     pub error_message: Option<String>,
 }
-impl OptionalOverwrite for TemplateString {
-    type Item = TemplateString;
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for TemplateString {
+    fn check(&self) -> RumbasCheckResult {
         if let Some(e) = &self.error_message {
-            vec![e.clone()]
+            RumbasCheckResult::from_missing(Some(e.clone())) // TODO: seperate missing files? (also see FileString)
         } else {
-            Vec::new()
+            RumbasCheckResult::empty()
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
-    fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
+}
+impl OptionalOverwrite<TemplateString> for TemplateString {
+    fn overwrite(&mut self, _other: &TemplateString) {}
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(TemplateString);
 
@@ -66,7 +79,7 @@ impl std::convert::TryFrom<String> for TemplateString {
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let mut prefix = TEMPLATE_PREFIX.to_owned();
-        prefix.push_str(":");
+        prefix.push(':');
         if s.starts_with(&prefix) {
             if s == prefix {
                 Ok(TemplateString {
@@ -92,6 +105,7 @@ impl std::convert::TryFrom<String> for TemplateString {
 pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
+    Invalid(serde_yaml::Value),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -133,6 +147,10 @@ impl<T: std::clone::Clone> ValueType<T> {
             ValueType::Template(ts) => {
                 panic!("missing value for template key {}", ts.clone().key.unwrap())
             }
+            ValueType::Invalid(v) => match serde_yaml::to_string(v) {
+                Ok(s) => panic!("invalid yaml in part {}", s),
+                _ => panic!("invalid yaml"),
+            },
         }
     }
 }
@@ -150,6 +168,10 @@ impl<T: std::clone::Clone> ValueType<T> {
         match self {
             ValueType::Normal(val) => Some(f(val)),
             ValueType::Template(ts) => panic!("missing value for template key {}", ts.key.unwrap()),
+            ValueType::Invalid(v) => match serde_yaml::to_string(&v) {
+                Ok(s) => panic!("invalid yaml in part {}", s),
+                _ => panic!("invalid yaml"),
+            },
         }
     }
 }

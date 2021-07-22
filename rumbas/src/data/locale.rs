@@ -1,4 +1,4 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
@@ -55,7 +55,7 @@ impl_optional_overwrite!(SupportedLocale);
 
 //TODO? macro to reduce duplication?
 impl SupportedLocale {
-    pub fn to_str(&self) -> &'static str {
+    pub fn to_str(self) -> &'static str {
         match self {
             SupportedLocale::ArSA => "ar-SA",
             SupportedLocale::DeDE => "de-DE",

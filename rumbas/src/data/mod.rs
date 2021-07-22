@@ -5,7 +5,10 @@ pub mod optional_overwrite;
 #[macro_use]
 pub mod to_numbas;
 #[macro_use]
+pub mod to_rumbas;
+#[macro_use]
 pub mod question_part;
+pub mod custom_part_type;
 pub mod default;
 pub mod diagnostic_exam;
 pub mod exam;
@@ -18,6 +21,7 @@ pub mod information;
 pub mod input_string;
 pub mod jme;
 pub mod locale;
+pub mod matrix;
 pub mod multiple_choice;
 pub mod navigation;
 pub mod normal_exam;
@@ -27,6 +31,7 @@ pub mod pattern_match;
 pub mod preamble;
 pub mod question;
 pub mod question_group;
+pub mod resource;
 pub mod template;
 pub mod timing;
 pub mod translatable;
