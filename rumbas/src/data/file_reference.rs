@@ -49,7 +49,7 @@ impl std::convert::From<String> for FileString {
                 }
             } else {
                 let relative_file_name = s.split(FILE_PREFIX).collect::<Vec<&str>>()[1];
-                let file_path = Path::new("questions").join(relative_file_name);
+                let file_path = Path::new(crate::QUESTIONS_FOLDER).join(relative_file_name);
                 let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
                 if let Some(file_dir) = file_path.parent() {
                     //Look for translation dirs

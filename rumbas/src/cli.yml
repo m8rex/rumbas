@@ -30,3 +30,6 @@ subcommands:
             help: The path to the numbas .exam file
             required: true
             index: 1
+  - init:
+      about: |-
+        Initialize a rumbas project in this folder

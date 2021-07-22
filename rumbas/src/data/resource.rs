@@ -21,7 +21,7 @@ impl std::convert::TryFrom<String> for ResourcePath {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let path = std::path::Path::new("resources").join(&s);
+        let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
         if path.exists() {
             Ok(ResourcePath {
                 resource_name: s,

@@ -5,8 +5,6 @@ use crate::data::question::Question;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-pub const TEMPLATE_EXAMS_FOLDER: &str = "template_exams";
-pub const TEMPLATE_QUESTIONS_FOLDER: &str = "template_questions";
 pub const TEMPLATE_PREFIX: &str = "template";
 
 #[derive(Serialize, Deserialize, Debug)]

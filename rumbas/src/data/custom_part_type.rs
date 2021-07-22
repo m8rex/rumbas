@@ -217,7 +217,8 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
 
 impl CustomPartTypeDefinition {
     pub fn from_name(name: &str) -> YamlResult<Self> {
-        let file = std::path::Path::new("custom_part_types").join(format!("{}.yaml", name));
+        let file =
+            std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(format!("{}.yaml", name));
         let yaml = std::fs::read_to_string(&file).expect(
             &format!(
                 "Failed to read {}",

@@ -18,8 +18,8 @@ A rumbas project should have to following folder structure:
 - A folder named `questions` that contains the questions
 - A folder named `exams` that contains the exams
 - A folder named `themes` the contains the themes
-- A folder named `template_questions` that contains templates for questions
-- A folder named `template_exams` that contains the template for exams
+- A folder named `question_templates` that contains templates for questions
+- A folder named `exam_templates` that contains the template for exams
 - A folder named `custom_part_types` that contains `custom_part_types`
 - A folder named `resources` that contains the resources that are used in exams.
 
@@ -61,9 +61,9 @@ The easiest way is to use docker.
 - Get the docker image
   - Either Pull the latest image from [dockerhub](https://hub.docker.com/repository/docker/m8rex/rumbas): `docker pull m8rex/rumbas`
   - Or Clone this repo & Build the docker image with `docker build -t rumbas .`
-- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas m8rex/rumbas <relative path of exam in the mounted folder>`
-  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas exams/rumbas-exam-test.yaml`
-  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas questions/question1.yaml`
+- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas m8rex/rumbas compile <relative path of exam in the mounted folder>`
+  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas compile exams/rumbas-exam-test.yaml`
+  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas compile questions/question1.yaml`
     - This compiles a single exercise by using the `template_exams/question_preview.yaml` template
 
 ### Without docker
@@ -77,7 +77,7 @@ The easiest way is to use docker.
   - Make sure that the `NUMBAS_FOLDER` env variable is set to the root of the cloned Numbas repo
   - IMPORTANT: Themes don't work the right way yet, you need to make sure that de themes is added to the themes folder of your local numbas clone -> use Docker to not have this problem.
 
-## TODO
+## Progress
 
 - [x] Basic exam settings (`name`, `duration`, `percentPass`, `showQuestionGroupNames`, `showStudentName`)
   - [x] support in yaml

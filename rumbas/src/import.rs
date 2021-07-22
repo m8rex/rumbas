@@ -30,19 +30,19 @@ pub fn import(matches: &clap::ArgMatches) {
                 let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
                     .to_yaml()
                     .unwrap();
-                let file = format!("questions/{}.yaml", q_name);
+                let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
                 println!("Writing to {}", file);
                 std::fs::write(file, q_yaml).unwrap(); //fix handle result
             }
             for cpt in cpts.into_iter() {
                 let c_name = cpt.custom_part_type_name.clone();
                 let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
-                let file = format!("custom_part_types/{}.yaml", c_name);
+                let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
                 println!("Writing to {}", file);
                 std::fs::write(file, c_yaml).unwrap(); //fix handle result
             }
             let exam_yaml = rumbas_exam.to_yaml().unwrap();
-            std::fs::write(format!("exams/{}.yaml", name), exam_yaml).unwrap();
+            std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml).unwrap();
             //fix handle result
         }
         Err(e) => {
