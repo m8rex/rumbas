@@ -9,6 +9,7 @@
 - Written in Rust
 - Preferred way to use it is docker
 - Currently in beta, not all features are implemented yet.
+- Do you want to use it? Read the [Getting Started](https://github.com/m8rex/rumbas/blob/master/GETTING_STARTED.md) guide.
 
 ## Folder structure
 
@@ -33,7 +34,7 @@ The html input can be specified in two ways:
 
 - inline in the yaml,
 - in a separate html file (Recommended for larger htmls) - The value of the yaml field should then equal `file:<path to filename in questions folder>`
-  This is will also be possible for the description of functions
+  This will also be possible for the description of functions
 
 Functions can be specified by just a filename:
 
@@ -44,11 +45,11 @@ Functions can be specified by just a filename:
 
 Templating is possible:
 
-- Templates should be placed in the `template_questions`/`template_exams` folder
+- Templates should be placed in the `question_templates`/`exam_templates` folder
   - These files look like ordinary question/exam files
-  - Contains strings like `"template:<name>" as value for some fields (e.g. `"template:equation"`)
+  - Contains strings like `"template:<name>"` as value for some fields (e.g. `"template:equation"`)
 - `Values files` should be placed in the `questions`/`exams` folder
-  - Contains a `template` field which specifies the template. This path is relative within `template_questions`/`template_exams`
+  - Contains a `template` field which specifies the template. This path is relative within `question_templates`/`exam_templates`
   - Contains a field for every template variable in the template file
   - If the template file contains `"template:<name>"`, the field `name` has to be specified in the values file
 
@@ -58,13 +59,15 @@ Templating is possible:
 
 The easiest way is to use docker.
 
+!IMPORTANT! See the [Getting Started file](https://github.com/m8rex/rumbas/blob/master/GETTING_STARTED.md#simplifying-docker-usage) to see a way to simplify your docker usage.
+
 - Get the docker image
-  - Either Pull the latest image from [dockerhub](https://hub.docker.com/repository/docker/m8rex/rumbas): `docker pull m8rex/rumbas`
+  - Either Pull the latest image from [github](https://github.com/orgs/m8rex/packages/container/package/rumbas): `docker pull ghcr.io/m8rex/rumbas`
   - Or Clone this repo & Build the docker image with `docker build -t rumbas .`
-- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas m8rex/rumbas compile <relative path of exam in the mounted folder>`
-  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas compile exams/rumbas-exam-test.yaml`
-  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas m8rex/rumbas compile questions/question1.yaml`
-    - This compiles a single exercise by using the `template_exams/question_preview.yaml` template
+- Run rumbas:`docker run --rm -it -v <absolute_path_to_folder with rumbas structure>:/rumbas ghcr.io/m8rex/rumbas compile <relative path of exam in the mounted folder>`
+  - Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas ghcr.io/m8rex/rumbas compile exams/rumbas-exam-test.yaml`
+  - Other Example `docker run --rm -it -v /Programming/rumbas/rumbas/examples/simple-example:/rumbas ghcr.io/m8rex/rumbas compile questions/question1.yaml`
+    - This compiles a single exercise by using the `exam_templates/question_preview.yaml` template
 
 ### Without docker
 
@@ -75,7 +78,7 @@ The easiest way is to use docker.
   - Download binaries (not yet available)
 - Run rumbas
   - Make sure that the `NUMBAS_FOLDER` env variable is set to the root of the cloned Numbas repo
-  - IMPORTANT: Themes don't work the right way yet, you need to make sure that de themes is added to the themes folder of your local numbas clone -> use Docker to not have this problem.
+  - IMPORTANT: Themes don't work the right way yet, you need to make sure that the themes are added to the themes folder of your local numbas clone -> use Docker to not have this problem.
 
 ## Progress
 
@@ -96,7 +99,7 @@ The easiest way is to use docker.
   - [x] `name` and `pickingStrategy`
   - [x] `questions`
 - [x] Support for basic info in questions (`name`, `statement`, `advice`)
-- [ ] Support for `parts` in questions
+- [x] Support for `parts` in questions
   - [x] JME
   - [x] NumberEntry
   - [x] Matrix
