@@ -6,8 +6,10 @@ use std::path::Path;
 extern crate clap;
 use clap::{crate_version, App};
 mod import;
+mod init;
 
 use import::import;
+use init::init;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
@@ -33,6 +35,8 @@ fn main() {
         import(&matches)
     } else if let Some(matches) = matches.subcommand_matches("compile") {
         compile(&matches)
+    } else if let Some(matches) = matches.subcommand_matches("init") {
+        init(&matches)
     }
 }
 fn compile(matches: &clap::ArgMatches) {

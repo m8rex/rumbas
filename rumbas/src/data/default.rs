@@ -136,7 +136,7 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
                                      //TODO: write tests and maybe use .take(count()-1) instead of hashset
     let ancestors = path.ancestors();
     for a in ancestors {
-        let defaults_path = a.with_file_name("defaults");
+        let defaults_path = a.with_file_name(crate::DEFAULTS_FOLDER);
         if defaults_path.is_dir() {
             for entry in defaults_path
                 .read_dir()

@@ -6,7 +6,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::preamble::Preamble;
 use crate::data::question_part::QuestionPart;
 use crate::data::resource::ResourcePath;
-use crate::data::template::{QuestionFileType, TEMPLATE_QUESTIONS_FOLDER};
+use crate::data::template::QuestionFileType;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
@@ -201,7 +201,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
 impl Question {
     pub fn from_name(name: &str) -> YamlResult<Question> {
         use QuestionFileType::*;
-        let file = Path::new("questions").join(format!("{}.yaml", name));
+        let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
         let yaml = fs::read_to_string(&file).expect(
             &format!(
                 "Failed to read {}",
@@ -214,7 +214,7 @@ impl Question {
             .map(|e| match e {
                 Normal(e) => Ok(*e),
                 Template(t) => {
-                    let template_file = Path::new(TEMPLATE_QUESTIONS_FOLDER)
+                    let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)
                         .join(format!("{}.yaml", t.relative_template_path));
                     let template_yaml = fs::read_to_string(&template_file).expect(
                         &format!(

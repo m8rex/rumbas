@@ -17,11 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `builtin_constants` and `custom_constants` in question description
 - Support for `NumbasLike` answers field for ChooseOne part
 - Support for resources
+- `rumbas init`: command to initialize a rumbas project
+- `rumbas import`: command to import numbas .exam files
 
 ### Changed
 
 - Numbas version (v6.0)
 - `should_select_at_least` in `QuestionPartChooseOne` is changed to a boolean `has_to_select_option`
+- The command to compile a question or an exam is now `rumbas compile <path>` instead of just `rumbas <path>`.
+- Change template folder names to `question_templates` and `exam_templates` (instead of `template_questions` and `template_exams`)
 
 ### Removed
 
