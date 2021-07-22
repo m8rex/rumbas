@@ -53,35 +53,11 @@ jobs:
       - name: Run doc
         run: cargo doc --no-deps
         working-directory: rumbas
-
-  check_numbas_to_rumbas:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            numbas/target
-            rumbas/target
-            numbas_to_rumbas/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Build
-        run: cargo build --verbose
-        working-directory: numbas-to-rumbas
-      - name: Run tests
-        run: cargo test --verbose
-        working-directory: numbas-to-rumbas
-      - name: Run doc
-        run: cargo doc --no-deps
-        working-directory: numbas-to-rumbas
       - name: Add nightly
         run: |-
           rustup install nightly
           rustup +nightly component add rustfmt
-        working-directory: numbas-to-rumbas
+        working-directory: rumbas
       - name: Check todo's
         run: cargo +nightly fmt --all -- --check
-        working-directory: numbas-to-rumbas
+        working-directory: rumbas
