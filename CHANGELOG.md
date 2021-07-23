@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - If the type is `relative_difference` or `absolute_difference` there is a second field `max_difference` (previously this was `checking_accuracy`)
   - If the type is `decimal_places` or `significant_figures` there is a second field `amount` (previously this was `checking_accuracy`)
 - `answers` field in multiple choice parts in renamed to `answer_data`
+- Renaming and adding of AnswerStyles. `plain` is renamed to `english-plain` etc
 
 ### Removed
 
