@@ -14,7 +14,7 @@ question_part_type! {
         answer: TranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
         show_preview: bool,
-        checking_type: CheckingType,
+        answer_check: CheckingType,
         failure_rate: f64,
         vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
         vset_range_points: usize,
@@ -48,7 +48,7 @@ impl ToNumbas for QuestionPartJME {
                 ),
                 show_preview: self.show_preview.clone().unwrap(),
                 checking_type: self
-                    .checking_type
+                    .answer_check
                     .clone()
                     .unwrap()
                     .to_numbas(locale)
@@ -140,7 +140,7 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
             answer: Value::Normal(TranslatableString::s(&self.answer)),
             answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
             show_preview: Value::Normal(self.show_preview),
-            checking_type: Value::Normal(self.checking_type.to_rumbas()),
+            answer_check: Value::Normal(self.checking_type.to_rumbas()),
             failure_rate: Value::Normal(self.failure_rate),
             vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
             vset_range_points: Value::Normal(self.vset_range_points.0),
@@ -468,7 +468,7 @@ impl ToRumbas<JMEAnswerSimplification> for Option<Vec<numbas::exam::AnswerSimpli
 
 optional_overwrite! {
     pub struct CheckingTypeDataFloat {
-        checking_accuracy: f64
+        max_difference: f64
     }
 }
 
@@ -479,7 +479,7 @@ impl ToNumbas for CheckingTypeDataFloat {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
-                checking_accuracy: self.checking_accuracy.unwrap(),
+                checking_accuracy: self.max_difference.unwrap(),
             })
         } else {
             Err(check)
@@ -489,7 +489,7 @@ impl ToNumbas for CheckingTypeDataFloat {
 
 optional_overwrite! {
     pub struct CheckingTypeDataNatural {
-        checking_accuracy: usize
+        amount: usize
     }
 }
 
@@ -500,7 +500,7 @@ impl ToNumbas for CheckingTypeDataNatural {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
-                checking_accuracy: self.checking_accuracy.unwrap(),
+                checking_accuracy: self.amount.unwrap(),
             })
         } else {
             Err(check)
@@ -510,7 +510,7 @@ impl ToNumbas for CheckingTypeDataNatural {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
-#[serde(tag = "checking_type")]
+#[serde(tag = "type")]
 pub enum CheckingType {
     RelativeDifference(CheckingTypeDataFloat),
     AbsoluteDifference(CheckingTypeDataFloat),
@@ -549,22 +549,22 @@ impl ToRumbas<CheckingType> for numbas::exam::JMECheckingType {
         match self {
             numbas::exam::JMECheckingType::RelativeDifference(v) => {
                 CheckingType::RelativeDifference(CheckingTypeDataFloat {
-                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                    max_difference: Value::Normal(v.checking_accuracy),
                 })
             }
             numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
                 CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
-                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                    max_difference: Value::Normal(v.checking_accuracy),
                 })
             }
             numbas::exam::JMECheckingType::DecimalPlaces(v) => {
                 CheckingType::DecimalPlaces(CheckingTypeDataNatural {
-                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                    amount: Value::Normal(v.checking_accuracy),
                 })
             }
             numbas::exam::JMECheckingType::SignificantFigures(v) => {
                 CheckingType::SignificantFigures(CheckingTypeDataNatural {
-                    checking_accuracy: Value::Normal(v.checking_accuracy),
+                    amount: Value::Normal(v.checking_accuracy),
                 })
             }
         }
