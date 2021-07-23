@@ -117,19 +117,19 @@ impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
 pub enum VariableRepresentation {
     ListOfStrings(Vec<Value<String>>),
     ListOfNumbers(Vec<Value<f64>>),
-    Long(Box<Value<Variable>>),
-    Number(Value<f64>),
-    Other(Value<VariableStringRepresentation>),
+    Long(Box<Variable>),
+    Number(f64),
+    Other(VariableStringRepresentation),
 }
 
 impl RumbasCheck for VariableRepresentation {
     fn check(&self) -> RumbasCheckResult {
         match self {
-            VariableRepresentation::ListOfStrings(_) => RumbasCheckResult::empty(),
-            VariableRepresentation::ListOfNumbers(_) => RumbasCheckResult::empty(),
+            VariableRepresentation::ListOfStrings(v) => v.check(),
+            VariableRepresentation::ListOfNumbers(v) => v.check(),
             VariableRepresentation::Long(v) => v.check(),
-            VariableRepresentation::Number(_) => RumbasCheckResult::empty(),
-            VariableRepresentation::Other(_) => RumbasCheckResult::empty(),
+            VariableRepresentation::Number(v) => v.check(),
+            VariableRepresentation::Other(v) => v.check(),
         }
     }
 }
@@ -169,11 +169,11 @@ impl VariableRepresentation {
                 VariableTemplateType::ListOfNumbers,
                 &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
             ),
-            VariableRepresentation::Long(v) => v.clone().unwrap(),
+            VariableRepresentation::Long(v) => *(v.clone()),
             VariableRepresentation::Number(n) => {
-                create_ungrouped_variable(VariableTemplateType::Number, &n.unwrap().to_string())
+                create_ungrouped_variable(VariableTemplateType::Number, &n.to_string())
             }
-            VariableRepresentation::Other(o) => match o.unwrap() {
+            VariableRepresentation::Other(o) => match o {
                 VariableStringRepresentation::Anything(s) => {
                     create_ungrouped_variable(VariableTemplateType::Anything, &s)
                 }
@@ -191,12 +191,12 @@ impl VariableRepresentation {
 
 impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
     fn to_rumbas(&self) -> VariableRepresentation {
-        VariableRepresentation::Long(Box::new(Value::Normal(Variable {
+        VariableRepresentation::Long(Box::new(Variable {
             definition: Value::Normal(FileString::s(&self.definition)),
             description: Value::Normal(self.description.clone()),
             template_type: Value::Normal(self.template_type.to_rumbas()),
             group: Value::Normal(self.group.clone()),
-        })))
+        }))
     }
 }
 
@@ -230,13 +230,13 @@ pub struct RangeData {
 
 impl RangeData {
     pub fn try_from_range(s: &str) -> Option<RangeData> {
-        let re = Regex::new(r"^(\d+(?:\.\d*)?) \.\. (\d+(?:\.\d*)?)\#(\d+(?:\.\d*)?)$")
+        let re = Regex::new(r"^(\d+(?:\.\d*)?)\s*\.\.\s*(\d+(?:\.\d*)?)(\#(\d+(?:\.\d*)?))?$")
             .expect("It to be a valid regex");
         if let Some(c) = re.captures(s) {
             return Some(RangeData {
                 from: c.get(1).unwrap().as_str().parse().unwrap(),
                 to: c.get(2).unwrap().as_str().parse().unwrap(),
-                step: c.get(3).unwrap().as_str().parse().unwrap(),
+                step: c.get(4).map(|m| m.as_str()).unwrap_or("1").parse().unwrap(),
             });
         }
         None
@@ -274,7 +274,21 @@ mod test {
 
     #[test]
     fn random_range_ints() {
-        let s = "random(2 .. 10#1)".to_string();
+        let s = "random(2 .. 10#2)".to_string();
+        assert_eq!(
+            Some(RangeData {
+                from: 2.0,
+                to: 10.0,
+                step: 2.0
+            }),
+            RangeData::try_from_random_range(&s)
+        );
+        assert_eq!(None, RangeData::try_from_range(&s));
+    }
+
+    #[test]
+    fn random_range_ints_without_step() {
+        let s = "random(2..10)".to_string();
         assert_eq!(
             Some(RangeData {
                 from: 2.0,

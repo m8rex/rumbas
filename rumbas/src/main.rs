@@ -113,7 +113,6 @@ fn compile(matches: &clap::ArgMatches) {
                                 .current_dir(numbas_path.clone())
                                 .arg("bin/numbas.py")
                                 .arg("-l")
-                                //TODO.arg(&numbas_settings.locale.unwrap().to_str())
                                 .arg(locale_item.unwrap().numbas_locale.clone().unwrap().to_str())
                                 .arg("-t")
                                 .arg(numbas_settings.theme.unwrap())
