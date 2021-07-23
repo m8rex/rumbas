@@ -26,7 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `should_select_at_least` in `QuestionPartChooseOne` is changed to a boolean `has_to_select_option`
 - The command to compile a question or an exam is now `rumbas compile <path>` instead of just `rumbas <path>`.
 - Change template folder names to `question_templates` and `exam_templates` (instead of `template_questions` and `template_exams`)
-
+- Parsing of answer simplification types also handles the `!` operation.
+- `checking_type` and `checking_accuracy` fields in jme part are moved to a new field `answer_check` which is an object.
+  - This object has a `type` (previously this was `checking_type`)
+  - If the type is `relative_difference` or `absolute_difference` there is a second field `max_difference` (previously this was `checking_accuracy`)
+  - If the type is `decimal_places` or `significant_figures` there is a second field `amount` (previously this was `checking_accuracy`)
 ### Removed
 
 - `checking_type` option in `number_entry` questionparts
