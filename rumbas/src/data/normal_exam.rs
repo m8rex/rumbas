@@ -27,7 +27,7 @@ optional_overwrite! {
         /// The feedback settings for this exam
         feedback: Feedback,
         /// The questions groups for this exam
-        question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
+        question_groups: Vec<Value<QuestionGroup>>,
         /// The settings to set for numbas
         numbas_settings: NumbasSettings
     }
@@ -75,13 +75,10 @@ impl ToNumbas for NormalExam {
                 ),
             };
 
-            //TODO
             let navigation = self.navigation.clone().unwrap().to_numbas(locale).unwrap();
 
-            //TODO
             let timing = self.timing.clone().unwrap().to_numbas(locale).unwrap();
 
-            //TODO
             let feedback = self.feedback.clone().unwrap().to_numbas(locale).unwrap();
 
             //TODO
@@ -90,7 +87,6 @@ impl ToNumbas for NormalExam {
             //TODO
             let variables = Value::Normal(HashMap::new());
 
-            //TODO
             let question_groups: Vec<numbas::exam::ExamQuestionGroup> = self
                 .question_groups
                 .clone()
