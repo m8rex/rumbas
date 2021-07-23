@@ -679,6 +679,7 @@ pub struct ExamQuestion {
     //TODO type: question?
     /// Tags starting with 'skill: ' are used in diagnostic mode to specify a topic
     pub tags: Vec<String>,
+    pub custom_part_types: Vec<CustomPartType>,
 }
 
 #[skip_serializing_none]

@@ -1,3 +1,4 @@
+use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::extension::Extensions;
 use crate::data::file_reference::FileString;
 use crate::data::function::Function;
@@ -36,7 +37,9 @@ optional_overwrite! {
         extensions: Extensions,
         /// The names of the topics used in diagnostic exams that this question belongs to
         diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
-        resources: Vec<Value<ResourcePath>>
+        resources: Vec<Value<ResourcePath>>,
+        /// The custom part types used in this exam
+        custom_part_types: Vec<CustomPartTypeDefinitionPath>
         //TODO a lot of options
     }
 }
@@ -137,6 +140,17 @@ impl ToNumbas for Question {
                     .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
                     .collect(),
                 resources: self.resources.clone().unwrap().to_numbas(locale).unwrap(),
+                custom_part_types: self
+                    .custom_part_types
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|c| {
+                        c.custom_part_type_data
+                            .to_numbas_with_name(locale, c.custom_part_type_name)
+                            .unwrap()
+                    })
+                    .collect(),
             })
         } else {
             Err(check)
@@ -194,6 +208,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                     .map(Value::Normal)
                     .collect(),
             ),
+            custom_part_types: Value::Normal(self.custom_part_types.to_rumbas()),
         }
     }
 }

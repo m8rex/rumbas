@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Better messages when the yaml is invalid. The specific part that is invalid, is shown.
-- Support for `stats` extension (you will need to add a default value to `defauls/question.yaml` for the `stats` extension)
+- Support for `allow_printing` in navigation
+- Support for `stats`, `geogebra` and `eukleides` extensions (you will need to add a default value to `defauls/question.yaml` for the these extensions)
 - Support for `simplify_no_leading_minus`, `simplify_fractions`, `simplify_trigonometric`, `cancel_terms`, `cancel_factors`, `collect_like_fractions`, `order_canonical`, `use_times_dot` and `expand_brackets` in answer simplification.
 - `value_generators` support in JME
 - Support for diagnostic exams
 - `builtin_constants` and `custom_constants` in question description
+- `diagnostic_topic_names` in question description
+- `resources` in question description
 - Support for `NumbasLike` answers field for ChooseOne part
 - Support for resources
 - `rumbas init`: command to initialize a rumbas project
@@ -22,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Better messages when the yaml is invalid. The specific part that is invalid, is shown.
 - Numbas version (v6.0)
 - `should_select_at_least` in `QuestionPartChooseOne` is changed to a boolean `has_to_select_option`
 - The command to compile a question or an exam is now `rumbas compile <path>` instead of just `rumbas <path>`.
@@ -31,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - This object has a `type` (previously this was `checking_type`)
   - If the type is `relative_difference` or `absolute_difference` there is a second field `max_difference` (previously this was `checking_accuracy`)
   - If the type is `decimal_places` or `significant_figures` there is a second field `amount` (previously this was `checking_accuracy`)
+- `answers` field in multiple choice parts in renamed to `answer_data`
+
 ### Removed
 
 - `checking_type` option in `number_entry` questionparts
