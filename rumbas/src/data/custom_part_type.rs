@@ -8,6 +8,7 @@ use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::{YamlError, YamlResult};
 use serde::{Deserialize, Serialize};
+use std::hash::{Hash, Hasher};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeDefinition {
@@ -284,7 +285,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct CustomPartTypeDefinitionPath {
@@ -326,6 +327,18 @@ impl ToNumbas for CustomPartTypeDefinitionPath {
         }*/
     }
 }
+
+impl Hash for CustomPartTypeDefinitionPath {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.custom_part_type_name.hash(state);
+    }
+}
+impl PartialEq for CustomPartTypeDefinitionPath {
+    fn eq(&self, other: &Self) -> bool {
+        self.custom_part_type_name == other.custom_part_type_name
+    }
+}
+impl Eq for CustomPartTypeDefinitionPath {}
 
 impl CustomPartTypeDefinition {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {

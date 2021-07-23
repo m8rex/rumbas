@@ -1,4 +1,3 @@
-use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::extension::Extensions;
 use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
@@ -31,8 +30,6 @@ optional_overwrite! {
         question_groups: Vec<Value<QuestionGroup>>, //TODO: remove?
         /// The settings to set for numbas
         numbas_settings: NumbasSettings,
-        /// The custom part types used in this exam
-        custom_part_types: Vec<CustomPartTypeDefinitionPath>,
         /// The diagnostic data
         diagnostic: Diagnostic
     }
@@ -120,9 +117,11 @@ impl ToNumbas for DiagnosticExam {
                         .flat_map(|q| q.unwrap().question_data.unwrap().resources.unwrap())
                 })
                 .map(|r| r.unwrap())
+                .collect::<std::collections::HashSet<_>>()
+                .into_iter()
                 .collect::<Vec<_>>()
                 .to_numbas(locale)
-                .unwrap(); // TODO: remove duplicates?
+                .unwrap();
 
             let extensions: Vec<String> = self
                 .question_groups
@@ -140,17 +139,24 @@ impl ToNumbas for DiagnosticExam {
                 .fold(Extensions::default(), Extensions::combine)
                 .to_paths();
 
-            let custom_part_types = self
-                .custom_part_types
+            let custom_part_types: Vec<numbas::exam::CustomPartType> = self
+                .question_groups
                 .clone()
                 .unwrap()
-                .into_iter()
-                .map(|c| {
-                    c.custom_part_type_data
-                        .to_numbas_with_name(locale, c.custom_part_type_name)
+                .iter()
+                .flat_map(|qg| {
+                    qg.clone()
                         .unwrap()
+                        .questions
+                        .unwrap()
+                        .into_iter()
+                        .flat_map(|q| q.unwrap().question_data.unwrap().custom_part_types.unwrap())
                 })
-                .collect();
+                .collect::<std::collections::HashSet<_>>()
+                .into_iter()
+                .collect::<Vec<_>>()
+                .to_numbas(locale)
+                .unwrap();
 
             let diagnostic = Some(self.diagnostic.clone().unwrap().to_numbas(locale).unwrap());
 

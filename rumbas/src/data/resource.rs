@@ -5,10 +5,11 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use serde::{Deserialize, Serialize};
+use std::hash::{Hash, Hasher};
 
 // TODO TranslatableString
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct ResourcePath {
@@ -73,3 +74,16 @@ impl ResourcePath {
         serde_yaml::to_string(self)
     }
 }
+
+impl Hash for ResourcePath {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.resource_name.hash(state);
+    }
+}
+
+impl PartialEq for ResourcePath {
+    fn eq(&self, other: &Self) -> bool {
+        self.resource_name == other.resource_name
+    }
+}
+impl Eq for ResourcePath {}

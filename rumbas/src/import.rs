@@ -122,7 +122,6 @@ fn convert_normal_exam(
                 locale: Value::Normal(SupportedLocale::EnGB),
                 theme: Value::Normal("default".to_string()),
             }), // todo: argument?
-            custom_part_types: Value::Normal(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
@@ -168,7 +167,6 @@ fn convert_diagnostic_exam(
                 theme: Value::Normal("default".to_string()),
             }), // todo: argument?
             diagnostic: Value::Normal(exam.diagnostic.unwrap().to_rumbas()),
-            custom_part_types: Value::Normal(custom_part_types.clone()),
         },
         question_groups
             .into_iter()
