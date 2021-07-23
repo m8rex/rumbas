@@ -475,7 +475,6 @@ optional_overwrite! {
 impl ToNumbas for CheckingTypeDataFloat {
     type NumbasType = numbas::exam::JMECheckingTypeData<f64>;
     fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        // TODO: check empty?
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
@@ -496,7 +495,6 @@ optional_overwrite! {
 impl ToNumbas for CheckingTypeDataNatural {
     type NumbasType = numbas::exam::JMECheckingTypeData<usize>;
     fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        // TODO: check empty?
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
