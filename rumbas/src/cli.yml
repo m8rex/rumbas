@@ -6,12 +6,6 @@ args:
       short: v
       multiple: true
       help: Sets the level of verbosity
-  - scorm:
-      short: s
-      help: Include the files necessary to make a SCORM package
-  - zip:
-      short: z
-      help: Create a zip file instead of a directory
 subcommands:
   - compile:
       about: Compile a rumbas exam (or question)
@@ -20,6 +14,12 @@ subcommands:
             help: The path to the exam or question file to use
             required: true
             index: 1
+        - scorm:
+            short: s
+            help: Include the files necessary to make a SCORM package
+        - zip:
+            short: z
+            help: Create a zip file instead of a directory
   - import:
       about: |-
         Import a numbas .exam file
