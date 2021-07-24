@@ -11,13 +11,16 @@ optional_overwrite! {
     pub struct NavigationSharedData {
         /// Password to begin the exam
         start_password: FileString, //TODO: Noneable, but "" is none in this case?
-        /// Whether the student can regenerate questions (alias of `can_regenerate`)
+        /// Whether the student can regenerate questions
+        /// Old name was `allow_regenerate`
         #[serde(alias = "allow_regenerate")]
         can_regenerate: bool,
         /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
+        /// Old name was `allow_steps`
         #[serde(alias = "allow_steps")]
         show_steps: bool,
         /// Whether the title page should be shown.
+        /// Old name was `show_frontpage`
         #[serde(alias = "show_frontpage")]
         show_title_page: bool,
         /// Whether the student will be asked to confirm when leaving the exam.
@@ -117,7 +120,8 @@ optional_overwrite! {
         /// (flattened field) The data shared between all types of navigation
         #[serde(flatten)]
         shared_data: NavigationSharedData,
-        /// Whether the student can move back to previous question (alias of `reverse`)
+        /// Whether the student can move back to previous question
+        /// Old name was `reverse`
         #[serde(alias = "reverse")]
         can_move_to_previous: bool,
         /// Whether the student can jump to any question.
@@ -341,10 +345,15 @@ impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
 
 optional_overwrite! {
     pub struct QuestionNavigation {
+        /// Whether the student can regenerate the question
+        /// Old name was `allow_regenerate`
         #[serde(alias = "allow_regenerate")]
         can_regenerate: bool,
+        /// Whether the title page should be shown.
+        /// Old name was `show_frontpage`
         #[serde(alias = "show_frontpage")]
         show_title_page: bool,
+        /// Whether the student will be asked to confirm when leaving the exam.
         prevent_leaving: bool
     }
 }
