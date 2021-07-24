@@ -12,6 +12,8 @@ use std::convert::Into;
 //TODO: defaults
 question_part_type! {
     pub struct QuestionPartChooseOne {
+        /// Old name was `answers`
+        #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
@@ -351,6 +353,8 @@ optional_overwrite! {
 
 question_part_type! {
     pub struct QuestionPartChooseMultiple {
+        /// Old name was `answers`
+        #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
@@ -509,6 +513,8 @@ optional_overwrite! {
 
 question_part_type! {
     pub struct QuestionPartMatchAnswersWithItems {
+        /// Old name was `answers`
+        #[serde(alias = "answers")]
         answer_data: MultipleChoiceMatchAnswerData,
         shuffle_answers: bool,
         shuffle_items: bool,
