@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["TranslatableString","A translatable string"]],"fn":[["substitute",""]]});
+initSidebarItems({"enum":[["TranslatableString","A translatable string"]]});

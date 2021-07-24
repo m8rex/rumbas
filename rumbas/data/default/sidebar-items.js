@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["DefaultData",""],["DefaultFileType",""],["QuestionPartType",""]],"fn":[["combine_with_default_files",""],["default_file_paths",""],["default_files",""]],"struct":[["DefaultFile",""]]});
+initSidebarItems({"enum":[["DefaultData",""],["DefaultFileType",""]],"fn":[["combine_with_default_files",""]],"struct":[["DefaultFile",""]]});

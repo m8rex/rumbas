@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["QuestionPart",""],["VariableReplacementStrategy",""]]});
+initSidebarItems({"enum":[["CustomPartInputTypeValue",""],["QuestionPart",""],["QuestionPartBuiltin",""],["VariableReplacementStrategy",""]],"struct":[["QuestionPartCustom",""]]});

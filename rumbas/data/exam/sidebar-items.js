@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Exam","An Exam"]]});
+initSidebarItems({"enum":[["Exam",""]]});

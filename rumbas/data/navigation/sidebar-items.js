@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["LeaveAction",""],["ShowResultsPage",""]],"struct":[["Navigation",""],["QuestionNavigation",""]]});
+initSidebarItems({"enum":[["LeaveAction",""],["NormalNavigation",""],["ShowResultsPage",""]],"struct":[["DiagnosticNavigation",""],["MenuNavigation",""],["NavigationSharedData",""],["QuestionNavigation",""],["SequentialNavigation",""]]});

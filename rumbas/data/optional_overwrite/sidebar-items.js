@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Noneable",""]],"trait":[["OptionalOverwrite",""]]});
+initSidebarItems({"enum":[["Noneable",""],["VariableValued",""]],"struct":[["RumbasCheckInvalidData",""],["RumbasCheckMissingData",""],["RumbasCheckPath",""],["RumbasCheckResult",""]],"trait":[["OptionalOverwrite",""],["RumbasCheck",""]]});

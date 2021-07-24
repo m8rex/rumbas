@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DiagnosticScript",""]],"struct":[["Diagnostic","Information needed for a diagnostic test"],["DiagnosticExam","A Diagnostic Exam"],["LearningObjective","A Learning Objective"],["LearningTopic","A learning Topic"]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["TEMPLATE_EXAMS_FOLDER",""],["TEMPLATE_PREFIX",""],["TEMPLATE_QUESTIONS_FOLDER",""]],"enum":[["ExamFileType",""],["QuestionFileType",""],["ValueType",""]],"struct":[["TemplateData",""],["TemplateString",""],["Value",""]]});
+initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"enum":[["ExamFileType",""],["QuestionFileType",""],["ValueType",""]],"struct":[["TemplateData",""],["TemplateString",""],["Value",""]]});

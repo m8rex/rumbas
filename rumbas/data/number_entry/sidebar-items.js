@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["NumberEntryAnswer",""]],"struct":[["QuestionPartNumberEntry",""]]});
+initSidebarItems({"enum":[["AnswerStyle",""],["NumberEntryAnswer",""]],"struct":[["QuestionPartNumberEntry",""]]});

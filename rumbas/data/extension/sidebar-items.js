@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Extensions","Specify which extensions should be enabled"]]});
+initSidebarItems({"struct":[["Extensions","Specify which extensions should be enabled"],["QuestionPartExtension",""]]});
