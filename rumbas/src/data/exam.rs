@@ -10,12 +10,14 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum Exam {
-    Normal(NormalExam),
-    Diagnostic(DiagnosticExam),
+optional_overwrite_enum! {
+    #[serde(rename_all = "snake_case")]
+    #[serde(tag = "type")]
+    pub enum Exam {
+        Normal(NormalExam),
+        Diagnostic(DiagnosticExam)
+    }
 }
-impl_optional_overwrite!(Exam); // TODO?
 
 impl ToNumbas for Exam {
     type NumbasType = numbas::exam::Exam;
