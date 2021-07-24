@@ -5,14 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2021-07-24
+## [Unreleased]
 
 ### Added
 
 - Support for `allow_printing` in navigation
-- Support for `stats`, `geogebra` and `eukleides` extensions (you will need to add a default value to `defauls/question.yaml` for the these extensions)
-- Support for `simplify_no_leading_minus`, `simplify_fractions`, `simplify_trigonometric`, `cancel_terms`, `cancel_factors`, `collect_like_fractions`, `order_canonical`, `use_times_dot` and `expand_brackets` in answer simplification.
-- `value_generators` support in JME
+- Support for `geogebra` and `eukleides` extensions (you will need to add a default value to `defauls/question.yaml` for the these extensions)
 - Support for diagnostic exams
 - `builtin_constants` and `custom_constants` in question description
 - `diagnostic_topic_names` in question description
@@ -37,9 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `answers` field in multiple choice parts in renamed to `answer_data` (old name is still allowed)
 - Renamed and added some AnswerStyles. `plain` is renamed to `english-plain` etc
 - `allow_regenerate` field in navigation is changed to `can_regenerate` (old name is still allowed)
-
 - `allow_steps` field in navigation is changed to `show_steps` (old name is still allowed)
-
 - `show_frontpage` field in navigation is changed to `show_title_page` (old name is still allowed)
 - `reverse` field in navigation is changed to `can_move_to_previous` (old name is still allowed)
 
@@ -47,6 +43,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `checking_type` option in `number_entry` questionparts
 - `name` and `strings` options in `must_match_pattern` option of `jme` questionparts
+
+## [0.3.1] - 2021-07-24
+
+### Added
+
+- Support for `stats` extension (you will need to add a default value to `defauls/question.yaml` for the `stats` extension)
+- Support for `simplify_no_leading_minus`, `simplify_fractions`, `simplify_trigonometric`, `cancel_terms`, `cancel_factors`, `collect_like_fractions`, `order_canonical`, `use_times_dot` and `expand_brackets` in answer simplification.
+- `value_generators` support in JME
+
+### Changed
+
+- Numbas version
 
 ## [0.3.0] - 2020-12-17
 
