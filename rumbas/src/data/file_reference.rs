@@ -1,5 +1,5 @@
 use crate::data::input_string::InputString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use serde::Deserialize;
 use serde::Serialize;
@@ -7,30 +7,32 @@ use std::collections::HashMap;
 use std::path::Path;
 
 /// The prefix used to specify a file reference
-const FILE_PREFIX: &'static str = "file:";
+const FILE_PREFIX: &str = "file:";
 
 /// A string that has to be read from a file.
 ///
 /// Specified by a string starting with [FILE_PREFIX].
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
+#[serde(into = "String")]
 pub struct FileString {
     file_name: Option<String>,
     content: Option<InputString>,
     translated_content: HashMap<String, InputString>,
     error_message: Option<String>,
 }
-impl OptionalOverwrite for FileString {
-    type Item = FileString;
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for FileString {
+    fn check(&self) -> RumbasCheckResult {
         if let Some(e) = &self.error_message {
-            vec![e.clone()]
+            RumbasCheckResult::from_missing(Some(e.clone()))
         } else {
-            Vec::new()
+            RumbasCheckResult::empty()
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {}
-    fn insert_template_value(&mut self, _key: &String, _val: &serde_yaml::Value) {}
+}
+impl OptionalOverwrite<FileString> for FileString {
+    fn overwrite(&mut self, _other: &FileString) {}
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(FileString);
 
@@ -47,31 +49,30 @@ impl std::convert::From<String> for FileString {
                 }
             } else {
                 let relative_file_name = s.split(FILE_PREFIX).collect::<Vec<&str>>()[1];
-                let file_path = Path::new("questions").join(relative_file_name);
+                let file_path = Path::new(crate::QUESTIONS_FOLDER).join(relative_file_name);
                 let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
                 if let Some(file_dir) = file_path.parent() {
                     //Look for translation dirs
                     let mut translated_content = HashMap::new();
-                    for entry in file_dir.read_dir().expect("read_dir call failed") {
-                        if let Ok(entry) = entry {
-                            if let Ok(entry_name) = entry.file_name().into_string() {
-                                //println!("{}", entry_name);
-                                if entry_name.starts_with("locale-") {
-                                    let locale = entry_name
-                                        .splitn(2, "locale-")
-                                        .collect::<Vec<_>>()
-                                        .get(1)
-                                        .unwrap()
-                                        .to_string();
-                                    let locale_file_path =
-                                        file_dir.join(entry_name).join(file_name);
-                                    //println!("{}", locale_file_path.display());
-                                    if locale_file_path.exists() {
-                                        if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                                            //println!("{}", s);
-                                            translated_content
-                                                .insert(locale, InputString::from(s.clone()));
-                                        }
+                    for entry in file_dir.read_dir().expect("read_dir call failed").flatten()
+                    // We only care about the ones that are 'Ok'
+                    {
+                        if let Ok(entry_name) = entry.file_name().into_string() {
+                            //println!("{}", entry_name);
+                            if entry_name.starts_with("locale-") {
+                                let locale = entry_name
+                                    .splitn(2, "locale-")
+                                    .collect::<Vec<_>>()
+                                    .get(1)
+                                    .unwrap()
+                                    .to_string();
+                                let locale_file_path = file_dir.join(entry_name).join(file_name);
+                                //println!("{}", locale_file_path.display());
+                                if locale_file_path.exists() {
+                                    if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
+                                        //println!("{}", s);
+                                        translated_content
+                                            .insert(locale, InputString::from(s.clone()));
                                     }
                                 }
                             }
@@ -79,9 +80,9 @@ impl std::convert::From<String> for FileString {
                     }
 
                     let content = std::fs::read_to_string(&file_path)
-                        .map(|s| InputString::from(s.clone()))
+                        .map(InputString::from)
                         .ok();
-                    if content.is_none() && translated_content.len() == 0 {
+                    if content.is_none() && translated_content.is_empty() {
                         FileString {
                             file_name: Some(relative_file_name.to_string()),
                             content: None,
@@ -111,21 +112,32 @@ impl std::convert::From<String> for FileString {
     }
 }
 
+// Currently only implemented for conversion from numbas to rumbas: so not with translations or
+// file references
+impl std::convert::From<FileString> for String {
+    fn from(fs: FileString) -> Self {
+        if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
+            panic!("Deserializing FileString only supported when plain InputString")
+        }
+        fs.content.unwrap().into()
+    }
+}
+
 impl FileString {
-    pub fn get_content(&self, locale: &String) -> String {
+    pub fn get_content(&self, locale: &str) -> String {
         if let Some(c) = self.translated_content.get(locale) {
             return c.0.clone();
         }
         if let Some(c) = &self.content {
             return c.0.clone();
         }
-        panic!(format!("Missing translation for locale {}", locale)); //TODO
+        panic!("Missing translation for locale {}", locale); //TODO
     }
 
-    pub fn s(content: &String) -> FileString {
+    pub fn s(content: &str) -> FileString {
         FileString {
             file_name: None,
-            content: Some(InputString::from(content.clone())),
+            content: Some(InputString::from(content.to_string())),
             translated_content: HashMap::new(),
             error_message: None,
         }

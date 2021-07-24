@@ -1,2 +1,3 @@
-newline_style="Unix"
+newline_style = "Unix"
+report_todo = "Always"
 use_field_init_shorthand=true

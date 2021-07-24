@@ -1,8 +1,9 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
@@ -17,29 +18,30 @@ optional_overwrite! {
 
 impl ToNumbas for Variable {
     type NumbasType = numbas::exam::ExamVariable;
-    fn to_numbas_with_name(&self, locale: &String, name: String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(numbas::exam::ExamVariable::new(
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::ExamVariable {
                 name,
-                self.definition.clone().unwrap().get_content(&locale),
-                self.description.clone().unwrap(),
-                self.template_type
+                definition: self.definition.clone().unwrap().get_content(locale),
+                description: self.description.clone().unwrap(),
+                template_type: self
+                    .template_type
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
-                self.group.clone().unwrap(),
-            ))
+                group: self.group.clone().unwrap(),
+            })
         } else {
-            Err(empty_fields)
+            Err(check)
         }
     }
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
-        //TODO?
-        Err(vec![
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
+        panic!(
+            "{}",
             "Should not happen, don't call this method Missing name".to_string(),
-        ])
+        )
     }
 }
 
@@ -67,7 +69,7 @@ pub enum VariableTemplateType {
 
 impl ToNumbas for VariableTemplateType {
     type NumbasType = numbas::exam::ExamVariableTemplateType;
-    fn to_numbas(&self, _locale: &String) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(match self {
             VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
             VariableTemplateType::ListOfNumbers => {
@@ -88,31 +90,53 @@ impl ToNumbas for VariableTemplateType {
 }
 impl_optional_overwrite!(VariableTemplateType);
 
+impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
+    fn to_rumbas(&self) -> VariableTemplateType {
+        match self {
+            numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
+            numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
+                VariableTemplateType::ListOfNumbers
+            }
+            numbas::exam::ExamVariableTemplateType::ListOfStrings => {
+                VariableTemplateType::ListOfStrings
+            }
+            numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
+            numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
+            numbas::exam::ExamVariableTemplateType::RandomRange => {
+                VariableTemplateType::RandomRange
+            }
+            numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
+            numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
     ListOfStrings(Vec<Value<String>>),
     ListOfNumbers(Vec<Value<f64>>),
-    Long(Value<Variable>),
-    Number(Value<f64>),
-    Other(Value<VariableStringRepresentation>),
+    Long(Box<Variable>),
+    Number(f64),
+    Other(VariableStringRepresentation),
 }
 
-impl OptionalOverwrite for VariableRepresentation {
-    type Item = Self;
-    fn empty_fields(&self) -> Vec<String> {
+impl RumbasCheck for VariableRepresentation {
+    fn check(&self) -> RumbasCheckResult {
         match self {
-            VariableRepresentation::ListOfStrings(_) => Vec::new(),
-            VariableRepresentation::ListOfNumbers(_) => Vec::new(),
-            VariableRepresentation::Long(v) => v.empty_fields(),
-            VariableRepresentation::Number(_) => Vec::new(),
-            VariableRepresentation::Other(_) => Vec::new(),
+            VariableRepresentation::ListOfStrings(v) => v.check(),
+            VariableRepresentation::ListOfNumbers(v) => v.check(),
+            VariableRepresentation::Long(v) => v.check(),
+            VariableRepresentation::Number(v) => v.check(),
+            VariableRepresentation::Other(v) => v.check(),
         }
     }
-    fn overwrite(&mut self, _other: &Self::Item) {
+}
+impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
+    fn overwrite(&mut self, _other: &VariableRepresentation) {
         //TODO?
     }
-    fn insert_template_value(&mut self, key: &String, val: &serde_yaml::Value) {
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         match self {
             VariableRepresentation::ListOfStrings(v) => v.insert_template_value(key, val),
             VariableRepresentation::ListOfNumbers(v) => v.insert_template_value(key, val),
@@ -124,10 +148,10 @@ impl OptionalOverwrite for VariableRepresentation {
 }
 impl_optional_overwrite_value!(VariableRepresentation);
 
-fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &String) -> Variable {
+fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &str) -> Variable {
     Variable {
         template_type: Value::Normal(template_type),
-        definition: Value::Normal(FileString::s(definition)),
+        definition: Value::Normal(FileString::s(&definition.to_owned())),
         description: Value::Normal("".to_string()),
         group: Value::Normal(UNGROUPED_GROUP.to_string()),
     }
@@ -144,11 +168,11 @@ impl VariableRepresentation {
                 VariableTemplateType::ListOfNumbers,
                 &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
             ),
-            VariableRepresentation::Long(v) => v.clone().unwrap(),
+            VariableRepresentation::Long(v) => *(v.clone()),
             VariableRepresentation::Number(n) => {
-                create_ungrouped_variable(VariableTemplateType::Number, &n.unwrap().to_string())
+                create_ungrouped_variable(VariableTemplateType::Number, &n.to_string())
             }
-            VariableRepresentation::Other(o) => match o.unwrap() {
+            VariableRepresentation::Other(o) => match o {
                 VariableStringRepresentation::Anything(s) => {
                     create_ungrouped_variable(VariableTemplateType::Anything, &s)
                 }
@@ -161,6 +185,17 @@ impl VariableRepresentation {
                 ),
             },
         }
+    }
+}
+
+impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
+    fn to_rumbas(&self) -> VariableRepresentation {
+        VariableRepresentation::Long(Box::new(Variable {
+            definition: Value::Normal(FileString::s(&self.definition)),
+            description: Value::Normal(self.description.clone()),
+            template_type: Value::Normal(self.template_type.to_rumbas()),
+            group: Value::Normal(self.group.clone()),
+        }))
     }
 }
 
@@ -193,28 +228,28 @@ pub struct RangeData {
 }
 
 impl RangeData {
-    pub fn try_from_range(s: &String) -> Option<RangeData> {
-        let re = Regex::new(r"^(\d+(?:\.\d*)?) \.\. (\d+(?:\.\d*)?)\#(\d+(?:\.\d*)?)$")
+    pub fn try_from_range(s: &str) -> Option<RangeData> {
+        let re = Regex::new(r"^(\d+(?:\.\d*)?)\s*\.\.\s*(\d+(?:\.\d*)?)(\#(\d+(?:\.\d*)?))?$")
             .expect("It to be a valid regex");
         if let Some(c) = re.captures(s) {
             return Some(RangeData {
                 from: c.get(1).unwrap().as_str().parse().unwrap(),
                 to: c.get(2).unwrap().as_str().parse().unwrap(),
-                step: c.get(3).unwrap().as_str().parse().unwrap(),
+                step: c.get(4).map(|m| m.as_str()).unwrap_or("1").parse().unwrap(),
             });
         }
         None
     }
-    pub fn to_range(&self) -> String {
+    pub fn to_range(self) -> String {
         format!("{} .. {}#{}", self.from, self.to, self.step)
     }
-    pub fn try_from_random_range(s: &String) -> Option<RangeData> {
-        if s.starts_with("random(") && s.ends_with(")") {
+    pub fn try_from_random_range(s: &str) -> Option<RangeData> {
+        if s.starts_with("random(") && s.ends_with(')') {
             return RangeData::try_from_range(&s[7..s.len() - 1].to_string());
         }
         None
     }
-    pub fn to_random_range(&self) -> String {
+    pub fn to_random_range(self) -> String {
         format!("random({})", self.to_range())
     }
 }
@@ -238,7 +273,21 @@ mod test {
 
     #[test]
     fn random_range_ints() {
-        let s = "random(2 .. 10#1)".to_string();
+        let s = "random(2 .. 10#2)".to_string();
+        assert_eq!(
+            Some(RangeData {
+                from: 2.0,
+                to: 10.0,
+                step: 2.0
+            }),
+            RangeData::try_from_random_range(&s)
+        );
+        assert_eq!(None, RangeData::try_from_range(&s));
+    }
+
+    #[test]
+    fn random_range_ints_without_step() {
+        let s = "random(2..10)".to_string();
         assert_eq!(
             Some(RangeData {
                 from: 2.0,

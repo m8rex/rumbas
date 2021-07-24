@@ -1,9 +1,11 @@
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
+use sanitize_filename::sanitize;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -20,25 +22,45 @@ optional_overwrite! {
 
 impl ToNumbas for QuestionGroup {
     type NumbasType = numbas::exam::ExamQuestionGroup;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(numbas::exam::ExamQuestionGroup::new(
-                self.name.clone().map(|s| s.to_string(&locale)).flatten(),
-                self.picking_strategy
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::ExamQuestionGroup {
+                name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
+                picking_strategy: self
+                    .picking_strategy
                     .clone()
                     .unwrap()
-                    .to_numbas(&locale)
+                    .to_numbas(locale)
                     .unwrap(),
-                self.questions //TODO: add ToNumbas to QuestionPath?
+                questions: self
+                    .questions
                     .clone()
                     .unwrap()
                     .iter()
-                    .map(|q| q.to_numbas(&locale).unwrap())
+                    .map(|q| q.to_numbas(locale).unwrap())
                     .collect(),
-            ))
+            })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
+    fn to_rumbas(&self) -> QuestionGroup {
+        QuestionGroup {
+            name: Value::Normal(TranslatableString::s(
+                &self.name.clone().unwrap_or_default(),
+            )),
+            picking_strategy: Value::Normal(self.picking_strategy.to_rumbas()),
+            questions: Value::Normal(
+                self.questions
+                    .to_rumbas()
+                    .into_iter()
+                    .map(Value::Normal)
+                    .collect(),
+            ),
         }
     }
 }
@@ -59,7 +81,7 @@ impl ToNumbas for PickingStrategy {
     type NumbasType = numbas::exam::ExamQuestionGroupPickingStrategy;
     fn to_numbas(
         &self,
-        _locale: &String,
+        _locale: &str,
     ) -> NumbasResult<numbas::exam::ExamQuestionGroupPickingStrategy> {
         Ok(match self {
             PickingStrategy::AllOrdered => {
@@ -77,8 +99,27 @@ impl ToNumbas for PickingStrategy {
     }
 }
 
+impl ToRumbas<PickingStrategy> for numbas::exam::ExamQuestionGroupPickingStrategy {
+    fn to_rumbas(&self) -> PickingStrategy {
+        match self {
+            numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
+                PickingStrategy::AllOrdered
+            }
+            numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled => {
+                PickingStrategy::AllShuffled
+            }
+            numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset { pick_questions } => {
+                PickingStrategy::RandomSubset {
+                    pick_questions: *pick_questions,
+                }
+            }
+        }
+    }
+}
+
 optional_overwrite! {
     #[serde(try_from = "String")]
+    #[serde(into = "String")]
     pub struct QuestionPath {
         question_name: String,
         question_data: Question
@@ -89,10 +130,7 @@ impl std::convert::TryFrom<String> for QuestionPath {
     type Error = YamlError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = Question::from_name(&s).map_err(|e| {
-            println!("{}", e);
-            e
-        })?;
+        let question_data = Question::from_name(&s).map_err(|e| e)?;
         Ok(QuestionPath {
             question_name: Value::Normal(s),
             question_data: Value::Normal(question_data),
@@ -100,19 +138,34 @@ impl std::convert::TryFrom<String> for QuestionPath {
     }
 }
 
+impl std::convert::From<QuestionPath> for String {
+    fn from(q: QuestionPath) -> Self {
+        q.question_name.unwrap()
+    }
+}
+
 impl ToNumbas for QuestionPath {
     type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<Self::NumbasType> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
             Ok(self
                 .question_data
                 .clone()
                 .unwrap()
-                .to_numbas_with_name(&locale, self.question_name.clone().unwrap())
+                .to_numbas_with_name(locale, self.question_name.clone().unwrap())
                 .unwrap())
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
+    fn to_rumbas(&self) -> QuestionPath {
+        QuestionPath {
+            question_name: Value::Normal(sanitize(&self.name)),
+            question_data: Value::Normal(self.to_rumbas()),
         }
     }
 }

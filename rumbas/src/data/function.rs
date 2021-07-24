@@ -1,7 +1,8 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::{Noneable, OptionalOverwrite};
+use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_rumbas::ToRumbas;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -16,22 +17,34 @@ impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 
 impl ToNumbas for Function {
     type NumbasType = numbas::exam::ExamFunction;
-    fn to_numbas(&self, locale: &String) -> NumbasResult<numbas::exam::ExamFunction> {
-        let empty_fields = self.empty_fields();
-        if empty_fields.is_empty() {
-            Ok(numbas::exam::ExamFunction::new(
-                self.parameters
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFunction> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::ExamFunction {
+                parameters: self
+                    .parameters
                     .clone()
                     .unwrap()
                     .into_iter()
                     .map(|(a, b)| (a, b))
                     .collect(),
-                self.output_type.clone().unwrap(),
-                self.definition.clone().unwrap().get_content(&locale),
-                self.language.clone().unwrap(),
-            ))
+                output_type: self.output_type.clone().unwrap(),
+                definition: self.definition.clone().unwrap().get_content(locale),
+                language: self.language.clone().unwrap(),
+            })
         } else {
-            Err(empty_fields)
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<Function> for numbas::exam::ExamFunction {
+    fn to_rumbas(&self) -> Function {
+        Function {
+            definition: Value::Normal(FileString::s(&self.definition)),
+            output_type: Value::Normal(self.output_type),
+            language: Value::Normal(self.language),
+            parameters: Value::Normal(self.parameters.clone().into_iter().collect()),
         }
     }
 }

@@ -1,8 +1,17 @@
 [package]
 name = "rumbas"
-version = "0.3.1"
+version = "0.4.0-rc"
 authors = ["Jesse Hoobergs <jesse@hoobergs.be>"]
 edition = "2018"
+
+[[bin]]
+name = "rumbas"
+path = "src/main.rs"
+
+[lib]
+name = "rumbas"
+path = "src/lib.rs"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -13,3 +22,4 @@ serde_yaml = "0.8.13"
 numbas = {path="../numbas"}
 regex = "1"
 clap = {version = "2.33", features = ["yaml"]}
+sanitize-filename = "0.3.0"

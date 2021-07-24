@@ -1,4 +1,4 @@
-FROM rust:1.43.1-slim-stretch as builder
+FROM rust:1.53.0-slim as builder
 
 WORKDIR /usr/app
 RUN rustup target add x86_64-unknown-linux-musl
@@ -10,9 +10,12 @@ COPY numbas/src numbas/src
 
 RUN mkdir -p rumbas/src
 COPY rumbas/Cargo* rumbas/
+COPY rumbas/src/lib.rs rumbas/src/lib.rs
+RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/data.rs
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/main.rs
 RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
 RUN rm -f rumbas/target/x86_64-unknown-linux-musl/release/deps/rumbas*
+RUN rm -f rumbas/src/data.rs
 
 COPY rumbas/src rumbas/src
 RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
@@ -23,7 +26,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
-RUN git fetch && git checkout 89643bd0737730fc34711fee921af906af31ba04
+RUN git fetch && git checkout v6.0
 
 # Fetch jsx graph extension
 FROM alpine as jsxgraph_fetcher
@@ -39,7 +42,23 @@ WORKDIR /usr/app
 RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-stats.git stats
 WORKDIR /usr/app/stats
-RUN git fetch && git checkout  62ed29f8ef06dafef7b9fc47dc843d668e119966
+RUN git fetch && git checkout 62ed29f8ef06dafef7b9fc47dc843d668e119966
+
+# Fetch euklides extension
+FROM alpine as eukleides_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/numbas/numbas-extension-eukleides.git eukleides
+WORKDIR /usr/app/eukleides
+RUN git fetch && git checkout bac3d060cd70d79fb6f897f0a54076ec916b8e14
+
+# Fetch geogebra extension
+FROM alpine as geogebra_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/numbas/numbas-extension-geogebra.git geogebra
+WORKDIR /usr/app/geogebra
+RUN git fetch && git checkout 14fdb023341357134b6376f5f6084834587d6f8f
 
 # Main image
 FROM python:3.6.10-alpine 
@@ -51,7 +70,10 @@ RUN pip install -r requirements.txt
 RUN mkdir -p extensions
 COPY --from=jsxgraph_fetcher /usr/app/jsxgraph /usr/app/Numbas/extensions/jsxgraph
 COPY --from=stats_fetcher /usr/app/stats /usr/app/Numbas/extensions/stats
-
+COPY --from=geogebra_fetcher /usr/app/geogebra /usr/app/Numbas/extensions/geogebra
+RUN mkdir -p extensions/eukleides
+ # For now just use the js file in dist instead of using make
+COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numbas/extensions/eukleides
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
 COPY --from=builder /usr/app/rumbas/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas

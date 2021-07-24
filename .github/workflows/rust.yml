@@ -2,34 +2,104 @@ name: Rust
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  check_numbas:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          numbas/target
-          rumbas/target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - name: Build
-      run: cargo build --verbose
-      working-directory: rumbas
-    - name: Run tests
-      run: cargo test --verbose
-      working-directory: rumbas
-    - name: Run doc
-      run: cargo doc --no-deps
-      working-directory: rumbas
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: numbas
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: numbas
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: numbas
+
+  check_rumbas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        run: cargo build --verbose
+        working-directory: rumbas
+      - name: Run tests
+        run: cargo test --verbose
+        working-directory: rumbas
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: rumbas
+  check_cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install rumbas
+        run: cargo install --path .
+        working-directory: rumbas
+      - name: Clone Numbas & extensions
+        run: |-
+          git clone https://github.com/numbas/Numbas.git ~/NUMBAS
+          mkdir ~/NUMBAS/extensions
+          git clone https://github.com/numbas/numbas-extension-jsxgraph.git ~/NUMBAS/extensions/jsxgraph
+          git clone https://github.com/numbas/numbas-extension-stats.git ~/NUMBAS/extensions/stats
+          git clone https://github.com/numbas/numbas-extension-eukleides.git ~/NUMBAS/extensions/eukleides
+          git clone https://github.com/numbas/numbas-extension-geogebra.git ~/NUMBAS/extensions/geogebra # TODO: build the right js files?
+      - name: Run cli-tests
+        run: |-
+          export NUMBAS_FOLDER=~/NUMBAS
+          ./test.sh
+        working-directory: cli-tests
+  check_todos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Add nightly
+        run: |-
+          rustup install nightly
+          rustup +nightly component add rustfmt
+        working-directory: rumbas
+      - name: Check todo's
+        run: cargo +nightly fmt --all -- --check
+        working-directory: rumbas

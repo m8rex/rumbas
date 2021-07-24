@@ -1,0 +1,1079 @@
+// Numbas version: exam_results_page_options
+{
+  "name": "GeoGebra extension demo",
+  "metadata": {
+    "description": "<p>A few questions which use the GeoGebra extension.</p>",
+    "licence": "Creative Commons Attribution 4.0 International"
+  },
+  "duration": 0,
+  "percentPass": 0,
+  "showQuestionGroupNames": true,
+  "showstudentname": true,
+  "question_groups": [
+    {
+      "name": "Loading GeoGebra worksheets",
+      "pickingStrategy": "all-ordered",
+      "pickQuestions": 1,
+      "questionNames": ["", "", ""],
+      "questions": [
+        {
+          "name": "Create a GeoGebra worksheet entirely in Numbas",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>This question shows how to use the GeoGebra extension to start with a blank worksheet, and add objects to it.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "<p>The diagram below shows points at $\\var{p1}$ and $\\var{p2}$, as well as their midpoint.</p>\n<p>{app}</p>",
+          "advice": "",
+          "rulesets": {},
+          "variables": {
+            "app": {
+              "name": "app",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(\n  800,500,\n  [\n    A: [\n      definition: p1,\n      label_visible: false\n    ],\n    B: [\n      definition: p2,\n      label_visible: false\n    ],\n    m: [\n      definition: \"Midpoint(A,B)\",\n      label_visible: false\n    ]\n  ]\n)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "p1": {
+              "name": "p1",
+              "group": "Ungrouped variables",
+              "definition": "vector(random(-5..-2), random(-4..4 except 0))",
+              "description": "",
+              "templateType": "anything"
+            },
+            "p2": {
+              "name": "p2",
+              "group": "Ungrouped variables",
+              "definition": "vector(random(2..5), random(-4..4 except 0))",
+              "description": "",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": ["p1", "p2", "app"],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always"
+        },
+        {
+          "name": "Load a GeoGebra worksheet from a file",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [
+            [
+              "question-resources/material-dw4n67kf_vCI9659.ggb",
+              "/srv/numbas/media/question-resources/material-dw4n67kf_vCI9659.ggb"
+            ]
+          ],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>This question demonstrates how to display a GeoGebra worksheet loaded from a file attached to the question.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "<p>The diagram below has been loaded from a file.</p>\n<p>The point $A$ has been moved to $\\var{A}$ and locked.</p>\n<p>{geogebra_file('material-dw4n67kf_vCI9659.ggb',[\"A\":[\"definition\": A, \"fixed\": true]])}</p>",
+          "advice": "",
+          "rulesets": {},
+          "variables": {
+            "a": {
+              "name": "a",
+              "group": "Ungrouped variables",
+              "definition": "vector(random(0..2),random(0..2))",
+              "description": "",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": ["a"],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always"
+        },
+        {
+          "name": "Load a GeoGebra worksheet from geogebra.org",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>This question shows how to load a GeoGebra applet from geogebra.org.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "<p>This worksheet has been loaded from <a href=\"https://www.geogebra.org/m/UqJChZFJ\">https://www.geogebra.org/m/UqJChZFJ</a></p>\n<p>{geogebra_applet('https://www.geogebra.org/m/UqJChZFJ')}</p>",
+          "advice": "",
+          "rulesets": {},
+          "variables": {},
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": [],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always"
+        }
+      ]
+    },
+    {
+      "name": "Marking",
+      "pickingStrategy": "all-ordered",
+      "pickQuestions": 1,
+      "questionNames": ["", "", ""],
+      "questions": [
+        {
+          "name": "Mark a part as correct if the student moves a point to the right position",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>The student is shown a GeoGebra worksheet containing a single point on a grid. They must move the point to the required coordinates.</p>\n<p>The part is marked as correct if the point is in the right position.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "",
+          "advice": "",
+          "rulesets": {},
+          "variables": {
+            "app": {
+              "name": "app",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(\n  800,500,\n  [\n    \"A\": [\n      \"definition\": vector(0,0),\n      \"label_visible\": false\n    ]\n  ],\n  [\n    [\"A\", \"p0\"]\n  ]\n)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "target_position": {
+              "name": "target_position",
+              "group": "Ungrouped variables",
+              "definition": "vector(\n  random(-2..2 except 0),\n  random(-2..2 except 0)\n)",
+              "description": "",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": ["app", "target_position"],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [
+            {
+              "type": "extension",
+              "useCustomName": false,
+              "customName": "",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "pos:\n  value(app,\"A\")\n\nmark:\n  feedback(\"The point is at $\"+latex(app,'A')+\"$.\");\n  correctif(pos=target_position)\n\ninterpreted_answer:\n  pos",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{app}</p>\n<p>Move the point to $\\var[rowvector]{target_position}$.</p>"
+            }
+          ],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always"
+        },
+        {
+          "name": "Construct a polygon point by point",
+          "extensions": ["geogebra"],
+          "custom_part_types": [
+            {
+              "source": {
+                "pk": 1,
+                "author": { "name": "Christian Lawson-Perfect", "pk": 7 },
+                "edit_page": "/part_type/1/edit"
+              },
+              "name": "Yes/no",
+              "short_name": "yes-no",
+              "description": "<p>The student is shown two radio choices: \"Yes\" and \"No\". One of them is correct.</p>",
+              "help_url": "",
+              "input_widget": "radios",
+              "input_options": {
+                "correctAnswer": "if(eval(settings[\"correct_answer_expr\"]), 0, 1)",
+                "hint": { "static": true, "value": "" },
+                "choices": { "static": true, "value": ["Yes", "No"] }
+              },
+              "can_be_gap": true,
+              "can_be_step": true,
+              "marking_script": "mark:\nif(studentanswer=correct_answer,\n  correct(),\n  incorrect()\n)\n\ninterpreted_answer:\nstudentAnswer=0\n\ncorrect_answer:\nif(eval(settings[\"correct_answer_expr\"]),0,1)",
+              "marking_notes": [
+                {
+                  "name": "mark",
+                  "description": "This is the main marking note. It should award credit and provide feedback based on the student's answer.",
+                  "definition": "if(studentanswer=correct_answer,\n  correct(),\n  incorrect()\n)"
+                },
+                {
+                  "name": "interpreted_answer",
+                  "description": "A value representing the student's answer to this part.",
+                  "definition": "studentAnswer=0"
+                },
+                {
+                  "name": "correct_answer",
+                  "description": "",
+                  "definition": "if(eval(settings[\"correct_answer_expr\"]),0,1)"
+                }
+              ],
+              "settings": [
+                {
+                  "name": "correct_answer_expr",
+                  "label": "Is the answer \"Yes\"?",
+                  "help_url": "",
+                  "hint": "An expression which evaluates to <code>true</code> or <code>false</code>.",
+                  "input_type": "mathematical_expression",
+                  "default_value": "true",
+                  "subvars": false
+                }
+              ],
+              "public_availability": "always",
+              "published": true,
+              "extensions": []
+            }
+          ],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>This question demonstrates how to use GeoGebra applets in explore mode.</p>\n<p>The student must construct a polygon by adding points one at a time. At any point, they can answer the question, \"Is the centroid inside the polygon?\"</p>\n<p>GeoGebra's IsInRegion command is used to decide if the centroid is inside the polygon.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "",
+          "advice": "",
+          "rulesets": {},
+          "variables": {
+            "points": {
+              "name": "points",
+              "group": "Ungrouped variables",
+              "definition": "[\n  vector(0,0),\n  vector(1,0)\n]",
+              "description": "",
+              "templateType": "anything"
+            },
+            "centroid": {
+              "name": "centroid",
+              "group": "Ungrouped variables",
+              "definition": "vector(\n  sum_x,\n  sum_y\n)/len(points)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "sum_x": {
+              "name": "sum_x",
+              "group": "Ungrouped variables",
+              "definition": "sum(map(v[0],v,points))",
+              "description": "",
+              "templateType": "anything"
+            },
+            "sum_y": {
+              "name": "sum_y",
+              "group": "Ungrouped variables",
+              "definition": "sum(map(v[1],v,points))",
+              "description": "",
+              "templateType": "anything"
+            },
+            "show_centroid_applet": {
+              "name": "show_centroid_applet",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(500,500,\n  [\n    \"points\": [\n      \"definition\": points,\n      \"visible\": true\n    ],\n    \"p\": \"Polygon(points)\",\n    \"C\": [\n      \"definition\": centroid,\n      \"fixed\": true\n    ],\n    \"contained\": \"IsInRegion(C,p)\"\n  ]\n)",
+              "description": "<p>An applet showing the position of the centroid.</p>",
+              "templateType": "anything"
+            },
+            "show_points_applet": {
+              "name": "show_points_applet",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(500,500,\n  [\n    \"points\": [\n      \"definition\": points,\n      \"visible\": true\n    ],\n    \"p\": \"Polygon(points)\"\n  ]\n)",
+              "description": "<p>An applet showing just the points defined so far.</p>",
+              "templateType": "anything"
+            },
+            "test_centroid_applet": {
+              "name": "test_centroid_applet",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(500,500,\n  [\n    \"points\": points,\n    \"p\": \"Polygon(points)\",\n    \"C\": [\n      \"definition\": centroid,\n      \"visible\": false\n    ],\n    \"contained\": \"IsInRegion(C,p)\"\n  ]\n)",
+              "description": "",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": [
+            "points",
+            "sum_x",
+            "sum_y",
+            "show_points_applet",
+            "centroid",
+            "show_centroid_applet",
+            "test_centroid_applet"
+          ],
+          "variable_groups": [],
+          "functions": {
+            "add_point_applet": {
+              "parameters": [["points", "list"]],
+              "type": "ggbapplet",
+              "language": "jme",
+              "definition": "geogebra_applet(500,500,\n  [\n    \"points\": [\n      \"definition\": points,\n      \"visible\": true\n    ],\n    \"p\": \"Polygon(points)\",\n    \"A\": vector(0.5,0.5)\n  ],\n  [\n    [\"A\",part_path]\n  ]\n)"
+            }
+          },
+          "preamble": { "js": "", "css": "" },
+          "parts": [
+            {
+              "type": "matrix",
+              "useCustomName": true,
+              "customName": "Add a point",
+              "marks": "0",
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": false,
+              "showFeedbackIcon": false,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [
+                {
+                  "label": "Show the points",
+                  "rawLabel": "",
+                  "otherPart": 1,
+                  "variableReplacements": [
+                    {
+                      "variable": "points",
+                      "definition": "points+[transpose(interpreted_answer)[0]]"
+                    }
+                  ],
+                  "availabilityCondition": "answered",
+                  "penalty": "",
+                  "penaltyAmount": 0,
+                  "lockAfterLeaving": false
+                },
+                {
+                  "label": "Add another point",
+                  "rawLabel": "Add another point",
+                  "otherPart": 0,
+                  "variableReplacements": [
+                    {
+                      "variable": "points",
+                      "definition": "points+[transpose(interpreted_answer)[0]]"
+                    }
+                  ],
+                  "availabilityCondition": "answered",
+                  "penalty": "",
+                  "penaltyAmount": 0,
+                  "lockAfterLeaving": false
+                }
+              ],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{add_point_applet(points)}</p>\n<p>Add a point to the polygon.</p>\n<p>Either write the coordinates below or move the point $A$ in the diagram above.</p>",
+              "correctAnswer": "vector(0,0)",
+              "correctAnswerFractions": false,
+              "numRows": "2",
+              "numColumns": 1,
+              "allowResize": false,
+              "tolerance": 0,
+              "markPerCell": false,
+              "allowFractions": false,
+              "minColumns": 1,
+              "maxColumns": 0,
+              "minRows": 1,
+              "maxRows": 0
+            },
+            {
+              "type": "information",
+              "useCustomName": true,
+              "customName": "Show the points",
+              "marks": 0,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [
+                {
+                  "label": "Is the centroid in the polygon?",
+                  "rawLabel": "",
+                  "otherPart": 2,
+                  "variableReplacements": [],
+                  "availabilityCondition": "len(points)>=3",
+                  "penalty": "",
+                  "penaltyAmount": 0,
+                  "lockAfterLeaving": false
+                },
+                {
+                  "label": "Add a point",
+                  "rawLabel": "",
+                  "otherPart": 0,
+                  "variableReplacements": [],
+                  "availabilityCondition": "",
+                  "penalty": "",
+                  "penaltyAmount": 0,
+                  "lockAfterLeaving": false
+                }
+              ],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{show_points_applet}</p>"
+            },
+            {
+              "type": "yes-no",
+              "useCustomName": true,
+              "customName": "Is the centroid in the polygon?",
+              "marks": "2",
+              "scripts": {},
+              "customMarkingAlgorithm": "correct_answer:\n  if(value(test_centroid_applet,\"contained\"),0,1)",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [
+                {
+                  "label": "Show the centroid",
+                  "rawLabel": "",
+                  "otherPart": 3,
+                  "variableReplacements": [],
+                  "availabilityCondition": "not (answered and credit=1)",
+                  "penalty": "",
+                  "penaltyAmount": 0,
+                  "lockAfterLeaving": false
+                }
+              ],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": "Is the centroid in the polygon?",
+              "prompt": "<p>{test_centroid_applet}</p>\n<p>Is the centroid of this polygon inside the polygon?</p>",
+              "settings": { "correct_answer_expr": "true" }
+            },
+            {
+              "type": "information",
+              "useCustomName": true,
+              "customName": "Show the centroid",
+              "marks": 0,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{show_centroid_applet}</p>\n<p>The centroid is at $\\var{precround(centroid,2)}$.</p>"
+            }
+          ],
+          "partsMode": "explore",
+          "maxMarks": 0,
+          "objectives": [
+            {
+              "name": "Is the centroid in the polygon?",
+              "limit": "2",
+              "mode": "sum"
+            }
+          ],
+          "penalties": [
+            { "name": "Centroid shown", "limit": "1", "mode": "sum" }
+          ],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "when-active"
+        },
+        {
+          "name": "Link a GeoGebra object to a part's answer",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "tags": [],
+          "metadata": {
+            "description": "<p>This question demonstrates how to link a GeoGebra object to the answer to a part.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "",
+          "advice": "",
+          "rulesets": {},
+          "variables": {
+            "x": {
+              "name": "x",
+              "group": "Ungrouped variables",
+              "definition": "random(-2..2 except 0)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "y": {
+              "name": "y",
+              "group": "Ungrouped variables",
+              "definition": "random(-2..2 except 0)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "lines_app": {
+              "name": "lines_app",
+              "group": "Ungrouped variables",
+              "definition": "geogebra_applet(800,500,\n  [\n    \"A\": vector(0,0),\n    \"l1\": [\n      \"definition\": \"Line(({x},0),({x},1))\",\n      \"label_visible\": false\n    ],\n    \"l2\": [\n      \"definition\": \"Line((0,{y}),(1,{y}))\",\n      \"label_visible\": false\n    ]\n  ],\n  [\n    [\"A\",\"p0\"]\n  ]\n)",
+              "description": "<p>The applet for the first part, where the student must find the point of intersection of lines $x = \\var{x}$ and $y = \\var{y}$</p>",
+              "templateType": "anything"
+            },
+            "width": {
+              "name": "width",
+              "group": "Ungrouped variables",
+              "definition": "random(1..height-1)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "height": {
+              "name": "height",
+              "group": "Ungrouped variables",
+              "definition": "random(2..6)",
+              "description": "",
+              "templateType": "anything"
+            },
+            "area": {
+              "name": "area",
+              "group": "Ungrouped variables",
+              "definition": "width*height",
+              "description": "",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": [
+            "x",
+            "y",
+            "lines_app",
+            "width",
+            "height",
+            "area"
+          ],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [
+            {
+              "type": "matrix",
+              "useCustomName": false,
+              "customName": "",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{lines_app}</p>\n<p>What is the point of intersection of the lines $x = \\var{x}$ and $y=\\var{y}$?</p>\n<p>Enter the coordinates or move the point on the diagram above.</p>",
+              "correctAnswer": "matrix([[x],[y]])",
+              "correctAnswerFractions": false,
+              "numRows": "2",
+              "numColumns": 1,
+              "allowResize": true,
+              "tolerance": 0,
+              "markPerCell": false,
+              "allowFractions": false,
+              "minColumns": 1,
+              "maxColumns": 0,
+              "minRows": 1,
+              "maxRows": 0
+            },
+            {
+              "type": "numberentry",
+              "useCustomName": false,
+              "customName": "",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p>{geogebra_applet('https://www.geogebra.org/calculator/yms47z6u',[],[[\"area\",\"p1\"]])}</p>\n<p>What is the area of a rectangle with side lengths {width} and {height}? Drag the points on the diagram above to form the rectangle, and the area will be written below.</p>",
+              "minValue": "area",
+              "maxValue": "area",
+              "correctAnswerFraction": false,
+              "allowFractions": false,
+              "mustBeReduced": false,
+              "mustBeReducedPC": 0,
+              "showFractionHint": true,
+              "notationStyles": ["plain", "en", "si-en"],
+              "correctAnswerStyle": "plain"
+            }
+          ],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always"
+        }
+      ]
+    },
+    {
+      "name": "Illustration",
+      "pickingStrategy": "all-ordered",
+      "pickQuestions": 1,
+      "questionNames": ["Motion on a slope"],
+      "questions": [
+        {
+          "name": "GeoGebra test - motion on a slope",
+          "extensions": ["geogebra"],
+          "custom_part_types": [],
+          "resources": [],
+          "navigation": {
+            "allowregen": true,
+            "showfrontpage": false,
+            "preventleave": false
+          },
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            }
+          ],
+          "functions": {},
+          "ungrouped_variables": [],
+          "tags": [],
+          "preamble": { "css": "", "js": "" },
+          "advice": "<p>Either construct&nbsp;the intersection of two circles centred at $\\mathbf{a}$ and $\\mathbf{b}$, or use the Regular Polygon tool.</p>\n<p>(I could embed another GeoGebra applet here)</p>",
+          "rulesets": {},
+          "parts": [
+            {
+              "stepsPenalty": 0,
+              "precisionType": "dp",
+              "prompt": "<p>What is the total force acting on the mass, along the slope? Enter your answer in $\\mathrm{N}$, to 2 decimal places.</p>",
+              "precisionMessage": "<p>You have not given your answer to the correct precision.</p>",
+              "allowFractions": false,
+              "variableReplacements": [],
+              "maxValue": "mass*acceleration",
+              "strictPrecision": false,
+              "minValue": "mass*acceleration",
+              "variableReplacementStrategy": "originalfirst",
+              "steps": [
+                {
+                  "prompt": "<p>There are two forces acting on the mass: gravity and friction.</p>",
+                  "variableReplacements": [],
+                  "variableReplacementStrategy": "originalfirst",
+                  "showCorrectAnswer": true,
+                  "scripts": {},
+                  "marks": 0,
+                  "type": "information"
+                },
+                {
+                  "precisionType": "dp",
+                  "prompt": "<p>What is the force due to gravity, in the direction of the slope? Enter your answer in $\\mathrm{N}$, to 2 decimal places.</p>",
+                  "precisionMessage": "You have not given your answer to the correct precision.",
+                  "allowFractions": false,
+                  "variableReplacements": [],
+                  "maxValue": "mass*a_gravity",
+                  "strictPrecision": false,
+                  "minValue": "mass*a_gravity",
+                  "variableReplacementStrategy": "originalfirst",
+                  "precisionPartialCredit": 0,
+                  "correctAnswerFraction": false,
+                  "showCorrectAnswer": true,
+                  "precision": "2",
+                  "scripts": {},
+                  "marks": 1,
+                  "type": "numberentry",
+                  "showPrecisionHint": false
+                },
+                {
+                  "precisionType": "dp",
+                  "prompt": "<p>What is the force due to friction, in the direction of the slope? Enter your answer in $\\mathrm{N}$, to 2 decimal places.</p>",
+                  "precisionMessage": "<p>You have not given your answer to the correct precision.</p>",
+                  "allowFractions": false,
+                  "variableReplacements": [],
+                  "maxValue": "mass*a_friction",
+                  "strictPrecision": false,
+                  "minValue": "mass*a_friction",
+                  "variableReplacementStrategy": "originalfirst",
+                  "precisionPartialCredit": 0,
+                  "correctAnswerFraction": false,
+                  "showCorrectAnswer": true,
+                  "precision": "2",
+                  "scripts": {},
+                  "marks": 1,
+                  "type": "numberentry",
+                  "showPrecisionHint": false
+                }
+              ],
+              "precisionPartialCredit": 0,
+              "correctAnswerFraction": false,
+              "showCorrectAnswer": true,
+              "precision": "2",
+              "scripts": {},
+              "marks": "3",
+              "type": "numberentry",
+              "showPrecisionHint": false
+            },
+            {
+              "displayColumns": 0,
+              "prompt": "<p>What happens to the mass next?</p>",
+              "matrix": "if(acceleration=0,[0,1,0],[1,0,0])",
+              "shuffleChoices": false,
+              "variableReplacements": [],
+              "choices": [
+                "<p>It moves down the slope.</p>",
+                "<p>It moves up the slope.</p>",
+                "<p>It remains stationary.</p>"
+              ],
+              "variableReplacementStrategy": "originalfirst",
+              "maxMarks": 0,
+              "showCorrectAnswer": true,
+              "scripts": {},
+              "marks": 0,
+              "type": "1_n_2",
+              "displayType": "radiogroup",
+              "minMarks": 0
+            },
+            {
+              "precisionType": "dp",
+              "prompt": "<p>At what time&nbsp;does the mass reach the ground? Enter your answer in seconds to 2 decimal places, or $0$ if the mass never reaches the ground.</p>",
+              "precisionMessage": "<p>You have not given your answer to the correct precision.</p>",
+              "allowFractions": false,
+              "variableReplacements": [],
+              "maxValue": "t_ground",
+              "strictPrecision": false,
+              "minValue": "t_ground",
+              "variableReplacementStrategy": "originalfirst",
+              "precisionPartialCredit": 0,
+              "correctAnswerFraction": false,
+              "showCorrectAnswer": true,
+              "precision": "2",
+              "scripts": {},
+              "marks": 1,
+              "type": "numberentry",
+              "showPrecisionHint": false
+            }
+          ],
+          "statement": "<p>A mass of $\\var{mass}\\,\\mathrm{kg}$ is resting on a plane inclined at $\\var{incline}^{\\circ}$ to the horizontal. The distance along the plane from the ground to the mass is $\\var{distance}\\mathrm{m}$.</p>\n<p>A gravitational force&nbsp;of $9.8\\,\\mathrm{N/kg}$ is acting on the mass, and the coefficient of friction between the plane and the mass is $\\mu = \\var{c_friction}$.</p>\n<p>{geogebra_applet('xn3p5x73',[[\"height\",height],[\"c_\\{friction\\}\",c_friction],[\"mass\",mass]],[])}</p>",
+          "variable_groups": [
+            {
+              "variables": [
+                "height",
+                "c_friction",
+                "mass",
+                "incline",
+                "distance"
+              ],
+              "name": "Setup"
+            },
+            {
+              "variables": [
+                "slope",
+                "gravity",
+                "a_gravity",
+                "a_friction",
+                "acceleration_naive",
+                "acceleration"
+              ],
+              "name": "Acceleration"
+            },
+            { "variables": ["t_ground"], "name": "Answer" }
+          ],
+          "variablesTest": { "maxRuns": 100, "condition": "" },
+          "variables": {
+            "slope": {
+              "definition": "vector(cos(radians(incline)),sin(radians(incline)))",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "slope",
+              "description": ""
+            },
+            "acceleration": {
+              "definition": "if(acceleration_naive<0,acceleration_naive,0)",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "acceleration",
+              "description": ""
+            },
+            "incline": {
+              "definition": "precround(degrees(arctan(height/50)),1)",
+              "templateType": "anything",
+              "group": "Setup",
+              "name": "incline",
+              "description": ""
+            },
+            "t_ground": {
+              "definition": "if(acceleration=0,0,sqrt(-2*distance/acceleration))",
+              "templateType": "anything",
+              "group": "Answer",
+              "name": "t_ground",
+              "description": ""
+            },
+            "distance": {
+              "definition": "45",
+              "templateType": "anything",
+              "group": "Setup",
+              "name": "distance",
+              "description": ""
+            },
+            "a_friction": {
+              "definition": "let(f,dot(matrix([[0,1],[-1,0]])*slope,gravity)*c_friction,\n  min(f,-a_gravity)\n)",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "a_friction",
+              "description": ""
+            },
+            "c_friction": {
+              "definition": "random(0.01..0.5#0.01)",
+              "templateType": "anything",
+              "group": "Setup",
+              "name": "c_friction",
+              "description": ""
+            },
+            "gravity": {
+              "definition": "vector(0,-9.8)",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "gravity",
+              "description": ""
+            },
+            "a_gravity": {
+              "definition": "dot(gravity,slope)",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "a_gravity",
+              "description": ""
+            },
+            "mass": {
+              "definition": "random(5..35#5)",
+              "templateType": "anything",
+              "group": "Setup",
+              "name": "mass",
+              "description": ""
+            },
+            "acceleration_naive": {
+              "definition": "a_gravity+a_friction",
+              "templateType": "anything",
+              "group": "Acceleration",
+              "name": "acceleration_naive",
+              "description": ""
+            },
+            "height": {
+              "definition": "random(10..40)",
+              "templateType": "anything",
+              "group": "Setup",
+              "name": "height",
+              "description": ""
+            }
+          },
+          "metadata": {
+            "description": "<p>Given the gradient of a slope and the coefficient of friction for a mass resting on it,&nbsp;use the equations of motion to calculate how it moves.</p>\n<p>Includes a GeoGebra rendering of the model.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "type": "question",
+          "showQuestionGroupNames": false,
+          "question_groups": [
+            {
+              "name": "",
+              "pickingStrategy": "all-ordered",
+              "pickQuestions": 0,
+              "questions": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": {
+    "allowregen": true,
+    "reverse": true,
+    "browse": true,
+    "allowsteps": true,
+    "showfrontpage": false,
+    "showresultspage": "oncompletion",
+    "navigatemode": "menu",
+    "onleave": { "action": "none", "message": "" },
+    "preventleave": false,
+    "startpassword": ""
+  },
+  "timing": {
+    "allowPause": true,
+    "timeout": { "action": "none", "message": "" },
+    "timedwarning": { "action": "none", "message": "" }
+  },
+  "feedback": {
+    "showactualmark": true,
+    "showtotalmark": true,
+    "showanswerstate": true,
+    "allowrevealanswer": true,
+    "advicethreshold": 0,
+    "intro": "",
+    "reviewshowscore": true,
+    "reviewshowfeedback": true,
+    "reviewshowexpectedanswer": true,
+    "reviewshowadvice": true,
+    "feedbackmessages": []
+  },
+  "contributors": [
+    {
+      "name": "Christian Lawson-Perfect",
+      "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+    }
+  ],
+  "extensions": ["geogebra"],
+  "custom_part_types": [
+    {
+      "source": {
+        "pk": 1,
+        "author": { "name": "Christian Lawson-Perfect", "pk": 7 },
+        "edit_page": "/part_type/1/edit"
+      },
+      "name": "Yes/no",
+      "short_name": "yes-no",
+      "description": "<p>The student is shown two radio choices: \"Yes\" and \"No\". One of them is correct.</p>",
+      "help_url": "",
+      "input_widget": "radios",
+      "input_options": {
+        "correctAnswer": "if(eval(settings[\"correct_answer_expr\"]), 0, 1)",
+        "hint": { "static": true, "value": "" },
+        "choices": { "static": true, "value": ["Yes", "No"] }
+      },
+      "can_be_gap": true,
+      "can_be_step": true,
+      "marking_script": "mark:\nif(studentanswer=correct_answer,\n  correct(),\n  incorrect()\n)\n\ninterpreted_answer:\nstudentAnswer=0\n\ncorrect_answer:\nif(eval(settings[\"correct_answer_expr\"]),0,1)",
+      "marking_notes": [
+        {
+          "name": "mark",
+          "description": "This is the main marking note. It should award credit and provide feedback based on the student's answer.",
+          "definition": "if(studentanswer=correct_answer,\n  correct(),\n  incorrect()\n)"
+        },
+        {
+          "name": "interpreted_answer",
+          "description": "A value representing the student's answer to this part.",
+          "definition": "studentAnswer=0"
+        },
+        {
+          "name": "correct_answer",
+          "description": "",
+          "definition": "if(eval(settings[\"correct_answer_expr\"]),0,1)"
+        }
+      ],
+      "settings": [
+        {
+          "name": "correct_answer_expr",
+          "label": "Is the answer \"Yes\"?",
+          "help_url": "",
+          "hint": "An expression which evaluates to <code>true</code> or <code>false</code>.",
+          "input_type": "mathematical_expression",
+          "default_value": "true",
+          "subvars": false
+        }
+      ],
+      "public_availability": "always",
+      "published": true,
+      "extensions": []
+    }
+  ],
+  "resources": [
+    [
+      "question-resources/material-dw4n67kf_vCI9659.ggb",
+      "/srv/numbas/media/question-resources/material-dw4n67kf_vCI9659.ggb"
+    ]
+  ]
+}

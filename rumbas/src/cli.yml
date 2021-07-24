@@ -2,18 +2,34 @@ name: rumbas
 author: Jesse Hoobergs <jesse@hoobergs.be>
 about: Make online exercises great again!
 args:
-    - EXAM_OR_QUESTION_PATH:
-        help: The path to the exam or question file to use
-        required: true
-        index: 1
-    - verbose:
-        short: v
-        multiple: true
-        help: Sets the level of verbosity
-    - scorm:
-        short: s
-        help: Include the files necessary to make a SCORM package
-    - zip:
-        short: z
-        help: Create a zip file instead of a directory 
+  - verbose:
+      short: v
+      multiple: true
+      help: Sets the level of verbosity
 subcommands:
+  - compile:
+      about: Compile a rumbas exam (or question)
+      args:
+        - EXAM_OR_QUESTION_PATH:
+            help: The path to the exam or question file to use
+            required: true
+            index: 1
+        - scorm:
+            short: s
+            help: Include the files necessary to make a SCORM package
+        - zip:
+            short: z
+            help: Create a zip file instead of a directory
+  - import:
+      about: |-
+        Import a numbas .exam file
+            
+        Resources have to be manually placed in the resources folder
+      args:
+        - EXAM_PATH:
+            help: The path to the numbas .exam file
+            required: true
+            index: 1
+  - init:
+      about: |-
+        Initialize a rumbas project in this folder
