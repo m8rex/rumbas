@@ -38,7 +38,6 @@ impl ToNumbas for Variable {
         }
     }
     fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        //TODO?
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),

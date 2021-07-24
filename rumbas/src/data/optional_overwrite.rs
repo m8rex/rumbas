@@ -165,7 +165,7 @@ macro_rules! impl_optional_overwrite_value_only {
                     Some(ValueType::Template(ts)) => {
                         RumbasCheckResult::from_missing(Some(ts.yaml()))
                     },
-                    Some(ValueType::Invalid(v)) => { // TODO: report
+                    Some(ValueType::Invalid(v)) => {
                         RumbasCheckResult::from_invalid(v)
                     },
                         None => { RumbasCheckResult::from_missing(None)
@@ -379,7 +379,7 @@ macro_rules! optional_overwrite_enum {
             fn check(&self) -> RumbasCheckResult {
                 match self {
                 $(
-                    $enum::$field(val) => val.check() // TODO: stringify field or something? (to better show what failed)
+                    $enum::$field(val) => val.check()
                 ),*
                 }
             }

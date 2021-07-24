@@ -34,7 +34,7 @@ impl ToNumbas for QuestionGroup {
                     .to_numbas(locale)
                     .unwrap(),
                 questions: self
-                    .questions //TODO: add ToNumbas to QuestionPath?
+                    .questions
                     .clone()
                     .unwrap()
                     .iter()

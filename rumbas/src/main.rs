@@ -40,7 +40,8 @@ fn main() {
     }
 }
 fn compile(matches: &clap::ArgMatches) {
-    let numbas_path = env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set");
+    let numbas_path = env::var(rumbas::NUMBAS_FOLDER_ENV)
+        .expect(&format!("{} to be set", rumbas::NUMBAS_FOLDER_ENV)[..]);
     let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
     println!("{:?}", path.display());
     if path.is_absolute() {

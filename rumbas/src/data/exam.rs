@@ -66,7 +66,7 @@ impl Exam {
                     ),
                 );
                 let t = TemplateData {
-                    relative_template_path: "question_preview".to_string(), //TODO
+                    relative_template_path: crate::QUESTION_PREVIEW_TEMPLATE_NAME.to_string(),
                     data,
                 };
                 Ok(Template(t))

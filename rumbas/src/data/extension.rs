@@ -79,7 +79,8 @@ impl Extensions {
     }
 
     pub fn to_paths(&self) -> Vec<String> {
-        let numbas_path = std::env::var("NUMBAS_FOLDER").expect("NUMBAS_FOLDER to be set"); //TODO: static str for NUMBAS_FOLDER
+        let numbas_path = std::env::var(crate::NUMBAS_FOLDER_ENV)
+            .expect(&format!("{} to be set", crate::NUMBAS_FOLDER_ENV)[..]);
         let mut paths = Vec::new();
         if self.jsx_graph.unwrap() {
             paths.push("jsxgraph"); // TODO: add a toString?

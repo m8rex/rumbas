@@ -233,7 +233,6 @@ impl CustomPartTypeDefinition {
 impl ToNumbas for CustomPartTypeDefinition {
     type NumbasType = numbas::exam::CustomPartType;
     fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        //TODO?
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
