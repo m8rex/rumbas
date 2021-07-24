@@ -154,7 +154,7 @@ impl ToNumbas for NormalNavigation {
                 allow_steps: Some(self.to_shared_data().show_steps.unwrap()),
                 show_frontpage: self.to_shared_data().show_title_page.unwrap(),
                 show_results_page: self
-                    .show_results_page() // TODO
+                    .show_results_page()
                     .map(|s| s.to_numbas(locale).unwrap()),
                 prevent_leaving: Some(self.to_shared_data().prevent_leaving.unwrap()),
                 on_leave: self.on_leave().map(|s| s.to_numbas(locale).unwrap()),

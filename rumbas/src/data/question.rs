@@ -62,7 +62,7 @@ impl ToNumbas for Question {
         let check = self.check();
         if check.is_empty() {
             if self.variables.unwrap().contains_key("e") {
-                panic!("e is not allowed as a variable name"); //TODO
+                panic!("e is not allowed as a variable name"); //TODO is this still the case?
             }
             Ok(numbas::exam::ExamQuestion {
                 name,
