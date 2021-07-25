@@ -16,9 +16,14 @@ clean(){
   jq_in_place 'del(.question_groups[].questions[].metadata)' $NEW_FILE_NAME
   jq_in_place 'del(.metadata)' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].extensions[]|=sub("'$NUMBAS_FOLDER'/extensions/";"")' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].extensions|=sort' $NEW_FILE_NAME
   jq_in_place '.extensions[]|=sub("'$NUMBAS_FOLDER'/extensions/";"")' $NEW_FILE_NAME
+  jq_in_place '.extensions|=sort' $NEW_FILE_NAME
   jq_in_place '.resources[][1]|=sub(".*/question-resources/";"")' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].resources[][1]|=sub(".*/question-resources/";"")' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].tags|=map(select(.|startswith("skill:")))' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].tags|=sort' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].ungrouped_variables|=sort' $NEW_FILE_NAME
 }
 
 FILE_NUMBAS="tmp/"$3"-numbas.json"
