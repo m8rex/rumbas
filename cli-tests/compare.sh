@@ -24,6 +24,8 @@ clean(){
   jq_in_place '.question_groups[].questions[].tags|=map(select(.|startswith("skill:")))' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].tags|=sort' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].ungrouped_variables|=sort' $NEW_FILE_NAME
+  #jq_in_place '.question_groups[].questions[].parts[]|.displayColumns?|select(.)|=tonumber' $NEW_FILE_NAME
+  #jq_in_place '.question_groups[].questions[].parts[]|.maxMarks?|select(.)|=tonumber' $NEW_FILE_NAME
 }
 
 FILE_NUMBAS="tmp/"$3"-numbas.json"
