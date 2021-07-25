@@ -191,7 +191,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                 css: Value::Normal(FileString::s(&self.preamble.css)),
             }),
             navigation: Value::Normal(self.navigation.to_rumbas()),
-            extensions: Value::Normal(Extensions::from(&self.extensions)),
+            extensions: Value::Normal(self.extensions.to_rumbas()),
             diagnostic_topic_names: Value::Normal(
                 self.tags
                     .iter()
