@@ -29,7 +29,7 @@ impl ToNumbas for Extensions {
         if check.is_empty() {
             let mut extensions = Vec::new();
             if self.jsx_graph.unwrap() {
-                extensions.push("jsx_graph".to_string());
+                extensions.push("jsxgraph".to_string()); //TODO: Enum in numbas crate?
             }
             if self.stats.unwrap() {
                 extensions.push("stats".to_string());
@@ -47,10 +47,16 @@ impl ToNumbas for Extensions {
     }
 }
 
+impl ToRumbas<Extensions> for Vec<String> {
+    fn to_rumbas(&self) -> Extensions {
+        Extensions::from(self)
+    }
+}
+
 impl Extensions {
     pub fn from(v: &[String]) -> Self {
         Extensions {
-            jsx_graph: Value::Normal(v.contains(&"jsx_graph".to_string())),
+            jsx_graph: Value::Normal(v.contains(&"jsxgraph".to_string())),
             stats: Value::Normal(v.contains(&"stats".to_string())),
             eukleides: Value::Normal(v.contains(&"eukleides".to_string())),
             geogebra: Value::Normal(v.contains(&"geogebra".to_string())),
