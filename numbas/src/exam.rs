@@ -402,36 +402,50 @@ pub struct CustomPartTypeSettingCheckBox {
     default_value: bool,
 }
 
+// TODO: move options to sequence
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamNavigation {
+    #[serde(rename = "startpassword")]
+    pub start_password: Option<String>, //TODO: if empty string -> also None
     #[serde(rename = "allowregen")]
     pub allow_regenerate: bool,
-    #[serde(rename = "navigatemode")]
+    #[serde(flatten)]
     pub navigation_mode: ExamNavigationMode,
-    pub reverse: Option<bool>,
-    #[serde(rename = "browse")]
-    pub browsing_enabled: Option<bool>,
     #[serde(rename = "allowsteps")]
     pub allow_steps: Option<bool>,
     #[serde(rename = "showfrontpage")]
     pub show_frontpage: bool,
-    #[serde(rename = "showresultspage")]
-    pub show_results_page: Option<ExamShowResultsPage>,
     #[serde(rename = "preventleave")]
-    pub prevent_leaving: Option<bool>,
-    #[serde(rename = "onleave")]
-    pub on_leave: Option<ExamLeaveAction>,
-    #[serde(rename = "startpassword")]
-    pub start_password: Option<String>, //TODO: if empty string -> also None
+    pub confirm_when_leaving: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "lowercase")]
+#[serde(tag = "navigatemode")]
 pub enum ExamNavigationMode {
-    Sequence,
+    #[serde(rename = "sequence")]
+    Sequential(ExamNavigationModeSequential),
     Menu,
-    Diagnostic,
+    Diagnostic(ExamNavigationModeDiagnostic),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamNavigationModeSequential {
+    #[serde(rename = "onleave")]
+    pub on_leave: ExamLeaveAction,
+    #[serde(rename = "showresultspage")]
+    pub show_results_page: ExamShowResultsPage,
+    #[serde(rename = "reverse")]
+    pub can_move_to_previous: bool,
+    #[serde(rename = "browse")]
+    pub browsing_enabled: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ExamNavigationModeDiagnostic {
+    #[serde(rename = "onleave")]
+    pub on_leave: ExamLeaveAction,
 }
 
 #[skip_serializing_none]
@@ -442,7 +456,7 @@ pub struct QuestionNavigation {
     #[serde(rename = "showfrontpage")]
     pub show_frontpage: bool,
     #[serde(rename = "preventleave")]
-    pub prevent_leaving: Option<bool>,
+    pub confirm_when_leaving: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

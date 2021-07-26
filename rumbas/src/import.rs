@@ -60,7 +60,7 @@ fn convert_exam(
     Vec<CustomPartTypeDefinitionPath>,
 ) {
     let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
-        numbas::exam::ExamNavigationMode::Diagnostic => {
+        numbas::exam::ExamNavigationMode::Diagnostic(ref _d) => {
             let (exam, qgs, cpts) = convert_diagnostic_exam(exam);
             (
                 exam.name.clone().unwrap(),

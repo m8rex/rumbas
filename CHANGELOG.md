@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `allow_steps` field in navigation is changed to `show_steps` (old name is still allowed)
 - `show_frontpage` field in navigation is changed to `show_title_page` (old name is still allowed)
 - `reverse` field in navigation is changed to `can_move_to_previous` (old name is still allowed)
+- `prevent_leaving` field in navigation is changed to `confirm_when_leaving` (old name is still allowed)
 
 ### Removed
 
