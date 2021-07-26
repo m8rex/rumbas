@@ -601,6 +601,10 @@ pub struct ExamVariable {
     #[serde(rename = "templateType")]
     pub template_type: ExamVariableTemplateType,
     pub group: String,
+    /// If this is ticked, then when an exam uses this question the author can override the value
+    /// of this variable with their own choice.
+    #[serde(default)]
+    pub can_override: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

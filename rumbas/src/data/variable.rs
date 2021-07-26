@@ -32,6 +32,7 @@ impl ToNumbas for Variable {
                     .to_numbas(locale)
                     .unwrap(),
                 group: self.group.clone().unwrap(),
+                can_override: false, // Don't support overriding variables (yet?)
             })
         } else {
             Err(check)
