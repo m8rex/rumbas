@@ -26,6 +26,7 @@ clean(){
   jq_in_place '.question_groups[].questions[].ungrouped_variables|=sort' $NEW_FILE_NAME
   #jq_in_place '.question_groups[].questions[].parts[]|.displayColumns?|select(.)|=tonumber' $NEW_FILE_NAME
   #jq_in_place '.question_groups[].questions[].parts[]|.maxMarks?|select(.)|=tonumber' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].variablesTest.maxRuns|=tonumber' $NEW_FILE_NAME
 }
 
 FILE_NUMBAS="tmp/"$3"-numbas.json"
