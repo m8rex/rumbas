@@ -402,7 +402,6 @@ pub struct CustomPartTypeSettingCheckBox {
     default_value: bool,
 }
 
-// TODO: move options to sequence
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamNavigation {
