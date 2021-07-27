@@ -89,12 +89,23 @@ macro_rules! extensions {
     }
 }
 
-//TODO: add other extensions
+//fixme vis.js extension? (where to find?)
 extensions! {
-        jsx_graph: "jsxgraph",
-        stats: "stats",
+        chemistry: "chemistry",
+        download_text_file: "download-text-file",
         eukleides: "eukleides",
-        geogebra: "geogebra"
+        geogebra: "geogebra",
+        graphs: "graphs",
+        jsx_graph: "jsxgraph",
+        linear_algebra: "linear-algebra",
+        linear_codes: "codewords",
+        optimisation: "optimisation",
+        permutations: "permutations",
+        polynomials: "polynomials",
+        quantities: "quantities",
+        random_person: "random_person",
+        stats: "stats",
+        written_number: "written-number"
 }
 
 impl ToRumbas<Extensions> for Vec<String> {
