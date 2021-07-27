@@ -568,7 +568,7 @@
                 <span class="ident">css</span>: <span class="ident">Value::Normal</span>(<span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">preamble</span>.<span class="ident">css</span>)),
             }),
             <span class="ident">navigation</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_rumbas</span>()),
-            <span class="ident">extensions</span>: <span class="ident">Value::Normal</span>(<span class="ident">Extensions::from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">extensions</span>)),
+            <span class="ident">extensions</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">to_rumbas</span>()),
             <span class="ident">diagnostic_topic_names</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">tags</span>
                     .<span class="ident">iter</span>()

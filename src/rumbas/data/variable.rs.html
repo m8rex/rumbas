@@ -330,6 +330,7 @@
 <span id="327">327</span>
 <span id="328">328</span>
 <span id="329">329</span>
+<span id="330">330</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference::FileString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
@@ -365,6 +366,7 @@
                     .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
                     .<span class="ident">unwrap</span>(),
                 <span class="ident">group</span>: <span class="self">self</span>.<span class="ident">group</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
+                <span class="ident">can_override</span>: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)</span>
             })
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">check</span>)
