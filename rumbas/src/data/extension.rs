@@ -6,104 +6,100 @@ use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
 use serde::{Deserialize, Serialize};
 
-//TODO: add other extensions
-optional_overwrite! {
-    /// Specify which extensions should be enabled
-    pub struct Extensions {
-        /// Whether the jsx_graph extension is enabled
-        jsx_graph: bool,
-        /// Whether the stats extension is enabled
-        stats: bool,
-        /// Whether the eukleides extension is enabled
-        eukleides: bool,
-        /// Whether the geogebra extension is enabled
-        geogebra: bool
+macro_rules! extensions {
+    (
+        $(
+            $(#[$inner:meta])*
+            $name: ident: $path: literal
+        ),+
+    ) => {
+        optional_overwrite! {
+            /// Specify which extensions should be enabled
+            pub struct Extensions {
+                $(
+                    $(
+                        #[$inner]
+                    )*
+                    $name: bool
+                ),*
+            }
+        }
+
+        impl ToNumbas for Extensions {
+            type NumbasType = Vec<String>;
+            fn to_numbas(&self, _locale: &str) -> NumbasResult<Vec<String>> {
+                let check = self.check();
+                if check.is_empty() {
+                    let mut extensions = Vec::new();
+                    $(
+                        if self.$name.unwrap() {
+                            extensions.push($path.to_string()); //TODO: Enum in numbas crate?
+                        }
+                    )*
+                    Ok(extensions)
+                } else {
+                    Err(check)
+                }
+            }
+        }
+
+        impl Extensions {
+            pub fn from(v: &[String]) -> Self {
+                Extensions {
+                    $(
+                        $name: Value::Normal(v.contains(&$path.to_string()))
+                    ),*
+                }
+            }
+
+            pub fn combine(e: Extensions, f: Extensions) -> Extensions {
+                Extensions {
+                    $(
+                    $name: Value::Normal(e.$name.unwrap() || f.$name.unwrap())
+                    ),*
+                }
+            }
+
+            pub fn to_paths(&self) -> Vec<String> {
+                let numbas_path = std::env::var(crate::NUMBAS_FOLDER_ENV)
+                    .expect(&format!("{} to be set", crate::NUMBAS_FOLDER_ENV)[..]);
+                let mut paths = Vec::new();
+                $(
+                    if self.$name.unwrap() {
+                        paths.push($path);
+                    }
+                )*
+                paths
+                    .into_iter()
+                    .map(|s| format!("{}/extensions/{}", numbas_path, s))
+                    .collect()
+            }
+        }
+
+        impl Default for Extensions {
+            fn default() -> Extensions {
+                Extensions {
+                    $(
+                        $name: Value::Normal(false)
+                    ),*
+                }
+            }
+        }
+
     }
 }
 
-impl ToNumbas for Extensions {
-    // TODO: create macro
-    type NumbasType = Vec<String>;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Vec<String>> {
-        let check = self.check();
-        if check.is_empty() {
-            let mut extensions = Vec::new();
-            if self.jsx_graph.unwrap() {
-                extensions.push("jsxgraph".to_string()); //TODO: Enum in numbas crate?
-            }
-            if self.stats.unwrap() {
-                extensions.push("stats".to_string());
-            }
-            if self.eukleides.unwrap() {
-                extensions.push("eukleides".to_string());
-            }
-            if self.geogebra.unwrap() {
-                extensions.push("geogebra".to_string());
-            }
-            Ok(extensions)
-        } else {
-            Err(check)
-        }
-    }
+//TODO: add other extensions
+extensions! {
+        jsx_graph: "jsxgraph",
+        stats: "stats",
+        eukleides: "eukleides",
+        geogebra: "geogebra"
 }
 
 impl ToRumbas<Extensions> for Vec<String> {
     fn to_rumbas(&self) -> Extensions {
         Extensions::from(self)
-    }
-}
-
-impl Extensions {
-    pub fn from(v: &[String]) -> Self {
-        Extensions {
-            jsx_graph: Value::Normal(v.contains(&"jsxgraph".to_string())),
-            stats: Value::Normal(v.contains(&"stats".to_string())),
-            eukleides: Value::Normal(v.contains(&"eukleides".to_string())),
-            geogebra: Value::Normal(v.contains(&"geogebra".to_string())),
-        }
-    }
-}
-
-impl Default for Extensions {
-    fn default() -> Extensions {
-        Extensions {
-            jsx_graph: Value::Normal(false),
-            stats: Value::Normal(false),
-            eukleides: Value::Normal(false),
-            geogebra: Value::Normal(false),
-        }
-    }
-}
-impl Extensions {
-    pub fn combine(e: Extensions, f: Extensions) -> Extensions {
-        Extensions {
-            jsx_graph: Value::Normal(e.jsx_graph.unwrap() || f.jsx_graph.unwrap()),
-            stats: Value::Normal(e.stats.unwrap() || f.stats.unwrap()),
-            eukleides: Value::Normal(e.eukleides.unwrap() || f.eukleides.unwrap()),
-            geogebra: Value::Normal(e.geogebra.unwrap() || f.geogebra.unwrap()),
-        }
-    }
-
-    pub fn to_paths(&self) -> Vec<String> {
-        let numbas_path = std::env::var(crate::NUMBAS_FOLDER_ENV)
-            .expect(&format!("{} to be set", crate::NUMBAS_FOLDER_ENV)[..]);
-        let mut paths = Vec::new();
-        if self.jsx_graph.unwrap() {
-            paths.push("jsxgraph"); // TODO: add a toString?
-        }
-        if self.stats.unwrap() {
-            paths.push("stats");
-        }
-        if self.eukleides.unwrap() {
-            paths.push("eukleides");
-        }
-        if self.geogebra.unwrap() {
-            paths.push("geogebra");
-        }
-        paths
-            .into_iter()
-            .map(|s| format!("{}/extensions/{}", numbas_path, s))
-            .collect()
     }
 }
 
