@@ -158,6 +158,7 @@ fn compile(matches: &clap::ArgMatches) {
         }
         Err(e) => {
             println!("{}", e);
+            std::process::exit(1)
         }
     };
 }

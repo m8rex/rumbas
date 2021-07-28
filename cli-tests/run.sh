@@ -13,3 +13,5 @@ import_and_compile(){
 import_and_compile exam-110396-getting-started "Getting Started"
 import_and_compile exam-115828-diagnosys "DIAGNOSYS"
 import_and_compile exam-14065-geogebra-extension-demo "GeoGebra extension demo"
+import_and_compile exam-119218-jesse-s-copy-of-simplex-method "Simplex method"
+import_and_compile exam-11981-numbas-website-demo "Numbas website demo"

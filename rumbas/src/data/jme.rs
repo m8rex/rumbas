@@ -592,7 +592,7 @@ impl ToNumbas for JMERestriction {
                     .into_iter()
                     .map(|s| s.to_string(locale).unwrap())
                     .collect(),
-                partial_credit: self.partial_credit.clone().unwrap(),
+                partial_credit: self.partial_credit.clone().unwrap().into(),
                 message: self.message.clone().unwrap().to_string(locale).unwrap(),
             })
         } else {
@@ -612,7 +612,7 @@ impl ToRumbas<JMERestriction> for numbas::exam::JMERestriction {
                     .map(|s| TranslatableString::s(&s))
                     .collect(),
             ),
-            partial_credit: Value::Normal(self.partial_credit),
+            partial_credit: Value::Normal(self.partial_credit.0),
             message: Value::Normal(TranslatableString::s(&self.message)),
         }
     }
@@ -697,7 +697,7 @@ impl ToNumbas for JMEPatternRestriction {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMEPatternRestriction {
-                partial_credit: self.partial_credit.clone().unwrap(),
+                partial_credit: self.partial_credit.clone().unwrap().into(),
                 message: self.message.clone().unwrap().to_string(locale).unwrap(),
                 pattern: self.pattern.clone().unwrap(),
                 name_to_compare: self.name_to_compare.clone().unwrap(),
@@ -711,7 +711,7 @@ impl ToNumbas for JMEPatternRestriction {
 impl ToRumbas<JMEPatternRestriction> for numbas::exam::JMEPatternRestriction {
     fn to_rumbas(&self) -> JMEPatternRestriction {
         JMEPatternRestriction {
-            partial_credit: Value::Normal(self.partial_credit),
+            partial_credit: Value::Normal(self.partial_credit.0),
             message: Value::Normal(TranslatableString::s(&self.message.clone())),
             pattern: Value::Normal(self.pattern.clone()),
             name_to_compare: Value::Normal(self.name_to_compare.clone()),

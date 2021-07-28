@@ -34,8 +34,11 @@ pub struct NumbasDefaults {
     pub choose_one_has_to_select_option: bool,
     pub choose_one_show_cell_answer_state: bool,
     pub gapfill_sort_answers: bool,
-    pub match_answers_with_items_min_answers: usize,
-    pub choose_multiple_min_answers: usize,
+    pub match_answers_with_items_min_answers: crate::exam::SafeNatural,
+    pub choose_multiple_min_answers: crate::exam::SafeNatural,
+
+    pub pattern_match_case_sensitive: bool,
+    pub pattern_match_partial_credit: crate::exam::SafeFloat,
 
     pub jme_single_letter_variables: bool,
     pub jme_allow_unknown_functions: bool,
@@ -101,8 +104,11 @@ pub const DEFAULTS: NumbasDefaults = NumbasDefaults {
     choose_one_has_to_select_option: true,
     choose_one_show_cell_answer_state: true,
     gapfill_sort_answers: true,
-    match_answers_with_items_min_answers: 0,
-    choose_multiple_min_answers: 0,
+    match_answers_with_items_min_answers: crate::exam::SafeNatural(0),
+    choose_multiple_min_answers: crate::exam::SafeNatural(0),
+
+    pattern_match_case_sensitive: false,
+    pattern_match_partial_credit: crate::exam::SafeFloat(0.0),
 
     number_entry_fractions_must_be_reduced: false,
     number_entry_partial_credit_if_fraction_not_reduced: crate::exam::Primitive::Natural(0),

@@ -47,6 +47,7 @@ pub fn import(matches: &clap::ArgMatches) {
         }
         Err(e) => {
             eprintln!("Error: {:?}", e);
+            std::process::exit(1)
         }
     }
 }

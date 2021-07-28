@@ -4,6 +4,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
 use crate::data::translatable::TranslatableString;
+use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
@@ -24,8 +25,8 @@ impl ToNumbas for QuestionPartPatternMatch {
         if check.is_empty() {
             Ok(Self::NumbasType {
                 part_data: self.to_numbas_shared_data(locale),
-                case_sensitive: self.case_sensitive.unwrap(),
-                partial_credit: self.partial_credit.unwrap(),
+                case_sensitive: Some(self.case_sensitive.unwrap()),
+                partial_credit: Some(self.partial_credit.unwrap().into()),
                 answer: numbas::exam::Primitive::String(
                     self.pattern.clone().unwrap().to_string(locale).unwrap(),
                 ),
@@ -78,8 +79,15 @@ impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatter
             ),
             steps: Value::Normal(extract_part_common_steps(&self.part_data)),
 
-            case_sensitive: Value::Normal(self.case_sensitive),
-            partial_credit: Value::Normal(self.partial_credit),
+            case_sensitive: Value::Normal(
+                self.case_sensitive
+                    .unwrap_or(DEFAULTS.pattern_match_case_sensitive),
+            ),
+            partial_credit: Value::Normal(
+                self.partial_credit
+                    .unwrap_or(DEFAULTS.pattern_match_partial_credit)
+                    .0,
+            ),
             pattern: Value::Normal(TranslatableString::s(&self.answer.to_string())),
             display_answer: Value::Normal(TranslatableString::s(
                 &self
