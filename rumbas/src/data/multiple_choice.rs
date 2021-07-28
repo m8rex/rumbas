@@ -360,12 +360,14 @@ question_part_type! {
         show_cell_answer_state: bool,
         should_select_at_least: usize,
         should_select_at_most: Noneable<usize>,
-        columns: usize
+        columns: usize,
+        /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
+        wrong_nb_answers_warning_type:  numbas::exam::MultipleChoiceWarningType
         //min_marks & max_marks?
-        //TODO wrong_nb_choices_warning:
         //TODO other?
     }
 }
+impl_optional_overwrite!(numbas::exam::MultipleChoiceWarningType);
 
 impl ToNumbas for QuestionPartChooseMultiple {
     type NumbasType = numbas::exam::ExamQuestionPartChooseMultiple;
@@ -414,12 +416,13 @@ impl ToNumbas for QuestionPartChooseMultiple {
             };
             Ok(numbas::exam::ExamQuestionPartChooseMultiple {
                 part_data: self.to_numbas_shared_data(locale),
-                min_answers: Some(self.should_select_at_least.clone().unwrap()),
+                min_answers: Some(self.should_select_at_least.clone().unwrap().into()),
                 max_answers: self
                     .should_select_at_most
                     .clone()
                     .map(|s| s.to_numbas(locale).unwrap())
-                    .flatten(),
+                    .flatten()
+                    .map(|a| a.into()),
                 //.map(|a| a)
                 //.unwrap_or(None),
                 min_marks: Some(0usize), // todo?
@@ -427,7 +430,7 @@ impl ToNumbas for QuestionPartChooseMultiple {
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 choices,
                 display_columns: self.columns.unwrap().into(),
-                wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
+                wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.unwrap(),
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
                 marking_matrix,
                 distractors,
@@ -484,14 +487,17 @@ impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChoo
             show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
             should_select_at_least: Value::Normal(
                 self.min_answers
-                    .unwrap_or(DEFAULTS.choose_multiple_min_answers),
+                    .unwrap_or(DEFAULTS.choose_multiple_min_answers)
+                    .0,
             ),
             should_select_at_most: Value::Normal(
                 self.max_answers
+                    .map(|v| v.0)
                     .map(Noneable::NotNone)
                     .unwrap_or_else(Noneable::nn),
             ),
             columns: Value::Normal(self.display_columns.0),
+            wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning),
         }
     }
 }
@@ -524,7 +530,9 @@ question_part_type! {
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
-        layout: numbas::exam::MatchAnswersWithChoicesLayout
+        layout: numbas::exam::MatchAnswersWithChoicesLayout,
+        /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
+        wrong_nb_answers_warning_type: numbas::exam::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO wrong_nb_choices_warning:
         //TODO other?
@@ -607,19 +615,20 @@ impl ToNumbas for QuestionPartMatchAnswersWithItems {
             };
             Ok(numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
                 part_data: self.to_numbas_shared_data(locale),
-                min_answers: Some(self.should_select_at_least.clone().unwrap()),
+                min_answers: Some(self.should_select_at_least.clone().unwrap().into()),
                 max_answers: self
                     .should_select_at_most
                     .clone()
                     .map(|s| s.to_numbas(locale).unwrap())
-                    .flatten(),
-                min_marks: Some(0),
-                max_marks: Some(0),
+                    .flatten()
+                    .map(|v| v.into()),
+                min_marks: Some(0.into()),
+                max_marks: Some(0.into()),
                 shuffle_answers: self.shuffle_answers.unwrap(),
                 shuffle_choices: self.shuffle_items.unwrap(),
                 answers,
                 choices,
-                wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
+                wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.unwrap(),
                 layout: self.layout.clone().unwrap(),
                 show_cell_answer_state: self.show_cell_answer_state.unwrap(),
                 marking_matrix,
@@ -769,15 +778,18 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
             show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
             should_select_at_least: Value::Normal(
                 self.min_answers
-                    .unwrap_or(DEFAULTS.match_answers_with_items_min_answers),
+                    .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)
+                    .0,
             ),
             should_select_at_most: Value::Normal(
                 self.max_answers
+                    .map(|v| v.0)
                     .map(Noneable::NotNone)
                     .unwrap_or_else(Noneable::nn),
             ),
             display: Value::Normal(self.display_type.to_rumbas()),
             layout: Value::Normal(self.layout.clone()),
+            wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning),
         }
     }
 }
@@ -820,9 +832,11 @@ impl ToRumbas<MatchAnswerWithItemsDisplay> for numbas::exam::MatchAnswersWithCho
 }
 
 optional_overwrite_enum! {
-    #[serde(untagged)]
+    #[serde(tag = "type")]
     pub enum MultipleChoiceMatchAnswerData {
+        #[serde(rename = "item_based")]
         ItemBased(MultipleChoiceMatchAnswers),
+        #[serde(rename = "numbas_like")]
         NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike)
     }
 }

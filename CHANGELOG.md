@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `builtin_constants` and `custom_constants` in question description
 - `diagnostic_topic_names` in question description
 - `resources` in question description
-- Support for `NumbasLike` answers field for ChooseOne part
+- Support for `NumbasLike` answers field for ChooseOne part (this means that a type has to be specified)
 - Support for resources
 - `rumbas init`: command to initialize a rumbas project
 - `rumbas import`: command to import numbas .exam files

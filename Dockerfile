@@ -108,7 +108,7 @@ RUN git clone https://github.com/numbas/numbas-extension-optimisation.git optimi
 WORKDIR /usr/app/optimisation
 RUN git fetch && git checkout 06899711367414950c7118329cb7c7c1bbb0542e
 
-# Fetch optimisation extension
+# Fetch polynomials extension
 FROM alpine as polynomials_fetcher
 WORKDIR /usr/app
 RUN apk add git
@@ -116,7 +116,7 @@ RUN git clone https://github.com/numbas/numbas-extension-polynomials.git polynom
 WORKDIR /usr/app/polynomials
 RUN git fetch && git checkout ab321aa13dc80609393553190233d1a771d04e7c
 
-# Fetch optimisation extension
+# Fetch chemistry extension
 FROM alpine as chemistry_fetcher
 WORKDIR /usr/app
 RUN apk add git

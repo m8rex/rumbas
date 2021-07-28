@@ -250,7 +250,7 @@ macro_rules! question_part_type {
 question_part_type! {
     pub struct QuestionPartCustom {
         r#type: String,
-        settings: std::collections::HashMap<String, TranslatableString> //CustomPartInputTypeValue> // TODO
+        settings: std::collections::HashMap<String, CustomPartInputTypeValue>
     }
 }
 

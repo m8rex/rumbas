@@ -1,8 +1,8 @@
-//Currently based on https://github.com/numbas/Numbas/blob/f420421a7ef3c2cd4c39e43f377d2a363ae2f81e/bin/exam.py
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use std::collections::HashMap;
+use std::convert::TryInto;
 use std::fmt::Display;
 use std::str::FromStr;
 //TODO: remove Exam from front of all types?
@@ -34,85 +34,58 @@ where
     }
 }
 
-fn answer_simplification_deserialize<'de, D>(
-    deserializer: D,
-) -> Result<Option<Vec<AnswerSimplificationType>>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let deser_res: Result<serde_json::Value, _> = serde::Deserialize::deserialize(deserializer);
-    match deser_res {
-        Ok(serde_json::Value::String(s)) => {
-            let mut r = Vec::new();
-            for whole_item in s.split(',') {
-                let (item, value) = if whole_item.starts_with('!') {
-                    let mut chars = whole_item.chars();
-                    chars.next();
-                    (chars.as_str(), false)
-                } else {
-                    (whole_item, true)
-                };
-                let new_item = match item.to_lowercase().as_ref() {
-                    "all" => Ok(AnswerSimplificationType::All(value)),
-                    "basic" => Ok(AnswerSimplificationType::Basic(value)),
-                    "unitfactor" => Ok(AnswerSimplificationType::UnitFactor(value)),
-                    "unitpower" => Ok(AnswerSimplificationType::UnitPower(value)),
-                    "unitdenominator" => Ok(AnswerSimplificationType::UnitDenominator(value)),
-                    "zerofactor" => Ok(AnswerSimplificationType::ZeroFactor(value)),
-                    "zeroterm" => Ok(AnswerSimplificationType::ZeroTerm(value)),
-                    "zeropower" => Ok(AnswerSimplificationType::ZeroPower(value)),
-                    "collectnumbers" => Ok(AnswerSimplificationType::CollectNumbers(value)),
-                    "zerobase" => Ok(AnswerSimplificationType::ZeroBase(value)),
-                    "constantsfirst" => Ok(AnswerSimplificationType::ConstantsFirst(value)),
-                    "sqrtproduct" => Ok(AnswerSimplificationType::SqrtProduct(value)),
-                    "sqrtfivision" => Ok(AnswerSimplificationType::SqrtDivision(value)),
-                    "sqrtdquare" => Ok(AnswerSimplificationType::SqrtSquare(value)),
-                    "othernumbers" => Ok(AnswerSimplificationType::OtherNumbers(value)),
-                    "timesdot" => Ok(AnswerSimplificationType::TimesDot(value)),
-                    "expandbrackets" => Ok(AnswerSimplificationType::ExpandBrackets(value)),
-                    "noleadingminus" => Ok(AnswerSimplificationType::NoLeadingMinus(value)),
-                    "trig" => Ok(AnswerSimplificationType::Trigonometric(value)),
-                    "collectlikefractions" => {
-                        Ok(AnswerSimplificationType::CollectLikeFractions(value))
-                    }
-                    "canonicalorder" => Ok(AnswerSimplificationType::CanonicalOrder(value)),
-                    "cancelfactors" => Ok(AnswerSimplificationType::CancelFactors(value)),
-                    "cancelterms" => Ok(AnswerSimplificationType::CancelTerms(value)),
-                    "simplifyfractions" => Ok(AnswerSimplificationType::Fractions(value)),
-                    _ => {
-                        /*       Err(serde::de::Error::custom(format!(
-                            "unknown answer simplification type {}",
-                            item
-                        )))*/
-                        Ok(AnswerSimplificationType::Unknown((item.to_string(), value)))
-                    }
-                };
-                match new_item {
-                    Ok(a) => r.push(a),
-                    Err(m) => return Err(m),
-                }
+impl std::convert::TryFrom<&str> for AnswerSimplificationType {
+    type Error = &'static str;
+    fn try_from(whole_item: &str) -> Result<Self, Self::Error> {
+        let (item, value) = if whole_item.starts_with('!') {
+            let mut chars = whole_item.chars();
+            chars.next();
+            (chars.as_str(), false)
+        } else {
+            (whole_item, true)
+        };
+        match item.to_lowercase().as_ref() {
+            "all" => Ok(AnswerSimplificationType::All(value)),
+            "basic" => Ok(AnswerSimplificationType::Basic(value)),
+            "unitfactor" => Ok(AnswerSimplificationType::UnitFactor(value)),
+            "unitpower" => Ok(AnswerSimplificationType::UnitPower(value)),
+            "unitdenominator" => Ok(AnswerSimplificationType::UnitDenominator(value)),
+            "zerofactor" => Ok(AnswerSimplificationType::ZeroFactor(value)),
+            "zeroterm" => Ok(AnswerSimplificationType::ZeroTerm(value)),
+            "zeropower" => Ok(AnswerSimplificationType::ZeroPower(value)),
+            "collectnumbers" => Ok(AnswerSimplificationType::CollectNumbers(value)),
+            "zerobase" => Ok(AnswerSimplificationType::ZeroBase(value)),
+            "constantsfirst" => Ok(AnswerSimplificationType::ConstantsFirst(value)),
+            "sqrtproduct" => Ok(AnswerSimplificationType::SqrtProduct(value)),
+            "sqrtfivision" => Ok(AnswerSimplificationType::SqrtDivision(value)),
+            "sqrtdquare" => Ok(AnswerSimplificationType::SqrtSquare(value)),
+            "othernumbers" => Ok(AnswerSimplificationType::OtherNumbers(value)),
+            "timesdot" => Ok(AnswerSimplificationType::TimesDot(value)),
+            "expandbrackets" => Ok(AnswerSimplificationType::ExpandBrackets(value)),
+            "noleadingminus" => Ok(AnswerSimplificationType::NoLeadingMinus(value)),
+            "trig" => Ok(AnswerSimplificationType::Trigonometric(value)),
+            "collectlikefractions" => Ok(AnswerSimplificationType::CollectLikeFractions(value)),
+            "canonicalorder" => Ok(AnswerSimplificationType::CanonicalOrder(value)),
+            "cancelfactors" => Ok(AnswerSimplificationType::CancelFactors(value)),
+            "cancelterms" => Ok(AnswerSimplificationType::CancelTerms(value)),
+            "simplifyfractions" => Ok(AnswerSimplificationType::Fractions(value)),
+            _ => {
+                /*       Err(serde::de::Error::custom(format!(
+                    "unknown answer simplification type {}",
+                    item
+                )))*/
+                Ok(AnswerSimplificationType::Unknown((item.to_string(), value)))
             }
-            Ok(Some(r))
         }
-        Ok(v) => Err(serde::de::Error::custom(format!(
-            "string expected but found something else: {}",
-            v
-        ))),
-        Err(_) => Ok(None),
     }
 }
 
-fn answer_simplification_serialize<S>(
-    values_o: &Option<Vec<AnswerSimplificationType>>,
-    s: S,
-) -> Result<S::Ok, S::Error>
-where
-    S: serde::Serializer,
-{
-    if let Some(values) = values_o {
-        let mut parts: Vec<String> = Vec::new();
-        for value in values {
-            let new_item = match value {
+impl std::fmt::Display for AnswerSimplificationType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
                 AnswerSimplificationType::All(true) => "all".to_string(),
                 AnswerSimplificationType::All(false) => "!all".to_string(),
                 AnswerSimplificationType::Basic(true) => "basic".to_string(),
@@ -167,14 +140,124 @@ where
                 AnswerSimplificationType::Fractions(false) => "!simplifyFractions".to_string(),
                 AnswerSimplificationType::Unknown((n, true)) => n.to_string(),
                 AnswerSimplificationType::Unknown((n, false)) => format!("!{}", n),
-            };
-            parts.push(new_item.to_string());
+            }
+        )
+    }
+}
+
+impl std::convert::From<AnswerSimplificationType> for String {
+    fn from(a: AnswerSimplificationType) -> String {
+        format!("{}", a)
+    }
+}
+
+fn answer_simplification_deserialize_string<'de, D>(
+    deserializer: D,
+) -> Result<Option<Vec<AnswerSimplificationType>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let deser_res: Result<serde_json::Value, _> = serde::Deserialize::deserialize(deserializer);
+    match deser_res {
+        Ok(serde_json::Value::String(s)) => {
+            let mut r = Vec::new();
+            for whole_item in s.split(',') {
+                let new_item = whole_item.try_into();
+                match new_item {
+                    Ok(a) => r.push(a),
+                    Err(m) => {
+                        return Err(serde::de::Error::custom(format!(
+                            "unknown answer simplification type {}",
+                            m
+                        )))
+                    }
+                }
+            }
+            Ok(Some(r))
+        }
+        Ok(v) => Err(serde::de::Error::custom(format!(
+            "string expected but found something else: {}",
+            v
+        ))),
+        Err(_) => Ok(None),
+    }
+}
+
+fn answer_simplification_serialize_string<S>(
+    values_o: &Option<Vec<AnswerSimplificationType>>,
+    s: S,
+) -> Result<S::Ok, S::Error>
+where
+    S: serde::Serializer,
+{
+    if let Some(values) = values_o {
+        let mut parts: Vec<String> = Vec::new();
+        for value in values {
+            let new_item = value.to_string();
+            parts.push(new_item);
         }
         s.serialize_str(&parts.join(",")[..])
     } else {
         s.serialize_str("")
     }
 }
+
+/*
+fn answer_simplification_deserialize_vec<'de, D>(
+    deserializer: D,
+) -> Result<Option<Vec<AnswerSimplificationType>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let deser_res: Result<serde_json::Value, _> = serde::Deserialize::deserialize(deserializer);
+    match deser_res {
+        Ok(serde_json::Value::Array(v)) => {
+            let mut r = Vec::new();
+            for value in v.iter() {
+                match value {
+                    serde_json::Value::String(whole_item) => {
+                        let new_item = AnswerSimplificationType::from_str(whole_item);
+                        match new_item {
+                            Ok(a) => r.push(a),
+                            Err(m) => {
+                                return Err(serde::de::Error::custom(format!(
+                                    "unknown answer simplification type {}",
+                                    m
+                                )))
+                            }
+                        }
+                    }
+                    _ => {
+                        return Err(serde::de::Error::custom(format!(
+                            "string expected but found something else: {}",
+                            value
+                        )))
+                    }
+                }
+            }
+            Ok(Some(r))
+        }
+        Ok(v) => Err(serde::de::Error::custom(format!(
+            "string expected but found something else: {}",
+            v
+        ))),
+        Err(_) => Ok(None),
+    }
+}
+
+impl Serialize for Vec<AnswerSimplificationType> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::ser::Serializer,
+    {
+        let mut seq = serializer.serialize_seq(Some(self.len()))?;
+        for value in self.iter() {
+            seq.serialize_element(&value.to_string())?;
+        }
+        seq.end()
+    }
+}
+*/
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -350,6 +433,10 @@ pub enum CustomPartTypeSetting {
     MathematicalExpression(CustomPartTypeSettingMathematicalExpression),
     #[serde(rename = "string")]
     String(CustomPartTypeSettingString),
+    #[serde(rename = "dropdown")]
+    DropDown(CustomPartTypeSettingDropDown),
+    #[serde(rename = "percent")]
+    Percentage(CustomPartTypeSettingPercentage),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -400,6 +487,29 @@ pub struct CustomPartTypeSettingCheckBox {
     shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
     default_value: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartTypeSettingDropDown {
+    #[serde(flatten)]
+    shared_data: CustomPartTypeSettingSharedData,
+    /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    default_value: Primitive,
+    choices: Vec<CustomPartTypeSettingDropDownChoice>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartTypeSettingDropDownChoice {
+    value: Primitive,
+    label: Primitive,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct CustomPartTypeSettingPercentage {
+    #[serde(flatten)]
+    shared_data: CustomPartTypeSettingSharedData,
+    /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    default_value: Primitive,
 }
 
 #[skip_serializing_none]
@@ -507,8 +617,10 @@ pub struct ExamFeedback {
     #[serde(flatten)]
     pub review: Option<ExamReview>,
     pub advice: Option<String>,
+    #[serde(default)]
     pub intro: String,
     #[serde(rename = "feedbackmessages")]
+    #[serde(default)]
     pub feedback_messages: Vec<ExamFeedbackMessage>,
 }
 
@@ -685,7 +797,7 @@ pub struct ExamQuestion {
     pub functions: HashMap<String, ExamFunction>,
     pub ungrouped_variables: Vec<String>,
     pub variable_groups: Vec<ExamQuestionVariableGroup>,
-    pub rulesets: HashMap<String, String>, //TODO Type
+    pub rulesets: HashMap<String, Vec<AnswerSimplificationType>>,
     pub preamble: Preamble,
     //contributors TODO
     pub navigation: QuestionNavigation,
@@ -787,7 +899,7 @@ pub struct ExamQuestionPartCustom {
     pub r#type: String,
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
-    pub settings: std::collections::HashMap<String, String>, //TODO CustomPartInputTypeValue>,
+    pub settings: std::collections::HashMap<String, CustomPartInputTypeValue>,
 }
 
 // TODO: other types
@@ -813,8 +925,8 @@ pub struct ExamQuestionPartJME {
     #[serde(
         rename = "answerSimplification",
         default,
-        deserialize_with = "answer_simplification_deserialize",
-        serialize_with = "answer_simplification_serialize"
+        deserialize_with = "answer_simplification_deserialize_string",
+        serialize_with = "answer_simplification_serialize_string"
     )]
     pub answer_simplification: Option<Vec<AnswerSimplificationType>>, //comma separated list
     #[serde(rename = "showPreview")]
@@ -852,6 +964,8 @@ pub struct ExamQuestionPartJME {
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(try_from = "&str")]
+#[serde(into = "String")]
 pub enum AnswerSimplificationType {
     //TODO casing?
     All(bool),
@@ -907,7 +1021,7 @@ pub struct JMERestriction {
     pub name: String,
     pub strings: Vec<String>,
     #[serde(rename = "partialCredit")]
-    pub partial_credit: f64, //TODO: maybe usize?
+    pub partial_credit: SafeFloat, //TODO: maybe SafeNatural?
     pub message: String,
 }
 
@@ -932,7 +1046,7 @@ pub struct JMEStringRestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEPatternRestriction {
     #[serde(rename = "partialCredit")]
-    pub partial_credit: f64, //TODO: maybe usize?
+    pub partial_credit: SafeFloat, //TODO: maybe SafeNatural?
     pub message: String,
     pub pattern: String, //TODO type?
     #[serde(rename = "nameToCompare")]
@@ -1050,9 +1164,9 @@ pub struct QuestionPrecision {
     #[serde(rename = "precisionType")]
     precision_type: String, //TODO: enum ('none',...)
     #[serde(rename = "precision")]
-    precision: usize,
+    precision: SafeNatural,
     #[serde(rename = "precisionPartialCredit")]
-    precision_partial_credit: usize,
+    precision_partial_credit: SafeNatural,
     #[serde(rename = "precisionMessage")]
     precision_message: String,
     #[serde(rename = "strictPrecision")]
@@ -1079,19 +1193,19 @@ pub struct ExamQuestionPartMatrix {
     #[serde(rename = "correctAnswerFractions")]
     pub correct_answer_fractions: bool,
     #[serde(rename = "numRows")]
-    pub num_rows: SafeNatural,
+    pub num_rows: VariableValued<SafeNatural>,
     #[serde(rename = "numColumns")]
-    pub num_columns: SafeNatural,
+    pub num_columns: VariableValued<SafeNatural>,
     #[serde(rename = "allowResize")]
     pub allow_resize: bool,
     #[serde(rename = "minColumns")]
-    pub min_columns: usize,
+    pub min_columns: VariableValued<usize>,
     #[serde(rename = "maxColumns")]
-    pub max_columns: usize,
+    pub max_columns: VariableValued<usize>,
     #[serde(rename = "minRows")]
-    pub min_rows: usize,
+    pub min_rows: VariableValued<usize>,
     #[serde(rename = "maxRows")]
-    pub max_rows: usize,
+    pub max_rows: VariableValued<usize>,
     #[serde(rename = "tolerance")]
     pub tolerance: f64,
     #[serde(rename = "markPerCell")]
@@ -1107,9 +1221,9 @@ pub struct ExamQuestionPartPatternMatch {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
     #[serde(rename = "caseSensitive")]
-    pub case_sensitive: bool,
+    pub case_sensitive: Option<bool>,
     #[serde(rename = "partialCredit")]
-    pub partial_credit: f64,
+    pub partial_credit: Option<SafeFloat>,
     pub answer: Primitive,
     #[serde(rename = "displayAnswer")]
     pub display_answer: Option<Primitive>,
@@ -1125,7 +1239,7 @@ pub enum PatternMatchMode {
     Exact, //TODO: check all options
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
@@ -1147,7 +1261,7 @@ impl std::convert::From<usize> for SafeNatural {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A decimal number (float) that can be parsed from primitive
 pub struct SafeFloat(pub f64);
@@ -1225,7 +1339,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "displayColumns")]
     pub columns: SafeNatural, // How many columns to use to display the choices. Not usefull when dropdown -> optional? TODO
     #[serde(rename = "warningType")]
-    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses? TODO: not used for this type?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: Option<bool>,
     #[serde(rename = "matrix")]
@@ -1253,15 +1367,15 @@ pub struct ExamQuestionPartChooseMultiple {
     #[serde(rename = "maxMarks")]
     pub max_marks: Option<SafeNatural>, // Is there a maximum number of marks the student can get?
     #[serde(rename = "minAnswers")]
-    pub min_answers: Option<usize>, // Minimum number of responses the student must select
+    pub min_answers: Option<SafeNatural>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
-    pub max_answers: Option<usize>, // Maximum number of responses the student can select
+    pub max_answers: Option<SafeNatural>, // Maximum number of responses the student can select
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayColumns")]
     pub display_columns: SafeNatural, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
-    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    pub wrong_nb_choices_warning: MultipleChoiceWarningType, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
     pub choices: VariableValued<Vec<String>>,
@@ -1277,13 +1391,13 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
     #[serde(rename = "minMarks")]
-    pub min_marks: Option<usize>, //TODO; what is difference with minimum_marks? -> not for 1_n_2
+    pub min_marks: Option<SafeNatural>, //TODO; what is difference with minimum_marks? -> not for 1_n_2
     #[serde(rename = "maxMarks")]
-    pub max_marks: Option<usize>, // Is there a maximum number of marks the student can get? -> not for 1_n_2
+    pub max_marks: Option<SafeNatural>, // Is there a maximum number of marks the student can get? -> not for 1_n_2
     #[serde(rename = "minAnswers")]
-    pub min_answers: Option<usize>, // Minimum number of responses the student must select
+    pub min_answers: Option<SafeNatural>, // Minimum number of responses the student must select
     #[serde(rename = "maxAnswers")]
-    pub max_answers: Option<usize>, // Maximum number of responses the student can select -> always one for 1_n_2
+    pub max_answers: Option<SafeNatural>, // Maximum number of responses the student can select -> always one for 1_n_2
     #[serde(rename = "shuffleChoices")]
     pub shuffle_choices: bool,
     #[serde(rename = "shuffleAnswers")]
@@ -1293,7 +1407,7 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     //#[serde(rename = "displayColumns")] //TODO?
     //pub displayed_columns: usize, // How many columns to use to display the choices.
     #[serde(rename = "warningType")]
-    pub wrong_nb_choices_warning: Option<MultipleChoiceWarningType>, // What to do if the student picks the wrong number of responses?
+    pub wrong_nb_choices_warning: MultipleChoiceWarningType, // What to do if the student picks the wrong number of responses?
     pub layout: MatchAnswersWithChoicesLayout,
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
@@ -1310,10 +1424,12 @@ pub enum MatchAnswersWithChoicesDisplayType {
     #[serde(rename = "radiogroup")]
     Radio,
 }
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
 pub enum MultipleChoiceWarningType {
     #[serde(rename = "none")]
     None,
+    #[serde(rename = "prevent")]
+    Prevent,
     //TODO: also prevent and warn -> same as leave actions?
     //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
 }
@@ -1321,6 +1437,8 @@ pub enum MultipleChoiceWarningType {
 pub enum MatchAnswersWithChoicesLayoutType {
     #[serde(rename = "all")]
     All,
+    #[serde(rename = "lowertriangle")]
+    LowerTriangle,
     //TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766
 }
 #[skip_serializing_none]

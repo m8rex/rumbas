@@ -35,13 +35,17 @@ impl ToNumbas for QuestionPartMatrix {
                 part_data: self.to_numbas_shared_data(locale),
                 correct_answer: self.correct_answer.unwrap(),
                 correct_answer_fractions: self.display_correct_as_fraction.unwrap(),
-                num_rows: rows.default().into(),
-                num_columns: columns.default().into(),
+                num_rows: rows.default().to_numbas(locale).unwrap().map(|v| v.into()),
+                num_columns: columns
+                    .default()
+                    .to_numbas(locale)
+                    .unwrap()
+                    .map(|v| v.into()),
                 allow_resize: dimensions.is_resizable(),
-                min_columns: columns.min(),
-                max_columns: columns.max(),
-                min_rows: rows.min(),
-                max_rows: rows.max(),
+                min_columns: columns.min().to_numbas(locale).unwrap(),
+                max_columns: columns.max().to_numbas(locale).unwrap(),
+                min_rows: rows.min().to_numbas(locale).unwrap(),
+                max_rows: rows.max().to_numbas(locale).unwrap(),
                 tolerance: self.max_absolute_deviation.unwrap(),
                 mark_per_cell: self.mark_partial_by_cells.unwrap(),
                 allow_fractions: self.allow_fractions.unwrap(),
@@ -55,14 +59,14 @@ impl ToNumbas for QuestionPartMatrix {
 impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
         let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
-            self.num_rows.0,
-            self.min_rows,
-            self.max_rows,
+            self.num_rows.clone().map(|v| v.0).to_rumbas(),
+            self.min_rows.to_rumbas(),
+            self.max_rows.to_rumbas(),
         ));
         let columns = Value::Normal(QuestionPartMatrixDimension::from_range(
-            self.num_columns.0,
-            self.min_columns,
-            self.max_columns,
+            self.num_columns.clone().map(|v| v.0).to_rumbas(),
+            self.min_columns.to_rumbas(),
+            self.max_columns.to_rumbas(),
         ));
         let dimensions = QuestionPartMatrixDimensions { rows, columns };
         QuestionPartMatrix {
@@ -122,29 +126,29 @@ impl QuestionPartMatrixDimensions {
 
 optional_overwrite_enum! {
     pub enum QuestionPartMatrixDimension {
-        Fixed(usize),
+        Fixed(VariableValued<usize>),
         Resizable(Box<QuestionPartMatrixRangedDimension>)
     }
 }
 
 impl QuestionPartMatrixDimension {
-    pub fn default(&self) -> usize {
+    pub fn default(&self) -> VariableValued<usize> {
         match self {
-            QuestionPartMatrixDimension::Fixed(f) => *f,
+            QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => r.default.unwrap(),
         }
     }
-    pub fn min(&self) -> usize {
+    pub fn min(&self) -> VariableValued<usize> {
         match self {
-            QuestionPartMatrixDimension::Fixed(f) => *f,
+            QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => r.min.unwrap(),
         }
     }
-    pub fn max(&self) -> usize {
+    pub fn max(&self) -> VariableValued<usize> {
         match self {
-            QuestionPartMatrixDimension::Fixed(f) => *f,
+            QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => match r.max.unwrap() {
-                Noneable::None(_s) => 0,
+                Noneable::None(_s) => VariableValued::Value(0),
                 Noneable::NotNone(f) => f,
             },
         }
@@ -152,14 +156,18 @@ impl QuestionPartMatrixDimension {
     pub fn is_resizable(&self) -> bool {
         self.default() != self.min() || self.default() != self.max()
     }
-    pub fn from_range(min: usize, default: usize, max: usize) -> Self {
+    pub fn from_range(
+        min: VariableValued<usize>,
+        default: VariableValued<usize>,
+        max: VariableValued<usize>,
+    ) -> Self {
         if min == default && default == max {
             Self::Fixed(min)
         } else {
             Self::Resizable(Box::new(QuestionPartMatrixRangedDimension {
                 default: Value::Normal(default),
                 min: Value::Normal(min),
-                max: Value::Normal(if max == 0 {
+                max: Value::Normal(if max == VariableValued::Value(0) {
                     Noneable::None("none".to_string())
                 } else {
                     Noneable::NotNone(max)
@@ -172,10 +180,10 @@ impl QuestionPartMatrixDimension {
 optional_overwrite! {
     pub struct QuestionPartMatrixRangedDimension {
         /// The default size
-        default: usize,
+        default: VariableValued<usize>,
         /// The minimal size
-        min: usize,
+        min: VariableValued<usize>,
         /// The maximal size, if this is none, there is no limit
-        max: Noneable<usize>
+        max: Noneable<VariableValued<usize>>
     }
 }
