@@ -473,12 +473,12 @@ optional_overwrite! {
 }
 
 impl ToNumbas for CheckingTypeDataFloat {
-    type NumbasType = numbas::exam::JMECheckingTypeData<f64>;
+    type NumbasType = numbas::exam::JMECheckingTypeData<numbas::exam::SafeFloat>;
     fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMECheckingTypeData {
-                checking_accuracy: self.max_difference.unwrap(),
+                checking_accuracy: self.max_difference.unwrap().into(),
             })
         } else {
             Err(check)
@@ -547,12 +547,12 @@ impl ToRumbas<CheckingType> for numbas::exam::JMECheckingType {
         match self {
             numbas::exam::JMECheckingType::RelativeDifference(v) => {
                 CheckingType::RelativeDifference(CheckingTypeDataFloat {
-                    max_difference: Value::Normal(v.checking_accuracy),
+                    max_difference: Value::Normal(v.checking_accuracy.0),
                 })
             }
             numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
                 CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
-                    max_difference: Value::Normal(v.checking_accuracy),
+                    max_difference: Value::Normal(v.checking_accuracy.0),
                 })
             }
             numbas::exam::JMECheckingType::DecimalPlaces(v) => {
@@ -571,8 +571,7 @@ impl ToRumbas<CheckingType> for numbas::exam::JMECheckingType {
 
 optional_overwrite! {
     pub struct JMERestriction {
-        name: TranslatableString,
-        strings: Vec<TranslatableString>,
+        // name: TranslatableString,
         partial_credit: f64, //TODO, is number, so maybe usize?
         message: TranslatableString
     }
@@ -584,14 +583,7 @@ impl ToNumbas for JMERestriction {
         let check = self.check();
         if check.is_empty() {
             Ok(numbas::exam::JMERestriction {
-                name: self.name.clone().unwrap().to_string(locale).unwrap(),
-                strings: self
-                    .strings
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|s| s.to_string(locale).unwrap())
-                    .collect(),
+                // name: self.name.clone().unwrap().to_string(locale).unwrap(),
                 partial_credit: self.partial_credit.clone().unwrap().into(),
                 message: self.message.clone().unwrap().to_string(locale).unwrap(),
             })
@@ -604,14 +596,7 @@ impl ToNumbas for JMERestriction {
 impl ToRumbas<JMERestriction> for numbas::exam::JMERestriction {
     fn to_rumbas(&self) -> JMERestriction {
         JMERestriction {
-            name: Value::Normal(TranslatableString::s(&self.name)),
-            strings: Value::Normal(
-                self.strings
-                    .clone()
-                    .into_iter()
-                    .map(|s| TranslatableString::s(&s))
-                    .collect(),
-            ),
+            //name: Value::Normal(TranslatableString::s(&self.name)),
             partial_credit: Value::Normal(self.partial_credit.0),
             message: Value::Normal(TranslatableString::s(&self.message)),
         }
@@ -633,7 +618,7 @@ impl ToNumbas for JMELengthRestriction {
         if check.is_empty() {
             Ok(numbas::exam::JMELengthRestriction {
                 restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
-                length: Some(self.length.clone().unwrap()),
+                length: Some(self.length.clone().unwrap().into()),
             })
         } else {
             Err(check)
@@ -645,7 +630,11 @@ impl ToRumbas<JMELengthRestriction> for numbas::exam::JMELengthRestriction {
     fn to_rumbas(&self) -> JMELengthRestriction {
         JMELengthRestriction {
             restriction: Value::Normal(self.restriction.to_rumbas()),
-            length: Value::Normal(self.length.unwrap_or(DEFAULTS.length_restriction_length)),
+            length: Value::Normal(
+                self.length
+                    .map(|v| v.0)
+                    .unwrap_or(DEFAULTS.length_restriction_length),
+            ),
         }
     }
 }
@@ -654,7 +643,8 @@ optional_overwrite! {
     pub struct JMEStringRestriction {
         #[serde(flatten)]
         restriction: JMERestriction,
-        show_strings: bool
+        show_strings: bool,
+        strings: Vec<TranslatableString>
     }
 }
 
@@ -666,6 +656,13 @@ impl ToNumbas for JMEStringRestriction {
             Ok(numbas::exam::JMEStringRestriction {
                 restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
                 show_strings: self.show_strings.clone().unwrap(),
+                strings: self
+                    .strings
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|s| s.to_string(locale).unwrap())
+                    .collect(),
             })
         } else {
             Err(check)
@@ -678,6 +675,13 @@ impl ToRumbas<JMEStringRestriction> for numbas::exam::JMEStringRestriction {
         JMEStringRestriction {
             restriction: Value::Normal(self.restriction.to_rumbas()),
             show_strings: Value::Normal(self.show_strings),
+            strings: Value::Normal(
+                self.strings
+                    .clone()
+                    .into_iter()
+                    .map(|s| TranslatableString::s(&s))
+                    .collect(),
+            ),
         }
     }
 }

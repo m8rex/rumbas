@@ -653,8 +653,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
             self.choices.clone(),
             self.marking_matrix.clone(),
         ) {
-            // inverted_matrix[choice][answer]
-            let inverted_matrix: Vec<Vec<_>> = (0..choice_options.len())
+            // transposed_matrix[choice][answer]
+            let transposed_matrix: Vec<Vec<_>> = (0..choice_options.len())
                 .map(|choice_idx| {
                     marking_matrix
                         .clone()
@@ -670,7 +670,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
 
             let items_data: Vec<_> = choice_options
                 .into_iter()
-                .zip(inverted_matrix.into_iter())
+                .zip(marking_matrix.into_iter())
                 .collect();
 
             MultipleChoiceMatchAnswerData::ItemBased({

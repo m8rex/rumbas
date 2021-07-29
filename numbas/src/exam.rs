@@ -479,6 +479,7 @@ pub struct CustomPartTypeSettingCode {
     shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
     default_value: Primitive,
+    evaluate: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -811,6 +812,37 @@ pub struct ExamQuestion {
     pub custom_part_types: Vec<CustomPartType>,
 }
 
+#[derive(Debug, Deserialize)]
+struct ExamQuestionInput<'a> {
+    #[serde(borrow)]
+    question_groups: [ExamQuestionInputQuestionGroups<'a>; 1],
+}
+#[derive(Debug, Deserialize)]
+struct ExamQuestionInputQuestionGroups<'a> {
+    #[serde(borrow)]
+    questions: [HashMap<&'a str, serde_json::Value>; 1],
+}
+impl ExamQuestion {
+    pub fn from_question_exam_str(s: &str) -> serde_json::Result<ExamQuestion> {
+        let json = if s.starts_with("// Numbas version: exam_results_page_options") {
+            s.splitn(2, '\n').collect::<Vec<_>>()[1]
+        } else {
+            s
+        };
+        let exam: HashMap<String, serde_json::Value> = serde_json::from_str(json)?;
+        let question_input: ExamQuestionInput = serde_json::from_str(json)?;
+        let mut question = question_input.question_groups[0].questions[0].clone();
+        for key in ["resources", "extensions", "custom_part_types", "navigation"] {
+            if let Some(value) = exam.get(key) {
+                question.insert(key, value.to_owned());
+            }
+        }
+        let new_json = serde_json::to_string_pretty(&question).unwrap();
+        println!("{}", new_json);
+        serde_json::from_str(&new_json)
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Preamble {
@@ -906,8 +938,17 @@ pub struct ExamQuestionPartCustom {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
-    CheckBox(SafeBool),
+    CheckBox(bool),
     Code(Primitive),
+}
+
+impl std::convert::From<CustomPartInputTypeValue> for String {
+    fn from(v: CustomPartInputTypeValue) -> Self {
+        match v {
+            CustomPartInputTypeValue::CheckBox(v) => v.to_string(),
+            CustomPartInputTypeValue::Code(v) => v.to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1006,9 +1047,9 @@ pub struct JMECheckingTypeData<T> {
 #[serde(tag = "checkingType")]
 pub enum JMECheckingType {
     #[serde(rename = "reldiff")]
-    RelativeDifference(JMECheckingTypeData<f64>),
+    RelativeDifference(JMECheckingTypeData<SafeFloat>),
     #[serde(rename = "absdiff")]
-    AbsoluteDifference(JMECheckingTypeData<f64>),
+    AbsoluteDifference(JMECheckingTypeData<SafeFloat>),
     #[serde(rename = "dp")]
     DecimalPlaces(JMECheckingTypeData<usize>),
     #[serde(rename = "sigfig")]
@@ -1018,8 +1059,7 @@ pub enum JMECheckingType {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMERestriction {
-    pub name: String,
-    pub strings: Vec<String>,
+    //pub name: String,
     #[serde(rename = "partialCredit")]
     pub partial_credit: SafeFloat, //TODO: maybe SafeNatural?
     pub message: String,
@@ -1030,7 +1070,7 @@ pub struct JMERestriction {
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
-    pub length: Option<usize>,
+    pub length: Option<SafeNatural>,
 }
 
 #[skip_serializing_none]
@@ -1040,6 +1080,7 @@ pub struct JMEStringRestriction {
     pub restriction: JMERestriction,
     #[serde(rename = "showStrings")]
     pub show_strings: bool,
+    pub strings: Vec<String>,
 }
 
 #[skip_serializing_none]
@@ -1306,6 +1347,12 @@ impl std::convert::From<bool> for SafeBool {
     }
 }
 
+impl std::fmt::Display for SafeBool {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
@@ -1414,7 +1461,7 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     pub choices: VariableValued<Vec<String>>,
     pub answers: VariableValued<Vec<String>>,
     #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<Vec<Vec<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    pub marking_matrix: Option<VariableValued<Vec<Vec<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

@@ -11,43 +11,82 @@ use rumbas::data::template::Value;
 use rumbas::data::to_rumbas::ToRumbas;
 use rumbas::data::translatable::TranslatableString;
 
-macro_rules! read {
+macro_rules! read_exam {
     ($file_name: expr) => {{
         let content = std::fs::read_to_string($file_name).expect("Invalid file path");
         NExam::from_exam_str(content.as_ref())
     }};
 }
 
+macro_rules! read_question {
+    ($file_name: expr) => {{
+        let content = std::fs::read_to_string($file_name).expect("Invalid file path");
+        numbas::exam::ExamQuestion::from_question_exam_str(content.as_ref())
+    }};
+}
+
+fn create_question(qp: QuestionPath) {
+    let q_name = qp.question_name.clone().unwrap();
+    let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
+        .to_yaml()
+        .unwrap();
+    let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
+    println!("Writing to {}", file);
+    std::fs::write(file, q_yaml).unwrap(); //fix handle result
+}
+
+fn create_custom_part_type(cpt: CustomPartTypeDefinitionPath) {
+    let c_name = cpt.custom_part_type_name.clone();
+    let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
+    let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
+    println!("Writing to {}", file);
+    std::fs::write(file, c_yaml).unwrap(); //fix handle result
+}
+
 pub fn import(matches: &clap::ArgMatches) {
     let path = std::path::Path::new(matches.value_of("EXAM_PATH").unwrap());
-    let exam_res = read!(path);
-    match exam_res {
-        Ok(exam) => {
-            //println!("{:?}", exam);
-            let (name, rumbas_exam, qs, cpts) = convert_exam(exam);
-            for qp in qs.into_iter() {
-                let q_name = qp.question_name.clone().unwrap();
-                let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
-                    .to_yaml()
-                    .unwrap();
-                let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
-                println!("Writing to {}", file);
-                std::fs::write(file, q_yaml).unwrap(); //fix handle result
+    if matches.is_present("question") {
+        let question_res = read_question!(path);
+        match question_res {
+            Ok(question) => {
+                let rumbas_question: QuestionPath = question.to_rumbas();
+                for cpt in rumbas_question
+                    .question_data
+                    .unwrap()
+                    .custom_part_types
+                    .unwrap()
+                    .iter()
+                {
+                    create_custom_part_type(cpt.to_owned());
+                }
+                create_question(rumbas_question);
             }
-            for cpt in cpts.into_iter() {
-                let c_name = cpt.custom_part_type_name.clone();
-                let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
-                let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
-                println!("Writing to {}", file);
-                std::fs::write(file, c_yaml).unwrap(); //fix handle result
+            Err(e) => {
+                eprintln!("Error: {:?}", e);
+                std::process::exit(1)
             }
-            let exam_yaml = rumbas_exam.to_yaml().unwrap();
-            std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml).unwrap();
-            //fix handle result
         }
-        Err(e) => {
-            eprintln!("Error: {:?}", e);
-            std::process::exit(1)
+    } else {
+        let exam_res = read_exam!(path);
+        match exam_res {
+            Ok(exam) => {
+                //println!("{:?}", exam);
+                let (name, rumbas_exam, qs, cpts) = convert_exam(exam);
+                for qp in qs.into_iter() {
+                    create_question(qp)
+                }
+                for cpt in cpts.into_iter() {
+                    create_custom_part_type(cpt);
+                }
+                let exam_yaml = rumbas_exam.to_yaml().unwrap();
+                std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml)
+                    .unwrap();
+                //fix handle result
+            }
+            Err(e) => {
+                eprintln!("Error: {:?}", e);
+                std::process::exit(1)
+            }
         }
     }
 }

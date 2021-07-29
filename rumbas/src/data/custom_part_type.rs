@@ -22,7 +22,6 @@ pub struct CustomPartTypeDefinition {
     help_url: TranslatableString,
     published: bool,
     extensions: Extensions,
-    #[serde(flatten)]
     input_widget: CustomPartInputWidget,
     //TODO source
 }
@@ -63,6 +62,7 @@ where
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "type")]
 pub enum CustomPartInputWidget {
     //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
     #[serde(rename = "string")]
