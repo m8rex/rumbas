@@ -285,7 +285,7 @@ impl ToRumbas<CustomPartInputTypeValue> for numbas::exam::CustomPartInputTypeVal
     fn to_rumbas(&self) -> CustomPartInputTypeValue {
         match self {
             numbas::exam::CustomPartInputTypeValue::CheckBox(v) => {
-                CustomPartInputTypeValue::CheckBox(v.0)
+                CustomPartInputTypeValue::CheckBox(*v)
             }
             numbas::exam::CustomPartInputTypeValue::Code(v) => {
                 CustomPartInputTypeValue::Code(v.to_string())

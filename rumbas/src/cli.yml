@@ -30,6 +30,10 @@ subcommands:
             help: The path to the numbas .exam file
             required: true
             index: 1
+        - question:
+            short: q
+            multiple: true
+            help: Tells rumbas that this is the exam file of a numbas question instead of of a numbas exam.
   - init:
       about: |-
         Initialize a rumbas project in this folder

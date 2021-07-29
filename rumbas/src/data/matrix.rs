@@ -59,13 +59,13 @@ impl ToNumbas for QuestionPartMatrix {
 impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
         let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
-            self.num_rows.clone().map(|v| v.0).to_rumbas(),
             self.min_rows.to_rumbas(),
+            self.num_rows.clone().map(|v| v.0).to_rumbas(),
             self.max_rows.to_rumbas(),
         ));
         let columns = Value::Normal(QuestionPartMatrixDimension::from_range(
-            self.num_columns.clone().map(|v| v.0).to_rumbas(),
             self.min_columns.to_rumbas(),
+            self.num_columns.clone().map(|v| v.0).to_rumbas(),
             self.max_columns.to_rumbas(),
         ));
         let dimensions = QuestionPartMatrixDimensions { rows, columns };

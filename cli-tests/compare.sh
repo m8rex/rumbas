@@ -15,11 +15,17 @@ clean(){
   jq_in_place 'del(.contributors)' $NEW_FILE_NAME
   jq_in_place 'del(.question_groups[].questions[].metadata)' $NEW_FILE_NAME
   jq_in_place 'del(.metadata)' $NEW_FILE_NAME
+  jq_in_place 'del(.custom_part_types[].source)' $NEW_FILE_NAME
+  jq_in_place 'del(.question_groups[].questions[].custom_part_types[].source)' $NEW_FILE_NAME
+
   jq_in_place '.question_groups[].questions[].extensions[]|=sub("'$NUMBAS_FOLDER'/extensions/";"")' $NEW_FILE_NAME
+  jq_in_place '.question_groups[].questions[].extensions[]|=sub(".*/extensions/";"")' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].extensions|=sort' $NEW_FILE_NAME
   jq_in_place '.extensions[]|=sub("'$NUMBAS_FOLDER'/extensions/";"")' $NEW_FILE_NAME
+  jq_in_place '.extensions[]|=sub(".*/extensions/";"")' $NEW_FILE_NAME
   jq_in_place '.extensions|=sort' $NEW_FILE_NAME
   jq_in_place '.resources[][1]|=sub(".*/question-resources/";"")' $NEW_FILE_NAME
+  jq_in_place '.resources|=sort_by(.[0])' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].resources[][1]|=sub(".*/question-resources/";"")' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].tags|=map(select(.|startswith("skill:")))' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].tags|=sort' $NEW_FILE_NAME
@@ -27,6 +33,8 @@ clean(){
   #jq_in_place '.question_groups[].questions[].parts[]|.displayColumns?|select(.)|=tonumber' $NEW_FILE_NAME
   #jq_in_place '.question_groups[].questions[].parts[]|.maxMarks?|select(.)|=tonumber' $NEW_FILE_NAME
   jq_in_place '.question_groups[].questions[].variablesTest.maxRuns|=tonumber' $NEW_FILE_NAME
+  jq_in_place '.custom_part_types|=sort_by(.short_name)' $NEW_FILE_NAME
+  jq_in_place '.custom_part_types[].settings|=sort_by(.name)' $NEW_FILE_NAME
 }
 
 FILE_NUMBAS="tmp/"$3"-numbas.json"
