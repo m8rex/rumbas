@@ -281,6 +281,10 @@ pub struct Exam {
     pub diagnostic: Option<ExamDiagnostic>,
 }
 
+fn hacky_fix_exam(s: &str) -> String {
+    s.replace("\"checkingtype\":", "\"checkingType\":") // Can't use alias because it uses tag
+}
+
 impl Exam {
     pub fn from_exam_str(s: &str) -> serde_json::Result<Exam> {
         let json = if s.starts_with("// Numbas version: exam_results_page_options") {
@@ -288,7 +292,8 @@ impl Exam {
         } else {
             s
         };
-        serde_json::from_str(json)
+        let json = hacky_fix_exam(json);
+        serde_json::from_str(json.as_str())
     }
 
     //TODO: return Result type instead of printing errors
@@ -838,6 +843,17 @@ impl ExamQuestion {
             }
         }
         let new_json = serde_json::to_string_pretty(&question).unwrap();
+        let new_json = hacky_fix_exam(&new_json[..]);
+        //  TODO: log as debug
+        println!(
+            "{}",
+            new_json
+                .split('\n')
+                .enumerate()
+                .map(|(i, s)| format!("{} {}", i, s))
+                .collect::<Vec<_>>()
+                .join("\n")
+        );
         serde_json::from_str(&new_json)
     }
 }
@@ -970,17 +986,23 @@ pub struct ExamQuestionPartJME {
     )]
     pub answer_simplification: Option<Vec<AnswerSimplificationType>>, //comma separated list
     #[serde(rename = "showPreview")]
+    #[serde(alias = "showpreview")]
     pub show_preview: bool,
     #[serde(rename = "checkingType")]
+    #[serde(alias = "checkingtype")]
     #[serde(flatten)]
     pub checking_type: JMECheckingType,
+    /// If the comparison fails this many times or more, the student’s answer is marked as wrong.
     #[serde(rename = "failureRate")]
-    pub failure_rate: f64,
+    pub failure_rate: Option<f64>,
     #[serde(rename = "vsetRange")]
+    #[serde(alias = "vsetrange")]
     pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
     #[serde(rename = "vsetRangePoints")]
+    #[serde(alias = "vsetrangepoints")]
     pub vset_range_points: SafeNatural,
     #[serde(rename = "checkVariableNames")]
+    #[serde(alias = "checkvariablenames")]
     pub check_variable_names: bool,
     #[serde(rename = "singleLetterVariables")]
     pub single_letter_variables: Option<bool>,
@@ -1038,6 +1060,7 @@ pub enum AnswerSimplificationType {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMECheckingTypeData<T> {
     #[serde(rename = "checkingAccuracy")]
+    #[serde(alias = "checkingaccuracy")]
     pub checking_accuracy: T,
 }
 
