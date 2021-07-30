@@ -182,6 +182,14 @@
 <span id="179">179</span>
 <span id="180">180</span>
 <span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part</span>::{<span class="ident">QuestionPart</span>, <span class="ident">VariableReplacementStrategy</span>};
@@ -220,13 +228,17 @@
                 <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
                 <span class="ident">correct_answer</span>: <span class="self">self</span>.<span class="ident">correct_answer</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">correct_answer_fractions</span>: <span class="self">self</span>.<span class="ident">display_correct_as_fraction</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">num_rows</span>: <span class="ident">rows</span>.<span class="ident">default</span>().<span class="ident">into</span>(),
-                <span class="ident">num_columns</span>: <span class="ident">columns</span>.<span class="ident">default</span>().<span class="ident">into</span>(),
+                <span class="ident">num_rows</span>: <span class="ident">rows</span>.<span class="ident">default</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>()),
+                <span class="ident">num_columns</span>: <span class="ident">columns</span>
+                    .<span class="ident">default</span>()
+                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>()),
                 <span class="ident">allow_resize</span>: <span class="ident">dimensions</span>.<span class="ident">is_resizable</span>(),
-                <span class="ident">min_columns</span>: <span class="ident">columns</span>.<span class="ident">min</span>(),
-                <span class="ident">max_columns</span>: <span class="ident">columns</span>.<span class="ident">max</span>(),
-                <span class="ident">min_rows</span>: <span class="ident">rows</span>.<span class="ident">min</span>(),
-                <span class="ident">max_rows</span>: <span class="ident">rows</span>.<span class="ident">max</span>(),
+                <span class="ident">min_columns</span>: <span class="ident">columns</span>.<span class="ident">min</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">max_columns</span>: <span class="ident">columns</span>.<span class="ident">max</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">min_rows</span>: <span class="ident">rows</span>.<span class="ident">min</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">max_rows</span>: <span class="ident">rows</span>.<span class="ident">max</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
                 <span class="ident">tolerance</span>: <span class="self">self</span>.<span class="ident">max_absolute_deviation</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">mark_per_cell</span>: <span class="self">self</span>.<span class="ident">mark_partial_by_cells</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">unwrap</span>(),
@@ -240,14 +252,14 @@
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartMatrix</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::ExamQuestionPartMatrix</span> {
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">QuestionPartMatrix</span> {
         <span class="kw">let</span> <span class="ident">rows</span> <span class="op">=</span> <span class="ident">Value::Normal</span>(<span class="ident">QuestionPartMatrixDimension::from_range</span>(
-            <span class="self">self</span>.<span class="ident">num_rows</span>.<span class="number">0</span>,
-            <span class="self">self</span>.<span class="ident">min_rows</span>,
-            <span class="self">self</span>.<span class="ident">max_rows</span>,
+            <span class="self">self</span>.<span class="ident">min_rows</span>.<span class="ident">to_rumbas</span>(),
+            <span class="self">self</span>.<span class="ident">num_rows</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="number">0</span>).<span class="ident">to_rumbas</span>(),
+            <span class="self">self</span>.<span class="ident">max_rows</span>.<span class="ident">to_rumbas</span>(),
         ));
         <span class="kw">let</span> <span class="ident">columns</span> <span class="op">=</span> <span class="ident">Value::Normal</span>(<span class="ident">QuestionPartMatrixDimension::from_range</span>(
-            <span class="self">self</span>.<span class="ident">num_columns</span>.<span class="number">0</span>,
-            <span class="self">self</span>.<span class="ident">min_columns</span>,
-            <span class="self">self</span>.<span class="ident">max_columns</span>,
+            <span class="self">self</span>.<span class="ident">min_columns</span>.<span class="ident">to_rumbas</span>(),
+            <span class="self">self</span>.<span class="ident">num_columns</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="number">0</span>).<span class="ident">to_rumbas</span>(),
+            <span class="self">self</span>.<span class="ident">max_columns</span>.<span class="ident">to_rumbas</span>(),
         ));
         <span class="kw">let</span> <span class="ident">dimensions</span> <span class="op">=</span> <span class="ident">QuestionPartMatrixDimensions</span> { <span class="ident">rows</span>, <span class="ident">columns</span> };
         <span class="ident">QuestionPartMatrix</span> {
@@ -307,29 +319,29 @@
 
 <span class="macro">optional_overwrite_enum!</span> {
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionPartMatrixDimension</span> {
-        <span class="ident">Fixed</span>(<span class="ident">usize</span>),
+        <span class="ident">Fixed</span>(<span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
         <span class="ident">Resizable</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">QuestionPartMatrixRangedDimension</span><span class="op">&gt;</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">QuestionPartMatrixDimension</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">f</span>,
+            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">clone</span>(),
             <span class="ident">QuestionPartMatrixDimension::Resizable</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">r</span>.<span class="ident">default</span>.<span class="ident">unwrap</span>(),
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">f</span>,
+            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">clone</span>(),
             <span class="ident">QuestionPartMatrixDimension::Resizable</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">r</span>.<span class="ident">min</span>.<span class="ident">unwrap</span>(),
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">f</span>,
+            <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">clone</span>(),
             <span class="ident">QuestionPartMatrixDimension::Resizable</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">r</span>.<span class="ident">max</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">Noneable::None</span>(<span class="ident">_s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
+                <span class="ident">Noneable::None</span>(<span class="ident">_s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VariableValued::Value</span>(<span class="number">0</span>),
                 <span class="ident">Noneable::NotNone</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>,
             },
         }
@@ -337,14 +349,18 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_resizable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">default</span>() <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">min</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">default</span>() <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max</span>()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_range</span>(<span class="ident">min</span>: <span class="ident">usize</span>, <span class="ident">default</span>: <span class="ident">usize</span>, <span class="ident">max</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_range</span>(
+        <span class="ident">min</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+        <span class="ident">default</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+        <span class="ident">max</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">if</span> <span class="ident">min</span> <span class="op">=</span><span class="op">=</span> <span class="ident">default</span> <span class="op">&amp;&amp;</span> <span class="ident">default</span> <span class="op">=</span><span class="op">=</span> <span class="ident">max</span> {
             <span class="self">Self</span><span class="ident">::Fixed</span>(<span class="ident">min</span>)
         } <span class="kw">else</span> {
             <span class="self">Self</span><span class="ident">::Resizable</span>(<span class="ident">Box::new</span>(<span class="ident">QuestionPartMatrixRangedDimension</span> {
                 <span class="ident">default</span>: <span class="ident">Value::Normal</span>(<span class="ident">default</span>),
                 <span class="ident">min</span>: <span class="ident">Value::Normal</span>(<span class="ident">min</span>),
-                <span class="ident">max</span>: <span class="ident">Value::Normal</span>(<span class="kw">if</span> <span class="ident">max</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="ident">max</span>: <span class="ident">Value::Normal</span>(<span class="kw">if</span> <span class="ident">max</span> <span class="op">=</span><span class="op">=</span> <span class="ident">VariableValued::Value</span>(<span class="number">0</span>) {
                     <span class="ident">Noneable::None</span>(<span class="string">&quot;none&quot;</span>.<span class="ident">to_string</span>())
                 } <span class="kw">else</span> {
                     <span class="ident">Noneable::NotNone</span>(<span class="ident">max</span>)
@@ -357,11 +373,11 @@
 <span class="macro">optional_overwrite!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartMatrixRangedDimension</span> {
         <span class="doccomment">/// The default size</span>
-        <span class="ident">default</span>: <span class="ident">usize</span>,
+        <span class="ident">default</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The minimal size</span>
-        <span class="ident">min</span>: <span class="ident">usize</span>,
+        <span class="ident">min</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The maximal size, if this is none, there is no limit</span>
-        <span class="ident">max</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>
+        <span class="ident">max</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>
     }
 }
 </pre></div>

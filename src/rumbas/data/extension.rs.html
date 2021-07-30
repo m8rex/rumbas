@@ -164,6 +164,13 @@
 <span id="161">161</span>
 <span id="162">162</span>
 <span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part</span>::{<span class="ident">QuestionPart</span>, <span class="ident">VariableReplacementStrategy</span>};
@@ -173,104 +180,111 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="comment">//TODO: add other extensions</span>
-<span class="macro">optional_overwrite!</span> {
-    <span class="doccomment">/// Specify which extensions should be enabled</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Extensions</span> {
-        <span class="doccomment">/// Whether the jsx_graph extension is enabled</span>
-        <span class="ident">jsx_graph</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// Whether the stats extension is enabled</span>
-        <span class="ident">stats</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// Whether the eukleides extension is enabled</span>
-        <span class="ident">eukleides</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// Whether the geogebra extension is enabled</span>
-        <span class="ident">geogebra</span>: <span class="ident">bool</span>
+<span class="macro">macro_rules!</span> <span class="ident">extensions</span> {
+    (
+        $(
+            $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>: <span class="ident">literal</span>
+        ),<span class="op">+</span>
+    ) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">optional_overwrite!</span> {
+            <span class="doccomment">/// Specify which extensions should be enabled</span>
+            <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Extensions</span> {
+                $(
+                    $(
+                        <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>]</span>
+                    )<span class="op">*</span>
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">bool</span>
+                ),<span class="op">*</span>
+            }
+        }
+
+        <span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">Extensions</span> {
+            <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>;
+            <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
+                <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">extensions</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+                    $(
+                        <span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">unwrap</span>() {
+                            <span class="ident">extensions</span>.<span class="ident">push</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>.<span class="ident">to_string</span>()); <span class="comment">//TODO: Enum in numbas crate?</span>
+                        }
+                    )<span class="op">*</span>
+                    <span class="prelude-val">Ok</span>(<span class="ident">extensions</span>)
+                } <span class="kw">else</span> {
+                    <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+                }
+            }
+        }
+
+        <span class="kw">impl</span> <span class="ident">Extensions</span> {
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">String</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="ident">Extensions</span> {
+                    $(
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">Value::Normal</span>(<span class="ident">v</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>.<span class="ident">to_string</span>()))
+                    ),<span class="op">*</span>
+                }
+            }
+
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">combine</span>(<span class="ident">e</span>: <span class="ident">Extensions</span>, <span class="ident">f</span>: <span class="ident">Extensions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Extensions</span> {
+                <span class="ident">Extensions</span> {
+                    $(
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">Value::Normal</span>(<span class="ident">e</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">unwrap</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">unwrap</span>())
+                    ),<span class="op">*</span>
+                }
+            }
+
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_paths</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">numbas_path</span> <span class="op">=</span> <span class="ident">std::env::var</span>(<span class="kw">crate</span><span class="ident">::NUMBAS_FOLDER_ENV</span>)
+                    .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{} to be set&quot;</span>, <span class="kw">crate</span><span class="ident">::NUMBAS_FOLDER_ENV</span>)[..]);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+                $(
+                    <span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">unwrap</span>() {
+                        <span class="ident">paths</span>.<span class="ident">push</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">path</span>);
+                    }
+                )<span class="op">*</span>
+                <span class="ident">paths</span>
+                    .<span class="ident">into_iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}/extensions/{}&quot;</span>, <span class="ident">numbas_path</span>, <span class="ident">s</span>))
+                    .<span class="ident">collect</span>()
+            }
+        }
+
+        <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Extensions</span> {
+            <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Extensions</span> {
+                <span class="ident">Extensions</span> {
+                    $(
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">Value::Normal</span>(<span class="bool-val">false</span>)
+                    ),<span class="op">*</span>
+                }
+            }
+        }
+
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">Extensions</span> {
-    <span class="comment">// TODO: create macro</span>
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">extensions</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">jsx_graph</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">extensions</span>.<span class="ident">push</span>(<span class="string">&quot;jsxgraph&quot;</span>.<span class="ident">to_string</span>()); <span class="comment">//TODO: Enum in numbas crate?</span>
-            }
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">stats</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">extensions</span>.<span class="ident">push</span>(<span class="string">&quot;stats&quot;</span>.<span class="ident">to_string</span>());
-            }
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">eukleides</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">extensions</span>.<span class="ident">push</span>(<span class="string">&quot;eukleides&quot;</span>.<span class="ident">to_string</span>());
-            }
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">geogebra</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">extensions</span>.<span class="ident">push</span>(<span class="string">&quot;geogebra&quot;</span>.<span class="ident">to_string</span>());
-            }
-            <span class="prelude-val">Ok</span>(<span class="ident">extensions</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
-        }
-    }
+<span class="comment">//fixme vis.js extension? (where to find?)</span>
+<span class="macro">extensions!</span> {
+        <span class="ident">chemistry</span>: <span class="string">&quot;chemistry&quot;</span>,
+        <span class="ident">download_text_file</span>: <span class="string">&quot;download-text-file&quot;</span>,
+        <span class="ident">eukleides</span>: <span class="string">&quot;eukleides&quot;</span>,
+        <span class="ident">geogebra</span>: <span class="string">&quot;geogebra&quot;</span>,
+        <span class="ident">graphs</span>: <span class="string">&quot;graphs&quot;</span>,
+        <span class="ident">jsx_graph</span>: <span class="string">&quot;jsxgraph&quot;</span>,
+        <span class="ident">linear_algebra</span>: <span class="string">&quot;linear-algebra&quot;</span>,
+        <span class="ident">linear_codes</span>: <span class="string">&quot;codewords&quot;</span>,
+        <span class="ident">optimisation</span>: <span class="string">&quot;optimisation&quot;</span>,
+        <span class="ident">permutations</span>: <span class="string">&quot;permutations&quot;</span>,
+        <span class="ident">polynomials</span>: <span class="string">&quot;polynomials&quot;</span>,
+        <span class="ident">quantities</span>: <span class="string">&quot;quantities&quot;</span>,
+        <span class="ident">random_person</span>: <span class="string">&quot;random_person&quot;</span>,
+        <span class="ident">stats</span>: <span class="string">&quot;stats&quot;</span>,
+        <span class="ident">written_number</span>: <span class="string">&quot;written-number&quot;</span>
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Extensions</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Extensions</span> {
         <span class="ident">Extensions::from</span>(<span class="self">self</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Extensions</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">String</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">Extensions</span> {
-            <span class="ident">jsx_graph</span>: <span class="ident">Value::Normal</span>(<span class="ident">v</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="string">&quot;jsxgraph&quot;</span>.<span class="ident">to_string</span>())),
-            <span class="ident">stats</span>: <span class="ident">Value::Normal</span>(<span class="ident">v</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="string">&quot;stats&quot;</span>.<span class="ident">to_string</span>())),
-            <span class="ident">eukleides</span>: <span class="ident">Value::Normal</span>(<span class="ident">v</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="string">&quot;eukleides&quot;</span>.<span class="ident">to_string</span>())),
-            <span class="ident">geogebra</span>: <span class="ident">Value::Normal</span>(<span class="ident">v</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="string">&quot;geogebra&quot;</span>.<span class="ident">to_string</span>())),
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Extensions</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Extensions</span> {
-        <span class="ident">Extensions</span> {
-            <span class="ident">jsx_graph</span>: <span class="ident">Value::Normal</span>(<span class="bool-val">false</span>),
-            <span class="ident">stats</span>: <span class="ident">Value::Normal</span>(<span class="bool-val">false</span>),
-            <span class="ident">eukleides</span>: <span class="ident">Value::Normal</span>(<span class="bool-val">false</span>),
-            <span class="ident">geogebra</span>: <span class="ident">Value::Normal</span>(<span class="bool-val">false</span>),
-        }
-    }
-}
-<span class="kw">impl</span> <span class="ident">Extensions</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">combine</span>(<span class="ident">e</span>: <span class="ident">Extensions</span>, <span class="ident">f</span>: <span class="ident">Extensions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Extensions</span> {
-        <span class="ident">Extensions</span> {
-            <span class="ident">jsx_graph</span>: <span class="ident">Value::Normal</span>(<span class="ident">e</span>.<span class="ident">jsx_graph</span>.<span class="ident">unwrap</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">jsx_graph</span>.<span class="ident">unwrap</span>()),
-            <span class="ident">stats</span>: <span class="ident">Value::Normal</span>(<span class="ident">e</span>.<span class="ident">stats</span>.<span class="ident">unwrap</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">stats</span>.<span class="ident">unwrap</span>()),
-            <span class="ident">eukleides</span>: <span class="ident">Value::Normal</span>(<span class="ident">e</span>.<span class="ident">eukleides</span>.<span class="ident">unwrap</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">eukleides</span>.<span class="ident">unwrap</span>()),
-            <span class="ident">geogebra</span>: <span class="ident">Value::Normal</span>(<span class="ident">e</span>.<span class="ident">geogebra</span>.<span class="ident">unwrap</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">geogebra</span>.<span class="ident">unwrap</span>()),
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_paths</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">numbas_path</span> <span class="op">=</span> <span class="ident">std::env::var</span>(<span class="kw">crate</span><span class="ident">::NUMBAS_FOLDER_ENV</span>)
-            .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{} to be set&quot;</span>, <span class="kw">crate</span><span class="ident">::NUMBAS_FOLDER_ENV</span>)[..]);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">paths</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">jsx_graph</span>.<span class="ident">unwrap</span>() {
-            <span class="ident">paths</span>.<span class="ident">push</span>(<span class="string">&quot;jsxgraph&quot;</span>); <span class="comment">// TODO: add a toString?</span>
-        }
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">stats</span>.<span class="ident">unwrap</span>() {
-            <span class="ident">paths</span>.<span class="ident">push</span>(<span class="string">&quot;stats&quot;</span>);
-        }
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">eukleides</span>.<span class="ident">unwrap</span>() {
-            <span class="ident">paths</span>.<span class="ident">push</span>(<span class="string">&quot;eukleides&quot;</span>);
-        }
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">geogebra</span>.<span class="ident">unwrap</span>() {
-            <span class="ident">paths</span>.<span class="ident">push</span>(<span class="string">&quot;geogebra&quot;</span>);
-        }
-        <span class="ident">paths</span>
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}/extensions/{}&quot;</span>, <span class="ident">numbas_path</span>, <span class="ident">s</span>))
-            .<span class="ident">collect</span>()
     }
 }
 

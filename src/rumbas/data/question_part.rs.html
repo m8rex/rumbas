@@ -646,7 +646,7 @@
 <span class="macro">question_part_type!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartCustom</span> {
         <span class="ident">r#type</span>: <span class="ident">String</span>,
-        <span class="ident">settings</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">TranslatableString</span><span class="op">&gt;</span> <span class="comment">//CustomPartInputTypeValue&gt; // TODO</span>
+        <span class="ident">settings</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">CustomPartInputTypeValue</span><span class="op">&gt;</span>
     }
 }
 
@@ -681,7 +681,7 @@
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CustomPartInputTypeValue</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">numbas::exam::CustomPartInputTypeValue::CheckBox</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">CustomPartInputTypeValue::CheckBox</span>(<span class="ident">v</span>.<span class="number">0</span>)
+                <span class="ident">CustomPartInputTypeValue::CheckBox</span>(<span class="kw-2">*</span><span class="ident">v</span>)
             }
             <span class="ident">numbas::exam::CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>.<span class="ident">to_string</span>())

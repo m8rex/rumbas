@@ -845,7 +845,6 @@
 <span id="842">842</span>
 <span id="843">843</span>
 <span id="844">844</span>
-<span id="845">845</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite::VariableValued</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
@@ -1209,12 +1208,14 @@
         <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
         <span class="ident">should_select_at_least</span>: <span class="ident">usize</span>,
         <span class="ident">should_select_at_most</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">columns</span>: <span class="ident">usize</span>
+        <span class="ident">columns</span>: <span class="ident">usize</span>,
+        <span class="doccomment">/// What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)</span>
+        <span class="ident">wrong_nb_answers_warning_type</span>:  <span class="ident">numbas::exam::MultipleChoiceWarningType</span>
         <span class="comment">//min_marks &amp; max_marks?</span>
-        <span class="comment">//TODO wrong_nb_choices_warning:</span>
         <span class="comment">//TODO other?</span>
     }
 }
+<span class="macro">impl_optional_overwrite!</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType</span>);
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">QuestionPartChooseMultiple</span> {
     <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span>;
@@ -1263,12 +1264,13 @@
             };
             <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span> {
                 <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
-                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>()),
+                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
                 <span class="ident">max_answers</span>: <span class="self">self</span>
                     .<span class="ident">should_select_at_most</span>
                     .<span class="ident">clone</span>()
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                    .<span class="ident">flatten</span>(),
+                    .<span class="ident">flatten</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">into</span>()),
                 <span class="comment">//.map(|a| a)</span>
                 <span class="comment">//.unwrap_or(None),</span>
                 <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0usize</span>), <span class="comment">// todo?</span>
@@ -1276,7 +1278,7 @@
                 <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">choices</span>,
                 <span class="ident">display_columns</span>: <span class="self">self</span>.<span class="ident">columns</span>.<span class="ident">unwrap</span>().<span class="ident">into</span>(),
-                <span class="ident">wrong_nb_choices_warning</span>: <span class="prelude-val">Some</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType::None</span>), <span class="comment">//TODO</span>
+                <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">marking_matrix</span>,
                 <span class="ident">distractors</span>,
@@ -1333,14 +1335,17 @@
             <span class="ident">show_cell_answer_state</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">show_cell_answer_state</span>),
             <span class="ident">should_select_at_least</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">min_answers</span>
-                    .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">choose_multiple_min_answers</span>),
+                    .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">choose_multiple_min_answers</span>)
+                    .<span class="number">0</span>,
             ),
             <span class="ident">should_select_at_most</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">max_answers</span>
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="number">0</span>)
                     .<span class="ident">map</span>(<span class="ident">Noneable::NotNone</span>)
                     .<span class="ident">unwrap_or_else</span>(<span class="ident">Noneable::nn</span>),
             ),
             <span class="ident">columns</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">display_columns</span>.<span class="number">0</span>),
+            <span class="ident">wrong_nb_answers_warning_type</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">wrong_nb_choices_warning</span>),
         }
     }
 }
@@ -1373,7 +1378,9 @@
         <span class="doccomment">/// !FLATTENED</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
         <span class="ident">display</span>: <span class="ident">MatchAnswerWithItemsDisplay</span>,
-        <span class="ident">layout</span>: <span class="ident">numbas::exam::MatchAnswersWithChoicesLayout</span>
+        <span class="ident">layout</span>: <span class="ident">numbas::exam::MatchAnswersWithChoicesLayout</span>,
+        <span class="doccomment">/// What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)</span>
+        <span class="ident">wrong_nb_answers_warning_type</span>: <span class="ident">numbas::exam::MultipleChoiceWarningType</span>
         <span class="comment">//min_marks &amp; max_marks?</span>
         <span class="comment">//TODO wrong_nb_choices_warning:</span>
         <span class="comment">//TODO other?</span>
@@ -1456,19 +1463,20 @@
             };
             <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span> {
                 <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
-                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>()),
+                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
                 <span class="ident">max_answers</span>: <span class="self">self</span>
                     .<span class="ident">should_select_at_most</span>
                     .<span class="ident">clone</span>()
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                    .<span class="ident">flatten</span>(),
-                <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>),
-                <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>),
+                    .<span class="ident">flatten</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>()),
+                <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
+                <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
                 <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">shuffle_choices</span>: <span class="self">self</span>.<span class="ident">shuffle_items</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">answers</span>,
                 <span class="ident">choices</span>,
-                <span class="ident">wrong_nb_choices_warning</span>: <span class="prelude-val">Some</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType::None</span>), <span class="comment">//TODO</span>
+                <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">layout</span>: <span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
                 <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
                 <span class="ident">marking_matrix</span>,
@@ -1493,24 +1501,9 @@
             <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">clone</span>(),
             <span class="self">self</span>.<span class="ident">marking_matrix</span>.<span class="ident">clone</span>(),
         ) {
-            <span class="comment">// inverted_matrix[choice][answer]</span>
-            <span class="kw">let</span> <span class="ident">inverted_matrix</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">choice_options</span>.<span class="ident">len</span>())
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">choice_idx</span><span class="op">|</span> {
-                    <span class="ident">marking_matrix</span>
-                        .<span class="ident">clone</span>()
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> {
-                            <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">choice_idx</span>)
-                                .<span class="ident">expect</span>(<span class="string">&quot;marking_matrix does not have enough columns?&quot;</span>)
-                                .<span class="ident">clone</span>()
-                        })
-                        .<span class="ident">collect</span>()
-                })
-                .<span class="ident">collect</span>();
-
             <span class="kw">let</span> <span class="ident">items_data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">choice_options</span>
                 .<span class="ident">into_iter</span>()
-                .<span class="ident">zip</span>(<span class="ident">inverted_matrix</span>.<span class="ident">into_iter</span>())
+                .<span class="ident">zip</span>(<span class="ident">marking_matrix</span>.<span class="ident">into_iter</span>())
                 .<span class="ident">collect</span>();
 
             <span class="ident">MultipleChoiceMatchAnswerData::ItemBased</span>({
@@ -1618,15 +1611,18 @@
             <span class="ident">show_cell_answer_state</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">show_cell_answer_state</span>),
             <span class="ident">should_select_at_least</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">min_answers</span>
-                    .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">match_answers_with_items_min_answers</span>),
+                    .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">match_answers_with_items_min_answers</span>)
+                    .<span class="number">0</span>,
             ),
             <span class="ident">should_select_at_most</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">max_answers</span>
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="number">0</span>)
                     .<span class="ident">map</span>(<span class="ident">Noneable::NotNone</span>)
                     .<span class="ident">unwrap_or_else</span>(<span class="ident">Noneable::nn</span>),
             ),
             <span class="ident">display</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">display_type</span>.<span class="ident">to_rumbas</span>()),
             <span class="ident">layout</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">clone</span>()),
+            <span class="ident">wrong_nb_answers_warning_type</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">wrong_nb_choices_warning</span>),
         }
     }
 }
@@ -1669,9 +1665,11 @@
 }
 
 <span class="macro">optional_overwrite_enum!</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MultipleChoiceMatchAnswerData</span> {
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;item_based&quot;</span>)]</span>
         <span class="ident">ItemBased</span>(<span class="ident">MultipleChoiceMatchAnswers</span>),
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;numbas_like&quot;</span>)]</span>
         <span class="ident">NumbasLike</span>(<span class="ident">MultipleChoiceMatchAnswerDataNumbasLike</span>)
     }
 }
