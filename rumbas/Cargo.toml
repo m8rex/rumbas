@@ -32,3 +32,9 @@ enum-display-derive = "0.1.1"
 
 #schemars= "0.8.3"
 schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged-enums-as-if-else" }
+
+http = "0.2.0"
+futures-util = "0.3.1"
+hyper = { version = "0.14.0", features = ["stream", "http1", "server", "tcp"] }
+hyper-staticfile = "0.6.0"
+tokio = { version = "1.0.0", features = ["macros", "rt-multi-thread"] }

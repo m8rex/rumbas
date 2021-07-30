@@ -14,3 +14,10 @@ pub const CUSTOM_PART_TYPES_FOLDER: &str = "custom_part_types";
 
 pub const QUESTION_PREVIEW_TEMPLATE_NAME: &str = "question_preview";
 pub const NUMBAS_FOLDER_ENV: &str = "NUMBAS_FOLDER";
+
+/// The name of the local folder used as cache
+/// It caches the .exam files that are given to Numbas.
+pub const CACHE_FOLDER: &str = ".rumbas";
+
+/// The name of the local folder used for the output.
+pub const OUTPUT_FOLDER: &str = "_output";

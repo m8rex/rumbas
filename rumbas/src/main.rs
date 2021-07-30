@@ -37,5 +37,7 @@ fn main() {
         cli::init(&matches)
     } else if let Some(matches) = matches.subcommand_matches("schema") {
         cli::schema(&matches)
+    } else if let Some(matches) = matches.subcommand_matches("serve") {
+        cli::serve(&matches)
     }
 }
