@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Multiple choice marking
+
 ### Added
 
 - Support for `allow_printing` in navigation
@@ -16,9 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `diagnostic_topic_names` in question description
 - `resources` in question description
 - Support for `NumbasLike` answers field for ChooseOne part (this means that a type has to be specified)
+- Support for `matrix` part type
 - Support for resources
 - `rumbas init`: command to initialize a rumbas project
 - `rumbas import`: command to import numbas .exam files
+- `wrong_nb_answers_warning_type` field to all multiple choice part types
 
 ### Changed
 
@@ -33,17 +39,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - If the type is `relative_difference` or `absolute_difference` there is a second field `max_difference` (previously this was `checking_accuracy`)
   - If the type is `decimal_places` or `significant_figures` there is a second field `amount` (previously this was `checking_accuracy`)
 - `answers` field in multiple choice parts in renamed to `answer_data` (old name is still allowed)
+  - Added `type` field to `answer_data`
 - Renamed and added some AnswerStyles. `plain` is renamed to `english-plain` etc
 - `allow_regenerate` field in navigation is changed to `can_regenerate` (old name is still allowed)
 - `allow_steps` field in navigation is changed to `show_steps` (old name is still allowed)
 - `show_frontpage` field in navigation is changed to `show_title_page` (old name is still allowed)
 - `reverse` field in navigation is changed to `can_move_to_previous` (old name is still allowed)
 - `prevent_leaving` field in navigation is changed to `confirm_when_leaving` (old name is still allowed)
+- Added `type` field to `input_widget` field of custom part types
 
 ### Removed
 
 - `checking_type` option in `number_entry` questionparts
-- `name` and `strings` options in `must_match_pattern` option of `jme` questionparts
+- `name` and `strings` options in `must_match_pattern`, `max_length` and `min_length` option of `jme` questionparts
+- `name` field in `must_have` and `may_not_have` option of `jme` questionparts
 
 ## [0.3.1] - 2021-07-24
 

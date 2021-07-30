@@ -202,63 +202,6 @@ where
     }
 }
 
-/*
-fn answer_simplification_deserialize_vec<'de, D>(
-    deserializer: D,
-) -> Result<Option<Vec<AnswerSimplificationType>>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let deser_res: Result<serde_json::Value, _> = serde::Deserialize::deserialize(deserializer);
-    match deser_res {
-        Ok(serde_json::Value::Array(v)) => {
-            let mut r = Vec::new();
-            for value in v.iter() {
-                match value {
-                    serde_json::Value::String(whole_item) => {
-                        let new_item = AnswerSimplificationType::from_str(whole_item);
-                        match new_item {
-                            Ok(a) => r.push(a),
-                            Err(m) => {
-                                return Err(serde::de::Error::custom(format!(
-                                    "unknown answer simplification type {}",
-                                    m
-                                )))
-                            }
-                        }
-                    }
-                    _ => {
-                        return Err(serde::de::Error::custom(format!(
-                            "string expected but found something else: {}",
-                            value
-                        )))
-                    }
-                }
-            }
-            Ok(Some(r))
-        }
-        Ok(v) => Err(serde::de::Error::custom(format!(
-            "string expected but found something else: {}",
-            v
-        ))),
-        Err(_) => Ok(None),
-    }
-}
-
-impl Serialize for Vec<AnswerSimplificationType> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::ser::Serializer,
-    {
-        let mut seq = serializer.serialize_seq(Some(self.len()))?;
-        for value in self.iter() {
-            seq.serialize_element(&value.to_string())?;
-        }
-        seq.end()
-    }
-}
-*/
-
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Exam {
