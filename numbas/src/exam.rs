@@ -838,7 +838,6 @@ impl ExamQuestion {
             }
         }
         let new_json = serde_json::to_string_pretty(&question).unwrap();
-        println!("{}", new_json);
         serde_json::from_str(&new_json)
     }
 }
