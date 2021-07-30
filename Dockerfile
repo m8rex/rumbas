@@ -124,6 +124,14 @@ RUN git clone https://github.com/numbas/numbas-extension-chemistry.git chemistry
 WORKDIR /usr/app/chemistry
 RUN git fetch && git checkout 6527a4690bd7ee5bca5e4f54facd8170eb018a2e
 
+# Fetch linear-algebra extension
+FROM alpine as linear_algebra_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/numbas/numbas-extension-linearalgebra.git linear_algebra
+WORKDIR /usr/app/linear_algebra
+RUN git fetch && git checkout 09672fccdf28ea30fc9b14ad5ab7b15515d97598
+
 # Main image
 FROM python:3.6.10-alpine 
 WORKDIR /usr/app/Numbas
@@ -143,6 +151,7 @@ COPY --from=quantities_fetcher /usr/app/quantities /usr/app/Numbas/extensions/qu
 COPY --from=optimisation_fetcher /usr/app/optimisation /usr/app/Numbas/extensions/optimisation
 COPY --from=polynomials_fetcher /usr/app/polynomials /usr/app/Numbas/extensions/polynomials
 COPY --from=chemistry_fetcher /usr/app/chemistry /usr/app/Numbas/extensions/chemistry
+COPY --from=linear_algebra_fetcher /usr/app/linear_algebra /usr/app/Numbas/extensions/linear-algebra
 # From git? Repo not found
 COPY extensions/written_number /usr/app/Numbas/extensions/written-number
 COPY extensions/graphs /usr/app/Numbas/extensions/graphs

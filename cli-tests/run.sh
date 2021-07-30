@@ -25,3 +25,5 @@ import_and_compile_q question-77526-written-number-extension "Written number ext
 import_and_compile_q question-91138-download-text-file-extension "Download text file extension"
 # TODO import_and_compile_q question-79222-find-a-spanning-tree-in-an-undirected-graph "Find a spanning tree in an undirected graph"
 import_and_compile_q question-7191-polynomials-extension "Polynomials extension"
+import_and_compile_q question-102802-generate-a-system-of-linear-equations-to-solve "Generate a system of linear equations to solve" 
+import_and_compile_q question-41128-find-a-basis-for-the-row-space-of-a-matrix "Find a basis for the row space of a matrix"
