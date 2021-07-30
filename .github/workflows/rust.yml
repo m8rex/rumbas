@@ -77,6 +77,17 @@ jobs:
           git clone https://github.com/numbas/numbas-extension-stats.git ~/NUMBAS/extensions/stats
           git clone https://github.com/numbas/numbas-extension-eukleides.git ~/NUMBAS/extensions/eukleides
           git clone https://github.com/numbas/numbas-extension-geogebra.git ~/NUMBAS/extensions/geogebra # TODO: build the right js files?
+          git clone https://github.com/numbas/numbas-extension-random-person.git ~/NUMBAS/extensions/random_person 
+          git clone https://github.com/numbas/numbas-extension-download-a-text-file.git ~/NUMBAS/extensions/download-text-file 
+          git clone https://github.com/numbas/numbas-extension-codewords.git ~/NUMBAS/extensions/codewords 
+          git clone https://github.com/numbas/numbas-extension-permutations.git ~/NUMBAS/extensions/permutations 
+          git clone https://github.com/numbas/numbas-extension-quantities.git ~/NUMBAS/extensions/quantities 
+          git clone https://github.com/numbas/numbas-extension-optimisation.git ~/NUMBAS/extensions/optimisation 
+          git clone https://github.com/numbas/numbas-extension-polynomials.git ~/NUMBAS/extensions/polynomials 
+          git clone https://github.com/numbas/numbas-extension-chemistry.git ~/NUMBAS/extensions/chemistry 
+          git clone https://github.com/numbas/numbas-extension-linearalgebra.git ~/NUMBAS/extensions/linear-algebra 
+          cp -r extensions/written_number ~/NUMBAS/extensions/written-number
+          cp -r extensions/graphs ~/NUMBAS/extensions/graphs
       - name: Run cli-tests
         run: |-
           export NUMBAS_FOLDER=~/NUMBAS

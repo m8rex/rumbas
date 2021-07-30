@@ -1,0 +1,50 @@
+---
+type: normal
+locales:
+  - name: en
+    numbas_locale: en-GB
+name: Question Preview
+navigation:
+  mode: sequential
+  start_password: ""
+  can_regenerate: true
+  show_steps: true
+  show_title_page: true
+  confirm_when_leaving: true
+  show_names_of_question_groups: false
+  allow_printing: true
+  can_move_to_previous: true
+  browsing_enabled: true
+  show_results_page: on_completion
+  on_leave:
+    action: none
+timing:
+  duration_in_seconds: 0
+  allow_pause: true
+  on_timeout:
+    action: none
+  timed_warning:
+    action: none
+feedback:
+  percentage_needed_to_pass: 0.0
+  show_name_of_student: true
+  show_current_marks: true
+  show_maximum_marks: true
+  show_answer_state: true
+  allow_reveal_answer: true
+  review:
+    show_score: true
+    show_feedback: true
+    show_expected_answer: true
+    show_advice: true
+  advice: ""
+  intro: ""
+  feedback_messages: []
+question_groups:
+  - name: Group
+    picking_strategy: all_ordered
+    questions:
+      - template:question
+numbas_settings:
+  locale: en-GB
+  theme: default
