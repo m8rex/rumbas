@@ -9,9 +9,19 @@ import_and_compile(){
   rumbas compile "exams/$EXAM_NAME.yaml"
 }
 
+import_and_compile_q(){
+  FILE=$1
+  QUESTION_NAME=$2
+  rumbas import -q $FILE".exam"
+  rumbas compile "questions/$QUESTION_NAME.yaml"
+}
 
 import_and_compile exam-110396-getting-started "Getting Started"
 import_and_compile exam-115828-diagnosys "DIAGNOSYS"
 import_and_compile exam-14065-geogebra-extension-demo "GeoGebra extension demo"
 import_and_compile exam-119218-jesse-s-copy-of-simplex-method "Simplex method"
 import_and_compile exam-11981-numbas-website-demo "Numbas website demo"
+import_and_compile_q question-77526-written-number-extension "Written number extension"
+import_and_compile_q question-91138-download-text-file-extension "Download text file extension"
+# TODO import_and_compile_q question-79222-find-a-spanning-tree-in-an-undirected-graph "Find a spanning tree in an undirected graph"
+import_and_compile_q question-7191-polynomials-extension "Polynomials extension"

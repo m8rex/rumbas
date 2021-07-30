@@ -53,7 +53,7 @@ impl ToNumbas for QuestionPartJME {
                     .unwrap()
                     .to_numbas(locale)
                     .unwrap(),
-                failure_rate: self.failure_rate.unwrap(),
+                failure_rate: Some(self.failure_rate.unwrap()),
                 vset_range: [
                     self.vset_range.unwrap()[0].into(),
                     self.vset_range.unwrap()[1].into(),
@@ -141,7 +141,7 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
             answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
             show_preview: Value::Normal(self.show_preview),
             answer_check: Value::Normal(self.checking_type.to_rumbas()),
-            failure_rate: Value::Normal(self.failure_rate),
+            failure_rate: Value::Normal(self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate)),
             vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
             vset_range_points: Value::Normal(self.vset_range_points.0),
             check_variable_names: Value::Normal(self.check_variable_names),

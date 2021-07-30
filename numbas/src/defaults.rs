@@ -66,6 +66,7 @@ pub struct NumbasDefaults {
     pub jme_simplification_order_canonical: bool,
     pub jme_simplification_use_times_dot: bool,
     pub jme_simplification_expand_brackets: bool,
+    pub jme_failure_rate: f64,
 }
 
 // TODO default values
@@ -140,4 +141,6 @@ pub const DEFAULTS: NumbasDefaults = NumbasDefaults {
     jme_simplification_order_canonical: false,
     jme_simplification_use_times_dot: true,
     jme_simplification_expand_brackets: false,
+
+    jme_failure_rate: 1.0,
 };
