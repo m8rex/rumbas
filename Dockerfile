@@ -144,7 +144,7 @@ COPY --from=optimisation_fetcher /usr/app/optimisation /usr/app/Numbas/extension
 COPY --from=polynomials_fetcher /usr/app/polynomials /usr/app/Numbas/extensions/polynomials
 COPY --from=chemistry_fetcher /usr/app/chemistry /usr/app/Numbas/extensions/chemistry
 # From git? Repo not found
-COPY extensions/written_number /usr/app/Numbas/extensions/written_number
+COPY extensions/written_number /usr/app/Numbas/extensions/written-number
 COPY extensions/graphs /usr/app/Numbas/extensions/graphs
 RUN mkdir -p extensions/eukleides
  # For now just use the js file in dist instead of using make

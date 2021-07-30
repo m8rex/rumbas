@@ -653,21 +653,6 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
             self.choices.clone(),
             self.marking_matrix.clone(),
         ) {
-            // transposed_matrix[choice][answer]
-            let transposed_matrix: Vec<Vec<_>> = (0..choice_options.len())
-                .map(|choice_idx| {
-                    marking_matrix
-                        .clone()
-                        .into_iter()
-                        .map(|m| {
-                            m.get(choice_idx)
-                                .expect("marking_matrix does not have enough columns?")
-                                .clone()
-                        })
-                        .collect()
-                })
-                .collect();
-
             let items_data: Vec<_> = choice_options
                 .into_iter()
                 .zip(marking_matrix.into_iter())
