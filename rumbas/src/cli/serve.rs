@@ -1,33 +1,65 @@
 use futures_util::future;
-use http::response::Builder as ResponseBuilder;
-use http::{header, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Response};
-use hyper_staticfile::Static;
 use std::io::Error as IoError;
 use std::path::Path;
 
-async fn handle_request<B>(req: Request<B>, static_: Static) -> Result<Response<Body>, IoError> {
-    if req.uri().path() == "/" {
-        let res = ResponseBuilder::new()
-            .status(StatusCode::MOVED_PERMANENTLY)
-            .header(header::LOCATION, "/hyper_staticfile/")
-            .body(Body::empty())
-            .expect("unable to build response");
-        Ok(res)
-    } else {
-        
-        static_.clone().serve(req).await
+async fn handle_request<B>(req: Request<B>) -> Result<Response<Body>, IoError> {
+    let root = Path::new(rumbas::OUTPUT_FOLDER); //.join("");
+
+    // First, resolve the request. Returns a future for a `ResolveResult`.
+    let result = hyper_staticfile::resolve(&root, &req)
+        .await
+        .unwrap();
+    println!("{} {:?}",  req.uri().path(), result);
+    if let hyper_staticfile::ResolveResult::IsDirectory = result {
+        let real_path = format!("{}{}", rumbas::OUTPUT_FOLDER, req.uri().path());
+        println!("Handling {}", real_path);
+
+        let index_path = format!("{}/index.html", real_path);
+        let index_path = std::path::Path::new(&index_path[..]);
+        if !index_path.exists(){
+        let items = read_folder(&real_path[..]);
+        let file = format!(r"
+<html>
+    <head>
+    </head>
+    <body>
+        <ul>
+            {}
+        </ul>
+    </body>
+</html>
+", items.into_iter().map(|i| format!(r#"<li><a href="{}">{}</a></li>"#, i.file_name().unwrap().to_str().unwrap(), i.file_name().unwrap().to_str().unwrap())).collect::<Vec<_>>().join("\n"));
+        std::fs::write(index_path, file).expect("valid file"); // TODO
+            }
     }
+
+    // Then, build a response based on the result.
+    // The `ResponseBuilder` is typically a short-lived, per-request instance.
+    let response = hyper_staticfile::ResponseBuilder::new()
+        .request(&req)
+        .build(result)
+        .unwrap();
+    Ok(response)
+}
+
+fn read_folder(path: &str)  -> Vec<std::path::PathBuf> {
+    let mut paths = Vec::new();
+     for entry in std::fs::read_dir(path).unwrap() {
+            let entry = entry.unwrap(); // TODO
+            let path = entry.path();
+            if path.is_dir() {
+                paths.push(path.to_path_buf());
+            } 
+    }
+    paths
 }
 
 #[tokio::main]
 pub async fn serve(_matches: &clap::ArgMatches) {
-    let static_ = Static::new(Path::new(rumbas::OUTPUT_FOLDER));
-
     let make_service = make_service_fn(|_| {
-        let static_ = static_.clone();
-        future::ok::<_, hyper::Error>(service_fn(move |req| handle_request(req, static_.clone())))
+        future::ok::<_, hyper::Error>(service_fn(handle_request))
     });
 
     let addr = ([127, 0, 0, 1], 3000).into();
