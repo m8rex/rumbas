@@ -228,6 +228,12 @@ fn hacky_fix_exam(s: &str) -> String {
     s.replace("\"checkingtype\":", "\"checkingType\":") // Can't use alias because it uses tag
 }
 
+pub enum WriteResult {
+    Ok,
+    IOError(std::io::Error),
+    JSONError(serde_json::Error),
+}
+
 impl Exam {
     pub fn from_exam_str(s: &str) -> serde_json::Result<Exam> {
         let json = if s.starts_with("// Numbas version: exam_results_page_options") {
@@ -239,8 +245,7 @@ impl Exam {
         serde_json::from_str(json.as_str())
     }
 
-    //TODO: return Result type instead of printing errors
-    pub fn write(&self, file_name: &str) {
+    pub fn write(&self, file_name: &str) -> WriteResult {
         match serde_json::to_string(self) {
             Ok(s) => match std::fs::write(
                 file_name,
@@ -250,13 +255,14 @@ impl Exam {
                     s
                 ),
             ) {
-                Ok(_) => println!("Saved {}", file_name),
-                Err(e) => println!("Error saving {}: {}", file_name, e),
+                Ok(_) => WriteResult::Ok,
+                Err(e) => WriteResult::IOError(e),
             },
-            Err(e) => println!("Error generating {}: {}", file_name, e),
+            Err(e) => WriteResult::JSONError(e),
         }
     }
 }
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct BasicExamSettings {
