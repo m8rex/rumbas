@@ -31,7 +31,7 @@ fn create_question(qp: QuestionPath) {
         .to_yaml()
         .unwrap();
     let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
-    println!("Writing to {}", file);
+    log::info!("Writing to {}", file);
     std::fs::write(file, q_yaml).unwrap(); //fix handle result
 }
 
@@ -39,7 +39,7 @@ fn create_custom_part_type(cpt: CustomPartTypeDefinitionPath) {
     let c_name = cpt.custom_part_type_name.clone();
     let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
     let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
-    println!("Writing to {}", file);
+    log::info!("Writing to {}", file);
     std::fs::write(file, c_yaml).unwrap(); //fix handle result
 }
 
@@ -62,7 +62,7 @@ pub fn import(matches: &clap::ArgMatches) {
                 create_question(rumbas_question);
             }
             Err(e) => {
-                eprintln!("Error: {:?}", e);
+                log::error!("{:?}", e);
                 std::process::exit(1)
             }
         }
@@ -84,7 +84,7 @@ pub fn import(matches: &clap::ArgMatches) {
                 //fix handle result
             }
             Err(e) => {
-                eprintln!("Error: {:?}", e);
+                log::error!("{:?}", e);
                 std::process::exit(1)
             }
         }

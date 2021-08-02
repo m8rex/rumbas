@@ -452,7 +452,7 @@ impl ToRumbas<JMEAnswerSimplification> for Option<Vec<numbas::exam::AnswerSimpli
                         result.order_canonical = Value::Normal(*b);
                     }
                     numbas::exam::AnswerSimplificationType::Unknown((name, val)) => {
-                        println!(
+                        log::info!(
                             "Found unknown answer simplification type {}{}",
                             if *val { "!" } else { "" },
                             name

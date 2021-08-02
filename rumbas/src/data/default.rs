@@ -265,7 +265,7 @@ macro_rules! handle {
     //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
         if !exam.check().is_empty() {
-            println!("Reading {}", default_file.get_path().display()); //TODO: debug
+            log::info!("Reading {}", default_file.get_path().display()); //TODO: debug
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
             match default_data {

@@ -23,3 +23,6 @@ numbas = {path="../numbas"}
 regex = "1"
 clap = {version = "2.33", features = ["yaml"]}
 sanitize-filename = "0.3.0"
+
+log = "0.4"
+fern = "0.5"
