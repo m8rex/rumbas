@@ -9,11 +9,12 @@ use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::{YamlError, YamlResult};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeDefinition {
     type_name: TranslatableString,
     description: TranslatableString,
@@ -28,7 +29,7 @@ pub struct CustomPartTypeDefinition {
     //TODO source
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartInputOptionValue<T: Clone> {
     /// The value
     value: T,
@@ -63,7 +64,7 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]
 pub enum CustomPartInputWidget {
     //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
@@ -116,7 +117,7 @@ impl ToRumbas<CustomPartInputWidget> for numbas::exam::CustomPartInputWidget {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -153,7 +154,7 @@ impl ToRumbas<CustomPartStringInputOptions> for numbas::exam::CustomPartStringIn
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartNumberInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -194,7 +195,7 @@ impl ToRumbas<CustomPartNumberInputOptions> for numbas::exam::CustomPartNumberIn
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartRadioGroupInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -306,7 +307,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct CustomPartTypeDefinitionPath {

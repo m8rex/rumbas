@@ -1,11 +1,12 @@
 use regex::Regex;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// The datatype for the input strings
 ///
 /// It supports the shorthand µ for \var
 /// It supports the shorthand § for \simplify
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 #[serde(into = "String")]
 pub struct InputString(pub String);

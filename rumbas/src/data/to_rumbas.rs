@@ -5,6 +5,7 @@ use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use schemars::JsonSchema;
 use std::convert::TryInto;
 
 pub trait ToRumbas<RumbasType>: Clone {

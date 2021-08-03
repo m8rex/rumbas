@@ -17,6 +17,7 @@ use crate::data::variable::VariableRepresentation;
 use crate::data::yaml::{YamlError, YamlResult};
 use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::convert::TryInto;
@@ -259,7 +260,7 @@ impl Question {
                     );
                     let mut question: Question = serde_yaml::from_str(&template_yaml).unwrap();
                     t.data.iter().for_each(|(k, v)| {
-                        question.insert_template_value(k, v);
+                        question.insert_template_value(k, &v.0);
                     });
                     Ok(question)
                 }

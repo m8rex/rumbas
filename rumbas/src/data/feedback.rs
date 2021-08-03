@@ -4,6 +4,7 @@ use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -139,7 +140,7 @@ impl ToRumbas<Review> for numbas::exam::ExamReview {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct FeedbackMessage {
     pub message: String,   //TODO: inputstring or filestring?
     pub threshold: String, //TODO type

@@ -5,6 +5,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use regex::Regex;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -47,7 +48,7 @@ impl ToNumbas for Variable {
 }
 
 /// The different template_types for a variable
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
     /// Not specified
@@ -112,7 +113,7 @@ impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
     ListOfStrings(Vec<Value<String>>),
@@ -200,7 +201,7 @@ impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
     Anything(String),
@@ -221,7 +222,7 @@ impl std::convert::From<String> for VariableStringRepresentation {
 }
 impl_optional_overwrite!(VariableStringRepresentation);
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 pub struct RangeData {
     from: f64,
     to: f64,

@@ -1,8 +1,23 @@
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 pub mod ast;
 pub mod builtin_functions;
 pub mod parser;
+
+macro_rules! impl_string_json_schema {
+    ($t: ty, $e: expr) => {
+        impl JsonSchema for $t {
+            fn schema_name() -> String {
+                $e.to_owned()
+            }
+
+            fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+                gen.subschema_for::<String>()
+            }
+        }
+    };
+}
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "String")]
@@ -11,6 +26,7 @@ pub struct JMEString {
     s: String,
     ast: Option<ast::Expr>,
 }
+impl_string_json_schema!(JMEString, "JMEString");
 
 impl std::convert::TryFrom<String> for JMEString {
     type Error = String; // TODO
@@ -43,6 +59,7 @@ pub struct EmbracedJMEString {
     s: String,
     asts: Option<Vec<ast::Expr>>,
 }
+impl_string_json_schema!(EmbracedJMEString, "EmbracedJMEString"); // maybe add pattern?
 
 impl std::convert::TryFrom<String> for EmbracedJMEString {
     type Error = String; // TODO
@@ -76,6 +93,7 @@ pub struct ContentAreaString {
     s: String,
     asts: Option<Vec<ast::Expr>>,
 }
+impl_string_json_schema!(ContentAreaString, "ContentAreaString");
 
 impl std::convert::TryFrom<String> for ContentAreaString {
     type Error = String; // TODO
@@ -110,6 +128,7 @@ pub struct JMENotesString {
     pub s: String,
     pub notes: Option<Vec<ast::Note>>,
 }
+impl_string_json_schema!(JMENotesString, "JMENotesString");
 
 impl std::convert::TryFrom<String> for JMENotesString {
     type Error = String; // TODO

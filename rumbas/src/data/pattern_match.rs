@@ -7,6 +7,7 @@ use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 

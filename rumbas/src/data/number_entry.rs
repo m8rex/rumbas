@@ -7,6 +7,7 @@ use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
@@ -133,7 +134,7 @@ impl ToRumbas<QuestionPartNumberEntry> for numbas::exam::ExamQuestionPartNumberE
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
     Normal(FileString), //TODO: filestrings?
@@ -173,7 +174,7 @@ impl ToRumbas<NumberEntryAnswer> for numbas::exam::NumberEntryAnswerType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum AnswerStyle {
     /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "english")]

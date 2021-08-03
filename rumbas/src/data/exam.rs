@@ -5,6 +5,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::template::{ExamFileType, TemplateData, Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::yaml::YamlError;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::Display;
@@ -67,7 +68,8 @@ impl Exam {
                             .unwrap()
                             .to_string_lossy()
                             .into_owned(),
-                    ),
+                    )
+                    .into(),
                 );
                 let t = TemplateData {
                     relative_template_path: crate::QUESTION_PREVIEW_TEMPLATE_NAME.to_string(),
@@ -98,7 +100,7 @@ impl Exam {
 
                     let mut exam: Exam = serde_yaml::from_str(&template_yaml).unwrap();
                     t.data.iter().for_each(|(k, v)| {
-                        exam.insert_template_value(k, v);
+                        exam.insert_template_value(k, &v.0);
                     });
                     Ok(exam)
                 }

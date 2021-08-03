@@ -6,6 +6,7 @@ use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
 use sanitize_filename::sanitize;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -65,7 +66,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]

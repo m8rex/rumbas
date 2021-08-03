@@ -13,6 +13,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
 use crate::data::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
@@ -184,7 +185,7 @@ impl QuestionPartBuiltin {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
 pub struct JMENotes(pub Value<Vec<JMENote>>);
 
 impl RumbasCheck for JMENotes {
@@ -483,7 +484,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
     OriginalFirst,

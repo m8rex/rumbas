@@ -2,6 +2,7 @@ use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // TODO: maybe translatable? So different text's can be set for different languages?

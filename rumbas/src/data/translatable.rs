@@ -4,6 +4,7 @@ use crate::data::file_reference::{
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_rumbas::ToRumbas;
+use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -14,7 +15,7 @@ macro_rules! translatable_type {
         type $type: ident,
         subtype $subtype: ty
     ) => {
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
         #[serde(untagged)]
         pub enum $type {
             //TODO: custom reader that checks for missing values etc?

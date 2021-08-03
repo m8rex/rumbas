@@ -40,3 +40,6 @@ subcommands:
   - init:
       about: |-
         Initialize a rumbas project in this folder
+  - schema:
+      about: |-
+        Prints the json schema

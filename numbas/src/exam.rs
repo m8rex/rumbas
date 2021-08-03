@@ -2,6 +2,7 @@ use crate::jme::ContentAreaString;
 use crate::jme::EmbracedJMEString;
 use crate::jme::JMENotesString;
 use crate::jme::JMEString;
+use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Error;
@@ -208,7 +209,7 @@ where
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Exam {
     #[serde(flatten)]
     pub basic_settings: BasicExamSettings,
@@ -269,7 +270,7 @@ impl Exam {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct BasicExamSettings {
     pub name: String,
     #[serde(rename = "duration")]
@@ -286,7 +287,7 @@ pub struct BasicExamSettings {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartType {
     pub name: String,
     pub short_name: String,
@@ -306,7 +307,7 @@ pub struct CustomPartType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartMarkingNote {
     pub name: String,
     pub definition: JMEString,
@@ -323,7 +324,7 @@ impl std::convert::From<crate::jme::ast::Note> for CustomPartMarkingNote {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "input_widget", content = "input_options")]
 pub enum CustomPartInputWidget {
     //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
@@ -339,7 +340,7 @@ pub enum CustomPartInputWidget {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartInputOptionValue<T: Clone> {
     pub value: T,
     /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
@@ -348,7 +349,7 @@ pub struct CustomPartInputOptionValue<T: Clone> {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -359,7 +360,7 @@ pub struct CustomPartStringInputOptions {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartNumberInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -372,7 +373,7 @@ pub struct CustomPartNumberInputOptions {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartRadioButtonsInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -382,7 +383,7 @@ pub struct CustomPartRadioButtonsInputOptions {
     pub choices: CustomPartInputOptionValue<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum CustomPartAvailability {
     #[serde(rename = "always")]
     Always,
@@ -391,7 +392,7 @@ pub enum CustomPartAvailability {
 // TODO: other
 // https://docs.numbas.org.uk/en/latest/custom-part-types/reference.html?highlight=Custom#setting-types
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "input_type")]
 pub enum CustomPartTypeSetting {
     #[serde(rename = "checkbox")]
@@ -409,7 +410,7 @@ pub enum CustomPartTypeSetting {
     // TODO see https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html?highlight=content%20area#setting-types
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingSharedData {
     /// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting, but doesn’t need to be very descriptive - the label can do that.
     name: String,
@@ -421,7 +422,7 @@ pub struct CustomPartTypeSettingSharedData {
     hint: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingString {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -432,7 +433,7 @@ pub struct CustomPartTypeSettingString {
     default_value: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingMathematicalExpression {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -443,7 +444,7 @@ pub struct CustomPartTypeSettingMathematicalExpression {
     default_value: EmbracedJMEString,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingCode {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -452,7 +453,7 @@ pub struct CustomPartTypeSettingCode {
     evaluate: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingCheckBox {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -460,7 +461,7 @@ pub struct CustomPartTypeSettingCheckBox {
     default_value: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingDropDown {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -469,13 +470,13 @@ pub struct CustomPartTypeSettingDropDown {
     choices: Vec<CustomPartTypeSettingDropDownChoice>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingDropDownChoice {
     value: Primitive,
     label: Primitive,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingPercentage {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
@@ -484,7 +485,7 @@ pub struct CustomPartTypeSettingPercentage {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamNavigation {
     #[serde(rename = "startpassword")]
     pub start_password: Option<String>, //TODO: if empty string -> also None
@@ -500,7 +501,7 @@ pub struct ExamNavigation {
     pub confirm_when_leaving: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[serde(tag = "navigatemode")]
 pub enum ExamNavigationMode {
@@ -510,7 +511,7 @@ pub enum ExamNavigationMode {
     Diagnostic(ExamNavigationModeDiagnostic),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamNavigationModeSequential {
     #[serde(rename = "onleave")]
     pub on_leave: ExamLeaveAction,
@@ -522,14 +523,14 @@ pub struct ExamNavigationModeSequential {
     pub browsing_enabled: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamNavigationModeDiagnostic {
     #[serde(rename = "onleave")]
     pub on_leave: ExamLeaveAction,
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionNavigation {
     #[serde(rename = "allowregen")]
     pub allow_regenerate: bool,
@@ -539,7 +540,7 @@ pub struct QuestionNavigation {
     pub confirm_when_leaving: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "action")]
 pub enum ExamLeaveAction {
     #[serde(rename = "none")]
@@ -549,7 +550,7 @@ pub enum ExamLeaveAction {
     #[serde(rename = "preventifunattempted")]
     PreventIfNotAttempted { message: String }, // Prevent a user from moving away from a question that is not attempted
 }
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "action")]
 pub enum ExamTimeoutAction {
     #[serde(rename = "none")]
@@ -557,7 +558,7 @@ pub enum ExamTimeoutAction {
     #[serde(rename = "warn")]
     Warn { message: String }, // Show a warning message
 }
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum ExamShowResultsPage {
     #[serde(rename = "oncompletion")]
     OnCompletion,
@@ -565,7 +566,7 @@ pub enum ExamShowResultsPage {
     Never,
 }
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamTiming {
     #[serde(rename = "allowPause")]
     pub allow_pause: bool,
@@ -575,7 +576,7 @@ pub struct ExamTiming {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamFeedback {
     #[serde(rename = "showactualmark")]
     pub show_actual_mark: bool, // show student's score
@@ -596,7 +597,7 @@ pub struct ExamFeedback {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamReview {
     #[serde(rename = "reviewshowscore")]
     pub show_score: Option<bool>,
@@ -609,14 +610,14 @@ pub struct ExamReview {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamFeedbackMessage {
     pub message: String,
     pub threshold: String, //TODO type
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamFunction {
     //TODO
     pub parameters: Vec<ExamFunctionParameter>,
@@ -628,7 +629,7 @@ pub struct ExamFunction {
 
 pub type ExamFunctionParameter = (String, ExamFunctionType);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "language")]
 pub enum ExamFunctionDefinition {
     #[serde(rename = "jme")]
@@ -637,7 +638,7 @@ pub enum ExamFunctionDefinition {
     Javascript { definition: String },
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
 pub enum ExamFunctionType {
     #[serde(rename = "boolean")]
     Boolean,
@@ -676,7 +677,7 @@ pub enum ExamFunctionType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamVariable {
     pub name: String,
     pub definition: String, // TODO: jme?
@@ -690,7 +691,7 @@ pub struct ExamVariable {
     pub can_override: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum ExamVariableTemplateType {
     #[serde(rename = "anything")]
     Anything, //JME
@@ -711,7 +712,7 @@ pub enum ExamVariableTemplateType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionGroup {
     //TODO
     pub name: Option<String>,
@@ -720,7 +721,7 @@ pub struct ExamQuestionGroup {
     pub questions: Vec<ExamQuestion>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "pickingStrategy")]
 pub enum ExamQuestionGroupPickingStrategy {
     #[serde(rename = "all-ordered")]
@@ -734,7 +735,7 @@ pub enum ExamQuestionGroupPickingStrategy {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct BuiltinConstants(pub std::collections::HashMap<String, bool>);
 
 impl Default for BuiltinConstants {
@@ -752,7 +753,7 @@ impl Default for BuiltinConstants {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestion {
     //TODO
     pub name: String,
@@ -828,20 +829,20 @@ impl ExamQuestion {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Preamble {
     pub js: String,
     pub css: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionConstant {
     pub name: String,
     pub value: JMEString,
     pub tex: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "std::collections::BTreeMap<String, serde_json::Value>")]
 #[serde(untagged)]
 pub enum ExamQuestionPart {
@@ -888,7 +889,7 @@ impl std::convert::TryFrom<std::collections::BTreeMap<String, serde_json::Value>
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]
 pub enum ExamQuestionPartBuiltin {
     #[serde(rename = "jme")]
@@ -914,7 +915,7 @@ pub enum ExamQuestionPartBuiltin {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartSharedData {
     /// A content area used to prompt the student for an answer.
     pub prompt: Option<ContentAreaString>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
@@ -965,7 +966,7 @@ pub struct ExamQuestionPartSharedData {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartCustom {
     pub r#type: String,
     #[serde(flatten)]
@@ -974,7 +975,7 @@ pub struct ExamQuestionPartCustom {
 }
 
 // TODO: other types
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
@@ -990,7 +991,7 @@ impl std::convert::From<CustomPartInputTypeValue> for String {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "originalfirst")]
     /// The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.
@@ -1001,7 +1002,7 @@ pub enum VariableReplacementStrategy {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartJME {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
@@ -1053,7 +1054,7 @@ pub struct ExamQuestionPartJME {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "&str")]
 #[serde(into = "String")]
 pub enum AnswerSimplificationType {
@@ -1085,7 +1086,7 @@ pub enum AnswerSimplificationType {
     Unknown((String, bool)),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMECheckingTypeData<T> {
     #[serde(rename = "checkingAccuracy")]
     #[serde(alias = "checkingaccuracy")]
@@ -1093,7 +1094,7 @@ pub struct JMECheckingTypeData<T> {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "checkingType")]
 pub enum JMECheckingType {
     #[serde(rename = "reldiff")]
@@ -1107,7 +1108,7 @@ pub enum JMECheckingType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMERestriction {
     //pub name: String,
     #[serde(rename = "partialCredit")]
@@ -1116,7 +1117,7 @@ pub struct JMERestriction {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
@@ -1124,7 +1125,7 @@ pub struct JMELengthRestriction {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMEStringRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
@@ -1134,7 +1135,7 @@ pub struct JMEStringRestriction {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMEPatternRestriction {
     #[serde(rename = "partialCredit")]
     pub partial_credit: SafeFloat, //TODO: maybe SafeNatural?
@@ -1145,21 +1146,21 @@ pub struct JMEPatternRestriction {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct JMEValueGenerator {
     pub name: String,
     pub value: JMEString,
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariablesTest {
     pub condition: JMEString,
     #[serde(rename = "maxRuns")]
     pub max_runs: SafeNatural,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariableGroup {
     pub variables: Vec<String>,
     pub name: String,
@@ -1167,7 +1168,7 @@ pub struct ExamQuestionVariableGroup {
 
 //TODO: docs https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/numberentry.js#L101
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartNumberEntry {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
@@ -1198,7 +1199,7 @@ pub struct ExamQuestionPartNumberEntry {
 }
 
 // See https://github.com/numbas/Numbas/blob/26e5c25be75f5bb1a7d6b625bc8ed0c6a59224e5/runtime/scripts/util.js#L1259
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum AnswerStyle {
     /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "en")]
@@ -1229,13 +1230,13 @@ pub enum AnswerStyle {
     Swiss,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum CheckingType {
     #[serde(rename = "range")]
     Range,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswerType {
     MinMax {
@@ -1250,7 +1251,7 @@ pub enum NumberEntryAnswerType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionPrecision {
     #[serde(rename = "precisionType")]
     precision_type: String, //TODO: enum ('none',...)
@@ -1264,7 +1265,7 @@ pub struct QuestionPrecision {
     strict_precision: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum QuestionPrecisionType {
     #[serde(rename = "none")]
     None,
@@ -1275,7 +1276,7 @@ pub enum QuestionPrecisionType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartMatrix {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
@@ -1307,7 +1308,7 @@ pub struct ExamQuestionPartMatrix {
     //precision: QuestionPrecision,
 }
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartPatternMatch {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
@@ -1322,7 +1323,7 @@ pub struct ExamQuestionPartPatternMatch {
     pub match_mode: PatternMatchMode,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
 pub enum PatternMatchMode {
     #[serde(rename = "regex")]
     Regex,
@@ -1330,7 +1331,7 @@ pub enum PatternMatchMode {
     Exact, //TODO: check all options
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
@@ -1352,7 +1353,7 @@ impl std::convert::From<usize> for SafeNatural {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A decimal number (float) that can be parsed from primitive
 pub struct SafeFloat(pub f64);
@@ -1374,7 +1375,7 @@ impl std::convert::From<f64> for SafeFloat {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "BooledPrimitive")]
 /// A boolean that can be parsed from (booled) primitive
 pub struct SafeBool(pub bool);
@@ -1403,7 +1404,7 @@ impl std::fmt::Display for SafeBool {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),
@@ -1420,7 +1421,7 @@ impl<T> VariableValued<T> {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartChooseOne {
     //TODO -> Split for different types
     #[serde(flatten)]
@@ -1445,7 +1446,7 @@ pub struct ExamQuestionPartChooseOne {
     pub distractors: Option<Vec<String>>, // TODO: jme?
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum ChooseOneDisplayType {
     #[serde(rename = "radiogroup")]
     Radio,
@@ -1454,7 +1455,7 @@ pub enum ChooseOneDisplayType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartChooseMultiple {
     //TODO -> Split for different types
     #[serde(flatten)]
@@ -1482,7 +1483,7 @@ pub struct ExamQuestionPartChooseMultiple {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartMatchAnswersWithChoices {
     //TODO -> Split for different types
     #[serde(flatten)]
@@ -1514,14 +1515,14 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     pub marking_matrix: Option<VariableValued<Vec<Vec<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum MatchAnswersWithChoicesDisplayType {
     #[serde(rename = "checkbox")]
     Check,
     #[serde(rename = "radiogroup")]
     Radio,
 }
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
 pub enum MultipleChoiceWarningType {
     #[serde(rename = "none")]
     None,
@@ -1530,7 +1531,7 @@ pub enum MultipleChoiceWarningType {
     //TODO: also prevent and warn -> same as leave actions?
     //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
 }
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum MatchAnswersWithChoicesLayoutType {
     #[serde(rename = "all")]
     All,
@@ -1539,14 +1540,14 @@ pub enum MatchAnswersWithChoicesLayoutType {
     //TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766
 }
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct MatchAnswersWithChoicesLayout {
     r#type: MatchAnswersWithChoicesLayoutType,
     expression: String,
 }
 
 /* TODO: remove */
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceMatrix {
     //TODO use specific type for the three types
@@ -1555,7 +1556,7 @@ pub enum MultipleChoiceMatrix {
     Matrix(Vec<VariableValued<Vec<Primitive>>>),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum Primitive {
     String(String),
@@ -1563,7 +1564,7 @@ pub enum Primitive {
     Float(f64),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum BooledPrimitive {
     String(String),
@@ -1601,7 +1602,7 @@ impl std::fmt::Display for Primitive {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartGapFill {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
@@ -1611,20 +1612,20 @@ pub struct ExamQuestionPartGapFill {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartInformation {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartExtension {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamDiagnostic {
     pub knowledge_graph: ExamDiagnosticKnowledgeGraph,
     pub script: ExamDiagnosticScript,
@@ -1632,13 +1633,13 @@ pub struct ExamDiagnostic {
     pub custom_script: String, // TODO jme...
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamDiagnosticKnowledgeGraph {
     pub topics: Vec<ExamDiagnosticKnowledgeGraphTopic>,
     pub learning_objectives: Vec<ExamDiagnosticKnowledgeGraphLearningObjective>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamDiagnosticKnowledgeGraphTopic {
     pub name: String,
     pub description: String,
@@ -1646,13 +1647,13 @@ pub struct ExamDiagnosticKnowledgeGraphTopic {
     pub depends_on: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct ExamDiagnosticKnowledgeGraphLearningObjective {
     pub name: String,
     pub description: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ExamDiagnosticScript {
     Mastery,
@@ -1660,5 +1661,5 @@ pub enum ExamDiagnosticScript {
     Custom,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Resource(pub [String; 2]);

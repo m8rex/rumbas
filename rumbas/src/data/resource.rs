@@ -4,12 +4,13 @@ use crate::data::optional_overwrite::{
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::hash::{Hash, Hasher};
 
 // TODO TranslatableString
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct ResourcePath {
