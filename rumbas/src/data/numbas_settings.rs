@@ -1,6 +1,7 @@
 use crate::data::locale::SupportedLocale;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 //TODO: is locale still being used?

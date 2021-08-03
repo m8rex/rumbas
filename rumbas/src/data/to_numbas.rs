@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use schemars::JsonSchema;
 
 pub type NumbasResult<T> = Result<T, RumbasCheckResult>;
 

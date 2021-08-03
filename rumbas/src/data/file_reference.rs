@@ -1,6 +1,7 @@
 use crate::data::input_string::InputString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -16,7 +17,7 @@ macro_rules! file_type {
         type $type: ident,
         subtype $subtype: ty
     ) => {
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
         #[serde(from = "String")]
         #[serde(into = "String")]
         $(

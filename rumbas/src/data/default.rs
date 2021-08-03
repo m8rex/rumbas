@@ -19,6 +19,7 @@ use crate::data::question::Question;
 use crate::data::question_part::{QuestionPart, QuestionPartBuiltin};
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
+use schemars::JsonSchema;
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};

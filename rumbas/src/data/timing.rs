@@ -3,6 +3,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
@@ -53,7 +54,7 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum TimeoutAction {

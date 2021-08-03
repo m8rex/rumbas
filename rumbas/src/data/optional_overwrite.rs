@@ -2,6 +2,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
@@ -138,7 +139,7 @@ pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + RumbasCheck {
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 #[serde(untagged)]
 //TODO: improve, all strings (not only none are seen as empty)
@@ -318,7 +319,7 @@ macro_rules! optional_overwrite {
             ),+
         }
     ) => {
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
         $(
             #[$outer]
         )*
@@ -374,7 +375,7 @@ macro_rules! optional_overwrite_enum {
             ),+
         }
     ) => {
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
         $(
             #[$outer]
         )*
@@ -661,7 +662,7 @@ mod test {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),

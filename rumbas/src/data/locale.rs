@@ -1,5 +1,6 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -12,7 +13,7 @@ optional_overwrite! {
 }
 
 /// Locales supported by Numbas
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
 pub enum SupportedLocale {
     #[serde(rename = "ar-SA")]
     ArSA,

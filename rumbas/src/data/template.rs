@@ -2,20 +2,40 @@ use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::normal_exam::NormalExam;
 use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
 pub struct TemplateData {
     #[serde(rename = "template")]
     pub relative_template_path: String,
     #[serde(flatten)]
-    pub data: HashMap<String, serde_yaml::Value>,
+    pub data: HashMap<String, MyYamlValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct MyYamlValue(pub serde_yaml::Value);
+
+impl JsonSchema for MyYamlValue {
+    fn schema_name() -> String {
+        format!("YamlValue")
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        schemars::schema::Schema::Bool(true)
+    }
+}
+
+impl std::convert::From<serde_yaml::Value> for MyYamlValue {
+    fn from(v: serde_yaml::Value) -> Self {
+        Self(v)
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum ExamFileType {
@@ -30,7 +50,7 @@ impl ExamFileType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum QuestionFileType {
@@ -44,7 +64,7 @@ impl QuestionFileType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 pub struct TemplateString {
     pub key: Option<String>,
@@ -106,7 +126,25 @@ pub enum ValueType<T> {
     Invalid(serde_yaml::Value),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+pub enum ValidValueType<T> {
+    Template(TemplateString),
+    Normal(T),
+}
+
+impl<T: JsonSchema> JsonSchema for ValueType<T> {
+    fn schema_name() -> String {
+        format!("Value_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let mut schema = gen.subschema_for::<ValidValueType<T>>();
+        schema // TODO
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
 

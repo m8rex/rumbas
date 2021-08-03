@@ -8,6 +8,7 @@ use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 use std::convert::TryInto;
@@ -45,7 +46,7 @@ optional_overwrite! {
     }
 }
 
-#[derive(Debug, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
 struct MatrixRowPrimitive(Vec<numbas::exam::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
@@ -61,7 +62,7 @@ impl ToNumbas for MatrixRowPrimitive {
     }
 }
 
-#[derive(Debug, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
 struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
@@ -84,7 +85,7 @@ impl ToNumbas for MatrixRow {
     }
 }
 
-#[derive(Debug, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
 struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::exam::Primitive>>>);
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
@@ -296,7 +297,7 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::exam::ExamQuestionPartChooseOne
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
@@ -785,7 +786,7 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum MatchAnswerWithItemsDisplay {
     #[serde(rename = "radio")]

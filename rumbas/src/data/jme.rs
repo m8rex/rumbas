@@ -10,6 +10,7 @@ use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::EmbracedJMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
@@ -518,7 +519,7 @@ impl ToNumbas for CheckingTypeDataNatural {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum CheckingType {

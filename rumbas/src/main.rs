@@ -2,12 +2,14 @@
 #![deny(clippy::print_stderr)]
 
 use rumbas::data::default::combine_with_default_files;
+use rumbas::data::exam::Exam;
 use rumbas::data::to_numbas::ToNumbas;
 use std::env;
 use std::path::Path;
 #[macro_use]
 extern crate clap;
 use clap::{crate_version, App};
+use schemars::{schema_for, JsonSchema};
 
 mod import;
 mod init;
@@ -91,7 +93,13 @@ fn main() {
         compile(&matches)
     } else if let Some(matches) = matches.subcommand_matches("init") {
         init(&matches)
+    } else if let Some(matches) = matches.subcommand_matches("schema") {
+        schema(&matches)
     }
+}
+fn schema(matches: &clap::ArgMatches) {
+    let schema = schema_for!(Exam);
+    log::info!("{}", serde_json::to_string_pretty(&schema).unwrap());
 }
 fn compile(matches: &clap::ArgMatches) {
     let numbas_path = env::var(rumbas::NUMBAS_FOLDER_ENV)

@@ -10,6 +10,7 @@ use crate::data::timing::Timing;
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -230,7 +231,7 @@ impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum DiagnosticScript {
     Mastery,
