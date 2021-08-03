@@ -25,4 +25,7 @@ clap = {version = "2.33", features = ["yaml"]}
 sanitize-filename = "0.3.0"
 
 log = "0.4"
-fern = "0.5"
+fern = { version = "0.5", features = ["colored"] }
+chrono = "0.4"
+
+enum-display-derive = "0.1.1"

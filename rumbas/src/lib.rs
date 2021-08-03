@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate enum_display_derive;
+
 pub mod data;
 
 pub const QUESTIONS_FOLDER: &str = "questions";
