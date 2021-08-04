@@ -2,7 +2,8 @@
 #![deny(clippy::print_stderr)]
 
 use rumbas::data::default::combine_with_default_files;
-use rumbas::data::exam::Exam;
+use rumbas::data::template::ExamFileType;
+use rumbas::data::template::QuestionFileType;
 use rumbas::data::to_numbas::ToNumbas;
 use std::env;
 use std::path::Path;
@@ -98,7 +99,9 @@ fn main() {
     }
 }
 fn schema(matches: &clap::ArgMatches) {
-    let schema = schema_for!(Exam);
+    let schema = schema_for!(ExamFileType);
+    log::info!("{}", serde_json::to_string_pretty(&schema).unwrap());
+    let schema = schema_for!(QuestionFileType);
     log::info!("{}", serde_json::to_string_pretty(&schema).unwrap());
 }
 fn compile(matches: &clap::ArgMatches) {

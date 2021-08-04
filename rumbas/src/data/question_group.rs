@@ -118,12 +118,34 @@ impl ToRumbas<PickingStrategy> for numbas::exam::ExamQuestionGroupPickingStrateg
     }
 }
 
-optional_overwrite! {
-    #[serde(try_from = "String")]
-    #[serde(into = "String")]
-    pub struct QuestionPath {
-        question_name: String,
-        question_data: Question
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(try_from = "String")]
+#[serde(into = "String")]
+pub struct QuestionPath {
+    pub question_name: String,
+    pub question_data: Question,
+}
+
+impl RumbasCheck for QuestionPath {
+    fn check(&self) -> RumbasCheckResult {
+        self.question_data.check()
+    }
+}
+impl OptionalOverwrite<QuestionPath> for QuestionPath {
+    fn overwrite(&mut self, other: &Self) {}
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        self.question_data.insert_template_value(key, val);
+    }
+}
+impl_optional_overwrite_value!(QuestionPath);
+
+impl JsonSchema for QuestionPath {
+    fn schema_name() -> String {
+        format!("QuestionPath")
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        gen.subschema_for::<String>()
     }
 }
 
@@ -133,15 +155,15 @@ impl std::convert::TryFrom<String> for QuestionPath {
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let question_data = Question::from_name(&s).map_err(|e| e)?;
         Ok(QuestionPath {
-            question_name: Value::Normal(s),
-            question_data: Value::Normal(question_data),
+            question_name: s,
+            question_data,
         })
     }
 }
 
 impl std::convert::From<QuestionPath> for String {
     fn from(q: QuestionPath) -> Self {
-        q.question_name.unwrap()
+        q.question_name
     }
 }
 
@@ -153,8 +175,7 @@ impl ToNumbas for QuestionPath {
             Ok(self
                 .question_data
                 .clone()
-                .unwrap()
-                .to_numbas_with_name(locale, self.question_name.clone().unwrap())
+                .to_numbas_with_name(locale, self.question_name.clone())
                 .unwrap())
         } else {
             Err(check)
@@ -165,8 +186,8 @@ impl ToNumbas for QuestionPath {
 impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
     fn to_rumbas(&self) -> QuestionPath {
         QuestionPath {
-            question_name: Value::Normal(sanitize(&self.name)),
-            question_data: Value::Normal(self.to_rumbas()),
+            question_name: sanitize(&self.name),
+            question_data: self.to_rumbas(),
         }
     }
 }

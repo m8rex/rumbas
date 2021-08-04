@@ -111,7 +111,7 @@ impl ToNumbas for DiagnosticExam {
                         .questions
                         .unwrap()
                         .into_iter()
-                        .flat_map(|q| q.unwrap().question_data.unwrap().resources.unwrap())
+                        .flat_map(|q| q.unwrap().question_data.resources.unwrap())
                 })
                 .map(|r| r.unwrap())
                 .collect::<std::collections::HashSet<_>>()
@@ -131,7 +131,7 @@ impl ToNumbas for DiagnosticExam {
                         .questions
                         .unwrap()
                         .into_iter()
-                        .map(|q| q.unwrap().question_data.unwrap().extensions.unwrap())
+                        .map(|q| q.unwrap().question_data.extensions.unwrap())
                 })
                 .fold(Extensions::default(), Extensions::combine)
                 .to_paths();
@@ -147,7 +147,7 @@ impl ToNumbas for DiagnosticExam {
                         .questions
                         .unwrap()
                         .into_iter()
-                        .flat_map(|q| q.unwrap().question_data.unwrap().custom_part_types.unwrap())
+                        .flat_map(|q| q.unwrap().question_data.custom_part_types.unwrap())
                 })
                 .collect::<std::collections::HashSet<_>>()
                 .into_iter()
