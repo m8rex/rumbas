@@ -307,7 +307,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct CustomPartTypeDefinitionPath {
@@ -325,6 +325,16 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
             custom_part_type_name: s,
             custom_part_type_data,
         })
+    }
+}
+
+impl JsonSchema for CustomPartTypeDefinitionPath {
+    fn schema_name() -> String {
+        format!("CustomPartTypeDefinitionPath")
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        gen.subschema_for::<String>()
     }
 }
 

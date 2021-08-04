@@ -9,7 +9,7 @@ use std::convert::TryInto;
 use std::path::Path;
 
 /// The prefix used to specify a file reference
-const FILE_PREFIX: &str = "file:";
+const FILE_PREFIX: &str = "file";
 
 macro_rules! file_type {
     (
@@ -17,7 +17,7 @@ macro_rules! file_type {
         type $type: ident,
         subtype $subtype: ty
     ) => {
-        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(from = "String")]
         #[serde(into = "String")]
         $(
@@ -47,8 +47,10 @@ macro_rules! file_type {
         //TODO: error message is not shown if no file found
         impl std::convert::From<String> for $type {
             fn from(s: String) -> Self {
-                if s.starts_with(FILE_PREFIX) {
-                    if s == FILE_PREFIX {
+                let mut prefix = FILE_PREFIX.to_owned();
+                prefix.push(':');
+                if s.starts_with(&prefix) {
+                    if s == prefix {
                         Self {
                             file_name: Some("".to_string()),
                             content: None,
@@ -56,7 +58,7 @@ macro_rules! file_type {
                             error_message: Some("Missing filename".to_string()),
                         }
                     } else {
-                        let relative_file_name = s.split(FILE_PREFIX).collect::<Vec<&str>>()[1];
+                        let relative_file_name = s.split(&prefix).collect::<Vec<&str>>()[1];
                         let file_path = Path::new(crate::QUESTIONS_FOLDER).join(relative_file_name);
                         let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
                         if let Some(file_dir) = file_path.parent() {
@@ -157,6 +159,32 @@ macro_rules! file_type {
                     panic!("Deserializing FileRef only supported when plain String")
                 }
                 fs.content.unwrap().into()
+            }
+        }
+
+        impl JsonSchema for $type {
+            fn schema_name() -> String {
+                stringify!($type).to_owned()
+            }
+
+            fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+                let file_schema = schemars::schema::SchemaObject {
+                    instance_type: Some(schemars::schema::InstanceType::String.into()),
+                    string: Some(Box::new(schemars::schema::StringValidation {
+                        min_length: Some(1 + (FILE_PREFIX.len() as u32)),
+                        max_length: None,
+                        pattern: Some(format!("^{}:.*$", FILE_PREFIX)),
+                    })),
+                    ..Default::default()
+                };
+                schemars::schema::SchemaObject {
+                    subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
+                        any_of: Some(vec![file_schema.into(), gen.subschema_for::<String>()]),
+                        ..Default::default()
+                    })),
+                    ..Default::default()
+                }
+                .into()
             }
         }
 
