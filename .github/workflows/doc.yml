@@ -2,25 +2,24 @@ name: Rust
 
 on:
   push:
-    branches: [ master, documentation ]
+    branches: [main, documentation]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Run doc
-      run: cargo doc --no-deps
-      working-directory: rumbas
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: rumbas/target/doc # The folder the action should deploy.
-        CLEAN: true # Automatically remove deleted files from the deploy branch
+      - uses: actions/checkout@v2
+      - name: Run doc
+        run: cargo doc --no-deps
+        working-directory: rumbas
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: rumbas/target/doc # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
