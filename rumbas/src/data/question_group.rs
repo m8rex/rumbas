@@ -132,7 +132,7 @@ impl RumbasCheck for QuestionPath {
     }
 }
 impl OptionalOverwrite<QuestionPath> for QuestionPath {
-    fn overwrite(&mut self, other: &Self) {}
+    fn overwrite(&mut self, _other: &Self) {}
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         self.question_data.insert_template_value(key, val);
     }

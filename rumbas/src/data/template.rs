@@ -24,7 +24,7 @@ impl JsonSchema for MyYamlValue {
         format!("YamlValue")
     }
 
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
         schemars::schema::Schema::Bool(true)
     }
 }
@@ -64,7 +64,7 @@ impl QuestionFileType {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 pub struct TemplateString {
     pub key: Option<String>,
@@ -84,6 +84,26 @@ impl OptionalOverwrite<TemplateString> for TemplateString {
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
 impl_optional_overwrite_value!(TemplateString);
+impl JsonSchema for TemplateString {
+    //no_ref_schema!();
+
+    fn schema_name() -> String {
+        "TemplateString".to_owned()
+    }
+
+    fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        schemars::schema::SchemaObject {
+            instance_type: Some(schemars::schema::InstanceType::String.into()),
+            string: Some(Box::new(schemars::schema::StringValidation {
+                min_length: Some(1 + (TEMPLATE_PREFIX.len() as u32)),
+                max_length: None,
+                pattern: Some(format!("^{}:.*$", TEMPLATE_PREFIX)),
+            })),
+            ..Default::default()
+        }
+        .into()
+    }
+}
 
 impl TemplateString {
     pub fn yaml(&self) -> String {
@@ -139,8 +159,8 @@ impl<T: JsonSchema> JsonSchema for ValueType<T> {
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let mut schema = gen.subschema_for::<ValidValueType<T>>();
-        schema // TODO
+        let schema = gen.subschema_for::<ValidValueType<T>>();
+        schema
     }
 }
 
