@@ -26,8 +26,8 @@ macro_rules! read_question {
 }
 
 fn create_question(qp: QuestionPath) {
-    let q_name = qp.question_name.unwrap();
-    let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
+    let q_name = qp.question_name.clone();
+    let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data))
         .to_yaml()
         .unwrap();
     let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
@@ -52,7 +52,6 @@ pub fn import(matches: &clap::ArgMatches) {
                 let rumbas_question: QuestionPath = question.to_rumbas();
                 for cpt in rumbas_question
                     .question_data
-                    .unwrap()
                     .custom_part_types
                     .unwrap()
                     .iter()

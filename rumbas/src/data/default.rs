@@ -163,43 +163,36 @@ macro_rules! handle_question_parts {
                         questions.iter_mut().for_each(|question_value| {
                             if let Some(ValueType::Normal(ref mut question)) = &mut question_value.0
                             {
-                                if let Some(ValueType::Normal(ref mut question_data)) =
-                                    question.question_data.0
+                                if let Some(ValueType::Normal(ref mut parts)) =
+                                    question.question_data.parts.0
                                 {
-                                    if let Some(ValueType::Normal(ref mut parts)) =
-                                        question_data.parts.0
-                                    {
-                                        //TODO: others etc
-                                        parts.iter_mut().for_each(|part_value| {
-                                            if let Some(ValueType::Normal(QuestionPart::Builtin(
-                                                ref mut part,
-                                            ))) = &mut part_value.0
-                                            {
-                                                if let QuestionPartBuiltin::$type(_) = &part {
-                                                    part.overwrite(&QuestionPartBuiltin::$type(
-                                                        $p.clone(),
-                                                    ))
-                                                }
-                                                if let Value(Some(ValueType::Normal(
-                                                    ref mut steps,
-                                                ))) = &mut part.get_steps()
-                                                {
-                                                    steps.iter_mut().for_each(|part| {
-                                                        if let QuestionPart::Builtin(
-                                                            QuestionPartBuiltin::$type(_),
-                                                        ) = &part
-                                                        {
-                                                            part.overwrite(&QuestionPart::Builtin(
-                                                                QuestionPartBuiltin::$type(
-                                                                    $p.clone(),
-                                                                ),
-                                                            ))
-                                                        }
-                                                    })
-                                                }
+                                    //TODO: others etc
+                                    parts.iter_mut().for_each(|part_value| {
+                                        if let Some(ValueType::Normal(QuestionPart::Builtin(
+                                            ref mut part,
+                                        ))) = &mut part_value.0
+                                        {
+                                            if let QuestionPartBuiltin::$type(_) = &part {
+                                                part.overwrite(&QuestionPartBuiltin::$type(
+                                                    $p.clone(),
+                                                ))
                                             }
-                                        });
-                                    }
+                                            if let Value(Some(ValueType::Normal(ref mut steps))) =
+                                                &mut part.get_steps()
+                                            {
+                                                steps.iter_mut().for_each(|part| {
+                                                    if let QuestionPart::Builtin(
+                                                        QuestionPartBuiltin::$type(_),
+                                                    ) = &part
+                                                    {
+                                                        part.overwrite(&QuestionPart::Builtin(
+                                                            QuestionPartBuiltin::$type($p.clone()),
+                                                        ))
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         })
@@ -216,36 +209,30 @@ macro_rules! handle_question_parts {
                         questions.iter_mut().for_each(|question_value| {
                             if let Some(ValueType::Normal(ref mut question)) = &mut question_value.0
                             {
-                                if let Some(ValueType::Normal(ref mut question_data)) =
-                                    question.question_data.0
+                                if let Some(ValueType::Normal(ref mut parts)) =
+                                    question.question_data.parts.0
                                 {
-                                    if let Some(ValueType::Normal(ref mut parts)) =
-                                        question_data.parts.0
-                                    {
-                                        parts.iter_mut().for_each(|part_value| {
-                                            if let Some(ValueType::Normal(QuestionPart::Builtin(
-                                                QuestionPartBuiltin::GapFill(ref mut gap_fill),
-                                            ))) = &mut part_value.0
+                                    parts.iter_mut().for_each(|part_value| {
+                                        if let Some(ValueType::Normal(QuestionPart::Builtin(
+                                            QuestionPartBuiltin::GapFill(ref mut gap_fill),
+                                        ))) = &mut part_value.0
+                                        {
+                                            if let Some(ValueType::Normal(ref mut gaps)) =
+                                                gap_fill.gaps.0
                                             {
-                                                if let Some(ValueType::Normal(ref mut gaps)) =
-                                                    gap_fill.gaps.0
-                                                {
-                                                    gaps.iter_mut().for_each(|gap| {
-                                                        if let QuestionPart::Builtin(
-                                                            QuestionPartBuiltin::$type(_),
-                                                        ) = &gap
-                                                        {
-                                                            gap.overwrite(&QuestionPart::Builtin(
-                                                                QuestionPartBuiltin::$type(
-                                                                    $p.clone(),
-                                                                ),
-                                                            ))
-                                                        }
-                                                    })
-                                                }
+                                                gaps.iter_mut().for_each(|gap| {
+                                                    if let QuestionPart::Builtin(
+                                                        QuestionPartBuiltin::$type(_),
+                                                    ) = &gap
+                                                    {
+                                                        gap.overwrite(&QuestionPart::Builtin(
+                                                            QuestionPartBuiltin::$type($p.clone()),
+                                                        ))
+                                                    }
+                                                })
                                             }
-                                        })
-                                    }
+                                        }
+                                    })
                                 }
                             }
                         })
@@ -295,7 +282,7 @@ macro_rules! handle {
                                         {
                                             question
                                                 .question_data
-                                                .overwrite(&Value::Normal(q.clone()));
+                                                .overwrite(&q);
                                         }
                                     })
                                 }
