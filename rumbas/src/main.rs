@@ -10,7 +10,7 @@ use std::path::Path;
 #[macro_use]
 extern crate clap;
 use clap::{crate_version, App};
-use schemars::{schema_for, JsonSchema};
+use schemars::schema_for;
 
 mod import;
 mod init;
