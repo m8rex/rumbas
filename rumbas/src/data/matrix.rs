@@ -152,7 +152,7 @@ impl QuestionPartMatrixDimension {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => match r.max.unwrap() {
-                Noneable::None(_s) => VariableValued::Value(0),
+                Noneable::None => VariableValued::Value(0),
                 Noneable::NotNone(f) => f,
             },
         }
@@ -172,7 +172,7 @@ impl QuestionPartMatrixDimension {
                 default: Value::Normal(default),
                 min: Value::Normal(min),
                 max: Value::Normal(if max == VariableValued::Value(0) {
-                    Noneable::None("none".to_string())
+                    Noneable::None
                 } else {
                     Noneable::NotNone(max)
                 }),

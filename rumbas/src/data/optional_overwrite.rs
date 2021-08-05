@@ -139,19 +139,83 @@ pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + RumbasCheck {
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-#[serde(untagged)]
-//TODO: improve, all strings (not only none are seen as empty)
+#[derive(Debug, Clone, PartialEq)]
 pub enum Noneable<T> {
-    None(String),
+    None,
     NotNone(T),
 }
 
 impl<T> Noneable<T> {
-    // Create a None with string "none"
     pub fn nn() -> Self {
-        Self::None("none".to_string())
+        Self::None
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+enum NoneEnum {
+    #[serde(rename = "none")]
+    None,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[serde(untagged)]
+enum NoneableDeserialize<T> {
+    None(NoneEnum),
+    NotNone(T),
+}
+
+// TODO: cleanup
+impl<'de, T> Deserialize<'de> for Noneable<T>
+where
+    T: serde::Deserialize<'de>,
+{
+    fn deserialize<D>(deserializer: D) -> Result<Noneable<T>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let deser_res: Result<NoneableDeserialize<T>, _> =
+            serde::Deserialize::deserialize(deserializer);
+        deser_res.map(|res| match res {
+            NoneableDeserialize::None(_v) => Noneable::None,
+            NoneableDeserialize::NotNone(v) => Noneable::NotNone(v),
+        })
+    }
+}
+
+impl<T> Serialize for Noneable<T>
+where
+    T: serde::Serialize,
+{
+    fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            Noneable::None => s.serialize_str("none"),
+            Noneable::NotNone(v) => v.serialize(s),
+        }
+    }
+}
+
+impl<T: JsonSchema> JsonSchema for Noneable<T> {
+    fn schema_name() -> String {
+        format!("Noneable_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let none_schema = schemars::schema::SchemaObject {
+            instance_type: Some(schemars::schema::InstanceType::String.into()),
+            enum_values: Some(vec![serde_json::json!("none")]),
+            ..Default::default()
+        };
+        schemars::schema::SchemaObject {
+            subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
+                any_of: Some(vec![none_schema.into(), gen.subschema_for::<T>()]),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
+        .into()
     }
 }
 
