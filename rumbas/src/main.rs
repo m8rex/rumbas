@@ -98,12 +98,28 @@ fn main() {
         schema(&matches)
     }
 }
-fn schema(matches: &clap::ArgMatches) {
+
+fn schema(_matches: &clap::ArgMatches) {
     let schema = schema_for!(ExamFileType);
-    log::info!("{}", serde_json::to_string_pretty(&schema).unwrap());
+    std::fs::write(
+        "exam-schema.json",
+        serde_json::to_string_pretty(&schema).unwrap(),
+    )
+    .expect("writting exam schema to file");
     let schema = schema_for!(QuestionFileType);
-    log::info!("{}", serde_json::to_string_pretty(&schema).unwrap());
+    std::fs::write(
+        "question-schema.json",
+        serde_json::to_string_pretty(&schema).unwrap(),
+    )
+    .expect("writting question schema to file");
+    let schema = schema_for!(rumbas::data::custom_part_type::CustomPartTypeDefinition);
+    std::fs::write(
+        "custom-part-type-schema.json",
+        serde_json::to_string_pretty(&schema).unwrap(),
+    )
+    .expect("writting custom-part-type schema to file");
 }
+
 fn compile(matches: &clap::ArgMatches) {
     let numbas_path = env::var(rumbas::NUMBAS_FOLDER_ENV)
         .expect(&format!("{} to be set", rumbas::NUMBAS_FOLDER_ENV)[..]);
