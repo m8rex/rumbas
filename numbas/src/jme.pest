@@ -8,7 +8,7 @@ WHITESPACE = _{ " " }
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
 node       = _{ implicit_multiplication | grouped_expression | terminal }
-terminal = { literal_value | function_application | variable | collection }  
+terminal = { literal_value | function_application | annotated_variable | collection }  
 grouped_expression = { "(" ~ expression ~ ")" }
 
 literal_value = { constant | boolean | number | string }
@@ -36,7 +36,7 @@ non_quoted_character = _{ !"\"" ~ ANY }
 arithmetic_function = { "exp" }
 builtin_function = { arithmetic_function }
 function = { builtin_function | variable }
-annotated_function = { (annotation ~ ":")? ~ function }
+annotated_function = { (annotation)* ~ function }
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { annotated_function ~ "(" ~ function_arguments ~ ")" }
 
@@ -45,18 +45,18 @@ implicit_multiplication = {
 	( (number | annotated_variable) ~ annotated_variable)
 } // TODO x y z etc
 
-annotated_variable = { (annotation ~ ":")? ~ variable }
-// TODO: can there be more annotations?
-verb_annotation = {"verb"}
-op_annotation = {"op"}
-vector_annotation = {"v" | "vector"}
-unit_annotation = { "unit" }
-dot_annotation = { "dot" }
-matrix_annotation = { "m" | "matrix" }
-diff_annotation = { "diff" }
-degrees_annotation = { "degrees" }
+annotated_variable = { (annotation)* ~ variable }
+verb_annotation = { "verb:" }
+op_annotation = { "op:" }
+vector_annotation = { "vector:" | "v:" }
+unit_annotation = { "unit:" }
+dot_annotation = { "dot:" }
+matrix_annotation = { "matrix:" | "m:" }
+diff_annotation = { "diff:" }
+degrees_annotation = { "degrees:" }
 builtin_annotation = { verb_annotation | op_annotation | vector_annotation | unit_annotation | dot_annotation | matrix_annotation | diff_annotation | degrees_annotation }
-annotation = { builtin_annotation }
+other_annotation = { ASCII_ALPHA+ ~ ":" }
+annotation = { (builtin_annotation | other_annotation) }
 // TODO: other
 variable = @{ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
 
@@ -78,4 +78,3 @@ range = { integer? ~ ".." ~ integer? }
 index_operator = { "[" ~ (string | range | integer | variable) ~ "]" } 
 postfix_operator = { "!" | index_operator }
 prefix_operator = { "!" }
-

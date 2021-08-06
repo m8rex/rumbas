@@ -1,6 +1,11 @@
 pub mod defaults;
 pub mod exam;
 
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
+pub mod jme;
+
 #[cfg(test)]
 mod tests {
     use super::*;
