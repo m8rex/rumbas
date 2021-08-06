@@ -223,7 +223,7 @@ impl<T: std::clone::Clone> Noneable<T> {
     #[inline]
     pub fn unwrap_or(&self, other: T) -> T {
         match self {
-            Noneable::None(_) => other,
+            Noneable::None => other,
             Noneable::NotNone(nn) => nn.clone(),
         }
     }

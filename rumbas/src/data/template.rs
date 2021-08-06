@@ -155,7 +155,7 @@ pub enum ValidValueType<T> {
 
 impl<T: JsonSchema> JsonSchema for ValueType<T> {
     fn schema_name() -> String {
-        format!("Value_{}", T::schema_name())
+        format!("ValueType_{}", T::schema_name())
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
@@ -164,9 +164,20 @@ impl<T: JsonSchema> JsonSchema for ValueType<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
+
+impl<T: JsonSchema> JsonSchema for Value<T> {
+    fn schema_name() -> String {
+        format!("Value_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        let schema = gen.subschema_for::<ValueType<T>>(); // Didn't add the option
+        schema
+    }
+}
 
 impl<T> Value<T> {
     #[inline]

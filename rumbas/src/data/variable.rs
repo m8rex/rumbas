@@ -201,7 +201,7 @@ impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
     Anything(String),
@@ -221,6 +221,20 @@ impl std::convert::From<String> for VariableStringRepresentation {
     }
 }
 impl_optional_overwrite!(VariableStringRepresentation);
+
+impl JsonSchema for VariableStringRepresentation {
+    fn schema_name() -> String {
+        "VariableStringRepresentation".to_owned()
+    }
+
+    fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        schemars::schema::SchemaObject {
+            instance_type: Some(schemars::schema::InstanceType::String.into()),
+            ..Default::default()
+        }
+        .into()
+    }
+}
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 pub struct RangeData {
