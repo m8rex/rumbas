@@ -1,0 +1,81 @@
+jme = {
+    SOI
+    ~ expression
+    ~ EOI
+}
+WHITESPACE = _{ " " }
+
+expression =  { term ~ (infix_operator ~ term)* }
+term       =  { prefix_operator* ~ node ~ postfix_operator* }
+node       = _{ implicit_multiplication | grouped_expression | terminal }
+terminal = { literal_value | function_application | variable | collection }  
+grouped_expression = { "(" ~ expression ~ ")" }
+
+literal_value = { constant | boolean | number | string }
+constant = { infinity_constant | nan_constant | changeable_constant }
+infinity_constant = { "infty" | "infinity" }
+// TODO unicode infinity char
+nan_constant = { "nan" }
+changeable_constant = { e_constant | pi_constant | i_constant }
+e_constant = { "e" }
+i_constant = { "i" }
+pi_constant = { "pi" }
+// TODO pi unicode
+
+number = { broken_number | integer }
+integer = { ("-")? ~ ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* | "0" }
+broken_part = { ASCII_DIGIT* }
+broken_number = { integer ~ "." ~ broken_part }
+boolean = { boolean_true | boolean_false }
+boolean_true = { "true" }
+boolean_false = { "false" }
+string = { "\"" ~ non_quoted_character* ~ "\"" }
+non_quoted_character = _{ !"\"" ~ ANY }
+
+
+arithmetic_function = { "exp" }
+builtin_function = { arithmetic_function }
+function = { builtin_function | variable }
+annotated_function = { (annotation ~ ":")? ~ function }
+function_arguments = { expression ~ ("," ~ expression)* }
+function_application = { annotated_function ~ "(" ~ function_arguments ~ ")" }
+
+implicit_multiplication = { 
+	(grouped_expression ~ ( annotated_variable | number | grouped_expression)) |
+	( (number | annotated_variable) ~ annotated_variable)
+} // TODO x y z etc
+
+annotated_variable = { (annotation ~ ":")? ~ variable }
+// TODO: can there be more annotations?
+verb_annotation = {"verb"}
+op_annotation = {"op"}
+vector_annotation = {"v" | "vector"}
+unit_annotation = { "unit" }
+dot_annotation = { "dot" }
+matrix_annotation = { "m" | "matrix" }
+diff_annotation = { "diff" }
+degrees_annotation = { "degrees" }
+builtin_annotation = { verb_annotation | op_annotation | vector_annotation | unit_annotation | dot_annotation | matrix_annotation | diff_annotation | degrees_annotation }
+annotation = { builtin_annotation }
+// TODO: other
+variable = @{ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
+
+collection = _{ dictionary | list }
+dictionary = { "[" ~ dictionary_item ~ ("," ~ dictionary_item )* ~ "]" }
+dictionary_key = { variable | string }
+dictionary_item = { dictionary_key ~ ":" ~ expression }
+list = { "[" ~ (expression ~ ("," ~ expression )*)? ~ "]" }
+
+arithmetic_operator = { "+" | "-" | "*" | "/" | "^" }
+relation_operator = { "<=" | "<>" |  "<" | ">=" | ">" | "=" | "in" } 
+and_operator = { "and" | "&" | "&&" }
+or_operator = { "or" }
+xor_operator = { "xor" }
+implies_operator = { "implies" }
+logic_binary_operator = { relation_operator | and_operator | or_operator | xor_operator | implies_operator }
+infix_operator = { arithmetic_operator | logic_binary_operator }
+range = { integer? ~ ".." ~ integer? }  
+index_operator = { "[" ~ (string | range | integer | variable) ~ "]" } 
+postfix_operator = { "!" | index_operator }
+prefix_operator = { "!" }
+
