@@ -13,7 +13,7 @@ grouped_expression = { "(" ~ expression ~ ")" }
 
 reserved = { boolean } //{ e_constant | i_constant | pi_constant | nan_constant | infinity_constant | boolean }
 
-literal = _{ boolean | number | string }
+literal = _{ boolean | range | number | string }
 //constant = { infinity_constant | nan_constant | changeable_constant }
 // TODO: to rust code side
 //infinity_constant = { "infty" | "infinity" }
