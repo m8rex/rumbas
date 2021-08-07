@@ -7,7 +7,7 @@ WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
 
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
-node       = _{ implicit_multiplication  | grouped_expression | terminal } // TODO  implicit_multiplication | 
+node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication | 
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
@@ -44,15 +44,16 @@ non_single_quoted_character = _{ !"'" ~ ANY }
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
 
-implicit_multiplication_grouped = { 
-	(grouped_expression ~ ( ident | number | grouped_expression))
-} 
-implicit_multiplication_ident = { 
-	((number | ident) ~ ident)
-} // TODO x y z etc
-implicit_multiplication = _{ 
-    implicit_multiplication_grouped | implicit_multiplication_ident  
-}
+implicit_multiplication_operator = { "" }
+//implicit_multiplication_grouped = _{ 
+//	(grouped_expression ~ implicit_multiplication_operator ~ ( ident | number | grouped_expression))
+//} 
+//implicit_multiplication_ident = _{ 
+//	((number | ident) ~ implicit_multiplication_operator ~ ident)
+//} // TODO x y z etc
+//implicit_multiplication = _{ 
+//    implicit_multiplication_grouped | implicit_multiplication_ident  
+//}
 
 //annotated_variable = { (annotation)* ~ ident }
 verb_annotation = { "verb:" }
@@ -97,7 +98,7 @@ or_operator = _{ "or" }
 xor_operator = _{ "xor" }
 implies_operator = _{ "implies" }
 logic_binary_operator = { and_operator | or_operator | xor_operator | implies_operator }
-infix_operator = _{ arithmetic_operator | relational_operator | logic_binary_operator }
+infix_operator = _{ arithmetic_operator | relational_operator | logic_binary_operator | implicit_multiplication_operator }
 range = { integer? ~ ".." ~ integer? }  
 index_operator = { "[" ~ (string | range | integer | ident_name) ~ "]" } 
 faculty_operator =  { "!" }

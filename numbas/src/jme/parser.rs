@@ -96,7 +96,9 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
         Operator::new(Rule::add, Assoc::Left) | Operator::new(Rule::subtract, Assoc::Left),
-        Operator::new(Rule::multiply, Assoc::Left) | Operator::new(Rule::divide, Assoc::Left),
+        Operator::new(Rule::multiply, Assoc::Left)
+            | Operator::new(Rule::implicit_multiplication_operator, Assoc::Left)
+            | Operator::new(Rule::divide, Assoc::Left),
         Operator::new(Rule::power, Assoc::Right),
     ]);
     let expression = pairs
@@ -235,7 +237,7 @@ fn consume_expression<'i>(
                             span: start_pos.span(&end_pos),
                         }
                     }
-                    Rule::implicit_multiplication_grouped => {
+                    /* Rule::implicit_multiplication_grouped => {
                         // TODO: this gives wrong precedence for (a)(b)^2
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
@@ -260,7 +262,7 @@ fn consume_expression<'i>(
                             expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
                             span, //start_pos.span(&end_pos),
                         }
-                    }
+                    } */
                     _ => unreachable!(),
                 };
 
@@ -268,7 +270,7 @@ fn consume_expression<'i>(
                     Ok(node),
                     |node: Result<ParserNode<'i>, Vec<Error<Rule>>>, pair| {
                         let node = node?;
-
+                        println!("folding {:#?}", pair);
                         let node = match pair.as_rule() {
                             Rule::faculty_operator => {
                                 let start = node.span.start_pos();
@@ -319,7 +321,7 @@ fn consume_expression<'i>(
                 span: start.span(&end),
             })
         }
-        Rule::multiply => {
+        Rule::multiply | Rule::implicit_multiplication_operator => {
             let lhs = lhs?;
             let rhs = rhs?;
 
