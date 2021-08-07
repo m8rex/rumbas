@@ -11,7 +11,7 @@ node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = { "(" ~ expression ~ ")" }
 
-reserved = { boolean } //{ e_constant | i_constant | pi_constant | nan_constant | infinity_constant | boolean }
+reserved = @{ (boolean | logic_binary_operator) ~ !ident_char }
 
 literal = _{ boolean | range | number | string }
 //constant = { infinity_constant | nan_constant | changeable_constant }
@@ -67,7 +67,8 @@ builtin_annotation = { verb_annotation | op_annotation | vector_annotation | uni
 other_annotation = { ASCII_ALPHA+ ~ ":" }
 annotation = { (builtin_annotation | other_annotation) }
 // TODO: other
-ident_name = _{ !reserved ~ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
+ident_char = _{ ASCII_ALPHA | ASCII_DIGIT | "_" | "'" }
+ident_name = @{ !reserved ~ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
 ident = { (annotation)* ~ ident_name }
 
 
