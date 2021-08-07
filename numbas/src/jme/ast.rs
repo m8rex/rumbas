@@ -178,64 +178,29 @@ mod test {
 
     #[test]
     fn ast_implicit_multiplication() {
-        let input = "(b+2)(a+1)";
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        for (implicit, explicit) in vec![
+            ("(b+2)(a+1)", "(b+2)*(a+1)"),
+            ("(a+1)2", "(a+1)*2"),
+            ("(x+y)z", "(x+y)*z"),
+            ("2x", "2*x"),
+            ("x y", "x*y"),
+        ] {
+            println!("Handling {}", implicit);
+            let pairs = parse(implicit).unwrap();
+            let ast = consume_outer_expression(pairs).unwrap();
+            let explicit_ast = consume_outer_expression(parse(explicit).unwrap()).unwrap();
 
-        assert_eq!(
-            ast,
-            Product(
-                Box::new(Sum(
-                    Box::new(Ident(Ident {
-                        name: "b".to_string(),
-                        annotations: vec![]
-                    })),
-                    Box::new(Int(2))
-                )),
-                Box::new(Sum(
-                    Box::new(Ident(Ident {
-                        name: "a".to_string(),
-                        annotations: vec![]
-                    })),
-                    Box::new(Int(1))
-                ))
-            )
-        );
-
-        // TODO
-        /*assert!(parse("(a+1)2").is_ok());
-        assert!(parse("(x+y)z").is_ok());
-        assert!(parse("2x").is_ok());
-        assert!(parse("x y").is_ok());*/
+            assert_eq!(ast, explicit_ast);
+        }
     }
 
     #[test]
     fn ast_implicit_multiplication_precedence() {
+        let explicit_ast = consume_outer_expression(parse("(b+2)*(a+1)^2").unwrap()).unwrap();
         let input = "(b+2)(a+1)^2";
         let pairs = parse(input).unwrap();
         let ast = consume_outer_expression(pairs).unwrap();
 
-        assert_eq!(
-            ast,
-            Product(
-                Box::new(Sum(
-                    Box::new(Ident(Ident {
-                        name: "b".to_string(),
-                        annotations: vec![]
-                    })),
-                    Box::new(Int(2))
-                )),
-                Box::new(Power(
-                    Box::new(Sum(
-                        Box::new(Ident(Ident {
-                            name: "a".to_string(),
-                            annotations: vec![]
-                        })),
-                        Box::new(Int(1))
-                    )),
-                    Box::new(Int(2))
-                ))
-            )
-        );
+        assert_eq!(ast, explicit_ast);
     }
 }
