@@ -34,8 +34,9 @@ pub enum LogicalOperator {
 
 impl std::convert::From<String> for LogicalOperator {
     fn from(s: String) -> Self {
+        println!("{}", s);
         match &s[..] {
-            "and" => LogicalOperator::And,
+            "and" | "&&" | "&" => LogicalOperator::And,
             "or" => LogicalOperator::Or,
             "xor" => LogicalOperator::Xor,
             "implies" => LogicalOperator::Implies,
@@ -92,4 +93,57 @@ pub enum Expr {
     /// Matches a faculty expression
     Faculty(Box<Expr>),
     // TODO: collection
+}
+
+#[cfg(test)]
+mod test {
+    use super::Expr::*;
+    use super::Ident;
+    use super::LogicalOperator::*;
+    use super::RelationalOperator::*;
+    use crate::jme::parser::consume_outer_expression;
+    use crate::jme::parser::parse;
+
+    #[test]
+    fn ast() {
+        let input = "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false";
+
+        let pairs = parse(input).unwrap();
+        let ast = consume_outer_expression(pairs).unwrap();
+        //let ast: Vec<_> = ast.into_iter().map(|rule| convert_rule(rule)).collect();
+
+        assert_eq!(
+            ast,
+            Logic(
+                And,
+                Box::new(Logic(
+                    Or,
+                    Box::new(Logic(
+                        And,
+                        Box::new(Relation(
+                            GreaterThan,
+                            Box::new(Product(
+                                Box::new(Ident(Ident {
+                                    name: "a".to_string(),
+                                    annotations: vec![]
+                                })),
+                                Box::new(Int(7))
+                            )),
+                            Box::new(Int(5))
+                        )),
+                        Box::new(Bool(true))
+                    )),
+                    Box::new(Relation(
+                        LessThan,
+                        Box::new(Sum(
+                            Box::new(Power(Box::new(Int(9)), Box::new(Int(10)))),
+                            Box::new(Product(Box::new(Int(8)), Box::new(Int(5))))
+                        )),
+                        Box::new(Division(Box::new(Int(6)), Box::new(Int(10))))
+                    ))
+                )),
+                Box::new(Bool(false))
+            )
+        );
+    }
 }

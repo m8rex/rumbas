@@ -112,7 +112,7 @@ fn consume_expression<'i>(
     pairs: Peekable<Pairs<'i, Rule>>,
     climber: &PrecClimber<Rule>,
 ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
-    println!("outer {:?}", pairs);
+    println!("outer {:#?}", pairs);
     fn unaries<'i>(
         mut pairs: Peekable<Pairs<'i, Rule>>,
         climber: &PrecClimber<Rule>,
@@ -137,7 +137,7 @@ fn consume_expression<'i>(
                     Rule::ident => {
                         println!("ident {:?}", pair);
                         ParserNode {
-                            expr: ParserExpr::AnnotatedIdent(pair.as_str().to_owned()),
+                            expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
                             span: pair.clone().as_span(),
                         }
                     }
@@ -196,7 +196,7 @@ fn consume_expression<'i>(
                         let start_pos = pair.clone().as_span().start_pos();
                         pairs.next().unwrap(); // (
                         let pair = pairs.next().unwrap();
-                        let mut inner_pairs = pair.into_inner();
+                        let inner_pairs = pair.into_inner();
                         let mut arguments = Vec::new();
                         for p in inner_pairs.filter(|p| p.as_rule() == Rule::expression) {
                             arguments.push(consume_expression(p.into_inner().peekable(), climber)?);
@@ -212,6 +212,36 @@ fn consume_expression<'i>(
                             span: start_pos.span(&end_pos),
                         }
                     }
+                    /* Rule::implicit_multiplication_grouped => {
+                        // TODO: this gives wrong precedence for (a)(b)^2
+                        let span = pair.as_span();
+                        let mut pairs = pair.into_inner();
+                        let pair = pairs.next().unwrap();
+                        let start_pos = pair.clone().as_span().start_pos();
+                        let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
+                        let pair = pairs.next().unwrap();
+                        let end_pos = pair.clone().as_span().start_pos();
+                        let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
+                        ParserNode {
+                            expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
+                            span,
+                        }
+                    }
+                    Rule::implicit_multiplication_ident => {
+                        // TODO: this gives wrong precedence for (a)(b)^2
+                        let span = pair.as_span();
+                        let mut pairs = pair.into_inner();
+                        let pair = pairs.next().unwrap();
+                        let start_pos = pair.clone().as_span().start_pos();
+                        let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
+                        let pair = pairs.next().unwrap();
+                        let end_pos = pair.clone().as_span().start_pos();
+                        let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
+                        ParserNode {
+                            expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
+                            span, //start_pos.span(&end_pos),
+                        }
+                    }*/
                     _ => unreachable!(),
                 };
 
@@ -392,7 +422,7 @@ fn unescape(string: &str) -> Option<String> {
     }
 }
 
-fn parse(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+pub fn parse(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
     JMEParser::parse(Rule::jme, s)
 }
 
@@ -404,7 +434,7 @@ mod test {
     const VALID_ANNOTATIONS: [&str; 11] = [
         "verb", "op", "v", "vector", "unit", "dot", "m", "matrix", "diff", "degrees", "vec",
     ];
-    const VALID_LITERALS: [&str; 5] = ["true", "false", "1", "4.3", "\"Numbas\""]; // unicode pi and infinity
+    const VALID_LITERALS: [&str; 6] = ["true", "false", "1", "4.3", "\"Numbas\"", "'Numbas'"]; // unicode pi and infinity
     const BUILTIN_CONSTANTS: [&str; 6] = ["pi", "e", "i", "infinity", "infty", "nan"]; // unicode pi and infinity
 
     #[test]
@@ -481,16 +511,5 @@ mod test {
         assert!(parse("(x+y)z").is_ok());
         assert!(parse("2x").is_ok());
         assert!(parse("x y").is_ok());
-    }
-    #[test]
-    fn ast() {
-        let input = "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false";
-
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
-        //let ast: Vec<_> = ast.into_iter().map(|rule| convert_rule(rule)).collect();
-        println!("{:?}", ast);
-
-        assert_eq!(true, false);
     }
 }
