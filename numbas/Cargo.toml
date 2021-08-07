@@ -13,3 +13,4 @@ serde_with = "1.4.0"
 
 pest = "2.1"
 pest_derive = "2.1"
+lazy_static = "1.4"
