@@ -7,9 +7,9 @@ WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
 
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
-node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication | 
+node       = _{ implicit_multiplication  | grouped_expression | terminal } // TODO  implicit_multiplication | 
 terminal = _{ function_application | ident | collection | literal }  
-grouped_expression = { "(" ~ expression ~ ")" }
+grouped_expression = _{ "(" ~ expression ~ ")" }
 
 reserved = @{ (boolean | logic_binary_operator) ~ !ident_char }
 
@@ -44,15 +44,15 @@ non_single_quoted_character = _{ !"'" ~ ANY }
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
 
-//implicit_multiplication_grouped = { 
-//	(grouped_expression ~ ( ident | number | grouped_expression))
-//} 
-//implicit_multiplication_ident = { 
-//	((number | ident) ~ ident)
-//} // TODO x y z etc
-//implicit_multiplication = _{ 
-//    implicit_multiplication_grouped | implicit_multiplication_ident  
-//}
+implicit_multiplication_grouped = { 
+	(grouped_expression ~ ( ident | number | grouped_expression))
+} 
+implicit_multiplication_ident = { 
+	((number | ident) ~ ident)
+} // TODO x y z etc
+implicit_multiplication = _{ 
+    implicit_multiplication_grouped | implicit_multiplication_ident  
+}
 
 //annotated_variable = { (annotation)* ~ ident }
 verb_annotation = { "verb:" }
