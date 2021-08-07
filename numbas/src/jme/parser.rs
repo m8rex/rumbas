@@ -22,6 +22,7 @@ pub enum ParserExpr<'i> {
     Int(isize),
     Float(isize, String),
     Bool(bool),
+    Range(isize, isize),
     Sum(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Diff(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Product(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
@@ -47,6 +48,7 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Int(i) => ast::Expr::Int(i),
             ParserExpr::Float(i, s) => ast::Expr::Float(i, s),
             ParserExpr::Bool(b) => ast::Expr::Bool(b),
+            ParserExpr::Range(f, t) => ast::Expr::Range(f, t),
             ParserExpr::Sum(n1, n2) => {
                 ast::Expr::Sum(Box::new((*n1).into()), Box::new((*n2).into()))
             }
@@ -171,8 +173,27 @@ fn consume_expression<'i>(
                             span: pair.clone().as_span(),
                         }
                     }
+                    Rule::range => {
+                        let mut pairs = pair.into_inner();
+                        let pair = pairs.next().unwrap();
+                        let start: isize = pair
+                            .as_str()
+                            .trim()
+                            .parse()
+                            .expect("incorrect integer start point of range");
+                        //pairs.next().unwrap(); // ..
+                        let pair = pairs.next().unwrap();
+                        let end: isize = pair
+                            .as_str()
+                            .trim()
+                            .parse()
+                            .expect("incorrect integer end point of range");
+                        ParserNode {
+                            expr: ParserExpr::Range(start, end),
+                            span: pair.clone().as_span(),
+                        }
+                    }
                     Rule::broken_number => {
-                        let start = pair.clone().as_span().start_pos();
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
                         let integer: isize = pair
@@ -183,7 +204,6 @@ fn consume_expression<'i>(
                         pairs.next().unwrap(); // dot
                         let pair = pairs.next().unwrap();
                         let broken_part: String = pair.as_str().trim().to_owned();
-                        let end = pair.clone().as_span().end_pos();
                         ParserNode {
                             expr: ParserExpr::Float(integer, broken_part),
                             span: pair.clone().as_span(),
@@ -191,18 +211,20 @@ fn consume_expression<'i>(
                     }
                     Rule::function_application => {
                         let mut pairs = pair.into_inner();
+                        println!("pairs {:#?}", pairs);
                         let pair = pairs.next().unwrap();
                         let ident = pair.as_str();
+                        println!("ident {:?}", ident);
                         let start_pos = pair.clone().as_span().start_pos();
-                        pairs.next().unwrap(); // (
+                        //pairs.next().unwrap(); // (
                         let pair = pairs.next().unwrap();
+                        let end_pos = pair.as_span().end_pos();
                         let inner_pairs = pair.into_inner();
                         let mut arguments = Vec::new();
                         for p in inner_pairs.filter(|p| p.as_rule() == Rule::expression) {
                             arguments.push(consume_expression(p.into_inner().peekable(), climber)?);
                         }
-
-                        let end_pos = pairs.next().unwrap().as_span().end_pos();
+                        println!("args {:?}", arguments);
 
                         ParserNode {
                             expr: ParserExpr::FunctionApplication(

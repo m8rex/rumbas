@@ -70,6 +70,8 @@ pub enum Expr {
     Float(isize, String),
     /// Matches a boolean
     Bool(bool),
+    /// Matches a range-
+    Range(isize, isize),
     /// Matches a sum of two expressions, e.g. `e1 + e2`
     Sum(Box<Expr>, Box<Expr>),
     /// Matches a difference of two expressions, e.g. `e1 - e2`
@@ -143,6 +145,35 @@ mod test {
                     ))
                 )),
                 Box::new(Bool(false))
+            )
+        );
+    }
+
+    #[test]
+    fn ast_range() {
+        let input = "repeat(random(1..4),5)";
+
+        let pairs = parse(input).unwrap();
+        let ast = consume_outer_expression(pairs).unwrap();
+        //let ast: Vec<_> = ast.into_iter().map(|rule| convert_rule(rule)).collect();
+
+        assert_eq!(
+            ast,
+            FunctionApplication(
+                Ident {
+                    name: "repeat".to_string(),
+                    annotations: vec![]
+                },
+                Box::new(vec![
+                    FunctionApplication(
+                        Ident {
+                            name: "random".to_string(),
+                            annotations: vec![]
+                        },
+                        Box::new(vec![Range(1, 4)])
+                    ),
+                    Int(5)
+                ])
             )
         );
     }
