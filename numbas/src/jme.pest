@@ -3,23 +3,26 @@ jme = {
     ~ expression
     ~ EOI
 }
-WHITESPACE = _{ " " }
+WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
 
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
 node       = _{ implicit_multiplication | grouped_expression | terminal }
-terminal = { literal_value | function_application | annotated_variable | collection }  
+terminal = { function_application | ident | collection | literal }  
 grouped_expression = { "(" ~ expression ~ ")" }
 
-literal_value = { constant | boolean | number | string }
-constant = { infinity_constant | nan_constant | changeable_constant }
-infinity_constant = { "infty" | "infinity" }
+// reserved = { e_constant | i_constant | pi_constant | nan_constant | infinity_constant | boolean }
+
+literal = { boolean | number | string }
+//constant = { infinity_constant | nan_constant | changeable_constant }
+// TODO: to rust code side
+//infinity_constant = { "infty" | "infinity" }
 // TODO unicode infinity char
-nan_constant = { "nan" }
-changeable_constant = { e_constant | pi_constant | i_constant }
-e_constant = { "e" }
-i_constant = { "i" }
-pi_constant = { "pi" }
+//nan_constant = { "nan" }
+//changeable_constant = { e_constant | pi_constant | i_constant }
+//e_constant = { "e" }
+//i_constant = { "i" }
+//pi_constant = { "pi" }
 // TODO pi unicode
 
 number = { broken_number | integer }
@@ -33,19 +36,19 @@ string = { "\"" ~ non_quoted_character* ~ "\"" }
 non_quoted_character = _{ !"\"" ~ ANY }
 
 
-arithmetic_function = { "exp" }
-builtin_function = { arithmetic_function }
-function = { builtin_function | variable }
-annotated_function = { (annotation)* ~ function }
+//arithmetic_function = { "exp" }
+//builtin_function = { arithmetic_function }
+//function = { builtin_function | ident }
+//annotated_function = { (annotation)* ~ function }
 function_arguments = { expression ~ ("," ~ expression)* }
-function_application = { annotated_function ~ "(" ~ function_arguments ~ ")" }
+function_application = { ident ~ "(" ~ function_arguments ~ ")" }
 
 implicit_multiplication = { 
-	(grouped_expression ~ ( annotated_variable | number | grouped_expression)) |
-	( (number | annotated_variable) ~ annotated_variable)
+	(grouped_expression ~ ( ident | number | grouped_expression)) |
+	( (number | ident) ~ ident)
 } // TODO x y z etc
 
-annotated_variable = { (annotation)* ~ variable }
+//annotated_variable = { (annotation)* ~ ident }
 verb_annotation = { "verb:" }
 op_annotation = { "op:" }
 vector_annotation = { "vector:" | "v:" }
@@ -58,11 +61,13 @@ builtin_annotation = { verb_annotation | op_annotation | vector_annotation | uni
 other_annotation = { ASCII_ALPHA+ ~ ":" }
 annotation = { (builtin_annotation | other_annotation) }
 // TODO: other
-variable = @{ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
+ident_name = { ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
+ident = { (annotation)* ~ ident_name }
+
 
 collection = _{ dictionary | list }
 dictionary = { "[" ~ dictionary_item ~ ("," ~ dictionary_item )* ~ "]" }
-dictionary_key = { variable | string }
+dictionary_key = { ident_name | string }
 dictionary_item = { dictionary_key ~ ":" ~ expression }
 list = { "[" ~ (expression ~ ("," ~ expression )*)? ~ "]" }
 
@@ -75,6 +80,6 @@ implies_operator = { "implies" }
 logic_binary_operator = { relation_operator | and_operator | or_operator | xor_operator | implies_operator }
 infix_operator = { arithmetic_operator | logic_binary_operator }
 range = { integer? ~ ".." ~ integer? }  
-index_operator = { "[" ~ (string | range | integer | variable) ~ "]" } 
+index_operator = { "[" ~ (string | range | integer | ident_name) ~ "]" } 
 postfix_operator = { "!" | index_operator }
 prefix_operator = { "!" }
