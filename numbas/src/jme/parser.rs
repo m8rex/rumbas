@@ -134,6 +134,7 @@ fn consume_expression<'i>(
             }
             other_rule => {
                 println!("other {:#?}", other_rule);
+                println!("other {:#?}", pair);
                 let node = match other_rule {
                     Rule::expression => consume_expression(pair.into_inner().peekable(), climber)?,
                     Rule::ident => {
@@ -234,15 +235,13 @@ fn consume_expression<'i>(
                             span: start_pos.span(&end_pos),
                         }
                     }
-                    /* Rule::implicit_multiplication_grouped => {
+                    Rule::implicit_multiplication_grouped => {
                         // TODO: this gives wrong precedence for (a)(b)^2
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
-                        let start_pos = pair.clone().as_span().start_pos();
                         let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
                         let pair = pairs.next().unwrap();
-                        let end_pos = pair.clone().as_span().start_pos();
                         let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
                         ParserNode {
                             expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
@@ -254,16 +253,14 @@ fn consume_expression<'i>(
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
-                        let start_pos = pair.clone().as_span().start_pos();
                         let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
                         let pair = pairs.next().unwrap();
-                        let end_pos = pair.clone().as_span().start_pos();
                         let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
                         ParserNode {
                             expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
                             span, //start_pos.span(&end_pos),
                         }
-                    }*/
+                    }
                     _ => unreachable!(),
                 };
 
