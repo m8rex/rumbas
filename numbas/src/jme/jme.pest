@@ -85,7 +85,7 @@ arithmetic_operator = _{ add | subtract | multiply | divide | power }
     multiply = { "*" }
     divide   = { "/" }
     power    = { "^" }
-relational_operator = { less_or_equal | not_equal | less | greater_or_equal | greater | equal | in_operator } 
+relational_operator = { less_or_equal | not_equal | less | greater_or_equal | greater | equal | in_operator | divides_operator } 
     less_or_equal = _{ "<="  } 
     not_equal = _{ "<>" } 
     less = _{  "<" } 
