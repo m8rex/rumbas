@@ -283,6 +283,84 @@ pub enum BuiltinFunctions {
     /// Calculate the sum of all the cells in a matrix.
     SumCells,
 
+    /// Convert x to a string.
+    /// When converting a expression value to a string, you can give a list of display options as a second argument, either as a comma-separated string or a list of strings.
+    String,
+    /// Mark string x as containing raw LaTeX, so when it’s included in a mathmode environment it doesn’t get wrapped in a \textrm environment.
+    /// If x is a expression value, it’s rendered to LaTeX.
+    /// Note that backslashes must be double up, because the backslash is an escape character in JME strings.
+    LaTeX,
+    /// Mark string x as safe: don’t substitute variable values into it when this expression is evaluated.
+    /// Use this function to preserve curly braces in string literals.
+    Safe,
+    /// Substitute variable values into the string x, even if it’s marked as safe (see safe()).
+    /// The optional dictionary values overrides any previously-defined values of variables.
+    /// Note: The variable dependency checker can’t establish which variables will be used in the string until render is evaluated, so you may encounter errors if using render in the definition of a question variable. You can ensure a variable has been evaluated by including it in the values argument, e.g.:
+    /// render("a is {}",["a": a])
+    /// This function is intended for use primarily in content areas.
+    Render,
+    /// Capitalise the first letter of a string.
+    Capitalise,
+    /// Return singular if n is 1, otherwise return plural.
+    Pluralise,
+    /// Convert string to upper-case.
+    Upper,
+    /// Convert string to lower-case.
+    Lower,
+    /// Join a list of strings with the given delimiter.
+    Join,
+    /// Split a string at every occurrence of delimiter, returning a list of the resulting pieces.
+    Split,
+    #[serde(rename = "match_regex")]
+    /// If str matches the regular expression pattern, returns a list of matched groups, otherwise returns an empty list.
+    /// This function uses JavaScript regular expression syntax.
+    /// flags is an optional string listing the options flags to use. If it’s not given, the default value of "u" is used.
+    MatchRegex,
+    #[serde(rename = "split_regex")]
+    /// Split a string at every occurrence of a substring matching the given regular expression pattern, returning a list of the the remaining pieces.
+    /// flags is an optional string listing the options flags to use. If it’s not given, the default value of "u" is used.
+    SplitRegex,
+    #[serde(rename = "replace_regex")]
+    /// Replace a substring of string matching the given regular expression pattern with the string replacement.
+    /// flags is an optional string listing the options flags to use. If it’s not given, the default value of "u" is used.
+    /// Remember that backslashes must be doubled up inside JME strings, and curly braces are normally used to substitute in variables. You can use the safe() function to avoid this behaviour.
+    /// To replace all occurrences of the pattern, add the flag "g".
+    ReplaceRegex,
+    /// Remove whitespace from the start and end of str.
+    Trim,
+    /// Write a currency amount, with the given prefix or suffix characters.
+    Currency,
+    #[serde(rename = "separateThousands")]
+    /// Write a number, with the given separator character between every 3 digits
+    /// To write a number using notation appropriate to a particular culture or context, see formatnumber().
+    SeparateThousands,
+    /// Get rid of the % on the end of a percentage and parse as a number, then divide by 100.
+    UnPercent,
+    /// Add copies of prefix to the start of str until the result is at least n characters long.
+    LPad,
+    /// Add copies of suffix to the end of str until the result is at least n characters long.
+    RPad,
+    /// For each occurrence of %s in str, replace it with the corresponding entry in the list values.
+    FormatString,
+    /// Get the n^th element of the sequence a, b, c, ..., aa, ab, ....
+    /// Note that the numbering starts from 0.
+    LetterOrdinal,
+    /// Translate the given string, if it’s in the localisation file.
+    /// Look at the default localisation file for strings which can be translated. This function takes a key representing a string to be translated, and returns the corresponding value from the current localisation file.
+    /// arguments is a dictionary of named substitutions to make in the string.
+    Translate,
+    /// After converting to lower case, is str any of the strings "true", "false", "yes" or "no"?
+    IsBool,
+
+    /// Returns true if x is close to y.
+    /// The arguments rel_tol and abs_tol are optional, with default values of 10−15.
+    /// Equivalent to the following expression:
+    IsClose,
+    /// Returns true if a and b are both of the same data type, and “close enough” according to the given checking function.
+    /// Vectors, matrices, and lists are considered equal only if every pair of corresponding elements in a and b is “close enough”.
+    /// checkingFunction is the name of a checking function to use. These are documented in the Numbas runtime documentation.
+    ResultsEqual,
+
     Random,
     Repeat,
 }
