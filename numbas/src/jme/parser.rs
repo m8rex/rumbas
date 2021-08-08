@@ -23,11 +23,11 @@ pub enum ParserExpr<'i> {
     Float(isize, String),
     Bool(bool),
     Range(isize, isize),
-    Sum(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
-    Diff(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
-    Product(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
-    Division(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
-    Power(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
+    Arithmetic(
+        ast::ArithmeticOperator,
+        Box<ParserNode<'i>>,
+        Box<ParserNode<'i>>,
+    ),
     AnnotatedIdent(String),
     Relation(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Logic(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
@@ -49,20 +49,8 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Float(i, s) => ast::Expr::Float(i, s),
             ParserExpr::Bool(b) => ast::Expr::Bool(b),
             ParserExpr::Range(f, t) => ast::Expr::Range(f, t),
-            ParserExpr::Sum(n1, n2) => {
-                ast::Expr::Sum(Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::Diff(n1, n2) => {
-                ast::Expr::Diff(Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::Product(n1, n2) => {
-                ast::Expr::Product(Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::Division(n1, n2) => {
-                ast::Expr::Division(Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::Power(n1, n2) => {
-                ast::Expr::Power(Box::new((*n1).into()), Box::new((*n2).into()))
+            ParserExpr::Arithmetic(a, n1, n2) => {
+                ast::Expr::Arithmetic(a, Box::new((*n1).into()), Box::new((*n2).into()))
             }
             ParserExpr::AnnotatedIdent(s) => ast::Expr::Ident(s.into()),
             ParserExpr::Relation(s, n1, n2) => {
@@ -305,7 +293,11 @@ fn consume_expression<'i>(
             let end = rhs.span.end_pos();
 
             Ok(ParserNode {
-                expr: ParserExpr::Sum(Box::new(lhs), Box::new(rhs)),
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Add,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
                 span: start.span(&end),
             })
         }
@@ -317,7 +309,11 @@ fn consume_expression<'i>(
             let end = rhs.span.end_pos();
 
             Ok(ParserNode {
-                expr: ParserExpr::Diff(Box::new(lhs), Box::new(rhs)),
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Subtract,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
                 span: start.span(&end),
             })
         }
@@ -329,7 +325,11 @@ fn consume_expression<'i>(
             let end = rhs.span.end_pos();
 
             Ok(ParserNode {
-                expr: ParserExpr::Product(Box::new(lhs), Box::new(rhs)),
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Multiply,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
                 span: start.span(&end),
             })
         }
@@ -341,7 +341,11 @@ fn consume_expression<'i>(
             let end = rhs.span.end_pos();
 
             Ok(ParserNode {
-                expr: ParserExpr::Division(Box::new(lhs), Box::new(rhs)),
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Divide,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
                 span: start.span(&end),
             })
         }
@@ -353,7 +357,11 @@ fn consume_expression<'i>(
             let end = rhs.span.end_pos();
 
             Ok(ParserNode {
-                expr: ParserExpr::Power(Box::new(lhs), Box::new(rhs)),
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Power,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
                 span: start.span(&end),
             })
         }
@@ -395,12 +403,20 @@ fn unescape(string: &str) -> Option<String> {
         match chars.next() {
             Some('\\') => match chars.next()? {
                 '"' => result.push('"'),
-                '\\' => result.push('\\'),
-                'r' => result.push('\r'),
-                'n' => result.push('\n'),
-                't' => result.push('\t'),
-                //  '0' => result.push('\0'),
                 '\'' => result.push('\''),
+                'n' => result.push('\n'),
+                '{' => {
+                    result.push('\\');
+                    result.push('{')
+                }
+                '}' => {
+                    result.push('\\');
+                    result.push('}')
+                }
+                //'\\' => result.push('\\'),
+                //'r' => result.push('\r'),
+                //'t' => result.push('\t'),
+                //  '0' => result.push('\0'),
                 /*    'x' => {
                     let string: String = chars.clone().take(2).collect();
 

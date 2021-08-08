@@ -1,4 +1,15 @@
-#[derive(Clone, Debug, Eq, PartialEq)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ArithmeticOperator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Power,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RelationalOperator {
     LessThan,
     LessThanOrEqual,
@@ -24,7 +35,7 @@ impl std::convert::From<String> for RelationalOperator {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum LogicalOperator {
     And,
     Or,
@@ -51,12 +62,31 @@ pub struct Ident {
     annotations: Vec<String>, // TODO: enu value
 }
 
+impl Ident {
+    pub fn is_builtin_funtion(&self) -> bool {
+        BuiltinFunctions::get(&self.name[..]).is_some()
+    }
+}
+
 impl std::convert::From<String> for Ident {
     fn from(s: String) -> Self {
         let mut items = s.split(":");
         let name = items.next().unwrap().to_owned();
         let annotations = items.map(|s| s.to_owned()).collect::<Vec<_>>();
         Ident { name, annotations }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BuiltinFunctions {
+    Random,
+    Repeat,
+}
+
+impl BuiltinFunctions {
+    fn get(s: &str) -> Option<Self> {
+        serde_plain::from_str(s).ok()
     }
 }
 
@@ -72,16 +102,8 @@ pub enum Expr {
     Bool(bool),
     /// Matches a range-
     Range(isize, isize),
-    /// Matches a sum of two expressions, e.g. `e1 + e2`
-    Sum(Box<Expr>, Box<Expr>),
-    /// Matches a difference of two expressions, e.g. `e1 - e2`
-    Diff(Box<Expr>, Box<Expr>),
-    /// Matches a product of two expressions, e.g. `e1 * e2`
-    Product(Box<Expr>, Box<Expr>),
-    /// Matches a division of two expressions, e.g. `e1 / e2`
-    Division(Box<Expr>, Box<Expr>),
-    /// Matches a power of two expressions, e.g. `e1 ^ e2`
-    Power(Box<Expr>, Box<Expr>),
+    /// Matches an arithmetic operation of two expressions`
+    Arithmetic(ArithmeticOperator, Box<Expr>, Box<Expr>),
     /// Matches an identifier
     Ident(Ident),
     /// Matches a relationship between two expressions`
@@ -97,8 +119,57 @@ pub enum Expr {
     // TODO: collection
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ExprValidationError {
+    UnknownFunction(Ident),
+    UnknownVariable(Ident),
+}
+
+impl Expr {
+    fn validate(&self) -> Vec<ExprValidationError> {
+        match self {
+            Expr::Str(_) => vec![],
+            Expr::Int(_) => vec![],
+            Expr::Float(_, _) => vec![],
+            Expr::Bool(_) => vec![],
+            Expr::Range(_, _) => vec![], // TODO: if range is changed to expr, expr, to recursive call
+            Expr::Arithmetic(_, e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Ident(_) => vec![], // TODO: check if part of variable list
+            Expr::Relation(_, e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Logic(_, e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::FunctionApplication(ident, es) => {
+                let base = es.iter().flat_map(|e| e.validate()).collect::<Vec<_>>();
+                if ident.is_builtin_funtion() {
+                    base
+                } else {
+                    base.into_iter()
+                        .chain(
+                            vec![ExprValidationError::UnknownFunction(ident.clone())].into_iter(),
+                        )
+                        .collect()
+                }
+            }
+            Expr::Not(e1) => e1.validate(),
+            Expr::Faculty(e1) => e1.validate(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
+    use super::ArithmeticOperator::*;
     use super::Expr::*;
     use super::Ident;
     use super::LogicalOperator::*;
@@ -123,7 +194,8 @@ mod test {
                         And,
                         Box::new(Relation(
                             GreaterThan,
-                            Box::new(Product(
+                            Box::new(Arithmetic(
+                                Multiply,
                                 Box::new(Ident(Ident {
                                     name: "a".to_string(),
                                     annotations: vec![]
@@ -136,16 +208,18 @@ mod test {
                     )),
                     Box::new(Relation(
                         LessThan,
-                        Box::new(Sum(
-                            Box::new(Power(Box::new(Int(9)), Box::new(Int(10)))),
-                            Box::new(Product(Box::new(Int(8)), Box::new(Int(5))))
+                        Box::new(Arithmetic(
+                            Add,
+                            Box::new(Arithmetic(Power, Box::new(Int(9)), Box::new(Int(10)))),
+                            Box::new(Arithmetic(Multiply, Box::new(Int(8)), Box::new(Int(5))))
                         )),
-                        Box::new(Division(Box::new(Int(6)), Box::new(Int(10))))
+                        Box::new(Arithmetic(Divide, Box::new(Int(6)), Box::new(Int(10))))
                     ))
                 )),
                 Box::new(Bool(false))
             )
         );
+        assert_eq!(ast.validate(), vec![]);
     }
 
     #[test]
@@ -174,6 +248,7 @@ mod test {
                 ])
             )
         );
+        assert_eq!(ast.validate(), vec![]);
     }
 
     #[test]
@@ -191,6 +266,7 @@ mod test {
             let explicit_ast = consume_outer_expression(parse(explicit).unwrap()).unwrap();
 
             assert_eq!(ast, explicit_ast);
+            assert_eq!(ast.validate(), vec![]);
         }
     }
 
@@ -202,5 +278,6 @@ mod test {
         let ast = consume_outer_expression(pairs).unwrap();
 
         assert_eq!(ast, explicit_ast);
+        assert_eq!(ast.validate(), vec![]);
     }
 }
