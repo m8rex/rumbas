@@ -93,6 +93,7 @@ relational_operator = { less_or_equal | not_equal | less | greater_or_equal | gr
     greater = _{ ">" } 
     equal = _{ "=" } 
     in_operator = _{ "in" } 
+    divides_operator = _{ "|" } 
 and_operator = _{ "and" | "&&" | "&" }
 or_operator = _{ "or" }
 xor_operator = _{ "xor" }
