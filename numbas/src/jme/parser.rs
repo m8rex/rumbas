@@ -192,7 +192,6 @@ fn consume_expression<'i>(
                             .trim()
                             .parse()
                             .expect("incorrect integer part of float literal");
-                        pairs.next().unwrap(); // dot
                         let pair = pairs.next().unwrap();
                         let broken_part: String = pair.as_str().trim().to_owned();
                         ParserNode {
