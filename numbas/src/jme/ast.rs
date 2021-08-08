@@ -457,6 +457,8 @@ mod test {
     use super::RelationalOperator::*;
     use crate::jme::parser::consume_outer_expression;
     use crate::jme::parser::parse;
+    use serde::{Deserialize, Serialize};
+    use std::fmt::Write;
 
     #[test]
     fn ast() {
@@ -560,5 +562,68 @@ mod test {
 
         assert_eq!(ast, explicit_ast);
         assert_eq!(ast.validate(), vec![]);
+    }
+
+    #[derive(Serialize, Deserialize)]
+    struct DocTest {
+        name: String,
+        fns: Vec<DocTestFn>,
+    }
+
+    #[derive(Serialize, Deserialize)]
+    struct DocTestFn {
+        name: String,
+        examples: Vec<DocTestFnExample>,
+    }
+
+    #[derive(Serialize, Deserialize)]
+    struct DocTestFnExample {
+        r#in: String,
+        out: String,
+    }
+
+    #[test]
+    fn numbas_doc_tests() {
+        let mut total_tests = 0;
+        let mut passed_tests = 0;
+        let mut output = String::new();
+        let doc_tests_json = include_str!("numbas-jme-doc-tests.json");
+        let doc_tests: Vec<DocTest> =
+            serde_json::from_str(doc_tests_json).expect("it to parse the docstest json");
+        for test in doc_tests.into_iter() {
+            for r#fn in test.fns {
+                for example in r#fn.examples {
+                    total_tests += 1;
+
+                    let pairs_res = parse(&example.r#in[..]);
+                    let mut failed = true;
+                    if let Ok(pairs) = pairs_res.clone() {
+                        let result = std::panic::catch_unwind(|| consume_outer_expression(pairs));
+                        match result {
+                            Ok(ast_res) => {
+                                if ast_res.is_ok() {
+                                    failed = false;
+                                }
+                            }
+                            _ => (),
+                        }
+                    }
+                    if failed {
+                        writeln!(
+                            output,
+                            "{}.{}.{}:", //" {:?}",
+                            test.name,
+                            r#fn.name,
+                            example.r#in //, pairs_res
+                        )
+                        .expect("Error occured while trying to write to string");
+                    } else {
+                        passed_tests += 1;
+                    }
+                }
+            }
+        }
+        println!("{}", output);
+        assert_eq!(total_tests, passed_tests);
     }
 }
