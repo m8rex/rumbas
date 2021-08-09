@@ -79,14 +79,26 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
     }
 }
 
-pub fn consume_outer_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, Vec<Error<Rule>>> {
-    let expression = consume_expression_with_spans(pairs)?;
-    //let errors = validator::validate_ast(&rules);
-    //if errors.is_empty() {
-    Ok(expression.into())
-    /*} else {
-        Err(errors)
-    }*/
+#[derive(Debug, Clone, PartialEq)]
+pub enum ConsumeError {
+    ParseError(Vec<Error<Rule>>),
+    UnknownParseError,
+}
+
+pub fn consume_outer_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, ConsumeError> {
+    let res_res = std::panic::catch_unwind(|| {
+        let expression = consume_expression_with_spans(pairs)?;
+        //let errors = validator::validate_ast(&rules);
+        //if errors.is_empty() {
+        Ok(expression.into())
+        /*} else {
+            Err(errors)
+        }*/
+    });
+    match res_res {
+        Ok(res) => res.map_err(|e| ConsumeError::ParseError(e)),
+        Err(_err) => Err(ConsumeError::UnknownParseError),
+    }
 }
 
 fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<Error<Rule>>> {

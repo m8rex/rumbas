@@ -615,7 +615,8 @@ mod test {
     #[test]
     fn numbas_doc_tests() {
         let mut total_tests = 0;
-        let mut passed_tests = 0;
+        let mut passed_parse_tests = 0;
+        let mut passed_validate_tests = 0;
         let mut output = String::new();
         let doc_tests_json = include_str!("numbas-jme-doc-tests.json");
         let doc_tests: Vec<DocTest> =
@@ -626,36 +627,53 @@ mod test {
                     total_tests += 1;
 
                     let pairs_res = parse(&example.r#in[..]);
-                    let mut failed = true;
+                    let mut failed_parsing = true;
+                    let mut failed_validating = true;
                     if let Ok(pairs) = pairs_res.clone() {
-                        //let result = std::panic::catch_unwind(|| consume_outer_expression(pairs));
-                        let result: Result<_, ()> = Ok(consume_outer_expression(pairs));
-                        match result {
-                            Ok(ast_res) => {
-                                if ast_res.is_ok() {
-                                    failed = false;
-                                }
+                        let ast_res = consume_outer_expression(pairs);
+                        if let Ok(ast) = ast_res {
+                            failed_parsing = false;
+                            let validation_errors = ast.validate();
+                            if validation_errors.is_empty() {
+                                failed_validating = false;
+                            } else {
+                                writeln!(
+                                    output,
+                                    "VALIDATE: {}.{}.{}: {:?}",
+                                    test.name,
+                                    r#fn.name,
+                                    example.r#in,
+                                    validation_errors
+                                        .iter()
+                                        .map(|v| format!("{:?}", v))
+                                        .collect::<Vec<_>>()
+                                        .join(" & ")
+                                )
+                                .expect("Error occured while trying to write to string");
                             }
-                            _ => (),
                         }
                     }
-                    if failed {
+                    if failed_parsing {
                         writeln!(
                             output,
-                            "{}.{}.{}:", //" {:?}",
+                            "PARSE: {}.{}.{}:", //" {:?}",
                             test.name,
                             r#fn.name,
                             example.r#in //, pairs_res
                         )
                         .expect("Error occured while trying to write to string");
                     } else {
-                        passed_tests += 1;
+                        passed_parse_tests += 1;
+                    }
+                    if !failed_validating && !failed_parsing {
+                        passed_validate_tests += 1;
                     }
                 }
             }
         }
         println!("{}", output);
-        assert_eq!(total_tests, passed_tests);
+        assert_eq!(total_tests, passed_parse_tests);
+        assert_eq!(total_tests, passed_validate_tests);
     }
 
     #[test]
