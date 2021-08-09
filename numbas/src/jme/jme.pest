@@ -75,7 +75,7 @@ ident = { (annotation)* ~ ident_name }
 
 collection = _{ dictionary | list }
 dictionary = { "[" ~ dictionary_item ~ ("," ~ dictionary_item )* ~ "]" }
-dictionary_key = { ident_name | string }
+dictionary_key = _{ ident_name | string }
 dictionary_item = { dictionary_key ~ ":" ~ expression }
 list = { "[" ~ (expression ~ ("," ~ expression )*)? ~ "]" }
 

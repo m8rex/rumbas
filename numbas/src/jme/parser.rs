@@ -32,6 +32,7 @@ pub enum ParserExpr<'i> {
     Relation(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Logic(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     List(Box<Vec<ParserNode<'i>>>),
+    Dictionary(Box<Vec<(ParserNode<'i>, ParserNode<'i>)>>),
     FunctionApplication(String, Box<Vec<ParserNode<'i>>>),
     Not(Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
@@ -63,6 +64,9 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::List(n1) => {
                 ast::Expr::List(Box::new(n1.into_iter().map(|n| n.into()).collect()))
             }
+            ParserExpr::Dictionary(n1) => ast::Expr::Dictionary(Box::new(
+                n1.into_iter().map(|(k, v)| (k.into(), v.into())).collect(),
+            )),
             ParserExpr::FunctionApplication(s, n1) => ast::Expr::FunctionApplication(
                 s.into(),
                 Box::new(n1.into_iter().map(|n| n.into()).collect()),
@@ -219,7 +223,7 @@ fn consume_expression<'i>(
                     }
                     Rule::list => {
                         let span = pair.as_span();
-                        let mut pairs = pair.into_inner();
+                        let pairs = pair.into_inner();
                         println!("pairs {:#?}", pairs);
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
@@ -229,6 +233,27 @@ fn consume_expression<'i>(
 
                         ParserNode {
                             expr: ParserExpr::List(Box::new(elements)),
+                            span,
+                        }
+                    }
+                    Rule::dictionary => {
+                        let span = pair.as_span();
+                        let pairs = pair.into_inner();
+                        println!("pairs {:#?}", pairs);
+                        let mut elements = Vec::new();
+                        for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
+                            let mut item = p.into_inner();
+                            let key_pair = item.next().unwrap();
+                            let value_pair = item.next().unwrap();
+                            elements.push((
+                                consume_expression(key_pair.into_inner().peekable(), climber)?,
+                                consume_expression(value_pair.into_inner().peekable(), climber)?,
+                            ));
+                        }
+                        println!("elements {:?}", elements);
+
+                        ParserNode {
+                            expr: ParserExpr::Dictionary(Box::new(elements)),
                             span,
                         }
                     }
