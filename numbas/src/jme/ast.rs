@@ -460,7 +460,176 @@ pub enum BuiltinFunctions {
     /// Enumerate the elements of collection: this function returns a list containing, for each element v of collection, a new list of the form [i,v], where i is the index of the element in collection.
     Enumerate,
 
+    /// Get the value corresponding to the given key string in the dictionary.
+    /// If the key is not present in the dictionary, the default value will be returned.
+    Get,
+    /// Create a dictionary with the given key-value pairs. Equivalent to [ .. ], except when no key-value pairs are given: [] creates an empty list instead.
+    /// You can alternately pass a list of pairs of the form [key, value], to transform a list into a dictionary.
+    Dict,
+    /// A list of all of the given dictionary’s keys.
+    Keys,
+    /// A list of the values corresponding to each of the given dictionary’s keys.
+    /// If a list of keys is given, only the values corresponding to those keys are returned, in the same order.
+    Values,
+    /// A list of all of the [key,value] pairs in the given dictionary.
+    Items,
+
+    /// Create a set with the given elements. Either pass the elements as individual arguments, or as a list.
+    Set,
+    /// Union of sets a and b
+    Union,
+    /// Intersection of sets a and b, i.e. elements which are in both sets.
+    Intersection,
+
+    /// Pick uniformly at random from a range, list, or from the given arguments.
     Random,
+    /// Pick random from a weighted list of items. Each element in the input list is a pair of the form [item, probability], where probability is a number value.
+    /// Items with negative weight are ignored.
+    #[serde(rename = "weighted_random")]
+    WeightedRandom,
+    /// Get a random shuffling of the integers [0…n−1]
+    Deal,
+    /// Reorder a list given a permutation. The i'th element of the output is the order[i]'th element of list.
+    Reorder,
+    /// Random shuffling of list or range.
+    Shuffle,
+    /// Shuffle several lists together - each list has the same permutation of its elements applied. The lists must all be the same length, otherwise an error is thrown.
+    #[serde(rename = "shuffle_together")]
+    ShuffleTogether,
+
+    /// Return a if b is true, else return 0.
+    Award,
+    /// If p is true, return a, else return b. Only the returned value is evaluated.
+    If,
+    /// Select cases. Alternating boolean expressions with values to return, with the final argument representing the default case. Only the returned value is evaluated.
+    Switch,
+    /// If condition is false, then return value, otherwise don’t evaluate value and return false. This is intended for use in marking scripts, to apply marking feedback only if a condition is met.
+    Assert,
+    /// Try to evaluate expression. If it is successfully evaluated, return the result. Otherwise,
+    /// evaluate except, with the error message available as name.
+    Try,
+
+    /// Parse string x as HTML.
+    HTML,
+    /// Does str represent a string of HTML containing text? Returns false for the empty string, or HTML elements with no text content.
+    IsNonEmptyHTML,
+    /// Create an HTML with cell contents defined by data, which should be a list of lists of data,
+    /// and column headers defined by the list of strings headers.
+    Table,
+    /// Create an HTML img element loading the image from the given URL. Images uploaded through the resources tab are stored in the relative URL resources/images/<filename>.png, where <filename> is the name of the original file.
+    Image,
+    /// Apply a CSS max-width attribute to the given element. You can use this to ensure that an
+    /// image is not displayed too wide. The given width is in pixels.
+    #[serde(rename = "max_width")]
+    MaxWidth,
+    /// Apply a CSS max-height attribute to the given element. You can use this to ensure that an image is not displayed too long. The given height is in pixels.
+    #[serde(rename = "max_height")]
+    MaxHeight,
+
+    /// Decode a JSON string into JME data types.
+    /// JSON is decoded into numbers, strings, booleans, lists, or dictionaries. To produce other data types, such as matrices or vectors, you will have to post-process the resulting data.
+    /// Warning: The JSON value null is silently converted to an empty string, because JME has no “null” data type. This may change in the future.
+    #[serde(rename = "json_decode")]
+    JsonDecode,
+    /// Convert the given object to a JSON string.
+    /// Numbers, strings, booleans, lists, and dictionaries are converted in a straightforward manner. Other data types may behave unexpectedly.
+    #[serde(rename = "json_encode")]
+    JsonEncode,
+
+    /// Parse a string as a JME expression. The expression can be substituted into other expressions, such as the answer to a mathematical expression part, or the \simplify LaTeX command.
+    /// Warning: Note that the argument to expression is evaluated using the same rules as any
+    /// other JME expression, so for example expression("2" + "x") is equivalent to
+    /// expression("2x"), not expression("2 + x"). A good way to construct a randomised
+    /// sub-expression is using substitute().
+    #[serde(alias = "expression")]
+    Parse,
+    /// Evaluate the given sub-expression.
+    /// If values is given, it should be a dictionary mapping names of variables to their values.
+    Eval,
+    /// Returns the arguments of the top-level operation of expression, as a list of sub-expressions. If expression is a data type other than an operation or function, an empty list is returned.
+    /// Binary operations only ever have two arguments. For example, 1+2+3 is parsed as (1+2)+3.
+    Args,
+    /// Returns the name of the data type of the top token in the expression, as a string.
+    Type,
+    /// Construct a name token with the given name.
+    Name,
+    /// Construct an operator with the given name.
+    Op,
+    /// Construct a function token with the given name.
+    Function,
+    /// Returns a sub-expression representing the application of the given operation to the list of arguments.
+    Exec,
+    /// Return a list of all unbound variables used in the given expression. Effectively, this is all the variables that need to be given values in order for this expression to be evaluated.
+    /// Bound variables are those defined as part of operations which also assign values to those variables, such as map or let.
+    FindVars,
+    /// Substitute the given variable values into expression.
+    /// variables is a dictionary mapping variable names to values.
+    Substitute,
+    /// Apply the given simplification rules to expression, until no rules apply.
+    /// rules is a list of names of rules to apply, given either as a string containing a comma-separated list of names, or a list of strings.
+    /// Unlike the \\simplify command in content areas, the basic rule is not turned on by default.
+    /// See Substituting variables into displayed maths for a list of rules available.
+    Simplify,
+    /// Expand juxtapositions in variable and function names for implicit multiplication of terms or composition of functions. This is to do with strings of letters with no spaces or operator symbols between them.
+    /// options is an optional dictionary of settings for the process. It can contain the following keys.
+    ///     singleLetterVariables - Insist that all variable names consist of a single letter, interpreting longer strings of characters as implicit multiplication. Greek letters are considered to be one letter long.
+    ///     noUnknownFunctions - When a name appears before a bracket, but it’s not the name of a defined function, interpret it as a multiplication instead. This does not apply function applications with more than one argument.
+    /// implicitFunctionComposition - When several function names are juxtaposed together to form a string that is not the name of a defined function, or several function names are joined with the multiplication symbol *, interpret it as implicity composition of functions.
+    /// If options is not given, all of these are turned on.
+    /// Variable name annotations, subscripts and primes do not count towards the number of letters in a name.
+    #[serde(rename = "expand_juxtapositions")]
+    ExpandJuxtapositions,
+    /// Compare expressions a and b using the “canonical” ordering. Returns -1 if a should go before b, 0 if they are considered “equal”, and 1 if a should go after b.
+    /// Expressions are examined in the following order:
+    ///     Names used: all variable names used in each expression are collected in a depth-first search and the resulting lists are compared lexicographically.
+    ///     Data type: if a and b are of different data types, op and function go first, and then they are compared using the names of their data types.
+    ///     Polynomials: terms of the form x^b or a*x^b, where a and b are numbers and x is a variable name, go before anything else.
+    ///     Function name: if a and b are both function applications, they are compared using the names of the functions. If the functions are the same, the arguments are compared. Powers, or multiples of powers, go after anything else.
+    ///     Number: if a and b are both numbers, the lowest number goes first. Complex numbers are compared by real part and then by imaginary part.
+    ///     Elements of other data types are considered to be equal to any other value of the same data type.
+    #[serde(rename = "canonical_compare")]
+    CanonicalCompare,
+    /// Compare expression a and b by substituting random values in for the free variables.
+    /// Returns true if a and b have exactly the same free variables, and produce the same results when evaluated against the randomly chosen values.
+    /// For more control over the evaluation, see resultsequal().
+    #[serde(rename = "numerical_compare")]
+    NumericalCompare,
+    /// Set the case-sensitivity of the scope and then evaluate expression.
+    /// If case_sensitive is not given, it defaults to true.
+    /// Case-sensitivity affects variable and function names. The names x and X are considered equivalent when not in case-sensitive mode, but are considered to be different when in case-sensitive mode.
+    #[serde(rename = "scope_case_sensitive")]
+    ScopeCaseSensitive,
+
+    /// Differentiate the given expression with respect to the given variable name
+    Diff,
+
+    /// If expr matches pattern, return a dictionary of the form ["match": boolean, "groups": dict], where "groups" is a dictionary mapping names of matches to sub-expressions.
+    /// See the documentation on pattern-matching mathematical expressions.
+    /// If you don’t need to use any parts of the matched expression, use matches() instead.
+    Match,
+    /// Return true if expr matches pattern.
+    /// Use this if you’re not interested in capturing any parts of the matched expression.
+    Matches,
+    /// Replace occurrences of pattern in expr with the expression created by substituting the matched items into replacement.
+    Replace,
+
+    /// Attempt to infer the types of free variables in the given expression.
+    /// There can be more than one valid assignment of types to the variables in an expression. For example, in the expression a+a, the variable a can be any type which has a defined addition operation.
+    /// Returns the first possible assignment of types to variables, as a dictionary mapping variable names to the name of its type. If a variable name is missing from the dictionary, the algorithm can’t establish any constraint on it.
+    #[serde(rename = "infer_variable_types")]
+    InferVariableTypes,
+    /// Attempt to infer the type of the value produced by the given expression, which may contain free variables.
+    /// First, the types of any free variables are inferred. Then, definitions of an operations or functions in the function are chosen to match the types of their arguments.
+    /// Returns the name of the expression’s output type as a string, or "?" if the type can’t be determined.
+    #[serde(rename = "infer_type")]
+    InferType,
+
+    /// Returns a list containing the names of every variable defined in the current scope, as strings.
+    DefinedVariables,
+    /// Returns true if the variable with the given name has been defined in the current scope.
+    IsSet,
+    /// Temporarily remove the named variables, functions and rulesets from the scope, and evaluate the given expression.
+    Unset,
 }
 
 impl BuiltinFunctions {
