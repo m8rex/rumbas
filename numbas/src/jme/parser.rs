@@ -83,7 +83,9 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
     let climber = PrecClimber::new(vec![
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
-        Operator::new(Rule::add, Assoc::Left) | Operator::new(Rule::subtract, Assoc::Left),
+        Operator::new(Rule::add, Assoc::Left)
+            | Operator::new(Rule::subtract, Assoc::Left)
+            | Operator::new(Rule::except, Assoc::Left),
         Operator::new(Rule::multiply, Assoc::Left)
             | Operator::new(Rule::implicit_multiplication_operator, Assoc::Left)
             | Operator::new(Rule::divide, Assoc::Left),
@@ -310,6 +312,22 @@ fn consume_expression<'i>(
             Ok(ParserNode {
                 expr: ParserExpr::Arithmetic(
                     ast::ArithmeticOperator::Subtract,
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ),
+                span: start.span(&end),
+            })
+        }
+        Rule::except => {
+            let lhs = lhs?;
+            let rhs = rhs?;
+
+            let start = lhs.span.start_pos();
+            let end = rhs.span.end_pos();
+
+            Ok(ParserNode {
+                expr: ParserExpr::Arithmetic(
+                    ast::ArithmeticOperator::Except,
                     Box::new(lhs),
                     Box::new(rhs),
                 ),
