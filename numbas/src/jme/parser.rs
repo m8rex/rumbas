@@ -22,7 +22,7 @@ pub enum ParserExpr<'i> {
     Int(isize),
     Float(isize, String),
     Bool(bool),
-    Range(isize, isize, isize),
+    Range(Option<isize>, Option<isize>, Option<isize>),
     Arithmetic(
         ast::ArithmeticOperator,
         Box<ParserNode<'i>>,
@@ -36,6 +36,7 @@ pub enum ParserExpr<'i> {
     FunctionApplication(String, Box<Vec<ParserNode<'i>>>),
     Not(Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
+    Indexation(Box<ParserNode<'i>>),
 }
 
 impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
@@ -73,6 +74,7 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ),
             ParserExpr::Not(n) => ast::Expr::Not(Box::new((*n).into())),
             ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).into())),
+            ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).into())),
         }
     }
 }
@@ -178,29 +180,31 @@ fn consume_expression<'i>(
                         // TODO fix optional
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
-                        let pair = pairs.next().unwrap();
-                        let start: isize = pair
-                            .as_str()
-                            .trim()
-                            .parse()
-                            .expect("incorrect integer start point of range");
-                        pairs.next().unwrap(); // ..
-                        let pair = pairs.next().unwrap();
-                        let end: isize = pair
-                            .as_str()
-                            .trim()
-                            .parse()
-                            .expect("incorrect integer end point of range");
-                        let pair = pairs.next();
-                        let step: isize = if let Some(pair) = pair {
-                            let pair = pairs.next().unwrap();
+                        let mut pair = pairs.next().unwrap();
+                        let start: Option<isize> = if pair.as_rule() == Rule::integer {
+                            let val = Some(
+                                pair.as_str()
+                                    .trim()
+                                    .parse()
+                                    .expect("incorrect integer start point of range"),
+                            );
+                            pair = pairs.next().unwrap();
+                            val
+                        } else {
+                            None
+                        };
+                        let end: Option<isize> = pairs.next().map(|pair| {
+                            pair.as_str()
+                                .trim()
+                                .parse()
+                                .expect("incorrect integer end point of range")
+                        });
+                        let step: Option<isize> = pairs.next().map(|pair| {
                             pair.as_str()
                                 .trim()
                                 .parse()
                                 .expect("incorrect integer step size for range")
-                        } else {
-                            1
-                        };
+                        });
                         ParserNode {
                             expr: ParserExpr::Range(start, end, step),
                             span,
@@ -321,6 +325,13 @@ fn consume_expression<'i>(
                                 let start = node.span.start_pos();
                                 ParserNode {
                                     expr: ParserExpr::Faculty(Box::new(node)),
+                                    span: start.span(&pair.as_span().end_pos()),
+                                }
+                            }
+                            Rule::index_operator => {
+                                let start = node.span.start_pos();
+                                ParserNode {
+                                    expr: ParserExpr::Indexation(Box::new(node)),
                                     span: start.span(&pair.as_span().end_pos()),
                                 }
                             }
@@ -486,7 +497,7 @@ fn unescape(string: &str) -> Option<String> {
                     result.push('\\');
                     result.push('}')
                 }
-                //'\\' => result.push('\\'),
+                '\\' => result.push('\\'),
                 //'r' => result.push('\r'),
                 //'t' => result.push('\t'),
                 //  '0' => result.push('\0'),
