@@ -382,8 +382,8 @@ pub enum Expr {
     Float(isize, String),
     /// Matches a boolean
     Bool(bool),
-    /// Matches a range (second index is not included)-
-    Range(isize, isize),
+    /// Matches a range (second index is not included) with a certain step-
+    Range(isize, isize, isize),
     /// Matches an arithmetic operation of two expressions`
     Arithmetic(ArithmeticOperator, Box<Expr>, Box<Expr>),
     /// Matches an identifier
@@ -392,6 +392,8 @@ pub enum Expr {
     Relation(RelationalOperator, Box<Expr>, Box<Expr>),
     /// Matches a logical operation between two expressions`
     Logic(LogicalOperator, Box<Expr>, Box<Expr>),
+    /// Matches a list application
+    List(Box<Vec<Expr>>),
     /// Matches a function application
     FunctionApplication(Ident, Box<Vec<Expr>>),
     /// Matches a not expression
@@ -414,7 +416,7 @@ impl Expr {
             Expr::Int(_) => vec![],
             Expr::Float(_, _) => vec![],
             Expr::Bool(_) => vec![],
-            Expr::Range(_, _) => vec![], // TODO: if range is changed to expr, expr, to recursive call
+            Expr::Range(_, _, _) => vec![], // TODO: if range is changed to expr, expr, to recursive call
             Expr::Arithmetic(_, e1, e2) => e1
                 .validate()
                 .into_iter()
@@ -431,6 +433,7 @@ impl Expr {
                 .into_iter()
                 .chain(e2.validate().into_iter())
                 .collect(),
+            Expr::List(es) => es.iter().flat_map(|e| e.validate()).collect::<Vec<_>>(),
             Expr::FunctionApplication(ident, es) => {
                 let base = es.iter().flat_map(|e| e.validate()).collect::<Vec<_>>();
                 if ident.is_builtin_funtion() {
@@ -526,7 +529,7 @@ mod test {
                             name: "random".to_string(),
                             annotations: vec![]
                         },
-                        Box::new(vec![Range(1, 4)])
+                        Box::new(vec![Range(1, 4, 1)])
                     ),
                     Int(5)
                 ])
@@ -626,5 +629,22 @@ mod test {
         }
         println!("{}", output);
         assert_eq!(total_tests, passed_tests);
+    }
+
+    #[test]
+    fn ast_list() {
+        let input = "[1,2,3]+4";
+        let pairs = parse(input).unwrap();
+        let ast = consume_outer_expression(pairs).unwrap();
+
+        assert_eq!(
+            ast,
+            Arithmetic(
+                Add,
+                Box::new(List(Box::new(vec![Int(1), Int(2), Int(3)]))),
+                Box::new(Int(4))
+            )
+        );
+        assert_eq!(ast.validate(), vec![]);
     }
 }
