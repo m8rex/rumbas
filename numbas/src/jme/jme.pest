@@ -11,7 +11,7 @@ node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
-reserved = @{ (boolean | logic_binary_operator) ~ !ident_char }
+reserved = @{ (boolean | logic_binary_operator | not_operator | in_operator | except) ~ !ident_char }
 
 literal = _{ boolean | range | number | string }
 //constant = { infinity_constant | nan_constant | changeable_constant }
@@ -85,6 +85,7 @@ arithmetic_operator = _{ add | subtract | multiply | divide | power }
     multiply = { "*" }
     divide   = { "/" }
     power    = { "^" }
+    except   = { "except" }
 relational_operator = { less_or_equal | not_equal | less | greater_or_equal | greater | equal | in_operator | divides_operator } 
     less_or_equal = _{ "<="  } 
     not_equal = _{ "<>" } 
