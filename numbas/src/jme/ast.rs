@@ -382,8 +382,8 @@ pub enum Expr {
     Float(isize, String),
     /// Matches a boolean
     Bool(bool),
-    /// Matches a range (second index is not included) with a certain step-
-    Range(isize, isize, isize),
+    /// Matches a range (end value is not included) with a certain step-
+    Range(Option<isize>, Option<isize>, Option<isize>),
     /// Matches an arithmetic operation of two expressions`
     Arithmetic(ArithmeticOperator, Box<Expr>, Box<Expr>),
     /// Matches an identifier
@@ -402,7 +402,8 @@ pub enum Expr {
     Not(Box<Expr>),
     /// Matches a faculty expression
     Faculty(Box<Expr>),
-    // TODO: collection
+    /// Matches an indexation expression
+    Indexation(Box<Expr>),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -455,6 +456,7 @@ impl Expr {
             }
             Expr::Not(e1) => e1.validate(),
             Expr::Faculty(e1) => e1.validate(),
+            Expr::Indexation(e1) => e1.validate(),
         }
     }
 }
@@ -536,7 +538,7 @@ mod test {
                             name: "random".to_string(),
                             annotations: vec![]
                         },
-                        Box::new(vec![Range(1, 4, 1)])
+                        Box::new(vec![Range(Some(1), Some(4), Some(1))])
                     ),
                     Int(5)
                 ])
