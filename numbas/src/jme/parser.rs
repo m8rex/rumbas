@@ -22,7 +22,7 @@ pub enum ParserExpr<'i> {
     Int(isize),
     Float(isize, String),
     Bool(bool),
-    Range(isize, isize),
+    Range(isize, isize, isize),
     Arithmetic(
         ast::ArithmeticOperator,
         Box<ParserNode<'i>>,
@@ -31,6 +31,7 @@ pub enum ParserExpr<'i> {
     AnnotatedIdent(String),
     Relation(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Logic(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
+    List(Box<Vec<ParserNode<'i>>>),
     FunctionApplication(String, Box<Vec<ParserNode<'i>>>),
     Not(Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
@@ -48,7 +49,7 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Int(i) => ast::Expr::Int(i),
             ParserExpr::Float(i, s) => ast::Expr::Float(i, s),
             ParserExpr::Bool(b) => ast::Expr::Bool(b),
-            ParserExpr::Range(f, t) => ast::Expr::Range(f, t),
+            ParserExpr::Range(f, t, s) => ast::Expr::Range(f, t, s),
             ParserExpr::Arithmetic(a, n1, n2) => {
                 ast::Expr::Arithmetic(a, Box::new((*n1).into()), Box::new((*n2).into()))
             }
@@ -58,6 +59,9 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             }
             ParserExpr::Logic(s, n1, n2) => {
                 ast::Expr::Logic(s.into(), Box::new((*n1).into()), Box::new((*n2).into()))
+            }
+            ParserExpr::List(n1) => {
+                ast::Expr::List(Box::new(n1.into_iter().map(|n| n.into()).collect()))
             }
             ParserExpr::FunctionApplication(s, n1) => ast::Expr::FunctionApplication(
                 s.into(),
@@ -167,6 +171,8 @@ fn consume_expression<'i>(
                         }
                     }
                     Rule::range => {
+                        // TODO fix optional
+                        let span = pair.as_span();
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
                         let start: isize = pair
@@ -174,16 +180,26 @@ fn consume_expression<'i>(
                             .trim()
                             .parse()
                             .expect("incorrect integer start point of range");
-                        //pairs.next().unwrap(); // ..
+                        pairs.next().unwrap(); // ..
                         let pair = pairs.next().unwrap();
                         let end: isize = pair
                             .as_str()
                             .trim()
                             .parse()
                             .expect("incorrect integer end point of range");
+                        let pair = pairs.next();
+                        let step: isize = if let Some(pair) = pair {
+                            let pair = pairs.next().unwrap();
+                            pair.as_str()
+                                .trim()
+                                .parse()
+                                .expect("incorrect integer step size for range")
+                        } else {
+                            1
+                        };
                         ParserNode {
-                            expr: ParserExpr::Range(start, end),
-                            span: pair.clone().as_span(),
+                            expr: ParserExpr::Range(start, end, step),
+                            span,
                         }
                     }
                     Rule::broken_number => {
@@ -199,6 +215,21 @@ fn consume_expression<'i>(
                         ParserNode {
                             expr: ParserExpr::Float(integer, broken_part),
                             span: pair.clone().as_span(),
+                        }
+                    }
+                    Rule::list => {
+                        let span = pair.as_span();
+                        let mut pairs = pair.into_inner();
+                        println!("pairs {:#?}", pairs);
+                        let mut elements = Vec::new();
+                        for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
+                            elements.push(consume_expression(p.into_inner().peekable(), climber)?);
+                        }
+                        println!("elements {:?}", elements);
+
+                        ParserNode {
+                            expr: ParserExpr::List(Box::new(elements)),
+                            span,
                         }
                     }
                     Rule::function_application => {
