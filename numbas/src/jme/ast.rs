@@ -392,8 +392,10 @@ pub enum Expr {
     Relation(RelationalOperator, Box<Expr>, Box<Expr>),
     /// Matches a logical operation between two expressions`
     Logic(LogicalOperator, Box<Expr>, Box<Expr>),
-    /// Matches a list application
+    /// Matches a list
     List(Box<Vec<Expr>>),
+    /// Matches a dictionary
+    Dictionary(Box<Vec<(Expr, Expr)>>),
     /// Matches a function application
     FunctionApplication(Ident, Box<Vec<Expr>>),
     /// Matches a not expression
@@ -434,6 +436,11 @@ impl Expr {
                 .chain(e2.validate().into_iter())
                 .collect(),
             Expr::List(es) => es.iter().flat_map(|e| e.validate()).collect::<Vec<_>>(),
+            Expr::Dictionary(es) => es
+                .iter()
+                .flat_map(|(k, v)| vec![k, v])
+                .flat_map(|e| e.validate())
+                .collect::<Vec<_>>(),
             Expr::FunctionApplication(ident, es) => {
                 let base = es.iter().flat_map(|e| e.validate()).collect::<Vec<_>>();
                 if ident.is_builtin_funtion() {
@@ -602,7 +609,8 @@ mod test {
                     let pairs_res = parse(&example.r#in[..]);
                     let mut failed = true;
                     if let Ok(pairs) = pairs_res.clone() {
-                        let result = std::panic::catch_unwind(|| consume_outer_expression(pairs));
+                        //let result = std::panic::catch_unwind(|| consume_outer_expression(pairs));
+                        let result: Result<_, ()> = Ok(consume_outer_expression(pairs));
                         match result {
                             Ok(ast_res) => {
                                 if ast_res.is_ok() {
