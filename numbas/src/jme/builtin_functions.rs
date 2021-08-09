@@ -7,6 +7,7 @@ pub enum BuiltinFunctions {
     Exp,
 
     /// Construct a decimal value. Any string accepted by Decimal.js is accepted.
+    #[serde(alias = "dec")]
     Decimal,
     /// Convert n to a rational nubmer, taking an approximation when necessary.
     Rational,
@@ -65,7 +66,7 @@ pub enum BuiltinFunctions {
     /// Round n to d significant figures and return a string, padding with zeros if necessary.
     SigFormat,
     /// Assuming n is a string representing a number, return the number of significant figures. The string is passed through cleannumber() first.
-    CountSigFids,
+    CountSigFigs,
     /// Returns true if str is a string representing a number given to the desired number of decimal places or significant figures.
     /// precisionType is either "dp", for decimal places, or "sigfig", for significant figures.
     /// If strict is true, then trailing zeroes must be included.
@@ -142,6 +143,8 @@ pub enum BuiltinFunctions {
     /// Inverse of tanh
     ArcTanh,
 
+    /// fact(x) is a synonym for x!.
+    Fact,
     /// Factorise n. Returns the exponents of the prime factorisation of n as a list.
     Factorise,
     /// Gamma function
@@ -165,7 +168,7 @@ pub enum BuiltinFunctions {
     Perm,
     /// Count combinations
     Comb,
-    #[serde(rename = "gcf")]
+    #[serde(alias = "gcf")]
     /// Greatest common divisor of integers a and b
     GCD,
     #[serde(rename = "gcd_without_pi_or_i")]
@@ -202,6 +205,7 @@ pub enum BuiltinFunctions {
     /// Matrix transpose.
     Transpose,
     /// Calculate the sum of all the cells in a matrix.
+    #[serde(rename = "sum_cells")]
     SumCells,
 
     /// Convert x to a string.
