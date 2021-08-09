@@ -128,12 +128,12 @@ fn consume_expression<'i>(
     pairs: Peekable<Pairs<'i, Rule>>,
     climber: &PrecClimber<Rule>,
 ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
-    println!("outer {:#?}", pairs);
+    //println!("outer {:#?}", pairs);
     fn unaries<'i>(
         mut pairs: Peekable<Pairs<'i, Rule>>,
         climber: &PrecClimber<Rule>,
     ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
-        println!("unaries {:?}", pairs);
+        //println!("unaries {:?}", pairs);
         let pair = pairs.next().unwrap();
 
         let node = match pair.as_rule() {
@@ -147,12 +147,12 @@ fn consume_expression<'i>(
                 }
             }
             other_rule => {
-                println!("other {:#?}", other_rule);
-                println!("other {:#?}", pair);
+                //println!("other {:#?}", other_rule);
+                //println!("other {:#?}", pair);
                 let node = match other_rule {
                     Rule::expression => consume_expression(pair.into_inner().peekable(), climber)?,
                     Rule::ident => {
-                        println!("ident {:?}", pair);
+                        //println!("ident {:?}", pair);
                         ParserNode {
                             expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
                             span: pair.clone().as_span(),
@@ -200,7 +200,7 @@ fn consume_expression<'i>(
                                     .parse()
                                     .expect("incorrect integer start point of range"),
                             );
-                            pair = pairs.next().unwrap();
+                            pairs.next().unwrap(); // dots
                             val
                         } else {
                             None
@@ -240,12 +240,12 @@ fn consume_expression<'i>(
                     Rule::list => {
                         let span = pair.as_span();
                         let pairs = pair.into_inner();
-                        println!("pairs {:#?}", pairs);
+                        //println!("pairs {:#?}", pairs);
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
                             elements.push(consume_expression(p.into_inner().peekable(), climber)?);
                         }
-                        println!("elements {:?}", elements);
+                        //println!("elements {:?}", elements);
 
                         ParserNode {
                             expr: ParserExpr::List(Box::new(elements)),
@@ -255,7 +255,7 @@ fn consume_expression<'i>(
                     Rule::dictionary => {
                         let span = pair.as_span();
                         let pairs = pair.into_inner();
-                        println!("pairs {:#?}", pairs);
+                        //println!("pairs {:#?}", pairs);
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
                             let mut item = p.into_inner();
@@ -266,7 +266,7 @@ fn consume_expression<'i>(
                                 consume_expression(value_pair.into_inner().peekable(), climber)?,
                             ));
                         }
-                        println!("elements {:?}", elements);
+                        //println!("elements {:?}", elements);
 
                         ParserNode {
                             expr: ParserExpr::Dictionary(Box::new(elements)),
@@ -275,10 +275,10 @@ fn consume_expression<'i>(
                     }
                     Rule::function_application => {
                         let mut pairs = pair.into_inner();
-                        println!("pairs {:#?}", pairs);
+                        //println!("pairs {:#?}", pairs);
                         let pair = pairs.next().unwrap();
                         let ident = pair.as_str();
-                        println!("ident {:?}", ident);
+                        //println!("ident {:?}", ident);
                         let start_pos = pair.clone().as_span().start_pos();
                         //pairs.next().unwrap(); // (
                         let pair = pairs.next().unwrap();
@@ -288,7 +288,7 @@ fn consume_expression<'i>(
                         for p in inner_pairs.filter(|p| p.as_rule() == Rule::expression) {
                             arguments.push(consume_expression(p.into_inner().peekable(), climber)?);
                         }
-                        println!("args {:?}", arguments);
+                        //println!("args {:?}", arguments);
 
                         ParserNode {
                             expr: ParserExpr::FunctionApplication(
@@ -331,7 +331,7 @@ fn consume_expression<'i>(
                     Ok(node),
                     |node: Result<ParserNode<'i>, Vec<Error<Rule>>>, pair| {
                         let node = node?;
-                        println!("folding {:#?}", pair);
+                        //println!("folding {:#?}", pair);
                         let node = match pair.as_rule() {
                             Rule::faculty_operator => {
                                 let start = node.span.start_pos();
@@ -359,7 +359,7 @@ fn consume_expression<'i>(
         Ok(node)
     }
     let term = |pair: Pair<'i, Rule>| {
-        println!("term {:?}", pair);
+        //println!("term {:?}", pair);
         unaries(pair.into_inner().peekable(), climber)
     };
     let infix = |lhs: Result<ParserNode<'i>, Vec<Error<Rule>>>,
@@ -582,7 +582,7 @@ mod test {
         for valid_name in VALID_NAMES {
             for valid_annotation in VALID_ANNOTATIONS {
                 let annotated = format!("{}:{}", valid_annotation, valid_name);
-                println!("{}", annotated);
+                //println!("{}", annotated);
                 assert!(parse(&annotated[..]).is_ok());
             }
         }
