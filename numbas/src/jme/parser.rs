@@ -34,7 +34,7 @@ pub enum ParserExpr<'i> {
     List(Box<Vec<ParserNode<'i>>>),
     Dictionary(Box<Vec<(ParserNode<'i>, ParserNode<'i>)>>),
     FunctionApplication(String, Box<Vec<ParserNode<'i>>>),
-    Not(Box<ParserNode<'i>>),
+    Prefix(String, Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
     Indexation(Box<ParserNode<'i>>),
 }
@@ -72,7 +72,7 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
                 s.into(),
                 Box::new(n1.into_iter().map(|n| n.into()).collect()),
             ),
-            ParserExpr::Not(n) => ast::Expr::Not(Box::new((*n).into())),
+            ParserExpr::Prefix(s, n) => ast::Expr::Prefix(s.into(), Box::new((*n).into())),
             ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).into())),
             ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).into())),
         }
@@ -125,12 +125,12 @@ fn consume_expression<'i>(
         let pair = pairs.next().unwrap();
 
         let node = match pair.as_rule() {
-            Rule::not_operator => {
+            Rule::prefix_operator => {
                 let node = unaries(pairs, climber)?;
                 let end = node.span.end_pos();
 
                 ParserNode {
-                    expr: ParserExpr::Not(Box::new(node)),
+                    expr: ParserExpr::Prefix(pair.as_str().trim().to_owned(), Box::new(node)),
                     span: pair.as_span().start_pos().span(&end),
                 }
             }

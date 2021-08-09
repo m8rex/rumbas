@@ -59,6 +59,23 @@ impl std::convert::From<String> for LogicalOperator {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum PrefixOperator {
+    Not,
+    Minus,
+}
+
+impl std::convert::From<String> for PrefixOperator {
+    fn from(s: String) -> Self {
+        println!("{}", s);
+        match &s[..] {
+            "!" | "not" => PrefixOperator::Not,
+            "-" => PrefixOperator::Minus,
+            _ => unreachable!(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Ident {
     name: String,
@@ -398,8 +415,8 @@ pub enum Expr {
     Dictionary(Box<Vec<(Expr, Expr)>>),
     /// Matches a function application
     FunctionApplication(Ident, Box<Vec<Expr>>),
-    /// Matches a not expression
-    Not(Box<Expr>),
+    /// Matches a prefixed expression
+    Prefix(PrefixOperator, Box<Expr>),
     /// Matches a faculty expression
     Faculty(Box<Expr>),
     /// Matches an indexation expression
@@ -454,7 +471,7 @@ impl Expr {
                         .collect()
                 }
             }
-            Expr::Not(e1) => e1.validate(),
+            Expr::Prefix(_, e1) => e1.validate(),
             Expr::Faculty(e1) => e1.validate(),
             Expr::Indexation(e1) => e1.validate(),
         }
@@ -538,7 +555,7 @@ mod test {
                             name: "random".to_string(),
                             annotations: vec![]
                         },
-                        Box::new(vec![Range(Some(1), Some(4), Some(1))])
+                        Box::new(vec![Range(Some(1), Some(4), None)])
                     ),
                     Int(5)
                 ])
