@@ -48,7 +48,6 @@ pub enum LogicalOperator {
 
 impl std::convert::From<String> for LogicalOperator {
     fn from(s: String) -> Self {
-        println!("{}", s);
         match &s[..] {
             "and" | "&&" | "&" => LogicalOperator::And,
             "or" => LogicalOperator::Or,
@@ -67,7 +66,6 @@ pub enum PrefixOperator {
 
 impl std::convert::From<String> for PrefixOperator {
     fn from(s: String) -> Self {
-        println!("{}", s);
         match &s[..] {
             "!" | "not" => PrefixOperator::Not,
             "-" => PrefixOperator::Minus,
@@ -379,8 +377,90 @@ pub enum BuiltinFunctions {
     /// checkingFunction is the name of a checking function to use. These are documented in the Numbas runtime documentation.
     ResultsEqual,
 
-    Random,
+    /// Evaluate expression n times, and return the results in a list.
     Repeat,
+    /// Returns true if every element of list is true.
+    All,
+    /// Returns true if at least one element of list is true.
+    Some,
+    /// Evaluate expression for each item in list, range, vector or matrix d, replacing variable name with the element from d each time.
+    /// You can also give a list of names if each element of d is a list of values. The Nth element of the list will be mapped to the Nth name.
+    Map,
+    /// Filter each item in list or range d, replacing variable name with the element from d each time, returning only the elements for which expression evaluates to true.
+    Filter,
+    /// Accumulate a value by iterating over a collection. This can be used as an abstraction of routines such as “sum of a list of numbers”, or “maximum value in a list”.
+    /// Evaluate expression for each item in the list, range, vector or matrix d, accumulating a single value which is returned.
+    /// At each iteration, the variable item_name is replaced with the corresponding value from d. The variable accumulator_name is replaced with first_value for the first iteration, and the result of expression from the previous iteration subsequently.
+    FoldL,
+    /// Iterate an expression on the given initial value the given number of times, returning a list containing the values produced at each step.
+    /// You can also give a list of names. The Nth element of the value will be mapped to the Nth name.
+    Iterate,
+    /// Iterate an expression on the given initial value until the condition is satisfied, returning a list containing the values produced at each step.
+    /// You can also give a list of names. The Nth element of the value will be mapped to the Nth name.
+    /// max_iterations is an optional parameter specifying the maximum number of iterations that may be performed. If not given, the default value of 100 is used. This parameter prevents the function from running indefinitely, when the condition is never met.
+    #[serde(rename = "iterate_until")]
+    IterateUntil,
+    /// Take the first n elements from list or range d, replacing variable name with the element from d each time, returning only the elements for which expression evaluates to true.
+    /// This operation is lazy - once n elements satisfying the expression have been found, execution stops. You can use this to filter a few elements from a large list, where the condition might take a long time to calculate.
+    Take,
+    /// “Flatten” a list of lists, returning a single list containing the concatenation of all the entries in lists.
+    Flatten,
+    /// Evaluate expression, temporarily defining variables with the given names. Use this to cut down on repetition. You can define any number of variables - in the first calling pattern, follow a variable name with its definition. Or you can give a dictionary mapping variable names to their values. The last argument is the expression to be evaluated.
+    Let,
+    /// Sort a list
+    Sort,
+    /// Return a list giving the index that each entry in the list will occupy after sorting.
+    #[serde(rename = "sort_destinations")]
+    SortDestinations,
+    /// Sort the given list of either list or dict values by their entries corresponding to the given key. When sorting a list of lists, the key is a number representing the index of each list to look at. When sorting a list of dictionaries, the key is a string.
+    #[serde(rename = "sort_by")]
+    SortBy,
+    /// Group the entries in the given list of either list or dict values by their entries corresponding to the given key. The returned value is a list of lists of the form [key, group], where key is the value all elements of the list group have in common.
+    /// When grouping a list of lists, the key argument is a number representing the index of each list to look at. When grouping a list of dictionaries, the key argument is a string.
+    #[serde(rename = "group_by")]
+    GroupBy,
+    /// Reverse list
+    Reverse,
+    /// Find the indices at which value occurs in list.
+    Indices,
+    /// Return a copy of the list x with duplicates removed.
+    Distinct,
+    /// Convert a value to a list of its components (or rows, for a matrix).
+    List,
+    /// Evaluate a dictionary of variable definitions and return a dictionary containing the generated values.
+    /// definitions is a dictionary mapping variable names to expression values corresponding to definitions.
+    /// The definitions can refer to other variables to be evaluated, or variables already defined in the current scope. Variables named in the dictionary which have already been defined will be removed before evaluation begins.
+    #[serde(rename = "make_variables")]
+    MakeVariables,
+    /// Each variable name in names should have a corresponding definition expression in
+    /// definitions. conditions is a list of expressions which you want to evaluate to true.
+    /// The definitions will be evaluated repeatedly until all the conditions are satisfied, or
+    /// the number of attempts is greater than maxRuns. If maxRuns isn’t given, it defaults to
+    /// 100 attempts.
+    Satisfy,
+    /// Add up a list of numbers
+    Sum,
+    /// Multiply a list of numbers together
+    Prod,
+    /// Cartesian product of lists. In other words, every possible combination of choices of one value from each given list.
+    /// If one list and a number are given, then the n-th Cartesian power of the list is returned: the Cartesian product of n copies of the list.
+    Product,
+    /// Combine two (or more) lists into one - the Nth element of the output is a list containing the Nth elements of each of the input lists.
+    Zip,
+    /// All ordered choices of r elements from collection, without replacement.
+    Combinations,
+    /// All ordered choices of r elements from collection, with replacement.
+    #[serde(rename = "combinations_with_replacement")]
+    CombinationsWithReplacement,
+    /// All choices of r elements from collection, in any order, without replacement.
+    Permutations,
+    /// Count the number of times each distinct element of collection appears.
+    /// Returns a list of pairs [value, frequency], where value is a value from the list, and frequency is the number of times it appeared.
+    Frequencies,
+    /// Enumerate the elements of collection: this function returns a list containing, for each element v of collection, a new list of the form [i,v], where i is the index of the element in collection.
+    Enumerate,
+
+    Random,
 }
 
 impl BuiltinFunctions {
