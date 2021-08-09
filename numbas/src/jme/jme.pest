@@ -11,7 +11,7 @@ node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
-reserved = @{ (boolean | logic_binary_operator | not_operator | in_operator | except) ~ !ident_char }
+reserved = @{ (boolean | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char }
 
 literal = _{ boolean | range | number | string }
 //constant = { infinity_constant | nan_constant | changeable_constant }
@@ -86,13 +86,14 @@ arithmetic_operator = _{ add | subtract | multiply | divide | power }
     divide   = { "/" }
     power    = { "^" }
     except   = { "except" }
-relational_operator = { less_or_equal | not_equal | less | greater_or_equal | greater | equal | in_operator | divides_operator } 
+relational_operator = { less_or_equal | not_equal | less | greater_or_equal | greater | equal | in_operator | divides_operator | isa } 
     less_or_equal = _{ "<="  } 
     not_equal = _{ "<>" } 
     less = _{  "<" } 
     greater_or_equal = _{ ">=" } 
     greater = _{ ">" } 
     equal = _{ "=" } 
+    isa = _{ "isa" } 
     in_operator = _{ "in" } 
     divides_operator = _{ "|" } 
 and_operator = _{ "and" | "&&" | "&" }
@@ -100,7 +101,8 @@ or_operator = _{ "or" }
 xor_operator = _{ "xor" }
 implies_operator = _{ "implies" }
 logic_binary_operator = { and_operator | or_operator | xor_operator | implies_operator }
-infix_operator = _{ arithmetic_operator | relational_operator | logic_binary_operator | implicit_multiplication_operator }
+cast_operator = { "as" }
+infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | logic_binary_operator | implicit_multiplication_operator }
 range_separator = { ".." }
 range_step_separator = { "#" }
 range = { integer? ~ range_separator ~ integer? ~ ( range_step_separator ~ integer )? }  

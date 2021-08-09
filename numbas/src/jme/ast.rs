@@ -1,5 +1,4 @@
 use crate::jme::builtin_functions::BuiltinFunctions;
-use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ArithmeticOperator {
@@ -20,6 +19,7 @@ pub enum RelationalOperator {
     Equals,
     NotEquals,
     In,
+    IsA,
     Divides,
 }
 
@@ -32,6 +32,7 @@ impl std::convert::From<String> for RelationalOperator {
             ">=" => RelationalOperator::GreaterThanOrEqual,
             "=" => RelationalOperator::Equals,
             "<>" => RelationalOperator::NotEquals,
+            "isa" => RelationalOperator::IsA,
             "in" => RelationalOperator::In,
             "|" => RelationalOperator::Divides,
             _ => unreachable!(),
@@ -128,6 +129,8 @@ pub enum Expr {
     Faculty(Box<Expr>),
     /// Matches an indexation expression
     Indexation(Box<Expr>),
+    /// Matches a cast expression
+    Cast(Box<Expr>, Box<Expr>),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -181,6 +184,11 @@ impl Expr {
             Expr::Prefix(_, e1) => e1.validate(),
             Expr::Faculty(e1) => e1.validate(),
             Expr::Indexation(e1) => e1.validate(),
+            Expr::Cast(e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
         }
     }
 }

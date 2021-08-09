@@ -37,6 +37,7 @@ pub enum ParserExpr<'i> {
     Prefix(String, Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
     Indexation(Box<ParserNode<'i>>),
+    Cast(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
 }
 
 impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
@@ -75,6 +76,9 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Prefix(s, n) => ast::Expr::Prefix(s.into(), Box::new((*n).into())),
             ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).into())),
             ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).into())),
+            ParserExpr::Cast(n1, n2) => {
+                ast::Expr::Cast(Box::new((*n1).into()), Box::new((*n2).into()))
+            }
         }
     }
 }
@@ -105,6 +109,7 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
     let climber = PrecClimber::new(vec![
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
+        Operator::new(Rule::cast_operator, Assoc::Left),
         Operator::new(Rule::add, Assoc::Left)
             | Operator::new(Rule::subtract, Assoc::Left)
             | Operator::new(Rule::except, Assoc::Left),
@@ -458,6 +463,18 @@ fn consume_expression<'i>(
                     Box::new(lhs),
                     Box::new(rhs),
                 ),
+                span: start.span(&end),
+            })
+        }
+        Rule::cast_operator => {
+            let lhs = lhs?;
+            let rhs = rhs?;
+
+            let start = lhs.span.start_pos();
+            let end = rhs.span.end_pos();
+
+            Ok(ParserNode {
+                expr: ParserExpr::Cast(Box::new(lhs), Box::new(rhs)),
                 span: start.span(&end),
             })
         }
