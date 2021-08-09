@@ -26,7 +26,7 @@ literal = _{ boolean | range | number | string }
 // TODO pi unicode
 
 number = _{ broken_number | integer }
-integer = { ("-")? ~ ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* | "0" }
+integer = { ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* | "0" }
 broken_part = { ASCII_DIGIT* }
 broken_number = { integer ~ "." ~ broken_part }
 boolean = { boolean_true | boolean_false }
@@ -107,5 +107,6 @@ range = { integer? ~ range_separator ~ integer? ~ ( range_step_separator ~ integ
 index_operator = { "[" ~ (string | range | integer | ident_name) ~ "]" } 
 faculty_operator =  { "!" }
 postfix_operator = _{ faculty_operator | index_operator }
-not_operator = { "!" | "not" }
-prefix_operator = _{ not_operator }
+not_operator = _{ "!" | "not" }
+unary_minus = _{ "-" }
+prefix_operator = { not_operator | unary_minus }
