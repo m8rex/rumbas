@@ -1,5 +1,5 @@
 use crate::jme::ast;
-use pest::error::{Error, ErrorVariant};
+use pest::error::Error;
 use pest::iterators::Pair;
 use pest::iterators::Pairs;
 use pest::prec_climber::{Assoc, Operator, PrecClimber};
@@ -32,9 +32,9 @@ pub enum ParserExpr<'i> {
     AnnotatedIdent(String),
     Relation(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Logic(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
-    List(Box<Vec<ParserNode<'i>>>),
-    Dictionary(Box<Vec<(ParserNode<'i>, ParserNode<'i>)>>),
-    FunctionApplication(String, Box<Vec<ParserNode<'i>>>),
+    List(Vec<ParserNode<'i>>),
+    Dictionary(Vec<(ParserNode<'i>, ParserNode<'i>)>),
+    FunctionApplication(String, Vec<ParserNode<'i>>),
     Prefix(String, Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
     Indexation(Box<ParserNode<'i>>),
@@ -65,16 +65,13 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Logic(s, n1, n2) => {
                 ast::Expr::Logic(s.into(), Box::new((*n1).into()), Box::new((*n2).into()))
             }
-            ParserExpr::List(n1) => {
-                ast::Expr::List(Box::new(n1.into_iter().map(|n| n.into()).collect()))
+            ParserExpr::List(n1) => ast::Expr::List(n1.into_iter().map(|n| n.into()).collect()),
+            ParserExpr::Dictionary(n1) => {
+                ast::Expr::Dictionary(n1.into_iter().map(|(k, v)| (k.into(), v.into())).collect())
             }
-            ParserExpr::Dictionary(n1) => ast::Expr::Dictionary(Box::new(
-                n1.into_iter().map(|(k, v)| (k.into(), v.into())).collect(),
-            )),
-            ParserExpr::FunctionApplication(s, n1) => ast::Expr::FunctionApplication(
-                s.into(),
-                Box::new(n1.into_iter().map(|n| n.into()).collect()),
-            ),
+            ParserExpr::FunctionApplication(s, n1) => {
+                ast::Expr::FunctionApplication(s.into(), n1.into_iter().map(|n| n.into()).collect())
+            }
             ParserExpr::Prefix(s, n) => ast::Expr::Prefix(s.into(), Box::new((*n).into())),
             ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).into())),
             ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).into())),
@@ -102,7 +99,7 @@ pub fn consume_outer_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, Consume
         }*/
     });
     match res_res {
-        Ok(res) => res.map_err(|e| ConsumeError::ParseError(e)),
+        Ok(res) => res.map_err(ConsumeError::ParseError),
         Err(_err) => Err(ConsumeError::UnknownParseError),
     }
 }
@@ -125,8 +122,7 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
         .next()
         .unwrap()
         .into_inner()
-        .filter(|pair| pair.as_rule() == Rule::expression)
-        .next()
+        .find(|pair| pair.as_rule() == Rule::expression)
         .unwrap();
     consume_expression(expression.into_inner().peekable(), &climber)
 }
@@ -135,12 +131,10 @@ fn consume_expression<'i>(
     pairs: Peekable<Pairs<'i, Rule>>,
     climber: &PrecClimber<Rule>,
 ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
-    //println!("outer {:#?}", pairs);
     fn unaries<'i>(
         mut pairs: Peekable<Pairs<'i, Rule>>,
         climber: &PrecClimber<Rule>,
     ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
-        //println!("unaries {:?}", pairs);
         let pair = pairs.next().unwrap();
 
         let node = match pair.as_rule() {
@@ -154,24 +148,16 @@ fn consume_expression<'i>(
                 }
             }
             other_rule => {
-                //println!("other {:#?}", other_rule);
-                //println!("other {:#?}", pair);
                 let node = match other_rule {
                     Rule::expression => consume_expression(pair.into_inner().peekable(), climber)?,
-                    Rule::ident => {
-                        //println!("ident {:?}", pair);
-                        ParserNode {
-                            expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
-                            span: pair.clone().as_span(),
-                        }
-                    }
-                    Rule::constant => {
-                        //println!("ident {:?}", pair);
-                        ParserNode {
-                            expr: ParserExpr::AnnotatedConstant(pair.as_str().trim().to_owned()),
-                            span: pair.clone().as_span(),
-                        }
-                    }
+                    Rule::ident => ParserNode {
+                        expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
+                        span: pair.clone().as_span(),
+                    },
+                    Rule::constant => ParserNode {
+                        expr: ParserExpr::AnnotatedConstant(pair.as_str().trim().to_owned()),
+                        span: pair.clone().as_span(),
+                    },
                     Rule::string => {
                         let string =
                             unescape(pair.as_str().trim()).expect("incorrect string literal");
@@ -203,10 +189,9 @@ fn consume_expression<'i>(
                         }
                     }
                     Rule::range => {
-                        // TODO fix optional
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
-                        let mut pair = pairs.next().unwrap();
+                        let pair = pairs.next().unwrap();
                         let start: Option<isize> = if pair.as_rule() == Rule::integer {
                             let val = Some(
                                 pair.as_str()
@@ -254,15 +239,12 @@ fn consume_expression<'i>(
                     Rule::list => {
                         let span = pair.as_span();
                         let pairs = pair.into_inner();
-                        //println!("pairs {:#?}", pairs);
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
                             elements.push(consume_expression(p.into_inner().peekable(), climber)?);
                         }
-                        //println!("elements {:?}", elements);
-
                         ParserNode {
-                            expr: ParserExpr::List(Box::new(elements)),
+                            expr: ParserExpr::List(elements),
                             span,
                         }
                     }
@@ -280,10 +262,8 @@ fn consume_expression<'i>(
                                 consume_expression(value_pair.into_inner().peekable(), climber)?,
                             ));
                         }
-                        //println!("elements {:?}", elements);
-
                         ParserNode {
-                            expr: ParserExpr::Dictionary(Box::new(elements)),
+                            expr: ParserExpr::Dictionary(elements),
                             span,
                         }
                     }
@@ -302,42 +282,11 @@ fn consume_expression<'i>(
                         for p in inner_pairs.filter(|p| p.as_rule() == Rule::expression) {
                             arguments.push(consume_expression(p.into_inner().peekable(), climber)?);
                         }
-                        //println!("args {:?}", arguments);
-
                         ParserNode {
-                            expr: ParserExpr::FunctionApplication(
-                                ident.to_string(),
-                                Box::new(arguments),
-                            ),
+                            expr: ParserExpr::FunctionApplication(ident.to_string(), arguments),
                             span: start_pos.span(&end_pos),
                         }
                     }
-                    /* Rule::implicit_multiplication_grouped => {
-                        // TODO: this gives wrong precedence for (a)(b)^2
-                        let span = pair.as_span();
-                        let mut pairs = pair.into_inner();
-                        let pair = pairs.next().unwrap();
-                        let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
-                        let pair = pairs.next().unwrap();
-                        let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
-                        ParserNode {
-                            expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
-                            span,
-                        }
-                    }
-                    Rule::implicit_multiplication_ident => {
-                        // TODO: this gives wrong precedence for (a)(b)^2
-                        let span = pair.as_span();
-                        let mut pairs = pair.into_inner();
-                        let pair = pairs.next().unwrap();
-                        let exp1 = consume_expression(pair.into_inner().peekable(), climber)?;
-                        let pair = pairs.next().unwrap();
-                        let exp2 = consume_expression(pair.into_inner().peekable(), climber)?;
-                        ParserNode {
-                            expr: ParserExpr::Product(Box::new(exp1), Box::new(exp2)),
-                            span, //start_pos.span(&end_pos),
-                        }
-                    } */
                     _ => unreachable!(),
                 };
 
@@ -642,8 +591,6 @@ mod test {
         assert!(parse("f(a)").is_ok());
         assert!(parse("g(a,b)").is_ok());
     }
-
-    // TODO test operators
 
     #[test]
     fn collections() {

@@ -79,7 +79,7 @@ impl std::convert::From<String> for PrefixOperator {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Ident {
     name: String,
-    annotations: Vec<String>, // TODO: enu value
+    annotations: Vec<String>, // TODO: enum value
 }
 
 impl Ident {
@@ -90,7 +90,7 @@ impl Ident {
 
 impl std::convert::From<String> for Ident {
     fn from(s: String) -> Self {
-        let items = s.split(":");
+        let items = s.split(':');
         let mut annotations = items.map(|s| s.to_owned()).collect::<Vec<_>>();
         let name = annotations.pop().expect("impossible");
         Ident { name, annotations }
@@ -120,11 +120,11 @@ pub enum Expr {
     /// Matches a logical operation between two expressions`
     Logic(LogicalOperator, Box<Expr>, Box<Expr>),
     /// Matches a list
-    List(Box<Vec<Expr>>),
+    List(Vec<Expr>),
     /// Matches a dictionary
-    Dictionary(Box<Vec<(Expr, Expr)>>),
+    Dictionary(Vec<(Expr, Expr)>),
     /// Matches a function application
-    FunctionApplication(Ident, Box<Vec<Expr>>),
+    FunctionApplication(Ident, Vec<Expr>),
     /// Matches a prefixed expression
     Prefix(PrefixOperator, Box<Expr>),
     /// Matches a faculty expression
@@ -142,7 +142,7 @@ pub enum ExprValidationError {
 }
 
 impl Expr {
-    fn validate(&self) -> Vec<ExprValidationError> {
+    pub fn validate(&self) -> Vec<ExprValidationError> {
         match self {
             Expr::Str(_) => vec![],
             Expr::Int(_) => vec![],
@@ -268,16 +268,16 @@ mod test {
                     name: "repeat".to_string(),
                     annotations: vec![]
                 },
-                Box::new(vec![
+                vec![
                     FunctionApplication(
                         Ident {
                             name: "random".to_string(),
                             annotations: vec![]
                         },
-                        Box::new(vec![Range(Some(1), Some(4), None)])
+                        vec![Range(Some(1), Some(4), None)]
                     ),
                     Int(5)
-                ])
+                ]
             )
         );
         assert_eq!(ast.validate(), vec![]);
@@ -323,7 +323,7 @@ mod test {
             ast,
             Arithmetic(
                 Add,
-                Box::new(List(Box::new(vec![Int(1), Int(2), Int(3)]))),
+                Box::new(List(vec![Int(1), Int(2), Int(3)])),
                 Box::new(Int(4))
             )
         );
