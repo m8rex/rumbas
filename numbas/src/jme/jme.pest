@@ -7,7 +7,7 @@ WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
 
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
-node       = _{ grouped_expression | terminal } // TODO  implicit_multiplication | 
+node       = _{ grouped_expression | terminal } 
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
@@ -36,26 +36,11 @@ string = { "\"" ~ non_double_quoted_character* ~ "\"" |  "'" ~ non_single_quoted
 non_double_quoted_character = _{ !"\"" ~ ANY }
 non_single_quoted_character = _{ !"'" ~ ANY }
 
-
-//arithmetic_function = { "exp" }
-//builtin_function = { arithmetic_function }
-//function = { builtin_function | ident }
-//annotated_function = { (annotation)* ~ function }
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
 
 implicit_multiplication_operator = { "" }
-//implicit_multiplication_grouped = _{ 
-//	(grouped_expression ~ implicit_multiplication_operator ~ ( ident | number | grouped_expression))
-//} 
-//implicit_multiplication_ident = _{ 
-//	((number | ident) ~ implicit_multiplication_operator ~ ident)
-//} // TODO x y z etc
-//implicit_multiplication = _{ 
-//    implicit_multiplication_grouped | implicit_multiplication_ident  
-//}
 
-//annotated_variable = { (annotation)* ~ ident }
 verb_annotation = { "verb:" }
 op_annotation = { "op:" }
 vector_annotation = { "vector:" | "v:" }
