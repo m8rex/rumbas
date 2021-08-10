@@ -5,9 +5,11 @@ use crate::data::optional_overwrite::{
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
+use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::{YamlError, YamlResult};
 use serde::{Deserialize, Serialize};
+use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -120,7 +122,7 @@ pub struct CustomPartStringInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: TranslatableString,
+    correct_answer: JMETranslatableString,
     /// If false, the part will only be marked if their answer is non-empty.
     allow_empty: CustomPartInputOptionValue<bool>,
 }
@@ -130,7 +132,12 @@ impl ToNumbas for CustomPartStringInputOptions {
     fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartStringInputOptions {
             hint: self.hint.to_numbas(locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            correct_answer: self
+                .correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
             allow_empty: self.allow_empty.to_numbas(locale).unwrap(),
         })
     }
@@ -152,7 +159,7 @@ pub struct CustomPartNumberInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: TranslatableString,
+    correct_answer: JMETranslatableString,
     ///Allow the student to enter their answer as a fraction?
     allow_fractions: CustomPartInputOptionValue<bool>,
     allowed_notation_styles:
@@ -164,7 +171,12 @@ impl ToNumbas for CustomPartNumberInputOptions {
     fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartNumberInputOptions {
             hint: self.hint.to_numbas(locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            correct_answer: self
+                .correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
             allow_fractions: self.allow_fractions.to_numbas(locale).unwrap(),
             allowed_notation_styles: self.allowed_notation_styles.to_numbas(locale).unwrap(),
         })
@@ -188,7 +200,7 @@ pub struct CustomPartRadioGroupInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: TranslatableString,
+    correct_answer: JMETranslatableString,
     /// The labels for the choices to offer to the student.
     choices: CustomPartInputOptionValue<Vec<TranslatableString>>,
 }
@@ -198,7 +210,12 @@ impl ToNumbas for CustomPartRadioGroupInputOptions {
     fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
         Ok(numbas::exam::CustomPartRadioButtonsInputOptions {
             hint: self.hint.to_numbas(locale).unwrap(),
-            correct_answer: self.correct_answer.to_string(locale).unwrap(),
+            correct_answer: self
+                .correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
             choices: self.choices.to_numbas(locale).unwrap(),
         })
     }

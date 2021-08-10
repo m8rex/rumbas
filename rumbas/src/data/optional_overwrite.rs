@@ -1,6 +1,7 @@
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
+use numbas::jme::JMEString;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
@@ -173,7 +174,7 @@ macro_rules! impl_optional_overwrite_value_only {
                 }
             }
         }
-        impl$(< $($gen: OptionalOverwrite<$gen> + DeserializeOwned ),* >)? OptionalOverwrite<Value<$type>> for Value<$type> {
+        impl$(< $($gen: OptionalOverwrite<$gen> + DeserializeOwned),* >)? OptionalOverwrite<Value<$type>> for Value<$type> {
             fn overwrite(&mut self, other: &Value<$type>) {
                 if let Some(ValueType::Normal(ref mut val)) = self.0 {
                     if let Some(ValueType::Normal(other_val)) = &other.0 {
@@ -202,7 +203,7 @@ macro_rules! impl_optional_overwrite_value {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
         impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
-        impl$(< $($gen: RumbasCheck ),* >)? RumbasCheck for Noneable<$type> {
+        impl$(< $($gen: RumbasCheck),* >)? RumbasCheck for Noneable<$type> {
             fn check(&self) -> RumbasCheckResult {
                 if let Noneable::NotNone(val) = &self {
                     val.check()
@@ -212,7 +213,7 @@ macro_rules! impl_optional_overwrite_value {
                 }
             }
         }
-        impl$(< $($gen: OptionalOverwrite<$gen> ),* >)? OptionalOverwrite<Noneable<$type>> for Noneable<$type> {
+        impl$(< $($gen: OptionalOverwrite<$gen>),* >)? OptionalOverwrite<Noneable<$type>> for Noneable<$type> {
             fn overwrite(&mut self, other: &Noneable<$type>) {
                 if let Noneable::NotNone(ref mut val) = self {
                     if let Noneable::NotNone(other_val) = &other {
@@ -653,9 +654,10 @@ mod test {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
-    Variable(String),
+    Variable(JMEString),
     Value(T),
 }
+impl_optional_overwrite!(JMEString);
 
 impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     fn check(&self) -> RumbasCheckResult {
