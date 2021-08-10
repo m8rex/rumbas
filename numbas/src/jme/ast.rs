@@ -90,9 +90,9 @@ impl Ident {
 
 impl std::convert::From<String> for Ident {
     fn from(s: String) -> Self {
-        let mut items = s.split(":");
-        let name = items.next().unwrap().to_owned();
-        let annotations = items.map(|s| s.to_owned()).collect::<Vec<_>>();
+        let items = s.split(":");
+        let mut annotations = items.map(|s| s.to_owned()).collect::<Vec<_>>();
+        let name = annotations.pop().expect("impossible");
         Ident { name, annotations }
     }
 }
@@ -313,6 +313,39 @@ mod test {
         assert_eq!(ast.validate(), vec![]);
     }
 
+    #[test]
+    fn ast_list() {
+        let input = "[1,2,3]+4";
+        let pairs = parse(input).unwrap();
+        let ast = consume_outer_expression(pairs).unwrap();
+
+        assert_eq!(
+            ast,
+            Arithmetic(
+                Add,
+                Box::new(List(Box::new(vec![Int(1), Int(2), Int(3)]))),
+                Box::new(Int(4))
+            )
+        );
+        assert_eq!(ast.validate(), vec![]);
+    }
+
+    #[test]
+    fn ast_non_ascii_ident() {
+        let input = "vec:ε";
+        let pairs = parse(input).unwrap();
+        let ast = consume_outer_expression(pairs).unwrap();
+
+        assert_eq!(
+            ast,
+            Ident(Ident {
+                name: "ε".to_owned(),
+                annotations: vec!["vec".to_owned()]
+            })
+        );
+        assert_eq!(ast.validate(), vec![]);
+    }
+
     #[derive(Serialize, Deserialize)]
     struct DocTest {
         name: String,
@@ -411,22 +444,5 @@ mod test {
         println!("{}", output);
         assert_eq!(total_tests, passed_parse_tests);
         assert_eq!(total_tests, passed_validate_tests);
-    }
-
-    #[test]
-    fn ast_list() {
-        let input = "[1,2,3]+4";
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
-
-        assert_eq!(
-            ast,
-            Arithmetic(
-                Add,
-                Box::new(List(Box::new(vec![Int(1), Int(2), Int(3)]))),
-                Box::new(Int(4))
-            )
-        );
-        assert_eq!(ast.validate(), vec![]);
     }
 }
