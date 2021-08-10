@@ -113,6 +113,8 @@ pub enum Expr {
     Arithmetic(ArithmeticOperator, Box<Expr>, Box<Expr>),
     /// Matches an identifier
     Ident(Ident),
+    /// Matches a constant
+    Constant(Ident),
     /// Matches a relationship between two expressions`
     Relation(RelationalOperator, Box<Expr>, Box<Expr>),
     /// Matches a logical operation between two expressions`
@@ -153,6 +155,7 @@ impl Expr {
                 .chain(e2.validate().into_iter())
                 .collect(),
             Expr::Ident(_) => vec![], // TODO: check if part of variable list
+            Expr::Constant(_) => vec![],
             Expr::Relation(_, e1, e2) => e1
                 .validate()
                 .into_iter()
