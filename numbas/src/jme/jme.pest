@@ -11,7 +11,7 @@ node       = _{ grouped_expression | terminal }
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
-reserved = @{ (boolean | constant_name | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char }
+reserved = @{ (boolean | constant_name | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char_all }
 
 literal = _{ boolean | range | number | string | constant }
 
@@ -51,9 +51,9 @@ degrees_annotation = { "degrees:" }
 builtin_annotation = { verb_annotation | op_annotation | vector_annotation | unit_annotation | dot_annotation | matrix_annotation | diff_annotation | degrees_annotation }
 other_annotation = { ASCII_ALPHA+ ~ ":" }
 annotation = { (builtin_annotation | other_annotation) }
-// TODO: other
-ident_char = _{ ASCII_ALPHA | ASCII_DIGIT | "_" | "'" }
-ident_name = @{ !reserved ~ ASCII_ALPHA ~ (ASCII_ALPHA | ASCII_DIGIT | "_")* ~ "'"* }
+ident_char_all = _{ ident_char | "'" }
+ident_char = _{ CASED_LETTER | ASCII_DIGIT | "_"  }
+ident_name = @{ !reserved ~ CASED_LETTER ~ ident_char* ~ "'"* }
 ident = { (annotation)* ~ ident_name }
 
 
