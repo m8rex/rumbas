@@ -1,15 +1,17 @@
 use crate::data::question_part::QuestionPart;
+use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
+use numbas::jme::JMEString;
 
 pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
 }
 
 macro_rules! impl_to_rumbas {
-    ($($type: ty), *) => {
+    ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-        impl ToRumbas<$type> for $type {
+        impl$(< $($gen : Clone),* >)? ToRumbas<$type> for $type {
             fn to_rumbas(&self) -> $type {
                 self.clone()
             }
@@ -20,6 +22,7 @@ macro_rules! impl_to_rumbas {
 
 impl_to_rumbas!(bool, f64, usize, [f64; 2]);
 impl_to_rumbas!(numbas::exam::Primitive);
+impl_to_rumbas!(numbas::jme::JMEString);
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {
@@ -36,6 +39,13 @@ impl<T, O: ToRumbas<T>> ToRumbas<Option<T>> for Option<O> {
 impl ToRumbas<TranslatableString> for String {
     fn to_rumbas(&self) -> TranslatableString {
         TranslatableString::s(self)
+    }
+}
+
+impl ToRumbas<JMETranslatableString> for JMEString {
+    fn to_rumbas(&self) -> JMETranslatableString {
+        let s: String = self.clone().into();
+        JMETranslatableString::s(&s[..])
     }
 }
 

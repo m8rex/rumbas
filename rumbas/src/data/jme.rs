@@ -1,17 +1,18 @@
-use crate::data::file_reference::FileString;
+use crate::data::file_reference::{FileString, JMEFileString};
 use crate::data::optional_overwrite::*;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::to_rumbas::*;
-use crate::data::translatable::TranslatableString;
+use crate::data::translatable::{JMETranslatableString, TranslatableString};
 use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
+use std::convert::TryInto;
 
 question_part_type! {
     pub struct QuestionPartJME {
-        answer: TranslatableString, //TODO: should this be translatable?
+        answer: JMETranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
         show_preview: bool,
         answer_check: CheckingType,
@@ -38,7 +39,14 @@ impl ToNumbas for QuestionPartJME {
         if check.is_empty() {
             Ok(numbas::exam::ExamQuestionPartJME {
                 part_data: self.to_numbas_shared_data(locale),
-                answer: self.answer.clone().unwrap().to_string(locale).unwrap(),
+                answer: self
+                    .answer
+                    .clone()
+                    .unwrap()
+                    .to_string(locale)
+                    .unwrap()
+                    .try_into()
+                    .unwrap(),
                 answer_simplification: Some(
                     self.answer_simplification
                         .clone()
@@ -137,7 +145,7 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
             ),
             steps: Value::Normal(extract_part_common_steps(&self.part_data)),
 
-            answer: Value::Normal(TranslatableString::s(&self.answer)),
+            answer: Value::Normal(self.answer.to_rumbas()),
             answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
             show_preview: Value::Normal(self.show_preview),
             answer_check: Value::Normal(self.checking_type.to_rumbas()),
@@ -726,7 +734,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::exam::JMEPatternRestriction {
 optional_overwrite! {
     pub struct JMEValueGenerator {
         name: FileString,
-        value: FileString
+        value: JMEFileString
     }
 }
 
@@ -737,7 +745,13 @@ impl ToNumbas for JMEValueGenerator {
         if check.is_empty() {
             Ok(numbas::exam::JMEValueGenerator {
                 name: self.name.clone().unwrap().get_content(locale),
-                value: self.value.clone().unwrap().get_content(locale),
+                value: self
+                    .value
+                    .clone()
+                    .unwrap()
+                    .get_content(locale)
+                    .try_into()
+                    .expect("invalid jme string in value of valuegenerator"),
             })
         } else {
             Err(check)
@@ -747,9 +761,10 @@ impl ToNumbas for JMEValueGenerator {
 
 impl ToRumbas<JMEValueGenerator> for numbas::exam::JMEValueGenerator {
     fn to_rumbas(&self) -> JMEValueGenerator {
+        let s: String = self.value.clone().into();
         JMEValueGenerator {
             name: Value::Normal(FileString::s(&self.name)),
-            value: Value::Normal(FileString::s(&self.value)),
+            value: Value::Normal(JMEFileString::s(&s[..])),
         }
     }
 }

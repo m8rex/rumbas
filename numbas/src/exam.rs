@@ -1,3 +1,4 @@
+use crate::jme::JMEString;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
@@ -246,6 +247,7 @@ impl Exam {
     }
 
     pub fn write(&self, file_name: &str) -> WriteResult {
+        println!("{:#?}", self);
         match serde_json::to_string(self) {
             Ok(s) => match std::fs::write(
                 file_name,
@@ -304,7 +306,7 @@ pub struct CustomPartType {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct CustomPartMarkingNotes {
     pub name: String,
-    pub definition: String,
+    pub definition: String, // TODO marking JME
     pub description: String,
 }
 
@@ -338,7 +340,7 @@ pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
-    pub correct_answer: String, // A JME expression which evaluates to the expected answer to the part.
+    pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.
     #[serde(rename = "allowEmpty")]
     pub allow_empty: CustomPartInputOptionValue<bool>, // If false, the part will only be marked if their answer is non-empty.
 }
@@ -349,7 +351,7 @@ pub struct CustomPartNumberInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
-    pub correct_answer: String, // A JME expression which evaluates to the expected answer to the part.
+    pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.
     #[serde(rename = "allowFractions")]
     pub allow_fractions: CustomPartInputOptionValue<bool>, //Allow the student to enter their answer as a fraction?
     #[serde(rename = "allowedNotationStyles")]
@@ -362,7 +364,7 @@ pub struct CustomPartRadioButtonsInputOptions {
     //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
-    pub correct_answer: String, // A JME expression which evaluates to the expected answer to the part.
+    pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.
     /// The labels for the choices to offer to the student.
     pub choices: CustomPartInputOptionValue<Vec<String>>,
 }
@@ -606,18 +608,19 @@ pub struct ExamFunction {
     pub parameters: Vec<ExamFunctionParameter>,
     #[serde(rename = "type")]
     pub output_type: ExamFunctionType,
-    pub definition: String,
-    pub language: ExamFunctionLanguage,
+    #[serde(flatten)]
+    pub definition: ExamFunctionDefinition,
 }
 
 pub type ExamFunctionParameter = (String, ExamFunctionType);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
-pub enum ExamFunctionLanguage {
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "language")]
+pub enum ExamFunctionDefinition {
     #[serde(rename = "jme")]
-    JME,
+    JME { definition: JMEString },
     #[serde(rename = "javascript")]
-    JavaScript,
+    Javascript { definition: String },
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Copy)]
@@ -662,7 +665,7 @@ pub enum ExamFunctionType {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamVariable {
     pub name: String,
-    pub definition: String,
+    pub definition: String, // TODO: jme?
     pub description: String,
     #[serde(rename = "templateType")]
     pub template_type: ExamVariableTemplateType,
@@ -817,7 +820,7 @@ pub struct Preamble {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionConstant {
     pub name: String,
-    pub value: String,
+    pub value: JMEString,
     pub tex: String,
 }
 
@@ -881,7 +884,7 @@ pub struct ExamQuestionPartSharedData {
     #[serde(rename = "adaptiveMarkingPenalty")]
     pub adaptive_marking_penalty: Option<usize>,
     #[serde(rename = "customMarkingAlgorithm")]
-    pub custom_marking_algorithm: Option<String>,
+    pub custom_marking_algorithm: Option<String>, // jme...
     #[serde(rename = "extendBaseMarkingAlgorithm")]
     pub extend_base_marking_algorithm: Option<bool>,
     pub steps: Option<Vec<ExamQuestionPart>>,
@@ -926,7 +929,7 @@ pub enum VariableReplacementStrategy {
 pub struct ExamQuestionPartJME {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
-    pub answer: String,
+    pub answer: JMEString,
     #[serde(
         rename = "answerSimplification",
         default,
@@ -1069,13 +1072,13 @@ pub struct JMEPatternRestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct JMEValueGenerator {
     pub name: String,
-    pub value: String,
+    pub value: JMEString,
 }
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionVariablesTest {
-    pub condition: String,
+    pub condition: JMEString,
     #[serde(rename = "maxRuns")]
     pub max_runs: SafeNatural,
 }
@@ -1327,7 +1330,7 @@ impl std::fmt::Display for SafeBool {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
-    Variable(String),
+    Variable(JMEString),
     Value(T),
 }
 
@@ -1349,7 +1352,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "minAnswers")]
     pub min_answers: Option<usize>, // Minimum number of responses the student must select
     #[serde(rename = "choices")]
-    pub answers: VariableValued<Vec<String>>,
+    pub answers: VariableValued<Vec<String>>, // TODO: jme?
     #[serde(rename = "shuffleChoices")]
     pub shuffle_answers: bool,
     #[serde(rename = "displayType")]
@@ -1363,7 +1366,7 @@ pub struct ExamQuestionPartChooseOne {
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<Vec<Primitive>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     //TODO: type (contains only strings...)
-    pub distractors: Option<Vec<String>>,
+    pub distractors: Option<Vec<String>>, // TODO: jme?
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -1396,10 +1399,10 @@ pub struct ExamQuestionPartChooseMultiple {
     pub wrong_nb_choices_warning: MultipleChoiceWarningType, // What to do if the student picks the wrong number of responses?
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: VariableValued<Vec<String>>,
+    pub choices: VariableValued<Vec<String>>, // todo jme?
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<Vec<Primitive>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    pub distractors: Option<Vec<String>>,
+    pub distractors: Option<Vec<String>>, // todo jme?
 }
 
 #[skip_serializing_none]
@@ -1429,8 +1432,8 @@ pub struct ExamQuestionPartMatchAnswersWithChoices {
     pub layout: MatchAnswersWithChoicesLayout,
     #[serde(rename = "showCellAnswerState")]
     pub show_cell_answer_state: bool,
-    pub choices: VariableValued<Vec<String>>,
-    pub answers: VariableValued<Vec<String>>,
+    pub choices: VariableValued<Vec<String>>, // todo jme
+    pub answers: VariableValued<Vec<String>>, // todo jme
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<Vec<Vec<Primitive>>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }
@@ -1550,7 +1553,7 @@ pub struct ExamDiagnostic {
     pub knowledge_graph: ExamDiagnosticKnowledgeGraph,
     pub script: ExamDiagnosticScript,
     #[serde(rename = "customScript")]
-    pub custom_script: String,
+    pub custom_script: String, // TODO jme...
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

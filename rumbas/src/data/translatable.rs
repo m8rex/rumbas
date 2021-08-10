@@ -1,4 +1,4 @@
-use crate::data::file_reference::FileString;
+use crate::data::file_reference::{FileString, JMEFileString};
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_rumbas::ToRumbas;
@@ -6,106 +6,129 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
 
-/// A translatable string
-///
-/// In yaml it should be specified as either
-/// - a simple string: "this is a string"
-/// - a file string: file:<path>
-/// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(untagged)]
-pub enum TranslatableString {
-    //TODO: custom reader that checks for missing values etc?
-    /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-    Translated(HashMap<String, Value<TranslatableString>>),
-    /// A file reference or string
-    NotTranslated(FileString),
-}
+macro_rules! translatable_type {
+    (
+        $(#[$outer:meta])*
+        type $type: ident,
+        subtype $subtype: ty
+    ) => {
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[serde(untagged)]
+        pub enum $type {
+            //TODO: custom reader that checks for missing values etc?
+            /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
+            Translated(HashMap<String, Value<$type>>),
+            /// A file reference or string
+            NotTranslated($subtype),
+        }
 
-impl_to_rumbas!(TranslatableString);
+        impl_to_rumbas!($type);
 
-impl TranslatableString {
-    pub fn s(s: &str) -> Self {
-        TranslatableString::NotTranslated(FileString::s(s))
-    }
-}
-
-impl RumbasCheck for TranslatableString {
-    fn check(&self) -> RumbasCheckResult {
-        match self {
-            TranslatableString::Translated(m) => {
-                let mut empty = RumbasCheckResult::empty();
-                for (_, v) in m.iter() {
-                    empty.union(&v.check());
-                }
-                empty
+        impl $type {
+            pub fn s(s: &str) -> Self {
+                $type::NotTranslated(<$subtype>::s(s))
             }
-            TranslatableString::NotTranslated(f) => f.check(),
         }
-    }
-}
-impl OptionalOverwrite<TranslatableString> for TranslatableString {
-    fn overwrite(&mut self, _other: &TranslatableString) {
-        //TODO: Maybe add languages of other that are missing in self?
-        // These default values should be read before language is interpreted
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            TranslatableString::Translated(m) => m.insert_template_value(key, val),
-            TranslatableString::NotTranslated(f) => f.insert_template_value(key, val),
-        }
-    }
-}
-impl_optional_overwrite_value!(TranslatableString);
 
-impl TranslatableString {
-    pub fn to_string(&self, locale: &str) -> Option<String> {
-        match self {
-            //TODO: just use unwrap on values?
-            TranslatableString::NotTranslated(s) => Some(s.get_content(locale)),
-            TranslatableString::Translated(m_value) => {
-                let m = m_value.clone();
-                m.get(locale)
-                    .or_else(|| m.get("content")) //TODO
-                    .map(|t_value| {
-                        let t = t_value.unwrap();
-                        match t {
-                            TranslatableString::NotTranslated(s) => {
-                                substitute(&s.get_content(locale), locale, &m)
-                            }
-                            _ => t.to_string(locale),
+        impl RumbasCheck for $type {
+            fn check(&self) -> RumbasCheckResult {
+                match self {
+                    $type::Translated(m) => {
+                        let mut empty = RumbasCheckResult::empty();
+                        for (_, v) in m.iter() {
+                            empty.union(&v.check());
                         }
-                    })
-                    .flatten()
-            } //TODO content to static string //TODO: check for missing translations
-        }
-    }
-}
-
-//TODO: check for infinite loops / recursion? -> don't substitute something that is already
-//substituted
-fn substitute(
-    pattern: &str,
-    locale: &str,
-    map: &HashMap<String, Value<TranslatableString>>,
-) -> Option<String> {
-    let mut result = pattern.to_string();
-    let mut substituted = false;
-    for (key, val) in map.iter() {
-        if key.starts_with('{') && key.ends_with('}') {
-            let before = result.clone();
-            if let Some(v) = val.unwrap().to_string(locale) {
-                result = result.replace(key, &v);
-                substituted = substituted || before != result;
-            } else {
-                return None;
+                        empty
+                    }
+                    $type::NotTranslated(f) => f.check(),
+                }
             }
         }
-    }
-    if substituted {
-        return substitute(&result, locale, map);
-    }
-    Some(result)
+        impl OptionalOverwrite<$type> for $type {
+            fn overwrite(&mut self, _other: &$type) {
+                //TODO: Maybe add languages of other that are missing in self?
+                // These default values should be read before language is interpreted
+            }
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+                match self {
+                    $type::Translated(m) => m.insert_template_value(key, val),
+                    $type::NotTranslated(f) => f.insert_template_value(key, val),
+                }
+            }
+        }
+        impl_optional_overwrite_value!($type);
+
+        impl $type {
+            pub fn to_string(&self, locale: &str) -> Option<String> {
+                //TODO: check for infinite loops / recursion? -> don't substitute something that is already
+                //substituted
+                fn substitute(
+                    pattern: &str,
+                    locale: &str,
+                    map: &HashMap<String, Value<$type>>,
+                ) -> Option<String> {
+                    let mut result = pattern.to_string();
+                    let mut substituted = false;
+                    for (key, val) in map.iter() {
+                        if key.starts_with('{') && key.ends_with('}') {
+                            let before = result.clone();
+                            if let Some(v) = val.unwrap().to_string(locale) {
+                                result = result.replace(key, &v);
+                                substituted = substituted || before != result;
+                            } else {
+                                return None;
+                            }
+                        }
+                    }
+                    if substituted {
+                        return substitute(&result, locale, map);
+                    }
+                    Some(result)
+                }
+                match self {
+                    //TODO: just use unwrap on values?
+                    $type::NotTranslated(s) => Some(s.get_content(locale)),
+                    $type::Translated(m_value) => {
+                        let m = m_value.clone();
+                        m.get(locale)
+                            .or_else(|| m.get("content")) //TODO
+                            .map(|t_value| {
+                                let t = t_value.unwrap();
+                                match t {
+                                    $type::NotTranslated(s) => {
+                                        substitute(&s.get_content(locale), locale, &m)
+                                    }
+                                    _ => t.to_string(locale),
+                                }
+                            })
+                            .flatten()
+                    } //TODO content to static string //TODO: check for missing translations
+                }
+            }
+        }
+    };
+}
+
+translatable_type! {
+    /// A translatable string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: "this is a string"
+    /// - a file string: file:<path>
+    /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
+    type TranslatableString,
+    subtype FileString
+}
+
+translatable_type! {
+    /// A translatable JME string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: "this is a string"
+    /// - a file string: file:<path>
+    /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
+    type JMETranslatableString,
+    subtype JMEFileString
 }
 
 #[cfg(test)]

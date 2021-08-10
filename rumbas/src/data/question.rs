@@ -15,6 +15,7 @@ use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
 use crate::data::yaml::{YamlError, YamlResult};
 use numbas::defaults::DEFAULTS;
+use numbas::jme::JMEString;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -251,7 +252,7 @@ impl Question {
 
 optional_overwrite! {
     pub struct VariablesTest {
-        condition: String,
+        condition: JMEString,
         max_runs: usize
     }
 }
@@ -340,7 +341,7 @@ optional_overwrite! {
         /// The name of the constant
         name: String,
         /// The value of the constant
-        value: String,
+        value: JMEString,
         /// The tex code use to display the constant
         tex: String
     }
