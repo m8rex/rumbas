@@ -11,19 +11,18 @@ node       = _{ grouped_expression | terminal }
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
 
-reserved = @{ (boolean | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char }
+reserved = @{ (boolean | constant_name | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char }
 
-literal = _{ boolean | range | number | string }
-//constant = { infinity_constant | nan_constant | changeable_constant }
-// TODO: to rust code side
-//infinity_constant = { "infty" | "infinity" }
-// TODO unicode infinity char
-//nan_constant = { "nan" }
-//changeable_constant = { e_constant | pi_constant | i_constant }
-//e_constant = { "e" }
-//i_constant = { "i" }
-//pi_constant = { "pi" }
-// TODO pi unicode
+literal = _{ boolean | range | number | string | constant }
+
+constant_name = { infinity_constant | nan_constant | changeable_constant }
+infinity_constant = { "infty" | "infinity" | "∞" }
+nan_constant = { "nan" }
+changeable_constant = { e_constant | pi_constant | i_constant }
+e_constant = { "e" }
+i_constant = { "i" }
+pi_constant = { "pi" | "π" }
+constant = { (annotation)* ~ constant_name }
 
 number = _{ broken_number | integer }
 integer = { ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* | "0" }

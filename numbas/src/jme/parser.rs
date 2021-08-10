@@ -28,6 +28,7 @@ pub enum ParserExpr<'i> {
         Box<ParserNode<'i>>,
         Box<ParserNode<'i>>,
     ),
+    AnnotatedConstant(String),
     AnnotatedIdent(String),
     Relation(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Logic(String, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
@@ -57,6 +58,7 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
                 ast::Expr::Arithmetic(a, Box::new((*n1).into()), Box::new((*n2).into()))
             }
             ParserExpr::AnnotatedIdent(s) => ast::Expr::Ident(s.into()),
+            ParserExpr::AnnotatedConstant(s) => ast::Expr::Constant(s.into()),
             ParserExpr::Relation(s, n1, n2) => {
                 ast::Expr::Relation(s.into(), Box::new((*n1).into()), Box::new((*n2).into()))
             }
@@ -160,6 +162,13 @@ fn consume_expression<'i>(
                         //println!("ident {:?}", pair);
                         ParserNode {
                             expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
+                            span: pair.clone().as_span(),
+                        }
+                    }
+                    Rule::constant => {
+                        //println!("ident {:?}", pair);
+                        ParserNode {
+                            expr: ParserExpr::AnnotatedConstant(pair.as_str().trim().to_owned()),
                             span: pair.clone().as_span(),
                         }
                     }
