@@ -1,4 +1,7 @@
-WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
+WHITESPACE = _{ " " | "\t" | newline }
+COMMENT    = _{ block_comment | ("//" ~ (!newline ~ ANY)*) }
+newline    = _{ "\n" | "\r\n" }
+block_comment = _{ "/*" ~ (block_comment | !"*/" ~ ANY)* ~ "*/" }
 
 jme = {
     SOI
