@@ -5,14 +5,14 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::to_rumbas::*;
-use crate::data::translatable::{JMETranslatableString, TranslatableString};
+use crate::data::translatable::{EmbracedJMETranslatableString, TranslatableString};
 use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
 question_part_type! {
     pub struct QuestionPartJME {
-        answer: JMETranslatableString, //TODO: should this be translatable?
+        answer: EmbracedJMETranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
         show_preview: bool,
         answer_check: CheckingType,

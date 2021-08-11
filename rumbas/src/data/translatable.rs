@@ -1,4 +1,4 @@
-use crate::data::file_reference::{FileString, JMEFileString};
+use crate::data::file_reference::{EmbracedJMEFileString, FileString, JMEFileString};
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_rumbas::ToRumbas;
@@ -129,6 +129,17 @@ translatable_type! {
     /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
     type JMETranslatableString,
     subtype JMEFileString
+}
+
+translatable_type! {
+    /// A translatable embraced JME string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: "this is a string"
+    /// - a file string: file:<path>
+    /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
+    type EmbracedJMETranslatableString,
+    subtype EmbracedJMEFileString
 }
 
 #[cfg(test)]

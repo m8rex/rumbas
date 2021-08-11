@@ -225,8 +225,8 @@ mod test {
     use super::LogicalOperator::*;
     use super::RangeOperator::*;
     use super::RelationalOperator::*;
-    use crate::jme::parser::consume_outer_expression;
-    use crate::jme::parser::parse;
+    use crate::jme::parser::consume_one_expression;
+    use crate::jme::parser::parse_as_jme;
     use serde::{Deserialize, Serialize};
     use std::fmt::Write;
 
@@ -234,8 +234,8 @@ mod test {
     fn ast() {
         let input = "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false";
 
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        let pairs = parse_as_jme(input).unwrap();
+        let ast = consume_one_expression(pairs).unwrap();
 
         assert_eq!(
             ast,
@@ -279,8 +279,8 @@ mod test {
     fn ast_range() {
         let input = "repeat(random(1..4),5)";
 
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        let pairs = parse_as_jme(input).unwrap();
+        let ast = consume_one_expression(pairs).unwrap();
 
         assert_eq!(
             ast,
@@ -314,9 +314,9 @@ mod test {
             ("x y", "x*y"),
         ] {
             println!("Handling {}", implicit);
-            let pairs = parse(implicit).unwrap();
-            let ast = consume_outer_expression(pairs).unwrap();
-            let explicit_ast = consume_outer_expression(parse(explicit).unwrap()).unwrap();
+            let pairs = parse_as_jme(implicit).unwrap();
+            let ast = consume_one_expression(pairs).unwrap();
+            let explicit_ast = consume_one_expression(parse_as_jme(explicit).unwrap()).unwrap();
 
             assert_eq!(ast, explicit_ast);
             assert_eq!(ast.validate(), vec![]);
@@ -325,10 +325,10 @@ mod test {
 
     #[test]
     fn ast_implicit_multiplication_precedence() {
-        let explicit_ast = consume_outer_expression(parse("(b+2)*(a+1)^2").unwrap()).unwrap();
+        let explicit_ast = consume_one_expression(parse_as_jme("(b+2)*(a+1)^2").unwrap()).unwrap();
         let input = "(b+2)(a+1)^2";
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        let pairs = parse_as_jme(input).unwrap();
+        let ast = consume_one_expression(pairs).unwrap();
 
         assert_eq!(ast, explicit_ast);
         assert_eq!(ast.validate(), vec![]);
@@ -337,8 +337,8 @@ mod test {
     #[test]
     fn ast_list() {
         let input = "[1,2,3]+4";
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        let pairs = parse_as_jme(input).unwrap();
+        let ast = consume_one_expression(pairs).unwrap();
 
         assert_eq!(
             ast,
@@ -354,8 +354,8 @@ mod test {
     #[test]
     fn ast_non_ascii_ident() {
         let input = "vec:ε";
-        let pairs = parse(input).unwrap();
-        let ast = consume_outer_expression(pairs).unwrap();
+        let pairs = parse_as_jme(input).unwrap();
+        let ast = consume_one_expression(pairs).unwrap();
 
         assert_eq!(
             ast,
@@ -388,12 +388,12 @@ mod test {
     #[test]
     fn numbas_doc_tests() {
         let mut total_tests = 0;
-        let mut passed_parse_tests = 0;
+        let mut passed_parse_as_jme_tests = 0;
         let mut passed_validate_tests = 0;
         let mut output = String::new();
         let doc_tests_json = include_str!("numbas-jme-doc-tests.json");
         let doc_tests: Vec<DocTest> =
-            serde_json::from_str(doc_tests_json).expect("it to parse the docstest json");
+            serde_json::from_str(doc_tests_json).expect("it to parse_as_jme the docstest json");
         for test in doc_tests.into_iter() {
             for r#fn in test.fns {
                 for example in r#fn.examples {
@@ -404,11 +404,11 @@ mod test {
                     ]
                     .contains(&&example.r#in[..]);
 
-                    let pairs_res = parse(&example.r#in[..]);
+                    let pairs_res = parse_as_jme(&example.r#in[..]);
                     let mut failed_parsing = true;
                     let mut failed_validating = true;
                     if let Ok(pairs) = pairs_res.clone() {
-                        let ast_res = consume_outer_expression(pairs);
+                        let ast_res = consume_one_expression(pairs);
                         if let Ok(ast) = ast_res {
                             failed_parsing = false;
                             let validation_errors = ast.validate();
@@ -447,14 +447,14 @@ mod test {
                     if failed_parsing {
                         writeln!(
                             output,
-                            "PARSE: {}.{}.{}:", //" {:?}",
+                            "parse_as_jme: {}.{}.{}:", //" {:?}",
                             test.name,
                             r#fn.name,
                             example.r#in //, pairs_res
                         )
                         .expect("Error occured while trying to write to string");
                     } else {
-                        passed_parse_tests += 1;
+                        passed_parse_as_jme_tests += 1;
                     }
                     if !failed_validating && !failed_parsing {
                         passed_validate_tests += 1;
@@ -463,7 +463,7 @@ mod test {
             }
         }
         println!("{}", output);
-        assert_eq!(total_tests, passed_parse_tests);
+        assert_eq!(total_tests, passed_parse_as_jme_tests);
         assert_eq!(total_tests, passed_validate_tests);
     }
 }

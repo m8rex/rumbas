@@ -90,12 +90,13 @@ pub enum ConsumeError {
     UnknownParseError,
 }
 
-pub fn consume_outer_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, ConsumeError> {
+pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, ConsumeError> {
+    let pairs = pairs.clone().next().unwrap().into_inner();
     let res_res = std::panic::catch_unwind(|| {
         let expression = consume_expression_with_spans(pairs)?;
         //let errors = validator::validate_ast(&rules);
         //if errors.is_empty() {
-        Ok(expression.into())
+        Ok(expression.into_iter().map(|e| e.into()).collect())
         /*} else {
             Err(errors)
         }*/
@@ -106,7 +107,11 @@ pub fn consume_outer_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, Consume
     }
 }
 
-fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<Error<Rule>>> {
+pub fn consume_one_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, ConsumeError> {
+    consume_expressions(pairs).map(|v| v.into_iter().next().unwrap())
+}
+
+fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, Vec<Error<Rule>>> {
     let climber = PrecClimber::new(vec![
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
@@ -121,14 +126,14 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
         Operator::new(Rule::range_separator, Assoc::Left),
         Operator::new(Rule::power, Assoc::Right),
     ]);
-    let expression = pairs
-        .clone()
-        .next()
-        .unwrap()
-        .into_inner()
-        .find(|pair| pair.as_rule() == Rule::expression)
-        .unwrap();
-    consume_expression(expression.into_inner().peekable(), &climber)
+    let mut results = Vec::new();
+    for expression in pairs.filter(|pair| pair.as_rule() == Rule::expression) {
+        results.push(consume_expression(
+            expression.into_inner().peekable(),
+            &climber,
+        )?);
+    }
+    Ok(results)
 }
 
 fn consume_expression<'i>(
@@ -568,8 +573,12 @@ fn unescape(string: &str) -> Option<String> {
     }
 }
 
-pub fn parse(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+pub fn parse_as_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
     JMEParser::parse(Rule::jme, s)
+}
+
+pub fn parse_as_embraced_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    JMEParser::parse(Rule::embraced_jme, s)
 }
 
 #[cfg(test)]
@@ -586,7 +595,7 @@ mod test {
     #[test]
     fn variable_names() {
         for valid_name in VALID_NAMES {
-            assert!(parse(valid_name).is_ok());
+            assert!(parse_as_jme(valid_name).is_ok());
         }
     }
 
@@ -596,23 +605,23 @@ mod test {
             for valid_annotation in VALID_ANNOTATIONS {
                 let annotated = format!("{}:{}", valid_annotation, valid_name);
                 //println!("{}", annotated);
-                assert!(parse(&annotated[..]).is_ok());
+                assert!(parse_as_jme(&annotated[..]).is_ok());
             }
         }
-        assert!(parse("v:dot:x").is_ok()); // multiple annotations
+        assert!(parse_as_jme("v:dot:x").is_ok()); // multiple annotations
     }
 
     #[test]
     fn literals() {
         for valid_literal in VALID_LITERALS {
-            assert!(parse(valid_literal).is_ok());
+            assert!(parse_as_jme(valid_literal).is_ok());
         }
     }
 
     #[test]
     fn builtin_constants() {
         for builtin_constant in BUILTIN_CONSTANTS {
-            assert!(parse(builtin_constant).is_ok());
+            assert!(parse_as_jme(builtin_constant).is_ok());
         }
     }
 
@@ -620,40 +629,45 @@ mod test {
     fn grouped_terms_simple() {
         for valid_name in VALID_NAMES {
             let grouped = format!("({})", valid_name);
-            assert!(parse(&grouped[..]).is_ok());
+            assert!(parse_as_jme(&grouped[..]).is_ok());
         }
     }
 
     #[test]
     fn function_application() {
-        assert!(parse("f(a)").is_ok());
-        assert!(parse("g(a,b)").is_ok());
+        assert!(parse_as_jme("f(a)").is_ok());
+        assert!(parse_as_jme("g(a,b)").is_ok());
     }
 
     #[test]
     fn collections() {
-        assert!(parse("[a: 1, \"first name\": \"Owen\"]").is_ok());
-        assert!(parse("[1, 2, 3]").is_ok());
-        assert!(parse("[a]").is_ok());
-        assert!(parse("[]").is_ok());
+        assert!(parse_as_jme("[a: 1, \"first name\": \"Owen\"]").is_ok());
+        assert!(parse_as_jme("[1, 2, 3]").is_ok());
+        assert!(parse_as_jme("[a]").is_ok());
+        assert!(parse_as_jme("[]").is_ok());
     }
 
     #[test]
     fn indices() {
-        assert!(parse("[1, 2, 3][0]").is_ok());
-        assert!(parse("x[3..7]").is_ok());
-        assert!(parse("id(4)[1]").is_ok());
-        assert!(parse("info[\"name\"]").is_ok());
-        assert!(parse("\"Numbas\"[0]").is_ok());
+        assert!(parse_as_jme("[1, 2, 3][0]").is_ok());
+        assert!(parse_as_jme("x[3..7]").is_ok());
+        assert!(parse_as_jme("id(4)[1]").is_ok());
+        assert!(parse_as_jme("info[\"name\"]").is_ok());
+        assert!(parse_as_jme("\"Numbas\"[0]").is_ok());
     }
 
     #[test]
     fn implicit_multiplication() {
         // TODO: see warning in docs about settings https://numbas-editor.readthedocs.io/en/latest/jme-reference.html#implicit-multiplication
-        assert!(parse("(a+2)(a+1)").is_ok());
-        assert!(parse("(a+1)2").is_ok());
-        assert!(parse("(x+y)z").is_ok());
-        assert!(parse("2x").is_ok());
-        assert!(parse("x y").is_ok());
+        assert!(parse_as_jme("(a+2)(a+1)").is_ok());
+        assert!(parse_as_jme("(a+1)2").is_ok());
+        assert!(parse_as_jme("(x+y)z").is_ok());
+        assert!(parse_as_jme("2x").is_ok());
+        assert!(parse_as_jme("x y").is_ok());
+    }
+
+    #[test]
+    fn embraced_expression() {
+        assert!(parse_as_embraced_jme("hallo {x+5} test {x*y+7} \\{xxxtest\\}").is_ok());
     }
 }

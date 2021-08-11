@@ -1,9 +1,15 @@
+WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
+
 jme = {
     SOI
     ~ expression
     ~ EOI
 }
-WHITESPACE = _{ (" " | "\t" | "\r" | "\n")+ }
+
+embraced_jme = { SOI ~ (normal_char | (brace_open ~ expression ~ brace_close))* ~ EOI  }
+brace_open = _{ !"\\{" ~ "{" }
+brace_close = _{ !"\\}" ~ "}" }
+normal_char = _{ "\\{" | "\\}" | (!(brace_open | brace_close) ~ ANY) }
 
 expression =  { term ~ (infix_operator ~ term)* }
 term       =  { prefix_operator* ~ node ~ postfix_operator* }
