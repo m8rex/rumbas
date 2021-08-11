@@ -13,7 +13,7 @@ grouped_expression = _{ "(" ~ expression ~ ")" }
 
 reserved = @{ (boolean | constant_name | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char_all }
 
-literal = _{ boolean | range | number | string | constant }
+literal = _{ boolean | number | string | constant }
 
 constant_name = { infinity_constant | nan_constant | changeable_constant }
 infinity_constant = { "infty" | "infinity" | "∞" }
@@ -27,7 +27,7 @@ constant = { (annotation)* ~ constant_name }
 number = _{ broken_number | integer }
 integer = { ASCII_NONZERO_DIGIT ~ ASCII_DIGIT* | "0" }
 broken_part = { ASCII_DIGIT* }
-broken_number = { integer ~ "." ~ broken_part }
+broken_number = { integer ~ !".." ~ "." ~ broken_part }
 boolean = { boolean_true | boolean_false }
 boolean_true = { "true" }
 boolean_false = { "false" }
@@ -86,11 +86,10 @@ xor_operator = _{ "xor" }
 implies_operator = _{ "implies" }
 logic_binary_operator = { and_operator | or_operator | xor_operator | implies_operator }
 cast_operator = { "as" }
-infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | logic_binary_operator | implicit_multiplication_operator }
+infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | logic_binary_operator | range_separator | range_step_separator | implicit_multiplication_operator }
 range_separator = { ".." }
 range_step_separator = { "#" }
-range = { integer? ~ range_separator ~ integer? ~ ( range_step_separator ~ integer )? }  
-index_operator = { "[" ~ (string | range | integer | ident_name) ~ "]" } 
+index_operator = { "[" ~ (string | integer | ident_name) ~ "]" } 
 faculty_operator =  { "!" }
 postfix_operator = _{ faculty_operator | index_operator }
 not_operator = _{ "!" | "not" }

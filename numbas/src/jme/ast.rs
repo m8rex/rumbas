@@ -61,6 +61,22 @@ impl std::convert::From<String> for LogicalOperator {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RangeOperator {
+    Create,
+    Step,
+}
+
+impl std::convert::From<String> for RangeOperator {
+    fn from(s: String) -> Self {
+        match &s[..] {
+            ".." => RangeOperator::Create,
+            "#" => RangeOperator::Step,
+            _ => unreachable!(),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum PrefixOperator {
     Not,
     Minus,
@@ -107,8 +123,8 @@ pub enum Expr {
     Float(isize, String),
     /// Matches a boolean
     Bool(bool),
-    /// Matches a range (end value is not included) with a certain step-
-    Range(Option<isize>, Option<isize>, Option<isize>),
+    /// Matches a range operation-
+    Range(RangeOperator, Box<Expr>, Box<Expr>),
     /// Matches an arithmetic operation of two expressions`
     Arithmetic(ArithmeticOperator, Box<Expr>, Box<Expr>),
     /// Matches an identifier
@@ -148,7 +164,11 @@ impl Expr {
             Expr::Int(_) => vec![],
             Expr::Float(_, _) => vec![],
             Expr::Bool(_) => vec![],
-            Expr::Range(_, _, _) => vec![], // TODO: if range is changed to expr, expr, to recursive call
+            Expr::Range(_, e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
             Expr::Arithmetic(_, e1, e2) => e1
                 .validate()
                 .into_iter()
@@ -203,6 +223,7 @@ mod test {
     use super::ExprValidationError::*;
     use super::Ident;
     use super::LogicalOperator::*;
+    use super::RangeOperator::*;
     use super::RelationalOperator::*;
     use crate::jme::parser::consume_outer_expression;
     use crate::jme::parser::parse;
@@ -274,7 +295,7 @@ mod test {
                             name: "random".to_string(),
                             annotations: vec![]
                         },
-                        vec![Range(Some(1), Some(4), None)]
+                        vec![Range(Create, Box::new(Int(1)), Box::new(Int(4)))]
                     ),
                     Int(5)
                 ]
