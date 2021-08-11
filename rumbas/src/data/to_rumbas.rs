@@ -1,8 +1,9 @@
 use crate::data::question_part::QuestionPart;
+use crate::data::translatable::EmbracedJMETranslatableString;
 use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::jme::JMEString;
+use numbas::jme::{EmbracedJMEString, JMEString};
 
 pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
@@ -23,6 +24,7 @@ macro_rules! impl_to_rumbas {
 impl_to_rumbas!(bool, f64, usize, [f64; 2]);
 impl_to_rumbas!(numbas::exam::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
+impl_to_rumbas!(numbas::jme::EmbracedJMEString);
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {
@@ -46,6 +48,13 @@ impl ToRumbas<JMETranslatableString> for JMEString {
     fn to_rumbas(&self) -> JMETranslatableString {
         let s: String = self.clone().into();
         JMETranslatableString::s(&s[..])
+    }
+}
+
+impl ToRumbas<EmbracedJMETranslatableString> for EmbracedJMEString {
+    fn to_rumbas(&self) -> EmbracedJMETranslatableString {
+        let s: String = self.clone().into();
+        EmbracedJMETranslatableString::s(&s[..])
     }
 }
 

@@ -200,3 +200,11 @@ file_type! {
     type JMEFileString,
     subtype String
 }
+
+file_type! {
+    /// An embraced JME string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    type EmbracedJMEFileString,
+    subtype String
+}

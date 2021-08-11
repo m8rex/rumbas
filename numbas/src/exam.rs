@@ -1,3 +1,4 @@
+use crate::jme::EmbracedJMEString;
 use crate::jme::JMEString;
 use serde::Deserialize;
 use serde::Serialize;
@@ -1008,7 +1009,7 @@ pub enum VariableReplacementStrategy {
 pub struct ExamQuestionPartJME {
     #[serde(flatten)]
     pub part_data: ExamQuestionPartSharedData,
-    pub answer: JMEString,
+    pub answer: EmbracedJMEString,
     #[serde(
         rename = "answerSimplification",
         default,
