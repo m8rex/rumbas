@@ -123,7 +123,7 @@ impl ToNumbas for QuestionPartBuiltin {
             }
             QuestionPartBuiltin::Matrix(d) => {
                 let n = d.to_numbas(locale)?;
-                numbas::exam::ExamQuestionPartBuiltin::Matrix(n)
+                numbas::exam::ExamQuestionPartBuiltin::Matrix(Box::new(n))
             }
         })
     }
@@ -269,7 +269,7 @@ impl ToNumbas for CustomPartInputTypeValue {
         if check.is_empty() {
             Ok(match self {
                 CustomPartInputTypeValue::CheckBox(v) => {
-                    numbas::exam::CustomPartInputTypeValue::CheckBox((*v).into())
+                    numbas::exam::CustomPartInputTypeValue::CheckBox(*v)
                 }
                 CustomPartInputTypeValue::Code(v) => {
                     numbas::exam::CustomPartInputTypeValue::Code(v.clone().into())

@@ -26,7 +26,7 @@ macro_rules! read_question {
 }
 
 fn create_question(qp: QuestionPath) {
-    let q_name = qp.question_name.clone().unwrap();
+    let q_name = qp.question_name.unwrap();
     let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data.unwrap()))
         .to_yaml()
         .unwrap();
