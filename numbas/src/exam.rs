@@ -1,6 +1,7 @@
 use crate::jme::JMEString;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_json::Error;
 use serde_with::skip_serializing_none;
 use std::collections::HashMap;
 use std::convert::TryInto;
@@ -824,12 +825,90 @@ pub struct ExamQuestionConstant {
     pub tex: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(try_from = "std::collections::BTreeMap<String, serde_json::Value>")]
 #[serde(untagged)]
 pub enum ExamQuestionPart {
     Builtin(ExamQuestionPartBuiltin),
     Custom(ExamQuestionPartCustom),
 }
+impl std::convert::TryFrom<std::collections::BTreeMap<String, serde_json::Value>>
+    for ExamQuestionPart
+{
+    type Error = serde_json::Error;
+    fn try_from(
+        map: std::collections::BTreeMap<String, serde_json::Value>,
+    ) -> Result<ExamQuestionPart, Error> {
+        if let Some(serde_json::Value::String(r#type)) = map.get("type") {
+            if [
+                "jme",
+                "numberentry",
+                "matrix",
+                "patternmatch",
+                "1_n_2",
+                "m_n_2",
+                "m_n_x",
+                "gapfill",
+                "information",
+                "extension",
+            ]
+            .contains(&&r#type[..])
+            {
+                ExamQuestionPartBuiltin::deserialize(serde_json::Value::Object(
+                    map.into_iter().collect(),
+                ))
+                .map_err(serde::de::Error::custom)
+                .map(ExamQuestionPart::Builtin)
+            } else {
+                ExamQuestionPartCustom::deserialize(serde_json::Value::Object(
+                    map.into_iter().collect(),
+                ))
+                .map_err(serde::de::Error::custom)
+                .map(ExamQuestionPart::Custom)
+            }
+        } else {
+            Err(serde::de::Error::custom("Missing type field"))
+        }
+    }
+} /*
+  pub fn deserialize_question_part<'de, D>(deserializer: D) -> Result<ExamQuestionPart, D::Error>
+  where
+      D: Deserializer<'de>,
+  {
+      use serde_json::Value;
+
+      use std::collections::BTreeMap as Map;
+
+      let map = Map::<String, Value>::deserialize(deserializer)?;
+      if let Some(Value::String(ref r#type)) = map.get("type") {
+          let lower = map.into_iter().collect();
+          if [
+              "jme",
+              "numberentry",
+              "matrix",
+              "patternmatch",
+              "1_n_2",
+              "m_n_2",
+              "m_n_x",
+              "gapfill",
+              "information",
+              "extension",
+          ]
+          .contains(r#type)
+          {
+              ExamQuestionPartBuiltin::deserialize(Value::Object(lower))
+                  .map_err(Error::custom)
+                  .map(ExamQuestionPart::Builtin)
+          } else {
+              ExamQuestionPartCustom::deserialize(Value::Object(lower))
+                  .map_err(Error::custom)
+                  .map(ExamQuestionPart::Custom)
+          }
+      } else {
+          Err(Error::custom("Missing type field"))
+      }
+  }
+  */
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]

@@ -22,7 +22,7 @@ pub enum ParserExpr<'i> {
     Int(isize),
     Float(isize, String),
     Bool(bool),
-    Range(Option<isize>, Option<isize>, Option<isize>),
+    Range(ast::RangeOperator, Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Arithmetic(
         ast::ArithmeticOperator,
         Box<ParserNode<'i>>,
@@ -53,7 +53,9 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Int(i) => ast::Expr::Int(i),
             ParserExpr::Float(i, s) => ast::Expr::Float(i, s),
             ParserExpr::Bool(b) => ast::Expr::Bool(b),
-            ParserExpr::Range(f, t, s) => ast::Expr::Range(f, t, s),
+            ParserExpr::Range(o, n1, n2) => {
+                ast::Expr::Range(o, Box::new((*n1).into()), Box::new((*n2).into()))
+            }
             ParserExpr::Arithmetic(a, n1, n2) => {
                 ast::Expr::Arithmetic(a, Box::new((*n1).into()), Box::new((*n2).into()))
             }
@@ -115,6 +117,8 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<ParserNode, Vec<E
         Operator::new(Rule::multiply, Assoc::Left)
             | Operator::new(Rule::implicit_multiplication_operator, Assoc::Left)
             | Operator::new(Rule::divide, Assoc::Left),
+        Operator::new(Rule::range_step_separator, Assoc::Left), // TODO...
+        Operator::new(Rule::range_separator, Assoc::Left),
         Operator::new(Rule::power, Assoc::Right),
     ]);
     let expression = pairs
@@ -188,39 +192,49 @@ fn consume_expression<'i>(
                             span: pair.clone().as_span(),
                         }
                     }
-                    Rule::range => {
+                    /*                    Rule::range => {
                         let span = pair.as_span();
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
-                        let start: Option<isize> = if pair.as_rule() == Rule::integer {
-                            let val = Some(
-                                pair.as_str()
-                                    .trim()
-                                    .parse()
-                                    .expect("incorrect integer start point of range"),
-                            );
+                        let start = if pair.as_rule() != Rule::range_separator {
+                            let val = Some(Box::new(consume_expression(
+                                pair.into_inner().peekable(),
+                                climber,
+                            )?));
                             pairs.next().unwrap(); // dots
                             val
                         } else {
                             None
                         };
-                        let end: Option<isize> = pairs.next().map(|pair| {
-                            pair.as_str()
-                                .trim()
-                                .parse()
-                                .expect("incorrect integer end point of range")
-                        });
-                        let step: Option<isize> = pairs.next().map(|pair| {
-                            pair.as_str()
-                                .trim()
-                                .parse()
-                                .expect("incorrect integer step size for range")
-                        });
+                        let (end, step) = if let Some(pair) = pairs.next() {
+                            let end = if pair.as_rule() != Rule::range_step_separator {
+                                let val = Some(Box::new(consume_expression(
+                                    pair.into_inner().peekable(),
+                                    climber,
+                                )?));
+                                pairs.next().unwrap(); // #
+                                val
+                            } else {
+                                None
+                            };
+                            let step = if let Some(pair) = pairs.next() {
+                                Some(Box::new(consume_expression(
+                                    pair.into_inner().peekable(),
+                                    climber,
+                                )?))
+                            } else {
+                                None
+                            };
+                            (end, step)
+                        } else {
+                            (None, None)
+                        };
+
                         ParserNode {
                             expr: ParserExpr::Range(start, end, step),
                             span,
                         }
-                    }
+                    }*/
                     Rule::broken_number => {
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
@@ -421,6 +435,30 @@ fn consume_expression<'i>(
                     Box::new(lhs),
                     Box::new(rhs),
                 ),
+                span: start.span(&end),
+            })
+        }
+        Rule::range_separator => {
+            let lhs = lhs?;
+            let rhs = rhs?;
+
+            let start = lhs.span.start_pos();
+            let end = rhs.span.end_pos();
+
+            Ok(ParserNode {
+                expr: ParserExpr::Range(ast::RangeOperator::Create, Box::new(lhs), Box::new(rhs)),
+                span: start.span(&end),
+            })
+        }
+        Rule::range_step_separator => {
+            let lhs = lhs?;
+            let rhs = rhs?;
+
+            let start = lhs.span.start_pos();
+            let end = rhs.span.end_pos();
+
+            Ok(ParserNode {
+                expr: ParserExpr::Range(ast::RangeOperator::Step, Box::new(lhs), Box::new(rhs)),
                 span: start.span(&end),
             })
         }
