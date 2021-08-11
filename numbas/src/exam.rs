@@ -249,7 +249,6 @@ impl Exam {
     }
 
     pub fn write(&self, file_name: &str) -> WriteResult {
-        println!("{:#?}", self);
         match serde_json::to_string(self) {
             Ok(s) => match std::fs::write(
                 file_name,
@@ -871,45 +870,7 @@ impl std::convert::TryFrom<std::collections::BTreeMap<String, serde_json::Value>
             Err(serde::de::Error::custom("Missing type field"))
         }
     }
-} /*
-  pub fn deserialize_question_part<'de, D>(deserializer: D) -> Result<ExamQuestionPart, D::Error>
-  where
-      D: Deserializer<'de>,
-  {
-      use serde_json::Value;
-
-      use std::collections::BTreeMap as Map;
-
-      let map = Map::<String, Value>::deserialize(deserializer)?;
-      if let Some(Value::String(ref r#type)) = map.get("type") {
-          let lower = map.into_iter().collect();
-          if [
-              "jme",
-              "numberentry",
-              "matrix",
-              "patternmatch",
-              "1_n_2",
-              "m_n_2",
-              "m_n_x",
-              "gapfill",
-              "information",
-              "extension",
-          ]
-          .contains(r#type)
-          {
-              ExamQuestionPartBuiltin::deserialize(Value::Object(lower))
-                  .map_err(Error::custom)
-                  .map(ExamQuestionPart::Builtin)
-          } else {
-              ExamQuestionPartCustom::deserialize(Value::Object(lower))
-                  .map_err(Error::custom)
-                  .map(ExamQuestionPart::Custom)
-          }
-      } else {
-          Err(Error::custom("Missing type field"))
-      }
-  }
-  */
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]
@@ -919,7 +880,7 @@ pub enum ExamQuestionPartBuiltin {
     #[serde(rename = "numberentry")]
     NumberEntry(ExamQuestionPartNumberEntry),
     #[serde(rename = "matrix")]
-    Matrix(ExamQuestionPartMatrix),
+    Matrix(Box<ExamQuestionPartMatrix>),
     #[serde(rename = "patternmatch")]
     PatternMatch(ExamQuestionPartPatternMatch),
     #[serde(rename = "1_n_2")]

@@ -55,7 +55,7 @@ impl Exam {
         use ExamFileType::*;
         let input: std::result::Result<ExamFileType, serde_yaml::Error> =
             if file.starts_with(crate::EXAMS_FOLDER) {
-                let yaml = fs::read_to_string(file).map_err(|e| ParseError::IOError(e))?;
+                let yaml = fs::read_to_string(file).map_err(ParseError::IOError)?;
                 serde_yaml::from_str(&yaml)
             } else if file.starts_with(crate::QUESTIONS_FOLDER) {
                 let mut data = HashMap::new();

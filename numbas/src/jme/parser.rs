@@ -197,49 +197,6 @@ fn consume_expression<'i>(
                             span: pair.clone().as_span(),
                         }
                     }
-                    /*                    Rule::range => {
-                        let span = pair.as_span();
-                        let mut pairs = pair.into_inner();
-                        let pair = pairs.next().unwrap();
-                        let start = if pair.as_rule() != Rule::range_separator {
-                            let val = Some(Box::new(consume_expression(
-                                pair.into_inner().peekable(),
-                                climber,
-                            )?));
-                            pairs.next().unwrap(); // dots
-                            val
-                        } else {
-                            None
-                        };
-                        let (end, step) = if let Some(pair) = pairs.next() {
-                            let end = if pair.as_rule() != Rule::range_step_separator {
-                                let val = Some(Box::new(consume_expression(
-                                    pair.into_inner().peekable(),
-                                    climber,
-                                )?));
-                                pairs.next().unwrap(); // #
-                                val
-                            } else {
-                                None
-                            };
-                            let step = if let Some(pair) = pairs.next() {
-                                Some(Box::new(consume_expression(
-                                    pair.into_inner().peekable(),
-                                    climber,
-                                )?))
-                            } else {
-                                None
-                            };
-                            (end, step)
-                        } else {
-                            (None, None)
-                        };
-
-                        ParserNode {
-                            expr: ParserExpr::Range(start, end, step),
-                            span,
-                        }
-                    }*/
                     Rule::broken_number => {
                         let mut pairs = pair.into_inner();
                         let pair = pairs.next().unwrap();
@@ -270,7 +227,6 @@ fn consume_expression<'i>(
                     Rule::dictionary => {
                         let span = pair.as_span();
                         let pairs = pair.into_inner();
-                        //println!("pairs {:#?}", pairs);
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
                             let mut item = p.into_inner();
@@ -288,10 +244,8 @@ fn consume_expression<'i>(
                     }
                     Rule::function_application => {
                         let mut pairs = pair.into_inner();
-                        //println!("pairs {:#?}", pairs);
                         let pair = pairs.next().unwrap();
                         let ident = pair.as_str();
-                        //println!("ident {:?}", ident);
                         let start_pos = pair.clone().as_span().start_pos();
                         //pairs.next().unwrap(); // (
                         let pair = pairs.next().unwrap();
@@ -313,7 +267,6 @@ fn consume_expression<'i>(
                     Ok(node),
                     |node: Result<ParserNode<'i>, Vec<Error<Rule>>>, pair| {
                         let node = node?;
-                        //println!("folding {:#?}", pair);
                         let node = match pair.as_rule() {
                             Rule::faculty_operator => {
                                 let start = node.span.start_pos();
@@ -340,10 +293,7 @@ fn consume_expression<'i>(
 
         Ok(node)
     }
-    let term = |pair: Pair<'i, Rule>| {
-        //println!("term {:?}", pair);
-        unaries(pair.into_inner().peekable(), climber)
-    };
+    let term = |pair: Pair<'i, Rule>| unaries(pair.into_inner().peekable(), climber);
     let infix = |lhs: Result<ParserNode<'i>, Vec<Error<Rule>>>,
                  op: Pair<'i, Rule>,
                  rhs: Result<ParserNode<'i>, Vec<Error<Rule>>>| match op.as_rule() {
@@ -528,43 +478,6 @@ fn unescape(string: &str) -> Option<String> {
                     result.push('}')
                 }
                 '\\' => result.push('\\'),
-                //'r' => result.push('\r'),
-                //'t' => result.push('\t'),
-                //  '0' => result.push('\0'),
-                /*    'x' => {
-                    let string: String = chars.clone().take(2).collect();
-
-                    if string.len() != 2 {
-                        return None;
-                    }
-
-                    for _ in 0..string.len() {
-                        chars.next()?;
-                    }
-
-                    let value = u8::from_str_radix(&string, 16).ok()?;
-
-                    result.push(char::from(value));
-                }
-                'u' => {
-                    if chars.next()? != '{' {
-                        return None;
-                    }
-
-                    let string: String = chars.clone().take_while(|c| *c != '}').collect();
-
-                    if string.len() < 2 || 6 < string.len() {
-                        return None;
-                    }
-
-                    for _ in 0..string.len() + 1 {
-                        chars.next()?;
-                    }
-
-                    let value = u32::from_str_radix(&string, 16).ok()?;
-
-                    result.push(char::from_u32(value)?);
-                } */
                 _ => return None,
             },
             Some(c) => result.push(c),
@@ -589,8 +502,8 @@ mod test {
     const VALID_ANNOTATIONS: [&str; 11] = [
         "verb", "op", "v", "vector", "unit", "dot", "m", "matrix", "diff", "degrees", "vec",
     ];
-    const VALID_LITERALS: [&str; 6] = ["true", "false", "1", "4.3", "\"Numbas\"", "'Numbas'"]; // unicode pi and infinity
-    const BUILTIN_CONSTANTS: [&str; 6] = ["pi", "e", "i", "infinity", "infty", "nan"]; // unicode pi and infinity
+    const VALID_LITERALS: [&str; 6] = ["true", "false", "1", "4.3", "\"Numbas\"", "'Numbas'"];
+    const BUILTIN_CONSTANTS: [&str; 8] = ["pi", "π", "e", "i", "infinity", "infty", "∞", "nan"];
 
     #[test]
     fn variable_names() {
@@ -604,7 +517,6 @@ mod test {
         for valid_name in VALID_NAMES {
             for valid_annotation in VALID_ANNOTATIONS {
                 let annotated = format!("{}:{}", valid_annotation, valid_name);
-                //println!("{}", annotated);
                 assert!(parse_as_jme(&annotated[..]).is_ok());
             }
         }
