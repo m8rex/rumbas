@@ -494,6 +494,10 @@ pub fn parse_as_embraced_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Er
     JMEParser::parse(Rule::embraced_jme, s)
 }
 
+pub fn parse_as_content_area(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    JMEParser::parse(Rule::content_area, s)
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
