@@ -85,7 +85,8 @@ impl std::convert::TryFrom<String> for ContentAreaString {
             None
         } else {
             let pairs = parser::parse_as_content_area(&trimmed).map_err(|e| format!("{:?}", e))?;
-            let asts = parser::consume_expressions(pairs).map_err(|e| format!("{:?}", e))?;
+            let asts =
+                parser::consume_content_area_expressions(pairs).map_err(|e| format!("{:?}", e))?;
             Some(asts)
         };
         Ok(Self {
