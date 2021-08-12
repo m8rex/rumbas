@@ -6,9 +6,19 @@ use pest::prec_climber::{Assoc, Operator, PrecClimber};
 use pest::{Parser, Span};
 use std::iter::Peekable;
 
-#[derive(Parser)]
-#[grammar = "jme/jme.pest"]
-struct JMEParser;
+mod jme {
+    #[derive(Parser)]
+    #[grammar = "jme/jme.pest"]
+    pub struct JMEParser;
+}
+use jme::Rule;
+
+mod html {
+    #[derive(Parser)]
+    #[grammar = "jme/html.pest"]
+    pub struct HTMLParser;
+}
+use html::Rule as HTMLRule;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ParserNode<'i> {
@@ -88,6 +98,20 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
 pub enum ConsumeError {
     ParseError(Vec<Error<Rule>>),
     UnknownParseError,
+}
+
+pub fn consume_content_area_expressions(
+    pairs: Pairs<HTMLRule>,
+) -> Result<Vec<ast::Expr>, ConsumeError> {
+    let pairs = pairs.clone().next().unwrap().into_inner();
+    let mut asts = vec![];
+    for expression in pairs.filter(|p| p.as_rule() == HTMLRule::expression) {
+        let parsed_jme =
+            parse_as_jme(expression.as_str()).map_err(|_| ConsumeError::UnknownParseError)?; // TODO
+        let ast = consume_one_expression(parsed_jme)?;
+        asts.push(ast);
+    }
+    Ok(asts)
 }
 
 pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, ConsumeError> {
@@ -487,15 +511,15 @@ fn unescape(string: &str) -> Option<String> {
 }
 
 pub fn parse_as_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
-    JMEParser::parse(Rule::jme, s)
+    jme::JMEParser::parse(Rule::jme, s)
 }
 
 pub fn parse_as_embraced_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
-    JMEParser::parse(Rule::embraced_jme, s)
+    jme::JMEParser::parse(Rule::embraced_jme, s)
 }
 
-pub fn parse_as_content_area(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
-    JMEParser::parse(Rule::content_area, s)
+pub fn parse_as_content_area(s: &str) -> Result<Pairs<'_, HTMLRule>, pest::error::Error<HTMLRule>> {
+    html::HTMLParser::parse(HTMLRule::content_area, s)
 }
 
 #[cfg(test)]
