@@ -506,7 +506,15 @@ mod test {
     const VALID_ANNOTATIONS: [&str; 11] = [
         "verb", "op", "v", "vector", "unit", "dot", "m", "matrix", "diff", "degrees", "vec",
     ];
-    const VALID_LITERALS: [&str; 6] = ["true", "false", "1", "4.3", "\"Numbas\"", "'Numbas'"];
+    const VALID_LITERALS: [&str; 7] = [
+        "true",
+        "false",
+        "1",
+        "4.3",
+        "\"Numbas\"",
+        "'Numbas'",
+        "\"String with \\\\ which is no comment\"",
+    ];
     const BUILTIN_CONSTANTS: [&str; 8] = ["pi", "π", "e", "i", "infinity", "infty", "∞", "nan"];
 
     #[test]

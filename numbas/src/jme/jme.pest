@@ -40,8 +40,10 @@ broken_number = { integer ~ !".." ~ "." ~ broken_part }
 boolean = { boolean_true | boolean_false }
 boolean_true = { "true" }
 boolean_false = { "false" }
-string = { PUSH("\"" | "'") ~ non_quoted_character* ~ POP }
-non_quoted_character = _{ !PEEK ~ ANY }
+string = { PUSH("\"" | "'") ~ inner_str ~ POP }
+
+inner_str = @{ (!(PEEK | "\\") ~ ANY)* ~ (escape ~ inner_str)? }
+escape    = @{ "\\" ~ (PEEK | "\\" | "n" | "t" ) } 
 
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
