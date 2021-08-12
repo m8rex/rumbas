@@ -40,9 +40,8 @@ broken_number = { integer ~ !".." ~ "." ~ broken_part }
 boolean = { boolean_true | boolean_false }
 boolean_true = { "true" }
 boolean_false = { "false" }
-string = { "\"" ~ non_double_quoted_character* ~ "\"" |  "'" ~ non_single_quoted_character* ~ "'" }
-non_double_quoted_character = _{ !"\"" ~ ANY }
-non_single_quoted_character = _{ !"'" ~ ANY }
+string = { PUSH("\"" | "'") ~ non_quoted_character* ~ POP }
+non_quoted_character = _{ !PEEK ~ ANY }
 
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
