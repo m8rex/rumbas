@@ -1,3 +1,4 @@
+use crate::jme::ContentAreaString;
 use crate::jme::EmbracedJMEString;
 use crate::jme::JMEString;
 use serde::Deserialize;
@@ -743,7 +744,8 @@ impl Default for BuiltinConstants {
 pub struct ExamQuestion {
     //TODO
     pub name: String,
-    pub statement: String,
+    /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
+    pub statement: ContentAreaString,
     pub advice: String,
     pub parts: Vec<ExamQuestionPart>,
     #[serde(default)]

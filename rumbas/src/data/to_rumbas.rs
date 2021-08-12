@@ -1,9 +1,10 @@
 use crate::data::question_part::QuestionPart;
+use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::EmbracedJMETranslatableString;
 use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::jme::{EmbracedJMEString, JMEString};
+use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 
 pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
@@ -25,6 +26,7 @@ impl_to_rumbas!(bool, f64, usize, [f64; 2]);
 impl_to_rumbas!(numbas::exam::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
+impl_to_rumbas!(numbas::jme::ContentAreaString);
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {
@@ -55,6 +57,13 @@ impl ToRumbas<EmbracedJMETranslatableString> for EmbracedJMEString {
     fn to_rumbas(&self) -> EmbracedJMETranslatableString {
         let s: String = self.clone().into();
         EmbracedJMETranslatableString::s(&s[..])
+    }
+}
+
+impl ToRumbas<ContentAreaTranslatableString> for ContentAreaString {
+    fn to_rumbas(&self) -> ContentAreaTranslatableString {
+        let s: String = self.clone().into();
+        ContentAreaTranslatableString::s(&s[..])
     }
 }
 
