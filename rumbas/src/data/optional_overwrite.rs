@@ -1,7 +1,7 @@
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
-use numbas::jme::{EmbracedJMEString, JMEString};
+use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 use std::collections::HashMap;
@@ -659,6 +659,7 @@ pub enum VariableValued<T> {
 }
 impl_optional_overwrite!(JMEString);
 impl_optional_overwrite!(EmbracedJMEString);
+impl_optional_overwrite!(ContentAreaString);
 
 impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     fn check(&self) -> RumbasCheckResult {
