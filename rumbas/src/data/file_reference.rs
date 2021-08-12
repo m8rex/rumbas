@@ -208,3 +208,11 @@ file_type! {
     type EmbracedJMEFileString,
     subtype String
 }
+
+file_type! {
+    /// An ContentArea string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    type ContentAreaFileString,
+    subtype InputString
+}

@@ -11,6 +11,7 @@ use crate::data::template::QuestionFileType;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
+use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
 use crate::data::yaml::{YamlError, YamlResult};
@@ -18,6 +19,7 @@ use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::convert::TryInto;
 use std::fs;
 use std::path::Path;
 
@@ -25,7 +27,8 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 optional_overwrite! {
     pub struct Question {
-        statement: TranslatableString,
+        /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
+        statement: ContentAreaTranslatableString,
         advice: TranslatableString,
         parts: Vec<Value<QuestionPart>>,
         builtin_constants: BuiltinConstants,
@@ -67,7 +70,14 @@ impl ToNumbas for Question {
             }
             Ok(numbas::exam::ExamQuestion {
                 name,
-                statement: self.statement.clone().unwrap().to_string(locale).unwrap(),
+                statement: self
+                    .statement
+                    .clone()
+                    .unwrap()
+                    .to_string(locale)
+                    .unwrap()
+                    .try_into()
+                    .unwrap(),
                 advice: self.advice.clone().unwrap().to_string(locale).unwrap(),
                 parts: self
                     .parts
@@ -162,7 +172,7 @@ impl ToNumbas for Question {
 impl ToRumbas<Question> for numbas::exam::ExamQuestion {
     fn to_rumbas(&self) -> Question {
         Question {
-            statement: Value::Normal(TranslatableString::s(&self.statement)),
+            statement: Value::Normal(self.statement.to_rumbas()),
             advice: Value::Normal(TranslatableString::s(&self.advice)),
             parts: Value::Normal(
                 self.parts

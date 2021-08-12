@@ -115,7 +115,7 @@ html = _{
     ~ html_node*
     ~ EOI
 }
-content_area = _{
+content_area = {
     SOI
     ~ html_node_comment*
     ~ html_doctype?
@@ -132,12 +132,15 @@ html_doctype = _{ html_chevron_left_bang ~ html_doctype_name ~ html_attr* ~ html
 //
 // NODES
 //
-html_node = _{ html_node_comment | html_node_element | html_embraced_jme }
+html_node = _{ html_node_comment | html_node_element | html_latex | html_embraced_jme }
 html_node_comment = _{ html_comment_tag_start ~ (!html_comment_tag_end ~ ANY)* ~ html_comment_tag_end }
 //html_node_text = { (!(html_chevron_left | html_comment_tag_start ) ~ ANY }
 html_node_element = _{ html_el_void | html_el_void_xml | html_el_process_instruct | html_el_raw_text | html_el_normal | html_el_dangling }
 
-html_embraced_jme = { ( !(html_chevron_left | html_comment_tag_start) ~ (normal_char | (brace_open ~ expression ~ brace_close)) )+ }
+html_latex = _{ "$" ~ (!"$" ~ latex_content)*  ~ "$" }
+latex_jme_expression_start = _{ ("\\var" | "\\simplify") ~ brace_open }
+latex_content = _{ (latex_jme_expression_start ~ expression ~ brace_close) | (!latex_jme_expression_start ~ ANY) }
+html_embraced_jme = _{ ( !(html_chevron_left | html_comment_tag_start | "$") ~ (normal_char | (brace_open ~ expression ~ brace_close)) )+ }
 
 //
 // COMMENTS
@@ -231,3 +234,4 @@ html_equal = _{ "=" }
 html_quote_dubble = _{ "\"" }
 html_quote_single = _{ "'" }
 html_quote = _{ html_quote_dubble | html_quote_single }
+

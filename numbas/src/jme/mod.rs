@@ -71,6 +71,7 @@ impl std::convert::From<EmbracedJMEString> for String {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
+/// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct ContentAreaString {
     s: String,
     asts: Option<Vec<ast::Expr>>,
@@ -83,7 +84,7 @@ impl std::convert::TryFrom<String> for ContentAreaString {
         let asts = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_embraced_jme(&trimmed).map_err(|e| format!("{:?}", e))?;
+            let pairs = parser::parse_as_content_area(&trimmed).map_err(|e| format!("{:?}", e))?;
             let asts = parser::consume_expressions(pairs).map_err(|e| format!("{:?}", e))?;
             Some(asts)
         };
@@ -112,5 +113,16 @@ mod test {
         assert!(res.is_ok());
         assert!(res.as_ref().unwrap().asts.is_some());
         assert_eq!(res.unwrap().asts.unwrap().len(), 2);
+    }
+
+    #[test]
+    fn content_area_with_latex() {
+        let res = ContentAreaString::try_from(
+            r#"<p>A mass of $\var{mass}\,\mathrm{kg}$ is resting on a plane inclined at $\var{incline}^{\circ}$ to the horizontal. The distance along the plane from the ground to the mass is $\var{distance}\mathrm{m}$.</p>"#.to_string(),
+        );
+        res.clone().unwrap();
+        assert!(res.is_ok());
+        assert!(res.as_ref().unwrap().asts.is_some());
+        assert_eq!(res.unwrap().asts.unwrap().len(), 3);
     }
 }
