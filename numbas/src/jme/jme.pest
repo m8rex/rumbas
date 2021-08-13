@@ -43,7 +43,7 @@ boolean_false = { "false" }
 string = { PUSH("\"" | "'") ~ inner_str ~ POP }
 
 inner_str = @{ (!(PEEK | "\\") ~ ANY)* ~ (escape ~ inner_str)? }
-escape    = @{ "\\" ~ (PEEK | "\\" | "n" | "t" ) } 
+escape    = @{ "\\" ~ (PEEK | "\\" | "{" | "}" | "n" | "t" ) } 
 
 function_arguments = { expression ~ ("," ~ expression)* }
 function_application = { ident ~ "(" ~ function_arguments ~ ")" }
