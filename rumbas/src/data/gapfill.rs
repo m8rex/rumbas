@@ -3,9 +3,10 @@ use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
-use crate::data::translatable::TranslatableString;
+use crate::data::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
+use std::convert::TryInto;
 
 question_part_type! {
     // The Gap fill question part type
@@ -43,9 +44,7 @@ impl ToRumbas<QuestionPartGapFill> for numbas::exam::ExamQuestionPartGapFill {
     fn to_rumbas(&self) -> QuestionPartGapFill {
         QuestionPartGapFill {
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
-                &self.part_data,
-            ))),
+            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
             use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
             custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
             steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),

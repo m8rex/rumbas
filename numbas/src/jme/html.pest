@@ -32,7 +32,7 @@ html_node_element = _{ html_el_void | html_el_void_xml | html_el_process_instruc
 
 brace_open = _{ !"\\{" ~ "{" }
 brace_close = _{ !"\\}" ~ "}" }
-normal_char = _{ "\\{" | "\\}" | (!(brace_open | brace_close) ~ (!"\\" ~ ANY)) }
+normal_char = _{ "\\{" | "\\}" | "\\n" | (!(brace_open | brace_close) ~ (!"\\" ~ ANY)) }
 html_latex_dollar = _{ "$" ~ (!"$" ~ latex_content)*  ~ "$" }
 html_latex_block_normal = _{ "\\[" ~ (!"\\]" ~ latex_content)*  ~ "\\]" }
 html_latex_block_align = _{ "\\begin{align}" ~ (!"\\end{align}" ~ latex_content)*  ~ "\\end{align}" }
@@ -44,7 +44,7 @@ latex_jme_expression_start = _{ "\\var" ~ latex_jme_simplification? ~ brace_open
 latex_jme_simplification = { ("[" ~ ((!("]" | brace_open | brace_close) ~ ANY)*) ~ "]") }
 latex_jme_simplify_start = _{ "\\simplify" ~ latex_jme_simplification? ~ brace_open }
 latex_simplify_content = _{ (latex_jme_simplify_start ~ html_embraced_jme ~ brace_close) }
-latex_content = _{ latex_simplify_content  | (latex_jme_expression_start ~ braced_expression ~ brace_close) | (!(latex_jme_expression_start | latex_jme_simplify_start | "[") ~ ANY) }
+latex_content = _{ latex_simplify_content  | (latex_jme_expression_start ~ braced_expression ~ brace_close) | (!(latex_jme_expression_start | latex_jme_simplify_start) ~ ANY) }
 html_embraced_jme = _{ ( !(html_chevron_left | html_comment_tag_start | "$") ~ (normal_char | (brace_open ~ expression ~ brace_close)) )+ }
 
 //

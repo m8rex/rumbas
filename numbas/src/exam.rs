@@ -395,6 +395,7 @@ pub enum CustomPartTypeSetting {
     DropDown(CustomPartTypeSettingDropDown),
     #[serde(rename = "percent")]
     Percentage(CustomPartTypeSettingPercentage),
+    // TODO see https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html?highlight=content%20area#setting-types
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -428,7 +429,7 @@ pub struct CustomPartTypeSettingMathematicalExpression {
     ///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.
     evaluate_enclosed_expressions: bool,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: Primitive,
+    default_value: EmbracedJMEString,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -436,7 +437,7 @@ pub struct CustomPartTypeSettingCode {
     #[serde(flatten)]
     shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: Primitive,
+    default_value: JMEString,
     evaluate: bool,
 }
 
@@ -904,36 +905,51 @@ pub enum ExamQuestionPartBuiltin {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ExamQuestionPartSharedData {
+    /// A content area used to prompt the student for an answer.
+    pub prompt: Option<ContentAreaString>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
+    /// The number of marks to award for answering the part correctly.
     pub marks: Option<Primitive>,
-    pub prompt: Option<String>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
-    #[serde(rename = "useCustomName")]
-    pub use_custom_name: Option<bool>,
-    #[serde(rename = "customName")]
-    pub custom_name: Option<String>,
+    /// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
+    pub steps: Option<Vec<ExamQuestionPart>>,
     #[serde(
         rename = "stepsPenalty",
         default,
         deserialize_with = "from_str_optional"
     )]
+    /// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3×46=2 marks after revealing steps.
     pub steps_penalty: Option<usize>,
+    #[serde(rename = "showCorrectAnswer")]
+    /// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.
+    pub show_correct_answer: bool,
+    #[serde(rename = "showFeedbackIcon")]
+    /// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.
+    pub show_feedback_icon: Option<bool>,
+    // TODO: "Score_counts_toward_objective"
+    #[serde(rename = "customMarkingAlgorithm")]
+    pub custom_marking_algorithm: Option<String>, // jme...
+    #[serde(rename = "extendBaseMarkingAlgorithm")]
+    /// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.
+    pub extend_base_marking_algorithm: Option<bool>,
+
+    // TODO below not listed in
+    // https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#generic-part-properties
+    #[serde(rename = "useCustomName")]
+    pub use_custom_name: Option<bool>,
+    #[serde(rename = "customName")]
+    pub custom_name: Option<String>,
     #[serde(rename = "enableMinimumMarks")]
     pub enable_minimum_marks: Option<bool>,
     #[serde(rename = "minimumMarks")]
     pub minimum_marks: Option<usize>,
-    #[serde(rename = "showCorrectAnswer")]
-    pub show_correct_answer: bool,
-    #[serde(rename = "showFeedbackIcon")]
-    pub show_feedback_icon: Option<bool>,
+
     #[serde(rename = "variableReplacementStrategy")]
+    /// The circumstances under which the variable replacements are used, and adaptive marking is applied.
     pub variable_replacement_strategy: VariableReplacementStrategy,
     #[serde(rename = "adaptiveMarkingPenalty")]
+    /// If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for using adaptive marking is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without the penalty is instead worth 3×46=2 marks when adaptive marking is used.
     pub adaptive_marking_penalty: Option<usize>,
-    #[serde(rename = "customMarkingAlgorithm")]
-    pub custom_marking_algorithm: Option<String>, // jme...
-    #[serde(rename = "extendBaseMarkingAlgorithm")]
-    pub extend_base_marking_algorithm: Option<bool>,
-    pub steps: Option<Vec<ExamQuestionPart>>,
     //scripts TODO
+    //https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#scripts
     //[serde(rename= "variableReplacements")]
 }
 
@@ -966,7 +982,11 @@ impl std::convert::From<CustomPartInputTypeValue> for String {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "originalfirst")]
+    /// The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.
     OriginalFirst,
+    //#[serde(rename = "always")] // TODO: check name etc
+    // /// The student’s answer is only marked once, with the defined variable replacements applied.
+    //Always,
 }
 
 #[skip_serializing_none]
