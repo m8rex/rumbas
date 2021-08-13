@@ -5,7 +5,9 @@ use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::to_rumbas::*;
-use crate::data::translatable::{EmbracedJMETranslatableString, TranslatableString};
+use crate::data::translatable::ContentAreaTranslatableString;
+use crate::data::translatable::EmbracedJMETranslatableString;
+use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -115,9 +117,7 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
         QuestionPartJME {
             // Default section
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
-                &self.part_data,
-            ))),
+            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
             use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
             custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
             steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),

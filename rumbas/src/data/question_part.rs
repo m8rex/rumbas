@@ -12,8 +12,9 @@ use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
-use crate::data::translatable::TranslatableString;
+use crate::data::translatable::ContentAreaTranslatableString;
 use serde::{Deserialize, Serialize};
+use std::convert::TryInto;
 
 optional_overwrite_enum! {
     #[serde(untagged)]
@@ -198,7 +199,7 @@ macro_rules! question_part_type {
             $(#[$outer])*
             pub struct $struct {
                 marks: numbas::exam::Primitive, // TODO: strict?
-                prompt: TranslatableString,
+                prompt: ContentAreaTranslatableString,
                 use_custom_name: bool,
                 custom_name: String, //Translatable?
                 steps_penalty: usize,
@@ -223,7 +224,7 @@ macro_rules! question_part_type {
             fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData {
                     marks: Some(self.marks.clone().unwrap().into()),
-                    prompt: self.prompt.clone().map(|s| s.to_string(&locale)).flatten(),
+                    prompt: self.prompt.clone().map(|s| s.to_string(&locale).unwrap().try_into().unwrap()),
                     use_custom_name: Some(self.use_custom_name.clone().unwrap()),
                     custom_name: Some(self.custom_name.clone().unwrap()),
                     steps_penalty: Some(self.steps_penalty.clone().unwrap()),
@@ -321,9 +322,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
         QuestionPartCustom {
             // Default section
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(TranslatableString::s(&extract_part_common_prompt(
-                &self.part_data,
-            ))),
+            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
             use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
             custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
             steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),

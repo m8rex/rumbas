@@ -5,6 +5,7 @@ use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use std::convert::TryInto;
 
 pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
@@ -75,8 +76,13 @@ pub fn extract_part_common_marks(
         .unwrap_or(numbas::exam::Primitive::Natural(DEFAULTS.part_common_marks))
 }
 
-pub fn extract_part_common_prompt(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
-    pd.prompt.clone().unwrap_or_default()
+pub fn extract_part_common_prompt(
+    pd: &numbas::exam::ExamQuestionPartSharedData,
+) -> ContentAreaTranslatableString {
+    pd.prompt
+        .clone()
+        .unwrap_or_else(|| "".to_string().try_into().unwrap())
+        .to_rumbas()
 }
 
 pub fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
