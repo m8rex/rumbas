@@ -746,7 +746,9 @@ pub struct ExamQuestion {
     pub name: String,
     /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
     pub statement: ContentAreaString,
-    pub advice: String,
+    /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
+    /// The advice area is normally used to present a worked solution to the question.
+    pub advice: ContentAreaString,
     pub parts: Vec<ExamQuestionPart>,
     #[serde(default)]
     pub builtin_constants: BuiltinConstants,
