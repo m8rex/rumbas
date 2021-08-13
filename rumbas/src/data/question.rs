@@ -29,7 +29,9 @@ optional_overwrite! {
     pub struct Question {
         /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
         statement: ContentAreaTranslatableString,
-        advice: TranslatableString,
+        /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
+        /// The advice area is normally used to present a worked solution to the question.
+        advice: ContentAreaTranslatableString,
         parts: Vec<Value<QuestionPart>>,
         builtin_constants: BuiltinConstants,
         custom_constants: Vec<CustomConstant>,
@@ -78,7 +80,14 @@ impl ToNumbas for Question {
                     .unwrap()
                     .try_into()
                     .unwrap(),
-                advice: self.advice.clone().unwrap().to_string(locale).unwrap(),
+                advice: self
+                    .advice
+                    .clone()
+                    .unwrap()
+                    .to_string(locale)
+                    .unwrap()
+                    .try_into()
+                    .unwrap(),
                 parts: self
                     .parts
                     .clone()
@@ -173,7 +182,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
     fn to_rumbas(&self) -> Question {
         Question {
             statement: Value::Normal(self.statement.to_rumbas()),
-            advice: Value::Normal(TranslatableString::s(&self.advice)),
+            advice: Value::Normal(self.advice.to_rumbas()),
             parts: Value::Normal(
                 self.parts
                     .iter()
