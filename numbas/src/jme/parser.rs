@@ -107,7 +107,7 @@ pub fn consume_content_area_expressions(
     let mut asts = vec![];
     for expression in pairs.filter(|p| p.as_rule() == HTMLRule::expression) {
         let parsed_jme =
-            parse_as_jme(expression.as_str()).map_err(|_| ConsumeError::UnknownParseError)?; // TODO
+            parse_as_jme(expression.as_str()).map_err(|e| ConsumeError::ParseError(vec![e]))?;
         let ast = consume_one_expression(parsed_jme)?;
         asts.push(ast);
     }
