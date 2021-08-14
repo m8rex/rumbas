@@ -1,6 +1,7 @@
 WHITESPACE = _{ " " | "\t" | newline }
 COMMENT    = _{ block_comment | ("//" ~ (!newline ~ ANY)*) }
-newline    = _{ "\n" | "\r\n" }
+newline    = _{ !(newline_item~newline_item) ~ newline_item }
+newline_item    = _{ "\n" | "\r\n" }
 block_comment = _{ "/*" ~ (block_comment | !"*/" ~ ANY)* ~ "*/" }
 
 jme = {
@@ -8,6 +9,18 @@ jme = {
     ~ expression
     ~ EOI
 }
+
+script = {
+	SOI ~ note ~ ("\n\n" ~ note)* ~ EOI 
+}
+
+note = {
+	ident_name
+    ~ ("(" ~ description ~ ")" )?
+    ~ ":"
+    ~ expression  
+}
+description = {  (!")" ~ ANY)* }
 
 embraced_jme = { SOI ~ (normal_char | (brace_open ~ expression ~ brace_close))* ~ EOI  }
 brace_open = _{ !"\\{" ~ "{" }

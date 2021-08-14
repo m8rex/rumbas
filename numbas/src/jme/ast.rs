@@ -114,6 +114,23 @@ impl std::convert::From<String> for Ident {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub struct Note {
+    name: Ident,
+    description: Option<String>,
+    expression: Expr,
+}
+
+impl Note {
+    pub fn create(name: Ident, description: Option<String>, expression: Expr) -> Note {
+        Note {
+            name,
+            description,
+            expression,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Expr {
     /// Matches an exact string, e.g. `"a"`
     Str(String),

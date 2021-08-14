@@ -51,6 +51,17 @@ pub enum ParserExpr<'i> {
     Cast(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ScriptParserNode<'i> {
+    pub expr: ScriptParserExpr<'i>,
+    pub span: Span<'i>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ScriptParserExpr<'i> {
+    Note(String, Option<String>, ParserNode<'i>),
+}
+
 impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
     fn from(node: ParserNode<'i>) -> ast::Expr {
         node.expr.into()
@@ -94,6 +105,21 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
     }
 }
 
+impl<'i> std::convert::From<ScriptParserNode<'i>> for ast::Note {
+    fn from(node: ScriptParserNode<'i>) -> ast::Note {
+        node.expr.into()
+    }
+}
+impl<'i> std::convert::From<ScriptParserExpr<'i>> for ast::Note {
+    fn from(expr: ScriptParserExpr<'i>) -> ast::Note {
+        match expr {
+            ScriptParserExpr::Note(name, description, expression) => {
+                ast::Note::create(name.into(), description, expression.into())
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum ConsumeError {
     ParseError(Vec<Error<Rule>>),
@@ -112,6 +138,23 @@ pub fn consume_content_area_expressions(
         asts.push(ast);
     }
     Ok(asts)
+}
+
+pub fn consume_notes(pairs: Pairs<Rule>) -> Result<Vec<ast::Note>, ConsumeError> {
+    let pairs = pairs.clone().next().unwrap().into_inner();
+    let res_res = std::panic::catch_unwind(|| {
+        let expression = consume_note_with_spans(pairs)?;
+        //let errors = validator::validate_ast(&rules);
+        //if errors.is_empty() {
+        Ok(expression.into_iter().map(|e| e.into()).collect())
+        /*} else {
+            Err(errors)
+        }*/
+    });
+    match res_res {
+        Ok(res) => res.map_err(ConsumeError::ParseError),
+        Err(_err) => Err(ConsumeError::UnknownParseError),
+    }
 }
 
 pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, ConsumeError> {
@@ -135,7 +178,46 @@ pub fn consume_one_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, ConsumeEr
     consume_expressions(pairs).map(|v| v.into_iter().next().unwrap())
 }
 
+fn consume_note_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ScriptParserNode>, Vec<Error<Rule>>> {
+    let mut results = Vec::new();
+    for note in pairs.filter(|pair| pair.as_rule() == Rule::note) {
+        results.push(consume_note(note.into_inner().peekable())?);
+    }
+    Ok(results)
+}
+
+fn consume_note<'i>(
+    mut pairs: Peekable<Pairs<'i, Rule>>,
+) -> Result<ScriptParserNode<'i>, Vec<Error<Rule>>> {
+    let first = pairs.next().unwrap();
+    //let start = first.as_span().start();
+    let s = first.as_str().to_string();
+    let mut pair = pairs.next().unwrap();
+    let description = if pair.as_rule() == Rule::description {
+        let res = Some(pair.as_str().to_string());
+        pair = pairs.next().unwrap();
+        res
+    } else {
+        None
+    };
+    //let end = pair.as_span().end();
+    let expression = consume_expression(pair)?;
+
+    Ok(ScriptParserNode {
+        expr: ScriptParserExpr::Note(s, description, expression),
+        span: first.as_span(), //Span::new("", start, end).unwrap(), // TODO: input string?
+    })
+}
+
 fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, Vec<Error<Rule>>> {
+    let mut results = Vec::new();
+    for expression in pairs.filter(|pair| pair.as_rule() == Rule::expression) {
+        results.push(consume_expression(expression)?);
+    }
+    Ok(results)
+}
+
+fn consume_expression(expression: Pair<Rule>) -> Result<ParserNode, Vec<Error<Rule>>> {
     let climber = PrecClimber::new(vec![
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
@@ -150,17 +232,10 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, 
         Operator::new(Rule::range_separator, Assoc::Left),
         Operator::new(Rule::power, Assoc::Right),
     ]);
-    let mut results = Vec::new();
-    for expression in pairs.filter(|pair| pair.as_rule() == Rule::expression) {
-        results.push(consume_expression(
-            expression.into_inner().peekable(),
-            &climber,
-        )?);
-    }
-    Ok(results)
+    consume_expression_internal(expression.into_inner().peekable(), &climber)
 }
 
-fn consume_expression<'i>(
+fn consume_expression_internal<'i>(
     pairs: Peekable<Pairs<'i, Rule>>,
     climber: &PrecClimber<Rule>,
 ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
@@ -182,7 +257,9 @@ fn consume_expression<'i>(
             }
             other_rule => {
                 let node = match other_rule {
-                    Rule::expression => consume_expression(pair.into_inner().peekable(), climber)?,
+                    Rule::expression => {
+                        consume_expression_internal(pair.into_inner().peekable(), climber)?
+                    }
                     Rule::ident => ParserNode {
                         expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
                         span: pair.clone().as_span(),
@@ -241,7 +318,10 @@ fn consume_expression<'i>(
                         let pairs = pair.into_inner();
                         let mut elements = Vec::new();
                         for p in pairs.filter(|p| p.as_rule() == Rule::expression) {
-                            elements.push(consume_expression(p.into_inner().peekable(), climber)?);
+                            elements.push(consume_expression_internal(
+                                p.into_inner().peekable(),
+                                climber,
+                            )?);
                         }
                         ParserNode {
                             expr: ParserExpr::List(elements),
@@ -257,8 +337,14 @@ fn consume_expression<'i>(
                             let key_pair = item.next().unwrap();
                             let value_pair = item.next().unwrap();
                             elements.push((
-                                consume_expression(key_pair.into_inner().peekable(), climber)?,
-                                consume_expression(value_pair.into_inner().peekable(), climber)?,
+                                consume_expression_internal(
+                                    key_pair.into_inner().peekable(),
+                                    climber,
+                                )?,
+                                consume_expression_internal(
+                                    value_pair.into_inner().peekable(),
+                                    climber,
+                                )?,
                             ));
                         }
                         ParserNode {
@@ -277,7 +363,10 @@ fn consume_expression<'i>(
                         let inner_pairs = pair.into_inner();
                         let mut arguments = Vec::new();
                         for p in inner_pairs.filter(|p| p.as_rule() == Rule::expression) {
-                            arguments.push(consume_expression(p.into_inner().peekable(), climber)?);
+                            arguments.push(consume_expression_internal(
+                                p.into_inner().peekable(),
+                                climber,
+                            )?);
                         }
                         ParserNode {
                             expr: ParserExpr::FunctionApplication(ident.to_string(), arguments),
@@ -520,6 +609,10 @@ pub fn parse_as_embraced_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Er
 
 pub fn parse_as_content_area(s: &str) -> Result<Pairs<'_, HTMLRule>, pest::error::Error<HTMLRule>> {
     html::HTMLParser::parse(HTMLRule::content_area, s)
+}
+
+pub fn parse_as_jme_script(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    jme::JMEParser::parse(Rule::script, s)
 }
 
 #[cfg(test)]

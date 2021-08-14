@@ -102,6 +102,39 @@ impl std::convert::From<ContentAreaString> for String {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[serde(try_from = "String")]
+#[serde(into = "String")]
+/// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
+pub struct JMENotesString {
+    s: String,
+    notes: Option<Vec<ast::Note>>,
+}
+
+impl std::convert::TryFrom<String> for JMENotesString {
+    type Error = String; // TODO
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let trimmed = s.trim();
+        let notes = if trimmed.is_empty() {
+            None
+        } else {
+            let pairs = parser::parse_as_jme_script(&trimmed).map_err(|e| format!("{:?}", e))?;
+            let notes = parser::consume_notes(pairs).map_err(|e| format!("{:?}", e))?;
+            Some(notes)
+        };
+        Ok(Self {
+            s: trimmed.to_owned(),
+            notes,
+        })
+    }
+}
+
+impl std::convert::From<JMENotesString> for String {
+    fn from(jme: JMENotesString) -> Self {
+        jme.s
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -125,5 +158,14 @@ mod test {
         assert!(res.is_ok());
         assert!(res.as_ref().unwrap().asts.is_some());
         assert_eq!(res.unwrap().asts.unwrap().len(), 3);
+    }
+
+    #[test]
+    fn diagnosys() {
+        let s = include_str!("test_assets/diagnosys.jme");
+        let res = JMENotesString::try_from(s.to_string());
+        assert!(res.is_ok());
+        assert!(res.as_ref().unwrap().notes.is_some());
+        assert_eq!(res.unwrap().notes.unwrap().len(), 21);
     }
 }
