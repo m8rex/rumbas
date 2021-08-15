@@ -1,5 +1,6 @@
 use crate::jme::ContentAreaString;
 use crate::jme::EmbracedJMEString;
+use crate::jme::JMENotesString;
 use crate::jme::JMEString;
 use serde::Deserialize;
 use serde::Serialize;
@@ -293,10 +294,10 @@ pub struct CustomPartType {
     pub settings: Vec<CustomPartTypeSetting>,
     pub help_url: String,
     pub public_availability: CustomPartAvailability,
-    pub marking_script: String,
+    pub marking_script: JMENotesString,
     pub can_be_gap: bool,
     pub can_be_step: bool,
-    pub marking_notes: Vec<CustomPartMarkingNotes>,
+    pub marking_notes: Vec<CustomPartMarkingNote>,
     pub published: bool,
     pub extensions: Vec<String>,
     #[serde(flatten)]
@@ -306,10 +307,20 @@ pub struct CustomPartType {
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct CustomPartMarkingNotes {
+pub struct CustomPartMarkingNote {
     pub name: String,
-    pub definition: String, // TODO marking JME
+    pub definition: JMEString,
     pub description: String,
+}
+
+impl std::convert::From<crate::jme::ast::Note> for CustomPartMarkingNote {
+    fn from(note: crate::jme::ast::Note) -> Self {
+        CustomPartMarkingNote {
+            name: note.name.to_string(),
+            definition: note.expressions_string.try_into().unwrap(),
+            description: note.description.unwrap_or("".to_string()),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -926,7 +937,7 @@ pub struct ExamQuestionPartSharedData {
     pub show_feedback_icon: Option<bool>,
     // TODO: "Score_counts_toward_objective"
     #[serde(rename = "customMarkingAlgorithm")]
-    pub custom_marking_algorithm: Option<String>, // jme...
+    pub custom_marking_algorithm: Option<JMENotesString>,
     #[serde(rename = "extendBaseMarkingAlgorithm")]
     /// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.
     pub extend_base_marking_algorithm: Option<bool>,

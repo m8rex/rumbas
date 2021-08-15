@@ -2,6 +2,7 @@ use crate::data::extension::Extensions;
 use crate::data::optional_overwrite::{
     Noneable, OptionalOverwrite, RumbasCheck, RumbasCheckResult,
 };
+use crate::data::question_part::JMENotes;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::ToRumbas;
@@ -19,8 +20,7 @@ pub struct CustomPartTypeDefinition {
     settings: Vec<numbas::exam::CustomPartTypeSetting>, // TODO
     can_be_gap: bool,
     can_be_step: bool,
-    marking_notes: Vec<numbas::exam::CustomPartMarkingNotes>, // TODO
-    marking_script: TranslatableString,
+    marking_notes: JMENotes,
     help_url: TranslatableString,
     published: bool,
     extensions: Extensions,
@@ -265,10 +265,16 @@ impl ToNumbas for CustomPartTypeDefinition {
             settings: self.settings.clone(), // .to_numbas(&locale).unwrap(),
             help_url: self.help_url.clone().to_string(locale).unwrap(),
             public_availability: numbas::exam::CustomPartAvailability::Always,
-            marking_script: self.marking_script.clone().to_string(locale).unwrap(),
+            marking_script: self.marking_notes.to_numbas(locale).unwrap(),
             can_be_gap: self.can_be_gap,
             can_be_step: self.can_be_step,
-            marking_notes: self.marking_notes.clone(),
+            marking_notes: self
+                .marking_notes
+                .0
+                .unwrap()
+                .iter()
+                .map(|mn| mn.to_numbas(locale).unwrap())
+                .collect(),
             published: self.published,
             extensions: self.extensions.to_numbas(locale).unwrap(),
             input_widget: self.input_widget.to_numbas(locale).unwrap(),
@@ -288,10 +294,9 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
                 settings: self.settings.clone(),
                 help_url: self.help_url.to_rumbas(),
                 // public_availability: numbas::exam::CustomPartAvailability::Always,
-                marking_script: self.marking_script.to_rumbas(),
                 can_be_gap: self.can_be_gap,
                 can_be_step: self.can_be_step,
-                marking_notes: self.marking_notes.clone(),
+                marking_notes: JMENotes(Value::Normal(self.marking_notes.clone().to_rumbas())),
                 published: self.published,
                 extensions: Extensions::from(&self.extensions),
                 input_widget: self.input_widget.to_rumbas(),
