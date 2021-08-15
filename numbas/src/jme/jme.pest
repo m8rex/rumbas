@@ -17,8 +17,10 @@ script = {
 note = {
 	ident_name
     ~ ("(" ~ description ~ ")" )?
-    ~ ":"
-    ~ expression  
+    ~ ":" ~ note_expressions
+}
+note_expressions =  { 
+    expression ~ ( ";" ~ expression)* ~ ";"?
 }
 description = {  (!")" ~ ANY)* }
 

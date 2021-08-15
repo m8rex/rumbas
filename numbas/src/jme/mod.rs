@@ -107,8 +107,8 @@ impl std::convert::From<ContentAreaString> for String {
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct JMENotesString {
-    s: String,
-    notes: Option<Vec<ast::Note>>,
+    pub s: String,
+    pub notes: Option<Vec<ast::Note>>,
 }
 
 impl std::convert::TryFrom<String> for JMENotesString {

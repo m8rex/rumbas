@@ -12,7 +12,7 @@ use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
 use crate::data::to_rumbas::*;
-use crate::data::translatable::ContentAreaTranslatableString;
+use crate::data::translatable::{ContentAreaTranslatableString, JMETranslatableString};
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
@@ -184,6 +184,124 @@ impl QuestionPartBuiltin {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct JMENotes(pub Value<Vec<JMENote>>);
+
+impl RumbasCheck for JMENotes {
+    fn check(&self) -> RumbasCheckResult {
+        self.0.check()
+    }
+}
+
+impl OptionalOverwrite<JMENotes> for JMENotes {
+    fn overwrite(&mut self, other: &JMENotes) {
+        self.0.overwrite(&other.0)
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        self.0.insert_template_value(key, val)
+    }
+}
+impl_optional_overwrite_value!(JMENotes);
+
+impl ToNumbas for JMENotes {
+    type NumbasType = numbas::jme::JMENotesString;
+    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(self
+                .0
+                .unwrap()
+                .iter()
+                .map(|v| {
+                    let description = if let Noneable::NotNone(d) = v.description.unwrap() {
+                        format!("({})", d)
+                    } else {
+                        "".to_string()
+                    };
+                    format!(
+                        "{}{}:{}",
+                        v.name.unwrap(),
+                        description,
+                        v.expression.unwrap().to_string(locale).unwrap()
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n\n")
+                .try_into()
+                .unwrap())
+        } else {
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
+    fn to_rumbas(&self) -> JMENotes {
+        JMENotes(Value::Normal(if let Some(ref notes) = self.notes {
+            notes
+                .iter()
+                .map(|n| JMENote {
+                    name: Value::Normal(n.name.to_string()),
+                    description: Value::Normal(
+                        n.description
+                            .clone()
+                            .map_or(Noneable::nn(), Noneable::NotNone),
+                    ),
+                    expression: Value::Normal(n.expressions_string.to_rumbas()),
+                })
+                .collect()
+        } else {
+            vec![]
+        }))
+    }
+}
+
+impl Default for JMENotes {
+    fn default() -> Self {
+        JMENotes(Value::Normal(vec![]))
+    }
+}
+
+optional_overwrite! {
+    pub struct JMENote {
+        name: String,
+        description: Noneable<String>,
+        expression: JMETranslatableString
+    }
+}
+
+impl ToNumbas for JMENote {
+    type NumbasType = numbas::exam::CustomPartMarkingNote;
+    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::CustomPartMarkingNote> {
+        let check = self.check();
+        if check.is_empty() {
+            Ok(numbas::exam::CustomPartMarkingNote {
+                name: self.name.unwrap(),
+                definition: self
+                    .expression
+                    .unwrap()
+                    .to_string(&locale)
+                    .unwrap()
+                    .try_into()
+                    .unwrap(),
+                description: self.description.unwrap().unwrap_or("".to_string()),
+            })
+        } else {
+            Err(check)
+        }
+    }
+}
+
+impl ToRumbas<JMENote> for numbas::exam::CustomPartMarkingNote {
+    fn to_rumbas(&self) -> JMENote {
+        JMENote {
+            name: Value::Normal(self.name.clone()),
+            expression: Value::Normal(self.definition.to_rumbas()),
+            description: Value::Normal(Noneable::NotNone(self.description.clone())),
+        }
+    }
+}
+
 // TODO major refactor: add fields that are used to right ones
 macro_rules! question_part_type {
     (
@@ -209,7 +327,7 @@ macro_rules! question_part_type {
                 show_feedback_icon: bool,
                 variable_replacement_strategy: VariableReplacementStrategy,
                 adaptive_marking_penalty: usize,
-                custom_marking_algorithm: String, // TODO? empty string -> none?, from file?
+                custom_marking_algorithm_notes: JMENotes,
                 extend_base_marking_algorithm: bool,
                 steps: Vec<QuestionPart>
                 $(,
@@ -234,7 +352,7 @@ macro_rules! question_part_type {
                     show_feedback_icon: Some(self.show_feedback_icon.clone().unwrap()),
                     variable_replacement_strategy: self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale).unwrap(),
                     adaptive_marking_penalty:Some(self.adaptive_marking_penalty.clone().unwrap()),
-                    custom_marking_algorithm: Some(self.custom_marking_algorithm.clone().unwrap()),
+                    custom_marking_algorithm: Some(self.custom_marking_algorithm_notes.unwrap().to_numbas(&locale).unwrap()),
                     extend_base_marking_algorithm: Some(self.extend_base_marking_algorithm.clone().unwrap()),
                     steps: self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale).unwrap()).collect()),
                 }
@@ -342,9 +460,12 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
             adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
                 &self.part_data,
             )),
-            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
-                &self.part_data,
-            )),
+            custom_marking_algorithm_notes: Value::Normal(
+                self.part_data
+                    .custom_marking_algorithm
+                    .to_rumbas()
+                    .unwrap_or_default(),
+            ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),
             ),

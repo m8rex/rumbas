@@ -154,6 +154,16 @@ impl<T> Noneable<T> {
     }
 }
 
+impl<T: std::clone::Clone> Noneable<T> {
+    #[inline]
+    pub fn unwrap_or(&self, other: T) -> T {
+        match self {
+            Noneable::None(_) => other,
+            Noneable::NotNone(nn) => nn.clone(),
+        }
+    }
+}
+
 macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(

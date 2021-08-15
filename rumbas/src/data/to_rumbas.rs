@@ -54,6 +54,12 @@ impl ToRumbas<JMETranslatableString> for JMEString {
     }
 }
 
+impl ToRumbas<JMETranslatableString> for String {
+    fn to_rumbas(&self) -> JMETranslatableString {
+        JMETranslatableString::s(&self[..])
+    }
+}
+
 impl ToRumbas<EmbracedJMETranslatableString> for EmbracedJMEString {
     fn to_rumbas(&self) -> EmbracedJMETranslatableString {
         let s: String = self.clone().into();
@@ -129,12 +135,6 @@ pub fn extract_part_common_adaptive_marking_penalty(
 ) -> usize {
     pd.adaptive_marking_penalty
         .unwrap_or(DEFAULTS.part_common_adaptive_marking_penalty)
-}
-
-pub fn extract_part_common_custom_marking_algorithm(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
-) -> String {
-    pd.custom_marking_algorithm.clone().unwrap_or_default()
 }
 
 pub fn extract_part_common_extend_base_marking_algorithm(

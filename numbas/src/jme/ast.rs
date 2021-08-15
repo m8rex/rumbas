@@ -102,6 +102,14 @@ impl Ident {
     pub fn is_builtin_funtion(&self) -> bool {
         BuiltinFunctions::get(&self.name[..]).is_some()
     }
+    pub fn to_string(&self) -> String {
+        self.annotations
+            .clone()
+            .into_iter()
+            .chain(vec![self.name.clone()].into_iter())
+            .collect::<Vec<_>>()
+            .join(":")
+    }
 }
 
 impl std::convert::From<String> for Ident {
@@ -115,17 +123,24 @@ impl std::convert::From<String> for Ident {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Note {
-    name: Ident,
-    description: Option<String>,
-    expression: Expr,
+    pub name: Ident,
+    pub description: Option<String>,
+    pub expressions: Vec<Expr>,
+    pub expressions_string: String,
 }
 
 impl Note {
-    pub fn create(name: Ident, description: Option<String>, expression: Expr) -> Note {
+    pub fn create(
+        name: Ident,
+        description: Option<String>,
+        expressions: Vec<Expr>,
+        expressions_string: String,
+    ) -> Note {
         Note {
             name,
             description,
-            expression,
+            expressions,
+            expressions_string,
         }
     }
 }

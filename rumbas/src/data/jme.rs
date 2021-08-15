@@ -1,5 +1,6 @@
 use crate::data::file_reference::{FileString, JMEFileString};
 use crate::data::optional_overwrite::*;
+use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::{NumbasResult, ToNumbas};
@@ -137,9 +138,12 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
             adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
                 &self.part_data,
             )),
-            custom_marking_algorithm: Value::Normal(extract_part_common_custom_marking_algorithm(
-                &self.part_data,
-            )),
+            custom_marking_algorithm_notes: Value::Normal(
+                self.part_data
+                    .custom_marking_algorithm
+                    .to_rumbas()
+                    .unwrap_or_default(),
+            ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),
             ),

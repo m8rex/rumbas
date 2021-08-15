@@ -59,7 +59,7 @@ pub struct ScriptParserNode<'i> {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ScriptParserExpr<'i> {
-    Note(String, Option<String>, ParserNode<'i>),
+    Note(String, Option<String>, Vec<ParserNode<'i>>, String),
 }
 
 impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
@@ -113,8 +113,13 @@ impl<'i> std::convert::From<ScriptParserNode<'i>> for ast::Note {
 impl<'i> std::convert::From<ScriptParserExpr<'i>> for ast::Note {
     fn from(expr: ScriptParserExpr<'i>) -> ast::Note {
         match expr {
-            ScriptParserExpr::Note(name, description, expression) => {
-                ast::Note::create(name.into(), description, expression.into())
+            ScriptParserExpr::Note(name, description, expressions, expressions_string) => {
+                ast::Note::create(
+                    name.into(),
+                    description,
+                    expressions.into_iter().map(|e| e.into()).collect(),
+                    expressions_string,
+                )
             }
         }
     }
@@ -201,10 +206,17 @@ fn consume_note<'i>(
         None
     };
     //let end = pair.as_span().end();
-    let expression = consume_expression(pair)?;
+    let expression_string = pair.as_str().to_string();
+    let mut expressions = Vec::new();
+    for pair in pair
+        .into_inner()
+        .filter(|p| p.as_rule() == Rule::expression)
+    {
+        expressions.push(consume_expression(pair)?);
+    }
 
     Ok(ScriptParserNode {
-        expr: ScriptParserExpr::Note(s, description, expression),
+        expr: ScriptParserExpr::Note(s, description, expressions, expression_string),
         span: first.as_span(), //Span::new("", start, end).unwrap(), // TODO: input string?
     })
 }
