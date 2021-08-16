@@ -195,9 +195,7 @@ fn consume_note_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ScriptParserNode>, 
     Ok(results)
 }
 
-fn consume_note<'i>(
-    mut pairs: Peekable<Pairs<'i, Rule>>,
-) -> Result<ScriptParserNode<'i>, Vec<Error<Rule>>> {
+fn consume_note(mut pairs: Peekable<Pairs<Rule>>) -> Result<ScriptParserNode, Vec<Error<Rule>>> {
     let first = pairs.next().unwrap();
     //let start = first.as_span().start();
     let s = first.as_str().to_string();
