@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Validation of JME fields
+  - Previously they were parsed as strings
+  - Now they are parsed as JME expressions / ContentAreas
+- Better error message when there is something wrong in the yaml of a question_part
+
 ## [0.4.0] - 2021-08-04
 
 ### Fixed
