@@ -247,7 +247,7 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
                             .clone()
                             .map_or(Noneable::nn(), Noneable::NotNone),
                     ),
-                    expression: Value::Normal(n.expressions_string.to_rumbas()),
+                    expression: Value::Normal(n.expression_string.to_rumbas()),
                 })
                 .collect()
         } else {

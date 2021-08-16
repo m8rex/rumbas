@@ -49,6 +49,7 @@ pub enum ParserExpr<'i> {
     Faculty(Box<ParserNode<'i>>),
     Indexation(Box<ParserNode<'i>>),
     Cast(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
+    Sequence(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -59,7 +60,7 @@ pub struct ScriptParserNode<'i> {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ScriptParserExpr<'i> {
-    Note(String, Option<String>, Vec<ParserNode<'i>>, String),
+    Note(String, Option<String>, ParserNode<'i>, String),
 }
 
 impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
@@ -101,6 +102,9 @@ impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
             ParserExpr::Cast(n1, n2) => {
                 ast::Expr::Cast(Box::new((*n1).into()), Box::new((*n2).into()))
             }
+            ParserExpr::Sequence(n1, n2) => {
+                ast::Expr::Sequence(Box::new((*n1).into()), Box::new((*n2).into()))
+            }
         }
     }
 }
@@ -113,12 +117,12 @@ impl<'i> std::convert::From<ScriptParserNode<'i>> for ast::Note {
 impl<'i> std::convert::From<ScriptParserExpr<'i>> for ast::Note {
     fn from(expr: ScriptParserExpr<'i>) -> ast::Note {
         match expr {
-            ScriptParserExpr::Note(name, description, expressions, expressions_string) => {
+            ScriptParserExpr::Note(name, description, expression, expression_string) => {
                 ast::Note::create(
                     name.into(),
                     description,
-                    expressions.into_iter().map(|e| e.into()).collect(),
-                    expressions_string,
+                    expression.into(),
+                    expression_string,
                 )
             }
         }
@@ -207,16 +211,10 @@ fn consume_note<'i>(
     };
     //let end = pair.as_span().end();
     let expression_string = pair.as_str().to_string();
-    let mut expressions = Vec::new();
-    for pair in pair
-        .into_inner()
-        .filter(|p| p.as_rule() == Rule::expression)
-    {
-        expressions.push(consume_expression(pair)?);
-    }
+    let expression = consume_expression(pair)?;
 
     Ok(ScriptParserNode {
-        expr: ScriptParserExpr::Note(s, description, expressions, expression_string),
+        expr: ScriptParserExpr::Note(s, description, expression, expression_string),
         span: first.as_span(), //Span::new("", start, end).unwrap(), // TODO: input string?
     })
 }
@@ -231,6 +229,7 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, 
 
 fn consume_expression(expression: Pair<Rule>) -> Result<ParserNode, Vec<Error<Rule>>> {
     let climber = PrecClimber::new(vec![
+        Operator::new(Rule::sequence_operator, Assoc::Left),
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
         Operator::new(Rule::relational_operator, Assoc::Left),
         Operator::new(Rule::cast_operator, Assoc::Left),
@@ -575,6 +574,18 @@ fn consume_expression_internal<'i>(
 
             Ok(ParserNode {
                 expr: ParserExpr::Logic(op.as_str().to_string(), Box::new(lhs), Box::new(rhs)),
+                span: start.span(&end),
+            })
+        }
+        Rule::sequence_operator => {
+            let lhs = lhs?;
+            let rhs = rhs?;
+
+            let start = lhs.span.start_pos();
+            let end = rhs.span.end_pos();
+
+            Ok(ParserNode {
+                expr: ParserExpr::Sequence(Box::new(lhs), Box::new(rhs)),
                 span: start.span(&end),
             })
         }

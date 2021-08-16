@@ -317,7 +317,7 @@ impl std::convert::From<crate::jme::ast::Note> for CustomPartMarkingNote {
     fn from(note: crate::jme::ast::Note) -> Self {
         CustomPartMarkingNote {
             name: note.name.to_string(),
-            definition: note.expressions_string.try_into().unwrap(),
+            definition: note.expression_string.try_into().unwrap(),
             description: note.description.unwrap_or("".to_string()),
         }
     }

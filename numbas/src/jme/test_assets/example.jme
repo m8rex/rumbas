@@ -1,0 +1,39 @@
+all_valid:
+  map(assert(x["valid"], concat_feedback(x["feedback"],1/len(gaps))), x, marked_original_order)
+
+shuttles:
+  interpreted_answers[0]
+
+coaches:
+  interpreted_answers[1]
+
+conditions:
+  [
+    shuttles+coaches<=garage,
+    shuttles>=min_shuttles,
+    coaches>=min_coaches,
+    coaches/(coaches+shuttles)>=prop_coaches,
+    shuttles*price_shuttle + coaches*price_coach<=budget,
+    shuttles*seats_shuttle + coaches*seats_coach >= min_seats
+  ]
+
+conditions_unsatisfied:
+  assert(all(conditions),
+    incorrect("Your solution does not satisfy all of the conditions.");
+    end();
+    true
+  )
+
+student_profit: shuttles*profit_shuttle + coaches*profit_coach
+
+profit_optimal:
+  if(student_profit >= profit,
+    correct("Your solution is optimal.")
+  ,
+    incorrect("There is another solution which gives a higher profit.")
+  )
+
+mark:
+  apply(all_valid);
+  apply(conditions_unsatisfied);
+  apply(profit_optimal)
