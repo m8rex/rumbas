@@ -171,10 +171,9 @@ mod test {
     }
 
     #[test]
-    fn marking_notes() {
+    fn marking_notes_with_space_between_newlines() {
         let s = include_str!("test_assets/example.jme");
         let res = JMENotesString::try_from(s.to_string());
-        println!("{:?}", res);
         assert!(res.is_ok());
         assert!(res.as_ref().unwrap().notes.is_some());
         assert_eq!(res.unwrap().notes.unwrap().len(), 8);
