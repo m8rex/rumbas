@@ -102,13 +102,20 @@ impl Ident {
     pub fn is_builtin_funtion(&self) -> bool {
         BuiltinFunctions::get(&self.name[..]).is_some()
     }
-    pub fn to_string(&self) -> String {
-        self.annotations
-            .clone()
-            .into_iter()
-            .chain(vec![self.name.clone()].into_iter())
-            .collect::<Vec<_>>()
-            .join(":")
+}
+
+impl std::fmt::Display for Ident {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.annotations
+                .clone()
+                .into_iter()
+                .chain(vec![self.name.clone()].into_iter())
+                .collect::<Vec<_>>()
+                .join(":")
+        )
     }
 }
 
