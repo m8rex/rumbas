@@ -125,22 +125,22 @@ impl std::convert::From<String> for Ident {
 pub struct Note {
     pub name: Ident,
     pub description: Option<String>,
-    pub expressions: Vec<Expr>,
-    pub expressions_string: String,
+    pub expression: Expr,
+    pub expression_string: String,
 }
 
 impl Note {
     pub fn create(
         name: Ident,
         description: Option<String>,
-        expressions: Vec<Expr>,
-        expressions_string: String,
+        expression: Expr,
+        expression_string: String,
     ) -> Note {
         Note {
             name,
             description,
-            expressions,
-            expressions_string,
+            expression,
+            expression_string,
         }
     }
 }
@@ -181,6 +181,8 @@ pub enum Expr {
     Indexation(Box<Expr>),
     /// Matches a cast expression
     Cast(Box<Expr>, Box<Expr>),
+    /// Matches a sequence expression
+    Sequence(Box<Expr>, Box<Expr>),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -240,6 +242,11 @@ impl Expr {
             Expr::Faculty(e1) => e1.validate(),
             Expr::Indexation(e1) => e1.validate(),
             Expr::Cast(e1, e2) => e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Sequence(e1, e2) => e1
                 .validate()
                 .into_iter()
                 .chain(e2.validate().into_iter())

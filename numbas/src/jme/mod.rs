@@ -118,8 +118,9 @@ impl std::convert::TryFrom<String> for JMENotesString {
         let notes = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_jme_script(&trimmed).map_err(|e| format!("{:?}", e))?;
-            let notes = parser::consume_notes(pairs).map_err(|e| format!("{:?}", e))?;
+            let pairs =
+                parser::parse_as_jme_script(&trimmed).map_err(|e| format!("Parsing: {:?}", e))?;
+            let notes = parser::consume_notes(pairs).map_err(|e| format!("Consuming: {:?}", e))?;
             Some(notes)
         };
         Ok(Self {
@@ -167,5 +168,15 @@ mod test {
         assert!(res.is_ok());
         assert!(res.as_ref().unwrap().notes.is_some());
         assert_eq!(res.unwrap().notes.unwrap().len(), 21);
+    }
+
+    #[test]
+    fn marking_notes() {
+        let s = include_str!("test_assets/example.jme");
+        let res = JMENotesString::try_from(s.to_string());
+        println!("{:?}", res);
+        assert!(res.is_ok());
+        assert!(res.as_ref().unwrap().notes.is_some());
+        assert_eq!(res.unwrap().notes.unwrap().len(), 8);
     }
 }

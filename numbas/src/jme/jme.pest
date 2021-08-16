@@ -17,10 +17,7 @@ script = {
 note = {
 	ident_name
     ~ ("(" ~ description ~ ")" )?
-    ~ ":" ~ note_expressions
-}
-note_expressions =  { 
-    expression ~ ( ";" ~ expression)* ~ ";"?
+    ~ ":" ~ expression
 }
 description = {  (!")" ~ ANY)* }
 
@@ -111,12 +108,15 @@ xor_operator = _{ "xor" }
 implies_operator = _{ "implies" }
 logic_binary_operator = { and_operator | or_operator | xor_operator | implies_operator }
 cast_operator = { "as" }
-infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | logic_binary_operator | range_separator | range_step_separator | implicit_multiplication_operator }
 range_separator = { ".." }
 range_step_separator = { "#" }
+sequence_operator = { ";" }
+infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | logic_binary_operator | range_separator | range_step_separator | sequence_operator | implicit_multiplication_operator }
+
 index_operator = { "[" ~ (string | integer | ident_name) ~ "]" } 
 faculty_operator =  { "!" }
 postfix_operator = _{ faculty_operator | index_operator }
+
 not_operator = _{ "!" | "not" }
 unary_minus = _{ "-" }
 prefix_operator = { not_operator | unary_minus }
