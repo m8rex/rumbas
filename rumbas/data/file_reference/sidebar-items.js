@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["FileString","A string that has to be read from a file."]]});
+initSidebarItems({"struct":[["ContentAreaFileString","An ContentArea string that has to be read from a file."],["EmbracedJMEFileString","An embraced JME string that has to be read from a file."],["FileString","A string that has to be read from a file."],["JMEFileString","A JME string that has to be read from a file."]]});

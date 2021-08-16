@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["TranslatableString","A translatable string"]]});
+initSidebarItems({"enum":[["ContentAreaTranslatableString",""],["EmbracedJMETranslatableString",""],["JMETranslatableString",""],["TranslatableString",""]]});

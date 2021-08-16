@@ -81,15 +81,20 @@
 <span id="79">79</span>
 <span id="80">80</span>
 <span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part::JMENotes</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part</span>::{<span class="ident">QuestionPart</span>, <span class="ident">VariableReplacementStrategy</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 
 <span class="macro">question_part_type!</span> {
     <span class="comment">// The Gap fill question part type</span>
@@ -127,9 +132,7 @@
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">QuestionPartGapFill</span> {
         <span class="ident">QuestionPartGapFill</span> {
             <span class="ident">marks</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_marks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>)),
-            <span class="ident">prompt</span>: <span class="ident">Value::Normal</span>(<span class="ident">TranslatableString::s</span>(<span class="kw-2">&amp;</span><span class="ident">extract_part_common_prompt</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>,
-            ))),
+            <span class="ident">prompt</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_prompt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>)),
             <span class="ident">use_custom_name</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_use_custom_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>)),
             <span class="ident">custom_name</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_custom_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>)),
             <span class="ident">steps_penalty</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_steps_penalty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>)),
@@ -149,9 +152,12 @@
             <span class="ident">adaptive_marking_penalty</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_adaptive_marking_penalty</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>,
             )),
-            <span class="ident">custom_marking_algorithm</span>: <span class="ident">Value::Normal</span>(<span class="ident">extract_part_common_custom_marking_algorithm</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>,
-            )),
+            <span class="ident">custom_marking_algorithm_notes</span>: <span class="ident">Value::Normal</span>(
+                <span class="self">self</span>.<span class="ident">part_data</span>
+                    .<span class="ident">custom_marking_algorithm</span>
+                    .<span class="ident">to_rumbas</span>()
+                    .<span class="ident">unwrap_or_default</span>(),
+            ),
             <span class="ident">extend_base_marking_algorithm</span>: <span class="ident">Value::Normal</span>(
                 <span class="ident">extract_part_common_extend_base_marking_algorithm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
             ),

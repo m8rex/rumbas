@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["CustomPartInputTypeValue",""],["QuestionPart",""],["QuestionPartBuiltin",""],["VariableReplacementStrategy",""]],"struct":[["QuestionPartCustom",""]]});
+initSidebarItems({"enum":[["CustomPartInputTypeValue",""],["QuestionPart",""],["QuestionPartBuiltin",""],["VariableReplacementStrategy",""]],"struct":[["JMENote",""],["JMENotes",""],["QuestionPartCustom",""]]});

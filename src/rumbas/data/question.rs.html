@@ -373,6 +373,26 @@
 <span id="371">371</span>
 <span id="372">372</span>
 <span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::custom_part_type::CustomPartTypeDefinitionPath</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::extension::Extensions</span>;
@@ -387,12 +407,15 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::variable::VariableRepresentation</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::yaml</span>::{<span class="ident">YamlError</span>, <span class="ident">YamlResult</span>};
 <span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
+<span class="kw">use</span> <span class="ident">numbas::jme::JMEString</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 <span class="kw">use</span> <span class="ident">std::fs</span>;
 <span class="kw">use</span> <span class="ident">std::path::Path</span>;
 
@@ -400,8 +423,11 @@
 
 <span class="macro">optional_overwrite!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Question</span> {
-        <span class="ident">statement</span>: <span class="ident">TranslatableString</span>,
-        <span class="ident">advice</span>: <span class="ident">TranslatableString</span>,
+        <span class="doccomment">/// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</span>
+        <span class="ident">statement</span>: <span class="ident">ContentAreaTranslatableString</span>,
+        <span class="doccomment">/// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.</span>
+        <span class="doccomment">/// The advice area is normally used to present a worked solution to the question.</span>
+        <span class="ident">advice</span>: <span class="ident">ContentAreaTranslatableString</span>,
         <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">builtin_constants</span>: <span class="ident">BuiltinConstants</span>,
         <span class="ident">custom_constants</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomConstant</span><span class="op">&gt;</span>,
@@ -442,8 +468,22 @@
             }
             <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestion</span> {
                 <span class="ident">name</span>,
-                <span class="ident">statement</span>: <span class="self">self</span>.<span class="ident">statement</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                <span class="ident">advice</span>: <span class="self">self</span>.<span class="ident">advice</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">statement</span>: <span class="self">self</span>
+                    .<span class="ident">statement</span>
+                    .<span class="ident">clone</span>()
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">to_string</span>(<span class="ident">locale</span>)
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">try_into</span>()
+                    .<span class="ident">unwrap</span>(),
+                <span class="ident">advice</span>: <span class="self">self</span>
+                    .<span class="ident">advice</span>
+                    .<span class="ident">clone</span>()
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">to_string</span>(<span class="ident">locale</span>)
+                    .<span class="ident">unwrap</span>()
+                    .<span class="ident">try_into</span>()
+                    .<span class="ident">unwrap</span>(),
                 <span class="ident">parts</span>: <span class="self">self</span>
                     .<span class="ident">parts</span>
                     .<span class="ident">clone</span>()
@@ -537,8 +577,8 @@
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Question</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::ExamQuestion</span> {
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Question</span> {
         <span class="ident">Question</span> {
-            <span class="ident">statement</span>: <span class="ident">Value::Normal</span>(<span class="ident">TranslatableString::s</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">statement</span>)),
-            <span class="ident">advice</span>: <span class="ident">Value::Normal</span>(<span class="ident">TranslatableString::s</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">advice</span>)),
+            <span class="ident">statement</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">statement</span>.<span class="ident">to_rumbas</span>()),
+            <span class="ident">advice</span>: <span class="ident">Value::Normal</span>(<span class="self">self</span>.<span class="ident">advice</span>.<span class="ident">to_rumbas</span>()),
             <span class="ident">parts</span>: <span class="ident">Value::Normal</span>(
                 <span class="self">self</span>.<span class="ident">parts</span>
                     .<span class="ident">iter</span>()
@@ -627,7 +667,7 @@
 
 <span class="macro">optional_overwrite!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VariablesTest</span> {
-        <span class="ident">condition</span>: <span class="ident">String</span>,
+        <span class="ident">condition</span>: <span class="ident">JMEString</span>,
         <span class="ident">max_runs</span>: <span class="ident">usize</span>
     }
 }
@@ -716,7 +756,7 @@
         <span class="doccomment">/// The name of the constant</span>
         <span class="ident">name</span>: <span class="ident">String</span>,
         <span class="doccomment">/// The value of the constant</span>
-        <span class="ident">value</span>: <span class="ident">String</span>,
+        <span class="ident">value</span>: <span class="ident">JMEString</span>,
         <span class="doccomment">/// The tex code use to display the constant</span>
         <span class="ident">tex</span>: <span class="ident">String</span>
     }
