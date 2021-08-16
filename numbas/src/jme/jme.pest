@@ -1,4 +1,4 @@
-WHITESPACE = _{ " " | "\t" | newline }
+WHITESPACE = _{ !double_newline ~ (" " | "\t" | newline) }
 COMMENT    = _{ block_comment | ("//" ~ (!newline ~ ANY)*) }
 newline    = _{ !(newline_item~newline_item) ~ newline_item }
 newline_item    = _{ "\n" | "\r\n" }
@@ -11,8 +11,10 @@ jme = {
 }
 
 script = {
-	SOI ~ note ~ ("\n\n" ~ note)* ~ EOI 
+	SOI ~ note ~ (double_newline ~ note)* ~ EOI 
 }
+
+double_newline = @{ "\n" ~ " "* ~ "\n" }
 
 note = {
 	ident_name

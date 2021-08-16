@@ -23,7 +23,7 @@ conditions_unsatisfied:
     end();
     true
   )
-
+ 
 student_profit: shuttles*profit_shuttle + coaches*profit_coach
 
 profit_optimal:
