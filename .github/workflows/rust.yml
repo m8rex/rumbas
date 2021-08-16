@@ -114,3 +114,4 @@ jobs:
       - name: Check todo's
         run: cargo +nightly fmt --all -- --check
         working-directory: rumbas
+        continue-on-error: true
