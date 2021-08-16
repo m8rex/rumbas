@@ -813,8 +813,8 @@ impl ExamQuestion {
         }
         let new_json = serde_json::to_string_pretty(&question).unwrap();
         let new_json = hacky_fix_exam(&new_json[..]);
-        //  TODO: log as debug
-        println!(
+        log::debug!("Question loaded as following exam");
+        log::debug!(
             "{}",
             new_json
                 .split('\n')
