@@ -224,7 +224,7 @@ fn compile(matches: &clap::ArgMatches) {
                                         );
                                     }
                                     if !output.stderr.is_empty() {
-                                        log::error!("Compilation failed");
+                                        log::error!("Compilation failed. Use -v to see more");
                                         log::debug!(
                                             "{}",
                                             std::str::from_utf8(&output.stderr).unwrap()
