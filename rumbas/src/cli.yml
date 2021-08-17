@@ -42,4 +42,5 @@ subcommands:
         Initialize a rumbas project in this folder
   - schema:
       about: |-
-        Prints the json schema
+        Creates files with the json schemas (beta).
+        See https://github.com/m8rex/rumbas-examples/tree/main/.vscode for usage instructions
