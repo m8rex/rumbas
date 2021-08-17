@@ -330,7 +330,7 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
 
 impl JsonSchema for CustomPartTypeDefinitionPath {
     fn schema_name() -> String {
-        format!("CustomPartTypeDefinitionPath")
+        "CustomPartTypeDefinitionPath".to_owned()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {

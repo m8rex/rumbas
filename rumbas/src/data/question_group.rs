@@ -141,7 +141,7 @@ impl_optional_overwrite_value!(QuestionPath);
 
 impl JsonSchema for QuestionPath {
     fn schema_name() -> String {
-        format!("QuestionPath")
+        "QuestionPath".to_owned()
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
