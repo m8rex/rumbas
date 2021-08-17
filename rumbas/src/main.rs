@@ -101,23 +101,20 @@ fn main() {
 
 fn schema(_matches: &clap::ArgMatches) {
     let schema = schema_for!(ExamFileType);
-    std::fs::write(
-        "exam-schema.json",
-        serde_json::to_string_pretty(&schema).unwrap(),
-    )
-    .expect("writting exam schema to file");
+    let file_name = "exam-schema.json";
+    std::fs::write(file_name, serde_json::to_string_pretty(&schema).unwrap())
+        .expect("writting exam schema to file");
+    log::info!("{} created", file_name);
     let schema = schema_for!(QuestionFileType);
-    std::fs::write(
-        "question-schema.json",
-        serde_json::to_string_pretty(&schema).unwrap(),
-    )
-    .expect("writting question schema to file");
+    let file_name = "question-schema.json";
+    std::fs::write(file_name, serde_json::to_string_pretty(&schema).unwrap())
+        .expect("writting question schema to file");
+    log::info!("{} created", file_name);
     let schema = schema_for!(rumbas::data::custom_part_type::CustomPartTypeDefinition);
-    std::fs::write(
-        "custom-part-type-schema.json",
-        serde_json::to_string_pretty(&schema).unwrap(),
-    )
-    .expect("writting custom-part-type schema to file");
+    let file_name = "custom-part-type-schema.json";
+    std::fs::write(file_name, serde_json::to_string_pretty(&schema).unwrap())
+        .expect("writting custom-part-type schema to file");
+    log::info!("{} created", file_name);
 }
 
 fn compile(matches: &clap::ArgMatches) {
