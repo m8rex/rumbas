@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `custom_marking_algorithm` to `custom_marking_algorithm_notes`
+  - The type is changed from a string, to a map
 - Validation of JME fields
   - Previously they were parsed as strings
   - Now they are parsed as JME expressions / ContentAreas
