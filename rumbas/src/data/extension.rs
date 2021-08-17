@@ -2,7 +2,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use schemars::JsonSchema;
@@ -28,21 +28,15 @@ macro_rules! extensions {
             }
         }
 
-        impl ToNumbas for Extensions {
-            type NumbasType = Vec<String>;
-            fn to_numbas(&self, _locale: &str) -> NumbasResult<Vec<String>> {
-                let check = self.check();
-                if check.is_empty() {
-                    let mut extensions = Vec::new();
-                    $(
-                        if self.$name.unwrap() {
-                            extensions.push($path.to_string()); //TODO: Enum in numbas crate?
-                        }
-                    )*
-                    Ok(extensions)
-                } else {
-                    Err(check)
-                }
+        impl ToNumbas<Vec<String>> for Extensions {
+            fn to_numbas(&self, _locale: &str) -> Vec<String> {
+                let mut extensions = Vec::new();
+                $(
+                    if self.$name.unwrap() {
+                        extensions.push($path.to_string()); //TODO: Enum in numbas crate?
+                    }
+                )*
+                extensions
             }
         }
 
@@ -121,16 +115,10 @@ question_part_type! {
     pub struct QuestionPartExtension {}
 }
 
-impl ToNumbas for QuestionPartExtension {
-    type NumbasType = numbas::exam::ExamQuestionPartExtension;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(locale),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionPartExtension> for QuestionPartExtension {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartExtension {
+        numbas::exam::ExamQuestionPartExtension {
+            part_data: self.to_numbas_shared_data(locale),
         }
     }
 }

@@ -3,7 +3,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
@@ -30,41 +30,35 @@ question_part_type! {
 }
 impl_optional_overwrite!(numbas::exam::AnswerStyle);
 
-impl ToNumbas for QuestionPartNumberEntry {
-    type NumbasType = numbas::exam::ExamQuestionPartNumberEntry;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(locale),
-                correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
-                correct_answer_style: Some(
-                    self.display_correct_in_style
-                        .clone()
-                        .map(|a| a.to_numbas(locale).unwrap())
-                        .unwrap(),
-                ),
-                allow_fractions: self.allow_fractions.unwrap(),
-                notation_styles: Some(
-                    self.allowed_notation_styles
-                        .clone()
-                        .unwrap()
-                        .into_iter()
-                        .map(|a| a.to_numbas(locale).unwrap())
-                        .collect(),
-                ),
-                fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
-                partial_credit_if_fraction_not_reduced: Some(
-                    self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
-                ),
-                precision: None,           //TODO
-                show_precision_hint: None, //TODO
-                show_fraction_hint: Some(self.hint_fraction.clone().unwrap()),
-                answer: self.answer.to_numbas(locale).unwrap(),
-                // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberEntry {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartNumberEntry {
+        numbas::exam::ExamQuestionPartNumberEntry {
+            part_data: self.to_numbas_shared_data(locale),
+            correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
+            correct_answer_style: Some(
+                self.display_correct_in_style
+                    .clone()
+                    .map(|a| a.to_numbas(locale))
+                    .unwrap(),
+            ),
+            allow_fractions: self.allow_fractions.unwrap(),
+            notation_styles: Some(
+                self.allowed_notation_styles
+                    .clone()
+                    .unwrap()
+                    .into_iter()
+                    .map(|a| a.to_numbas(locale))
+                    .collect(),
+            ),
+            fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
+            partial_credit_if_fraction_not_reduced: Some(
+                self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
+            ),
+            precision: None,           //TODO
+            show_precision_hint: None, //TODO
+            show_fraction_hint: Some(self.hint_fraction.clone().unwrap()),
+            answer: self.answer.to_numbas(locale),
+            // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
         }
     }
 }
@@ -142,18 +136,17 @@ pub enum NumberEntryAnswer {
 }
 impl_optional_overwrite!(NumberEntryAnswer);
 
-impl ToNumbas for NumberEntryAnswer {
-    type NumbasType = numbas::exam::NumberEntryAnswerType;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::NumberEntryAnswerType> for NumberEntryAnswer {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::NumberEntryAnswerType {
+        match self {
             NumberEntryAnswer::Normal(f) => numbas::exam::NumberEntryAnswerType::Answer {
-                answer: numbas::exam::Primitive::String(f.get_content(locale)),
+                answer: numbas::exam::Primitive::String(f.to_numbas(locale)),
             },
             NumberEntryAnswer::Range { from, to } => numbas::exam::NumberEntryAnswerType::MinMax {
-                min_value: numbas::exam::Primitive::String(from.get_content(locale)),
-                max_value: numbas::exam::Primitive::String(to.get_content(locale)),
+                min_value: numbas::exam::Primitive::String(from.to_numbas(locale)),
+                max_value: numbas::exam::Primitive::String(to.to_numbas(locale)),
             },
-        })
+        }
     }
 }
 
@@ -206,10 +199,9 @@ pub enum AnswerStyle {
 }
 impl_optional_overwrite!(AnswerStyle);
 
-impl ToNumbas for AnswerStyle {
-    type NumbasType = numbas::exam::AnswerStyle;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::AnswerStyle> for AnswerStyle {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::AnswerStyle {
+        match self {
             AnswerStyle::English => numbas::exam::AnswerStyle::English,
             AnswerStyle::EnglishPlain => numbas::exam::AnswerStyle::EnglishPlain,
             AnswerStyle::EnglishSI => numbas::exam::AnswerStyle::EnglishSI,
@@ -219,7 +211,7 @@ impl ToNumbas for AnswerStyle {
             AnswerStyle::Indian => numbas::exam::AnswerStyle::Indian,
             AnswerStyle::Scientific => numbas::exam::AnswerStyle::Scientific,
             AnswerStyle::Swiss => numbas::exam::AnswerStyle::Swiss,
-        })
+        }
     }
 }
 

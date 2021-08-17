@@ -3,7 +3,7 @@ use crate::data::locale::Locale;
 use crate::data::normal_exam::NormalExam;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{ExamFileType, TemplateData, Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::yaml::YamlError;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -21,9 +21,8 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas for Exam {
-    type NumbasType = numbas::exam::Exam;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Exam> {
+impl ToNumbas<numbas::exam::Exam> for Exam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         match self {
             Exam::Normal(n) => n.to_numbas(locale),
             Exam::Diagnostic(n) => n.to_numbas(locale),

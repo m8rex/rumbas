@@ -2,7 +2,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use schemars::JsonSchema;
@@ -26,35 +26,25 @@ question_part_type! {
     }
 }
 
-impl ToNumbas for QuestionPartMatrix {
-    type NumbasType = numbas::exam::ExamQuestionPartMatrix;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            let dimensions = self.dimensions.unwrap();
-            let rows = dimensions.rows.unwrap();
-            let columns = dimensions.columns.unwrap();
-            Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(locale),
-                correct_answer: self.correct_answer.unwrap(),
-                correct_answer_fractions: self.display_correct_as_fraction.unwrap(),
-                num_rows: rows.default().to_numbas(locale).unwrap().map(|v| v.into()),
-                num_columns: columns
-                    .default()
-                    .to_numbas(locale)
-                    .unwrap()
-                    .map(|v| v.into()),
-                allow_resize: dimensions.is_resizable(),
-                min_columns: columns.min().to_numbas(locale).unwrap(),
-                max_columns: columns.max().to_numbas(locale).unwrap(),
-                min_rows: rows.min().to_numbas(locale).unwrap(),
-                max_rows: rows.max().to_numbas(locale).unwrap(),
-                tolerance: self.max_absolute_deviation.unwrap(),
-                mark_per_cell: self.mark_partial_by_cells.unwrap(),
-                allow_fractions: self.allow_fractions.unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionPartMatrix> for QuestionPartMatrix {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartMatrix {
+        let dimensions = self.dimensions.unwrap();
+        let rows = dimensions.rows.unwrap();
+        let columns = dimensions.columns.unwrap();
+        numbas::exam::ExamQuestionPartMatrix {
+            part_data: self.to_numbas_shared_data(locale),
+            correct_answer: self.correct_answer.unwrap(),
+            correct_answer_fractions: self.display_correct_as_fraction.unwrap(),
+            num_rows: rows.default().to_numbas(locale).map(|v| v.into()),
+            num_columns: columns.default().to_numbas(locale).map(|v| v.into()),
+            allow_resize: dimensions.is_resizable(),
+            min_columns: columns.min().to_numbas(locale),
+            max_columns: columns.max().to_numbas(locale),
+            min_rows: rows.min().to_numbas(locale),
+            max_rows: rows.max().to_numbas(locale),
+            tolerance: self.max_absolute_deviation.unwrap(),
+            mark_per_cell: self.mark_partial_by_cells.unwrap(),
+            allow_fractions: self.allow_fractions.unwrap(),
         }
     }
 }

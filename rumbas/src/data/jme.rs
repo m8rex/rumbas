@@ -3,7 +3,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
@@ -36,80 +36,68 @@ question_part_type! {
     }
 }
 
-impl ToNumbas for QuestionPartJME {
-    type NumbasType = numbas::exam::ExamQuestionPartJME;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartJME> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionPartJME {
-                part_data: self.to_numbas_shared_data(locale),
-                answer: self
-                    .answer
+impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartJME {
+        numbas::exam::ExamQuestionPartJME {
+            part_data: self.to_numbas_shared_data(locale),
+            answer: self
+                .answer
+                .clone()
+                .unwrap()
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            answer_simplification: Some(
+                self.answer_simplification
                     .clone()
                     .unwrap()
-                    .to_string(locale)
-                    .unwrap()
-                    .try_into()
-                    .unwrap(),
-                answer_simplification: Some(
-                    self.answer_simplification
-                        .clone()
-                        .unwrap()
-                        .to_numbas(locale)
-                        .unwrap(),
-                ),
-                show_preview: self.show_preview.clone().unwrap(),
-                checking_type: self
-                    .answer_check
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale)
-                    .unwrap(),
-                failure_rate: Some(self.failure_rate.unwrap()),
-                vset_range: [
-                    self.vset_range.unwrap()[0].into(),
-                    self.vset_range.unwrap()[1].into(),
-                ],
-                vset_range_points: self.vset_range_points.unwrap().into(),
-                check_variable_names: self.check_variable_names.unwrap(),
-                single_letter_variables: Some(self.single_letter_variables.clone().unwrap()),
-                allow_unknown_functions: Some(self.allow_unknown_functions.clone().unwrap()),
-                implicit_function_composition: Some(
-                    self.implicit_function_composition.clone().unwrap(),
-                ),
-                max_length: self
-                    .max_length
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-                min_length: self
-                    .min_length
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-                must_have: self
-                    .must_have
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-                may_not_have: self
-                    .may_not_have
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-                must_match_pattern: self
-                    .must_match_pattern
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-                value_generators: self
-                    .value_generators
-                    .clone()
-                    .map(|v| v.to_numbas(locale).unwrap())
-                    .flatten(),
-            })
-        } else {
-            Err(check)
+                    .to_numbas(locale),
+            ),
+            show_preview: self.show_preview.clone().unwrap(),
+            checking_type: self.answer_check.clone().unwrap().to_numbas(locale),
+            failure_rate: Some(self.failure_rate.unwrap()),
+            vset_range: [
+                self.vset_range.unwrap()[0].into(),
+                self.vset_range.unwrap()[1].into(),
+            ],
+            vset_range_points: self.vset_range_points.unwrap().into(),
+            check_variable_names: self.check_variable_names.unwrap(),
+            single_letter_variables: Some(self.single_letter_variables.clone().unwrap()),
+            allow_unknown_functions: Some(self.allow_unknown_functions.clone().unwrap()),
+            implicit_function_composition: Some(
+                self.implicit_function_composition.clone().unwrap(),
+            ),
+            max_length: self
+                .max_length
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
+            min_length: self
+                .min_length
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
+            must_have: self
+                .must_have
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
+            may_not_have: self
+                .may_not_have
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
+            must_match_pattern: self
+                .must_match_pattern
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
+            value_generators: self
+                .value_generators
+                .clone()
+                .map(|v| v.to_numbas(locale))
+                .flatten(),
         }
     }
 }
@@ -241,90 +229,81 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMEAnswerSimplification {
-    type NumbasType = Vec<numbas::exam::AnswerSimplificationType>;
-    fn to_numbas(
-        &self,
-        _locale: &str,
-    ) -> NumbasResult<Vec<numbas::exam::AnswerSimplificationType>> {
-        let check = self.check();
-        if check.is_empty() {
-            let mut v = Vec::new();
-            if self.simplify_basic.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Basic(true));
-            }
-            if self.simplify_unit_factor.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitFactor(true));
-            }
-            if self.simplify_unit_power.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitPower(true));
-            }
-            if self.simplify_unit_denominator.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::UnitDenominator(
-                    true,
-                ));
-            }
-            if self.simplify_zero_factor.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroFactor(true));
-            }
-            if self.simplify_zero_term.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroTerm(true));
-            }
-            if self.simplify_zero_power.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroPower(true));
-            }
-            if self.simplify_zero_base.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ZeroBase(true));
-            }
-            if self.collect_numbers.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CollectNumbers(true));
-            }
-            if self.constants_first.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ConstantsFirst(true));
-            }
-            if self.simplify_sqrt_products.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtProduct(true));
-            }
-            if self.simplify_sqrt_division.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtDivision(true));
-            }
-            if self.simplify_sqrt_square.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::SqrtSquare(true));
-            }
-            if self.simplify_other_numbers.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::OtherNumbers(true));
-            }
-            if self.simplify_no_leading_minus.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::NoLeadingMinus(true));
-            }
-            if self.simplify_fractions.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Fractions(true));
-            }
-            if self.simplify_trigonometric.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::Trigonometric(true));
-            }
-            if self.cancel_terms.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CancelTerms(true));
-            }
-            if self.cancel_factors.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CancelFactors(true));
-            }
-            if self.collect_like_fractions.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CollectLikeFractions(true));
-            }
-            if self.order_canonical.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::CanonicalOrder(true));
-            }
-            if self.use_times_dot.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::TimesDot(true));
-            }
-            if self.expand_brackets.unwrap() {
-                v.push(numbas::exam::AnswerSimplificationType::ExpandBrackets(true));
-            }
-            Ok(v)
-        } else {
-            Err(check)
+impl ToNumbas<Vec<numbas::exam::AnswerSimplificationType>> for JMEAnswerSimplification {
+    fn to_numbas(&self, _locale: &str) -> Vec<numbas::exam::AnswerSimplificationType> {
+        let mut v = Vec::new();
+        if self.simplify_basic.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::Basic(true));
         }
+        if self.simplify_unit_factor.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::UnitFactor(true));
+        }
+        if self.simplify_unit_power.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::UnitPower(true));
+        }
+        if self.simplify_unit_denominator.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::UnitDenominator(
+                true,
+            ));
+        }
+        if self.simplify_zero_factor.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ZeroFactor(true));
+        }
+        if self.simplify_zero_term.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ZeroTerm(true));
+        }
+        if self.simplify_zero_power.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ZeroPower(true));
+        }
+        if self.simplify_zero_base.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ZeroBase(true));
+        }
+        if self.collect_numbers.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::CollectNumbers(true));
+        }
+        if self.constants_first.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ConstantsFirst(true));
+        }
+        if self.simplify_sqrt_products.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::SqrtProduct(true));
+        }
+        if self.simplify_sqrt_division.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::SqrtDivision(true));
+        }
+        if self.simplify_sqrt_square.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::SqrtSquare(true));
+        }
+        if self.simplify_other_numbers.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::OtherNumbers(true));
+        }
+        if self.simplify_no_leading_minus.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::NoLeadingMinus(true));
+        }
+        if self.simplify_fractions.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::Fractions(true));
+        }
+        if self.simplify_trigonometric.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::Trigonometric(true));
+        }
+        if self.cancel_terms.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::CancelTerms(true));
+        }
+        if self.cancel_factors.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::CancelFactors(true));
+        }
+        if self.collect_like_fractions.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::CollectLikeFractions(true));
+        }
+        if self.order_canonical.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::CanonicalOrder(true));
+        }
+        if self.use_times_dot.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::TimesDot(true));
+        }
+        if self.expand_brackets.unwrap() {
+            v.push(numbas::exam::AnswerSimplificationType::ExpandBrackets(true));
+        }
+        v
     }
 }
 
@@ -485,16 +464,15 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for CheckingTypeDataFloat {
-    type NumbasType = numbas::exam::JMECheckingTypeData<numbas::exam::SafeFloat>;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMECheckingTypeData {
-                checking_accuracy: self.max_difference.unwrap().into(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMECheckingTypeData<numbas::exam::SafeFloat>>
+    for CheckingTypeDataFloat
+{
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::exam::JMECheckingTypeData<numbas::exam::SafeFloat> {
+        numbas::exam::JMECheckingTypeData {
+            checking_accuracy: self.max_difference.unwrap().into(),
         }
     }
 }
@@ -505,16 +483,10 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for CheckingTypeDataNatural {
-    type NumbasType = numbas::exam::JMECheckingTypeData<usize>;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMECheckingTypeData {
-                checking_accuracy: self.amount.unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMECheckingTypeData<usize>> for CheckingTypeDataNatural {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::JMECheckingTypeData<usize> {
+        numbas::exam::JMECheckingTypeData {
+            checking_accuracy: self.amount.unwrap(),
         }
     }
 }
@@ -530,27 +502,21 @@ pub enum CheckingType {
 }
 impl_optional_overwrite!(CheckingType);
 
-impl ToNumbas for CheckingType {
-    type NumbasType = numbas::exam::JMECheckingType;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(match self {
-                CheckingType::RelativeDifference(f) => {
-                    numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(locale).unwrap())
-                }
-                CheckingType::AbsoluteDifference(f) => {
-                    numbas::exam::JMECheckingType::AbsoluteDifference(f.to_numbas(locale).unwrap())
-                }
-                CheckingType::DecimalPlaces(f) => {
-                    numbas::exam::JMECheckingType::DecimalPlaces(f.to_numbas(locale).unwrap())
-                }
-                CheckingType::SignificantFigures(f) => {
-                    numbas::exam::JMECheckingType::SignificantFigures(f.to_numbas(locale).unwrap())
-                }
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMECheckingType> for CheckingType {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMECheckingType {
+        match self {
+            CheckingType::RelativeDifference(f) => {
+                numbas::exam::JMECheckingType::RelativeDifference(f.to_numbas(locale))
+            }
+            CheckingType::AbsoluteDifference(f) => {
+                numbas::exam::JMECheckingType::AbsoluteDifference(f.to_numbas(locale))
+            }
+            CheckingType::DecimalPlaces(f) => {
+                numbas::exam::JMECheckingType::DecimalPlaces(f.to_numbas(locale))
+            }
+            CheckingType::SignificantFigures(f) => {
+                numbas::exam::JMECheckingType::SignificantFigures(f.to_numbas(locale))
+            }
         }
     }
 }
@@ -590,18 +556,12 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMERestriction {
-    type NumbasType = numbas::exam::JMERestriction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMERestriction> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMERestriction {
-                // name: self.name.clone().unwrap().to_string(locale).unwrap(),
-                partial_credit: self.partial_credit.clone().unwrap().into(),
-                message: self.message.clone().unwrap().to_string(locale).unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMERestriction> for JMERestriction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMERestriction {
+        numbas::exam::JMERestriction {
+            // name: self.name.clone().unwrap().to_string(locale).unwrap(),
+            partial_credit: self.partial_credit.clone().unwrap().into(),
+            message: self.message.clone().unwrap().to_string(locale).unwrap(),
         }
     }
 }
@@ -624,17 +584,11 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMELengthRestriction {
-    type NumbasType = numbas::exam::JMELengthRestriction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMELengthRestriction> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMELengthRestriction {
-                restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
-                length: Some(self.length.clone().unwrap().into()),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMELengthRestriction> for JMELengthRestriction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMELengthRestriction {
+        numbas::exam::JMELengthRestriction {
+            restriction: self.restriction.clone().unwrap().to_numbas(locale),
+            length: Some(self.length.clone().unwrap().into()),
         }
     }
 }
@@ -661,24 +615,18 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMEStringRestriction {
-    type NumbasType = numbas::exam::JMEStringRestriction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEStringRestriction> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMEStringRestriction {
-                restriction: self.restriction.clone().unwrap().to_numbas(locale).unwrap(),
-                show_strings: self.show_strings.clone().unwrap(),
-                strings: self
-                    .strings
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|s| s.to_string(locale).unwrap())
-                    .collect(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMEStringRestriction> for JMEStringRestriction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMEStringRestriction {
+        numbas::exam::JMEStringRestriction {
+            restriction: self.restriction.clone().unwrap().to_numbas(locale),
+            show_strings: self.show_strings.clone().unwrap(),
+            strings: self
+                .strings
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|s| s.to_string(locale).unwrap())
+                .collect(),
         }
     }
 }
@@ -708,19 +656,13 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMEPatternRestriction {
-    type NumbasType = numbas::exam::JMEPatternRestriction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEPatternRestriction> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMEPatternRestriction {
-                partial_credit: self.partial_credit.clone().unwrap().into(),
-                message: self.message.clone().unwrap().to_string(locale).unwrap(),
-                pattern: self.pattern.clone().unwrap(),
-                name_to_compare: self.name_to_compare.clone().unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMEPatternRestriction> for JMEPatternRestriction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMEPatternRestriction {
+        numbas::exam::JMEPatternRestriction {
+            partial_credit: self.partial_credit.clone().unwrap().into(),
+            message: self.message.clone().unwrap().to_string(locale).unwrap(),
+            pattern: self.pattern.clone().unwrap(),
+            name_to_compare: self.name_to_compare.clone().unwrap(),
         }
     }
 }
@@ -743,23 +685,15 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for JMEValueGenerator {
-    type NumbasType = numbas::exam::JMEValueGenerator;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::JMEValueGenerator> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::JMEValueGenerator {
-                name: self.name.clone().unwrap().get_content(locale),
-                value: self
-                    .value
-                    .clone()
-                    .unwrap()
-                    .get_content(locale)
-                    .try_into()
-                    .expect("invalid jme string in value of valuegenerator"),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::JMEValueGenerator> for JMEValueGenerator {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::JMEValueGenerator {
+        numbas::exam::JMEValueGenerator {
+            name: self.name.clone().unwrap().to_numbas(locale),
+            value: self
+                .value
+                .clone()
+                .unwrap()
+                .to_numbas(locale),
         }
     }
 }

@@ -251,7 +251,6 @@ macro_rules! handle {
     let default_files = default_files(path);
     //println!("Found {} default files.", default_files.len());
     for default_file in default_files.iter() {
-        if !exam.check().is_empty() {
             log::info!("Reading {}", default_file.get_path().display()); //TODO: debug
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
@@ -306,7 +305,7 @@ macro_rules! handle {
                 DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, p, Information),
 
             }
-        }
+
     }
 }
 }

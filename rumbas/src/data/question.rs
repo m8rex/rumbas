@@ -9,7 +9,7 @@ use crate::data::question_part::QuestionPart;
 use crate::data::resource::ResourcePath;
 use crate::data::template::QuestionFileType;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
@@ -51,9 +51,8 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for Question {
-    type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
+impl ToNumbas<numbas::exam::ExamQuestion> for Question {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestion {
         //TODO?
         panic!(
             "{}",
@@ -61,120 +60,96 @@ impl ToNumbas for Question {
         )
     }
     //TODO: add to_numbas on Option's to reduce burden?
-    fn to_numbas_with_name(
-        &self,
-        locale: &str,
-        name: String,
-    ) -> NumbasResult<numbas::exam::ExamQuestion> {
-        let check = self.check();
-        if check.is_empty() {
-            if self.variables.unwrap().contains_key("e") {
-                panic!("e is not allowed as a variable name"); //TODO is this still the case?
-            }
-            Ok(numbas::exam::ExamQuestion {
-                name,
-                statement: self
-                    .statement
-                    .clone()
-                    .unwrap()
-                    .to_string(locale)
-                    .unwrap()
-                    .try_into()
-                    .unwrap(),
-                advice: self
-                    .advice
-                    .clone()
-                    .unwrap()
-                    .to_string(locale)
-                    .unwrap()
-                    .try_into()
-                    .unwrap(),
-                parts: self
-                    .parts
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .map(|p| p.to_numbas(locale).unwrap())
-                    .collect(),
-                builtin_constants: numbas::exam::BuiltinConstants(
-                    self.builtin_constants
-                        .clone()
-                        .unwrap()
-                        .to_numbas(locale)
-                        .unwrap(),
-                ),
-                constants: self
-                    .custom_constants
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .map(|p| p.to_numbas(locale).unwrap())
-                    .collect(),
-                variables: self
-                    .variables
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|(k, v)| {
-                        (
-                            k.clone(),
-                            v.unwrap()
-                                .to_variable()
-                                .to_numbas_with_name(locale, k)
-                                .unwrap(),
-                        )
-                    })
-                    .collect(),
-                variables_test: self
-                    .variables_test
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale)
-                    .unwrap(),
-                functions: self
-                    .functions
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|(k, v)| (k, v.to_numbas(locale).unwrap()))
-                    .collect(),
-                ungrouped_variables: self
-                    .variables
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .filter(|(_k, v)| {
-                        &v.unwrap().to_variable().group.unwrap()[..] == UNGROUPED_GROUP
-                    })
-                    .map(|(k, _)| k)
-                    .collect(),
-                variable_groups: Vec::new(), // Don't add variable groups
-                rulesets: HashMap::new(),    //TODO: add to Question type ?
-                preamble: self.preamble.clone().unwrap().to_numbas(locale).unwrap(),
-                navigation: self.navigation.clone().unwrap().to_numbas(locale).unwrap(),
-                extensions: self.extensions.clone().unwrap().to_numbas(locale).unwrap(),
-                tags: self
-                    .diagnostic_topic_names
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
-                    .collect(),
-                resources: self.resources.clone().unwrap().to_numbas(locale).unwrap(),
-                custom_part_types: self
-                    .custom_part_types
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|c| {
-                        c.custom_part_type_data
-                            .to_numbas_with_name(locale, c.custom_part_type_name)
-                            .unwrap()
-                    })
-                    .collect(),
-            })
-        } else {
-            Err(check)
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamQuestion {
+        if self.variables.unwrap().contains_key("e") {
+            panic!("e is not allowed as a variable name"); //TODO is this still the case?
+        }
+        numbas::exam::ExamQuestion {
+            name,
+            statement: self
+                .statement
+                .clone()
+                .unwrap()
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            advice: self
+                .advice
+                .clone()
+                .unwrap()
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            parts: self
+                .parts
+                .clone()
+                .unwrap()
+                .iter()
+                .map(|p| p.to_numbas(locale))
+                .collect(),
+            builtin_constants: numbas::exam::BuiltinConstants(
+                self.builtin_constants.clone().unwrap().to_numbas(locale),
+            ),
+            constants: self
+                .custom_constants
+                .clone()
+                .unwrap()
+                .iter()
+                .map(|p| p.to_numbas(locale))
+                .collect(),
+            variables: self
+                .variables
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|(k, v)| {
+                    (
+                        k.clone(),
+                        v.unwrap().to_variable().to_numbas_with_name(locale, k),
+                    )
+                })
+                .collect(),
+            variables_test: self.variables_test.clone().unwrap().to_numbas(locale),
+            functions: self
+                .functions
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|(k, v)| (k, v.to_numbas(locale)))
+                .collect(),
+            ungrouped_variables: self
+                .variables
+                .clone()
+                .unwrap()
+                .into_iter()
+                .filter(|(_k, v)| &v.unwrap().to_variable().group.unwrap()[..] == UNGROUPED_GROUP)
+                .map(|(k, _)| k)
+                .collect(),
+            variable_groups: Vec::new(), // Don't add variable groups
+            rulesets: HashMap::new(),    //TODO: add to Question type ?
+            preamble: self.preamble.clone().unwrap().to_numbas(locale),
+            navigation: self.navigation.clone().unwrap().to_numbas(locale),
+            extensions: self.extensions.clone().unwrap().to_numbas(locale),
+            tags: self
+                .diagnostic_topic_names
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
+                .collect(),
+            resources: self.resources.clone().unwrap().to_numbas(locale),
+            custom_part_types: self
+                .custom_part_types
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|c| {
+                    c.custom_part_type_data
+                        .to_numbas_with_name(locale, c.custom_part_type_name)
+                })
+                .collect(),
         }
     }
 }
@@ -277,17 +252,11 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for VariablesTest {
-    type NumbasType = numbas::exam::ExamQuestionVariablesTest;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::ExamQuestionVariablesTest> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionVariablesTest {
-                condition: self.condition.clone().unwrap(),
-                max_runs: self.max_runs.clone().unwrap().into(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionVariablesTest> for VariablesTest {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionVariablesTest {
+        numbas::exam::ExamQuestionVariablesTest {
+            condition: self.condition.clone().unwrap(),
+            max_runs: self.max_runs.clone().unwrap().into(),
         }
     }
 }
@@ -313,20 +282,14 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for BuiltinConstants {
-    type NumbasType = std::collections::HashMap<String, bool>;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            let mut builtin = std::collections::HashMap::new();
-            // TODO: use macro to make sure that this list always remains up to date
-            builtin.insert("e".to_string(), self.e.unwrap());
-            builtin.insert("pi,\u{03c0}".to_string(), self.pi.unwrap());
-            builtin.insert("i".to_string(), self.i.unwrap());
-            Ok(builtin)
-        } else {
-            Err(check)
-        }
+impl ToNumbas<std::collections::HashMap<String, bool>> for BuiltinConstants {
+    fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
+        let mut builtin = std::collections::HashMap::new();
+        // TODO: use macro to make sure that this list always remains up to date
+        builtin.insert("e".to_string(), self.e.unwrap());
+        builtin.insert("pi,\u{03c0}".to_string(), self.pi.unwrap());
+        builtin.insert("i".to_string(), self.i.unwrap());
+        builtin
     }
 }
 
@@ -367,18 +330,12 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for CustomConstant {
-    type NumbasType = numbas::exam::ExamQuestionConstant;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(Self::NumbasType {
-                name: self.name.clone().unwrap(),
-                value: self.value.clone().unwrap(),
-                tex: self.tex.clone().unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionConstant> for CustomConstant {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionConstant {
+        numbas::exam::ExamQuestionConstant {
+            name: self.name.clone().unwrap(),
+            value: self.value.clone().unwrap(),
+            tex: self.tex.clone().unwrap(),
         }
     }
 }

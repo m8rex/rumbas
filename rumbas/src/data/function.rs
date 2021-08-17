@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::{JMETranslatableString, TranslatableString};
 use schemars::JsonSchema;
@@ -17,24 +17,18 @@ optional_overwrite! {
 }
 impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 
-impl ToNumbas for Function {
-    type NumbasType = numbas::exam::ExamFunction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFunction> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamFunction {
-                parameters: self
-                    .parameters
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|(a, b)| (a, b))
-                    .collect(),
-                output_type: self.output_type.clone().unwrap(),
-                definition: self.definition.clone().unwrap().to_numbas(&locale).unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamFunction> for Function {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunction {
+        numbas::exam::ExamFunction {
+            parameters: self
+                .parameters
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|(a, b)| (a, b))
+                .collect(),
+            output_type: self.output_type.clone().unwrap(),
+            definition: self.definition.clone().unwrap().to_numbas(&locale),
         }
     }
 }
@@ -61,30 +55,22 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas for FunctionDefinition {
-    type NumbasType = numbas::exam::ExamFunctionDefinition;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamFunctionDefinition> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(match self {
-                FunctionDefinition::JME(c) => numbas::exam::ExamFunctionDefinition::JME {
-                    definition: c
-                        .definition
-                        .clone()
-                        .unwrap()
-                        .to_string(locale)
-                        .unwrap()
-                        .try_into()
-                        .unwrap(),
-                },
-                FunctionDefinition::Javascript(c) => {
-                    numbas::exam::ExamFunctionDefinition::Javascript {
-                        definition: c.definition.clone().unwrap().to_string(locale).unwrap(),
-                    }
-                }
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamFunctionDefinition> for FunctionDefinition {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunctionDefinition {
+        match self {
+            FunctionDefinition::JME(c) => numbas::exam::ExamFunctionDefinition::JME {
+                definition: c
+                    .definition
+                    .clone()
+                    .unwrap()
+                    .to_string(locale)
+                    .unwrap()
+                    .try_into()
+                    .unwrap(),
+            },
+            FunctionDefinition::Javascript(c) => numbas::exam::ExamFunctionDefinition::Javascript {
+                definition: c.definition.clone().unwrap().to_string(locale).unwrap(),
+            },
         }
     }
 }

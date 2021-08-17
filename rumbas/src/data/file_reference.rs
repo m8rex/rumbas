@@ -1,6 +1,8 @@
 use crate::data::input_string::InputString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use crate::data::to_numbas::ToNumbas;
+use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -15,7 +17,8 @@ macro_rules! file_type {
     (
         $(#[$outer:meta])*
         type $type: ident,
-        subtype $subtype: ty
+        subtype $subtype: ty,
+        rumbas_check $check_expr: expr
     ) => {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(from = "String")]
@@ -25,16 +28,26 @@ macro_rules! file_type {
         )*
         pub struct $type {
             file_name: Option<String>,
-            content: Option<$subtype>,
-            translated_content: HashMap<String, $subtype>,
+            content: Option<String>,
+            translated_content: HashMap<String, String>,
             error_message: Option<String>,
         }
         impl RumbasCheck for $type {
-            fn check(&self) -> RumbasCheckResult {
+            fn check(&self, locale: &str) -> RumbasCheckResult {
                 if let Some(e) = &self.error_message {
                     RumbasCheckResult::from_missing(Some(e.clone()))
                 } else {
-                    RumbasCheckResult::empty()
+                    let content = self.get_content(locale);
+                    match content {
+                        Some(c) => {
+                            let conversion_res: Result<$subtype, _> = c.try_into();
+                            match conversion_res {
+                                Ok(_) => RumbasCheckResult::empty(),
+                                Err(e) => $check_expr(e),
+                            }
+                        }
+                        None => RumbasCheckResult::empty(), // TODO: change
+                    }
                 }
             }
         }
@@ -188,24 +201,36 @@ macro_rules! file_type {
             }
         }
 
+        impl ToNumbas<String> for $type {
+            fn to_numbas(&self, locale: &str)-> String {
+                self.get_content(locale).unwrap()
+            }
+        }
+
+        impl ToNumbas<$subtype> for $type {
+            fn to_numbas(&self, locale: &str)-> $subtype {
+                self.get_content(locale).unwrap().try_into().unwrap()
+            }
+        }
+
         impl $type {
-            pub fn get_content(&self, locale: &str) -> String {
+            pub fn get_content(&self, locale: &str) -> Option<String> {
                 if let Some(c) = self.translated_content.get(locale) {
-                    return c.clone().into();
+                    Some(c.clone().into())
+                } else if let Some(c) = &self.content {
+                    Some(c.clone().into())
+                } else {
+                    None
                 }
-                if let Some(c) = &self.content {
-                    return c.clone().into();
-                }
-                panic!("Missing translation for locale {}", locale); //TODO
             }
             pub fn s(content: &str) -> $type {
                 let content = content.to_string().try_into();
-                let error_message = if let Err(e) = content {
+                let error_message = if let Err(ref e) = content {
                     Some(format!("Invalid file content: {}", e))
                 } else { None };
                 $type {
                     file_name: None,
-                    content: content.ok(),
+                    content: content.clone().ok(),
                     translated_content: HashMap::new(),
                     error_message,
                 }
@@ -219,7 +244,8 @@ file_type! {
     ///
     /// Specified by a string starting with [FILE_PREFIX].
     type FileString,
-    subtype InputString
+    subtype InputString,
+    rumbas_check |_e| RumbasCheckResult::empty() // never happens
 }
 
 file_type! {
@@ -227,7 +253,8 @@ file_type! {
     ///
     /// Specified by a string starting with [FILE_PREFIX].
     type JMEFileString,
-    subtype String
+    subtype JMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
 }
 
 file_type! {
@@ -235,7 +262,8 @@ file_type! {
     ///
     /// Specified by a string starting with [FILE_PREFIX].
     type EmbracedJMEFileString,
-    subtype String
+    subtype EmbracedJMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
 }
 
 file_type! {
@@ -243,5 +271,6 @@ file_type! {
     ///
     /// Specified by a string starting with [FILE_PREFIX].
     type ContentAreaFileString,
-    subtype InputString
+    subtype ContentAreaString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
 }

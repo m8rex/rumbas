@@ -1,7 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -15,17 +15,11 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for Preamble {
-    type NumbasType = numbas::exam::Preamble;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::Preamble> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::Preamble {
-                js: self.js.clone().unwrap().get_content(locale),
-                css: self.css.clone().unwrap().get_content(locale),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::Preamble> for Preamble {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::Preamble {
+        numbas::exam::Preamble {
+            js: self.js.clone().unwrap().to_numbas(locale),
+            css: self.css.clone().unwrap().to_numbas(locale),
         }
     }
 }
