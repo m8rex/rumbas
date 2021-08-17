@@ -280,6 +280,7 @@
 <span id="278">278</span>
 <span id="279">279</span>
 <span id="280">280</span>
+<span id="281">281</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference</span>::{
     <span class="ident">ContentAreaFileString</span>, <span class="ident">EmbracedJMEFileString</span>, <span class="ident">FileString</span>, <span class="ident">JMEFileString</span>,
@@ -287,6 +288,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
@@ -297,7 +299,7 @@
         <span class="kw">type</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
         <span class="ident">subtype</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>: <span class="ident">ty</span>
     ) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
         <span class="kw">pub</span> <span class="kw">enum</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
             <span class="comment">//TODO: custom reader that checks for missing values etc?</span>

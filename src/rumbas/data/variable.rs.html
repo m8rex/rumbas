@@ -330,6 +330,21 @@
 <span id="328">328</span>
 <span id="329">329</span>
 <span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference::FileString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
@@ -338,6 +353,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
 <span class="kw">use</span> <span class="ident">regex::Regex</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="macro">optional_overwrite!</span> {
@@ -380,7 +396,7 @@
 }
 
 <span class="doccomment">/// The different template_types for a variable</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableTemplateType</span> {
     <span class="doccomment">/// Not specified</span>
@@ -445,7 +461,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableRepresentation</span> {
     <span class="ident">ListOfStrings</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>),
@@ -554,7 +570,21 @@
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">VariableStringRepresentation</span>);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentation</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+        <span class="string">&quot;VariableStringRepresentation&quot;</span>.<span class="ident">to_owned</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+        <span class="ident">schemars::schema::SchemaObject</span> {
+            <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
+            ..<span class="ident">Default::default</span>()
+        }
+        .<span class="ident">into</span>()
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RangeData</span> {
     <span class="ident">from</span>: <span class="ident">f64</span>,
     <span class="ident">to</span>: <span class="ident">f64</span>,

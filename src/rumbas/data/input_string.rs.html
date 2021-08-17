@@ -70,15 +70,17 @@
 <span id="68">68</span>
 <span id="69">69</span>
 <span id="70">70</span>
+<span id="71">71</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">regex::Regex</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// The datatype for the input strings</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It supports the shorthand µ for \var</span>
 <span class="doccomment">/// It supports the shorthand § for \simplify</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InputString</span>(<span class="kw">pub</span> <span class="ident">String</span>);

@@ -774,6 +774,7 @@
 <span id="772">772</span>
 <span id="773">773</span>
 <span id="774">774</span>
+<span id="775">775</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference</span>::{<span class="ident">FileString</span>, <span class="ident">JMEFileString</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
@@ -787,6 +788,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::EmbracedJMETranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
 <span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 
@@ -1295,7 +1297,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CheckingType</span> {

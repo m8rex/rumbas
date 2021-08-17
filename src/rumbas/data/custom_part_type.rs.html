@@ -368,6 +368,17 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::extension::Extensions</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::{
@@ -380,11 +391,12 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::JMETranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::yaml</span>::{<span class="ident">YamlError</span>, <span class="ident">YamlResult</span>};
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 <span class="kw">use</span> <span class="ident">std::hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeDefinition</span> {
     <span class="ident">type_name</span>: <span class="ident">TranslatableString</span>,
     <span class="ident">description</span>: <span class="ident">TranslatableString</span>,
@@ -399,7 +411,7 @@
     <span class="comment">//TODO source</span>
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The value</span>
     <span class="ident">value</span>: <span class="ident">T</span>,
@@ -434,7 +446,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartInputWidget</span> {
     <span class="comment">//TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html</span>
@@ -487,7 +499,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartStringInputOptions</span> {
     <span class="comment">//TODO? hint &amp; correctAnswer is shared for all...</span>
     <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
@@ -524,7 +536,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartNumberInputOptions</span> {
     <span class="comment">//TODO? hint &amp; correctAnswer is shared for all...</span>
     <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
@@ -565,7 +577,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartRadioGroupInputOptions</span> {
     <span class="comment">//TODO? hint &amp; correctAnswer is shared for all...</span>
     <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
@@ -695,6 +707,16 @@
             <span class="ident">custom_part_type_name</span>: <span class="ident">s</span>,
             <span class="ident">custom_part_type_data</span>,
         })
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">CustomPartTypeDefinitionPath</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+        <span class="string">&quot;CustomPartTypeDefinitionPath&quot;</span>.<span class="ident">to_owned</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+        <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
     }
 }
 

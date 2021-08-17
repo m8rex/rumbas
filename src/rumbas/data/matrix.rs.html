@@ -192,6 +192,7 @@
 <span id="190">190</span>
 <span id="191">191</span>
 <span id="192">192</span>
+<span id="193">193</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part::JMENotes</span>;
@@ -200,6 +201,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::ContentAreaTranslatableString</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 
@@ -346,7 +348,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">QuestionPartMatrixDimension::Fixed</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">clone</span>(),
             <span class="ident">QuestionPartMatrixDimension::Resizable</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">r</span>.<span class="ident">max</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">Noneable::None</span>(<span class="ident">_s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VariableValued::Value</span>(<span class="number">0</span>),
+                <span class="ident">Noneable::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VariableValued::Value</span>(<span class="number">0</span>),
                 <span class="ident">Noneable::NotNone</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>,
             },
         }
@@ -366,7 +368,7 @@
                 <span class="ident">default</span>: <span class="ident">Value::Normal</span>(<span class="ident">default</span>),
                 <span class="ident">min</span>: <span class="ident">Value::Normal</span>(<span class="ident">min</span>),
                 <span class="ident">max</span>: <span class="ident">Value::Normal</span>(<span class="kw">if</span> <span class="ident">max</span> <span class="op">=</span><span class="op">=</span> <span class="ident">VariableValued::Value</span>(<span class="number">0</span>) {
-                    <span class="ident">Noneable::None</span>(<span class="string">&quot;none&quot;</span>.<span class="ident">to_string</span>())
+                    <span class="ident">Noneable::None</span>
                 } <span class="kw">else</span> {
                     <span class="ident">Noneable::NotNone</span>(<span class="ident">max</span>)
                 }),

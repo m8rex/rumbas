@@ -377,6 +377,7 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
+<span id="378">378</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::extension::Extensions</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::feedback::Feedback</span>;
@@ -390,6 +391,7 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
+<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
@@ -490,7 +492,7 @@
                         .<span class="ident">questions</span>
                         .<span class="ident">unwrap</span>()
                         .<span class="ident">into_iter</span>()
-                        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">unwrap</span>().<span class="ident">resources</span>.<span class="ident">unwrap</span>())
+                        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">resources</span>.<span class="ident">unwrap</span>())
                 })
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">unwrap</span>())
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
@@ -510,7 +512,7 @@
                         .<span class="ident">questions</span>
                         .<span class="ident">unwrap</span>()
                         .<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">unwrap</span>().<span class="ident">extensions</span>.<span class="ident">unwrap</span>())
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">extensions</span>.<span class="ident">unwrap</span>())
                 })
                 .<span class="ident">fold</span>(<span class="ident">Extensions::default</span>(), <span class="ident">Extensions::combine</span>)
                 .<span class="ident">to_paths</span>();
@@ -526,7 +528,7 @@
                         .<span class="ident">questions</span>
                         .<span class="ident">unwrap</span>()
                         .<span class="ident">into_iter</span>()
-                        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">unwrap</span>().<span class="ident">custom_part_types</span>.<span class="ident">unwrap</span>())
+                        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">unwrap</span>().<span class="ident">question_data</span>.<span class="ident">custom_part_types</span>.<span class="ident">unwrap</span>())
                 })
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">into_iter</span>()
@@ -610,7 +612,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DiagnosticScript</span> {
     <span class="ident">Mastery</span>,

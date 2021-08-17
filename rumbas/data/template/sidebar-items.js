@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"enum":[["ExamFileType",""],["QuestionFileType",""],["ValueType",""]],"struct":[["TemplateData",""],["TemplateString",""],["Value",""]]});
+initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"enum":[["ExamFileType",""],["QuestionFileType",""],["ValidValueType",""],["ValueType",""]],"struct":[["MyYamlValue",""],["TemplateData",""],["TemplateString",""],["Value",""]]});
