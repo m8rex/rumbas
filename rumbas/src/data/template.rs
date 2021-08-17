@@ -21,7 +21,7 @@ pub struct MyYamlValue(pub serde_yaml::Value);
 
 impl JsonSchema for MyYamlValue {
     fn schema_name() -> String {
-        format!("YamlValue")
+        "YamlValue".to_owned()
     }
 
     fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
@@ -85,8 +85,6 @@ impl OptionalOverwrite<TemplateString> for TemplateString {
 }
 impl_optional_overwrite_value!(TemplateString);
 impl JsonSchema for TemplateString {
-    //no_ref_schema!();
-
     fn schema_name() -> String {
         "TemplateString".to_owned()
     }
@@ -159,8 +157,7 @@ impl<T: JsonSchema> JsonSchema for ValueType<T> {
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let schema = gen.subschema_for::<ValidValueType<T>>();
-        schema
+        gen.subschema_for::<ValidValueType<T>>()
     }
 }
 
@@ -174,8 +171,7 @@ impl<T: JsonSchema> JsonSchema for Value<T> {
     }
 
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        let schema = gen.subschema_for::<ValueType<T>>(); // Didn't add the option
-        schema
+        gen.subschema_for::<ValueType<T>>() // Didn't add the option
     }
 }
 
