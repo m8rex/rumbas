@@ -2,7 +2,7 @@ use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use regex::Regex;
 use schemars::JsonSchema;
@@ -17,29 +17,18 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for Variable {
-    type NumbasType = numbas::exam::ExamVariable;
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamVariable {
-                name,
-                definition: self.definition.clone().unwrap().get_content(locale),
-                description: self.description.clone().unwrap(),
-                template_type: self
-                    .template_type
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale)
-                    .unwrap(),
-                group: self.group.clone().unwrap(),
-                can_override: false, // Don't support overriding variables (yet?)
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamVariable> for Variable {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
+        numbas::exam::ExamVariable {
+            name,
+            definition: self.definition.clone().unwrap().to_numbas(locale),
+            description: self.description.clone().unwrap(),
+            template_type: self.template_type.clone().unwrap().to_numbas(locale),
+            group: self.group.clone().unwrap(),
+            can_override: false, // Don't support overriding variables (yet?)
         }
     }
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
@@ -69,10 +58,9 @@ pub enum VariableTemplateType {
     r#String,
 }
 
-impl ToNumbas for VariableTemplateType {
-    type NumbasType = numbas::exam::ExamVariableTemplateType;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::ExamVariableTemplateType> for VariableTemplateType {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariableTemplateType {
+        match self {
             VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
             VariableTemplateType::ListOfNumbers => {
                 numbas::exam::ExamVariableTemplateType::ListOfNumbers
@@ -87,7 +75,7 @@ impl ToNumbas for VariableTemplateType {
                 numbas::exam::ExamVariableTemplateType::RandomRange
             }
             VariableTemplateType::r#String => numbas::exam::ExamVariableTemplateType::r#String,
-        })
+        }
     }
 }
 impl_optional_overwrite!(VariableTemplateType);
@@ -124,13 +112,13 @@ pub enum VariableRepresentation {
 }
 
 impl RumbasCheck for VariableRepresentation {
-    fn check(&self) -> RumbasCheckResult {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
         match self {
-            VariableRepresentation::ListOfStrings(v) => v.check(),
-            VariableRepresentation::ListOfNumbers(v) => v.check(),
-            VariableRepresentation::Long(v) => v.check(),
-            VariableRepresentation::Number(v) => v.check(),
-            VariableRepresentation::Other(v) => v.check(),
+            VariableRepresentation::ListOfStrings(v) => v.check(locale),
+            VariableRepresentation::ListOfNumbers(v) => v.check(locale),
+            VariableRepresentation::Long(v) => v.check(locale),
+            VariableRepresentation::Number(v) => v.check(locale),
+            VariableRepresentation::Other(v) => v.check(locale),
         }
     }
 }

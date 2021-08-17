@@ -2,7 +2,7 @@ use crate::data::optional_overwrite::{
     Noneable, OptionalOverwrite, RumbasCheck, RumbasCheckResult,
 };
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -41,23 +41,17 @@ impl std::convert::From<ResourcePath> for String {
     }
 }
 
-impl ToNumbas for ResourcePath {
-    type NumbasType = numbas::exam::Resource;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::Resource([
-                self.resource_name.clone(),
-                self.resource_path
-                    .canonicalize()
-                    .unwrap()
-                    .to_str()
-                    .unwrap()
-                    .to_string(),
-            ]))
-        } else {
-            Err(check)
-        }
+impl ToNumbas<numbas::exam::Resource> for ResourcePath {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::Resource {
+        numbas::exam::Resource([
+            self.resource_name.clone(),
+            self.resource_path
+                .canonicalize()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string(),
+        ])
     }
 }
 

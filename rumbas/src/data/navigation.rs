@@ -1,7 +1,7 @@
 use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
@@ -105,22 +105,14 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for SequentialNavigation {
-    type NumbasType = numbas::exam::ExamNavigationMode;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamNavigationMode::Sequential(
-                numbas::exam::ExamNavigationModeSequential {
-                    on_leave: self.on_leave.clone().unwrap().to_numbas(locale).unwrap(),
-                    show_results_page: self.show_results_page.clone().to_numbas(locale).unwrap(),
-                    can_move_to_previous: self.can_move_to_previous.unwrap(),
-                    browsing_enabled: self.browsing_enabled.unwrap(),
-                },
-            ))
-        } else {
-            Err(check)
-        }
+impl ToNumbas<numbas::exam::ExamNavigationMode> for SequentialNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigationMode {
+        numbas::exam::ExamNavigationMode::Sequential(numbas::exam::ExamNavigationModeSequential {
+            on_leave: self.on_leave.clone().unwrap().to_numbas(locale),
+            show_results_page: self.show_results_page.clone().to_numbas(locale),
+            can_move_to_previous: self.can_move_to_previous.unwrap(),
+            browsing_enabled: self.browsing_enabled.unwrap(),
+        })
     }
 }
 
@@ -132,34 +124,27 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for MenuNavigation {
-    type NumbasType = numbas::exam::ExamNavigationMode;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(numbas::exam::ExamNavigationMode::Menu)
+impl ToNumbas<numbas::exam::ExamNavigationMode> for MenuNavigation {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamNavigationMode {
+        numbas::exam::ExamNavigationMode::Menu // TODO: sequential
     }
 }
 
-impl ToNumbas for NormalNavigation {
-    type NumbasType = numbas::exam::ExamNavigation;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamNavigation {
-                allow_regenerate: self.to_shared_data().can_regenerate.unwrap(),
-                allow_steps: Some(self.to_shared_data().show_steps.unwrap()),
-                show_frontpage: self.to_shared_data().show_title_page.unwrap(),
-                confirm_when_leaving: Some(self.to_shared_data().confirm_when_leaving.unwrap()),
-                start_password: self
-                    .to_shared_data()
-                    .start_password
-                    .map(|s| s.get_content(locale)),
-                navigation_mode: match self {
-                    NormalNavigation::Menu(n) => n.to_numbas(locale).unwrap(),
-                    NormalNavigation::Sequential(n) => n.to_numbas(locale).unwrap(),
-                },
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
+        numbas::exam::ExamNavigation {
+            allow_regenerate: self.to_shared_data().can_regenerate.unwrap(),
+            allow_steps: Some(self.to_shared_data().show_steps.unwrap()),
+            show_frontpage: self.to_shared_data().show_title_page.unwrap(),
+            confirm_when_leaving: Some(self.to_shared_data().confirm_when_leaving.unwrap()),
+            start_password: self
+                .to_shared_data()
+                .start_password
+                .map(|s| s.to_numbas(locale)),
+            navigation_mode: match self {
+                NormalNavigation::Menu(n) => n.to_numbas(locale),
+                NormalNavigation::Sequential(n) => n.to_numbas(locale),
+            },
         }
     }
 }
@@ -199,36 +184,30 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for DiagnosticNavigation {
-    type NumbasType = numbas::exam::ExamNavigation;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamNavigation> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamNavigation {
-                allow_regenerate: self.shared_data.clone().unwrap().can_regenerate.unwrap(),
-                allow_steps: Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
-                show_frontpage: self.shared_data.clone().unwrap().show_title_page.unwrap(),
-                confirm_when_leaving: Some(
-                    self.shared_data
-                        .clone()
-                        .unwrap()
-                        .confirm_when_leaving
-                        .unwrap(),
-                ),
-                start_password: self
-                    .shared_data
+impl ToNumbas<numbas::exam::ExamNavigation> for DiagnosticNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
+        numbas::exam::ExamNavigation {
+            allow_regenerate: self.shared_data.clone().unwrap().can_regenerate.unwrap(),
+            allow_steps: Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
+            show_frontpage: self.shared_data.clone().unwrap().show_title_page.unwrap(),
+            confirm_when_leaving: Some(
+                self.shared_data
                     .clone()
                     .unwrap()
-                    .start_password
-                    .map(|s| s.get_content(locale)),
-                navigation_mode: numbas::exam::ExamNavigationMode::Diagnostic(
-                    numbas::exam::ExamNavigationModeDiagnostic {
-                        on_leave: self.on_leave.clone().to_numbas(locale).unwrap(),
-                    },
-                ),
-            })
-        } else {
-            Err(check)
+                    .confirm_when_leaving
+                    .unwrap(),
+            ),
+            start_password: self
+                .shared_data
+                .clone()
+                .unwrap()
+                .start_password
+                .map(|s| s.to_numbas(locale)),
+            navigation_mode: numbas::exam::ExamNavigationMode::Diagnostic(
+                numbas::exam::ExamNavigationModeDiagnostic {
+                    on_leave: self.on_leave.clone().to_numbas(locale),
+                },
+            ),
         }
     }
 }
@@ -264,13 +243,12 @@ pub enum ShowResultsPage {
 }
 impl_optional_overwrite!(ShowResultsPage);
 
-impl ToNumbas for ShowResultsPage {
-    type NumbasType = numbas::exam::ExamShowResultsPage;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::ExamShowResultsPage> for ShowResultsPage {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamShowResultsPage {
+        match self {
             ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
             ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
-        })
+        }
     }
 }
 
@@ -293,10 +271,9 @@ pub enum LeaveAction {
 }
 impl_optional_overwrite!(LeaveAction);
 
-impl ToNumbas for LeaveAction {
-    type NumbasType = numbas::exam::ExamLeaveAction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::ExamLeaveAction> for LeaveAction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamLeaveAction {
+        match self {
             LeaveAction::None => numbas::exam::ExamLeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
@@ -310,7 +287,7 @@ impl ToNumbas for LeaveAction {
                     message: message.to_string(locale).unwrap(),
                 }
             }
-        })
+        }
     }
 }
 
@@ -348,18 +325,12 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for QuestionNavigation {
-    type NumbasType = numbas::exam::QuestionNavigation;
-    fn to_numbas(&self, _locale: &str) -> NumbasResult<numbas::exam::QuestionNavigation> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::QuestionNavigation {
-                allow_regenerate: self.can_regenerate.unwrap(),
-                show_frontpage: self.show_title_page.unwrap(),
-                confirm_when_leaving: Some(self.confirm_when_leaving.clone().unwrap()),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::QuestionNavigation {
+        numbas::exam::QuestionNavigation {
+            allow_regenerate: self.can_regenerate.unwrap(),
+            show_frontpage: self.show_title_page.unwrap(),
+            confirm_when_leaving: Some(self.confirm_when_leaving.clone().unwrap()),
         }
     }
 }

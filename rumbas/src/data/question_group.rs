@@ -1,7 +1,7 @@
 use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
@@ -21,29 +21,18 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for QuestionGroup {
-    type NumbasType = numbas::exam::ExamQuestionGroup;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionGroup> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionGroup {
-                name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
-                picking_strategy: self
-                    .picking_strategy
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale)
-                    .unwrap(),
-                questions: self
-                    .questions
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .map(|q| q.to_numbas(locale).unwrap())
-                    .collect(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionGroup {
+        numbas::exam::ExamQuestionGroup {
+            name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
+            picking_strategy: self.picking_strategy.clone().unwrap().to_numbas(locale),
+            questions: self
+                .questions
+                .clone()
+                .unwrap()
+                .iter()
+                .map(|q| q.to_numbas(locale))
+                .collect(),
         }
     }
 }
@@ -78,13 +67,9 @@ pub enum PickingStrategy {
 }
 impl_optional_overwrite!(PickingStrategy);
 
-impl ToNumbas for PickingStrategy {
-    type NumbasType = numbas::exam::ExamQuestionGroupPickingStrategy;
-    fn to_numbas(
-        &self,
-        _locale: &str,
-    ) -> NumbasResult<numbas::exam::ExamQuestionGroupPickingStrategy> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::ExamQuestionGroupPickingStrategy> for PickingStrategy {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionGroupPickingStrategy {
+        match self {
             PickingStrategy::AllOrdered => {
                 numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered
             }
@@ -96,7 +81,7 @@ impl ToNumbas for PickingStrategy {
                     pick_questions: *pick_questions,
                 }
             }
-        })
+        }
     }
 }
 
@@ -127,8 +112,8 @@ pub struct QuestionPath {
 }
 
 impl RumbasCheck for QuestionPath {
-    fn check(&self) -> RumbasCheckResult {
-        self.question_data.check()
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        self.question_data.check(locale)
     }
 }
 impl OptionalOverwrite<QuestionPath> for QuestionPath {
@@ -167,19 +152,11 @@ impl std::convert::From<QuestionPath> for String {
     }
 }
 
-impl ToNumbas for QuestionPath {
-    type NumbasType = numbas::exam::ExamQuestion;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(self
-                .question_data
-                .clone()
-                .to_numbas_with_name(locale, self.question_name.clone())
-                .unwrap())
-        } else {
-            Err(check)
-        }
+impl ToNumbas<numbas::exam::ExamQuestion> for QuestionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestion {
+        self.question_data
+            .clone()
+            .to_numbas_with_name(locale, self.question_name.clone())
     }
 }
 

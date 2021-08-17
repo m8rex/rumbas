@@ -121,7 +121,7 @@ fn convert_exam(
     (
         {
             if let TranslatableString::NotTranslated(n) = name {
-                n.get_content(&String::new())
+                n.get_content("").unwrap()
             } else {
                 panic!("Should not happen");
             }

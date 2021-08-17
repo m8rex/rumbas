@@ -2,7 +2,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
@@ -22,29 +22,23 @@ question_part_type! {
 }
 impl_optional_overwrite!(numbas::exam::PatternMatchMode);
 
-impl ToNumbas for QuestionPartPatternMatch {
-    type NumbasType = numbas::exam::ExamQuestionPartPatternMatch;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(Self::NumbasType {
-                part_data: self.to_numbas_shared_data(locale),
-                case_sensitive: Some(self.case_sensitive.unwrap()),
-                partial_credit: Some(self.partial_credit.unwrap().into()),
-                answer: numbas::exam::Primitive::String(
-                    self.pattern.clone().unwrap().to_string(locale).unwrap(),
-                ),
-                display_answer: Some(numbas::exam::Primitive::String(
-                    self.display_answer
-                        .clone()
-                        .unwrap()
-                        .to_string(locale)
-                        .unwrap(),
-                )),
-                match_mode: self.match_mode.unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionPartPatternMatch> for QuestionPartPatternMatch {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartPatternMatch {
+        numbas::exam::ExamQuestionPartPatternMatch {
+            part_data: self.to_numbas_shared_data(locale),
+            case_sensitive: Some(self.case_sensitive.unwrap()),
+            partial_credit: Some(self.partial_credit.unwrap().into()),
+            answer: numbas::exam::Primitive::String(
+                self.pattern.clone().unwrap().to_string(locale).unwrap(),
+            ),
+            display_answer: Some(numbas::exam::Primitive::String(
+                self.display_answer
+                    .clone()
+                    .unwrap()
+                    .to_string(locale)
+                    .unwrap(),
+            )),
+            match_mode: self.match_mode.unwrap(),
         }
     }
 }

@@ -1,19 +1,21 @@
-use crate::data::file_reference::{
-    ContentAreaFileString, EmbracedJMEFileString, FileString, JMEFileString,
-};
+use crate::data::file_reference::FileString;
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
+use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
+use std::convert::TryInto;
 
 macro_rules! translatable_type {
     (
         $(#[$outer:meta])*
         type $type: ident,
-        subtype $subtype: ty
+        subtype $subtype: ty,
+        rumbas_check $check_expr: expr
     ) => {
         #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
         #[serde(untagged)]
@@ -22,31 +24,56 @@ macro_rules! translatable_type {
             /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
             Translated(HashMap<String, Value<$type>>),
             /// A file reference or string
-            NotTranslated($subtype),
+            NotTranslated(FileString),
         }
 
         impl_to_rumbas!($type);
 
         impl $type {
             pub fn s(s: &str) -> Self {
-                $type::NotTranslated(<$subtype>::s(s))
+                $type::NotTranslated(FileString::s(s))
             }
         }
 
         impl RumbasCheck for $type {
-            fn check(&self) -> RumbasCheckResult {
+            fn check(&self, locale: &str) -> RumbasCheckResult {
+                /*let check_result =
                 match self {
                     $type::Translated(m) => {
                         let mut empty = RumbasCheckResult::empty();
-                        for (_, v) in m.iter() {
-                            empty.union(&v.check());
+                        for (k, v) in m.iter() {
+                            let mut new = v.check(locale);
+                            new.extend_path(k.to_owned());
+                            empty.union(&new);
                         }
                         empty
                     }
-                    $type::NotTranslated(f) => f.check(),
+                    $type::NotTranslated(f) => RumbasCheckResult::empty(), // don't validate FileStrings (they assume complete JME etc in the string)
+                };
+                if !check_result.is_empty() {
+                    check_result
+                } else {*/
+                let content = self.to_string(locale);
+                match content {
+                    Some(c) => {
+                        let conversion_res: Result<$subtype, _> = c.try_into();
+                        match conversion_res {
+                            Ok(_) => RumbasCheckResult::empty(),
+                            Err(e) => $check_expr(e),
+                        }
+                    }
+                    None => RumbasCheckResult::empty(), // TODO: change
                 }
+                //}
             }
         }
+
+        impl ToNumbas<$subtype> for $type {
+            fn to_numbas(&self, locale: &str) -> $subtype {
+                self.to_string(locale).unwrap().try_into().unwrap()
+            }
+        }
+
         impl OptionalOverwrite<$type> for $type {
             fn overwrite(&mut self, _other: &$type) {
                 //TODO: Maybe add languages of other that are missing in self?
@@ -66,11 +93,14 @@ macro_rules! translatable_type {
                 //TODO: check for infinite loops / recursion? -> don't substitute something that is already
                 //substituted
                 fn substitute(
-                    pattern: &str,
+                    pattern: &Option<String>,
                     locale: &str,
                     map: &HashMap<String, Value<$type>>,
                 ) -> Option<String> {
-                    let mut result = pattern.to_string();
+                    if pattern.is_none() {
+                        return None;
+                    }
+                    let mut result = pattern.clone().unwrap();
                     let mut substituted = false;
                     for (key, val) in map.iter() {
                         if key.starts_with('{') && key.ends_with('}') {
@@ -84,13 +114,13 @@ macro_rules! translatable_type {
                         }
                     }
                     if substituted {
-                        return substitute(&result, locale, map);
+                        return substitute(&Some(result), locale, map);
                     }
                     Some(result)
                 }
                 match self {
                     //TODO: just use unwrap on values?
-                    $type::NotTranslated(s) => Some(s.get_content(locale)),
+                    $type::NotTranslated(s) => s.get_content(locale),
                     $type::Translated(m_value) => {
                         let m = m_value.clone();
                         m.get(locale)
@@ -120,7 +150,9 @@ translatable_type! {
     /// - a file string: file:<path>
     /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
     type TranslatableString,
-    subtype FileString
+    subtype String,
+    rumbas_check |_e| RumbasCheckResult::empty() // never happens
+
 }
 
 translatable_type! {
@@ -131,7 +163,8 @@ translatable_type! {
     /// - a file string: file:<path>
     /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
     type JMETranslatableString,
-    subtype JMEFileString
+    subtype JMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
 }
 
 translatable_type! {
@@ -142,7 +175,9 @@ translatable_type! {
     /// - a file string: file:<path>
     /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
     type EmbracedJMETranslatableString,
-    subtype EmbracedJMEFileString
+    subtype EmbracedJMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
+
 }
 
 translatable_type! {
@@ -153,7 +188,9 @@ translatable_type! {
     /// - a file string: file:<path>
     /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
     type ContentAreaTranslatableString,
-    subtype ContentAreaFileString
+    subtype ContentAreaString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
+
 }
 
 #[cfg(test)]

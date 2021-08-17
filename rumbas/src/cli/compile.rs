@@ -40,7 +40,7 @@ pub fn compile(matches: &clap::ArgMatches) {
             } else {
                 for locale_item in exam.locales().unwrap().iter() {
                     let locale = locale_item.clone().unwrap().name.unwrap();
-                    let numbas = exam.to_numbas(&locale);
+                    let numbas = exam.to_numbas_safe(&locale);
                     match numbas {
                         Ok(res) => {
                             let numbas_exam_name = path.with_extension("exam");
@@ -126,9 +126,10 @@ pub fn compile(matches: &clap::ArgMatches) {
                         }
                         Err(check_result) => {
                             let missing_fields = check_result.missing_fields();
-                            let invalid_fields = check_result.invalid_fields();
+                            let invalid_yaml_fields = check_result.invalid_yaml_fields();
+                            let invalid_jme_fields = check_result.invalid_jme_fields();
                             log::error!(
-                                "Error when processing locale {}.\nFound {} missing fields:\n{}\nFound {} invalid fields:\n{}",
+                                "Error when processing locale {}.\nFound {} missing fields:\n{}\nFound {} invalid fields:\n{}\nFound {} invalid jme fields:\n{}\n",
                                 locale,
                                 missing_fields.len(),
                                 missing_fields
@@ -136,8 +137,14 @@ pub fn compile(matches: &clap::ArgMatches) {
                                     .map(|f| f.to_string())
                                     .collect::<Vec<_>>()
                                     .join("\n"),
-                                invalid_fields.len(),
-                                invalid_fields
+                                invalid_yaml_fields.len(),
+                                invalid_yaml_fields
+                                    .iter()
+                                    .map(|f| f.to_string())
+                                    .collect::<Vec<_>>()
+                                    .join("\n"),
+                                invalid_jme_fields.len(),
+                                invalid_jme_fields
                                     .iter()
                                     .map(|f| f.to_string())
                                     .collect::<Vec<_>>()

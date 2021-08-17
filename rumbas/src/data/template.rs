@@ -71,7 +71,7 @@ pub struct TemplateString {
     pub error_message: Option<String>,
 }
 impl RumbasCheck for TemplateString {
-    fn check(&self) -> RumbasCheckResult {
+    fn check(&self, _locale: &str) -> RumbasCheckResult {
         if let Some(e) = &self.error_message {
             RumbasCheckResult::from_missing(Some(e.clone())) // TODO: seperate missing files? (also see FileString)
         } else {

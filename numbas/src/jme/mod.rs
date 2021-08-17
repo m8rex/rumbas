@@ -29,14 +29,15 @@ pub struct JMEString {
 impl_string_json_schema!(JMEString, "JMEString");
 
 impl std::convert::TryFrom<String> for JMEString {
-    type Error = String; // TODO
+    type Error = parser::ConsumeError;
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let trimmed = s.trim();
         let ast = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_jme(&trimmed).map_err(|e| format!("{:?}", e))?;
-            let ast = parser::consume_one_expression(pairs).map_err(|e| format!("{:?}", e))?;
+            let pairs = parser::parse_as_jme(&trimmed)
+                .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
+            let ast = parser::consume_one_expression(pairs)?;
             Some(ast)
         };
         Ok(Self {
@@ -62,14 +63,15 @@ pub struct EmbracedJMEString {
 impl_string_json_schema!(EmbracedJMEString, "EmbracedJMEString"); // maybe add pattern?
 
 impl std::convert::TryFrom<String> for EmbracedJMEString {
-    type Error = String; // TODO
+    type Error = parser::ConsumeError;
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let trimmed = s.trim();
         let asts = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_embraced_jme(&trimmed).map_err(|e| format!("{:?}", e))?;
-            let asts = parser::consume_expressions(pairs).map_err(|e| format!("{:?}", e))?;
+            let pairs = parser::parse_as_embraced_jme(&trimmed)
+                .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
+            let asts = parser::consume_expressions(pairs)?;
             Some(asts)
         };
         Ok(Self {
@@ -96,15 +98,15 @@ pub struct ContentAreaString {
 impl_string_json_schema!(ContentAreaString, "ContentAreaString");
 
 impl std::convert::TryFrom<String> for ContentAreaString {
-    type Error = String; // TODO
+    type Error = parser::ConsumeError;
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let trimmed = s.trim();
         let asts = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_content_area(&trimmed).map_err(|e| format!("{:?}", e))?;
-            let asts =
-                parser::consume_content_area_expressions(pairs).map_err(|e| format!("{:?}", e))?;
+            let pairs = parser::parse_as_content_area(&trimmed)
+                .map_err(|e| parser::ConsumeError::HTMLParseError(vec![e]))?;
+            let asts = parser::consume_content_area_expressions(pairs)?;
             Some(asts)
         };
         Ok(Self {
@@ -131,15 +133,15 @@ pub struct JMENotesString {
 impl_string_json_schema!(JMENotesString, "JMENotesString");
 
 impl std::convert::TryFrom<String> for JMENotesString {
-    type Error = String; // TODO
+    type Error = parser::ConsumeError;
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let trimmed = s.trim();
         let notes = if trimmed.is_empty() {
             None
         } else {
-            let pairs =
-                parser::parse_as_jme_script(&trimmed).map_err(|e| format!("Parsing: {:?}", e))?;
-            let notes = parser::consume_notes(pairs).map_err(|e| format!("Consuming: {:?}", e))?;
+            let pairs = parser::parse_as_jme_script(&trimmed)
+                .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
+            let notes = parser::consume_notes(pairs)?;
             Some(notes)
         };
         Ok(Self {

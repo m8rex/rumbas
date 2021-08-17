@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::TranslatableString;
 use schemars::JsonSchema;
@@ -17,23 +17,12 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas for Timing {
-    type NumbasType = numbas::exam::ExamTiming;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamTiming> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamTiming {
-                allow_pause: self.allow_pause.unwrap(),
-                timeout: self.on_timeout.clone().unwrap().to_numbas(locale).unwrap(),
-                timed_warning: self
-                    .timed_warning
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale)
-                    .unwrap(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamTiming> for Timing {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamTiming {
+        numbas::exam::ExamTiming {
+            allow_pause: self.allow_pause.unwrap(),
+            timeout: self.on_timeout.clone().unwrap().to_numbas(locale),
+            timed_warning: self.timed_warning.clone().unwrap().to_numbas(locale),
         }
     }
 }
@@ -63,17 +52,16 @@ pub enum TimeoutAction {
 }
 impl_optional_overwrite!(TimeoutAction);
 
-impl ToNumbas for TimeoutAction {
-    type NumbasType = numbas::exam::ExamTimeoutAction;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<Self::NumbasType> {
-        Ok(match self {
+impl ToNumbas<numbas::exam::ExamTimeoutAction> for TimeoutAction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamTimeoutAction {
+        match self {
             TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
                 message: message.to_string(locale).unwrap(),
             },
-        })
+        }
     }
 }
 

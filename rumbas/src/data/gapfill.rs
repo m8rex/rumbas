@@ -2,7 +2,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::question_part::JMENotes;
 use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::{NumbasResult, ToNumbas};
+use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
@@ -20,24 +20,18 @@ question_part_type! {
     }
 }
 
-impl ToNumbas for QuestionPartGapFill {
-    type NumbasType = numbas::exam::ExamQuestionPartGapFill;
-    fn to_numbas(&self, locale: &str) -> NumbasResult<numbas::exam::ExamQuestionPartGapFill> {
-        let check = self.check();
-        if check.is_empty() {
-            Ok(numbas::exam::ExamQuestionPartGapFill {
-                part_data: self.to_numbas_shared_data(locale),
-                sort_answers: Some(self.sort_answers.clone().unwrap()),
-                gaps: self
-                    .gaps
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|g| g.to_numbas(locale).unwrap())
-                    .collect(),
-            })
-        } else {
-            Err(check)
+impl ToNumbas<numbas::exam::ExamQuestionPartGapFill> for QuestionPartGapFill {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartGapFill {
+        numbas::exam::ExamQuestionPartGapFill {
+            part_data: self.to_numbas_shared_data(locale),
+            sort_answers: Some(self.sort_answers.clone().unwrap()),
+            gaps: self
+                .gaps
+                .clone()
+                .unwrap()
+                .into_iter()
+                .map(|g| g.to_numbas(locale))
+                .collect(),
         }
     }
 }

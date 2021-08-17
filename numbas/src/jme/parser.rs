@@ -131,8 +131,39 @@ impl<'i> std::convert::From<ScriptParserExpr<'i>> for ast::Note {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ConsumeError {
-    ParseError(Vec<Error<Rule>>),
+    JMEParseError(Vec<Error<Rule>>),
+    HTMLParseError(Vec<Error<HTMLRule>>),
     UnknownParseError,
+}
+
+impl std::fmt::Display for ConsumeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            ConsumeError::JMEParseError(errors) => {
+                write!(
+                    f,
+                    "Error while parsing JME:\n{}",
+                    errors
+                        .iter()
+                        .map(|e| format!("{:?}", e))
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                )
+            }
+            ConsumeError::HTMLParseError(errors) => {
+                write!(
+                    f,
+                    "Error while parsing HTML:\n{}",
+                    errors
+                        .iter()
+                        .map(|e| format!("{:?}", e))
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                )
+            }
+            ConsumeError::UnknownParseError => write!(f, "Unknown parse error, please report."),
+        }
+    }
 }
 
 pub fn consume_content_area_expressions(
@@ -142,7 +173,7 @@ pub fn consume_content_area_expressions(
     let mut asts = vec![];
     for expression in pairs.filter(|p| p.as_rule() == HTMLRule::expression) {
         let parsed_jme =
-            parse_as_jme(expression.as_str()).map_err(|e| ConsumeError::ParseError(vec![e]))?;
+            parse_as_jme(expression.as_str()).map_err(|e| ConsumeError::JMEParseError(vec![e]))?;
         let ast = consume_one_expression(parsed_jme)?;
         asts.push(ast);
     }
@@ -161,7 +192,7 @@ pub fn consume_notes(pairs: Pairs<Rule>) -> Result<Vec<ast::Note>, ConsumeError>
         }*/
     });
     match res_res {
-        Ok(res) => res.map_err(ConsumeError::ParseError),
+        Ok(res) => res.map_err(ConsumeError::JMEParseError),
         Err(_err) => Err(ConsumeError::UnknownParseError),
     }
 }
@@ -178,7 +209,7 @@ pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, Consume
         }*/
     });
     match res_res {
-        Ok(res) => res.map_err(ConsumeError::ParseError),
+        Ok(res) => res.map_err(ConsumeError::JMEParseError),
         Err(_err) => Err(ConsumeError::UnknownParseError),
     }
 }
