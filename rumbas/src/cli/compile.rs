@@ -129,32 +129,32 @@ pub fn compile(matches: &clap::ArgMatches) {
                             }
                         }
                         Err(check_result) => {
+                            something_failed = true;
                             let missing_fields = check_result.missing_fields();
                             let invalid_yaml_fields = check_result.invalid_yaml_fields();
                             let invalid_jme_fields = check_result.invalid_jme_fields();
-                            log::error!(
-                                "Error when processing locale {}.\nFound {} missing fields:\n{}\nFound {} invalid fields:\n{}\nFound {} invalid jme fields:\n{}\n",
-                                locale,
-                                missing_fields.len(),
-                                missing_fields
-                                    .iter()
-                                    .map(|f| f.to_string())
-                                    .collect::<Vec<_>>()
-                                    .join("\n"),
-                                invalid_yaml_fields.len(),
-                                invalid_yaml_fields
-                                    .iter()
-                                    .map(|f| f.to_string())
-                                    .collect::<Vec<_>>()
-                                    .join("\n"),
-                                invalid_jme_fields.len(),
-                                invalid_jme_fields
-                                    .iter()
-                                    .map(|f| f.to_string())
-                                    .collect::<Vec<_>>()
-                                    .join("\n")
-                            );
-                            something_failed = true;
+                            log::error!("Error when processing locale {}.", locale);
+                            if !missing_fields.is_empty() {
+                                log::error!("Found {} missing fields:", missing_fields.len());
+                                for (idx, error) in missing_fields.iter().enumerate() {
+                                    log::error!("{}\t{}", idx + 1, error.to_string());
+                                }
+                            }
+                            if !invalid_jme_fields.is_empty() {
+                                log::error!(
+                                    "Found {} invalid jme expressions:",
+                                    invalid_jme_fields.len()
+                                );
+                                for (idx, error) in invalid_jme_fields.iter().enumerate() {
+                                    log::error!("{}\t{}", idx + 1, error.to_string());
+                                }
+                            }
+                            if !invalid_yaml_fields.is_empty() {
+                                log::error!("Found {} invalid fields:", invalid_yaml_fields.len());
+                                for (idx, error) in invalid_yaml_fields.iter().enumerate() {
+                                    log::error!("{}\t{}", idx + 1, error.to_string());
+                                }
+                            }
                         }
                     }
                 }
