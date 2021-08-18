@@ -9,7 +9,6 @@ use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 question_part_type! {
     pub struct QuestionPartPatternMatch {

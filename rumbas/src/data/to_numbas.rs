@@ -64,11 +64,6 @@ impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<Option<S>> for Noneable<T> {
 macro_rules! impl_to_numbas {
     ($($type: ty), *) => {
         $(
-        /*impl RumbasCheck for $type {
-            fn check(&self, _locale: &str) -> RumbasCheckResult {
-                RumbasCheckResult::empty()
-            }
-        }*/
         impl ToNumbas<$type> for $type {
             fn to_numbas(&self, _locale: &str) -> $type {
                 self.clone()
