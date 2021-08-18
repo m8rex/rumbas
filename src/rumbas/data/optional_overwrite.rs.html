@@ -803,9 +803,14 @@
 <span id="801">801</span>
 <span id="802">802</span>
 <span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
 <span class="kw">use</span> <span class="ident">numbas::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
@@ -861,12 +866,12 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckInvalidData</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckInvalidYamlData</span> {
     <span class="ident">path</span>: <span class="ident">RumbasCheckPath</span>,
     <span class="ident">data</span>: <span class="ident">serde_yaml::Value</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckInvalidData</span> {
+<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckInvalidYamlData</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>();
         <span class="macro">write!</span>(
@@ -882,10 +887,24 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckInvalidJMEStringData</span> {
+    <span class="ident">path</span>: <span class="ident">RumbasCheckPath</span>,
+    <span class="ident">error</span>: <span class="ident">numbas::jme::parser::ConsumeError</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckInvalidJMEStringData</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>();
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}\n With error:\n{}&quot;</span>, <span class="ident">p</span>, <span class="self">self</span>.<span class="ident">error</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckResult</span> {
     <span class="comment">// When adding a field, do also add it to is_empty</span>
     <span class="ident">missing_values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckMissingData</span><span class="op">&gt;</span>,
-    <span class="ident">invalid_values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidData</span><span class="op">&gt;</span>,
+    <span class="ident">invalid_yaml_values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidYamlData</span><span class="op">&gt;</span>,
+    <span class="ident">invalid_jme_strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidJMEStringData</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">RumbasCheckResult</span> {
@@ -894,50 +913,74 @@
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckMissingData</span> {
                 <span class="ident">path</span>: <span class="ident">RumbasCheckPath::with_last</span>(<span class="ident">os</span>),
             }],
-            <span class="ident">invalid_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[],
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_invalid</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="ident">RumbasCheckResult</span> {
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[],
-            <span class="ident">invalid_values</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckInvalidData</span> {
+            <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckInvalidYamlData</span> {
                 <span class="ident">path</span>: <span class="ident">RumbasCheckPath::without_last</span>(),
                 <span class="ident">data</span>: <span class="ident">v</span>.<span class="ident">clone</span>(),
+            }],
+            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[],
+        }
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_invalid_jme</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">numbas::jme::parser::ConsumeError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+        <span class="ident">RumbasCheckResult</span> {
+            <span class="ident">missing_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckInvalidJMEStringData</span> {
+                <span class="ident">path</span>: <span class="ident">RumbasCheckPath::without_last</span>(),
+                <span class="ident">error</span>: <span class="ident">e</span>.<span class="ident">clone</span>(),
             }],
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="ident">RumbasCheckResult</span> {
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[],
-            <span class="ident">invalid_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[],
+            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[],
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+        <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extend_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="ident">String</span>) {
         <span class="kw">for</span> <span class="ident">missing_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">iter_mut</span>() {
             <span class="ident">missing_value</span>.<span class="ident">path</span>.<span class="ident">add</span>(<span class="ident">s</span>.<span class="ident">clone</span>());
         }
-        <span class="kw">for</span> <span class="ident">invalid_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">invalid_values</span>.<span class="ident">iter_mut</span>() {
+        <span class="kw">for</span> <span class="ident">invalid_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">iter_mut</span>() {
+            <span class="ident">invalid_value</span>.<span class="ident">path</span>.<span class="ident">add</span>(<span class="ident">s</span>.<span class="ident">clone</span>());
+        }
+        <span class="kw">for</span> <span class="ident">invalid_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">iter_mut</span>() {
             <span class="ident">invalid_value</span>.<span class="ident">path</span>.<span class="ident">add</span>(<span class="ident">s</span>.<span class="ident">clone</span>());
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
         <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">missing_values</span>.<span class="ident">clone</span>());
-        <span class="self">self</span>.<span class="ident">invalid_values</span>.<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">invalid_values</span>.<span class="ident">clone</span>());
+        <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>
+            .<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">clone</span>());
+        <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>
+            .<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">clone</span>());
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">missing_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckMissingData</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">clone</span>()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidData</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">invalid_values</span>.<span class="ident">clone</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_yaml_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidYamlData</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">clone</span>()
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_jme_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidJMEStringData</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">clone</span>()
     }
 }
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RumbasCheck</span> {
     <span class="doccomment">/// Check the read rumbas data</span>
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span>;
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span>;
 }
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OptionalOverwrite</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">&gt;</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span> <span class="op">+</span> <span class="ident">RumbasCheck</span> {
@@ -1038,23 +1081,6 @@
 <span class="macro">macro_rules!</span> <span class="ident">impl_optional_overwrite_value_only</span> {
     ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>$([$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">tt</span>), <span class="kw-2">*</span>])<span class="question-mark">?</span>), <span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
         $(
-        <span class="kw">impl</span>$(<span class="op">&lt;</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">RumbasCheck</span> ),<span class="op">*</span> <span class="op">&gt;</span>)<span class="question-mark">?</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
-                <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">ValueType::Normal</span>(<span class="ident">val</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">val</span>.<span class="ident">check</span>()
-                    },
-                    <span class="prelude-val">Some</span>(<span class="ident">ValueType::Template</span>(<span class="ident">ts</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">RumbasCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">ts</span>.<span class="ident">yaml</span>()))
-                    },
-                    <span class="prelude-val">Some</span>(<span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">RumbasCheckResult::from_invalid</span>(<span class="ident">v</span>)
-                    },
-                        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> { <span class="ident">RumbasCheckResult::from_missing</span>(<span class="prelude-val">None</span>)
-                    }
-                }
-            }
-        }
         <span class="kw">impl</span>$(<span class="op">&lt;</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">OptionalOverwrite</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span>),<span class="op">*</span> <span class="op">&gt;</span>)<span class="question-mark">?</span> <span class="ident">OptionalOverwrite</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">Value</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span> {
             <span class="kw">fn</span> <span class="macro-nonterminal">overwrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Value</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span>) {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="macro-nonterminal">ValueType::Normal</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">val</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span> {
@@ -1084,16 +1110,6 @@
     ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>$([$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">tt</span>), <span class="kw-2">*</span>])<span class="question-mark">?</span>), <span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
         $(
         <span class="macro">impl_optional_overwrite_value_only!</span>(<span class="macro-nonterminal">$</span><span class="kw">type</span>$([ $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>),<span class="op">*</span> ])<span class="question-mark">?</span>);
-        <span class="kw">impl</span>$(<span class="op">&lt;</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">RumbasCheck</span>),<span class="op">*</span> <span class="op">&gt;</span>)<span class="question-mark">?</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
-                    <span class="ident">val</span>.<span class="ident">check</span>()
-                }
-                <span class="kw">else</span> {
-                    <span class="ident">RumbasCheckResult::empty</span>()
-                }
-            }
-        }
         <span class="kw">impl</span>$(<span class="op">&lt;</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span>: <span class="ident">OptionalOverwrite</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">gen</span><span class="op">&gt;</span>),<span class="op">*</span> <span class="op">&gt;</span>)<span class="question-mark">?</span> <span class="ident">OptionalOverwrite</span><span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">Noneable</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span> {
             <span class="kw">fn</span> <span class="macro-nonterminal">overwrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span>) {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="macro-nonterminal">Noneable::NotNone</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">val</span>) <span class="op">=</span> <span class="self">self</span> {
@@ -1116,10 +1132,10 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
             <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
             <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>)
         }
@@ -1140,7 +1156,7 @@
     ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>), <span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
         $(
         <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
                 <span class="ident">RumbasCheckResult::empty</span>()
             }
         }
@@ -1155,11 +1171,11 @@
 <span class="macro">impl_optional_overwrite!</span>(<span class="macro-nonterminal">String</span>, <span class="ident">bool</span>, <span class="ident">f64</span>, <span class="ident">usize</span>, [<span class="ident">f64</span>; <span class="number">2</span>]);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
         <span class="comment">// Key is not displayable, so show an index, just to differentiate</span>
         <span class="kw">for</span> (<span class="ident">i</span>, (<span class="ident">_key</span>, <span class="ident">item</span>)) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
             <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
             <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>)
         }
@@ -1200,11 +1216,11 @@
             ),<span class="op">*</span>
         }
         <span class="kw">impl</span> <span class="macro-nonterminal">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
                 $(
                     {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>.<span class="ident">check</span>();
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
                     <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>).<span class="ident">to_string</span>());
                     <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>);
                     }
@@ -1258,10 +1274,10 @@
             ),<span class="op">*</span>
         }
         <span class="kw">impl</span> <span class="macro-nonterminal">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">enum</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+            <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
                 <span class="kw">match</span> <span class="self">self</span> {
                 $(
-                    <span class="macro-nonterminal">$</span><span class="kw">enum</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">check</span>()
+                    <span class="macro-nonterminal">$</span><span class="kw">enum</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">check</span>(<span class="ident">locale</span>)
                 ),<span class="op">*</span>
                 }
             }
@@ -1312,7 +1328,7 @@
             <span class="ident">name</span>: <span class="ident">Value::Normal</span>(<span class="string">&quot;test&quot;</span>.<span class="ident">to_string</span>()),
             <span class="ident">test</span>: <span class="ident">Value::None</span>(),
         };
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1321,17 +1337,17 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;test&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
         <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Temp</span> {
             <span class="ident">name</span>: <span class="ident">Value::Normal</span>(<span class="string">&quot;test2&quot;</span>.<span class="ident">to_string</span>()),
             <span class="ident">test</span>: <span class="ident">Value::Normal</span>(<span class="string">&quot;name&quot;</span>.<span class="ident">to_string</span>()),
         };
-        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">check</span>().<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>).<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Temp</span> {
             <span class="ident">name</span>: <span class="ident">Value::None</span>(),
             <span class="ident">test</span>: <span class="ident">Value::None</span>(),
         };
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1340,7 +1356,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;name&quot;</span>, <span class="string">&quot;test&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1352,7 +1368,7 @@
                 <span class="ident">test</span>: <span class="ident">Value::Normal</span>(<span class="string">&quot;name&quot;</span>.<span class="ident">to_string</span>()),
             }),
         };
-        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">check</span>().<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>).<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Temp2</span> {
             <span class="ident">other</span>: <span class="ident">Value::None</span>(),
             <span class="ident">t</span>: <span class="ident">Value::Normal</span>(<span class="ident">Temp</span> {
@@ -1360,7 +1376,7 @@
                 <span class="ident">test</span>: <span class="ident">Value::Normal</span>(<span class="string">&quot;name&quot;</span>.<span class="ident">to_string</span>()),
             }),
         };
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1369,12 +1385,12 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;other&quot;</span>, <span class="string">&quot;t.name&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">is_empty</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Temp2</span> {
             <span class="ident">other</span>: <span class="ident">Value::None</span>(),
             <span class="ident">t</span>: <span class="ident">Value::None</span>(),
         };
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1383,7 +1399,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;other&quot;</span>, <span class="string">&quot;t&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
         <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Temp2</span> {
             <span class="ident">other</span>: <span class="ident">Value::None</span>(),
             <span class="ident">t</span>: <span class="ident">Value::Normal</span>(<span class="ident">Temp</span> {
@@ -1391,7 +1407,7 @@
                 <span class="ident">test</span>: <span class="ident">Value::None</span>(),
             }),
         };
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1400,7 +1416,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;other&quot;</span>, <span class="string">&quot;t.name&quot;</span>, <span class="string">&quot;t.test&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1479,7 +1495,7 @@
             <span class="ident">test</span>: <span class="ident">Value::None</span>(),
         };
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">t1</span>, <span class="ident">t2</span>, <span class="ident">t3</span>];
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1488,7 +1504,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;0.test&quot;</span>, <span class="string">&quot;2.name&quot;</span>, <span class="string">&quot;2.test&quot;</span>],
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1519,7 +1535,7 @@
             }),
         };
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">t1</span>, <span class="ident">t2</span>, <span class="ident">t3</span>, <span class="ident">t4</span>];
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">check</span>();
+        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="string">&quot;&quot;</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">check</span>
                 .<span class="ident">missing_values</span>
@@ -1528,7 +1544,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
             <span class="macro">vec!</span>[<span class="string">&quot;1.other&quot;</span>, <span class="string">&quot;1.t.name&quot;</span>, <span class="string">&quot;2.other&quot;</span>, <span class="string">&quot;2.t&quot;</span>, <span class="string">&quot;3.other&quot;</span>, <span class="string">&quot;3.t.name&quot;</span>, <span class="string">&quot;3.t.test&quot;</span>]
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">check</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 }
 
@@ -1543,10 +1559,10 @@
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">ContentAreaString</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableValued::Variable</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">check</span>(),
-            <span class="ident">VariableValued::Value</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
+            <span class="ident">VariableValued::Variable</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
+            <span class="ident">VariableValued::Value</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
         }
     }
 }
@@ -1573,19 +1589,13 @@
 }
 <span class="macro">impl_optional_overwrite_value!</span>(<span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>[<span class="ident">T</span>]);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToNumbas</span> <span class="op">+</span> <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::VariableValued</span><span class="op">&lt;</span><span class="ident">T::NumbasType</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">VariableValued::Variable</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::VariableValued::Variable</span>(<span class="ident">v</span>.<span class="ident">clone</span>()),
-                <span class="ident">VariableValued::Value</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="ident">numbas::exam::VariableValued::Value</span>(<span class="ident">v</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                }
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">V</span>, <span class="ident">T</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::VariableValued</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">for</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+{
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::VariableValued</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">VariableValued::Variable</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::VariableValued::Variable</span>(<span class="ident">v</span>.<span class="ident">clone</span>()),
+            <span class="ident">VariableValued::Value</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::VariableValued::Value</span>(<span class="ident">v</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
         }
     }
 }

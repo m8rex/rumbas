@@ -778,86 +778,13 @@
 <span id="776">776</span>
 <span id="777">777</span>
 <span id="778">778</span>
-<span id="779">779</span>
-<span id="780">780</span>
-<span id="781">781</span>
-<span id="782">782</span>
-<span id="783">783</span>
-<span id="784">784</span>
-<span id="785">785</span>
-<span id="786">786</span>
-<span id="787">787</span>
-<span id="788">788</span>
-<span id="789">789</span>
-<span id="790">790</span>
-<span id="791">791</span>
-<span id="792">792</span>
-<span id="793">793</span>
-<span id="794">794</span>
-<span id="795">795</span>
-<span id="796">796</span>
-<span id="797">797</span>
-<span id="798">798</span>
-<span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
-<span id="802">802</span>
-<span id="803">803</span>
-<span id="804">804</span>
-<span id="805">805</span>
-<span id="806">806</span>
-<span id="807">807</span>
-<span id="808">808</span>
-<span id="809">809</span>
-<span id="810">810</span>
-<span id="811">811</span>
-<span id="812">812</span>
-<span id="813">813</span>
-<span id="814">814</span>
-<span id="815">815</span>
-<span id="816">816</span>
-<span id="817">817</span>
-<span id="818">818</span>
-<span id="819">819</span>
-<span id="820">820</span>
-<span id="821">821</span>
-<span id="822">822</span>
-<span id="823">823</span>
-<span id="824">824</span>
-<span id="825">825</span>
-<span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
-<span id="837">837</span>
-<span id="838">838</span>
-<span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
-<span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
-<span id="848">848</span>
-<span id="849">849</span>
-<span id="850">850</span>
-<span id="851">851</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite::VariableValued</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part::JMENotes</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question_part</span>::{<span class="ident">QuestionPart</span>, <span class="ident">VariableReplacementStrategy</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
@@ -865,7 +792,6 @@
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::convert::Into</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
 
 <span class="comment">//TODO: defaults</span>
 <span class="macro">question_part_type!</span> {
@@ -904,15 +830,9 @@
 <span class="kw">struct</span> <span class="ident">MatrixRowPrimitive</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::exam::Primitive</span><span class="op">&gt;</span>);
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">MatrixRowPrimitive</span>); <span class="comment">// TODO: Does this do what it needs to do?</span>
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">MatrixRowPrimitive</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::MultipleChoiceMatrix::Row</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>()))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
-        }
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::MultipleChoiceMatrix</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MatrixRowPrimitive</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span> {
+        <span class="ident">numbas::exam::MultipleChoiceMatrix::Row</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>())
     }
 }
 
@@ -920,22 +840,15 @@
 <span class="kw">struct</span> <span class="ident">MatrixRow</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>);
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">MatrixRow</span>); <span class="comment">// TODO: Does this do what it needs to do?</span>
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">MatrixRow</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::MultipleChoiceMatrix::Row</span>(
-                <span class="self">self</span>.<span class="number">0</span>
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">into</span>())
-                    .<span class="ident">collect</span>(),
-            ))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
-        }
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::MultipleChoiceMatrix</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MatrixRow</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span> {
+        <span class="ident">numbas::exam::MultipleChoiceMatrix::Row</span>(
+            <span class="self">self</span>.<span class="number">0</span>
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
+                .<span class="ident">into_iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">into</span>())
+                .<span class="ident">collect</span>(),
+        )
     }
 }
 
@@ -943,85 +856,68 @@
 <span class="kw">struct</span> <span class="ident">MatrixPrimitive</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::exam::Primitive</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">MatrixPrimitive</span>); <span class="comment">// TODO: Does this do what it needs to do?</span>
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">MatrixPrimitive</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::MultipleChoiceMatrix::Matrix</span>(
-                <span class="self">self</span>.<span class="number">0</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                    .<span class="ident">collect</span>(),
-            ))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
-        }
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::MultipleChoiceMatrix</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MatrixPrimitive</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span> {
+        <span class="ident">numbas::exam::MultipleChoiceMatrix::Matrix</span>(
+            <span class="self">self</span>.<span class="number">0</span>
+                .<span class="ident">clone</span>()
+                .<span class="ident">into_iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+                .<span class="ident">collect</span>(),
+        )
     }
 }
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">QuestionPartChooseOne</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamQuestionPartChooseOne</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> (<span class="ident">answers</span>, <span class="ident">marking_matrix</span>, <span class="ident">distractors</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">MultipleChoiceAnswerData::ItemBased</span>(<span class="ident">answers</span>) <span class="op">=</span><span class="op">&gt;</span> (
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamQuestionPartChooseOne</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartChooseOne</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamQuestionPartChooseOne</span> {
+        <span class="kw">let</span> (<span class="ident">answers</span>, <span class="ident">marking_matrix</span>, <span class="ident">distractors</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
+            <span class="ident">MultipleChoiceAnswerData::ItemBased</span>(<span class="ident">answers</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">VariableValued::Value</span>(
+                    <span class="ident">answers</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">statement</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+                )
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(
                     <span class="ident">VariableValued::Value</span>(
                         <span class="ident">answers</span>
                             .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">statement</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
                             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                     )
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                    .<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(
-                        <span class="ident">VariableValued::Value</span>(
-                            <span class="ident">answers</span>
-                                .<span class="ident">iter</span>()
-                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
-                                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-                        )
-                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                        .<span class="ident">unwrap</span>(),
-                    ),
-                    <span class="prelude-val">Some</span>(
-                        <span class="ident">answers</span>
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                                <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>() <span class="comment">//TODO</span>
-                            })
-                            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                            .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                            .<span class="ident">unwrap</span>(),
-                    ),
+                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 ),
-                <span class="ident">MultipleChoiceAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()),
-                    <span class="ident">data</span>.<span class="ident">feedback</span>
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                        .<span class="ident">flatten</span>(),
+                <span class="prelude-val">Some</span>(
+                    <span class="ident">answers</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                            <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>() <span class="comment">//TODO</span>
+                        })
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 ),
-            };
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestionPartChooseOne</span> {
-                <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
-                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="kw">if</span> <span class="self">self</span>.<span class="ident">has_to_select_option</span>.<span class="ident">unwrap</span>() {
-                    <span class="number">1</span>
-                } <span class="kw">else</span> {
-                    <span class="number">0</span>
-                }),
-                <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">answers</span>,
-                <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">get_numbas_type</span>(),
-                <span class="ident">columns</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">get_nb_columns</span>().<span class="ident">into</span>(),
-                <span class="ident">wrong_nb_choices_warning</span>: <span class="prelude-val">Some</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType::None</span>), <span class="comment">//TODO</span>
-                <span class="ident">show_cell_answer_state</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>()),
-                <span class="ident">marking_matrix</span>,
-                <span class="ident">distractors</span>,
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+            ),
+            <span class="ident">MultipleChoiceAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+                <span class="ident">data</span>.<span class="ident">feedback</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)).<span class="ident">flatten</span>(),
+            ),
+        };
+        <span class="ident">numbas::exam::ExamQuestionPartChooseOne</span> {
+            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
+            <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="kw">if</span> <span class="self">self</span>.<span class="ident">has_to_select_option</span>.<span class="ident">unwrap</span>() {
+                <span class="number">1</span>
+            } <span class="kw">else</span> {
+                <span class="number">0</span>
+            }),
+            <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">answers</span>,
+            <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">get_numbas_type</span>(),
+            <span class="ident">columns</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">get_nb_columns</span>().<span class="ident">into</span>(),
+            <span class="ident">wrong_nb_choices_warning</span>: <span class="prelude-val">Some</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType::None</span>), <span class="comment">//TODO</span>
+            <span class="ident">show_cell_answer_state</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">marking_matrix</span>,
+            <span class="ident">distractors</span>,
         }
     }
 }
@@ -1188,20 +1084,12 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">numbas::exam::MultipleChoiceMatrix</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">clone</span>())
-    }
-}
+<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::exam::MultipleChoiceMatrix</span>);
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">numbas::exam::MultipleChoiceMatrix</span>);
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">numbas::exam::Primitive</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">clone</span>())
-    }
-}
+
+<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::exam::Primitive</span>);
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">numbas::exam::Primitive</span>);
+
 <span class="macro">optional_overwrite!</span> {
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceAnswer</span> {
         <span class="ident">statement</span>: <span class="ident">TranslatableString</span>,
@@ -1228,74 +1116,63 @@
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">numbas::exam::MultipleChoiceWarningType</span>);
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">QuestionPartChooseMultiple</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="comment">// TODO: below is duplicated in CHooseOne</span>
-            <span class="kw">let</span> (<span class="ident">choices</span>, <span class="ident">marking_matrix</span>, <span class="ident">distractors</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">MultipleChoiceAnswerData::ItemBased</span>(<span class="ident">answers</span>) <span class="op">=</span><span class="op">&gt;</span> (
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartChooseMultiple</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span> {
+        <span class="comment">// TODO: below is duplicated in CHooseOne</span>
+        <span class="kw">let</span> (<span class="ident">choices</span>, <span class="ident">marking_matrix</span>, <span class="ident">distractors</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
+            <span class="ident">MultipleChoiceAnswerData::ItemBased</span>(<span class="ident">answers</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">VariableValued::Value</span>(
+                    <span class="ident">answers</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">statement</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+                )
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(
                     <span class="ident">VariableValued::Value</span>(
                         <span class="ident">answers</span>
                             .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">statement</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
                             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                     )
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                    .<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(
-                        <span class="ident">VariableValued::Value</span>(
-                            <span class="ident">answers</span>
-                                .<span class="ident">iter</span>()
-                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
-                                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-                        )
-                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                        .<span class="ident">unwrap</span>(),
-                    ),
-                    <span class="prelude-val">Some</span>(
-                        <span class="ident">answers</span>
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                                <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>() <span class="comment">//TODO</span>
-                            })
-                            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                            .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                            .<span class="ident">unwrap</span>(),
-                    ),
+                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 ),
-                <span class="ident">MultipleChoiceAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()),
-                    <span class="ident">data</span>.<span class="ident">feedback</span>
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                        .<span class="ident">flatten</span>(),
+                <span class="prelude-val">Some</span>(
+                    <span class="ident">answers</span>
+                        .<span class="ident">iter</span>()
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                            <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>() <span class="comment">//TODO</span>
+                        })
+                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 ),
-            };
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span> {
-                <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
-                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
-                <span class="ident">max_answers</span>: <span class="self">self</span>
-                    .<span class="ident">should_select_at_most</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                    .<span class="ident">flatten</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">into</span>()),
-                <span class="comment">//.map(|a| a)</span>
-                <span class="comment">//.unwrap_or(None),</span>
-                <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0usize</span>), <span class="comment">// todo?</span>
-                <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0usize</span>.<span class="ident">into</span>()),
-                <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">choices</span>,
-                <span class="ident">display_columns</span>: <span class="self">self</span>.<span class="ident">columns</span>.<span class="ident">unwrap</span>().<span class="ident">into</span>(),
-                <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">marking_matrix</span>,
-                <span class="ident">distractors</span>,
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+            ),
+            <span class="ident">MultipleChoiceAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+                <span class="ident">data</span>.<span class="ident">feedback</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)).<span class="ident">flatten</span>(),
+            ),
+        };
+        <span class="ident">numbas::exam::ExamQuestionPartChooseMultiple</span> {
+            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
+            <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
+            <span class="ident">max_answers</span>: <span class="self">self</span>
+                .<span class="ident">should_select_at_most</span>
+                .<span class="ident">clone</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+                .<span class="ident">flatten</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">into</span>()),
+            <span class="comment">//.map(|a| a)</span>
+            <span class="comment">//.unwrap_or(None),</span>
+            <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0usize</span>), <span class="comment">// todo?</span>
+            <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0usize</span>.<span class="ident">into</span>()),
+            <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">choices</span>,
+            <span class="ident">display_columns</span>: <span class="self">self</span>.<span class="ident">columns</span>.<span class="ident">unwrap</span>().<span class="ident">into</span>(),
+            <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">marking_matrix</span>,
+            <span class="ident">distractors</span>,
         }
     }
 }
@@ -1403,99 +1280,77 @@
     <span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType</span>
 );
 
-<span class="comment">// TODO move</span>
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">TranslatableString</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">String</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="comment">// TODO: check if translation exists?</span>
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-        <span class="comment">/*self
-        .iter()
-        .map(|a| a.clone().unwrap().to_string(&amp;locale).unwrap())
-        .collect()
-            */</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">QuestionPartMatchAnswersWithItems</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> (<span class="ident">answers</span>, <span class="ident">choices</span>, <span class="ident">marking_matrix</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
-                <span class="ident">MultipleChoiceMatchAnswerData::ItemBased</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">VariableValued::Value</span>(<span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">clone</span>())
-                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                        .<span class="ident">unwrap</span>(),
-                    <span class="ident">VariableValued::Value</span>(
-                        <span class="ident">data</span>.<span class="ident">items</span>
-                            .<span class="ident">clone</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
-                                <span class="ident">v</span>.<span class="ident">iter</span>()
-                                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">statement</span>)
-                                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                            })
-                            .<span class="ident">unwrap</span>(),
-                    )
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                    .<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(
-                        <span class="ident">VariableValued::Value</span>(
-                            <span class="ident">data</span>.<span class="ident">items</span> <span class="comment">// TODO: better handling</span>
-                                .<span class="ident">unwrap</span>(),
-                        )
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span><span class="op">&gt;</span>
+    <span class="kw">for</span> <span class="ident">QuestionPartMatchAnswersWithItems</span>
+{
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span> {
+        <span class="kw">let</span> (<span class="ident">answers</span>, <span class="ident">choices</span>, <span class="ident">marking_matrix</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">answer_data</span>.<span class="ident">unwrap</span>() {
+            <span class="ident">MultipleChoiceMatchAnswerData::ItemBased</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">VariableValued::Value</span>(<span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">clone</span>()).<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="ident">VariableValued::Value</span>(
+                    <span class="ident">data</span>.<span class="ident">items</span>
+                        .<span class="ident">clone</span>()
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
                             <span class="ident">v</span>.<span class="ident">iter</span>()
-                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
-                                    <span class="ident">data</span>.<span class="ident">answers</span>
-                                        .<span class="ident">clone</span>()
-                                        .<span class="ident">unwrap</span>()
-                                        .<span class="ident">iter</span>()
-                                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                                            <span class="ident">i</span>.<span class="ident">unwrap</span>()
-                                                .<span class="ident">answer_marks</span>
-                                                .<span class="ident">unwrap</span>()
-                                                .<span class="ident">iter</span>()
-                                                .<span class="ident">find</span>(<span class="op">|</span><span class="ident">am</span><span class="op">|</span> <span class="ident">am</span>.<span class="ident">answer</span>.<span class="ident">unwrap</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">a</span>.<span class="ident">unwrap</span>())
-                                                .<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="number">0usize</span>.<span class="ident">into</span>(), <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">marks</span>.<span class="ident">unwrap</span>())
-                                        })
-                                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                                })
+                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">statement</span>)
                                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                         })
-                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
                         .<span class="ident">unwrap</span>(),
-                    ),
+                )
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(
+                    <span class="ident">VariableValued::Value</span>(
+                        <span class="ident">data</span>.<span class="ident">items</span> <span class="comment">// TODO: better handling</span>
+                            .<span class="ident">unwrap</span>(),
+                    )
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
+                        <span class="ident">v</span>.<span class="ident">iter</span>()
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
+                                <span class="ident">data</span>.<span class="ident">answers</span>
+                                    .<span class="ident">clone</span>()
+                                    .<span class="ident">unwrap</span>()
+                                    .<span class="ident">iter</span>()
+                                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                                        <span class="ident">i</span>.<span class="ident">unwrap</span>()
+                                            .<span class="ident">answer_marks</span>
+                                            .<span class="ident">unwrap</span>()
+                                            .<span class="ident">iter</span>()
+                                            .<span class="ident">find</span>(<span class="op">|</span><span class="ident">am</span><span class="op">|</span> <span class="ident">am</span>.<span class="ident">answer</span>.<span class="ident">unwrap</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">a</span>.<span class="ident">unwrap</span>())
+                                            .<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="number">0usize</span>.<span class="ident">into</span>(), <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">marks</span>.<span class="ident">unwrap</span>())
+                                    })
+                                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                            })
+                            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    })
+                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 ),
-                <span class="ident">MultipleChoiceMatchAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()),
-                ),
-            };
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span> {
-                <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
-                <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
-                <span class="ident">max_answers</span>: <span class="self">self</span>
-                    .<span class="ident">should_select_at_most</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>())
-                    .<span class="ident">flatten</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>()),
-                <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
-                <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
-                <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">shuffle_choices</span>: <span class="self">self</span>.<span class="ident">shuffle_items</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">answers</span>,
-                <span class="ident">choices</span>,
-                <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">layout</span>: <span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">marking_matrix</span>,
-                <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+            ),
+            <span class="ident">MultipleChoiceMatchAnswerData::NumbasLike</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            ),
+        };
+        <span class="ident">numbas::exam::ExamQuestionPartMatchAnswersWithChoices</span> {
+            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas_shared_data</span>(<span class="ident">locale</span>),
+            <span class="ident">min_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>()),
+            <span class="ident">max_answers</span>: <span class="self">self</span>
+                .<span class="ident">should_select_at_most</span>
+                .<span class="ident">clone</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+                .<span class="ident">flatten</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>()),
+            <span class="ident">min_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
+            <span class="ident">max_marks</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>.<span class="ident">into</span>()),
+            <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">shuffle_choices</span>: <span class="self">self</span>.<span class="ident">shuffle_items</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">answers</span>,
+            <span class="ident">choices</span>,
+            <span class="ident">wrong_nb_choices_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">layout</span>: <span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
+            <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">marking_matrix</span>,
+            <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
         }
     }
 }
@@ -1650,17 +1505,16 @@
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">MatchAnswerWithItemsDisplay</span>);
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">MatchAnswerWithItemsDisplay</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span> {
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MatchAnswerWithItemsDisplay</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">MatchAnswerWithItemsDisplay::Check</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType::Check</span>
             }
             <span class="ident">MatchAnswerWithItemsDisplay::Radio</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">numbas::exam::MatchAnswersWithChoicesDisplayType::Radio</span>
             }
-        })
+        }
     }
 }
 

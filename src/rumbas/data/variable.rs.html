@@ -333,24 +333,12 @@
 <span id="331">331</span>
 <span id="332">332</span>
 <span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference::FileString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::question::UNGROUPED_GROUP</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
 <span class="kw">use</span> <span class="ident">regex::Regex</span>;
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
@@ -365,29 +353,18 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">Variable</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamVariable</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">name</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamVariable</span> {
-                <span class="ident">name</span>,
-                <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">get_content</span>(<span class="ident">locale</span>),
-                <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">template_type</span>: <span class="self">self</span>
-                    .<span class="ident">template_type</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                    .<span class="ident">unwrap</span>(),
-                <span class="ident">group</span>: <span class="self">self</span>.<span class="ident">group</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">can_override</span>: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)</span>
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamVariable</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Variable</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">name</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamVariable</span> {
+        <span class="ident">numbas::exam::ExamVariable</span> {
+            <span class="ident">name</span>,
+            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
+            <span class="ident">template_type</span>: <span class="self">self</span>.<span class="ident">template_type</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">group</span>: <span class="self">self</span>.<span class="ident">group</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>(),
+            <span class="ident">can_override</span>: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)</span>
         }
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamVariable</span> {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
@@ -417,10 +394,9 @@
     <span class="ident">r#String</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">VariableTemplateType</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamVariableTemplateType</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span> {
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamVariableTemplateType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableTemplateType</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamVariableTemplateType</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">VariableTemplateType::Anything</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamVariableTemplateType::Anything</span>,
             <span class="ident">VariableTemplateType::ListOfNumbers</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">numbas::exam::ExamVariableTemplateType::ListOfNumbers</span>
@@ -435,7 +411,7 @@
                 <span class="ident">numbas::exam::ExamVariableTemplateType::RandomRange</span>
             }
             <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamVariableTemplateType</span>::<span class="ident">r#String</span>,
-        })
+        }
     }
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">VariableTemplateType</span>);
@@ -472,13 +448,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">VariableRepresentation</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableRepresentation::ListOfStrings</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
-            <span class="ident">VariableRepresentation::ListOfNumbers</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
-            <span class="ident">VariableRepresentation::Long</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
-            <span class="ident">VariableRepresentation::Number</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
-            <span class="ident">VariableRepresentation::Other</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(),
+            <span class="ident">VariableRepresentation::ListOfStrings</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
+            <span class="ident">VariableRepresentation::ListOfNumbers</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
+            <span class="ident">VariableRepresentation::Long</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
+            <span class="ident">VariableRepresentation::Number</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
+            <span class="ident">VariableRepresentation::Other</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
         }
     }
 }

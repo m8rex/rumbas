@@ -338,7 +338,6 @@
 <span id="336">336</span>
 <span id="337">337</span>
 <span id="338">338</span>
-<span id="339">339</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::diagnostic_exam::DiagnosticExam</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::exam::Exam</span>;
@@ -593,7 +592,6 @@
     <span class="kw">let</span> <span class="ident">default_files</span> <span class="op">=</span> <span class="ident">default_files</span>(<span class="ident">path</span>);
     <span class="comment">//println!(&quot;Found {} default files.&quot;, default_files.len());</span>
     <span class="kw">for</span> <span class="ident">default_file</span> <span class="kw">in</span> <span class="ident">default_files</span>.<span class="ident">iter</span>() {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">exam</span>.<span class="ident">check</span>().<span class="ident">is_empty</span>() {
             <span class="macro">log::info!</span>(<span class="string">&quot;Reading {}&quot;</span>, <span class="ident">default_file</span>.<span class="ident">get_path</span>().<span class="ident">display</span>()); <span class="comment">//TODO: debug</span>
             <span class="kw">let</span> <span class="ident">default_data</span> <span class="op">=</span> <span class="ident">default_file</span>.<span class="ident">read_as_data</span>().<span class="ident">unwrap</span>(); <span class="comment">//TODO</span>
                                                                      <span class="comment">//TODO: always call overwrite</span>
@@ -648,7 +646,7 @@
                 <span class="ident">DefaultData::QuestionPartGapFillGapInformation</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">handle_question_parts!</span>(<span class="ident">gap</span> <span class="ident">exam</span>, <span class="ident">p</span>, <span class="ident">Information</span>),
 
             }
-        }
+
     }
 }
 }

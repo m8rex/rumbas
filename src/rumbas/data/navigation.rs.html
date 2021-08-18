@@ -349,40 +349,11 @@
 <span id="347">347</span>
 <span id="348">348</span>
 <span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::file_reference::FileString</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::optional_overwrite</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::template</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas</span>::{<span class="ident">NumbasResult</span>, <span class="ident">ToNumbas</span>};
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::to_rumbas::ToRumbas</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::data::translatable::TranslatableString</span>;
 <span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
@@ -486,22 +457,14 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">SequentialNavigation</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamNavigationMode</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamNavigationMode::Sequential</span>(
-                <span class="ident">numbas::exam::ExamNavigationModeSequential</span> {
-                    <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="ident">show_results_page</span>: <span class="self">self</span>.<span class="ident">show_results_page</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="ident">can_move_to_previous</span>: <span class="self">self</span>.<span class="ident">can_move_to_previous</span>.<span class="ident">unwrap</span>(),
-                    <span class="ident">browsing_enabled</span>: <span class="self">self</span>.<span class="ident">browsing_enabled</span>.<span class="ident">unwrap</span>(),
-                },
-            ))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
-        }
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigationMode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SequentialNavigation</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamNavigationMode</span> {
+        <span class="ident">numbas::exam::ExamNavigationMode::Sequential</span>(<span class="ident">numbas::exam::ExamNavigationModeSequential</span> {
+            <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">show_results_page</span>: <span class="self">self</span>.<span class="ident">show_results_page</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">can_move_to_previous</span>: <span class="self">self</span>.<span class="ident">can_move_to_previous</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">browsing_enabled</span>: <span class="self">self</span>.<span class="ident">browsing_enabled</span>.<span class="ident">unwrap</span>(),
+        })
     }
 }
 
@@ -513,34 +476,27 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">MenuNavigation</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamNavigationMode</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamNavigationMode::Menu</span>)
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigationMode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MenuNavigation</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamNavigationMode</span> {
+        <span class="ident">numbas::exam::ExamNavigationMode::Menu</span> <span class="comment">// TODO: sequential</span>
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">NormalNavigation</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamNavigation</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigation</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamNavigation</span> {
-                <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">allow_steps</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_steps</span>.<span class="ident">unwrap</span>()),
-                <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">confirm_when_leaving</span>.<span class="ident">unwrap</span>()),
-                <span class="ident">start_password</span>: <span class="self">self</span>
-                    .<span class="ident">to_shared_data</span>()
-                    .<span class="ident">start_password</span>
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>)),
-                <span class="ident">navigation_mode</span>: <span class="kw">match</span> <span class="self">self</span> {
-                    <span class="ident">NormalNavigation::Menu</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    <span class="ident">NormalNavigation::Sequential</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                },
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalNavigation</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamNavigation</span> {
+        <span class="ident">numbas::exam::ExamNavigation</span> {
+            <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">allow_steps</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_steps</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">confirm_when_leaving</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">start_password</span>: <span class="self">self</span>
+                .<span class="ident">to_shared_data</span>()
+                .<span class="ident">start_password</span>
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">navigation_mode</span>: <span class="kw">match</span> <span class="self">self</span> {
+                <span class="ident">NormalNavigation::Menu</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="ident">NormalNavigation::Sequential</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            },
         }
     }
 }
@@ -580,36 +536,30 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">DiagnosticNavigation</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamNavigation</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigation</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::ExamNavigation</span> {
-                <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">allow_steps</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">show_steps</span>.<span class="ident">unwrap</span>()),
-                <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(
-                    <span class="self">self</span>.<span class="ident">shared_data</span>
-                        .<span class="ident">clone</span>()
-                        .<span class="ident">unwrap</span>()
-                        .<span class="ident">confirm_when_leaving</span>
-                        .<span class="ident">unwrap</span>(),
-                ),
-                <span class="ident">start_password</span>: <span class="self">self</span>
-                    .<span class="ident">shared_data</span>
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamNavigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DiagnosticNavigation</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamNavigation</span> {
+        <span class="ident">numbas::exam::ExamNavigation</span> {
+            <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">allow_steps</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">show_steps</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(
+                <span class="self">self</span>.<span class="ident">shared_data</span>
                     .<span class="ident">clone</span>()
                     .<span class="ident">unwrap</span>()
-                    .<span class="ident">start_password</span>
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>)),
-                <span class="ident">navigation_mode</span>: <span class="ident">numbas::exam::ExamNavigationMode::Diagnostic</span>(
-                    <span class="ident">numbas::exam::ExamNavigationModeDiagnostic</span> {
-                        <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-                    },
-                ),
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+                    .<span class="ident">confirm_when_leaving</span>
+                    .<span class="ident">unwrap</span>(),
+            ),
+            <span class="ident">start_password</span>: <span class="self">self</span>
+                .<span class="ident">shared_data</span>
+                .<span class="ident">clone</span>()
+                .<span class="ident">unwrap</span>()
+                .<span class="ident">start_password</span>
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">navigation_mode</span>: <span class="ident">numbas::exam::ExamNavigationMode::Diagnostic</span>(
+                <span class="ident">numbas::exam::ExamNavigationModeDiagnostic</span> {
+                    <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                },
+            ),
         }
     }
 }
@@ -645,13 +595,12 @@
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">ShowResultsPage</span>);
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">ShowResultsPage</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamShowResultsPage</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span> {
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamShowResultsPage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShowResultsPage</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamShowResultsPage</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">ShowResultsPage::OnCompletion</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamShowResultsPage::OnCompletion</span>,
             <span class="ident">ShowResultsPage::Never</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamShowResultsPage::Never</span>,
-        })
+        }
     }
 }
 
@@ -674,10 +623,9 @@
 }
 <span class="macro">impl_optional_overwrite!</span>(<span class="ident">LeaveAction</span>);
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">LeaveAction</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::ExamLeaveAction</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="ident">::NumbasType</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span> {
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::ExamLeaveAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LeaveAction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamLeaveAction</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">LeaveAction::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::ExamLeaveAction::None</span> {
                 <span class="ident">message</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(), <span class="comment">// message doesn&#39;t mean anything</span>
             },
@@ -691,7 +639,7 @@
                     <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
                 }
             }
-        })
+        }
     }
 }
 
@@ -729,18 +677,12 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span> <span class="kw">for</span> <span class="ident">QuestionNavigation</span> {
-    <span class="kw">type</span> <span class="ident">NumbasType</span> <span class="op">=</span> <span class="ident">numbas::exam::QuestionNavigation</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">numbas::exam::QuestionNavigation</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>();
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">numbas::exam::QuestionNavigation</span> {
-                <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
-                <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">confirm_when_leaving</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>()),
-            })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::QuestionNavigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionNavigation</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::QuestionNavigation</span> {
+        <span class="ident">numbas::exam::QuestionNavigation</span> {
+            <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">can_regenerate</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">show_title_page</span>.<span class="ident">unwrap</span>(),
+            <span class="ident">confirm_when_leaving</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">confirm_when_leaving</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>()),
         }
     }
 }
