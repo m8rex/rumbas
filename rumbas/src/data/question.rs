@@ -67,23 +67,11 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
             name,
             statement: self.statement.to_numbas(locale),
             advice: self.advice.to_numbas(locale),
-            parts: self
-                .parts
-                .clone()
-                .unwrap()
-                .iter()
-                .map(|p| p.to_numbas(locale))
-                .collect(),
+            parts: self.parts.to_numbas(locale),
             builtin_constants: numbas::exam::BuiltinConstants(
                 self.builtin_constants.clone().unwrap().to_numbas(locale),
             ),
-            constants: self
-                .custom_constants
-                .clone()
-                .unwrap()
-                .iter()
-                .map(|p| p.to_numbas(locale))
-                .collect(),
+            constants: self.custom_constants.to_numbas(locale),
             variables: self
                 .variables
                 .clone()

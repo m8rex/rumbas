@@ -41,14 +41,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberE
                     .unwrap(),
             ),
             allow_fractions: self.allow_fractions.unwrap(),
-            notation_styles: Some(
-                self.allowed_notation_styles
-                    .clone()
-                    .unwrap()
-                    .into_iter()
-                    .map(|a| a.to_numbas(locale))
-                    .collect(),
-            ),
+            notation_styles: Some(self.allowed_notation_styles.to_numbas(locale)),
             fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
             partial_credit_if_fraction_not_reduced: Some(
                 self.partial_credit_if_fraction_not_reduced.clone().unwrap(),

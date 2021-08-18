@@ -77,13 +77,7 @@ impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs t
 
 impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Matrix(
-            self.0
-                .clone()
-                .into_iter()
-                .map(|r| r.to_numbas(locale))
-                .collect(),
-        )
+        numbas::exam::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
     }
 }
 impl ToNumbas<numbas::exam::ExamQuestionPartChooseOne> for QuestionPartChooseOne {

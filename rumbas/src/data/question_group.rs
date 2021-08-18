@@ -25,14 +25,8 @@ impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionGroup {
         numbas::exam::ExamQuestionGroup {
             name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
-            picking_strategy: self.picking_strategy.clone().unwrap().to_numbas(locale),
-            questions: self
-                .questions
-                .clone()
-                .unwrap()
-                .iter()
-                .map(|q| q.to_numbas(locale))
-                .collect(),
+            picking_strategy: self.picking_strategy.to_numbas(locale),
+            questions: self.questions.to_numbas(locale),
         }
     }
 }

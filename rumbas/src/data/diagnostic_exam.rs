@@ -179,20 +179,8 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamDiagnostic> for Diagnostic {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnostic {
         let knowledge_graph = numbas::exam::ExamDiagnosticKnowledgeGraph {
-            topics: self
-                .topics
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|t| t.to_numbas(locale))
-                .collect(),
-            learning_objectives: self
-                .objectives
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|t| t.to_numbas(locale))
-                .collect(),
+            topics: self.topics.to_numbas(locale),
+            learning_objectives: self.objectives.to_numbas(locale),
         };
 
         numbas::exam::ExamDiagnostic {
