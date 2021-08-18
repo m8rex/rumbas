@@ -293,13 +293,7 @@ impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinition {
             marking_script: self.marking_notes.to_numbas(locale),
             can_be_gap: self.can_be_gap,
             can_be_step: self.can_be_step,
-            marking_notes: self
-                .marking_notes
-                .0
-                .unwrap()
-                .iter()
-                .map(|mn| mn.to_numbas(locale))
-                .collect(),
+            marking_notes: self.marking_notes.0.to_numbas(locale),
             published: self.published,
             extensions: self.extensions.to_numbas(locale),
             input_widget: self.input_widget.to_numbas(locale),
