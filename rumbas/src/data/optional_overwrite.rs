@@ -84,9 +84,7 @@ pub struct RumbasCheckInvalidJMEStringData {
 impl std::fmt::Display for RumbasCheckInvalidJMEStringData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let p = self.path.to_string();
-        write!(
-            f,
-            "{}\n With error:\n{}", p, self.error)
+        write!(f, "{}\n With error:\n{}", p, self.error)
     }
 }
 
@@ -95,7 +93,7 @@ pub struct RumbasCheckResult {
     // When adding a field, do also add it to is_empty
     missing_values: Vec<RumbasCheckMissingData>,
     invalid_yaml_values: Vec<RumbasCheckInvalidYamlData>,
-    invalid_jme_strings: Vec<RumbasCheckInvalidJMEStringData>
+    invalid_jme_strings: Vec<RumbasCheckInvalidJMEStringData>,
 }
 
 impl RumbasCheckResult {
@@ -105,7 +103,7 @@ impl RumbasCheckResult {
                 path: RumbasCheckPath::with_last(os),
             }],
             invalid_yaml_values: vec![],
-            invalid_jme_strings: vec![]
+            invalid_jme_strings: vec![],
         }
     }
     pub fn from_invalid(v: &serde_yaml::Value) -> RumbasCheckResult {
@@ -115,7 +113,7 @@ impl RumbasCheckResult {
                 path: RumbasCheckPath::without_last(),
                 data: v.clone(),
             }],
-            invalid_jme_strings: vec![]
+            invalid_jme_strings: vec![],
         }
     }
     pub fn from_invalid_jme(e: &numbas::jme::parser::ConsumeError) -> RumbasCheckResult {
@@ -132,11 +130,13 @@ impl RumbasCheckResult {
         RumbasCheckResult {
             missing_values: vec![],
             invalid_yaml_values: vec![],
-            invalid_jme_strings: vec![]
+            invalid_jme_strings: vec![],
         }
     }
     pub fn is_empty(&self) -> bool {
-        self.missing_values.len() == 0 && self.invalid_yaml_values.len() == 0 && self.invalid_jme_strings.len() == 0
+        self.missing_values.len() == 0
+            && self.invalid_yaml_values.len() == 0
+            && self.invalid_jme_strings.len() == 0
     }
     pub fn extend_path(&mut self, s: String) {
         for missing_value in self.missing_values.iter_mut() {
@@ -151,9 +151,10 @@ impl RumbasCheckResult {
     }
     pub fn union(&mut self, other: &Self) {
         self.missing_values.extend(other.missing_values.clone());
-        self.invalid_yaml_values.extend(other.invalid_yaml_values.clone());
-        self.invalid_jme_strings.extend(other.invalid_jme_strings.clone());
-
+        self.invalid_yaml_values
+            .extend(other.invalid_yaml_values.clone());
+        self.invalid_jme_strings
+            .extend(other.invalid_jme_strings.clone());
     }
     pub fn missing_fields(&self) -> Vec<RumbasCheckMissingData> {
         self.missing_values.clone()
@@ -269,23 +270,6 @@ impl<T: std::clone::Clone> Noneable<T> {
 macro_rules! impl_optional_overwrite_value_only {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
-        /*impl$(< $($gen: RumbasCheck ),* >)? RumbasCheck for Value<$type> {
-            fn check(&self, locale: &str) -> RumbasCheckResult {
-                match &self.0 {
-                    Some(ValueType::Normal(val)) => {
-                        val.check(locale)
-                    },
-                    Some(ValueType::Template(ts)) => {
-                        RumbasCheckResult::from_missing(Some(ts.yaml()))
-                    },
-                    Some(ValueType::Invalid(v)) => {
-                        RumbasCheckResult::from_invalid(v)
-                    },
-                        None => { RumbasCheckResult::from_missing(None)
-                    }
-                }
-            }
-        }*/
         impl$(< $($gen: OptionalOverwrite<$gen> + DeserializeOwned),* >)? OptionalOverwrite<Value<$type>> for Value<$type> {
             fn overwrite(&mut self, other: &Value<$type>) {
                 if let Some(ValueType::Normal(ref mut val)) = self.0 {
@@ -315,16 +299,6 @@ macro_rules! impl_optional_overwrite_value {
     ($($type: ty$([$($gen: tt), *])?), *) => {
         $(
         impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
-        /*impl$(< $($gen: RumbasCheck),* >)? RumbasCheck for Noneable<$type> {
-            fn check(&self, locale: &str) -> RumbasCheckResult {
-                if let Noneable::NotNone(val) = &self {
-                    val.check(locale)
-                }
-                else {
-                    RumbasCheckResult::empty()
-                }
-            }
-        }*/
         impl$(< $($gen: OptionalOverwrite<$gen>),* >)? OptionalOverwrite<Noneable<$type>> for Noneable<$type> {
             fn overwrite(&mut self, other: &Noneable<$type>) {
                 if let Noneable::NotNone(ref mut val) = self {
@@ -552,7 +526,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["test"],
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
         let t = Temp {
             name: Value::Normal("test2".to_string()),
             test: Value::Normal("name".to_string()),
@@ -571,7 +545,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["name", "test"],
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
     }
 
     #[test]
@@ -600,7 +574,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["other", "t.name"],
         );
-        assert_eq!(check.invalid_values.is_empty(), true);
+        assert_eq!(check.invalid_yaml_values.is_empty(), true);
         let t = Temp2 {
             other: Value::None(),
             t: Value::None(),
@@ -614,7 +588,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["other", "t"],
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
         let t = Temp2 {
             other: Value::None(),
             t: Value::Normal(Temp {
@@ -631,7 +605,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["other", "t.name", "t.test"],
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
     }
 
     #[test]
@@ -719,7 +693,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["0.test", "2.name", "2.test"],
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
     }
 
     #[test]
@@ -759,7 +733,7 @@ mod test {
                 .collect::<Vec<_>>(),
             vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
         );
-        assert_eq!(check.invalid_values.len(), 0);
+        assert_eq!(check.invalid_yaml_values.len(), 0);
     }
 }
 

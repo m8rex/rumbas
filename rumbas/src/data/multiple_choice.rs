@@ -11,7 +11,6 @@ use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
-use std::convert::TryInto;
 
 //TODO: defaults
 question_part_type! {

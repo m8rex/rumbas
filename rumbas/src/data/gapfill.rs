@@ -8,7 +8,6 @@ use crate::data::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 question_part_type! {
     // The Gap fill question part type

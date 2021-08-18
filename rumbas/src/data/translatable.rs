@@ -37,22 +37,6 @@ macro_rules! translatable_type {
 
         impl RumbasCheck for $type {
             fn check(&self, locale: &str) -> RumbasCheckResult {
-                /*let check_result =
-                match self {
-                    $type::Translated(m) => {
-                        let mut empty = RumbasCheckResult::empty();
-                        for (k, v) in m.iter() {
-                            let mut new = v.check(locale);
-                            new.extend_path(k.to_owned());
-                            empty.union(&new);
-                        }
-                        empty
-                    }
-                    $type::NotTranslated(f) => RumbasCheckResult::empty(), // don't validate FileStrings (they assume complete JME etc in the string)
-                };
-                if !check_result.is_empty() {
-                    check_result
-                } else {*/
                 let content = self.to_string(locale);
                 match content {
                     Some(c) => {
@@ -64,7 +48,6 @@ macro_rules! translatable_type {
                     }
                     None => RumbasCheckResult::empty(), // TODO: change
                 }
-                //}
             }
         }
 

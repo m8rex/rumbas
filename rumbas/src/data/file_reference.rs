@@ -217,10 +217,8 @@ macro_rules! file_type {
             pub fn get_content(&self, locale: &str) -> Option<String> {
                 if let Some(c) = self.translated_content.get(locale) {
                     Some(c.clone().into())
-                } else if let Some(c) = &self.content {
-                    Some(c.clone().into())
                 } else {
-                    None
+                    self.content.as_ref().map(|c| c.clone().into())
                 }
             }
             pub fn s(content: &str) -> $type {

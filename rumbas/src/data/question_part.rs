@@ -264,13 +264,7 @@ impl ToNumbas<numbas::exam::CustomPartMarkingNote> for JMENote {
     fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartMarkingNote {
         numbas::exam::CustomPartMarkingNote {
             name: self.name.unwrap(),
-            definition: self
-                .expression
-                .unwrap()
-                .to_string(&locale)
-                .unwrap()
-                .try_into()
-                .unwrap(),
+            definition: self.expression.to_numbas(&locale),
             description: self.description.unwrap().unwrap_or("".to_string()),
         }
     }
@@ -326,7 +320,7 @@ macro_rules! question_part_type {
             fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData {
                     marks: Some(self.marks.clone().unwrap().into()),
-                    prompt: self.prompt.clone().map(|s| s.to_string(&locale).unwrap().try_into().unwrap()),
+                    prompt: self.prompt.clone().map(|a| a.to_numbas(locale)),
                     use_custom_name: Some(self.use_custom_name.clone().unwrap()),
                     custom_name: Some(self.custom_name.clone().unwrap()),
                     steps_penalty: Some(self.steps_penalty.clone().unwrap()),

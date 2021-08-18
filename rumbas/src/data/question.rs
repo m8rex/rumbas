@@ -20,7 +20,6 @@ use numbas::jme::JMEString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::convert::TryInto;
 use std::fs;
 use std::path::Path;
 
@@ -66,22 +65,8 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
         }
         numbas::exam::ExamQuestion {
             name,
-            statement: self
-                .statement
-                .clone()
-                .unwrap()
-                .to_string(locale)
-                .unwrap()
-                .try_into()
-                .unwrap(),
-            advice: self
-                .advice
-                .clone()
-                .unwrap()
-                .to_string(locale)
-                .unwrap()
-                .try_into()
-                .unwrap(),
+            statement: self.statement.to_numbas(locale),
+            advice: self.advice.to_numbas(locale),
             parts: self
                 .parts
                 .clone()

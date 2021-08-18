@@ -7,7 +7,6 @@ use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 macro_rules! extensions {
     (

@@ -7,7 +7,6 @@ use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {

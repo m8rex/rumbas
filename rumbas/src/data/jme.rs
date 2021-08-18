@@ -12,7 +12,6 @@ use crate::data::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 question_part_type! {
     pub struct QuestionPartJME {
@@ -40,14 +39,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartJME {
         numbas::exam::ExamQuestionPartJME {
             part_data: self.to_numbas_shared_data(locale),
-            answer: self
-                .answer
-                .clone()
-                .unwrap()
-                .to_string(locale)
-                .unwrap()
-                .try_into()
-                .unwrap(),
+            answer: self.answer.to_numbas(locale),
             answer_simplification: Some(
                 self.answer_simplification
                     .clone()
@@ -689,11 +681,7 @@ impl ToNumbas<numbas::exam::JMEValueGenerator> for JMEValueGenerator {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMEValueGenerator {
         numbas::exam::JMEValueGenerator {
             name: self.name.clone().unwrap().to_numbas(locale),
-            value: self
-                .value
-                .clone()
-                .unwrap()
-                .to_numbas(locale),
+            value: self.value.clone().unwrap().to_numbas(locale),
         }
     }
 }

@@ -5,7 +5,6 @@ use crate::data::to_rumbas::ToRumbas;
 use crate::data::translatable::{JMETranslatableString, TranslatableString};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 optional_overwrite! {
     pub struct Function {
@@ -59,14 +58,7 @@ impl ToNumbas<numbas::exam::ExamFunctionDefinition> for FunctionDefinition {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunctionDefinition {
         match self {
             FunctionDefinition::JME(c) => numbas::exam::ExamFunctionDefinition::JME {
-                definition: c
-                    .definition
-                    .clone()
-                    .unwrap()
-                    .to_string(locale)
-                    .unwrap()
-                    .try_into()
-                    .unwrap(),
+                definition: c.definition.to_numbas(locale),
             },
             FunctionDefinition::Javascript(c) => numbas::exam::ExamFunctionDefinition::Javascript {
                 definition: c.definition.clone().unwrap().to_string(locale).unwrap(),
