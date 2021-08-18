@@ -46,7 +46,7 @@ macro_rules! translatable_type {
                             Err(e) => $check_expr(e),
                         }
                     }
-                    None => RumbasCheckResult::empty(), // TODO: change
+                    None => RumbasCheckResult::from_missing(Some(locale.to_owned())),
                 }
             }
         }
@@ -118,7 +118,7 @@ macro_rules! translatable_type {
                                 }
                             })
                             .flatten()
-                    } //TODO content to static string //TODO: check for missing translations
+                    } //TODO content to static string
                 }
             }
         }

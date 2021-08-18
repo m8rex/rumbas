@@ -38,6 +38,7 @@ pub fn compile(matches: &clap::ArgMatches) {
             if exam.locales().0.is_none() {
                 log::error!("Locales not set!");
             } else {
+                let mut something_failed: bool = false;
                 for locale_item in exam.locales().unwrap().iter() {
                     let locale = locale_item.clone().unwrap().name.unwrap();
                     let numbas = exam.to_numbas_safe(&locale);
@@ -73,17 +74,20 @@ pub fn compile(matches: &clap::ArgMatches) {
                             match exam_write_res {
                                 numbas::exam::WriteResult::IOError(e) => {
                                     log::error!("Failed saving the exam file because of {}.", e);
-                                    std::process::exit(1);
+                                    something_failed = true;
                                 }
                                 numbas::exam::WriteResult::JSONError(e) => {
                                     log::error!(
                                         "Failed generating the exam file because of {}.",
                                         e
                                     );
-                                    std::process::exit(1);
+                                    something_failed = true;
                                 }
                                 numbas::exam::WriteResult::Ok => {
-                                    log::info!("Generated and saved exam file.");
+                                    log::info!(
+                                        "Generated and saved exam file for locale {}.",
+                                        locale
+                                    );
 
                                     let numbas_settings = exam.numbas_settings().clone().unwrap();
 
@@ -119,7 +123,7 @@ pub fn compile(matches: &clap::ArgMatches) {
                                             "{}",
                                             std::str::from_utf8(&output.stderr).unwrap()
                                         );
-                                        std::process::exit(1)
+                                        something_failed = true;
                                     }
                                 }
                             }
@@ -150,9 +154,12 @@ pub fn compile(matches: &clap::ArgMatches) {
                                     .collect::<Vec<_>>()
                                     .join("\n")
                             );
-                            std::process::exit(1)
+                            something_failed = true;
                         }
                     }
+                }
+                if something_failed {
+                    std::process::exit(1)
                 }
             }
         }

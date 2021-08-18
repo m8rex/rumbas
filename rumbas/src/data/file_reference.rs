@@ -46,7 +46,7 @@ macro_rules! file_type {
                                 Err(e) => $check_expr(e),
                             }
                         }
-                        None => RumbasCheckResult::empty(), // TODO: change
+                        None => RumbasCheckResult::from_missing(Some(locale.to_string())),
                     }
                 }
             }
@@ -57,7 +57,6 @@ macro_rules! file_type {
         }
         impl_optional_overwrite_value!($type);
 
-        //TODO: error message is not shown if no file found
         impl std::convert::From<String> for $type {
             fn from(s: String) -> Self {
                 let mut prefix = FILE_PREFIX.to_owned();
@@ -81,7 +80,6 @@ macro_rules! file_type {
                             // We only care about the ones that are 'Ok'
                             {
                                 if let Ok(entry_name) = entry.file_name().into_string() {
-                                    //println!("{}", entry_name);
                                     if entry_name.starts_with("locale-") {
                                         let locale = entry_name
                                             .splitn(2, "locale-")
@@ -90,10 +88,8 @@ macro_rules! file_type {
                                             .unwrap()
                                             .to_string();
                                         let locale_file_path = file_dir.join(entry_name).join(file_name);
-                                        //println!("{}", locale_file_path.display());
                                         if locale_file_path.exists() {
                                             if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                                                //println!("{}", s);
                                                 if let Ok(s) = s.clone().try_into() {
                                                     translated_content.insert(
                                                         locale,
