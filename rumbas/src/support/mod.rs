@@ -6,3 +6,4 @@ pub mod to_numbas;
 pub mod to_rumbas;
 pub mod default;
 pub mod template;
+pub mod yaml;

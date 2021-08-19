@@ -20,4 +20,3 @@ pub mod resource;
 pub mod timing;
 pub mod translatable;
 pub mod variable;
-pub mod yaml;

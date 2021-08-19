@@ -7,7 +7,7 @@ use crate::data::normal_exam::NormalExam;
 use crate::data::question::Question;
 use crate::data::question_group::QuestionPath;
 use crate::data::translatable::TranslatableString;
-use crate::data::yaml::YamlError;
+use crate::support::yaml::YamlError;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{TemplateData, Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
