@@ -1,9 +1,14 @@
+use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::data::diagnostic_exam::convert_diagnostic_numbas_exam;
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::locale::Locale;
+use crate::data::normal_exam::convert_normal_numbas_exam;
 use crate::data::normal_exam::NormalExam;
 use crate::data::optional_overwrite::*;
+use crate::data::question_group::QuestionPath;
 use crate::data::template::{ExamFileType, TemplateData, Value, ValueType};
 use crate::data::to_numbas::ToNumbas;
+use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -107,4 +112,46 @@ impl Exam {
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
             .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
     }
+}
+
+pub fn convert_numbas_exam(
+    exam: numbas::exam::Exam,
+) -> (
+    String,
+    ExamFileType,
+    Vec<QuestionPath>,
+    Vec<CustomPartTypeDefinitionPath>,
+) {
+    let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
+        numbas::exam::ExamNavigationMode::Diagnostic(ref _d) => {
+            let (exam, qgs, cpts) = convert_diagnostic_numbas_exam(exam);
+            (
+                exam.name.clone().unwrap(),
+                ExamFileType::Diagnostic(exam),
+                qgs,
+                cpts,
+            )
+        }
+        _ => {
+            let (exam, qgs, cpts) = convert_normal_numbas_exam(exam);
+            (
+                exam.name.clone().unwrap(),
+                ExamFileType::Normal(exam),
+                qgs,
+                cpts,
+            )
+        }
+    };
+    (
+        {
+            if let TranslatableString::NotTranslated(n) = name {
+                n.get_content("").unwrap()
+            } else {
+                panic!("Should not happen");
+            }
+        },
+        exam,
+        qgs,
+        cpts,
+    )
 }
