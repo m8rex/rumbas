@@ -3,7 +3,7 @@ use rumbas::data::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::data::exam::convert_numbas_exam;
 use rumbas::data::question_group::QuestionPath;
 use rumbas::data::template::QuestionFileType;
-use rumbas::data::to_rumbas::ToRumbas;
+use rumbas::support::to_rumbas::ToRumbas;
 
 macro_rules! read_exam {
     ($file_name: expr) => {{

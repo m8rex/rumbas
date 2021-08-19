@@ -1,5 +1,5 @@
-use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
+use crate::support::optional_overwrite::*;
 
 pub type NumbasResult<T> = Result<T, RumbasCheckResult>;
 
@@ -86,6 +86,8 @@ macro_rules! impl_to_numbas {
         )*
     };
 }
+
+pub(crate) use impl_to_numbas;
 
 impl_to_numbas!(String, bool, f64, usize);
 impl_to_numbas!(numbas::jme::JMEString);

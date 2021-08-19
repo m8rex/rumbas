@@ -2,6 +2,7 @@
 extern crate enum_display_derive;
 
 pub mod data;
+pub mod support;
 
 pub const QUESTIONS_FOLDER: &str = "questions";
 pub const EXAMS_FOLDER: &str = "exams";

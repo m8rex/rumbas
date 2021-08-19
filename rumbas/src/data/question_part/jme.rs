@@ -1,14 +1,14 @@
 use crate::data::file_reference::{FileString, JMEFileString};
-use crate::data::optional_overwrite::*;
 use crate::data::question_part::question_part::JMENotes;
 use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::ToNumbas;
-use crate::data::to_rumbas::ToRumbas;
-use crate::data::to_rumbas::*;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::EmbracedJMETranslatableString;
 use crate::data::translatable::TranslatableString;
+use crate::support::optional_overwrite::*;
+use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::ToRumbas;
+use crate::support::to_rumbas::*;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

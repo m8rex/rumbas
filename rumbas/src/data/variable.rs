@@ -1,9 +1,9 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::*;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::ToNumbas;
-use crate::data::to_rumbas::ToRumbas;
+use crate::support::optional_overwrite::*;
+use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::ToRumbas;
 use regex::Regex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
