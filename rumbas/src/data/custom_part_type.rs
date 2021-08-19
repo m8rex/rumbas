@@ -1,6 +1,6 @@
 use crate::data::extension::Extensions;
 use crate::data::question_part::question_part::JMENotes;
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::{YamlError, YamlResult};

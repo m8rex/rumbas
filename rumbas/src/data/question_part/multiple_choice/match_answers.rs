@@ -1,6 +1,6 @@
 use crate::data::question_part::question_part::JMENotes;
 use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::support::optional_overwrite::*;

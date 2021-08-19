@@ -7,7 +7,7 @@ use crate::data::navigation::DiagnosticNavigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::question_group::QuestionGroup;
 use crate::data::question_group::QuestionPath;
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::translatable::JMENotesTranslatableString;
 use crate::data::translatable::TranslatableString;

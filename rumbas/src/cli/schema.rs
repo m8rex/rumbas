@@ -1,5 +1,5 @@
-use rumbas::data::template::ExamFileType;
-use rumbas::data::template::QuestionFileType;
+use rumbas::data::exam::ExamFileType;
+use rumbas::data::exam::QuestionFileType;
 use schemars::schema_for;
 
 pub fn schema(_matches: &clap::ArgMatches) {

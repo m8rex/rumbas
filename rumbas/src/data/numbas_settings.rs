@@ -1,5 +1,5 @@
 use crate::data::locale::SupportedLocale;
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

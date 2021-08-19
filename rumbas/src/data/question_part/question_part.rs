@@ -8,7 +8,7 @@ use crate::data::question_part::multiple_choice::choose_one::QuestionPartChooseO
 use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
 use crate::data::question_part::number_entry::QuestionPartNumberEntry;
 use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::translatable::{ContentAreaTranslatableString, JMETranslatableString};
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
