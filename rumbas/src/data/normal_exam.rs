@@ -37,7 +37,7 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::Exam> for NormalExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         let basic_settings = numbas::exam::BasicExamSettings {
-            name: self.name.clone().unwrap().to_string(locale).unwrap(), //TODO: might fail, not checked
+            name: self.name.to_numbas(locale), //TODO: might fail, not checked
             duration_in_seconds: self
                 .timing
                 .clone()
@@ -56,38 +56,39 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
                     .unwrap()
                     .to_shared_data()
                     .show_names_of_question_groups
-                    .unwrap(),
+                    .to_numbas(locale),
             ),
-            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
+            show_student_name: Some(
+                self.feedback
+                    .clone()
+                    .unwrap()
+                    .show_name_of_student
+                    .to_numbas(locale),
+            ),
             allow_printing: Some(
                 self.navigation
                     .clone()
                     .unwrap()
                     .to_shared_data()
                     .allow_printing
-                    .unwrap(),
+                    .to_numbas(locale),
             ),
         };
 
-        let navigation = self.navigation.clone().unwrap().to_numbas(locale);
+        let navigation = self.navigation.to_numbas(locale);
 
-        let timing = self.timing.clone().unwrap().to_numbas(locale);
+        let timing = self.timing.to_numbas(locale);
 
-        let feedback = self.feedback.clone().unwrap().to_numbas(locale);
-
-        //TODO
-        let functions = Value::Normal(HashMap::new());
+        let feedback = self.feedback.to_numbas(locale);
 
         //TODO
-        let variables = Value::Normal(HashMap::new());
+        let functions = Some(HashMap::new());
 
-        let question_groups: Vec<numbas::exam::ExamQuestionGroup> = self
-            .question_groups
-            .clone()
-            .unwrap()
-            .iter()
-            .map(|qg| qg.clone().to_numbas(locale))
-            .collect();
+        //TODO
+        let variables = Some(HashMap::new());
+
+        let question_groups: Vec<numbas::exam::ExamQuestionGroup> =
+            self.question_groups.to_numbas(locale);
 
         let resources: Vec<numbas::exam::Resource> = self
             .question_groups
@@ -150,8 +151,8 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             navigation,
             timing,
             feedback,
-            functions: Some(functions.unwrap()),
-            variables: Some(variables.unwrap()),
+            functions,
+            variables,
             question_groups,
             diagnostic: None,
         }

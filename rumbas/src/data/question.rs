@@ -77,21 +77,10 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
                 .clone()
                 .unwrap()
                 .into_iter()
-                .map(|(k, v)| {
-                    (
-                        k.clone(),
-                        v.unwrap().to_variable().to_numbas_with_name(locale, k),
-                    )
-                })
+                .map(|(k, v)| (k.clone(), v.to_numbas_with_name(locale, k)))
                 .collect(),
             variables_test: self.variables_test.clone().unwrap().to_numbas(locale),
-            functions: self
-                .functions
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|(k, v)| (k, v.to_numbas(locale)))
-                .collect(),
+            functions: self.functions.to_numbas(locale),
             ungrouped_variables: self
                 .variables
                 .clone()
@@ -112,7 +101,7 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
                 .into_iter()
                 .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
                 .collect(),
-            resources: self.resources.clone().unwrap().to_numbas(locale),
+            resources: self.resources.to_numbas(locale),
             custom_part_types: self
                 .custom_part_types
                 .clone()
@@ -224,10 +213,10 @@ optional_overwrite! {
 }
 
 impl ToNumbas<numbas::exam::ExamQuestionVariablesTest> for VariablesTest {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionVariablesTest {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionVariablesTest {
         numbas::exam::ExamQuestionVariablesTest {
-            condition: self.condition.clone().unwrap(),
-            max_runs: self.max_runs.clone().unwrap().into(),
+            condition: self.condition.to_numbas(locale),
+            max_runs: self.max_runs.to_numbas(locale),
         }
     }
 }
@@ -302,11 +291,11 @@ optional_overwrite! {
 }
 
 impl ToNumbas<numbas::exam::ExamQuestionConstant> for CustomConstant {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionConstant {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionConstant {
         numbas::exam::ExamQuestionConstant {
-            name: self.name.clone().unwrap(),
-            value: self.value.clone().unwrap(),
-            tex: self.tex.clone().unwrap(),
+            name: self.name.to_numbas(locale),
+            value: self.value.to_numbas(locale),
+            tex: self.tex.to_numbas(locale),
         }
     }
 }

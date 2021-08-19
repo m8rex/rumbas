@@ -24,7 +24,7 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionGroup {
         numbas::exam::ExamQuestionGroup {
-            name: self.name.clone().map(|s| s.to_string(locale)).flatten(),
+            name: Some(self.name.to_numbas(locale)),
             picking_strategy: self.picking_strategy.to_numbas(locale),
             questions: self.questions.to_numbas(locale),
         }

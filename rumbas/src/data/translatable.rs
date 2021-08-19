@@ -81,26 +81,29 @@ macro_rules! translatable_type {
                     locale: &str,
                     map: &HashMap<String, Value<$type>>,
                 ) -> Option<String> {
-                    if pattern.is_none() {
-                        return None;
-                    }
-                    let mut result = pattern.clone().unwrap();
-                    let mut substituted = false;
-                    for (key, val) in map.iter() {
-                        if key.starts_with('{') && key.ends_with('}') {
-                            let before = result.clone();
-                            if let Some(v) = val.unwrap().to_string(locale) {
-                                result = result.replace(key, &v);
-                                substituted = substituted || before != result;
-                            } else {
-                                return None;
+                    pattern
+                        .as_ref()
+                        .map(|pattern| {
+                            let mut result = pattern.to_string();
+                            let mut substituted = false;
+                            for (key, val) in map.iter() {
+                                if key.starts_with('{') && key.ends_with('}') {
+                                    let before = result.clone();
+                                    if let Some(v) = val.unwrap().to_string(locale) {
+                                        result = result.replace(key, &v);
+                                        substituted = substituted || before != result;
+                                    } else {
+                                        return None;
+                                    }
+                                }
                             }
-                        }
-                    }
-                    if substituted {
-                        return substitute(&Some(result), locale, map);
-                    }
-                    Some(result)
+                            if substituted {
+                                substitute(&Some(result), locale, map)
+                            } else {
+                                Some(result)
+                            }
+                        })
+                        .flatten()
                 }
                 match self {
                     //TODO: just use unwrap on values?

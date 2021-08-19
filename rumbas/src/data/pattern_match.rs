@@ -25,22 +25,17 @@ impl ToNumbas<numbas::exam::ExamQuestionPartPatternMatch> for QuestionPartPatter
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartPatternMatch {
         numbas::exam::ExamQuestionPartPatternMatch {
             part_data: self.to_numbas_shared_data(locale),
-            case_sensitive: Some(self.case_sensitive.unwrap()),
-            partial_credit: Some(self.partial_credit.unwrap().into()),
-            answer: numbas::exam::Primitive::String(
-                self.pattern.clone().unwrap().to_string(locale).unwrap(),
-            ),
+            case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
+            partial_credit: Some(self.partial_credit.to_numbas(locale)),
+            answer: numbas::exam::Primitive::String(self.pattern.to_numbas(locale)),
             display_answer: Some(numbas::exam::Primitive::String(
-                self.display_answer
-                    .clone()
-                    .unwrap()
-                    .to_string(locale)
-                    .unwrap(),
+                self.display_answer.to_numbas(locale),
             )),
-            match_mode: self.match_mode.unwrap(),
+            match_mode: self.match_mode.to_numbas(locale),
         }
     }
 }
+impl_to_numbas!(numbas::exam::PatternMatchMode);
 
 impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatternMatch {
     fn to_rumbas(&self) -> QuestionPartPatternMatch {

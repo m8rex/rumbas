@@ -53,6 +53,12 @@ impl std::convert::From<JMEString> for String {
     }
 }
 
+impl std::fmt::Display for JMEString {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.s)
+    }
+}
+
 impl Default for JMEString {
     fn default() -> Self {
         JMEString {
@@ -93,6 +99,12 @@ impl std::convert::TryFrom<String> for EmbracedJMEString {
 impl std::convert::From<EmbracedJMEString> for String {
     fn from(jme: EmbracedJMEString) -> Self {
         jme.s
+    }
+}
+
+impl std::fmt::Display for EmbracedJMEString {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.s)
     }
 }
 
@@ -140,6 +152,12 @@ impl std::convert::From<ContentAreaString> for String {
     }
 }
 
+impl std::fmt::Display for ContentAreaString {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.s)
+    }
+}
+
 impl Default for ContentAreaString {
     fn default() -> Self {
         ContentAreaString {
@@ -181,6 +199,12 @@ impl std::convert::TryFrom<String> for JMENotesString {
 impl std::convert::From<JMENotesString> for String {
     fn from(jme: JMENotesString) -> Self {
         jme.s
+    }
+}
+
+impl std::fmt::Display for JMENotesString {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.s)
     }
 }
 
