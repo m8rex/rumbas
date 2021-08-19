@@ -1,7 +1,7 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::normal_exam::NormalExam;
-use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
+use crate::support::optional_overwrite::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

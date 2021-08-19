@@ -1,6 +1,6 @@
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::ToNumbas;
-use crate::data::to_rumbas::ToRumbas;
+use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::ToRumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use schemars::JsonSchema;
 use serde::Serialize;
@@ -491,6 +491,11 @@ macro_rules! optional_overwrite_enum {
         impl_optional_overwrite_value!($enum);
     }
 }
+pub(crate) use impl_optional_overwrite;
+pub(crate) use impl_optional_overwrite_value;
+pub(crate) use impl_optional_overwrite_value_only;
+pub(crate) use optional_overwrite;
+pub(crate) use optional_overwrite_enum;
 
 #[cfg(test)]
 mod test {

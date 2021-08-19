@@ -1,4 +1,3 @@
-use crate::data::optional_overwrite::*;
 use crate::data::question_part::extension::QuestionPartExtension;
 use crate::data::question_part::gapfill::QuestionPartGapFill;
 use crate::data::question_part::information::QuestionPartInformation;
@@ -10,9 +9,10 @@ use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatc
 use crate::data::question_part::number_entry::QuestionPartNumberEntry;
 use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::ToNumbas;
-use crate::data::to_rumbas::*;
 use crate::data::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+use crate::support::optional_overwrite::*;
+use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;

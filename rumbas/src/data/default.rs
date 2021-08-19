@@ -6,7 +6,6 @@ use crate::data::navigation::{
 };
 use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::optional_overwrite::*;
 use crate::data::question::Question;
 use crate::data::question_part::gapfill::QuestionPartGapFill;
 use crate::data::question_part::information::QuestionPartInformation;
@@ -19,6 +18,7 @@ use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
 use crate::data::question_part::question_part::{QuestionPart, QuestionPartBuiltin};
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
+use crate::support::optional_overwrite::*;
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};

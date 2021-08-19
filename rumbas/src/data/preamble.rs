@@ -1,7 +1,7 @@
 use crate::data::file_reference::FileString;
-use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
-use crate::data::to_numbas::ToNumbas;
+use crate::support::optional_overwrite::*;
+use crate::support::to_numbas::ToNumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
