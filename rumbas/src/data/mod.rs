@@ -1,7 +1,6 @@
 //! Contains all the data types
 
 pub mod custom_part_type;
-pub mod default;
 pub mod diagnostic_exam;
 pub mod exam;
 pub mod extension;
@@ -18,7 +17,6 @@ pub mod question;
 pub mod question_group;
 pub mod question_part;
 pub mod resource;
-pub mod template;
 pub mod timing;
 pub mod translatable;
 pub mod variable;

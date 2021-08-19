@@ -1,5 +1,5 @@
 use crate::data::question::Question;
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
 use crate::support::optional_overwrite::*;

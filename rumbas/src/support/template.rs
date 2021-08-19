@@ -1,6 +1,3 @@
-use crate::data::diagnostic_exam::DiagnosticExam;
-use crate::data::normal_exam::NormalExam;
-use crate::data::question::Question;
 use crate::support::optional_overwrite::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -32,35 +29,6 @@ impl JsonSchema for MyYamlValue {
 impl std::convert::From<serde_yaml::Value> for MyYamlValue {
     fn from(v: serde_yaml::Value) -> Self {
         Self(v)
-    }
-}
-
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum ExamFileType {
-    Template(TemplateData),
-    Normal(NormalExam),
-    Diagnostic(DiagnosticExam),
-}
-
-impl ExamFileType {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
-    }
-}
-
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum QuestionFileType {
-    Template(TemplateData),
-    Normal(Box<Question>),
-}
-
-impl QuestionFileType {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
     }
 }
 

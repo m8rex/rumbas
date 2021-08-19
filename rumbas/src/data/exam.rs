@@ -4,11 +4,12 @@ use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::locale::Locale;
 use crate::data::normal_exam::convert_normal_numbas_exam;
 use crate::data::normal_exam::NormalExam;
+use crate::data::question::Question;
 use crate::data::question_group::QuestionPath;
-use crate::data::template::{ExamFileType, TemplateData, Value, ValueType};
 use crate::data::translatable::TranslatableString;
 use crate::data::yaml::YamlError;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{TemplateData, Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -154,4 +155,33 @@ pub fn convert_numbas_exam(
         qgs,
         cpts,
     )
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum ExamFileType {
+    Template(TemplateData),
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
+}
+
+impl ExamFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum QuestionFileType {
+    Template(TemplateData),
+    Normal(Box<Question>),
+}
+
+impl QuestionFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
 }

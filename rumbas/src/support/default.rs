@@ -16,9 +16,9 @@ use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatc
 use crate::data::question_part::number_entry::QuestionPartNumberEntry;
 use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
 use crate::data::question_part::question_part::{QuestionPart, QuestionPartBuiltin};
-use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};

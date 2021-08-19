@@ -1,4 +1,4 @@
-use crate::data::template::{Value, ValueType};
+use crate::support::template::{Value, ValueType};
 use crate::data::translatable::{JMETranslatableString, TranslatableString};
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::impl_to_numbas;

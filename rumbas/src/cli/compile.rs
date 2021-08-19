@@ -1,4 +1,4 @@
-use rumbas::data::default::combine_with_default_files;
+use rumbas::support::default::combine_with_default_files;
 use rumbas::support::to_numbas::ToNumbas;
 use std::env;
 use std::path::Path;
