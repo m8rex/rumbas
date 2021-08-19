@@ -1,10 +1,13 @@
+use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::extension::Extensions;
 use crate::data::feedback::Feedback;
 use crate::data::locale::Locale;
+use crate::data::locale::SupportedLocale;
 use crate::data::navigation::DiagnosticNavigation;
 use crate::data::numbas_settings::NumbasSettings;
 use crate::data::optional_overwrite::*;
 use crate::data::question_group::QuestionGroup;
+use crate::data::question_group::QuestionPath;
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::ToNumbas;
@@ -320,4 +323,50 @@ impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic
             ),
         }
     }
+}
+
+/// Converts a diagnostic numbas exam to a NormalExam
+pub fn convert_diagnostic_numbas_exam(
+    exam: numbas::exam::Exam,
+) -> (
+    DiagnosticExam,
+    Vec<QuestionPath>,
+    Vec<CustomPartTypeDefinitionPath>,
+) {
+    let question_groups = exam
+        .question_groups
+        .to_rumbas()
+        .into_iter()
+        .map(Value::Normal)
+        .collect::<Vec<_>>();
+    let custom_part_types = exam.custom_part_types.to_rumbas();
+    (
+        DiagnosticExam {
+            locales: Value::Normal(vec![Value::Normal(Locale {
+                name: Value::Normal("en".to_string()),
+                numbas_locale: Value::Normal(SupportedLocale::EnGB),
+            })]), // todo: argument?
+            name: Value::Normal(exam.basic_settings.name.clone().into()),
+            navigation: Value::Normal(exam.to_rumbas()),
+            timing: Value::Normal(exam.to_rumbas()),
+            feedback: Value::Normal(exam.to_rumbas()),
+            question_groups: Value::Normal(question_groups.clone()),
+            numbas_settings: Value::Normal(NumbasSettings {
+                locale: Value::Normal(SupportedLocale::EnGB),
+                theme: Value::Normal("default".to_string()),
+            }), // todo: argument?
+            diagnostic: Value::Normal(exam.diagnostic.unwrap().to_rumbas()),
+        },
+        question_groups
+            .into_iter()
+            .flat_map(|qg| {
+                qg.unwrap()
+                    .questions
+                    .unwrap()
+                    .into_iter()
+                    .map(|q| q.unwrap())
+            })
+            .collect(),
+        custom_part_types,
+    )
 }
