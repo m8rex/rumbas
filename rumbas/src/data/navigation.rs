@@ -1,6 +1,6 @@
-use crate::data::file_reference::FileString;
+use crate::support::file_reference::FileString;
 use crate::support::template::{Value, ValueType};
-use crate::data::translatable::TranslatableString;
+use crate::support::translatable::TranslatableString;
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;

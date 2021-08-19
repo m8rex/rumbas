@@ -1,4 +1,4 @@
-use crate::data::file_reference::FileString;
+use crate::support::file_reference::FileString;
 use crate::data::question::UNGROUPED_GROUP;
 use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;

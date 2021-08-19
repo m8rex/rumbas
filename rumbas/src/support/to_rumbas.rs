@@ -1,8 +1,8 @@
 use crate::data::question_part::question_part::QuestionPart;
-use crate::data::translatable::ContentAreaTranslatableString;
-use crate::data::translatable::EmbracedJMETranslatableString;
-use crate::data::translatable::JMETranslatableString;
-use crate::data::translatable::TranslatableString;
+use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::EmbracedJMETranslatableString;
+use crate::support::translatable::JMETranslatableString;
+use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use std::convert::TryInto;

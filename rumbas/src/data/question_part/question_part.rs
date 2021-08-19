@@ -9,7 +9,7 @@ use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatc
 use crate::data::question_part::number_entry::QuestionPartNumberEntry;
 use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
 use crate::support::template::{Value, ValueType};
-use crate::data::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
