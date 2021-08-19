@@ -3,7 +3,7 @@ use crate::data::question_part::question_part::JMENotes;
 use crate::support::template::{Value, ValueType};
 use crate::data::translatable::JMETranslatableString;
 use crate::data::translatable::TranslatableString;
-use crate::data::yaml::{YamlError, YamlResult};
+use crate::support::yaml::{YamlError, YamlResult};
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;

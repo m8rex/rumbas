@@ -10,7 +10,7 @@ use crate::data::resource::ResourcePath;
 use crate::data::translatable::ContentAreaTranslatableString;
 use crate::data::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
-use crate::data::yaml::{YamlError, YamlResult};
+use crate::support::yaml::{YamlError, YamlResult};
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
