@@ -1,6 +1,6 @@
 use crate::data::optional_overwrite::*;
-use crate::data::question_part::JMENotes;
-use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::data::question_part::question_part::JMENotes;
+use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::*;
@@ -9,20 +9,20 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    pub struct QuestionPartInformation {}
+    pub struct QuestionPartExtension {}
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartInformation> for QuestionPartInformation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartInformation {
-        numbas::exam::ExamQuestionPartInformation {
-            part_data: self.to_numbas_shared_data(locale), // TODO: to numbas?
+impl ToNumbas<numbas::exam::ExamQuestionPartExtension> for QuestionPartExtension {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartExtension {
+        numbas::exam::ExamQuestionPartExtension {
+            part_data: self.to_numbas_shared_data(locale),
         }
     }
 }
 
-impl ToRumbas<QuestionPartInformation> for numbas::exam::ExamQuestionPartInformation {
-    fn to_rumbas(&self) -> QuestionPartInformation {
-        QuestionPartInformation {
+impl ToRumbas<QuestionPartExtension> for numbas::exam::ExamQuestionPartExtension {
+    fn to_rumbas(&self) -> QuestionPartExtension {
+        QuestionPartExtension {
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
             prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
             use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),

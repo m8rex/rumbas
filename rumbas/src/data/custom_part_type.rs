@@ -2,7 +2,7 @@ use crate::data::extension::Extensions;
 use crate::data::optional_overwrite::{
     Noneable, OptionalOverwrite, RumbasCheck, RumbasCheckResult,
 };
-use crate::data::question_part::JMENotes;
+use crate::data::question_part::question_part::JMENotes;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
@@ -179,7 +179,7 @@ pub struct CustomPartNumberInputOptions {
     ///Allow the student to enter their answer as a fraction?
     allow_fractions: CustomPartInputOptionValue<bool>,
     allowed_notation_styles:
-        CustomPartInputOptionValue<Vec<crate::data::number_entry::AnswerStyle>>,
+        CustomPartInputOptionValue<Vec<crate::data::question_part::number_entry::AnswerStyle>>,
 }
 
 impl RumbasCheck for CustomPartNumberInputOptions {

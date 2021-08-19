@@ -5,7 +5,7 @@ use crate::data::function::Function;
 use crate::data::navigation::QuestionNavigation;
 use crate::data::optional_overwrite::*;
 use crate::data::preamble::Preamble;
-use crate::data::question_part::QuestionPart;
+use crate::data::question_part::question_part::QuestionPart;
 use crate::data::resource::ResourcePath;
 use crate::data::template::QuestionFileType;
 use crate::data::template::{Value, ValueType};

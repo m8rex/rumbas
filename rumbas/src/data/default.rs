@@ -1,22 +1,22 @@
 use crate::data::diagnostic_exam::DiagnosticExam;
 use crate::data::exam::Exam;
 use crate::data::feedback::Feedback;
-use crate::data::gapfill::QuestionPartGapFill;
-use crate::data::information::QuestionPartInformation;
-use crate::data::jme::QuestionPartJME;
-use crate::data::multiple_choice::QuestionPartChooseMultiple;
-use crate::data::multiple_choice::QuestionPartChooseOne;
-use crate::data::multiple_choice::QuestionPartMatchAnswersWithItems;
 use crate::data::navigation::{
     DiagnosticNavigation, MenuNavigation, NormalNavigation, SequentialNavigation,
 };
 use crate::data::normal_exam::NormalExam;
 use crate::data::numbas_settings::NumbasSettings;
-use crate::data::number_entry::QuestionPartNumberEntry;
 use crate::data::optional_overwrite::*;
-use crate::data::pattern_match::QuestionPartPatternMatch;
 use crate::data::question::Question;
-use crate::data::question_part::{QuestionPart, QuestionPartBuiltin};
+use crate::data::question_part::gapfill::QuestionPartGapFill;
+use crate::data::question_part::information::QuestionPartInformation;
+use crate::data::question_part::jme::QuestionPartJME;
+use crate::data::question_part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
+use crate::data::question_part::multiple_choice::choose_one::QuestionPartChooseOne;
+use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
+use crate::data::question_part::number_entry::QuestionPartNumberEntry;
+use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
+use crate::data::question_part::question_part::{QuestionPart, QuestionPartBuiltin};
 use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use std::collections::HashSet;
