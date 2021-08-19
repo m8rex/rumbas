@@ -1,7 +1,7 @@
 use crate::data::file_reference::{FileString, JMEFileString};
 use crate::data::optional_overwrite::*;
-use crate::data::question_part::JMENotes;
-use crate::data::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::data::question_part::question_part::JMENotes;
+use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
