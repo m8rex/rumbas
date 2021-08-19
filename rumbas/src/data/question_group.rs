@@ -1,6 +1,6 @@
 use crate::data::question::Question;
 use crate::support::template::{Value, ValueType};
-use crate::data::translatable::TranslatableString;
+use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;

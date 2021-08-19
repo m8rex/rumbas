@@ -1,4 +1,4 @@
-use crate::data::file_reference::FileString;
+use crate::support::file_reference::FileString;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
@@ -196,7 +196,7 @@ translatable_type! {
 mod test {
     use super::TranslatableString::*;
     use super::*;
-    use crate::data::file_reference::FileString;
+    use crate::support::file_reference::FileString;
 
     #[test]
     fn no_translation() {

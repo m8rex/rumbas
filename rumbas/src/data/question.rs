@@ -1,14 +1,14 @@
 use crate::data::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::data::exam::QuestionFileType;
 use crate::data::extension::Extensions;
-use crate::data::file_reference::FileString;
+use crate::support::file_reference::FileString;
 use crate::data::function::Function;
 use crate::data::navigation::QuestionNavigation;
 use crate::data::preamble::Preamble;
 use crate::data::question_part::question_part::QuestionPart;
 use crate::data::resource::ResourcePath;
-use crate::data::translatable::ContentAreaTranslatableString;
-use crate::data::translatable::TranslatableString;
+use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::TranslatableString;
 use crate::data::variable::VariableRepresentation;
 use crate::support::yaml::{YamlError, YamlResult};
 use crate::support::optional_overwrite::*;

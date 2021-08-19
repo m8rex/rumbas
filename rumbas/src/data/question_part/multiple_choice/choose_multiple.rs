@@ -4,7 +4,7 @@ use crate::data::question_part::multiple_choice::{
 use crate::data::question_part::question_part::JMENotes;
 use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::support::template::{Value, ValueType};
-use crate::data::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
