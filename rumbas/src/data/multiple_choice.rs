@@ -118,17 +118,17 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseOne> for QuestionPartChooseOne
         };
         numbas::exam::ExamQuestionPartChooseOne {
             part_data: self.to_numbas_shared_data(locale),
-            min_answers: Some(if self.has_to_select_option.unwrap() {
+            min_answers: Some(if self.has_to_select_option.to_numbas(locale) {
                 1
             } else {
                 0
             }),
-            shuffle_answers: self.shuffle_answers.unwrap(),
+            shuffle_answers: self.shuffle_answers.to_numbas(locale),
             answers,
             display_type: self.display.unwrap().get_numbas_type(),
             columns: self.display.unwrap().get_nb_columns().into(),
             wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
-            show_cell_answer_state: Some(self.show_cell_answer_state.unwrap()),
+            show_cell_answer_state: Some(self.show_cell_answer_state.to_numbas(locale)),
             marking_matrix,
             distractors,
         }
@@ -328,6 +328,7 @@ question_part_type! {
     }
 }
 impl_optional_overwrite!(numbas::exam::MultipleChoiceWarningType);
+impl_to_numbas!(numbas::exam::MultipleChoiceWarningType);
 
 impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChooseMultiple {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartChooseMultiple {
@@ -368,22 +369,15 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChoo
         };
         numbas::exam::ExamQuestionPartChooseMultiple {
             part_data: self.to_numbas_shared_data(locale),
-            min_answers: Some(self.should_select_at_least.clone().unwrap().into()),
-            max_answers: self
-                .should_select_at_most
-                .clone()
-                .map(|s| s.to_numbas(locale))
-                .flatten()
-                .map(|a| a.into()),
-            //.map(|a| a)
-            //.unwrap_or(None),
+            min_answers: Some(self.should_select_at_least.to_numbas(locale)),
+            max_answers: self.should_select_at_most.to_numbas(locale),
             min_marks: Some(0usize), // todo?
             max_marks: Some(0usize.into()),
-            shuffle_answers: self.shuffle_answers.unwrap(),
+            shuffle_answers: self.shuffle_answers.to_numbas(locale),
             choices,
-            display_columns: self.columns.unwrap().into(),
-            wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.unwrap(),
-            show_cell_answer_state: self.show_cell_answer_state.unwrap(),
+            display_columns: self.columns.to_numbas(locale),
+            wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.to_numbas(locale),
+            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
             marking_matrix,
             distractors,
         }
@@ -492,6 +486,10 @@ impl_optional_overwrite!(
     numbas::exam::MatchAnswersWithChoicesLayout,
     numbas::exam::MatchAnswersWithChoicesDisplayType
 );
+impl_to_numbas!(
+    numbas::exam::MatchAnswersWithChoicesLayout,
+    numbas::exam::MatchAnswersWithChoicesDisplayType
+);
 
 impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
     for QuestionPartMatchAnswersWithItems
@@ -546,24 +544,19 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
         };
         numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
             part_data: self.to_numbas_shared_data(locale),
-            min_answers: Some(self.should_select_at_least.clone().unwrap().into()),
-            max_answers: self
-                .should_select_at_most
-                .clone()
-                .map(|s| s.to_numbas(locale))
-                .flatten()
-                .map(|v| v.into()),
+            min_answers: Some(self.should_select_at_least.to_numbas(locale)),
+            max_answers: self.should_select_at_most.to_numbas(locale),
             min_marks: Some(0.into()),
             max_marks: Some(0.into()),
-            shuffle_answers: self.shuffle_answers.unwrap(),
-            shuffle_choices: self.shuffle_items.unwrap(),
+            shuffle_answers: self.shuffle_answers.to_numbas(locale),
+            shuffle_choices: self.shuffle_items.to_numbas(locale),
             answers,
             choices,
-            wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.unwrap(),
-            layout: self.layout.clone().unwrap(),
-            show_cell_answer_state: self.show_cell_answer_state.unwrap(),
+            wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.to_numbas(locale),
+            layout: self.layout.to_numbas(locale),
+            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
             marking_matrix,
-            display_type: self.display.unwrap().to_numbas(locale),
+            display_type: self.display.to_numbas(locale),
         }
     }
 }

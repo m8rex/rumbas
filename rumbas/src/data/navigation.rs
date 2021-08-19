@@ -108,10 +108,10 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamNavigationMode> for SequentialNavigation {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigationMode {
         numbas::exam::ExamNavigationMode::Sequential(numbas::exam::ExamNavigationModeSequential {
-            on_leave: self.on_leave.clone().unwrap().to_numbas(locale),
-            show_results_page: self.show_results_page.clone().to_numbas(locale),
-            can_move_to_previous: self.can_move_to_previous.unwrap(),
-            browsing_enabled: self.browsing_enabled.unwrap(),
+            on_leave: self.on_leave.to_numbas(locale),
+            show_results_page: self.show_results_page.to_numbas(locale),
+            can_move_to_previous: self.can_move_to_previous.to_numbas(locale),
+            browsing_enabled: self.browsing_enabled.to_numbas(locale),
         })
     }
 }
@@ -133,10 +133,12 @@ impl ToNumbas<numbas::exam::ExamNavigationMode> for MenuNavigation {
 impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
         numbas::exam::ExamNavigation {
-            allow_regenerate: self.to_shared_data().can_regenerate.unwrap(),
-            allow_steps: Some(self.to_shared_data().show_steps.unwrap()),
-            show_frontpage: self.to_shared_data().show_title_page.unwrap(),
-            confirm_when_leaving: Some(self.to_shared_data().confirm_when_leaving.unwrap()),
+            allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
+            allow_steps: Some(self.to_shared_data().show_steps.to_numbas(locale)),
+            show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
+            confirm_when_leaving: Some(
+                self.to_shared_data().confirm_when_leaving.to_numbas(locale),
+            ),
             start_password: self
                 .to_shared_data()
                 .start_password
@@ -187,15 +189,31 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamNavigation> for DiagnosticNavigation {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
         numbas::exam::ExamNavigation {
-            allow_regenerate: self.shared_data.clone().unwrap().can_regenerate.unwrap(),
-            allow_steps: Some(self.shared_data.clone().unwrap().show_steps.unwrap()),
-            show_frontpage: self.shared_data.clone().unwrap().show_title_page.unwrap(),
+            allow_regenerate: self
+                .shared_data
+                .clone()
+                .unwrap()
+                .can_regenerate
+                .to_numbas(locale),
+            allow_steps: Some(
+                self.shared_data
+                    .clone()
+                    .unwrap()
+                    .show_steps
+                    .to_numbas(locale),
+            ),
+            show_frontpage: self
+                .shared_data
+                .clone()
+                .unwrap()
+                .show_title_page
+                .to_numbas(locale),
             confirm_when_leaving: Some(
                 self.shared_data
                     .clone()
                     .unwrap()
                     .confirm_when_leaving
-                    .unwrap(),
+                    .to_numbas(locale),
             ),
             start_password: self
                 .shared_data
@@ -326,11 +344,11 @@ optional_overwrite! {
 }
 
 impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::QuestionNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::QuestionNavigation {
         numbas::exam::QuestionNavigation {
-            allow_regenerate: self.can_regenerate.unwrap(),
-            show_frontpage: self.show_title_page.unwrap(),
-            confirm_when_leaving: Some(self.confirm_when_leaving.clone().unwrap()),
+            allow_regenerate: self.can_regenerate.to_numbas(locale),
+            show_frontpage: self.show_title_page.to_numbas(locale),
+            confirm_when_leaving: Some(self.confirm_when_leaving.to_numbas(locale)),
         }
     }
 }

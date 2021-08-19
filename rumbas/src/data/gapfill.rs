@@ -23,14 +23,8 @@ impl ToNumbas<numbas::exam::ExamQuestionPartGapFill> for QuestionPartGapFill {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartGapFill {
         numbas::exam::ExamQuestionPartGapFill {
             part_data: self.to_numbas_shared_data(locale),
-            sort_answers: Some(self.sort_answers.clone().unwrap()),
-            gaps: self
-                .gaps
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|g| g.to_numbas(locale))
-                .collect(),
+            sort_answers: Some(self.sort_answers.to_numbas(locale)),
+            gaps: self.gaps.to_numbas(locale),
         }
     }
 }

@@ -215,7 +215,7 @@ impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
                     "{}{}:{}",
                     v.name.unwrap(),
                     description,
-                    v.expression.unwrap().to_string(locale).unwrap()
+                    v.expression.to_numbas(locale)
                 )
             })
             .collect::<Vec<_>>()
@@ -263,7 +263,7 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::CustomPartMarkingNote> for JMENote {
     fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartMarkingNote {
         numbas::exam::CustomPartMarkingNote {
-            name: self.name.unwrap(),
+            name: self.name.to_numbas(locale),
             definition: self.expression.to_numbas(&locale),
             description: self.description.unwrap().unwrap_or("".to_string()),
         }
@@ -319,20 +319,20 @@ macro_rules! question_part_type {
         impl $struct {
             fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData {
-                    marks: Some(self.marks.clone().unwrap().into()),
-                    prompt: self.prompt.clone().map(|a| a.to_numbas(locale)),
-                    use_custom_name: Some(self.use_custom_name.clone().unwrap()),
-                    custom_name: Some(self.custom_name.clone().unwrap()),
-                    steps_penalty: Some(self.steps_penalty.clone().unwrap()),
-                    enable_minimum_marks:Some(self.enable_minimum_marks.clone().unwrap()),
-                    minimum_marks: Some(self.minimum_marks.clone().unwrap()),
-                    show_correct_answer: self.show_correct_answer.clone().unwrap(),
-                    show_feedback_icon: Some(self.show_feedback_icon.clone().unwrap()),
-                    variable_replacement_strategy: self.variable_replacement_strategy.clone().unwrap().to_numbas(&locale),
-                    adaptive_marking_penalty:Some(self.adaptive_marking_penalty.clone().unwrap()),
-                    custom_marking_algorithm: Some(self.custom_marking_algorithm_notes.unwrap().to_numbas(&locale)),
-                    extend_base_marking_algorithm: Some(self.extend_base_marking_algorithm.clone().unwrap()),
-                    steps: self.steps.clone().map(|v| v.iter().map(|s| s.to_numbas(&locale)).collect()),
+                    marks: Some(self.marks.clone().to_numbas(locale)),
+                    prompt: Some(self.prompt.to_numbas(locale)),
+                    use_custom_name: Some(self.use_custom_name.to_numbas(locale)),
+                    custom_name: Some(self.custom_name.to_numbas(locale)),
+                    steps_penalty: Some(self.steps_penalty.to_numbas(locale)),
+                    enable_minimum_marks:Some(self.enable_minimum_marks.to_numbas(locale)),
+                    minimum_marks: Some(self.minimum_marks.to_numbas(locale)),
+                    show_correct_answer: self.show_correct_answer.to_numbas(locale),
+                    show_feedback_icon: Some(self.show_feedback_icon.to_numbas(locale)),
+                    variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(&locale),
+                    adaptive_marking_penalty:Some(self.adaptive_marking_penalty.to_numbas(locale)),
+                    custom_marking_algorithm: Some(self.custom_marking_algorithm_notes.to_numbas(&locale)),
+                    extend_base_marking_algorithm: Some(self.extend_base_marking_algorithm.to_numbas(locale)),
+                    steps: Some(self.steps.to_numbas(&locale)),
                 }
 
             }
@@ -389,14 +389,8 @@ impl ToNumbas<numbas::exam::ExamQuestionPartCustom> for QuestionPartCustom {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartCustom {
         numbas::exam::ExamQuestionPartCustom {
             part_data: self.to_numbas_shared_data(locale),
-            r#type: self.r#type.unwrap(),
-            settings: self
-                .settings
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|(k, v)| (k, v.to_numbas(locale)))
-                .collect(),
+            r#type: self.r#type.to_numbas(locale),
+            settings: self.settings.to_numbas(locale),
         }
     }
 }

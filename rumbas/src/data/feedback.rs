@@ -29,13 +29,13 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamFeedback> for Feedback {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFeedback {
         numbas::exam::ExamFeedback {
-            show_actual_mark: self.show_current_marks.unwrap(),
-            show_total_mark: self.show_maximum_marks.unwrap(),
-            show_answer_state: self.show_answer_state.unwrap(),
-            allow_reveal_answer: self.allow_reveal_answer.unwrap(),
+            show_actual_mark: self.show_current_marks.to_numbas(locale),
+            show_total_mark: self.show_maximum_marks.to_numbas(locale),
+            show_answer_state: self.show_answer_state.to_numbas(locale),
+            allow_reveal_answer: self.allow_reveal_answer.to_numbas(locale),
             review: self.review.clone().map(|o| o.to_numbas(locale)),
             advice: self.advice.clone().map(|o| o.to_string(locale)).flatten(),
-            intro: self.intro.clone().unwrap().to_string(locale).unwrap(),
+            intro: self.intro.clone().to_numbas(locale),
             feedback_messages: self.feedback_messages.to_numbas(locale),
         }
     }
@@ -93,12 +93,12 @@ optional_overwrite! {
 }
 
 impl ToNumbas<numbas::exam::ExamReview> for Review {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamReview {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamReview {
         numbas::exam::ExamReview {
-            show_score: Some(self.show_score.clone().unwrap()),
-            show_feedback: Some(self.show_feedback.clone().unwrap()),
-            show_expected_answer: Some(self.show_expected_answer.clone().unwrap()),
-            show_advice: Some(self.show_advice.clone().unwrap()),
+            show_score: Some(self.show_score.clone().to_numbas(locale)),
+            show_feedback: Some(self.show_feedback.clone().to_numbas(locale)),
+            show_expected_answer: Some(self.show_expected_answer.clone().to_numbas(locale)),
+            show_advice: Some(self.show_advice.clone().to_numbas(locale)),
         }
     }
 }

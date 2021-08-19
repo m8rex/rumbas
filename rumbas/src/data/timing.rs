@@ -20,9 +20,9 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamTiming> for Timing {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamTiming {
         numbas::exam::ExamTiming {
-            allow_pause: self.allow_pause.unwrap(),
-            timeout: self.on_timeout.clone().unwrap().to_numbas(locale),
-            timed_warning: self.timed_warning.clone().unwrap().to_numbas(locale),
+            allow_pause: self.allow_pause.to_numbas(locale),
+            timeout: self.on_timeout.to_numbas(locale),
+            timed_warning: self.timed_warning.to_numbas(locale),
         }
     }
 }

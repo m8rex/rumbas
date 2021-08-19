@@ -19,15 +19,9 @@ impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
 impl ToNumbas<numbas::exam::ExamFunction> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunction {
         numbas::exam::ExamFunction {
-            parameters: self
-                .parameters
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|(a, b)| (a, b))
-                .collect(),
-            output_type: self.output_type.clone().unwrap(),
-            definition: self.definition.clone().unwrap().to_numbas(&locale),
+            parameters: self.parameters.to_numbas(locale),
+            output_type: self.output_type.to_numbas(locale),
+            definition: self.definition.to_numbas(&locale),
         }
     }
 }
@@ -42,6 +36,7 @@ impl ToRumbas<Function> for numbas::exam::ExamFunction {
     }
 }
 
+impl_to_numbas!(numbas::exam::ExamFunctionType);
 impl_optional_overwrite!(numbas::exam::ExamFunctionType);
 
 optional_overwrite_enum! {
@@ -61,7 +56,7 @@ impl ToNumbas<numbas::exam::ExamFunctionDefinition> for FunctionDefinition {
                 definition: c.definition.to_numbas(locale),
             },
             FunctionDefinition::Javascript(c) => numbas::exam::ExamFunctionDefinition::Javascript {
-                definition: c.definition.clone().unwrap().to_string(locale).unwrap(),
+                definition: c.definition.to_numbas(locale),
             },
         }
     }

@@ -40,56 +40,25 @@ impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
         numbas::exam::ExamQuestionPartJME {
             part_data: self.to_numbas_shared_data(locale),
             answer: self.answer.to_numbas(locale),
-            answer_simplification: Some(
-                self.answer_simplification
-                    .clone()
-                    .unwrap()
-                    .to_numbas(locale),
-            ),
-            show_preview: self.show_preview.clone().unwrap(),
-            checking_type: self.answer_check.clone().unwrap().to_numbas(locale),
-            failure_rate: Some(self.failure_rate.unwrap()),
-            vset_range: [
-                self.vset_range.unwrap()[0].into(),
-                self.vset_range.unwrap()[1].into(),
-            ],
-            vset_range_points: self.vset_range_points.unwrap().into(),
-            check_variable_names: self.check_variable_names.unwrap(),
-            single_letter_variables: Some(self.single_letter_variables.clone().unwrap()),
-            allow_unknown_functions: Some(self.allow_unknown_functions.clone().unwrap()),
+            answer_simplification: Some(self.answer_simplification.to_numbas(locale)),
+            show_preview: self.show_preview.to_numbas(locale),
+            checking_type: self.answer_check.to_numbas(locale),
+            failure_rate: Some(self.failure_rate.to_numbas(locale)),
+            vset_range: self.vset_range.to_numbas(locale),
+            vset_range_points: self.vset_range_points.to_numbas(locale),
+            check_variable_names: self.check_variable_names.to_numbas(locale),
+            single_letter_variables: Some(self.single_letter_variables.to_numbas(locale)),
+            allow_unknown_functions: Some(self.allow_unknown_functions.to_numbas(locale)),
             implicit_function_composition: Some(
-                self.implicit_function_composition.clone().unwrap(),
+                self.implicit_function_composition.to_numbas(locale),
             ),
-            max_length: self
-                .max_length
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
-            min_length: self
-                .min_length
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
-            must_have: self
-                .must_have
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
-            may_not_have: self
-                .may_not_have
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
-            must_match_pattern: self
-                .must_match_pattern
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
-            value_generators: self
-                .value_generators
-                .clone()
-                .map(|v| v.to_numbas(locale))
-                .flatten(),
+            max_length: self.max_length.to_numbas(locale),
+            min_length: self.min_length.to_numbas(locale),
+
+            must_have: self.must_have.to_numbas(locale),
+            may_not_have: self.may_not_have.to_numbas(locale),
+            must_match_pattern: self.must_match_pattern.to_numbas(locale),
+            value_generators: self.value_generators.to_numbas(locale),
         }
     }
 }

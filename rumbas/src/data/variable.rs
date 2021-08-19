@@ -21,10 +21,10 @@ impl ToNumbas<numbas::exam::ExamVariable> for Variable {
     fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
         numbas::exam::ExamVariable {
             name,
-            definition: self.definition.clone().unwrap().to_numbas(locale),
-            description: self.description.clone().unwrap(),
-            template_type: self.template_type.clone().unwrap().to_numbas(locale),
-            group: self.group.clone().unwrap(),
+            definition: self.definition.to_numbas(locale),
+            description: self.description.to_numbas(locale),
+            template_type: self.template_type.to_numbas(locale),
+            group: self.group.to_numbas(locale),
             can_override: false, // Don't support overriding variables (yet?)
         }
     }
@@ -109,6 +109,18 @@ pub enum VariableRepresentation {
     Long(Box<Variable>),
     Number(f64),
     Other(VariableStringRepresentation),
+}
+
+impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
+        self.to_variable().to_numbas_with_name(locale, name)
+    }
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
+        panic!(
+            "{}",
+            "Should not happen, don't call this method Missing name".to_string(),
+        )
+    }
 }
 
 impl RumbasCheck for VariableRepresentation {

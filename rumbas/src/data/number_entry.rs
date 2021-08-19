@@ -33,22 +33,18 @@ impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberE
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartNumberEntry {
         numbas::exam::ExamQuestionPartNumberEntry {
             part_data: self.to_numbas_shared_data(locale),
-            correct_answer_fraction: self.display_correct_as_fraction.clone().unwrap(),
-            correct_answer_style: Some(
-                self.display_correct_in_style
-                    .clone()
-                    .map(|a| a.to_numbas(locale))
-                    .unwrap(),
-            ),
-            allow_fractions: self.allow_fractions.unwrap(),
+            correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
+            correct_answer_style: Some(self.display_correct_in_style.to_numbas(locale)),
+            allow_fractions: self.allow_fractions.to_numbas(locale),
             notation_styles: Some(self.allowed_notation_styles.to_numbas(locale)),
-            fractions_must_be_reduced: Some(self.fractions_must_be_reduced.clone().unwrap()),
+            fractions_must_be_reduced: Some(self.fractions_must_be_reduced.to_numbas(locale)),
             partial_credit_if_fraction_not_reduced: Some(
-                self.partial_credit_if_fraction_not_reduced.clone().unwrap(),
+                self.partial_credit_if_fraction_not_reduced
+                    .to_numbas(locale),
             ),
             precision: None,           //TODO
             show_precision_hint: None, //TODO
-            show_fraction_hint: Some(self.hint_fraction.clone().unwrap()),
+            show_fraction_hint: Some(self.hint_fraction.to_numbas(locale)),
             answer: self.answer.to_numbas(locale),
             // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
         }

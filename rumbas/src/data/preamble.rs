@@ -18,8 +18,8 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::Preamble> for Preamble {
     fn to_numbas(&self, locale: &str) -> numbas::exam::Preamble {
         numbas::exam::Preamble {
-            js: self.js.clone().unwrap().to_numbas(locale),
-            css: self.css.clone().unwrap().to_numbas(locale),
+            js: self.js.to_numbas(locale),
+            css: self.css.to_numbas(locale),
         }
     }
 }
