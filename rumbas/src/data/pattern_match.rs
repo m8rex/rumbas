@@ -86,14 +86,14 @@ impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatter
                     .unwrap_or(DEFAULTS.pattern_match_partial_credit)
                     .0,
             ),
-            pattern: Value::Normal(TranslatableString::s(&self.answer.to_string())),
-            display_answer: Value::Normal(TranslatableString::s(
-                &self
-                    .display_answer
+            pattern: Value::Normal(self.answer.to_string().into()),
+            display_answer: Value::Normal(
+                self.display_answer
                     .clone()
                     .map(|d| d.to_string())
-                    .unwrap_or_else(|| self.answer.to_string()),
-            )), // TDDO: check default
+                    .unwrap_or_else(|| self.answer.to_string())
+                    .into(),
+            ), // TDDO: check default
             match_mode: Value::Normal(self.match_mode),
         }
     }

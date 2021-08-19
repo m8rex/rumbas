@@ -9,6 +9,7 @@ use crate::data::template::{Value, ValueType};
 use crate::data::timing::Timing;
 use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
+use crate::data::translatable::JMENotesTranslatableString;
 use crate::data::translatable::TranslatableString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -207,7 +208,7 @@ impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
 pub enum DiagnosticScript {
     Mastery,
     Diagnosys,
-    Custom(TranslatableString), // TODO: JME Notes
+    Custom(JMENotesTranslatableString),
 }
 impl_optional_overwrite!(DiagnosticScript);
 impl ToNumbas<numbas::exam::ExamDiagnosticScript> for DiagnosticScript {
@@ -226,18 +227,18 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::ExamDiagnostic {
             numbas::exam::ExamDiagnosticScript::Mastery => DiagnosticScript::Mastery,
             numbas::exam::ExamDiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
             numbas::exam::ExamDiagnosticScript::Custom => {
-                DiagnosticScript::Custom(TranslatableString::s(&self.custom_script))
+                DiagnosticScript::Custom(self.custom_script.clone().into())
             }
         }
     }
 }
 
-impl ToNumbas<String> for DiagnosticScript {
-    fn to_numbas(&self, locale: &str) -> String {
+impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
+    fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
         match self {
             DiagnosticScript::Custom(s) => s.to_numbas(locale),
-            DiagnosticScript::Diagnosys => String::new(),
-            DiagnosticScript::Mastery => String::new(),
+            DiagnosticScript::Diagnosys => Default::default(),
+            DiagnosticScript::Mastery => Default::default(),
         }
     }
 }
@@ -267,8 +268,8 @@ impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective> for L
 impl ToRumbas<LearningObjective> for numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
     fn to_rumbas(&self) -> LearningObjective {
         LearningObjective {
-            name: Value::Normal(TranslatableString::s(&self.name)),
-            description: Value::Normal(TranslatableString::s(&self.description)),
+            name: Value::Normal(self.name.clone().into()),
+            description: Value::Normal(self.description.clone().into()),
         }
     }
 }
@@ -301,20 +302,20 @@ impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphTopic> for LearningTopic
 impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
     fn to_rumbas(&self) -> LearningTopic {
         LearningTopic {
-            name: Value::Normal(TranslatableString::s(&self.name)),
-            description: Value::Normal(TranslatableString::s(&self.description)),
+            name: Value::Normal(self.name.clone().into()),
+            description: Value::Normal(self.description.clone().into()),
             objectives: Value::Normal(
                 self.learning_objectives
                     .clone()
                     .into_iter()
-                    .map(|o| TranslatableString::s(&o))
+                    .map(|o| o.into())
                     .collect(),
             ),
             depends_on: Value::Normal(
                 self.depends_on
                     .clone()
                     .into_iter()
-                    .map(|o| TranslatableString::s(&o))
+                    .map(|o| o.into())
                     .collect(),
             ),
         }

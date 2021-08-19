@@ -297,12 +297,12 @@ impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
             numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
             numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
                 LeaveAction::WarnIfNotAttempted {
-                    message: TranslatableString::s(&message),
+                    message: message.clone().into(),
                 }
             }
             numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
                 LeaveAction::PreventIfNotAttempted {
-                    message: TranslatableString::s(&message),
+                    message: message.clone().into(),
                 }
             }
         }

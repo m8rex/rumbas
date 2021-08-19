@@ -53,6 +53,15 @@ impl std::convert::From<JMEString> for String {
     }
 }
 
+impl Default for JMEString {
+    fn default() -> Self {
+        JMEString {
+            s: String::new(),
+            ast: None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
@@ -84,6 +93,15 @@ impl std::convert::TryFrom<String> for EmbracedJMEString {
 impl std::convert::From<EmbracedJMEString> for String {
     fn from(jme: EmbracedJMEString) -> Self {
         jme.s
+    }
+}
+
+impl Default for EmbracedJMEString {
+    fn default() -> Self {
+        EmbracedJMEString {
+            s: String::new(),
+            asts: None,
+        }
     }
 }
 
@@ -122,6 +140,15 @@ impl std::convert::From<ContentAreaString> for String {
     }
 }
 
+impl Default for ContentAreaString {
+    fn default() -> Self {
+        ContentAreaString {
+            s: String::new(),
+            asts: None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
@@ -154,6 +181,15 @@ impl std::convert::TryFrom<String> for JMENotesString {
 impl std::convert::From<JMENotesString> for String {
     fn from(jme: JMENotesString) -> Self {
         jme.s
+    }
+}
+
+impl Default for JMENotesString {
+    fn default() -> Self {
+        JMENotesString {
+            s: String::new(),
+            notes: None,
+        }
     }
 }
 

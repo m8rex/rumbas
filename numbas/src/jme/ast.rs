@@ -1,4 +1,5 @@
 use crate::jme::builtin_functions::BuiltinFunctions;
+use std::convert::TryInto;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ArithmeticOperator {
@@ -133,7 +134,7 @@ pub struct Note {
     pub name: Ident,
     pub description: Option<String>,
     pub expression: Expr,
-    pub expression_string: String,
+    expression_string: String,
 }
 
 impl Note {
@@ -149,6 +150,9 @@ impl Note {
             expression,
             expression_string,
         }
+    }
+    pub fn expression_string(&self) -> crate::jme::JMEString {
+        self.expression_string.clone().try_into().unwrap()
     }
 }
 

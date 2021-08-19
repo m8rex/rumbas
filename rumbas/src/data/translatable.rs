@@ -3,7 +3,7 @@ use crate::data::optional_overwrite::*;
 use crate::data::template::{Value, ValueType};
 use crate::data::to_numbas::ToNumbas;
 use crate::data::to_rumbas::ToRumbas;
-use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use numbas::jme::{ContentAreaString, EmbracedJMEString, JMENotesString, JMEString};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -29,9 +29,10 @@ macro_rules! translatable_type {
 
         impl_to_rumbas!($type);
 
-        impl $type {
-            pub fn s(s: &str) -> Self {
-                $type::NotTranslated(FileString::s(s))
+        impl std::convert::From<$subtype> for $type {
+            fn from(sub: $subtype) -> Self {
+                let s: String = sub.into();
+                $type::NotTranslated(FileString::s(&s))
             }
         }
 
@@ -163,6 +164,18 @@ translatable_type! {
 
 }
 
+translatable_type! {
+    /// A translatable JME Notes string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: "this is a string"
+    /// - a file string: file:<path>
+    /// - A map that maps locales on formattables strings and parts like "{func}" (between {}) to values.
+    type JMENotesTranslatableString,
+    subtype JMENotesString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(&e)
+
+}
 translatable_type! {
     /// A translatable ContentArea string
     ///

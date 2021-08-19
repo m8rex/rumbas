@@ -152,7 +152,7 @@ fn convert_normal_exam(
                 name: Value::Normal("en".to_string()),
                 numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: Value::Normal(TranslatableString::s(&exam.basic_settings.name)), // todo: argument
+            name: Value::Normal(exam.basic_settings.name.clone().into()),
             navigation: Value::Normal(exam.to_rumbas()),
             timing: Value::Normal(exam.to_rumbas()),
             feedback: Value::Normal(exam.to_rumbas()),
@@ -196,7 +196,7 @@ fn convert_diagnostic_exam(
                 name: Value::Normal("en".to_string()),
                 numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: Value::Normal(TranslatableString::s(&exam.basic_settings.name)), // todo: argument
+            name: Value::Normal(exam.basic_settings.name.clone().into()),
             navigation: Value::Normal(exam.to_rumbas()),
             timing: Value::Normal(exam.to_rumbas()),
             feedback: Value::Normal(exam.to_rumbas()),
