@@ -43,34 +43,25 @@ impl<T, O: ToRumbas<T>> ToRumbas<Option<T>> for Option<O> {
 
 impl ToRumbas<TranslatableString> for String {
     fn to_rumbas(&self) -> TranslatableString {
-        TranslatableString::s(self)
+        self.clone().into()
     }
 }
 
 impl ToRumbas<JMETranslatableString> for JMEString {
     fn to_rumbas(&self) -> JMETranslatableString {
-        let s: String = self.clone().into();
-        JMETranslatableString::s(&s[..])
-    }
-}
-
-impl ToRumbas<JMETranslatableString> for String {
-    fn to_rumbas(&self) -> JMETranslatableString {
-        JMETranslatableString::s(&self[..])
+        self.clone().into()
     }
 }
 
 impl ToRumbas<EmbracedJMETranslatableString> for EmbracedJMEString {
     fn to_rumbas(&self) -> EmbracedJMETranslatableString {
-        let s: String = self.clone().into();
-        EmbracedJMETranslatableString::s(&s[..])
+        self.clone().into()
     }
 }
 
 impl ToRumbas<ContentAreaTranslatableString> for ContentAreaString {
     fn to_rumbas(&self) -> ContentAreaTranslatableString {
-        let s: String = self.clone().into();
-        ContentAreaTranslatableString::s(&s[..])
+        self.clone().into()
     }
 }
 

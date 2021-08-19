@@ -165,9 +165,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                 self.tags
                     .iter()
                     .filter(|t| t.starts_with("skill: "))
-                    .map(|t| {
-                        TranslatableString::s(&t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string())
-                    })
+                    .map(|t| t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string().into())
                     .collect(),
             ),
             resources: Value::Normal(

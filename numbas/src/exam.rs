@@ -318,7 +318,7 @@ impl std::convert::From<crate::jme::ast::Note> for CustomPartMarkingNote {
     fn from(note: crate::jme::ast::Note) -> Self {
         CustomPartMarkingNote {
             name: note.name.to_string(),
-            definition: note.expression_string.try_into().unwrap(),
+            definition: note.expression_string(),
             description: note.description.unwrap_or_else(|| "".to_string()),
         }
     }
@@ -1630,7 +1630,7 @@ pub struct ExamDiagnostic {
     pub knowledge_graph: ExamDiagnosticKnowledgeGraph,
     pub script: ExamDiagnosticScript,
     #[serde(rename = "customScript")]
-    pub custom_script: String, // TODO jme...
+    pub custom_script: JMENotesString,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]

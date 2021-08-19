@@ -70,7 +70,7 @@ impl ToRumbas<TimeoutAction> for numbas::exam::ExamTimeoutAction {
         match self {
             numbas::exam::ExamTimeoutAction::None { message: _ } => TimeoutAction::None,
             numbas::exam::ExamTimeoutAction::Warn { message } => TimeoutAction::Warn {
-                message: TranslatableString::s(&message),
+                message: message.to_owned().into(),
             },
         }
     }

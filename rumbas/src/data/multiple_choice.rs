@@ -162,9 +162,9 @@ fn extract_multiple_choice_answer_data(
             answers_data
                 .into_iter()
                 .map(|(a, b, c)| MultipleChoiceAnswer {
-                    statement: Value::Normal(TranslatableString::s(&a)),
+                    statement: Value::Normal(a.into()),
                     marks: Value::Normal(b),
-                    feedback: Value::Normal(TranslatableString::s(&c)),
+                    feedback: Value::Normal(c.into()),
                 })
                 .collect(),
         )
@@ -175,8 +175,8 @@ fn extract_multiple_choice_answer_data(
                     .clone()
                     .map(|v| {
                         v.iter()
-                            .map(|vv| TranslatableString::s(&vv.clone()))
-                            .collect::<Vec<_>>()
+                            .map(|vv| vv.clone().into())
+                            .collect::<Vec<TranslatableString>>()
                     })
                     .to_rumbas(),
             ),
@@ -191,9 +191,9 @@ fn extract_multiple_choice_answer_data(
                     .clone()
                     .map(|v| {
                         Noneable::NotNone(
-                            v.iter()
-                                .map(|f| TranslatableString::s(&f))
-                                .collect::<Vec<_>>()
+                            v.into_iter()
+                                .map(|f| f.into())
+                                .collect::<Vec<TranslatableString>>()
                                 .to_rumbas(),
                         )
                     })
@@ -589,7 +589,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
             MultipleChoiceMatchAnswerData::ItemBased({
                 let answers: Vec<_> = answer_options
                     .iter()
-                    .map(|a| Value::Normal(TranslatableString::s(&a.clone())))
+                    .map(|a| Value::Normal(a.clone().into()))
                     .collect();
                 MultipleChoiceMatchAnswers {
                     answers: Value::Normal(answers.clone()),
@@ -598,7 +598,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                             .into_iter()
                             .map(|(statement, marks)| {
                                 Value::Normal(MatchAnswersItem {
-                                    statement: Value::Normal(TranslatableString::s(&statement)),
+                                    statement: Value::Normal(statement.into()),
                                     answer_marks: Value::Normal(
                                         marks
                                             .into_iter()
@@ -622,8 +622,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                         .clone()
                         .map(|v| {
                             v.iter()
-                                .map(|vv| TranslatableString::s(&vv.clone()))
-                                .collect::<Vec<_>>()
+                                .map(|vv| vv.clone().into())
+                                .collect::<Vec<TranslatableString>>()
                         })
                         .to_rumbas(),
                 ),
@@ -632,8 +632,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                         .clone()
                         .map(|v| {
                             v.iter()
-                                .map(|vv| TranslatableString::s(&vv.clone()))
-                                .collect::<Vec<_>>()
+                                .map(|vv| vv.clone().into())
+                                .collect::<Vec<TranslatableString>>()
                         })
                         .to_rumbas(),
                 ),

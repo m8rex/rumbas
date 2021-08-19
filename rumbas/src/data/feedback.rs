@@ -60,10 +60,8 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
             show_answer_state: Value::Normal(self.feedback.show_answer_state),
             allow_reveal_answer: Value::Normal(self.feedback.allow_reveal_answer),
             review: Value::Normal(self.feedback.review.to_rumbas().unwrap()),
-            advice: Value::Normal(TranslatableString::s(
-                &self.feedback.advice.clone().unwrap_or_default(),
-            )),
-            intro: Value::Normal(TranslatableString::s(&self.feedback.intro)),
+            advice: Value::Normal(self.feedback.advice.clone().unwrap_or_default().into()),
+            intro: Value::Normal(self.feedback.intro.clone().into()),
             feedback_messages: Value::Normal(
                 self.feedback
                     .feedback_messages

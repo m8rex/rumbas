@@ -563,7 +563,7 @@ impl ToRumbas<JMERestriction> for numbas::exam::JMERestriction {
         JMERestriction {
             //name: Value::Normal(TranslatableString::s(&self.name)),
             partial_credit: Value::Normal(self.partial_credit.0),
-            message: Value::Normal(TranslatableString::s(&self.message)),
+            message: Value::Normal(self.message.clone().into()),
         }
     }
 }
@@ -628,13 +628,7 @@ impl ToRumbas<JMEStringRestriction> for numbas::exam::JMEStringRestriction {
         JMEStringRestriction {
             restriction: Value::Normal(self.restriction.to_rumbas()),
             show_strings: Value::Normal(self.show_strings),
-            strings: Value::Normal(
-                self.strings
-                    .clone()
-                    .into_iter()
-                    .map(|s| TranslatableString::s(&s))
-                    .collect(),
-            ),
+            strings: Value::Normal(self.strings.clone().into_iter().map(|s| s.into()).collect()),
         }
     }
 }
@@ -663,7 +657,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::exam::JMEPatternRestriction {
     fn to_rumbas(&self) -> JMEPatternRestriction {
         JMEPatternRestriction {
             partial_credit: Value::Normal(self.partial_credit.0),
-            message: Value::Normal(TranslatableString::s(&self.message.clone())),
+            message: Value::Normal(self.message.clone().into()),
             pattern: Value::Normal(self.pattern.clone()),
             name_to_compare: Value::Normal(self.name_to_compare.clone()),
         }
@@ -690,7 +684,7 @@ impl ToRumbas<JMEValueGenerator> for numbas::exam::JMEValueGenerator {
     fn to_rumbas(&self) -> JMEValueGenerator {
         let s: String = self.value.clone().into();
         JMEValueGenerator {
-            name: Value::Normal(FileString::s(&self.name)),
+            name: Value::Normal(self.name.clone().into()),
             value: Value::Normal(JMEFileString::s(&s[..])),
         }
     }
