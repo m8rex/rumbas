@@ -1,11 +1,12 @@
-use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::hash::{Hash, Hasher};
 
+// TODO Optional overwrite
 // TODO TranslatableString
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
@@ -16,28 +17,6 @@ pub struct ResourcePath {
     pub resource_path: std::path::PathBuf,
 }
 impl_optional_overwrite!(ResourcePath);
-
-impl std::convert::TryFrom<String> for ResourcePath {
-    type Error = String;
-
-    fn try_from(s: String) -> Result<Self, Self::Error> {
-        let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
-        if path.exists() {
-            Ok(ResourcePath {
-                resource_name: s,
-                resource_path: path,
-            })
-        } else {
-            Err(format!("Missing resource {}", path.display()))
-        }
-    }
-}
-
-impl std::convert::From<ResourcePath> for String {
-    fn from(q: ResourcePath) -> Self {
-        q.resource_name
-    }
-}
 
 impl ToNumbas<numbas::exam::Resource> for ResourcePath {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::Resource {
@@ -62,9 +41,25 @@ impl ToRumbas<ResourcePath> for numbas::exam::Resource {
     }
 }
 
-impl ResourcePath {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
+impl std::convert::TryFrom<String> for ResourcePath {
+    type Error = String;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
+        if path.exists() {
+            Ok(ResourcePath {
+                resource_name: s,
+                resource_path: path,
+            })
+        } else {
+            Err(format!("Missing resource {}", path.display()))
+        }
+    }
+}
+
+impl std::convert::From<ResourcePath> for String {
+    fn from(q: ResourcePath) -> Self {
+        q.resource_name
     }
 }
 
@@ -80,3 +75,9 @@ impl PartialEq for ResourcePath {
     }
 }
 impl Eq for ResourcePath {}
+
+impl ResourcePath {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}

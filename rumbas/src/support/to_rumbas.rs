@@ -1,4 +1,5 @@
 use crate::question::part::question_part::QuestionPart;
+use crate::support::file_reference::FileString;
 use crate::support::template::Value;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
@@ -47,6 +48,12 @@ impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
 impl<T, O: ToRumbas<T>> ToRumbas<Option<T>> for Option<O> {
     fn to_rumbas(&self) -> Option<T> {
         self.clone().map(|item| item.to_rumbas())
+    }
+}
+
+impl ToRumbas<FileString> for String {
+    fn to_rumbas(&self) -> FileString {
+        FileString::s(self)
     }
 }
 
