@@ -124,6 +124,24 @@ impl Exam {
     }
 }
 
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum ExamFileType {
+    Template(TemplateData),
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
+}
+
+impl ExamFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
+}
+
+/// Convert a numbas exam to rumbas data
+/// Returns the name of the exam, the resulting exam (as ExamFileType)
+/// and vectors of questions and custom part type definitions
 pub fn convert_numbas_exam(
     exam: numbas::exam::Exam,
 ) -> (
@@ -164,19 +182,4 @@ pub fn convert_numbas_exam(
         qgs,
         cpts,
     )
-}
-
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum ExamFileType {
-    Template(TemplateData),
-    Normal(NormalExam),
-    Diagnostic(DiagnosticExam),
-}
-
-impl ExamFileType {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
-    }
 }
