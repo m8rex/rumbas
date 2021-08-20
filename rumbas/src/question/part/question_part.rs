@@ -8,11 +8,11 @@ use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOne;
 use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
 use crate::question::part::number_entry::QuestionPartNumberEntry;
 use crate::question::part::pattern_match::QuestionPartPatternMatch;
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -137,7 +137,7 @@ impl ToRumbas<QuestionPartBuiltin> for numbas::exam::ExamQuestionPartBuiltin {
                 QuestionPartBuiltin::NumberEntry(p.to_rumbas())
             }
             numbas::exam::ExamQuestionPartBuiltin::Matrix(p) => {
-                QuestionPartBuiltin::Matrix(p.to_rumbas())
+                QuestionPartBuiltin::Matrix((**p).to_rumbas())
             }
             numbas::exam::ExamQuestionPartBuiltin::PatternMatch(p) => {
                 QuestionPartBuiltin::PatternMatch(p.to_rumbas())
@@ -397,6 +397,9 @@ impl ToNumbas<numbas::exam::ExamQuestionPartCustom> for QuestionPartCustom {
 
 impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
     fn to_rumbas(&self) -> QuestionPartCustom {
+        let custom_marking_algorithm_notes: Option<_> =
+            self.part_data.custom_marking_algorithm.to_rumbas();
+
         QuestionPartCustom {
             // Default section
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
@@ -421,10 +424,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
                 &self.part_data,
             )),
             custom_marking_algorithm_notes: Value::Normal(
-                self.part_data
-                    .custom_marking_algorithm
-                    .to_rumbas()
-                    .unwrap_or_default(),
+                custom_marking_algorithm_notes.unwrap_or_default(),
             ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),

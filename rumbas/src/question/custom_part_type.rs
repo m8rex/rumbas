@@ -1,12 +1,12 @@
 use crate::question::extension::Extensions;
 use crate::question::part::question_part::JMENotes;
+use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
+use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::{YamlError, YamlResult};
-use crate::support::optional_overwrite::*;
-use crate::support::to_numbas::ToNumbas;
-use crate::support::to_rumbas::ToRumbas;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -30,6 +30,49 @@ pub struct CustomPartTypeDefinition {
 impl RumbasCheck for CustomPartTypeDefinition {
     fn check(&self, _locale: &str) -> RumbasCheckResult {
         RumbasCheckResult::empty()
+    }
+}
+
+impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinition {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::CustomPartType {
+        panic!(
+            "{}",
+            "Should not happen, don't call this method Missing name".to_string(),
+        )
+    }
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::CustomPartType {
+        numbas::exam::CustomPartType {
+            short_name: name,
+            name: self.type_name.clone().to_string(locale).unwrap(),
+            description: self.description.clone().to_string(locale).unwrap(),
+            settings: self.settings.clone(), // .to_numbas(&locale).unwrap(),
+            help_url: self.help_url.clone().to_string(locale).unwrap(),
+            public_availability: numbas::exam::CustomPartAvailability::Always,
+            marking_script: self.marking_notes.to_numbas(locale),
+            can_be_gap: self.can_be_gap,
+            can_be_step: self.can_be_step,
+            marking_notes: self.marking_notes.0.to_numbas(locale),
+            published: self.published,
+            extensions: self.extensions.to_numbas(locale),
+            input_widget: self.input_widget.to_numbas(locale),
+        }
+    }
+}
+
+impl CustomPartTypeDefinition {
+    pub fn from_name(name: &str) -> YamlResult<Self> {
+        let file =
+            std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(format!("{}.yaml", name));
+        let yaml = std::fs::read_to_string(&file).expect(
+            &format!(
+                "Failed to read {}",
+                file.to_str().map_or("invalid filename", |s| s)
+            )[..],
+        );
+        serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file.to_path_buf()))
+    }
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
     }
 }
 
@@ -259,43 +302,20 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
     }
 }
 
-impl CustomPartTypeDefinition {
-    pub fn from_name(name: &str) -> YamlResult<Self> {
-        let file =
-            std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(format!("{}.yaml", name));
-        let yaml = std::fs::read_to_string(&file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
-        serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file.to_path_buf()))
-    }
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(try_from = "String")]
+#[serde(into = "String")]
+pub struct CustomPartTypeDefinitionPath {
+    pub custom_part_type_name: String,
+    pub custom_part_type_data: CustomPartTypeDefinition,
 }
+impl_optional_overwrite!(CustomPartTypeDefinitionPath);
 
-impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinition {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::CustomPartType {
-        panic!(
-            "{}",
-            "Should not happen, don't call this method Missing name".to_string(),
-        )
-    }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::CustomPartType {
-        numbas::exam::CustomPartType {
-            short_name: name,
-            name: self.type_name.clone().to_string(locale).unwrap(),
-            description: self.description.clone().to_string(locale).unwrap(),
-            settings: self.settings.clone(), // .to_numbas(&locale).unwrap(),
-            help_url: self.help_url.clone().to_string(locale).unwrap(),
-            public_availability: numbas::exam::CustomPartAvailability::Always,
-            marking_script: self.marking_notes.to_numbas(locale),
-            can_be_gap: self.can_be_gap,
-            can_be_step: self.can_be_step,
-            marking_notes: self.marking_notes.0.to_numbas(locale),
-            published: self.published,
-            extensions: self.extensions.to_numbas(locale),
-            input_widget: self.input_widget.to_numbas(locale),
-        }
+impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinitionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartType {
+        self.custom_part_type_data
+            .clone()
+            .to_numbas_with_name(locale, self.custom_part_type_name.clone())
     }
 }
 
@@ -320,14 +340,15 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(try_from = "String")]
-#[serde(into = "String")]
-pub struct CustomPartTypeDefinitionPath {
-    pub custom_part_type_name: String,
-    pub custom_part_type_data: CustomPartTypeDefinition,
+impl JsonSchema for CustomPartTypeDefinitionPath {
+    fn schema_name() -> String {
+        "CustomPartTypeDefinitionPath".to_owned()
+    }
+
+    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        gen.subschema_for::<String>()
+    }
 }
-impl_optional_overwrite!(CustomPartTypeDefinitionPath);
 
 impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
     type Error = YamlError;
@@ -341,27 +362,9 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
     }
 }
 
-impl JsonSchema for CustomPartTypeDefinitionPath {
-    fn schema_name() -> String {
-        "CustomPartTypeDefinitionPath".to_owned()
-    }
-
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        gen.subschema_for::<String>()
-    }
-}
-
 impl std::convert::From<CustomPartTypeDefinitionPath> for String {
     fn from(q: CustomPartTypeDefinitionPath) -> Self {
         q.custom_part_type_name
-    }
-}
-
-impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinitionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartType {
-        self.custom_part_type_data
-            .clone()
-            .to_numbas_with_name(locale, self.custom_part_type_name.clone())
     }
 }
 
@@ -376,9 +379,3 @@ impl PartialEq for CustomPartTypeDefinitionPath {
     }
 }
 impl Eq for CustomPartTypeDefinitionPath {}
-
-impl CustomPartTypeDefinition {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
-    }
-}

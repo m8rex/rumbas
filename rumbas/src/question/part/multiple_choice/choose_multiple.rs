@@ -3,12 +3,12 @@ use crate::question::part::multiple_choice::{
 };
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -95,6 +95,9 @@ impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChoose
 
 impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChooseMultiple {
     fn to_rumbas(&self) -> QuestionPartChooseMultiple {
+        let custom_marking_algorithm_notes: Option<_> =
+            self.part_data.custom_marking_algorithm.to_rumbas();
+
         QuestionPartChooseMultiple {
             // Default section
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
@@ -119,10 +122,7 @@ impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChoo
                 &self.part_data,
             )),
             custom_marking_algorithm_notes: Value::Normal(
-                self.part_data
-                    .custom_marking_algorithm
-                    .to_rumbas()
-                    .unwrap_or_default(),
+                custom_marking_algorithm_notes.unwrap_or_default(),
             ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),

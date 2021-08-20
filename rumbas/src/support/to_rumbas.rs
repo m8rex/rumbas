@@ -1,4 +1,5 @@
 use crate::question::part::question_part::QuestionPart;
+use crate::support::template::Value;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
@@ -30,6 +31,12 @@ impl_to_rumbas!(numbas::exam::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
 impl_to_rumbas!(numbas::jme::ContentAreaString);
+
+impl<T, O: ToRumbas<T>> ToRumbas<Value<T>> for O {
+    fn to_rumbas(&self) -> Value<T> {
+        Value::Normal(self.to_rumbas())
+    }
+}
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {

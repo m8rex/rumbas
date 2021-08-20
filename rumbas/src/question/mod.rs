@@ -39,20 +39,6 @@ use variable::VariableRepresentation;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum QuestionFileType {
-    Template(TemplateData),
-    Normal(Box<Question>),
-}
-
-impl QuestionFileType {
-    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
-    }
-}
-
 optional_overwrite! {
     pub struct Question {
         /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
@@ -185,13 +171,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                     .map(|t| t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string().into())
                     .collect(),
             ),
-            resources: Value::Normal(
-                self.resources
-                    .to_rumbas()
-                    .into_iter()
-                    .map(Value::Normal)
-                    .collect(),
-            ),
+            resources: Value::Normal(self.resources.to_rumbas()),
             custom_part_types: Value::Normal(self.custom_part_types.to_rumbas()),
         }
     }
@@ -230,5 +210,19 @@ impl Question {
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
             .map_err(|e| YamlError::from(e, file.to_path_buf()))
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum QuestionFileType {
+    Template(TemplateData),
+    Normal(Box<Question>),
+}
+
+impl QuestionFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
     }
 }

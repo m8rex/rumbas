@@ -36,13 +36,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
         QuestionGroup {
             name: Value::Normal(self.name.clone().unwrap_or_default().into()),
             picking_strategy: Value::Normal(self.picking_strategy.to_rumbas()),
-            questions: Value::Normal(
-                self.questions
-                    .to_rumbas()
-                    .into_iter()
-                    .map(Value::Normal)
-                    .collect(),
-            ),
+            questions: Value::Normal(self.questions.to_rumbas()),
         }
     }
 }
