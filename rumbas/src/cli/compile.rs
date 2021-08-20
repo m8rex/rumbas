@@ -31,7 +31,7 @@ pub fn compile(matches: &clap::ArgMatches) {
         ""
     };
 
-    let exam_result = rumbas::exam::exam::Exam::from_file(path);
+    let exam_result = rumbas::exam::Exam::from_file(path);
     match exam_result {
         Ok(mut exam) => {
             combine_with_default_files(path, &mut exam);

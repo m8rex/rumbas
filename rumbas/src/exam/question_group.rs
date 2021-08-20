@@ -1,10 +1,10 @@
-use crate::question::question::Question;
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::TranslatableString;
-use crate::support::yaml::YamlError;
+use crate::question::Question;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::TranslatableString;
+use crate::support::yaml::YamlError;
 use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

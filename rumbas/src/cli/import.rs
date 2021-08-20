@@ -1,8 +1,8 @@
 use numbas::exam::Exam as NExam;
-use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
-use rumbas::exam::exam::convert_numbas_exam;
-use rumbas::exam::exam::QuestionFileType;
+use rumbas::exam::convert_numbas_exam;
 use rumbas::exam::question_group::QuestionPath;
+use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
+use rumbas::question::QuestionFileType;
 use rumbas::support::to_rumbas::ToRumbas;
 
 macro_rules! read_exam {
