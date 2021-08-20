@@ -1,10 +1,10 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::ContentAreaTranslatableString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -22,6 +22,9 @@ impl ToNumbas<numbas::exam::ExamQuestionPartExtension> for QuestionPartExtension
 
 impl ToRumbas<QuestionPartExtension> for numbas::exam::ExamQuestionPartExtension {
     fn to_rumbas(&self) -> QuestionPartExtension {
+        let custom_marking_algorithm_notes: Option<_> =
+            self.part_data.custom_marking_algorithm.to_rumbas();
+
         QuestionPartExtension {
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
             prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
@@ -45,10 +48,7 @@ impl ToRumbas<QuestionPartExtension> for numbas::exam::ExamQuestionPartExtension
                 &self.part_data,
             )),
             custom_marking_algorithm_notes: Value::Normal(
-                self.part_data
-                    .custom_marking_algorithm
-                    .to_rumbas()
-                    .unwrap_or_default(),
+                custom_marking_algorithm_notes.unwrap_or_default(),
             ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),

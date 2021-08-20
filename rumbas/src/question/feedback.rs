@@ -1,8 +1,8 @@
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::TranslatableString;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -43,6 +43,7 @@ impl ToNumbas<numbas::exam::ExamFeedback> for Feedback {
 
 impl ToRumbas<Feedback> for numbas::exam::Exam {
     fn to_rumbas(&self) -> Feedback {
+        let review: Option<_> = self.feedback.review.to_rumbas();
         Feedback {
             percentage_needed_to_pass: Value::Normal(
                 self.basic_settings
@@ -59,22 +60,10 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
             show_maximum_marks: Value::Normal(self.feedback.show_total_mark),
             show_answer_state: Value::Normal(self.feedback.show_answer_state),
             allow_reveal_answer: Value::Normal(self.feedback.allow_reveal_answer),
-            review: Value::Normal(self.feedback.review.to_rumbas().unwrap()),
+            review: Value::Normal(review.unwrap()), // TODO: fix this unwrap
             advice: Value::Normal(self.feedback.advice.clone().unwrap_or_default().into()),
             intro: Value::Normal(self.feedback.intro.clone().into()),
-            feedback_messages: Value::Normal(
-                self.feedback
-                    .feedback_messages
-                    .clone()
-                    .into_iter()
-                    .map(|m| {
-                        Value::Normal(FeedbackMessage {
-                            message: m.message,
-                            threshold: m.threshold,
-                        })
-                    })
-                    .collect(),
-            ),
+            feedback_messages: Value::Normal(self.feedback.feedback_messages.to_rumbas()),
         }
     }
 }
@@ -136,6 +125,15 @@ impl_optional_overwrite!(FeedbackMessage);
 impl ToNumbas<numbas::exam::ExamFeedbackMessage> for FeedbackMessage {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamFeedbackMessage {
         numbas::exam::ExamFeedbackMessage {
+            message: self.message.clone(),
+            threshold: self.threshold.clone(),
+        }
+    }
+}
+
+impl ToRumbas<FeedbackMessage> for numbas::exam::ExamFeedbackMessage {
+    fn to_rumbas(&self) -> FeedbackMessage {
+        FeedbackMessage {
             message: self.message.clone(),
             threshold: self.threshold.clone(),
         }

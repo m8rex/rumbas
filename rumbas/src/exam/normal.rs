@@ -1,18 +1,18 @@
-use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
-use crate::question::extension::Extensions;
-use crate::question::feedback::Feedback;
 use crate::exam::locale::Locale;
 use crate::exam::locale::SupportedLocale;
 use crate::exam::navigation::NormalNavigation;
 use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::question_group::QuestionGroup;
 use crate::exam::question_group::QuestionPath;
-use crate::support::template::{Value, ValueType};
 use crate::exam::timing::Timing;
-use crate::support::translatable::TranslatableString;
+use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::question::extension::Extensions;
+use crate::question::feedback::Feedback;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::TranslatableString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -171,12 +171,7 @@ pub fn convert_normal_numbas_exam(
     Vec<QuestionPath>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
-    let question_groups = exam
-        .question_groups
-        .to_rumbas()
-        .into_iter()
-        .map(Value::Normal)
-        .collect::<Vec<_>>();
+    let question_groups: Vec<Value<_>> = exam.question_groups.to_rumbas();
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         NormalExam {

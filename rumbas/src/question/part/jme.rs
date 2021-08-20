@@ -1,14 +1,14 @@
-use crate::support::file_reference::{FileString, JMEFileString};
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::EmbracedJMETranslatableString;
-use crate::support::translatable::TranslatableString;
+use crate::support::file_reference::{FileString, JMEFileString};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::EmbracedJMETranslatableString;
+use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -65,6 +65,9 @@ impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
 
 impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
     fn to_rumbas(&self) -> QuestionPartJME {
+        let custom_marking_algorithm_notes: Option<_> =
+            self.part_data.custom_marking_algorithm.to_rumbas();
+
         QuestionPartJME {
             // Default section
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
@@ -89,10 +92,7 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
                 &self.part_data,
             )),
             custom_marking_algorithm_notes: Value::Normal(
-                self.part_data
-                    .custom_marking_algorithm
-                    .to_rumbas()
-                    .unwrap_or_default(),
+                custom_marking_algorithm_notes.unwrap_or_default(),
             ),
             extend_base_marking_algorithm: Value::Normal(
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),
