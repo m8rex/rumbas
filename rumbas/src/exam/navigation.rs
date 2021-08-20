@@ -1,9 +1,9 @@
 use crate::support::file_reference::FileString;
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::TranslatableString;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -323,45 +323,6 @@ impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
                     message: message.clone().into(),
                 }
             }
-        }
-    }
-}
-
-optional_overwrite! {
-    pub struct QuestionNavigation {
-        /// Whether the student can regenerate the question
-        /// Old name was `allow_regenerate`
-        #[serde(alias = "allow_regenerate")]
-        can_regenerate: bool,
-        /// Whether the title page should be shown.
-        /// Old name was `show_frontpage`
-        #[serde(alias = "show_frontpage")]
-        show_title_page: bool,
-        /// Whether the student will be asked to confirm when leaving the exam.
-        #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: bool
-    }
-}
-
-impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::QuestionNavigation {
-        numbas::exam::QuestionNavigation {
-            allow_regenerate: self.can_regenerate.to_numbas(locale),
-            show_frontpage: self.show_title_page.to_numbas(locale),
-            confirm_when_leaving: Some(self.confirm_when_leaving.to_numbas(locale)),
-        }
-    }
-}
-
-impl ToRumbas<QuestionNavigation> for numbas::exam::QuestionNavigation {
-    fn to_rumbas(&self) -> QuestionNavigation {
-        QuestionNavigation {
-            can_regenerate: Value::Normal(self.allow_regenerate),
-            show_title_page: Value::Normal(self.show_frontpage),
-            confirm_when_leaving: Value::Normal(
-                self.confirm_when_leaving
-                    .unwrap_or(DEFAULTS.question_navigation_prevent_leaving),
-            ),
         }
     }
 }

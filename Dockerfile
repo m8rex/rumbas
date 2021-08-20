@@ -11,12 +11,14 @@ COPY numbas/src numbas/src
 RUN mkdir -p rumbas/src
 COPY rumbas/Cargo* rumbas/
 COPY rumbas/src/lib.rs rumbas/src/lib.rs
-RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/data.rs
+RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/question.rs
+RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/exam.rs
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/support.rs
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/main.rs
 RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
 RUN rm -f rumbas/target/x86_64-unknown-linux-musl/release/deps/rumbas*
-RUN rm -f rumbas/src/data.rs
+RUN rm -f rumbas/src/exam.rs
+RUN rm -f rumbas/src/question.rs
 RUN rm -f rumbas/src/support.rs
 
 COPY rumbas/src rumbas/src
