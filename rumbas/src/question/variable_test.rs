@@ -25,8 +25,8 @@ impl ToNumbas<numbas::exam::ExamQuestionVariablesTest> for VariablesTest {
 impl ToRumbas<VariablesTest> for numbas::exam::ExamQuestionVariablesTest {
     fn to_rumbas(&self) -> VariablesTest {
         VariablesTest {
-            condition: Value::Normal(self.condition.clone()),
-            max_runs: Value::Normal(self.max_runs.0),
+            condition: self.condition.to_rumbas(),
+            max_runs: self.max_runs.0.to_rumbas(),
         }
     }
 }
