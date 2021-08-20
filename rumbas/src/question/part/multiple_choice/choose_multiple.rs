@@ -32,6 +32,7 @@ question_part_type! {
 }
 impl_optional_overwrite!(numbas::exam::MultipleChoiceWarningType);
 impl_to_numbas!(numbas::exam::MultipleChoiceWarningType);
+impl_to_rumbas!(numbas::exam::MultipleChoiceWarningType);
 
 impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChooseMultiple {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartChooseMultiple {
@@ -89,56 +90,25 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChoo
 
 impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChooseMultiple {
     fn to_rumbas(&self) -> QuestionPartChooseMultiple {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
-
-        QuestionPartChooseMultiple {
-            // Default section
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
-                &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
-            ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            answer_data: Value::Normal(self.to_rumbas()),
-            shuffle_answers: Value::Normal(self.shuffle_answers),
-            show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
-            should_select_at_least: Value::Normal(
-                self.min_answers
+        create_question_part! {
+            QuestionPartChooseMultiple with &self.part_data => {
+                answer_data: self.to_rumbas(),
+                shuffle_answers: self.shuffle_answers.to_rumbas(),
+                show_cell_answer_state: self.show_cell_answer_state.to_rumbas(),
+                should_select_at_least: self
+                    .min_answers
                     .unwrap_or(DEFAULTS.choose_multiple_min_answers)
-                    .0,
-            ),
-            should_select_at_most: Value::Normal(
-                self.max_answers
-                    .map(|v| v.0)
-                    .map(Noneable::NotNone)
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            columns: Value::Normal(self.display_columns.0),
-            wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning),
+                    .0
+                    .to_rumbas(),
+                should_select_at_most: Value::Normal(
+                    self.max_answers
+                        .map(|v| v.0)
+                        .map(Noneable::NotNone)
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                columns: self.display_columns.0.to_rumbas(),
+                wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
+            }
         }
     }
 }

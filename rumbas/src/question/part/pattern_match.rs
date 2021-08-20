@@ -40,57 +40,27 @@ impl_to_numbas!(numbas::exam::PatternMatchMode);
 
 impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatternMatch {
     fn to_rumbas(&self) -> QuestionPartPatternMatch {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
-
-        QuestionPartPatternMatch {
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
-                &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
-            ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            case_sensitive: Value::Normal(
-                self.case_sensitive
-                    .unwrap_or(DEFAULTS.pattern_match_case_sensitive),
-            ),
-            partial_credit: Value::Normal(
-                self.partial_credit
-                    .unwrap_or(DEFAULTS.pattern_match_partial_credit)
-                    .0,
-            ),
-            pattern: Value::Normal(self.answer.to_string().into()),
-            display_answer: Value::Normal(
-                self.display_answer
-                    .clone()
-                    .map(|d| d.to_string())
-                    .unwrap_or_else(|| self.answer.to_string())
-                    .into(),
-            ), // TDDO: check default
-            match_mode: Value::Normal(self.match_mode),
+        create_question_part! {
+            QuestionPartPatternMatch with &self.part_data => {
+                case_sensitive: Value::Normal(
+                    self.case_sensitive
+                        .unwrap_or(DEFAULTS.pattern_match_case_sensitive),
+                ),
+                partial_credit: Value::Normal(
+                    self.partial_credit
+                        .unwrap_or(DEFAULTS.pattern_match_partial_credit)
+                        .0,
+                ),
+                pattern: Value::Normal(self.answer.to_string().into()),
+                display_answer: Value::Normal(
+                    self.display_answer
+                        .clone()
+                        .map(|d| d.to_string())
+                        .unwrap_or_else(|| self.answer.to_string())
+                        .into(),
+                ), // TDDO: check default
+                match_mode: Value::Normal(self.match_mode)
+            }
         }
     }
 }

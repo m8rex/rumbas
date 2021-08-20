@@ -65,97 +65,66 @@ impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
 
 impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
     fn to_rumbas(&self) -> QuestionPartJME {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
+        create_question_part! {
+            QuestionPartJME with &self.part_data => {
+                answer: Value::Normal(self.answer.to_rumbas()),
+                answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
+                show_preview: Value::Normal(self.show_preview),
+                answer_check: Value::Normal(self.checking_type.to_rumbas()),
+                failure_rate: Value::Normal(self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate)),
+                vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
+                vset_range_points: Value::Normal(self.vset_range_points.0),
+                check_variable_names: Value::Normal(self.check_variable_names),
+                single_letter_variables: Value::Normal(
+                    self.single_letter_variables
+                        .unwrap_or(DEFAULTS.jme_single_letter_variables),
+                ),
+                allow_unknown_functions: Value::Normal(
+                    self.allow_unknown_functions
+                        .unwrap_or(DEFAULTS.jme_allow_unknown_functions),
+                ),
+                implicit_function_composition: Value::Normal(
+                    self.implicit_function_composition
+                        .unwrap_or(DEFAULTS.jme_implicit_function_composition),
+                ),
 
-        QuestionPartJME {
-            // Default section
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
-                &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
-            ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            answer: Value::Normal(self.answer.to_rumbas()),
-            answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
-            show_preview: Value::Normal(self.show_preview),
-            answer_check: Value::Normal(self.checking_type.to_rumbas()),
-            failure_rate: Value::Normal(self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate)),
-            vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
-            vset_range_points: Value::Normal(self.vset_range_points.0),
-            check_variable_names: Value::Normal(self.check_variable_names),
-            single_letter_variables: Value::Normal(
-                self.single_letter_variables
-                    .unwrap_or(DEFAULTS.jme_single_letter_variables),
-            ),
-            allow_unknown_functions: Value::Normal(
-                self.allow_unknown_functions
-                    .unwrap_or(DEFAULTS.jme_allow_unknown_functions),
-            ),
-            implicit_function_composition: Value::Normal(
-                self.implicit_function_composition
-                    .unwrap_or(DEFAULTS.jme_implicit_function_composition),
-            ),
-
-            max_length: Value::Normal(
-                self.max_length
-                    .clone()
-                    .map(|r| Noneable::NotNone(r.to_rumbas()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            min_length: Value::Normal(
-                self.min_length
-                    .clone()
-                    .map(|r| Noneable::NotNone(r.to_rumbas()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            must_have: Value::Normal(
-                self.must_have
-                    .clone()
-                    .map(|r| Noneable::NotNone(r.to_rumbas()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            may_not_have: Value::Normal(
-                self.may_not_have
-                    .clone()
-                    .map(|r| Noneable::NotNone(r.to_rumbas()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            must_match_pattern: Value::Normal(
-                self.must_match_pattern
-                    .clone()
-                    .map(|r| Noneable::NotNone(r.to_rumbas()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            value_generators: Value::Normal(
-                self.value_generators
-                    .clone()
-                    .map(|v| Noneable::NotNone(v.iter().map(|g| g.to_rumbas()).collect()))
-                    .unwrap_or_else(Noneable::nn),
-            ),
+                max_length: Value::Normal(
+                    self.max_length
+                        .clone()
+                        .map(|r| Noneable::NotNone(r.to_rumbas()))
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                min_length: Value::Normal(
+                    self.min_length
+                        .clone()
+                        .map(|r| Noneable::NotNone(r.to_rumbas()))
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                must_have: Value::Normal(
+                    self.must_have
+                        .clone()
+                        .map(|r| Noneable::NotNone(r.to_rumbas()))
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                may_not_have: Value::Normal(
+                    self.may_not_have
+                        .clone()
+                        .map(|r| Noneable::NotNone(r.to_rumbas()))
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                must_match_pattern: Value::Normal(
+                    self.must_match_pattern
+                        .clone()
+                        .map(|r| Noneable::NotNone(r.to_rumbas()))
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                value_generators: Value::Normal(
+                    self.value_generators
+                        .clone()
+                        .map(|v| Noneable::NotNone(v.iter().map(|g| g.to_rumbas()).collect()))
+                        .unwrap_or_else(Noneable::nn),
+                )
+            }
         }
     }
 }
