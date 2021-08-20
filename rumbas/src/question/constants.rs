@@ -7,51 +7,58 @@ use numbas::jme::JMEString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite! {
+/// Macro used to make sure that the ToNumbas & ToRumbas implementation remain up to data
+macro_rules! builtin_constants {
+    (
+        $(#[$outer:meta])*
+        pub struct $struct: ident {
+            $(
+                $(#[$inner:meta])*
+                $field: ident: $type: ty: $name: literal: $default: ident
+            ),+
+        }
+    ) => {
+        optional_overwrite! {
+            $(
+                #[$outer]
+            )*
+            pub struct $struct {
+                $(
+                    $(#[$inner])*
+                    $field: $type
+                ),*
+            }
+        }
+        impl ToNumbas<std::collections::HashMap<String, bool>> for $struct {
+            fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
+                let mut builtin = std::collections::HashMap::new();
+                $(
+                    builtin.insert($name.to_string(), self.$field.unwrap());
+                )*
+                builtin
+            }
+        }
+        impl ToRumbas<BuiltinConstants> for numbas::exam::BuiltinConstants {
+            fn to_rumbas(&self) -> BuiltinConstants {
+                BuiltinConstants {
+                $(
+                    $field: Value::Normal(*self.0.get(&$name.to_string()).unwrap_or(&DEFAULTS.$default))
+                ),*
+                }
+            }
+        }
+    }
+}
+
+builtin_constants! {
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
-        e: bool,
+        e: bool: "e": builtin_constants_e,
         /// Whether the constant pi is enabled
-        pi: bool,
+        pi: bool: "pi,\u{03c0}": builtin_constants_pi,
         /// Whether the constant i is enabled-
-        i: bool
-    }
-}
-
-impl ToNumbas<std::collections::HashMap<String, bool>> for BuiltinConstants {
-    fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
-        let mut builtin = std::collections::HashMap::new();
-        // TODO: use macro to make sure that this list always remains up to date
-        builtin.insert("e".to_string(), self.e.unwrap());
-        builtin.insert("pi,\u{03c0}".to_string(), self.pi.unwrap());
-        builtin.insert("i".to_string(), self.i.unwrap());
-        builtin
-    }
-}
-
-impl ToRumbas<BuiltinConstants> for numbas::exam::BuiltinConstants {
-    fn to_rumbas(&self) -> BuiltinConstants {
-        BuiltinConstants {
-            e: Value::Normal(
-                *self
-                    .0
-                    .get(&"e".to_string())
-                    .unwrap_or(&DEFAULTS.builtin_constants_e),
-            ),
-            pi: Value::Normal(
-                *self
-                    .0
-                    .get(&"pi,\u{03c0}".to_string())
-                    .unwrap_or(&DEFAULTS.builtin_constants_pi),
-            ),
-            i: Value::Normal(
-                *self
-                    .0
-                    .get(&"i".to_string())
-                    .unwrap_or(&DEFAULTS.builtin_constants_i),
-            ),
-        }
+        i: bool: "i": builtin_constants_i
     }
 }
 
