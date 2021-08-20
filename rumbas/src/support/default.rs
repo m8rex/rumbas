@@ -1,12 +1,12 @@
 use crate::exam::diagnostic::DiagnosticExam;
-use crate::exam::exam::Exam;
-use crate::question::feedback::Feedback;
 use crate::exam::navigation::{
     DiagnosticNavigation, MenuNavigation, NormalNavigation, SequentialNavigation,
 };
 use crate::exam::normal::NormalExam;
 use crate::exam::numbas_settings::NumbasSettings;
-use crate::question::question::Question;
+use crate::exam::timing::Timing;
+use crate::exam::Exam;
+use crate::question::feedback::Feedback;
 use crate::question::part::gapfill::QuestionPartGapFill;
 use crate::question::part::information::QuestionPartInformation;
 use crate::question::part::jme::QuestionPartJME;
@@ -16,7 +16,7 @@ use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnsw
 use crate::question::part::number_entry::QuestionPartNumberEntry;
 use crate::question::part::pattern_match::QuestionPartPatternMatch;
 use crate::question::part::question_part::{QuestionPart, QuestionPartBuiltin};
-use crate::exam::timing::Timing;
+use crate::question::Question;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use std::collections::HashSet;

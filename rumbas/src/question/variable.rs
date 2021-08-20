@@ -1,12 +1,13 @@
 use crate::support::file_reference::FileString;
-use crate::question::question::UNGROUPED_GROUP;
-use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use regex::Regex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 optional_overwrite! {
     pub struct Variable {
