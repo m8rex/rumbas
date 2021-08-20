@@ -40,45 +40,6 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
-        numbas::exam::BasicExamSettings {
-            name: self.name.to_numbas(locale), //TODO: might fail, not checked
-            duration_in_seconds: self
-                .timing
-                .clone()
-                .unwrap()
-                .duration_in_seconds
-                .to_numbas(locale),
-            percentage_needed_to_pass: self
-                .feedback
-                .clone()
-                .unwrap()
-                .percentage_needed_to_pass
-                .to_numbas(locale),
-            show_question_group_names: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .shared_data
-                    .unwrap()
-                    .show_names_of_question_groups
-                    .unwrap(),
-            ),
-            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
-            allow_printing: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .shared_data
-                    .unwrap()
-                    .allow_printing
-                    .unwrap(),
-            ),
-        }
-    }
-}
-
 impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         let basic_settings = self.to_numbas(locale);
@@ -115,7 +76,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale);
+            .to_numbas(locale); // TODO: extract?
 
         let extensions: Vec<String> = self
             .question_groups
@@ -128,7 +89,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
                     .questions
                     .unwrap()
                     .into_iter()
-                    .map(|q| q.unwrap().question_data.extensions.unwrap())
+                    .map(|q| q.unwrap().question_data.extensions.unwrap()) // todo: extract?
             })
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
@@ -149,7 +110,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale);
+            .to_numbas(locale); // todo extract?
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
 
@@ -169,6 +130,45 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
     }
 }
 
+impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+        numbas::exam::BasicExamSettings {
+            name: self.name.to_numbas(locale),
+            duration_in_seconds: self
+                .timing
+                .clone()
+                .unwrap()
+                .duration_in_seconds
+                .to_numbas(locale),
+            percentage_needed_to_pass: self
+                .feedback
+                .clone()
+                .unwrap()
+                .percentage_needed_to_pass
+                .to_numbas(locale),
+            show_question_group_names: Some(
+                self.navigation
+                    .clone()
+                    .unwrap()
+                    .shared_data
+                    .unwrap()
+                    .show_names_of_question_groups
+                    .unwrap(),
+            ),
+            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
+            allow_printing: Some(
+                self.navigation
+                    .clone()
+                    .unwrap()
+                    .shared_data
+                    .unwrap()
+                    .allow_printing
+                    .unwrap(),
+            ),
+        }
+    }
+}
+
 optional_overwrite! {
     /// Information needed for a diagnostic test
     pub struct Diagnostic {
@@ -183,15 +183,19 @@ optional_overwrite! {
 
 impl ToNumbas<numbas::exam::ExamDiagnostic> for Diagnostic {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnostic {
-        let knowledge_graph = numbas::exam::ExamDiagnosticKnowledgeGraph {
-            topics: self.topics.to_numbas(locale),
-            learning_objectives: self.objectives.to_numbas(locale),
-        };
-
         numbas::exam::ExamDiagnostic {
-            knowledge_graph,
+            knowledge_graph: self.to_numbas(locale),
             script: self.script.to_numbas(locale),
             custom_script: self.script.to_numbas(locale),
+        }
+    }
+}
+
+impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraph> for Diagnostic {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnosticKnowledgeGraph {
+        numbas::exam::ExamDiagnosticKnowledgeGraph {
+            topics: self.topics.to_numbas(locale),
+            learning_objectives: self.objectives.to_numbas(locale),
         }
     }
 }
@@ -199,9 +203,9 @@ impl ToNumbas<numbas::exam::ExamDiagnostic> for Diagnostic {
 impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
     fn to_rumbas(&self) -> Diagnostic {
         Diagnostic {
-            script: Value::Normal(self.to_rumbas()),
-            objectives: Value::Normal(self.knowledge_graph.clone().learning_objectives.to_rumbas()),
-            topics: Value::Normal(self.knowledge_graph.topics.to_rumbas()),
+            script: self.to_rumbas(),
+            objectives: self.knowledge_graph.learning_objectives.to_rumbas(),
+            topics: self.knowledge_graph.topics.to_rumbas(),
         }
     }
 }
@@ -214,12 +218,23 @@ pub enum DiagnosticScript {
     Custom(JMENotesTranslatableString),
 }
 impl_optional_overwrite!(DiagnosticScript);
+
 impl ToNumbas<numbas::exam::ExamDiagnosticScript> for DiagnosticScript {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamDiagnosticScript {
         match self {
             DiagnosticScript::Mastery => numbas::exam::ExamDiagnosticScript::Mastery,
             DiagnosticScript::Custom(_) => numbas::exam::ExamDiagnosticScript::Custom,
             DiagnosticScript::Diagnosys => numbas::exam::ExamDiagnosticScript::Diagnosys,
+        }
+    }
+}
+
+impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
+    fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
+        match self {
+            DiagnosticScript::Custom(s) => s.to_numbas(locale),
+            DiagnosticScript::Diagnosys => Default::default(),
+            DiagnosticScript::Mastery => Default::default(),
         }
     }
 }
@@ -232,16 +247,6 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::ExamDiagnostic {
             numbas::exam::ExamDiagnosticScript::Custom => {
                 DiagnosticScript::Custom(self.custom_script.clone().into())
             }
-        }
-    }
-}
-
-impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
-    fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
-        match self {
-            DiagnosticScript::Custom(s) => s.to_numbas(locale),
-            DiagnosticScript::Diagnosys => Default::default(),
-            DiagnosticScript::Mastery => Default::default(),
         }
     }
 }
@@ -271,8 +276,8 @@ impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective> for L
 impl ToRumbas<LearningObjective> for numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
     fn to_rumbas(&self) -> LearningObjective {
         LearningObjective {
-            name: Value::Normal(self.name.clone().into()),
-            description: Value::Normal(self.description.clone().into()),
+            name: self.name.to_rumbas(),
+            description: self.description.to_rumbas(),
         }
     }
 }
@@ -305,27 +310,16 @@ impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphTopic> for LearningTopic
 impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
     fn to_rumbas(&self) -> LearningTopic {
         LearningTopic {
-            name: Value::Normal(self.name.clone().into()),
-            description: Value::Normal(self.description.clone().into()),
-            objectives: Value::Normal(
-                self.learning_objectives
-                    .clone()
-                    .into_iter()
-                    .map(|o| o.into())
-                    .collect(),
-            ),
-            depends_on: Value::Normal(
-                self.depends_on
-                    .clone()
-                    .into_iter()
-                    .map(|o| o.into())
-                    .collect(),
-            ),
+            name: self.name.to_rumbas(),
+            description: self.description.to_rumbas(),
+            objectives: self.learning_objectives.to_rumbas(),
+            depends_on: self.depends_on.to_rumbas(),
         }
     }
 }
 
-/// Converts a diagnostic numbas exam to a NormalExam
+/// Converts a diagnostic numbas exam to a DiagnosticExam and extracts questions and
+/// custom_part_types
 pub fn convert_diagnostic_numbas_exam(
     exam: numbas::exam::Exam,
 ) -> (
@@ -341,16 +335,16 @@ pub fn convert_diagnostic_numbas_exam(
                 name: Value::Normal("en".to_string()),
                 numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: Value::Normal(exam.basic_settings.name.clone().into()),
-            navigation: Value::Normal(exam.to_rumbas()),
-            timing: Value::Normal(exam.to_rumbas()),
-            feedback: Value::Normal(exam.to_rumbas()),
+            name: exam.basic_settings.name.to_rumbas(),
+            navigation: exam.to_rumbas(),
+            timing: exam.to_rumbas(),
+            feedback: exam.to_rumbas(),
             question_groups: Value::Normal(question_groups.clone()),
             numbas_settings: Value::Normal(NumbasSettings {
                 locale: Value::Normal(SupportedLocale::EnGB),
                 theme: Value::Normal("default".to_string()),
             }), // todo: argument?
-            diagnostic: Value::Normal(exam.diagnostic.unwrap().to_rumbas()),
+            diagnostic: exam.diagnostic.unwrap().to_rumbas(), // Always set for a diagnostic exam
         },
         question_groups
             .into_iter()
