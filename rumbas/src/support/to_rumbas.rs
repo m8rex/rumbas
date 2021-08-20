@@ -26,7 +26,7 @@ macro_rules! impl_to_rumbas {
 }
 pub(crate) use impl_to_rumbas;
 
-impl_to_rumbas!(bool, f64, usize, [f64; 2]);
+impl_to_rumbas!(bool, f64, usize, String, [f64; 2]);
 impl_to_rumbas!(numbas::exam::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
@@ -153,10 +153,53 @@ pub fn extract_part_common_extend_base_marking_algorithm(
 pub fn extract_part_common_steps(
     pd: &numbas::exam::ExamQuestionPartSharedData,
 ) -> Vec<QuestionPart> {
-    pd.steps
-        .clone()
-        .unwrap_or_default()
-        .into_iter()
-        .map(|s| s.to_rumbas())
-        .collect()
+    pd.steps.clone().unwrap_or_default().to_rumbas()
 }
+
+/// Macro used to create a question part type for numbas
+/// Usage: create_question_part! { PartName with &self.part_data => { field1: val1, field2, val2 }  }
+macro_rules! create_question_part {
+    (
+        $type: ident with $part_data: expr => {
+            $(
+                $field: ident: $val: expr
+            ),*
+        }
+    ) => {
+        {
+            let part_data = $part_data;
+            let custom_marking_algorithm_notes: Value<JMENotes> = part_data
+                .custom_marking_algorithm
+                .clone()
+                .unwrap_or_default()
+                .to_rumbas();
+            $type {
+                // Default section
+                marks: extract_part_common_marks(&part_data).to_rumbas(),
+                prompt: extract_part_common_prompt(&part_data).to_rumbas(),
+                use_custom_name: extract_part_common_use_custom_name(&part_data).to_rumbas(),
+                custom_name: extract_part_common_custom_name(&part_data).to_rumbas(),
+                steps_penalty: extract_part_common_steps_penalty(&part_data).to_rumbas(),
+                enable_minimum_marks: extract_part_common_enable_minimum_marks(&part_data)
+                    .to_rumbas(),
+                minimum_marks: extract_part_common_minimum_marks(&part_data).to_rumbas(),
+                show_correct_answer: extract_part_common_show_correct_answer(&part_data)
+                    .to_rumbas(),
+                show_feedback_icon: extract_part_common_show_feedback_icon(&part_data).to_rumbas(),
+                variable_replacement_strategy: part_data.variable_replacement_strategy.to_rumbas(),
+                adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(&part_data)
+                    .to_rumbas(),
+                custom_marking_algorithm_notes,
+                extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
+                    &part_data,
+                )
+                .to_rumbas(),
+                steps: Value::Normal(extract_part_common_steps(&part_data)),
+                $(
+                    $field: $val
+                ),*
+            }
+        }
+    }
+}
+pub(crate) use create_question_part;

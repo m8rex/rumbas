@@ -50,9 +50,6 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatrix> for QuestionPartMatrix {
 
 impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
-
         let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
             self.min_rows.to_rumbas(),
             self.num_rows.clone().map(|v| v.0).to_rumbas(),
@@ -64,42 +61,15 @@ impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
             self.max_columns.to_rumbas(),
         ));
         let dimensions = QuestionPartMatrixDimensions { rows, columns };
-        QuestionPartMatrix {
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
-                &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
-            ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            correct_answer: Value::Normal(self.correct_answer.clone()),
-            display_correct_as_fraction: Value::Normal(self.correct_answer_fractions),
-            dimensions: Value::Normal(dimensions),
-            max_absolute_deviation: Value::Normal(self.tolerance),
-            mark_partial_by_cells: Value::Normal(self.mark_per_cell),
-            allow_fractions: Value::Normal(self.allow_fractions),
+        create_question_part! {
+            QuestionPartMatrix with &self.part_data  => {
+                correct_answer: Value::Normal(self.correct_answer.clone()),
+                display_correct_as_fraction: Value::Normal(self.correct_answer_fractions),
+                dimensions: Value::Normal(dimensions),
+                max_absolute_deviation: Value::Normal(self.tolerance),
+                mark_partial_by_cells: Value::Normal(self.mark_per_cell),
+                allow_fractions: Value::Normal(self.allow_fractions)
+            }
         }
     }
 }

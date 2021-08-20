@@ -112,6 +112,36 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
     }
 }
 
+impl ToRumbas<QuestionPartMatchAnswersWithItems>
+    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
+{
+    fn to_rumbas(&self) -> QuestionPartMatchAnswersWithItems {
+        create_question_part! {
+            QuestionPartMatchAnswersWithItems with &self.part_data => {
+
+                answer_data: Value::Normal(self.to_rumbas()),
+                shuffle_answers: Value::Normal(self.shuffle_answers),
+                shuffle_items: Value::Normal(self.shuffle_choices),
+                show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
+                should_select_at_least: Value::Normal(
+                    self.min_answers
+                        .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)
+                        .0,
+                ),
+                should_select_at_most: Value::Normal(
+                    self.max_answers
+                        .map(|v| v.0)
+                        .map(Noneable::NotNone)
+                        .unwrap_or_else(Noneable::nn),
+                ),
+                display: Value::Normal(self.display_type.to_rumbas()),
+                layout: Value::Normal(self.layout.clone()),
+                wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning)
+            }
+        }
+    }
+}
+
 impl ToRumbas<MultipleChoiceMatchAnswerData>
     for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
 {
@@ -189,65 +219,6 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                         .expect("How can the marking matrix be optional?"),
                 ),
             })
-        }
-    }
-}
-
-impl ToRumbas<QuestionPartMatchAnswersWithItems>
-    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
-{
-    fn to_rumbas(&self) -> QuestionPartMatchAnswersWithItems {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
-        QuestionPartMatchAnswersWithItems {
-            // Default section
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
-                &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
-            ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            answer_data: Value::Normal(self.to_rumbas()),
-            shuffle_answers: Value::Normal(self.shuffle_answers),
-            shuffle_items: Value::Normal(self.shuffle_choices),
-            show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
-            should_select_at_least: Value::Normal(
-                self.min_answers
-                    .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)
-                    .0,
-            ),
-            should_select_at_most: Value::Normal(
-                self.max_answers
-                    .map(|v| v.0)
-                    .map(Noneable::NotNone)
-                    .unwrap_or_else(Noneable::nn),
-            ),
-            display: Value::Normal(self.display_type.to_rumbas()),
-            layout: Value::Normal(self.layout.clone()),
-            wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning),
         }
     }
 }
