@@ -8,73 +8,64 @@ use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite! {
-    pub struct NavigationSharedData {
-        /// Password to begin the exam
-        start_password: FileString, //TODO: Noneable, but "" is none in this case?
-        /// Whether the student can regenerate questions
-        /// Old name was `allow_regenerate`
-        #[serde(alias = "allow_regenerate")]
-        can_regenerate: bool,
-        /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
-        /// Old name was `allow_steps`
-        #[serde(alias = "allow_steps")]
-        show_steps: bool,
-        /// Whether the title page should be shown.
-        /// Old name was `show_frontpage`
-        #[serde(alias = "show_frontpage")]
-        show_title_page: bool,
-        /// Whether the student will be asked to confirm when leaving the exam.
-        #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: bool,
-        show_names_of_question_groups: bool,
-        /// Whether the student is allowed to print the exam
-        allow_printing: bool
-    }
-}
-
-impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
-    fn to_rumbas(&self) -> NavigationSharedData {
-        NavigationSharedData {
-            start_password: Value::Normal(FileString::s(
-                &self
-                    .navigation
-                    .start_password
-                    .clone()
-                    .unwrap_or(DEFAULTS.navigation_start_password),
-            )),
-            can_regenerate: Value::Normal(self.navigation.allow_regenerate),
-            show_steps: Value::Normal(
-                self.navigation
-                    .allow_steps
-                    .unwrap_or(DEFAULTS.navigation_allow_steps),
-            ),
-            show_title_page: Value::Normal(self.navigation.show_frontpage),
-            confirm_when_leaving: Value::Normal(
-                self.navigation
-                    .confirm_when_leaving
-                    .unwrap_or(DEFAULTS.navigation_prevent_leaving),
-            ),
-            show_names_of_question_groups: Value::Normal(
-                self.basic_settings
-                    .show_question_group_names
-                    .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups),
-            ),
-            allow_printing: Value::Normal(
-                self.basic_settings
-                    .allow_printing
-                    .unwrap_or(DEFAULTS.basic_settings_allow_printing),
-            ),
-        }
-    }
-}
-
 optional_overwrite_enum! {
     #[serde(rename_all = "snake_case")]
     #[serde(tag = "mode")]
     pub enum NormalNavigation {
         Sequential(SequentialNavigation),
         Menu(MenuNavigation)
+    }
+}
+
+impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
+        numbas::exam::ExamNavigation {
+            allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
+            allow_steps: Some(self.to_shared_data().show_steps.to_numbas(locale)),
+            show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
+            confirm_when_leaving: Some(
+                self.to_shared_data().confirm_when_leaving.to_numbas(locale),
+            ),
+            start_password: self
+                .to_shared_data()
+                .start_password
+                .map(|s| s.to_numbas(locale)),
+            navigation_mode: self.to_numbas(locale),
+        }
+    }
+}
+
+impl ToNumbas<numbas::exam::ExamNavigationMode> for NormalNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigationMode {
+        match self {
+            NormalNavigation::Menu(n) => n.to_numbas(locale),
+            NormalNavigation::Sequential(n) => n.to_numbas(locale),
+        }
+    }
+}
+
+impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> NormalNavigation {
+        match &self.navigation.navigation_mode {
+            numbas::exam::ExamNavigationMode::Sequential(s) => {
+                NormalNavigation::Sequential(SequentialNavigation {
+                    shared_data: Value::Normal(self.to_rumbas()),
+                    can_move_to_previous: Value::Normal(s.can_move_to_previous),
+                    browsing_enabled: Value::Normal(s.browsing_enabled),
+                    show_results_page: Value::Normal(s.show_results_page.clone().to_rumbas()),
+                    on_leave: Value::Normal(s.on_leave.clone().to_rumbas()),
+                })
+            }
+            numbas::exam::ExamNavigationMode::Menu => NormalNavigation::Menu(MenuNavigation {
+                shared_data: Value::Normal(self.to_rumbas()),
+            }),
+            numbas::exam::ExamNavigationMode::Diagnostic(_d) => {
+                panic!(
+                    "{}",
+                    "Bug in rumbas: can' create normal exam from diagnostic one."
+                )
+            }
+        }
     }
 }
 
@@ -127,52 +118,6 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamNavigationMode> for MenuNavigation {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamNavigationMode {
         numbas::exam::ExamNavigationMode::Menu // TODO: sequential
-    }
-}
-
-impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
-        numbas::exam::ExamNavigation {
-            allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
-            allow_steps: Some(self.to_shared_data().show_steps.to_numbas(locale)),
-            show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
-            confirm_when_leaving: Some(
-                self.to_shared_data().confirm_when_leaving.to_numbas(locale),
-            ),
-            start_password: self
-                .to_shared_data()
-                .start_password
-                .map(|s| s.to_numbas(locale)),
-            navigation_mode: match self {
-                NormalNavigation::Menu(n) => n.to_numbas(locale),
-                NormalNavigation::Sequential(n) => n.to_numbas(locale),
-            },
-        }
-    }
-}
-
-impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
-    fn to_rumbas(&self) -> NormalNavigation {
-        match &self.navigation.navigation_mode {
-            numbas::exam::ExamNavigationMode::Sequential(s) => {
-                NormalNavigation::Sequential(SequentialNavigation {
-                    shared_data: Value::Normal(self.to_rumbas()),
-                    can_move_to_previous: Value::Normal(s.can_move_to_previous),
-                    browsing_enabled: Value::Normal(s.browsing_enabled),
-                    show_results_page: Value::Normal(s.show_results_page.clone().to_rumbas()),
-                    on_leave: Value::Normal(s.on_leave.clone().to_rumbas()),
-                })
-            }
-            numbas::exam::ExamNavigationMode::Menu => NormalNavigation::Menu(MenuNavigation {
-                shared_data: Value::Normal(self.to_rumbas()),
-            }),
-            numbas::exam::ExamNavigationMode::Diagnostic(_d) => {
-                panic!(
-                    "{}",
-                    "Bug in rumbas: can' create normal exam from diagnostic one."
-                )
-            }
-        }
     }
 }
 
@@ -323,6 +268,67 @@ impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
                     message: message.clone().into(),
                 }
             }
+        }
+    }
+}
+
+optional_overwrite! {
+    pub struct NavigationSharedData {
+        /// Password to begin the exam
+        start_password: FileString, //TODO: Noneable, but "" is none in this case?
+        /// Whether the student can regenerate questions
+        /// Old name was `allow_regenerate`
+        #[serde(alias = "allow_regenerate")]
+        can_regenerate: bool,
+        /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
+        /// Old name was `allow_steps`
+        #[serde(alias = "allow_steps")]
+        show_steps: bool,
+        /// Whether the title page should be shown.
+        /// Old name was `show_frontpage`
+        #[serde(alias = "show_frontpage")]
+        show_title_page: bool,
+        /// Whether the student will be asked to confirm when leaving the exam.
+        #[serde(alias = "prevent_leaving")]
+        confirm_when_leaving: bool,
+        show_names_of_question_groups: bool,
+        /// Whether the student is allowed to print the exam
+        allow_printing: bool
+    }
+}
+
+impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
+    fn to_rumbas(&self) -> NavigationSharedData {
+        NavigationSharedData {
+            start_password: Value::Normal(FileString::s(
+                &self
+                    .navigation
+                    .start_password
+                    .clone()
+                    .unwrap_or(DEFAULTS.navigation_start_password),
+            )),
+            can_regenerate: Value::Normal(self.navigation.allow_regenerate),
+            show_steps: Value::Normal(
+                self.navigation
+                    .allow_steps
+                    .unwrap_or(DEFAULTS.navigation_allow_steps),
+            ),
+            show_title_page: Value::Normal(self.navigation.show_frontpage),
+            confirm_when_leaving: Value::Normal(
+                self.navigation
+                    .confirm_when_leaving
+                    .unwrap_or(DEFAULTS.navigation_prevent_leaving),
+            ),
+            show_names_of_question_groups: Value::Normal(
+                self.basic_settings
+                    .show_question_group_names
+                    .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups),
+            ),
+            allow_printing: Value::Normal(
+                self.basic_settings
+                    .allow_printing
+                    .unwrap_or(DEFAULTS.basic_settings_allow_printing),
+            ),
         }
     }
 }
