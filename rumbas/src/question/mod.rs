@@ -12,8 +12,6 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
-use crate::exam::preamble::Preamble;
-use crate::support::file_reference::FileString;
 use crate::support::optional_overwrite::*;
 use crate::support::template::TemplateData;
 use crate::support::template::{Value, ValueType};
@@ -29,6 +27,7 @@ use extension::Extensions;
 use function::Function;
 use navigation::QuestionNavigation;
 use part::question_part::QuestionPart;
+use preamble::Preamble;
 use resource::ResourcePath;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -158,10 +157,7 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                     .map(|(k, f)| (k.clone(), Value::Normal(f.to_rumbas())))
                     .collect::<std::collections::HashMap<_, _>>(),
             ),
-            preamble: Value::Normal(Preamble {
-                js: Value::Normal(FileString::s(&self.preamble.js)),
-                css: Value::Normal(FileString::s(&self.preamble.css)),
-            }),
+            preamble: Value::Normal(self.preamble.to_rumbas()),
             navigation: Value::Normal(self.navigation.to_rumbas()),
             extensions: Value::Normal(self.extensions.to_rumbas()),
             diagnostic_topic_names: Value::Normal(

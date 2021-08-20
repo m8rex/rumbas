@@ -1,9 +1,9 @@
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::{JMETranslatableString, TranslatableString};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::impl_to_numbas;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::{JMETranslatableString, TranslatableString};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +16,7 @@ optional_overwrite! {
     }
 }
 impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
+impl_optional_overwrite!(numbas::exam::ExamFunctionType);
 
 impl ToNumbas<numbas::exam::ExamFunction> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunction {
@@ -26,6 +27,7 @@ impl ToNumbas<numbas::exam::ExamFunction> for Function {
         }
     }
 }
+impl_to_numbas!(numbas::exam::ExamFunctionType);
 
 impl ToRumbas<Function> for numbas::exam::ExamFunction {
     fn to_rumbas(&self) -> Function {
@@ -36,9 +38,6 @@ impl ToRumbas<Function> for numbas::exam::ExamFunction {
         }
     }
 }
-
-impl_to_numbas!(numbas::exam::ExamFunctionType);
-impl_optional_overwrite!(numbas::exam::ExamFunctionType);
 
 optional_overwrite_enum! {
     #[serde(tag = "language")]
