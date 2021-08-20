@@ -24,7 +24,6 @@ macro_rules! impl_to_rumbas {
         )*
     };
 }
-
 pub(crate) use impl_to_rumbas;
 
 impl_to_rumbas!(bool, f64, usize, [f64; 2]);

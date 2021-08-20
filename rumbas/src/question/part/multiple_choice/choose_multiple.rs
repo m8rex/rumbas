@@ -71,7 +71,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChoo
             ),
         };
         numbas::exam::ExamQuestionPartChooseMultiple {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
             min_marks: Some(0usize), // todo?
@@ -84,12 +84,6 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseMultiple> for QuestionPartChoo
             marking_matrix,
             distractors,
         }
-    }
-}
-
-impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseMultiple {
-    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
-        extract_multiple_choice_answer_data(&self.choices, &self.marking_matrix, &self.distractors)
     }
 }
 
@@ -146,5 +140,11 @@ impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChoo
             columns: Value::Normal(self.display_columns.0),
             wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning),
         }
+    }
+}
+
+impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseMultiple {
+    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
+        extract_multiple_choice_answer_data(&self.choices, &self.marking_matrix, &self.distractors)
     }
 }

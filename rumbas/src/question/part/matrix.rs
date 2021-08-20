@@ -31,7 +31,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatrix> for QuestionPartMatrix {
         let rows = dimensions.rows.unwrap();
         let columns = dimensions.columns.unwrap();
         numbas::exam::ExamQuestionPartMatrix {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             correct_answer: self.correct_answer.to_numbas(locale),
             correct_answer_fractions: self.display_correct_as_fraction.to_numbas(locale),
             num_rows: rows.default().to_numbas(locale),

@@ -25,7 +25,7 @@ impl_optional_overwrite!(numbas::exam::PatternMatchMode);
 impl ToNumbas<numbas::exam::ExamQuestionPartPatternMatch> for QuestionPartPatternMatch {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartPatternMatch {
         numbas::exam::ExamQuestionPartPatternMatch {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
             partial_credit: Some(self.partial_credit.to_numbas(locale)),
             answer: numbas::exam::Primitive::String(self.pattern.to_numbas(locale)),

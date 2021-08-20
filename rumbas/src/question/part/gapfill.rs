@@ -22,7 +22,7 @@ question_part_type! {
 impl ToNumbas<numbas::exam::ExamQuestionPartGapFill> for QuestionPartGapFill {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartGapFill {
         numbas::exam::ExamQuestionPartGapFill {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             sort_answers: Some(self.sort_answers.to_numbas(locale)),
             gaps: self.gaps.to_numbas(locale),
         }

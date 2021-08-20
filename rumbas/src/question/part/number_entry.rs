@@ -32,7 +32,7 @@ impl_optional_overwrite!(numbas::exam::AnswerStyle);
 impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberEntry {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartNumberEntry {
         numbas::exam::ExamQuestionPartNumberEntry {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
             correct_answer_style: Some(self.display_correct_in_style.to_numbas(locale)),
             allow_fractions: self.allow_fractions.to_numbas(locale),

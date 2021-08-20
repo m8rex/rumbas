@@ -12,21 +12,6 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 
-optional_overwrite! {
-    pub struct MatchAnswersItemMarks {
-        marks: numbas::exam::Primitive,
-        answer: TranslatableString
-    }
-}
-
-optional_overwrite! {
-    pub struct MatchAnswersItem {
-        statement: TranslatableString,
-        /// Map points to strings of answers ! use anchors in yaml
-        answer_marks: Vec<MatchAnswersItemMarks>
-    }
-}
-
 question_part_type! {
     pub struct QuestionPartMatchAnswersWithItems {
         /// Old name was `answers`
@@ -109,7 +94,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
             ),
         };
         numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
             min_marks: Some(0.into()),
@@ -157,6 +142,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                             .into_iter()
                             .map(|(statement, marks)| {
                                 Value::Normal(MatchAnswersItem {
+                                    // TODO: extract to ToRumbas?
                                     statement: Value::Normal(statement.into()),
                                     answer_marks: Value::Normal(
                                         marks
@@ -326,5 +312,20 @@ optional_overwrite! {
         answers: Vec<Value<TranslatableString>>,
         /// Items for which the answer can be selected
         items: Vec<Value<MatchAnswersItem>>
+    }
+}
+
+optional_overwrite! {
+    pub struct MatchAnswersItem {
+        statement: TranslatableString,
+        /// Map points to strings of answers ! use anchors in yaml
+        answer_marks: Vec<MatchAnswersItemMarks>
+    }
+}
+
+optional_overwrite! {
+    pub struct MatchAnswersItemMarks {
+        marks: numbas::exam::Primitive,
+        answer: TranslatableString
     }
 }
