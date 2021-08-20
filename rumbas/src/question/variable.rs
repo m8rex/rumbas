@@ -9,99 +9,6 @@ use serde::{Deserialize, Serialize};
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
-optional_overwrite! {
-    pub struct Variable {
-        definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
-        description: String,
-        template_type: VariableTemplateType,
-        group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
-    }
-}
-
-impl ToNumbas<numbas::exam::ExamVariable> for Variable {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
-        numbas::exam::ExamVariable {
-            name,
-            definition: self.definition.to_numbas(locale),
-            description: self.description.to_numbas(locale),
-            template_type: self.template_type.to_numbas(locale),
-            group: self.group.to_numbas(locale),
-            can_override: false, // Don't support overriding variables (yet?)
-        }
-    }
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
-        panic!(
-            "{}",
-            "Should not happen, don't call this method Missing name".to_string(),
-        )
-    }
-}
-
-/// The different template_types for a variable
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum VariableTemplateType {
-    /// Not specified
-    Anything, // TODO: allow this?
-    /// A list of numbers
-    ListOfNumbers,
-    /// A list of strings
-    ListOfStrings,
-    /// A long string
-    LongString,
-    /// A number
-    Number,
-    /// A random number from a range
-    RandomRange,
-    /// A range
-    Range,
-    /// A string
-    r#String,
-}
-
-impl ToNumbas<numbas::exam::ExamVariableTemplateType> for VariableTemplateType {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariableTemplateType {
-        match self {
-            VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
-            VariableTemplateType::ListOfNumbers => {
-                numbas::exam::ExamVariableTemplateType::ListOfNumbers
-            }
-            VariableTemplateType::ListOfStrings => {
-                numbas::exam::ExamVariableTemplateType::ListOfStrings
-            }
-            VariableTemplateType::LongString => numbas::exam::ExamVariableTemplateType::LongString,
-            VariableTemplateType::Number => numbas::exam::ExamVariableTemplateType::Number,
-            VariableTemplateType::Range => numbas::exam::ExamVariableTemplateType::Range,
-            VariableTemplateType::RandomRange => {
-                numbas::exam::ExamVariableTemplateType::RandomRange
-            }
-            VariableTemplateType::r#String => numbas::exam::ExamVariableTemplateType::r#String,
-        }
-    }
-}
-impl_optional_overwrite!(VariableTemplateType);
-
-impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
-    fn to_rumbas(&self) -> VariableTemplateType {
-        match self {
-            numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
-            numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
-                VariableTemplateType::ListOfNumbers
-            }
-            numbas::exam::ExamVariableTemplateType::ListOfStrings => {
-                VariableTemplateType::ListOfStrings
-            }
-            numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
-            numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
-            numbas::exam::ExamVariableTemplateType::RandomRange => {
-                VariableTemplateType::RandomRange
-            }
-            numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
-            numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
@@ -110,18 +17,6 @@ pub enum VariableRepresentation {
     Long(Box<Variable>),
     Number(f64),
     Other(VariableStringRepresentation),
-}
-
-impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
-        self.to_variable().to_numbas_with_name(locale, name)
-    }
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
-        panic!(
-            "{}",
-            "Should not happen, don't call this method Missing name".to_string(),
-        )
-    }
 }
 
 impl RumbasCheck for VariableRepresentation {
@@ -135,6 +30,7 @@ impl RumbasCheck for VariableRepresentation {
         }
     }
 }
+
 impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
     fn overwrite(&mut self, _other: &VariableRepresentation) {
         //TODO?
@@ -151,43 +47,15 @@ impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
 }
 impl_optional_overwrite_value!(VariableRepresentation);
 
-fn create_ungrouped_variable(template_type: VariableTemplateType, definition: &str) -> Variable {
-    Variable {
-        template_type: Value::Normal(template_type),
-        definition: Value::Normal(FileString::s(&definition.to_owned())),
-        description: Value::Normal("".to_string()),
-        group: Value::Normal(UNGROUPED_GROUP.to_string()),
+impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
+        self.to_variable().to_numbas_with_name(locale, name)
     }
-}
-
-impl VariableRepresentation {
-    pub fn to_variable(&self) -> Variable {
-        match self {
-            VariableRepresentation::ListOfStrings(l) => create_ungrouped_variable(
-                VariableTemplateType::ListOfStrings,
-                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
-            ),
-            VariableRepresentation::ListOfNumbers(l) => create_ungrouped_variable(
-                VariableTemplateType::ListOfNumbers,
-                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
-            ),
-            VariableRepresentation::Long(v) => *(v.clone()),
-            VariableRepresentation::Number(n) => {
-                create_ungrouped_variable(VariableTemplateType::Number, &n.to_string())
-            }
-            VariableRepresentation::Other(o) => match o {
-                VariableStringRepresentation::Anything(s) => {
-                    create_ungrouped_variable(VariableTemplateType::Anything, &s)
-                }
-                VariableStringRepresentation::Range(r) => {
-                    create_ungrouped_variable(VariableTemplateType::Range, &r.to_range())
-                }
-                VariableStringRepresentation::RandomRange(r) => create_ungrouped_variable(
-                    VariableTemplateType::RandomRange,
-                    &r.to_random_range(),
-                ),
-            },
-        }
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
+        panic!(
+            "{}",
+            "Should not happen, don't call this method Missing name".to_string(),
+        )
     }
 }
 
@@ -202,24 +70,42 @@ impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
     }
 }
 
+impl VariableRepresentation {
+    pub fn to_variable(&self) -> Variable {
+        match self {
+            VariableRepresentation::ListOfStrings(l) => Variable::ungrouped(
+                VariableTemplateType::ListOfStrings,
+                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
+            ),
+            VariableRepresentation::ListOfNumbers(l) => Variable::ungrouped(
+                VariableTemplateType::ListOfNumbers,
+                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
+            ),
+            VariableRepresentation::Long(v) => *(v.clone()),
+            VariableRepresentation::Number(n) => {
+                Variable::ungrouped(VariableTemplateType::Number, &n.to_string())
+            }
+            VariableRepresentation::Other(o) => match o {
+                VariableStringRepresentation::Anything(s) => {
+                    Variable::ungrouped(VariableTemplateType::Anything, &s)
+                }
+                VariableStringRepresentation::Range(r) => {
+                    Variable::ungrouped(VariableTemplateType::Range, &r.to_range())
+                }
+                VariableStringRepresentation::RandomRange(r) => {
+                    Variable::ungrouped(VariableTemplateType::RandomRange, &r.to_random_range())
+                }
+            },
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
     Anything(String),
     Range(RangeData),
     RandomRange(RangeData),
-}
-
-impl std::convert::From<String> for VariableStringRepresentation {
-    fn from(s: String) -> Self {
-        if let Some(r) = RangeData::try_from_range(&s) {
-            return VariableStringRepresentation::Range(r);
-        }
-        if let Some(r) = RangeData::try_from_random_range(&s) {
-            return VariableStringRepresentation::RandomRange(r);
-        }
-        VariableStringRepresentation::Anything(s)
-    }
 }
 impl_optional_overwrite!(VariableStringRepresentation);
 
@@ -237,6 +123,19 @@ impl JsonSchema for VariableStringRepresentation {
     }
 }
 
+impl std::convert::From<String> for VariableStringRepresentation {
+    fn from(s: String) -> Self {
+        if let Some(r) = RangeData::try_from_range(&s) {
+            VariableStringRepresentation::Range(r)
+        } else if let Some(r) = RangeData::try_from_random_range(&s) {
+            VariableStringRepresentation::RandomRange(r)
+        } else {
+            VariableStringRepresentation::Anything(s)
+        }
+    }
+}
+
+// TODO: let this be parsed as JME?
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 pub struct RangeData {
     from: f64,
@@ -270,6 +169,7 @@ impl RangeData {
         format!("random({})", self.to_range())
     }
 }
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -342,5 +242,109 @@ mod test {
             RangeData::try_from_random_range(&s)
         );
         assert_eq!(None, RangeData::try_from_range(&s));
+    }
+}
+
+optional_overwrite! {
+    pub struct Variable {
+        definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
+        description: String,
+        template_type: VariableTemplateType,
+        group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+    }
+}
+
+impl ToNumbas<numbas::exam::ExamVariable> for Variable {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
+        numbas::exam::ExamVariable {
+            name,
+            definition: self.definition.to_numbas(locale),
+            description: self.description.to_numbas(locale),
+            template_type: self.template_type.to_numbas(locale),
+            group: self.group.to_numbas(locale),
+            can_override: false, // Don't support overriding variables (yet?)
+        }
+    }
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
+        panic!(
+            "{}",
+            "Should not happen, don't call this method Missing name".to_string(),
+        )
+    }
+}
+
+impl Variable {
+    fn ungrouped(template_type: VariableTemplateType, definition: &str) -> Variable {
+        Variable {
+            template_type: Value::Normal(template_type),
+            definition: Value::Normal(FileString::s(&definition.to_owned())),
+            description: Value::Normal("".to_string()),
+            group: Value::Normal(UNGROUPED_GROUP.to_string()),
+        }
+    }
+}
+
+/// The different template_types for a variable
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum VariableTemplateType {
+    /// Not specified
+    Anything, // TODO: allow this?
+    /// A list of numbers
+    ListOfNumbers,
+    /// A list of strings
+    ListOfStrings,
+    /// A long string
+    LongString,
+    /// A number
+    Number,
+    /// A random number from a range
+    RandomRange,
+    /// A range
+    Range,
+    /// A string
+    r#String,
+}
+impl_optional_overwrite!(VariableTemplateType);
+
+impl ToNumbas<numbas::exam::ExamVariableTemplateType> for VariableTemplateType {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariableTemplateType {
+        match self {
+            VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
+            VariableTemplateType::ListOfNumbers => {
+                numbas::exam::ExamVariableTemplateType::ListOfNumbers
+            }
+            VariableTemplateType::ListOfStrings => {
+                numbas::exam::ExamVariableTemplateType::ListOfStrings
+            }
+            VariableTemplateType::LongString => numbas::exam::ExamVariableTemplateType::LongString,
+            VariableTemplateType::Number => numbas::exam::ExamVariableTemplateType::Number,
+            VariableTemplateType::Range => numbas::exam::ExamVariableTemplateType::Range,
+            VariableTemplateType::RandomRange => {
+                numbas::exam::ExamVariableTemplateType::RandomRange
+            }
+            VariableTemplateType::r#String => numbas::exam::ExamVariableTemplateType::r#String,
+        }
+    }
+}
+
+impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
+    fn to_rumbas(&self) -> VariableTemplateType {
+        match self {
+            numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
+            numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
+                VariableTemplateType::ListOfNumbers
+            }
+            numbas::exam::ExamVariableTemplateType::ListOfStrings => {
+                VariableTemplateType::ListOfStrings
+            }
+            numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
+            numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
+            numbas::exam::ExamVariableTemplateType::RandomRange => {
+                VariableTemplateType::RandomRange
+            }
+            numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
+            numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
+        }
     }
 }

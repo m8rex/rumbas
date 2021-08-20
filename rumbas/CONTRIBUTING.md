@@ -15,11 +15,13 @@
   - For each type
     - Struct / Enum
     - RumbasCheck implementation (if done manually)
+    - Optional overwrite implementation (if done manually)
     - ToNumbas implementation
     - ToRumbas implementation
     - Other trait implementations:
       - JsonSchema
       - builtin traits
     - Other impls on structure
+    - Tests for structure
 
 ### Support files
