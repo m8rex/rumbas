@@ -15,7 +15,7 @@ question_part_type! {
 impl ToNumbas<numbas::exam::ExamQuestionPartExtension> for QuestionPartExtension {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartExtension {
         numbas::exam::ExamQuestionPartExtension {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
         }
     }
 }

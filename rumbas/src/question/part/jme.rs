@@ -38,7 +38,7 @@ question_part_type! {
 impl ToNumbas<numbas::exam::ExamQuestionPartJME> for QuestionPartJME {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartJME {
         numbas::exam::ExamQuestionPartJME {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             answer: self.answer.to_numbas(locale),
             answer_simplification: Some(self.answer_simplification.to_numbas(locale)),
             show_preview: self.show_preview.to_numbas(locale),

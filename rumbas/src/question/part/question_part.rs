@@ -316,8 +316,8 @@ macro_rules! question_part_type {
                 )?
             }
         }
-        impl $struct {
-            fn to_numbas_shared_data(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
+        impl ToNumbas<numbas::exam::ExamQuestionPartSharedData> for $struct {
+            fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData {
                     marks: Some(self.marks.clone().to_numbas(locale)),
                     prompt: Some(self.prompt.to_numbas(locale)),
@@ -336,7 +336,9 @@ macro_rules! question_part_type {
                 }
 
             }
+        }
 
+        impl $struct {
             pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
                 &mut self.steps
             }
@@ -388,7 +390,7 @@ impl ToRumbas<CustomPartInputTypeValue> for numbas::exam::CustomPartInputTypeVal
 impl ToNumbas<numbas::exam::ExamQuestionPartCustom> for QuestionPartCustom {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartCustom {
         numbas::exam::ExamQuestionPartCustom {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             r#type: self.r#type.to_numbas(locale),
             settings: self.settings.to_numbas(locale),
         }

@@ -29,41 +29,6 @@ question_part_type! {
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRowPrimitive(Vec<numbas::exam::Primitive>);
-impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
-
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Row(self.0.clone())
-    }
-}
-
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRow(Vec<TranslatableString>);
-impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
-
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Row(
-            self.0
-                .to_numbas(locale)
-                .into_iter()
-                .map(|a| a.into())
-                .collect(),
-        )
-    }
-}
-
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::exam::Primitive>>>);
-impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
-
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
-    }
-}
 impl ToNumbas<numbas::exam::ExamQuestionPartChooseOne> for QuestionPartChooseOne {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartChooseOne {
         let (answers, marking_matrix, distractors) = match self.answer_data.unwrap() {
@@ -101,7 +66,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseOne> for QuestionPartChooseOne
             ),
         };
         numbas::exam::ExamQuestionPartChooseOne {
-            part_data: self.to_numbas_shared_data(locale),
+            part_data: self.to_numbas(locale),
             min_answers: Some(if self.has_to_select_option.to_numbas(locale) {
                 1
             } else {
@@ -109,19 +74,13 @@ impl ToNumbas<numbas::exam::ExamQuestionPartChooseOne> for QuestionPartChooseOne
             }),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             answers,
-            display_type: self.display.unwrap().get_numbas_type(),
+            display_type: self.display.unwrap().to_numbas(locale),
             columns: self.display.unwrap().get_nb_columns().into(),
             wrong_nb_choices_warning: Some(numbas::exam::MultipleChoiceWarningType::None), //TODO
             show_cell_answer_state: Some(self.show_cell_answer_state.to_numbas(locale)),
             marking_matrix,
             distractors,
         }
-    }
-}
-
-impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseOne {
-    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
-        extract_multiple_choice_answer_data(&self.answers, &self.marking_matrix, &self.distractors)
     }
 }
 
@@ -175,6 +134,48 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::exam::ExamQuestionPartChooseOne
     }
 }
 
+impl ToRumbas<MultipleChoiceAnswerData> for numbas::exam::ExamQuestionPartChooseOne {
+    fn to_rumbas(&self) -> MultipleChoiceAnswerData {
+        extract_multiple_choice_answer_data(&self.answers, &self.marking_matrix, &self.distractors)
+    }
+}
+
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
+struct MatrixRowPrimitive(Vec<numbas::exam::Primitive>);
+impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
+
+impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRowPrimitive {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::MultipleChoiceMatrix {
+        numbas::exam::MultipleChoiceMatrix::Row(self.0.clone())
+    }
+}
+
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
+struct MatrixRow(Vec<TranslatableString>);
+impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
+
+impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRow {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
+        numbas::exam::MultipleChoiceMatrix::Row(
+            self.0
+                .to_numbas(locale)
+                .into_iter()
+                .map(|a| a.into())
+                .collect(),
+        )
+    }
+}
+
+#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
+struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::exam::Primitive>>>);
+impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
+
+impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixPrimitive {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
+        numbas::exam::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+    }
+}
+
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum ChooseOneDisplay {
@@ -185,18 +186,11 @@ pub enum ChooseOneDisplay {
 }
 impl_optional_overwrite!(ChooseOneDisplay);
 
-impl ChooseOneDisplay {
-    pub fn get_numbas_type(&self) -> numbas::exam::ChooseOneDisplayType {
+impl ToNumbas<numbas::exam::ChooseOneDisplayType> for ChooseOneDisplay {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::ChooseOneDisplayType {
         match self {
             ChooseOneDisplay::DropDown => numbas::exam::ChooseOneDisplayType::DropDown,
             ChooseOneDisplay::Radio { columns: _ } => numbas::exam::ChooseOneDisplayType::Radio,
-        }
-    }
-
-    pub fn get_nb_columns(&self) -> usize {
-        match self {
-            ChooseOneDisplay::DropDown => 0,
-            ChooseOneDisplay::Radio { columns } => *columns,
         }
     }
 }
@@ -208,6 +202,15 @@ impl ToRumbas<ChooseOneDisplay> for numbas::exam::ExamQuestionPartChooseOne {
                 columns: self.columns.0,
             },
             numbas::exam::ChooseOneDisplayType::DropDown => ChooseOneDisplay::DropDown,
+        }
+    }
+}
+
+impl ChooseOneDisplay {
+    pub fn get_nb_columns(&self) -> usize {
+        match self {
+            ChooseOneDisplay::DropDown => 0,
+            ChooseOneDisplay::Radio { columns } => *columns,
         }
     }
 }
