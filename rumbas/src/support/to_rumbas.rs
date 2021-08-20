@@ -1,4 +1,4 @@
-use crate::data::question_part::question_part::QuestionPart;
+use crate::question::part::question_part::QuestionPart;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;

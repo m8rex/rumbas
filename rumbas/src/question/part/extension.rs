@@ -1,37 +1,28 @@
-use crate::data::question_part::question_part::JMENotes;
-use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::support::template::{Value, ValueType};
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
-use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    // The Gap fill question part type
-    pub struct QuestionPartGapFill {
-        /// Whether the answers should be sorted
-        sort_answers: bool,
-        /// The gaps
-        gaps: Vec<QuestionPart>
-    }
+    pub struct QuestionPartExtension {}
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartGapFill> for QuestionPartGapFill {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartGapFill {
-        numbas::exam::ExamQuestionPartGapFill {
+impl ToNumbas<numbas::exam::ExamQuestionPartExtension> for QuestionPartExtension {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartExtension {
+        numbas::exam::ExamQuestionPartExtension {
             part_data: self.to_numbas_shared_data(locale),
-            sort_answers: Some(self.sort_answers.to_numbas(locale)),
-            gaps: self.gaps.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<QuestionPartGapFill> for numbas::exam::ExamQuestionPartGapFill {
-    fn to_rumbas(&self) -> QuestionPartGapFill {
-        QuestionPartGapFill {
+impl ToRumbas<QuestionPartExtension> for numbas::exam::ExamQuestionPartExtension {
+    fn to_rumbas(&self) -> QuestionPartExtension {
+        QuestionPartExtension {
             marks: Value::Normal(extract_part_common_marks(&self.part_data)),
             prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
             use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
@@ -63,10 +54,6 @@ impl ToRumbas<QuestionPartGapFill> for numbas::exam::ExamQuestionPartGapFill {
                 extract_part_common_extend_base_marking_algorithm(&self.part_data),
             ),
             steps: Value::Normal(extract_part_common_steps(&self.part_data)),
-
-            sort_answers: Value::Normal(self.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
-
-            gaps: Value::Normal(self.gaps.to_rumbas()),
         }
     }
 }

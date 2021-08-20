@@ -1,8 +1,8 @@
-use crate::data::question_part::multiple_choice::{
+use crate::question::part::multiple_choice::{
     extract_multiple_choice_answer_data, MultipleChoiceAnswerData,
 };
-use crate::data::question_part::question_part::JMENotes;
-use crate::data::question_part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::support::template::{Value, ValueType};
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::optional_overwrite::*;

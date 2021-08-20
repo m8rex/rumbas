@@ -1,7 +1,8 @@
 #[macro_use]
 extern crate enum_display_derive;
 
-pub mod data;
+pub mod exam;
+pub mod question;
 pub mod support;
 
 pub const QUESTIONS_FOLDER: &str = "questions";

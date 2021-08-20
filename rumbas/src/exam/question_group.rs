@@ -1,4 +1,4 @@
-use crate::data::question::Question;
+use crate::question::question::Question;
 use crate::support::template::{Value, ValueType};
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;

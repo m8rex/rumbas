@@ -1,22 +1,22 @@
-use crate::data::diagnostic_exam::DiagnosticExam;
-use crate::data::exam::Exam;
-use crate::data::feedback::Feedback;
-use crate::data::navigation::{
+use crate::exam::diagnostic::DiagnosticExam;
+use crate::exam::exam::Exam;
+use crate::question::feedback::Feedback;
+use crate::exam::navigation::{
     DiagnosticNavigation, MenuNavigation, NormalNavigation, SequentialNavigation,
 };
-use crate::data::normal_exam::NormalExam;
-use crate::data::numbas_settings::NumbasSettings;
-use crate::data::question::Question;
-use crate::data::question_part::gapfill::QuestionPartGapFill;
-use crate::data::question_part::information::QuestionPartInformation;
-use crate::data::question_part::jme::QuestionPartJME;
-use crate::data::question_part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
-use crate::data::question_part::multiple_choice::choose_one::QuestionPartChooseOne;
-use crate::data::question_part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
-use crate::data::question_part::number_entry::QuestionPartNumberEntry;
-use crate::data::question_part::pattern_match::QuestionPartPatternMatch;
-use crate::data::question_part::question_part::{QuestionPart, QuestionPartBuiltin};
-use crate::data::timing::Timing;
+use crate::exam::normal::NormalExam;
+use crate::exam::numbas_settings::NumbasSettings;
+use crate::question::question::Question;
+use crate::question::part::gapfill::QuestionPartGapFill;
+use crate::question::part::information::QuestionPartInformation;
+use crate::question::part::jme::QuestionPartJME;
+use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
+use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOne;
+use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
+use crate::question::part::number_entry::QuestionPartNumberEntry;
+use crate::question::part::pattern_match::QuestionPartPatternMatch;
+use crate::question::part::question_part::{QuestionPart, QuestionPartBuiltin};
+use crate::exam::timing::Timing;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use std::collections::HashSet;

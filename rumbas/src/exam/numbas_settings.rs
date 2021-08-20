@@ -1,4 +1,4 @@
-use crate::data::locale::SupportedLocale;
+use crate::exam::locale::SupportedLocale;
 use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;
 use schemars::JsonSchema;

@@ -1,5 +1,5 @@
-use crate::data::extension::Extensions;
-use crate::data::question_part::question_part::JMENotes;
+use crate::question::extension::Extensions;
+use crate::question::part::question_part::JMENotes;
 use crate::support::template::{Value, ValueType};
 use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
@@ -177,7 +177,7 @@ pub struct CustomPartNumberInputOptions {
     ///Allow the student to enter their answer as a fraction?
     allow_fractions: CustomPartInputOptionValue<bool>,
     allowed_notation_styles:
-        CustomPartInputOptionValue<Vec<crate::data::question_part::number_entry::AnswerStyle>>,
+        CustomPartInputOptionValue<Vec<crate::question::part::number_entry::AnswerStyle>>,
 }
 
 impl RumbasCheck for CustomPartNumberInputOptions {
