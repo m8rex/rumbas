@@ -341,7 +341,6 @@ pub fn convert_diagnostic_numbas_exam(
             feedback: exam.to_rumbas(),
             question_groups: Value::Normal(question_groups.clone()),
             numbas_settings: Value::Normal(NumbasSettings {
-                locale: Value::Normal(SupportedLocale::EnGB),
                 theme: Value::Normal("default".to_string()),
             }), // todo: argument?
             diagnostic: exam.diagnostic.unwrap().to_rumbas(), // Always set for a diagnostic exam

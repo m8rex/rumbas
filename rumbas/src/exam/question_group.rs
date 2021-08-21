@@ -102,6 +102,7 @@ impl RumbasCheck for QuestionPath {
         self.question_data.check(locale)
     }
 }
+
 impl OptionalOverwrite<QuestionPath> for QuestionPath {
     fn overwrite(&mut self, _other: &Self) {}
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
@@ -109,6 +110,23 @@ impl OptionalOverwrite<QuestionPath> for QuestionPath {
     }
 }
 impl_optional_overwrite_value!(QuestionPath);
+
+impl ToNumbas<numbas::exam::ExamQuestion> for QuestionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestion {
+        self.question_data
+            .clone()
+            .to_numbas_with_name(locale, self.question_name.clone())
+    }
+}
+
+impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
+    fn to_rumbas(&self) -> QuestionPath {
+        QuestionPath {
+            question_name: sanitize(&self.name),
+            question_data: self.to_rumbas(),
+        }
+    }
+}
 
 impl JsonSchema for QuestionPath {
     fn schema_name() -> String {
@@ -135,22 +153,5 @@ impl std::convert::TryFrom<String> for QuestionPath {
 impl std::convert::From<QuestionPath> for String {
     fn from(q: QuestionPath) -> Self {
         q.question_name
-    }
-}
-
-impl ToNumbas<numbas::exam::ExamQuestion> for QuestionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestion {
-        self.question_data
-            .clone()
-            .to_numbas_with_name(locale, self.question_name.clone())
-    }
-}
-
-impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
-    fn to_rumbas(&self) -> QuestionPath {
-        QuestionPath {
-            question_name: sanitize(&self.name),
-            question_data: self.to_rumbas(),
-        }
     }
 }

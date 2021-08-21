@@ -40,45 +40,7 @@ optional_overwrite! {
 
 impl ToNumbas<numbas::exam::Exam> for NormalExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
-        let basic_settings = numbas::exam::BasicExamSettings {
-            name: self.name.to_numbas(locale), //TODO: might fail, not checked
-            duration_in_seconds: self
-                .timing
-                .clone()
-                .unwrap()
-                .duration_in_seconds
-                .to_numbas(locale),
-            percentage_needed_to_pass: self
-                .feedback
-                .clone()
-                .unwrap()
-                .percentage_needed_to_pass
-                .to_numbas(locale),
-            show_question_group_names: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .to_shared_data()
-                    .show_names_of_question_groups
-                    .to_numbas(locale),
-            ),
-            show_student_name: Some(
-                self.feedback
-                    .clone()
-                    .unwrap()
-                    .show_name_of_student
-                    .to_numbas(locale),
-            ),
-            allow_printing: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .to_shared_data()
-                    .allow_printing
-                    .to_numbas(locale),
-            ),
-        };
-
+        let basic_settings = self.to_numbas(locale);
         let navigation = self.navigation.to_numbas(locale);
 
         let timing = self.timing.to_numbas(locale);
@@ -163,6 +125,43 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
     }
 }
 
+impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+        numbas::exam::BasicExamSettings {
+            name: self.name.to_numbas(locale),
+            duration_in_seconds: self
+                .timing
+                .clone()
+                .unwrap()
+                .duration_in_seconds
+                .to_numbas(locale),
+            percentage_needed_to_pass: self
+                .feedback
+                .clone()
+                .unwrap()
+                .percentage_needed_to_pass
+                .to_numbas(locale),
+            show_question_group_names: Some(
+                self.navigation
+                    .clone()
+                    .unwrap()
+                    .to_shared_data()
+                    .show_names_of_question_groups
+                    .unwrap(),
+            ),
+            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
+            allow_printing: Some(
+                self.navigation
+                    .clone()
+                    .unwrap()
+                    .to_shared_data()
+                    .allow_printing
+                    .unwrap(),
+            ),
+        }
+    }
+}
+
 /// Converts a normal numbas exam to a NormalExam
 pub fn convert_normal_numbas_exam(
     exam: numbas::exam::Exam,
@@ -185,7 +184,6 @@ pub fn convert_normal_numbas_exam(
             feedback: Value::Normal(exam.to_rumbas()),
             question_groups: Value::Normal(question_groups.clone()),
             numbas_settings: Value::Normal(NumbasSettings {
-                locale: Value::Normal(SupportedLocale::EnGB),
                 theme: Value::Normal("default".to_string()),
             }), // todo: argument?
         },
