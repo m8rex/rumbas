@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+pub type YamlResult<T> = Result<T, YamlError>;
+
 #[derive(Debug)]
 pub struct YamlError {
     error: serde_yaml::Error,
@@ -33,5 +35,3 @@ impl std::fmt::Display for YamlError {
         }
     }
 }
-
-pub type YamlResult<T> = Result<T, YamlError>;
