@@ -25,3 +25,6 @@
     - Tests for structure
 
 ### Support files
+
+- Order in file:
+  - Macro's at the bottom. (needs a `use macro_name` at the bottom of the file)
