@@ -28,3 +28,7 @@
 
 - Order in file:
   - Macro's at the bottom. (needs a `use macro_name` at the bottom of the file)
+
+- Manual serialize / deserialize with specific new structs / enums:
+  - Create specific module
+  - mod `name` { // implementations  }
