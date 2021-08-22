@@ -49,7 +49,7 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
                 self.basic_settings
                     .percentage_needed_to_pass
                     .map(Noneable::NotNone)
-                    .unwrap_or_else(Noneable::nn),
+                    .unwrap_or(Noneable::None),
             ),
             show_name_of_student: Value::Normal(
                 self.basic_settings

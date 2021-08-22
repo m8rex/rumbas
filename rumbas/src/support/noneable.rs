@@ -54,12 +54,6 @@ impl<T: JsonSchema> JsonSchema for Noneable<T> {
     }
 }
 
-impl<T> Noneable<T> {
-    pub fn nn() -> Self {
-        Self::None
-    }
-}
-
 impl<T: std::clone::Clone> Noneable<T> {
     #[inline]
     pub fn unwrap_or(&self, other: T) -> T {

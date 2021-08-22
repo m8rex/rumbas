@@ -34,7 +34,7 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
                 self.basic_settings
                     .duration_in_seconds
                     .map(Noneable::NotNone)
-                    .unwrap_or_else(Noneable::nn),
+                    .unwrap_or(Noneable::None),
             ),
             allow_pause: Value::Normal(self.timing.allow_pause),
             on_timeout: Value::Normal(self.timing.timeout.to_rumbas()),

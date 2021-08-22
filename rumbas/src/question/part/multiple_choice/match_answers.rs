@@ -133,7 +133,7 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                     self.max_answers
                         .map(|v| v.0)
                         .map(Noneable::NotNone)
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 display: Value::Normal(self.display_type.to_rumbas()),
                 layout: Value::Normal(self.layout.clone()),
