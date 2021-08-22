@@ -1,6 +1,5 @@
 use crate::question::part::question_part::QuestionPart;
 use crate::support::file_reference::FileString;
-use crate::support::template::Value;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
@@ -13,30 +12,11 @@ pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
 }
 
-macro_rules! impl_to_rumbas {
-    ($($type: ty$([$($gen: tt), *])?), *) => {
-        $(
-        impl$(< $($gen : Clone),* >)? ToRumbas<$type> for $type {
-            fn to_rumbas(&self) -> $type {
-                self.clone()
-            }
-        }
-        )*
-    };
-}
-pub(crate) use impl_to_rumbas;
-
 impl_to_rumbas!(bool, f64, usize, String, [f64; 2]);
 impl_to_rumbas!(numbas::exam::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
 impl_to_rumbas!(numbas::jme::ContentAreaString);
-
-impl<T, O: ToRumbas<T>> ToRumbas<Value<T>> for O {
-    fn to_rumbas(&self) -> Value<T> {
-        Value::Normal(self.to_rumbas())
-    }
-}
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {
@@ -203,3 +183,16 @@ macro_rules! create_question_part {
     }
 }
 pub(crate) use create_question_part;
+
+macro_rules! impl_to_rumbas {
+    ($($type: ty$([$($gen: tt), *])?), *) => {
+        $(
+        impl$(< $($gen : Clone),* >)? ToRumbas<$type> for $type {
+            fn to_rumbas(&self) -> $type {
+                self.clone()
+            }
+        }
+        )*
+    };
+}
+pub(crate) use impl_to_rumbas;
