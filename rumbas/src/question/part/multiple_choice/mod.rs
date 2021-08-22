@@ -1,9 +1,10 @@
-use crate::support::template::{Value, ValueType};
-use crate::support::translatable::TranslatableString;
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::TranslatableString;
+use crate::support::variable_valued::VariableValued;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
