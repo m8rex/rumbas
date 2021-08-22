@@ -27,10 +27,12 @@ use std::path::{Path, PathBuf};
 //Questionnavigation?? -> in question?
 //
 
+/// Combine an exam with all data from the default files
 pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
+    let default_files = default_files(path);
     if let Exam::Normal(ref mut e) = exam {
         handle!(
-            path,
+            default_files,
             e,
             |n: &SequentialNavigation, e: &mut NormalExam| e
                 .navigation
@@ -42,7 +44,7 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
         );
     } else if let Exam::Diagnostic(ref mut e) = exam {
         handle!(
-            path,
+            default_files,
             e,
             |_n: &SequentialNavigation, _e: &mut DiagnosticExam| (),
             |_n: &MenuNavigation, _e: &mut DiagnosticExam| (),
@@ -53,58 +55,7 @@ pub fn combine_with_default_files(path: &Path, exam: &mut Exam) {
     }
 }
 
-create_default_file_type_structs!(
-SequentialNavigation, SequentialNavigation, "navigation";
-MenuNavigation, MenuNavigation, "navigation.menu";
-DiagnosticNavigation, DiagnosticNavigation, "navigation.diagnostic";
-Timing, Timing, "timing";
-Feedback, Feedback, "feedback";
-NumbasSettings, NumbasSettings, "numbas_settings";
-Question, Question, "question";
-QuestionPartJME, QuestionPartJME, "questionpart.jme";
-QuestionPartGapFill, QuestionPartGapFill, "questionpart.gapfill";
-QuestionPartChooseOne, QuestionPartChooseOne, "questionpart.choose_one";
-QuestionPartChooseMultiple, QuestionPartChooseMultiple, "questionpart.choose_multiple";
-QuestionPartMatchAnswersWithItems, QuestionPartMatchAnswersWithItems, "questionpart.match_answers";
-QuestionPartNumberEntry, QuestionPartNumberEntry, "questionpart.number_entry";
-QuestionPartPatternMatch, QuestionPartPatternMatch, "questionpart.pattern_match";
-QuestionPartInformation, QuestionPartInformation, "questionpart.information";
-QuestionPartGapFillGapJME, QuestionPartJME, "questionpart.gapfill.gap.jme";
-QuestionPartGapFillGapChooseOne, QuestionPartChooseOne, "questionpart.gapfill.gap.choose_one";
-QuestionPartGapFillGapChooseMultiple, QuestionPartChooseMultiple, "questionpart.gapfill.gap.choose_multiple";
-QuestionPartGapFillGapMatchAnswersWithItems, QuestionPartMatchAnswersWithItems, "questionpart.gapfill.gap.match_answers";
-QuestionPartGapFillGapNumberEntry, QuestionPartNumberEntry, "questionpart.gapfill.gap.number_entry";
-QuestionPartGapFillGapPatternMatch, QuestionPartPatternMatch, "questionpart.gapfill.gap.pattern_match";
-QuestionPartGapFillGapInformation, QuestionPartInformation, "questionpart.gapfill.gap.information"
-);
-
-#[derive(Debug)]
-struct DefaultFile {
-    r#type: DefaultFileType,
-    path: PathBuf,
-}
-
-impl DefaultFile {
-    fn from(path: &Path) -> Option<DefaultFile> {
-        let default_type: Option<DefaultFileType> = DefaultFileType::from(path);
-        if let Some(t) = default_type {
-            return Some(DefaultFile {
-                r#type: t,
-                path: path.to_path_buf(),
-            });
-        }
-        None
-    }
-
-    fn read_as_data(&self) -> serde_yaml::Result<DefaultData> {
-        self.r#type.read_as_data(&self.path)
-    }
-
-    fn get_path(&self) -> PathBuf {
-        self.path.clone()
-    }
-}
-
+/// Returns a vector with all DefaultFiles that are found for the given path
 fn default_files(path: &Path) -> Vec<DefaultFile> {
     let paths = default_file_paths(path);
     let usefull_paths = paths
@@ -114,6 +65,7 @@ fn default_files(path: &Path) -> Vec<DefaultFile> {
     usefull_paths.map(|p| p.unwrap()).collect()
 }
 
+/// Returns a vector of paths to default files for the given path
 fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     let mut result = HashSet::new(); //Use set to remove duplicates (only happens for the 'defaults' folder in root
                                      //TODO: write tests and maybe use .take(count()-1) instead of hashset
@@ -136,13 +88,70 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     result.into_iter().collect::<Vec<PathBuf>>()
 }
 
+// Create the needed enum by specifying which files contain which data
+create_default_file_type_enums!(
+    SequentialNavigation with type SequentialNavigation: in "navigation";
+    MenuNavigation with type MenuNavigation: in "navigation.menu";
+    DiagnosticNavigation with type DiagnosticNavigation: in "navigation.diagnostic";
+    Timing with type Timing: in "timing";
+    Feedback with type Feedback: in "feedback";
+    NumbasSettings with type NumbasSettings: in "numbas_settings";
+    Question with type Question: in "question";
+    QuestionPartJME with type QuestionPartJME: in "questionpart.jme";
+    QuestionPartGapFill with type QuestionPartGapFill: in "questionpart.gapfill";
+    QuestionPartChooseOne with type QuestionPartChooseOne: in "questionpart.choose_one";
+    QuestionPartChooseMultiple with type QuestionPartChooseMultiple: in "questionpart.choose_multiple";
+    QuestionPartMatchAnswersWithItems with type QuestionPartMatchAnswersWithItems: in "questionpart.match_answers";
+    QuestionPartNumberEntry with type QuestionPartNumberEntry: in "questionpart.number_entry";
+    QuestionPartPatternMatch with type QuestionPartPatternMatch: in "questionpart.pattern_match";
+    QuestionPartInformation with type QuestionPartInformation: in "questionpart.information";
+    QuestionPartGapFillGapJME with type QuestionPartJME: in "questionpart.gapfill.gap.jme";
+    QuestionPartGapFillGapChooseOne with type QuestionPartChooseOne: in "questionpart.gapfill.gap.choose_one";
+    QuestionPartGapFillGapChooseMultiple with type QuestionPartChooseMultiple: in "questionpart.gapfill.gap.choose_multiple";
+    QuestionPartGapFillGapMatchAnswersWithItems with type QuestionPartMatchAnswersWithItems: in "questionpart.gapfill.gap.match_answers";
+    QuestionPartGapFillGapNumberEntry with type QuestionPartNumberEntry: in "questionpart.gapfill.gap.number_entry";
+    QuestionPartGapFillGapPatternMatch with type QuestionPartPatternMatch: in "questionpart.gapfill.gap.pattern_match";
+    QuestionPartGapFillGapInformation with type QuestionPartInformation: in "questionpart.gapfill.gap.information"
+);
+
+#[derive(Debug)]
+/// Struct used to overwrite values with defaults
+struct DefaultFile {
+    r#type: DefaultFileType,
+    path: PathBuf,
+}
+
+impl DefaultFile {
+    /// Create a DefaultFile from the file_name of the given path, returns None if invalid path
+    fn from(path: &Path) -> Option<DefaultFile> {
+        let default_type: Option<DefaultFileType> = DefaultFileType::from(path);
+        if let Some(t) = default_type {
+            return Some(DefaultFile {
+                r#type: t,
+                path: path.to_path_buf(),
+            });
+        }
+        None
+    }
+
+    /// Read the given path as the data needed for this DefaultFile
+    fn read_as_data(&self) -> serde_yaml::Result<DefaultData> {
+        self.r#type.read_as_data(&self.path)
+    }
+
+    /// Get the path of this DefaultFile
+    fn get_path(&self) -> PathBuf {
+        self.path.clone()
+    }
+}
+
 /// Create the DefaultFileType and DefaultData enums and their methods to read data
-macro_rules! create_default_file_type_structs {
-    ( $($file_type:ident$([$file_type_data: ty])?, $data_type: ty, $file_name: literal);* ) => {
+macro_rules! create_default_file_type_enums {
+    ( $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
         #[derive(Debug)]
         pub enum DefaultFileType {
             $(
-                $file_type $(($file_type_data))?
+                $file_type
             ),*
         }
 
@@ -153,19 +162,21 @@ macro_rules! create_default_file_type_structs {
         }
 
         impl DefaultFileType {
+            /// Creates a DefaultFileType based on the filename, returns None if unknown
             fn from(path: &Path) -> Option<DefaultFileType> {
                 let file_name = path.file_stem();
                 match file_name {
                     Some(f) => match f.to_str() {
-                    $(
-                        Some($file_name) => Some(DefaultFileType::$file_type),
-                    )*
-                    _ => None
+                        $(
+                            Some($file_name) => Some(DefaultFileType::$file_type),
+                        )*
+                        _ => None
                     }
                     _ => None
                 }
             }
 
+            /// Read the given path as the data needed for this DefaultFileType
             fn read_as_data(&self, path: &Path) -> serde_yaml::Result<DefaultData> {
                 let yaml = fs::read_to_string(path).unwrap();
                 match self {
@@ -181,15 +192,14 @@ macro_rules! create_default_file_type_structs {
     }
 }
 
+/// Apply all defaults files to the given exam
 macro_rules! handle {
-    ($path: expr, $exam: expr, $handle_seq: expr, $handle_menu: expr, $handle_diag: expr) => {
+    ($default_files:expr, $exam: expr, $handle_seq: expr, $handle_menu: expr, $handle_diag: expr) => {
 {
-    let path = $path;
     let exam = $exam;
     // TODO: diagnostic
-    let default_files = default_files(path);
-    //println!("Found {} default files.", default_files.len());
-    for default_file in default_files.iter() {
+    log::info!("Found {} default files.", $default_files.len());
+    for default_file in $default_files.iter() {
             log::info!("Reading {}", default_file.get_path().display()); //TODO: debug
             let default_data = default_file.read_as_data().unwrap(); //TODO
                                                                      //TODO: always call overwrite
@@ -250,6 +260,7 @@ macro_rules! handle {
 }
 }
 
+/// Apply all defaults files to the question parts (or gaps) of the given exam
 macro_rules! handle_question_parts {
     ($exam: expr, $p: expr, $type: ident) => {
         if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
@@ -339,6 +350,6 @@ macro_rules! handle_question_parts {
     };
 }
 
-use create_default_file_type_structs;
+use create_default_file_type_enums;
 use handle;
 use handle_question_parts;

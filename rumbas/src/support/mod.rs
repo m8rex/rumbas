@@ -1,3 +1,5 @@
+//! Contains all the support code
+
 #[macro_use]
 pub mod optional_overwrite;
 #[macro_use]
