@@ -1,5 +1,4 @@
 use crate::support::optional_overwrite::*;
-use crate::support::template::{Value, ValueType};
 
 pub type NumbasResult<T> = Result<T, RumbasCheckResult>;
 
@@ -20,50 +19,6 @@ pub trait ToNumbas<NumbasType>: Clone + RumbasCheck {
         self.to_numbas(locale)
     }
 }
-
-impl<T: RumbasCheck> RumbasCheck for Value<T> {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match &self.0 {
-            Some(ValueType::Normal(val)) => val.check(locale),
-            Some(ValueType::Template(ts)) => RumbasCheckResult::from_missing(Some(ts.yaml())),
-            Some(ValueType::Invalid(v)) => RumbasCheckResult::from_invalid(v),
-            None => RumbasCheckResult::from_missing(None),
-        }
-    }
-}
-
-impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<S> for Value<T> {
-    fn to_numbas(&self, locale: &str) -> S {
-        match &self.0 {
-            Some(ValueType::Normal(val)) => val.to_numbas(locale),
-            Some(ValueType::Template(_ts)) => unreachable!(),
-            Some(ValueType::Invalid(_v)) => unreachable!(),
-            None => unreachable!(),
-        }
-    }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> S {
-        match &self.0 {
-            Some(ValueType::Normal(val)) => val.to_numbas_with_name(locale, name),
-            Some(ValueType::Template(_ts)) => unreachable!(),
-            Some(ValueType::Invalid(_v)) => unreachable!(),
-            None => unreachable!(),
-        }
-    }
-}
-
-macro_rules! impl_to_numbas {
-    ($($type: ty), *) => {
-        $(
-        impl ToNumbas<$type> for $type {
-            fn to_numbas(&self, _locale: &str) -> $type {
-                self.clone()
-            }
-        }
-        )*
-    };
-}
-
-pub(crate) use impl_to_numbas;
 
 impl_to_numbas!(String, bool, f64, usize);
 impl_to_numbas!(numbas::jme::JMEString);
@@ -121,3 +76,17 @@ impl ToNumbas<numbas::exam::SafeNatural> for usize {
         (*self).into()
     }
 }
+
+macro_rules! impl_to_numbas {
+    ($($type: ty), *) => {
+        $(
+        impl ToNumbas<$type> for $type {
+            fn to_numbas(&self, _locale: &str) -> $type {
+                self.clone()
+            }
+        }
+        )*
+    };
+}
+
+pub(crate) use impl_to_numbas;
