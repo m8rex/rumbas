@@ -276,7 +276,7 @@ impl ToNumbas<numbas::exam::ExamVariable> for Variable {
 impl Variable {
     fn ungrouped(template_type: VariableTemplateType, definition: &str) -> Variable {
         Variable {
-            template_type: Value::Normal(template_type.clone()),
+            template_type: Value::Normal(template_type),
             definition: definition.to_string().to_rumbas(),
             description: String::new().to_rumbas(),
             group: UNGROUPED_GROUP.to_string().to_rumbas(),
