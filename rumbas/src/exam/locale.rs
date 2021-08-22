@@ -1,5 +1,5 @@
-use crate::support::template::{Value, ValueType};
 use crate::support::optional_overwrite::*;
+use crate::support::template::{Value, ValueType};
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -12,70 +12,47 @@ optional_overwrite! {
     }
 }
 
-/// Locales supported by Numbas
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
-pub enum SupportedLocale {
-    #[serde(rename = "ar-SA")]
-    ArSA,
-    #[serde(rename = "de-DE")]
-    DeDE,
-    #[serde(rename = "en-GB")]
-    EnGB,
-    #[serde(rename = "es-ES")]
-    EsES,
-    #[serde(rename = "fr-FR")]
-    FrFR,
-    #[serde(rename = "he-IL")]
-    HeIL,
-    #[serde(rename = "it-IT")]
-    ItIT,
-    #[serde(rename = "ja-JP")]
-    JaJP,
-    #[serde(rename = "ko-KR")]
-    KoKR,
-    #[serde(rename = "nb-NO")]
-    NbNO,
-    #[serde(rename = "nl-NL")]
-    NlNL,
-    #[serde(rename = "pl-PL")]
-    PlPL,
-    #[serde(rename = "pt-BR")]
-    PtBR,
-    #[serde(rename = "sq-AL")]
-    SqAL,
-    #[serde(rename = "sv-SE")]
-    SvSE,
-    #[serde(rename = "tr-TR")]
-    TrTR,
-    #[serde(rename = "vi-VN")]
-    ViVN,
-    #[serde(rename = "zh-CN")]
-    ZhCN,
-}
-impl_optional_overwrite!(SupportedLocale);
-
-//TODO? macro to reduce duplication?
-impl SupportedLocale {
-    pub fn to_str(self) -> &'static str {
-        match self {
-            SupportedLocale::ArSA => "ar-SA",
-            SupportedLocale::DeDE => "de-DE",
-            SupportedLocale::EnGB => "en-GB",
-            SupportedLocale::EsES => "es-ES",
-            SupportedLocale::FrFR => "fr-FR",
-            SupportedLocale::HeIL => "he-IL",
-            SupportedLocale::ItIT => "it-IT",
-            SupportedLocale::JaJP => "ja-JP",
-            SupportedLocale::KoKR => "ko-KR",
-            SupportedLocale::NbNO => "nb-NO",
-            SupportedLocale::NlNL => "nl-NL",
-            SupportedLocale::PlPL => "pl-PL",
-            SupportedLocale::PtBR => "pt-BR",
-            SupportedLocale::SqAL => "sq-AL",
-            SupportedLocale::SvSE => "sv-SE",
-            SupportedLocale::TrTR => "tr-TR",
-            SupportedLocale::ViVN => "vi-VN",
-            SupportedLocale::ZhCN => "zg-CN",
+macro_rules! create_support_locale {
+    ($($name: ident => $key: literal),*) => {
+        /// Locales supported by Numbas
+        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
+        pub enum SupportedLocale {
+            $(
+                #[serde(rename = "$key")]
+                $name
+            ),*
         }
+        impl_optional_overwrite!(SupportedLocale);
+
+        //TODO? macro to reduce duplication?
+        impl SupportedLocale {
+            pub fn to_str(self) -> &'static str {
+                match self {
+                    $(SupportedLocale::$name => $key),*
+                }
+            }
+        }
+
     }
+}
+
+create_support_locale! {
+    ArSA => "ar-SA",
+    DeDE => "de-DE",
+    EnGB => "en-GB",
+    EsES => "es-ES",
+    FrFR => "fr-FR",
+    HeIL => "he-IL",
+    ItIT => "it-IT",
+    JaJP => "ja-JP",
+    KoKR => "ko-KR",
+    NbNO => "nb-NO",
+    NlNL => "nl-NL",
+    PlPL => "pl-PL",
+    PtBR => "pt-BR",
+    SqAL => "sq-AL",
+    SvSE => "sv-SE",
+    TrTR => "tr-TR",
+    ViVN => "vi-VN",
+    ZhCN => "zg-CN"
 }
