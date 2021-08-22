@@ -45,12 +45,6 @@ impl ToNumbas<numbas::exam::Exam> for Exam {
     }
 }
 
-#[derive(Debug, Display)]
-pub enum ParseError {
-    YamlError(YamlError),
-    IOError(std::io::Error),
-}
-
 impl Exam {
     pub fn locales(&self) -> Value<Vec<Value<Locale>>> {
         match self {
@@ -122,6 +116,12 @@ impl Exam {
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
             .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
     }
+}
+
+#[derive(Debug, Display)]
+pub enum ParseError {
+    YamlError(YamlError),
+    IOError(std::io::Error),
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug)]
