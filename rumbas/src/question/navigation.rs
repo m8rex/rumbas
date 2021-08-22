@@ -35,12 +35,12 @@ impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
 impl ToRumbas<QuestionNavigation> for numbas::exam::QuestionNavigation {
     fn to_rumbas(&self) -> QuestionNavigation {
         QuestionNavigation {
-            can_regenerate: Value::Normal(self.allow_regenerate),
-            show_title_page: Value::Normal(self.show_frontpage),
-            confirm_when_leaving: Value::Normal(
-                self.confirm_when_leaving
-                    .unwrap_or(DEFAULTS.question_navigation_prevent_leaving),
-            ),
+            can_regenerate: self.allow_regenerate.to_rumbas(),
+            show_title_page: self.show_frontpage.to_rumbas(),
+            confirm_when_leaving: self
+                .confirm_when_leaving
+                .unwrap_or(DEFAULTS.question_navigation_prevent_leaving)
+                .to_rumbas(),
         }
     }
 }

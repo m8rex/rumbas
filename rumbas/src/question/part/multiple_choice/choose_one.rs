@@ -89,18 +89,16 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::exam::ExamQuestionPartChooseOne
     fn to_rumbas(&self) -> QuestionPartChooseOne {
         create_question_part! {
             QuestionPartChooseOne with &self.part_data => {
-                answer_data: Value::Normal(self.to_rumbas()),
-                display: Value::Normal(self.to_rumbas()),
-                shuffle_answers: Value::Normal(self.shuffle_answers),
-                show_cell_answer_state: Value::Normal(
+                answer_data: self.to_rumbas(),
+                display: self.to_rumbas(),
+                shuffle_answers: self.shuffle_answers.to_rumbas(),
+                show_cell_answer_state:
                     self.show_cell_answer_state
-                        .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state),
-                ),
-                has_to_select_option: Value::Normal(
+                        .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state).to_rumbas(),
+                has_to_select_option:
                     self.min_answers
                         .map(|v| v == 1)
-                        .unwrap_or(DEFAULTS.choose_one_has_to_select_option),
-                )
+                        .unwrap_or(DEFAULTS.choose_one_has_to_select_option).to_rumbas()
             }
         }
     }

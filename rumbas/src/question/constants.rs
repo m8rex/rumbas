@@ -87,9 +87,9 @@ impl ToNumbas<numbas::exam::ExamQuestionConstant> for CustomConstant {
 impl ToRumbas<CustomConstant> for numbas::exam::ExamQuestionConstant {
     fn to_rumbas(&self) -> CustomConstant {
         CustomConstant {
-            name: Value::Normal(self.name.clone()),
-            value: Value::Normal(self.value.clone()),
-            tex: Value::Normal(self.tex.clone()),
+            name: self.name.to_rumbas(),
+            value: self.value.to_rumbas(),
+            tex: self.tex.to_rumbas(),
         }
     }
 }

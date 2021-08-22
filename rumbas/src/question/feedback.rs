@@ -45,25 +45,20 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
     fn to_rumbas(&self) -> Feedback {
         let review: Option<_> = self.feedback.review.to_rumbas();
         Feedback {
-            percentage_needed_to_pass: Value::Normal(
-                self.basic_settings
-                    .percentage_needed_to_pass
-                    .map(Noneable::NotNone)
-                    .unwrap_or(Noneable::None),
-            ),
-            show_name_of_student: Value::Normal(
-                self.basic_settings
-                    .show_student_name
-                    .unwrap_or(DEFAULTS.basic_settings_show_student_name),
-            ),
-            show_current_marks: Value::Normal(self.feedback.show_actual_mark),
-            show_maximum_marks: Value::Normal(self.feedback.show_total_mark),
-            show_answer_state: Value::Normal(self.feedback.show_answer_state),
-            allow_reveal_answer: Value::Normal(self.feedback.allow_reveal_answer),
+            percentage_needed_to_pass: self.basic_settings.percentage_needed_to_pass.to_rumbas(),
+            show_name_of_student: self
+                .basic_settings
+                .show_student_name
+                .unwrap_or(DEFAULTS.basic_settings_show_student_name)
+                .to_rumbas(),
+            show_current_marks: self.feedback.show_actual_mark.to_rumbas(),
+            show_maximum_marks: self.feedback.show_total_mark.to_rumbas(),
+            show_answer_state: self.feedback.show_answer_state.to_rumbas(),
+            allow_reveal_answer: self.feedback.allow_reveal_answer.to_rumbas(),
             review: Value::Normal(review.unwrap()), // TODO: fix this unwrap
-            advice: Value::Normal(self.feedback.advice.clone().unwrap_or_default().into()),
-            intro: Value::Normal(self.feedback.intro.clone().into()),
-            feedback_messages: Value::Normal(self.feedback.feedback_messages.to_rumbas()),
+            advice: self.feedback.advice.clone().unwrap_or_default().to_rumbas(),
+            intro: self.feedback.intro.to_rumbas(),
+            feedback_messages: self.feedback.feedback_messages.to_rumbas(),
         }
     }
 }
@@ -84,10 +79,10 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::ExamReview> for Review {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamReview {
         numbas::exam::ExamReview {
-            show_score: Some(self.show_score.clone().to_numbas(locale)),
-            show_feedback: Some(self.show_feedback.clone().to_numbas(locale)),
-            show_expected_answer: Some(self.show_expected_answer.clone().to_numbas(locale)),
-            show_advice: Some(self.show_advice.clone().to_numbas(locale)),
+            show_score: Some(self.show_score.to_numbas(locale)),
+            show_feedback: Some(self.show_feedback.to_numbas(locale)),
+            show_expected_answer: Some(self.show_expected_answer.to_numbas(locale)),
+            show_advice: Some(self.show_advice.to_numbas(locale)),
         }
     }
 }
@@ -95,22 +90,22 @@ impl ToNumbas<numbas::exam::ExamReview> for Review {
 impl ToRumbas<Review> for numbas::exam::ExamReview {
     fn to_rumbas(&self) -> Review {
         Review {
-            show_score: Value::Normal(
-                self.show_score
-                    .unwrap_or(DEFAULTS.feedback_review_show_score),
-            ),
-            show_feedback: Value::Normal(
-                self.show_feedback
-                    .unwrap_or(DEFAULTS.feedback_review_show_feedback),
-            ),
-            show_expected_answer: Value::Normal(
-                self.show_expected_answer
-                    .unwrap_or(DEFAULTS.feedback_review_show_expected_answer),
-            ),
-            show_advice: Value::Normal(
-                self.show_advice
-                    .unwrap_or(DEFAULTS.feedback_review_show_advice),
-            ),
+            show_score: self
+                .show_score
+                .unwrap_or(DEFAULTS.feedback_review_show_score)
+                .to_rumbas(),
+            show_feedback: self
+                .show_feedback
+                .unwrap_or(DEFAULTS.feedback_review_show_feedback)
+                .to_rumbas(),
+            show_expected_answer: self
+                .show_expected_answer
+                .unwrap_or(DEFAULTS.feedback_review_show_expected_answer)
+                .to_rumbas(),
+            show_advice: self
+                .show_advice
+                .unwrap_or(DEFAULTS.feedback_review_show_advice)
+                .to_rumbas(),
         }
     }
 }
@@ -123,10 +118,10 @@ pub struct FeedbackMessage {
 impl_optional_overwrite!(FeedbackMessage);
 
 impl ToNumbas<numbas::exam::ExamFeedbackMessage> for FeedbackMessage {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamFeedbackMessage {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFeedbackMessage {
         numbas::exam::ExamFeedbackMessage {
-            message: self.message.clone(),
-            threshold: self.threshold.clone(),
+            message: self.message.to_numbas(locale),
+            threshold: self.threshold.to_numbas(locale),
         }
     }
 }
@@ -134,8 +129,8 @@ impl ToNumbas<numbas::exam::ExamFeedbackMessage> for FeedbackMessage {
 impl ToRumbas<FeedbackMessage> for numbas::exam::ExamFeedbackMessage {
     fn to_rumbas(&self) -> FeedbackMessage {
         FeedbackMessage {
-            message: self.message.clone(),
-            threshold: self.threshold.clone(),
+            message: self.message.to_rumbas(),
+            threshold: self.threshold.to_rumbas(),
         }
     }
 }

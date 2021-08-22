@@ -42,23 +42,20 @@ impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatter
     fn to_rumbas(&self) -> QuestionPartPatternMatch {
         create_question_part! {
             QuestionPartPatternMatch with &self.part_data => {
-                case_sensitive: Value::Normal(
+                case_sensitive:
                     self.case_sensitive
-                        .unwrap_or(DEFAULTS.pattern_match_case_sensitive),
-                ),
-                partial_credit: Value::Normal(
+                        .unwrap_or(DEFAULTS.pattern_match_case_sensitive).to_rumbas(),
+                partial_credit:
                     self.partial_credit
                         .unwrap_or(DEFAULTS.pattern_match_partial_credit)
-                        .0,
-                ),
-                pattern: Value::Normal(self.answer.to_string().into()),
-                display_answer: Value::Normal(
+                        .0.to_rumbas(),
+                pattern: self.answer.to_string().to_rumbas(),
+                display_answer:
                     self.display_answer
                         .clone()
                         .map(|d| d.to_string())
                         .unwrap_or_else(|| self.answer.to_string())
-                        .into(),
-                ), // TDDO: check default
+                        .to_rumbas(),
                 match_mode: Value::Normal(self.match_mode)
             }
         }

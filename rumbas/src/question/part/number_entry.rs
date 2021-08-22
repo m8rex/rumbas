@@ -55,32 +55,29 @@ impl ToRumbas<QuestionPartNumberEntry> for numbas::exam::ExamQuestionPartNumberE
     fn to_rumbas(&self) -> QuestionPartNumberEntry {
         create_question_part! {
             QuestionPartNumberEntry with &self.part_data => {
-                answer: Value::Normal(self.answer.to_rumbas()),
-                display_correct_as_fraction: Value::Normal(self.correct_answer_fraction),
-                allow_fractions: Value::Normal(self.allow_fractions),
-                allowed_notation_styles: Value::Normal(
+                answer: self.answer.to_rumbas(),
+                display_correct_as_fraction: self.correct_answer_fraction.to_rumbas(),
+                allow_fractions: self.allow_fractions.to_rumbas(),
+                allowed_notation_styles:
                     self.notation_styles.clone().unwrap_or_default().to_rumbas(),
-                ),
-                display_correct_in_style: Value::Normal(
+
+                display_correct_in_style:
                     self.correct_answer_style
                         .clone()
                         .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
                         .to_rumbas(),
-                ),
 
-                fractions_must_be_reduced: Value::Normal(
+                fractions_must_be_reduced:
                     self.fractions_must_be_reduced
-                        .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced),
-                ),
-                partial_credit_if_fraction_not_reduced: Value::Normal(
+                        .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced).to_rumbas(),
+                partial_credit_if_fraction_not_reduced:
                     self.partial_credit_if_fraction_not_reduced
                         .clone()
-                        .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced),
-                ),
-                hint_fraction: Value::Normal(
+                        .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced).to_rumbas(),
+                hint_fraction:
                     self.show_fraction_hint
-                        .unwrap_or(DEFAULTS.number_entry_hint_fraction),
-                )
+                        .unwrap_or(DEFAULTS.number_entry_hint_fraction).to_rumbas()
+
             }
         }
     }
@@ -115,11 +112,11 @@ impl ToRumbas<NumberEntryAnswer> for numbas::exam::NumberEntryAnswerType {
                 min_value,
                 max_value,
             } => NumberEntryAnswer::Range {
-                from: FileString::s(&min_value.to_string()),
-                to: FileString::s(&max_value.to_string()),
+                from: min_value.to_string().to_rumbas(),
+                to: max_value.to_string().to_rumbas(),
             },
             numbas::exam::NumberEntryAnswerType::Answer { answer } => {
-                NumberEntryAnswer::Normal(FileString::s(&answer.to_string()))
+                NumberEntryAnswer::Normal(answer.to_string().to_rumbas())
             }
         }
     }

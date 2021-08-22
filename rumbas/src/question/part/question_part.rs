@@ -84,44 +84,34 @@ impl ToNumbas<numbas::exam::ExamQuestionPartBuiltin> for QuestionPartBuiltin {
     fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartBuiltin {
         match self {
             QuestionPartBuiltin::JME(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::JME(n)
+                numbas::exam::ExamQuestionPartBuiltin::JME(d.to_numbas(locale))
             }
             QuestionPartBuiltin::GapFill(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::GapFill(n)
+                numbas::exam::ExamQuestionPartBuiltin::GapFill(d.to_numbas(locale))
             }
             QuestionPartBuiltin::ChooseOne(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::ChooseOne(n)
+                numbas::exam::ExamQuestionPartBuiltin::ChooseOne(d.to_numbas(locale))
             }
             QuestionPartBuiltin::ChooseMultiple(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(n)
+                numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale))
             }
             QuestionPartBuiltin::MatchAnswersWithItems(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(n)
+                numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(d.to_numbas(locale))
             }
             QuestionPartBuiltin::NumberEntry(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::NumberEntry(n)
+                numbas::exam::ExamQuestionPartBuiltin::NumberEntry(d.to_numbas(locale))
             }
             QuestionPartBuiltin::PatternMatch(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::PatternMatch(n)
+                numbas::exam::ExamQuestionPartBuiltin::PatternMatch(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Information(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::Information(n)
+                numbas::exam::ExamQuestionPartBuiltin::Information(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Extension(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::Extension(n)
+                numbas::exam::ExamQuestionPartBuiltin::Extension(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Matrix(d) => {
-                let n = d.to_numbas(locale);
-                numbas::exam::ExamQuestionPartBuiltin::Matrix(Box::new(n))
+                numbas::exam::ExamQuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale)))
             }
         }
     }
@@ -181,6 +171,7 @@ impl QuestionPartBuiltin {
     }
 }
 
+// TODO: create macro so RumbasCheck and OptionalOverwrite are done by itself
 #[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
 pub struct JMENotes(pub Value<Vec<JMENote>>);
 
@@ -231,13 +222,9 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
             notes
                 .iter()
                 .map(|n| JMENote {
-                    name: Value::Normal(n.name.to_string()),
-                    description: Value::Normal(
-                        n.description
-                            .clone()
-                            .map_or(Noneable::None, Noneable::NotNone),
-                    ),
-                    expression: Value::Normal(n.expression_string().to_rumbas()),
+                    name: n.name.to_string().to_rumbas(),
+                    description: n.description.to_rumbas(),
+                    expression: n.expression_string().to_rumbas(),
                 })
                 .collect()
         } else {
@@ -273,9 +260,9 @@ impl ToNumbas<numbas::exam::CustomPartMarkingNote> for JMENote {
 impl ToRumbas<JMENote> for numbas::exam::CustomPartMarkingNote {
     fn to_rumbas(&self) -> JMENote {
         JMENote {
-            name: Value::Normal(self.name.clone()),
-            expression: Value::Normal(self.definition.to_rumbas()),
-            description: Value::Normal(Noneable::NotNone(self.description.clone())),
+            name: self.name.to_rumbas(),
+            expression: self.definition.to_rumbas(),
+            description: Value::Normal(Noneable::NotNone(self.description.to_rumbas())),
         }
     }
 }
@@ -319,7 +306,7 @@ macro_rules! question_part_type {
         impl ToNumbas<numbas::exam::ExamQuestionPartSharedData> for $struct {
             fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
                 numbas::exam::ExamQuestionPartSharedData {
-                    marks: Some(self.marks.clone().to_numbas(locale)),
+                    marks: Some(self.marks.to_numbas(locale)),
                     prompt: Some(self.prompt.to_numbas(locale)),
                     use_custom_name: Some(self.use_custom_name.to_numbas(locale)),
                     custom_name: Some(self.custom_name.to_numbas(locale)),
@@ -419,9 +406,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
             show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
                 &self.part_data,
             )),
-            variable_replacement_strategy: Value::Normal(
-                self.part_data.variable_replacement_strategy.to_rumbas(),
-            ),
+            variable_replacement_strategy: self.part_data.variable_replacement_strategy.to_rumbas(),
             adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
                 &self.part_data,
             )),
@@ -434,13 +419,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
             steps: Value::Normal(extract_part_common_steps(&self.part_data)),
 
             r#type: Value::Normal(self.r#type.clone()),
-            settings: Value::Normal(
-                self.settings
-                    .clone()
-                    .into_iter()
-                    .map(|(k, v)| (k, v.to_rumbas()))
-                    .collect(),
-            ),
+            settings: self.settings.to_rumbas(),
         }
     }
 }

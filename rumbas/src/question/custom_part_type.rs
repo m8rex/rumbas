@@ -330,7 +330,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
                 // public_availability: numbas::exam::CustomPartAvailability::Always,
                 can_be_gap: self.can_be_gap,
                 can_be_step: self.can_be_step,
-                marking_notes: JMENotes(Value::Normal(self.marking_notes.clone().to_rumbas())),
+                marking_notes: JMENotes(self.marking_notes.clone().to_rumbas()),
                 published: self.published,
                 extensions: Extensions::from(&self.extensions),
                 input_widget: self.input_widget.to_rumbas(),
