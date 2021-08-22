@@ -57,6 +57,44 @@ macro_rules! file_type {
         }
         impl_optional_overwrite_value!($type);
 
+        impl ToNumbas<String> for $type {
+            fn to_numbas(&self, locale: &str)-> String {
+                self.get_content(locale).unwrap()
+            }
+        }
+
+        impl ToNumbas<$subtype> for $type {
+            fn to_numbas(&self, locale: &str)-> $subtype {
+                self.get_content(locale).unwrap().try_into().unwrap()
+            }
+        }
+
+        impl JsonSchema for $type {
+            fn schema_name() -> String {
+                stringify!($type).to_owned()
+            }
+
+            fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+                let file_schema = schemars::schema::SchemaObject {
+                    instance_type: Some(schemars::schema::InstanceType::String.into()),
+                    string: Some(Box::new(schemars::schema::StringValidation {
+                        min_length: Some(1 + (FILE_PREFIX.len() as u32)),
+                        max_length: None,
+                        pattern: Some(format!("^{}:.*$", FILE_PREFIX)),
+                    })),
+                    ..Default::default()
+                };
+                schemars::schema::SchemaObject {
+                    subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
+                        any_of: Some(vec![file_schema.into(), gen.subschema_for::<String>()]),
+                        ..Default::default()
+                    })),
+                    ..Default::default()
+                }
+                .into()
+            }
+        }
+
         impl std::convert::From<String> for $type {
             fn from(s: String) -> Self {
                 let mut prefix = FILE_PREFIX.to_owned();
@@ -80,7 +118,7 @@ macro_rules! file_type {
                             // We only care about the ones that are 'Ok'
                             {
                                 if let Ok(entry_name) = entry.file_name().into_string() {
-                                    if entry_name.starts_with("locale-") {
+                                    if entry_name.starts_with("locale-") { // TODO: locale prefix?
                                         let locale = entry_name
                                             .splitn(2, "locale-")
                                             .collect::<Vec<_>>()
@@ -168,44 +206,6 @@ macro_rules! file_type {
                     panic!("Deserializing FileRef only supported when plain String")
                 }
                 fs.content.unwrap().into()
-            }
-        }
-
-        impl JsonSchema for $type {
-            fn schema_name() -> String {
-                stringify!($type).to_owned()
-            }
-
-            fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-                let file_schema = schemars::schema::SchemaObject {
-                    instance_type: Some(schemars::schema::InstanceType::String.into()),
-                    string: Some(Box::new(schemars::schema::StringValidation {
-                        min_length: Some(1 + (FILE_PREFIX.len() as u32)),
-                        max_length: None,
-                        pattern: Some(format!("^{}:.*$", FILE_PREFIX)),
-                    })),
-                    ..Default::default()
-                };
-                schemars::schema::SchemaObject {
-                    subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
-                        any_of: Some(vec![file_schema.into(), gen.subschema_for::<String>()]),
-                        ..Default::default()
-                    })),
-                    ..Default::default()
-                }
-                .into()
-            }
-        }
-
-        impl ToNumbas<String> for $type {
-            fn to_numbas(&self, locale: &str)-> String {
-                self.get_content(locale).unwrap()
-            }
-        }
-
-        impl ToNumbas<$subtype> for $type {
-            fn to_numbas(&self, locale: &str)-> $subtype {
-                self.get_content(locale).unwrap().try_into().unwrap()
             }
         }
 
