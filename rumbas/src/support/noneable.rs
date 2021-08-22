@@ -1,5 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
+use crate::support::to_rumbas::ToRumbas;
 use schemars::JsonSchema;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -29,6 +30,14 @@ impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<Option<S>> for Noneable<T> {
             Noneable::NotNone(val) => Some(val.clone().to_numbas_with_name(locale, name)),
             _ => None,
         }
+    }
+}
+
+impl<T, O: ToRumbas<T>> ToRumbas<Noneable<T>> for Option<O> {
+    fn to_rumbas(&self) -> Noneable<T> {
+        self.clone()
+            .map(|item| item.to_rumbas())
+            .map_or(Noneable::None, Noneable::NotNone)
     }
 }
 

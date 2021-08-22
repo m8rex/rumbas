@@ -178,10 +178,10 @@ pub fn convert_normal_numbas_exam(
                 name: Value::Normal("en".to_string()),
                 numbas_locale: Value::Normal(SupportedLocale::EnGB),
             })]), // todo: argument?
-            name: Value::Normal(exam.basic_settings.name.clone().into()),
-            navigation: Value::Normal(exam.to_rumbas()),
-            timing: Value::Normal(exam.to_rumbas()),
-            feedback: Value::Normal(exam.to_rumbas()),
+            name: exam.basic_settings.name.to_rumbas(),
+            navigation: exam.to_rumbas(),
+            timing: exam.to_rumbas(),
+            feedback: exam.to_rumbas(),
             question_groups: Value::Normal(question_groups.clone()),
             numbas_settings: Value::Normal(NumbasSettings {
                 theme: Value::Normal("default".to_string()),

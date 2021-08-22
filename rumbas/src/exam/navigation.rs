@@ -49,15 +49,15 @@ impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
         match &self.navigation.navigation_mode {
             numbas::exam::ExamNavigationMode::Sequential(s) => {
                 NormalNavigation::Sequential(SequentialNavigation {
-                    shared_data: Value::Normal(self.to_rumbas()),
-                    can_move_to_previous: Value::Normal(s.can_move_to_previous),
-                    browsing_enabled: Value::Normal(s.browsing_enabled),
-                    show_results_page: Value::Normal(s.show_results_page.clone().to_rumbas()),
-                    on_leave: Value::Normal(s.on_leave.clone().to_rumbas()),
+                    shared_data: self.to_rumbas(),
+                    can_move_to_previous: s.can_move_to_previous.to_rumbas(),
+                    browsing_enabled: s.browsing_enabled.to_rumbas(),
+                    show_results_page: s.show_results_page.to_rumbas(),
+                    on_leave: s.on_leave.to_rumbas(),
                 })
             }
             numbas::exam::ExamNavigationMode::Menu => NormalNavigation::Menu(MenuNavigation {
-                shared_data: Value::Normal(self.to_rumbas()),
+                shared_data: self.to_rumbas(),
             }),
             numbas::exam::ExamNavigationMode::Diagnostic(_d) => {
                 panic!(
@@ -191,8 +191,8 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
                 )
             }
             numbas::exam::ExamNavigationMode::Diagnostic(d) => DiagnosticNavigation {
-                shared_data: Value::Normal(self.to_rumbas()),
-                on_leave: Value::Normal(d.on_leave.clone().to_rumbas()),
+                shared_data: self.to_rumbas(),
+                on_leave: d.on_leave.to_rumbas(),
             },
         }
     }
@@ -300,35 +300,35 @@ optional_overwrite! {
 impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
     fn to_rumbas(&self) -> NavigationSharedData {
         NavigationSharedData {
-            start_password: Value::Normal(FileString::s(
-                &self
-                    .navigation
-                    .start_password
-                    .clone()
-                    .unwrap_or(DEFAULTS.navigation_start_password),
-            )),
-            can_regenerate: Value::Normal(self.navigation.allow_regenerate),
-            show_steps: Value::Normal(
-                self.navigation
-                    .allow_steps
-                    .unwrap_or(DEFAULTS.navigation_allow_steps),
-            ),
-            show_title_page: Value::Normal(self.navigation.show_frontpage),
-            confirm_when_leaving: Value::Normal(
-                self.navigation
-                    .confirm_when_leaving
-                    .unwrap_or(DEFAULTS.navigation_prevent_leaving),
-            ),
-            show_names_of_question_groups: Value::Normal(
-                self.basic_settings
-                    .show_question_group_names
-                    .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups),
-            ),
-            allow_printing: Value::Normal(
-                self.basic_settings
-                    .allow_printing
-                    .unwrap_or(DEFAULTS.basic_settings_allow_printing),
-            ),
+            start_password: self
+                .navigation
+                .start_password
+                .clone()
+                .unwrap_or(DEFAULTS.navigation_start_password)
+                .to_rumbas(),
+            can_regenerate: self.navigation.allow_regenerate.to_rumbas(),
+            show_steps: self
+                .navigation
+                .allow_steps
+                .unwrap_or(DEFAULTS.navigation_allow_steps)
+                .to_rumbas(),
+
+            show_title_page: self.navigation.show_frontpage.to_rumbas(),
+            confirm_when_leaving: self
+                .navigation
+                .confirm_when_leaving
+                .unwrap_or(DEFAULTS.navigation_prevent_leaving)
+                .to_rumbas(),
+            show_names_of_question_groups: self
+                .basic_settings
+                .show_question_group_names
+                .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups)
+                .to_rumbas(),
+            allow_printing: self
+                .basic_settings
+                .allow_printing
+                .unwrap_or(DEFAULTS.basic_settings_allow_printing)
+                .to_rumbas(),
         }
     }
 }
