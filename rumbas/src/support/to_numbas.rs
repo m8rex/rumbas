@@ -51,30 +51,6 @@ impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<S> for Value<T> {
     }
 }
 
-impl<T: RumbasCheck> RumbasCheck for Noneable<T> {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            Noneable::NotNone(val) => val.check(locale),
-            _ => RumbasCheckResult::empty(),
-        }
-    }
-}
-
-impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<Option<S>> for Noneable<T> {
-    fn to_numbas(&self, locale: &str) -> Option<S> {
-        match self {
-            Noneable::NotNone(val) => Some(val.clone().to_numbas(locale)),
-            _ => None,
-        }
-    }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> Option<S> {
-        match self {
-            Noneable::NotNone(val) => Some(val.clone().to_numbas_with_name(locale, name)),
-            _ => None,
-        }
-    }
-}
-
 macro_rules! impl_to_numbas {
     ($($type: ty), *) => {
         $(

@@ -1,6 +1,6 @@
+use crate::support::optional_overwrite::*;
+use crate::support::to_numbas::ToNumbas;
 use schemars::JsonSchema;
-use serde::Deserialize;
-use serde::Serialize;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Noneable<T> {
@@ -8,54 +8,26 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
-impl<T> Noneable<T> {
-    pub fn nn() -> Self {
-        Self::None
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Deserialize)]
-enum NoneEnum {
-    #[serde(rename = "none")]
-    None,
-}
-
-#[derive(Debug, Clone, PartialEq, Deserialize)]
-#[serde(untagged)]
-enum NoneableDeserialize<T> {
-    None(NoneEnum),
-    NotNone(T),
-}
-
-// TODO: cleanup
-impl<'de, T> Deserialize<'de> for Noneable<T>
-where
-    T: serde::Deserialize<'de>,
-{
-    fn deserialize<D>(deserializer: D) -> Result<Noneable<T>, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let deser_res: Result<NoneableDeserialize<T>, _> =
-            serde::Deserialize::deserialize(deserializer);
-        deser_res.map(|res| match res {
-            NoneableDeserialize::None(_v) => Noneable::None,
-            NoneableDeserialize::NotNone(v) => Noneable::NotNone(v),
-        })
-    }
-}
-
-impl<T> Serialize for Noneable<T>
-where
-    T: serde::Serialize,
-{
-    fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
+impl<T: RumbasCheck> RumbasCheck for Noneable<T> {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
         match self {
-            Noneable::None => s.serialize_str("none"),
-            Noneable::NotNone(v) => v.serialize(s),
+            Noneable::NotNone(val) => val.check(locale),
+            _ => RumbasCheckResult::empty(),
+        }
+    }
+}
+
+impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<Option<S>> for Noneable<T> {
+    fn to_numbas(&self, locale: &str) -> Option<S> {
+        match self {
+            Noneable::NotNone(val) => Some(val.clone().to_numbas(locale)),
+            _ => None,
+        }
+    }
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> Option<S> {
+        match self {
+            Noneable::NotNone(val) => Some(val.clone().to_numbas_with_name(locale, name)),
+            _ => None,
         }
     }
 }
@@ -82,6 +54,12 @@ impl<T: JsonSchema> JsonSchema for Noneable<T> {
     }
 }
 
+impl<T> Noneable<T> {
+    pub fn nn() -> Self {
+        Self::None
+    }
+}
+
 impl<T: std::clone::Clone> Noneable<T> {
     #[inline]
     pub fn unwrap_or(&self, other: T) -> T {
@@ -89,5 +67,55 @@ impl<T: std::clone::Clone> Noneable<T> {
             Noneable::None => other,
             Noneable::NotNone(nn) => nn.clone(),
         }
+    }
+}
+
+mod serde_noneable {
+    use super::Noneable;
+    use serde::Deserialize;
+    use serde::Serialize;
+    impl<T> Serialize for Noneable<T>
+    where
+        T: serde::Serialize,
+    {
+        fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
+        where
+            S: serde::Serializer,
+        {
+            match self {
+                Noneable::None => s.serialize_str("none"),
+                Noneable::NotNone(v) => v.serialize(s),
+            }
+        }
+    }
+    // TODO: cleanup
+    impl<'de, T> Deserialize<'de> for Noneable<T>
+    where
+        T: serde::Deserialize<'de>,
+    {
+        fn deserialize<D>(deserializer: D) -> Result<Noneable<T>, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            let deser_res: Result<NoneableDeserialize<T>, _> =
+                serde::Deserialize::deserialize(deserializer);
+            deser_res.map(|res| match res {
+                NoneableDeserialize::None(_v) => Noneable::None,
+                NoneableDeserialize::NotNone(v) => Noneable::NotNone(v),
+            })
+        }
+    }
+
+    #[derive(Debug, Clone, PartialEq, Deserialize)]
+    enum NoneEnum {
+        #[serde(rename = "none")]
+        None,
+    }
+
+    #[derive(Debug, Clone, PartialEq, Deserialize)]
+    #[serde(untagged)]
+    enum NoneableDeserialize<T> {
+        None(NoneEnum),
+        NotNone(T),
     }
 }
