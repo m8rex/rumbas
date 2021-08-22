@@ -27,6 +27,7 @@ impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
         }
     }
 }
+
 impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValued<T>>
     for VariableValued<T>
 {
@@ -61,20 +62,20 @@ impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::exam::VariableValued<V>>
     }
 }
 
-impl<T> VariableValued<T> {
-    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> VariableValued<U> {
-        match self {
-            VariableValued::Variable(x) => VariableValued::Variable(x),
-            VariableValued::Value(x) => VariableValued::Value(f(x)),
-        }
-    }
-}
-
 impl<O, T: ToRumbas<O>> ToRumbas<VariableValued<O>> for numbas::exam::VariableValued<T> {
     fn to_rumbas(&self) -> VariableValued<O> {
         match self {
             numbas::exam::VariableValued::Variable(v) => VariableValued::Variable(v.clone()),
             numbas::exam::VariableValued::Value(v) => VariableValued::Value(v.to_rumbas()),
+        }
+    }
+}
+
+impl<T> VariableValued<T> {
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> VariableValued<U> {
+        match self {
+            VariableValued::Variable(x) => VariableValued::Variable(x),
+            VariableValued::Value(x) => VariableValued::Value(f(x)),
         }
     }
 }
