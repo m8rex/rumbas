@@ -105,7 +105,7 @@ impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChoo
                     self.max_answers
                         .map(|v| v.0)
                         .map(Noneable::NotNone)
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 columns: self.display_columns.0.to_rumbas(),
                 wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()

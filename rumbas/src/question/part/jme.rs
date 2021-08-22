@@ -92,37 +92,37 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
                     self.max_length
                         .clone()
                         .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 min_length: Value::Normal(
                     self.min_length
                         .clone()
                         .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 must_have: Value::Normal(
                     self.must_have
                         .clone()
                         .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 may_not_have: Value::Normal(
                     self.may_not_have
                         .clone()
                         .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 must_match_pattern: Value::Normal(
                     self.must_match_pattern
                         .clone()
                         .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 ),
                 value_generators: Value::Normal(
                     self.value_generators
                         .clone()
                         .map(|v| Noneable::NotNone(v.iter().map(|g| g.to_rumbas()).collect()))
-                        .unwrap_or_else(Noneable::nn),
+                        .unwrap_or(Noneable::None),
                 )
             }
         }

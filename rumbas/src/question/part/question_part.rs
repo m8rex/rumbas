@@ -235,7 +235,7 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
                     description: Value::Normal(
                         n.description
                             .clone()
-                            .map_or(Noneable::nn(), Noneable::NotNone),
+                            .map_or(Noneable::None, Noneable::NotNone),
                     ),
                     expression: Value::Normal(n.expression_string().to_rumbas()),
                 })

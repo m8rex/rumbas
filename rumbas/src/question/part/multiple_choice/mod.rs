@@ -127,7 +127,7 @@ fn extract_multiple_choice_answer_data(
                                 .to_rumbas(),
                         )
                     })
-                    .unwrap_or_else(Noneable::nn),
+                    .unwrap_or(Noneable::None),
             ),
         }))
     }
