@@ -30,15 +30,10 @@ impl ToNumbas<numbas::exam::ExamTiming> for Timing {
 impl ToRumbas<Timing> for numbas::exam::Exam {
     fn to_rumbas(&self) -> Timing {
         Timing {
-            duration_in_seconds: Value::Normal(
-                self.basic_settings
-                    .duration_in_seconds
-                    .map(Noneable::NotNone)
-                    .unwrap_or(Noneable::None),
-            ),
-            allow_pause: Value::Normal(self.timing.allow_pause),
-            on_timeout: Value::Normal(self.timing.timeout.to_rumbas()),
-            timed_warning: Value::Normal(self.timing.timed_warning.to_rumbas()),
+            duration_in_seconds: self.basic_settings.duration_in_seconds.to_rumbas(),
+            allow_pause: self.timing.allow_pause.to_rumbas(),
+            on_timeout: self.timing.timeout.to_rumbas(),
+            timed_warning: self.timing.timed_warning.to_rumbas(),
         }
     }
 }

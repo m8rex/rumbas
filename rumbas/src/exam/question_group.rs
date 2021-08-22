@@ -34,9 +34,9 @@ impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
 impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
     fn to_rumbas(&self) -> QuestionGroup {
         QuestionGroup {
-            name: Value::Normal(self.name.clone().unwrap_or_default().into()),
-            picking_strategy: Value::Normal(self.picking_strategy.to_rumbas()),
-            questions: Value::Normal(self.questions.to_rumbas()),
+            name: self.name.clone().unwrap_or_default().to_rumbas(),
+            picking_strategy: self.picking_strategy.to_rumbas(),
+            questions: self.questions.to_rumbas(),
         }
     }
 }
