@@ -62,10 +62,10 @@ impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
 impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
     fn to_rumbas(&self) -> VariableRepresentation {
         VariableRepresentation::Long(Box::new(Variable {
-            definition: Value::Normal(FileString::s(&self.definition)),
-            description: Value::Normal(self.description.clone()),
-            template_type: Value::Normal(self.template_type.to_rumbas()),
-            group: Value::Normal(self.group.clone()),
+            definition: self.definition.to_rumbas(),
+            description: self.description.to_rumbas(),
+            template_type: self.template_type.to_rumbas(),
+            group: self.group.to_rumbas(),
         }))
     }
 }
@@ -276,10 +276,10 @@ impl ToNumbas<numbas::exam::ExamVariable> for Variable {
 impl Variable {
     fn ungrouped(template_type: VariableTemplateType, definition: &str) -> Variable {
         Variable {
-            template_type: Value::Normal(template_type),
-            definition: Value::Normal(FileString::s(&definition.to_owned())),
-            description: Value::Normal("".to_string()),
-            group: Value::Normal(UNGROUPED_GROUP.to_string()),
+            template_type: Value::Normal(template_type.clone()),
+            definition: definition.to_string().to_rumbas(),
+            description: String::new().to_rumbas(),
+            group: UNGROUPED_GROUP.to_string().to_rumbas(),
         }
     }
 }

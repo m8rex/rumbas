@@ -32,7 +32,7 @@ impl_to_numbas!(numbas::exam::ExamFunctionType);
 impl ToRumbas<Function> for numbas::exam::ExamFunction {
     fn to_rumbas(&self) -> Function {
         Function {
-            definition: Value::Normal(self.definition.to_rumbas()),
+            definition: self.definition.to_rumbas(),
             output_type: Value::Normal(self.output_type),
             parameters: Value::Normal(self.parameters.clone().into_iter().collect()),
         }
@@ -67,12 +67,12 @@ impl ToRumbas<FunctionDefinition> for numbas::exam::ExamFunctionDefinition {
         match self {
             numbas::exam::ExamFunctionDefinition::JME { definition } => {
                 FunctionDefinition::JME(FunctionDefinitionJME {
-                    definition: Value::Normal(definition.to_rumbas()),
+                    definition: definition.to_rumbas(),
                 })
             }
             numbas::exam::ExamFunctionDefinition::Javascript { definition } => {
                 FunctionDefinition::Javascript(FunctionDefinitionJavascript {
-                    definition: Value::Normal(definition.to_rumbas()),
+                    definition: definition.to_rumbas(),
                 })
             }
         }

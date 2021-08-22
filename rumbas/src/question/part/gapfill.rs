@@ -34,9 +34,9 @@ impl ToRumbas<QuestionPartGapFill> for numbas::exam::ExamQuestionPartGapFill {
         create_question_part! {
             QuestionPartGapFill with &self.part_data => {
 
-                sort_answers: Value::Normal(self.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers)),
+                sort_answers: self.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers).to_rumbas(),
 
-                gaps: Value::Normal(self.gaps.to_rumbas())
+                gaps: self.gaps.to_rumbas()
             }
         }
     }

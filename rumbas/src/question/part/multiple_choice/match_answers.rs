@@ -120,24 +120,21 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
         create_question_part! {
             QuestionPartMatchAnswersWithItems with &self.part_data => {
 
-                answer_data: Value::Normal(self.to_rumbas()),
-                shuffle_answers: Value::Normal(self.shuffle_answers),
-                shuffle_items: Value::Normal(self.shuffle_choices),
-                show_cell_answer_state: Value::Normal(self.show_cell_answer_state),
-                should_select_at_least: Value::Normal(
+                answer_data: self.to_rumbas(),
+                shuffle_answers: self.shuffle_answers.to_rumbas(),
+                shuffle_items: self.shuffle_choices.to_rumbas(),
+                show_cell_answer_state: self.show_cell_answer_state.to_rumbas(),
+                should_select_at_least:
                     self.min_answers
                         .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)
-                        .0,
-                ),
-                should_select_at_most: Value::Normal(
+                        .0.to_rumbas(),
+                should_select_at_most:
                     self.max_answers
-                        .map(|v| v.0)
-                        .map(Noneable::NotNone)
-                        .unwrap_or(Noneable::None),
-                ),
-                display: Value::Normal(self.display_type.to_rumbas()),
+                        .map(|v| v.0).to_rumbas()
+                ,
+                display: self.display_type.to_rumbas(),
                 layout: Value::Normal(self.layout.clone()),
-                wrong_nb_answers_warning_type: Value::Normal(self.wrong_nb_choices_warning)
+                wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
             }
         }
     }

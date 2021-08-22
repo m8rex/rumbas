@@ -67,63 +67,39 @@ impl ToRumbas<QuestionPartJME> for numbas::exam::ExamQuestionPartJME {
     fn to_rumbas(&self) -> QuestionPartJME {
         create_question_part! {
             QuestionPartJME with &self.part_data => {
-                answer: Value::Normal(self.answer.to_rumbas()),
-                answer_simplification: Value::Normal(self.answer_simplification.to_rumbas()),
-                show_preview: Value::Normal(self.show_preview),
-                answer_check: Value::Normal(self.checking_type.to_rumbas()),
-                failure_rate: Value::Normal(self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate)),
-                vset_range: Value::Normal([self.vset_range[0].0, self.vset_range[1].0]),
-                vset_range_points: Value::Normal(self.vset_range_points.0),
-                check_variable_names: Value::Normal(self.check_variable_names),
-                single_letter_variables: Value::Normal(
+                answer: self.answer.to_rumbas(),
+                answer_simplification: self.answer_simplification.to_rumbas(),
+                show_preview: self.show_preview.to_rumbas(),
+                answer_check: self.checking_type.to_rumbas(),
+                failure_rate: self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate).to_rumbas(),
+                vset_range: [self.vset_range[0].0, self.vset_range[1].0].to_rumbas(),
+                vset_range_points: self.vset_range_points.0.to_rumbas(),
+                check_variable_names: self.check_variable_names.to_rumbas(),
+                single_letter_variables:
                     self.single_letter_variables
-                        .unwrap_or(DEFAULTS.jme_single_letter_variables),
-                ),
-                allow_unknown_functions: Value::Normal(
+                        .unwrap_or(DEFAULTS.jme_single_letter_variables).to_rumbas(),
+                allow_unknown_functions:
                     self.allow_unknown_functions
-                        .unwrap_or(DEFAULTS.jme_allow_unknown_functions),
-                ),
-                implicit_function_composition: Value::Normal(
+                        .unwrap_or(DEFAULTS.jme_allow_unknown_functions).to_rumbas(),
+                implicit_function_composition:
                     self.implicit_function_composition
-                        .unwrap_or(DEFAULTS.jme_implicit_function_composition),
-                ),
-
-                max_length: Value::Normal(
-                    self.max_length
-                        .clone()
-                        .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or(Noneable::None),
-                ),
-                min_length: Value::Normal(
-                    self.min_length
-                        .clone()
-                        .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or(Noneable::None),
-                ),
-                must_have: Value::Normal(
+                        .unwrap_or(DEFAULTS.jme_implicit_function_composition).to_rumbas(),
+                max_length:
+                    self.max_length.to_rumbas(),
+                min_length:
+                    self.min_length.to_rumbas(),
+                must_have:
                     self.must_have
-                        .clone()
-                        .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or(Noneable::None),
-                ),
-                may_not_have: Value::Normal(
+                        .to_rumbas(),
+                may_not_have:
                     self.may_not_have
-                        .clone()
-                        .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or(Noneable::None),
-                ),
-                must_match_pattern: Value::Normal(
+                        .to_rumbas(),
+                must_match_pattern:
                     self.must_match_pattern
-                        .clone()
-                        .map(|r| Noneable::NotNone(r.to_rumbas()))
-                        .unwrap_or(Noneable::None),
-                ),
-                value_generators: Value::Normal(
+                        .to_rumbas(),
+                value_generators:
                     self.value_generators
-                        .clone()
-                        .map(|v| Noneable::NotNone(v.iter().map(|g| g.to_rumbas()).collect()))
-                        .unwrap_or(Noneable::None),
-                )
+                        .to_rumbas()
             }
         }
     }
@@ -374,6 +350,7 @@ impl ToRumbas<JMEAnswerSimplification> for Option<Vec<numbas::exam::AnswerSimpli
                         result.order_canonical = Value::Normal(*b);
                     }
                     numbas::exam::AnswerSimplificationType::Unknown((name, val)) => {
+                        // TODO: remove, add display options
                         log::info!(
                             "Found unknown answer simplification type {}{}",
                             if *val { "!" } else { "" },
@@ -456,22 +433,22 @@ impl ToRumbas<CheckingType> for numbas::exam::JMECheckingType {
         match self {
             numbas::exam::JMECheckingType::RelativeDifference(v) => {
                 CheckingType::RelativeDifference(CheckingTypeDataFloat {
-                    max_difference: Value::Normal(v.checking_accuracy.0),
+                    max_difference: v.checking_accuracy.0.to_rumbas(),
                 })
             }
             numbas::exam::JMECheckingType::AbsoluteDifference(v) => {
                 CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
-                    max_difference: Value::Normal(v.checking_accuracy.0),
+                    max_difference: v.checking_accuracy.0.to_rumbas(),
                 })
             }
             numbas::exam::JMECheckingType::DecimalPlaces(v) => {
                 CheckingType::DecimalPlaces(CheckingTypeDataNatural {
-                    amount: Value::Normal(v.checking_accuracy),
+                    amount: v.checking_accuracy.to_rumbas(),
                 })
             }
             numbas::exam::JMECheckingType::SignificantFigures(v) => {
                 CheckingType::SignificantFigures(CheckingTypeDataNatural {
-                    amount: Value::Normal(v.checking_accuracy),
+                    amount: v.checking_accuracy.to_rumbas(),
                 })
             }
         }
@@ -490,8 +467,8 @@ impl ToNumbas<numbas::exam::JMERestriction> for JMERestriction {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMERestriction {
         numbas::exam::JMERestriction {
             // name: self.name.clone().unwrap().to_string(locale).unwrap(),
-            partial_credit: self.partial_credit.clone().unwrap().into(),
-            message: self.message.clone().unwrap().to_string(locale).unwrap(),
+            partial_credit: self.partial_credit.clone().unwrap().to_numbas(locale),
+            message: self.message.to_numbas(locale),
         }
     }
 }
@@ -500,8 +477,8 @@ impl ToRumbas<JMERestriction> for numbas::exam::JMERestriction {
     fn to_rumbas(&self) -> JMERestriction {
         JMERestriction {
             //name: Value::Normal(TranslatableString::s(&self.name)),
-            partial_credit: Value::Normal(self.partial_credit.0),
-            message: Value::Normal(self.message.clone().into()),
+            partial_credit: self.partial_credit.0.to_rumbas(),
+            message: self.message.to_rumbas(),
         }
     }
 }
@@ -518,7 +495,7 @@ impl ToNumbas<numbas::exam::JMELengthRestriction> for JMELengthRestriction {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMELengthRestriction {
         numbas::exam::JMELengthRestriction {
             restriction: self.restriction.clone().unwrap().to_numbas(locale),
-            length: Some(self.length.clone().unwrap().into()),
+            length: Some(self.length.clone().unwrap().to_numbas(locale)),
         }
     }
 }
@@ -526,12 +503,12 @@ impl ToNumbas<numbas::exam::JMELengthRestriction> for JMELengthRestriction {
 impl ToRumbas<JMELengthRestriction> for numbas::exam::JMELengthRestriction {
     fn to_rumbas(&self) -> JMELengthRestriction {
         JMELengthRestriction {
-            restriction: Value::Normal(self.restriction.to_rumbas()),
-            length: Value::Normal(
-                self.length
-                    .map(|v| v.0)
-                    .unwrap_or(DEFAULTS.length_restriction_length),
-            ),
+            restriction: self.restriction.to_rumbas(),
+            length: self
+                .length
+                .map(|v| v.0)
+                .unwrap_or(DEFAULTS.length_restriction_length)
+                .to_rumbas(),
         }
     }
 }
@@ -548,15 +525,9 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::JMEStringRestriction> for JMEStringRestriction {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMEStringRestriction {
         numbas::exam::JMEStringRestriction {
-            restriction: self.restriction.clone().unwrap().to_numbas(locale),
-            show_strings: self.show_strings.clone().unwrap(),
-            strings: self
-                .strings
-                .clone()
-                .unwrap()
-                .into_iter()
-                .map(|s| s.to_string(locale).unwrap())
-                .collect(),
+            restriction: self.restriction.to_numbas(locale),
+            show_strings: self.show_strings.to_numbas(locale),
+            strings: self.strings.to_numbas(locale),
         }
     }
 }
@@ -564,9 +535,9 @@ impl ToNumbas<numbas::exam::JMEStringRestriction> for JMEStringRestriction {
 impl ToRumbas<JMEStringRestriction> for numbas::exam::JMEStringRestriction {
     fn to_rumbas(&self) -> JMEStringRestriction {
         JMEStringRestriction {
-            restriction: Value::Normal(self.restriction.to_rumbas()),
-            show_strings: Value::Normal(self.show_strings),
-            strings: Value::Normal(self.strings.clone().into_iter().map(|s| s.into()).collect()),
+            restriction: self.restriction.to_rumbas(),
+            show_strings: self.show_strings.to_rumbas(),
+            strings: self.strings.to_rumbas(),
         }
     }
 }
@@ -583,10 +554,10 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::JMEPatternRestriction> for JMEPatternRestriction {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMEPatternRestriction {
         numbas::exam::JMEPatternRestriction {
-            partial_credit: self.partial_credit.clone().unwrap().into(),
-            message: self.message.clone().unwrap().to_string(locale).unwrap(),
-            pattern: self.pattern.clone().unwrap(),
-            name_to_compare: self.name_to_compare.clone().unwrap(),
+            partial_credit: self.partial_credit.to_numbas(locale),
+            message: self.message.to_numbas(locale),
+            pattern: self.pattern.to_numbas(locale),
+            name_to_compare: self.name_to_compare.to_numbas(locale),
         }
     }
 }
@@ -594,10 +565,10 @@ impl ToNumbas<numbas::exam::JMEPatternRestriction> for JMEPatternRestriction {
 impl ToRumbas<JMEPatternRestriction> for numbas::exam::JMEPatternRestriction {
     fn to_rumbas(&self) -> JMEPatternRestriction {
         JMEPatternRestriction {
-            partial_credit: Value::Normal(self.partial_credit.0),
-            message: Value::Normal(self.message.clone().into()),
-            pattern: Value::Normal(self.pattern.clone()),
-            name_to_compare: Value::Normal(self.name_to_compare.clone()),
+            partial_credit: self.partial_credit.0.to_rumbas(),
+            message: self.message.to_rumbas(),
+            pattern: self.pattern.to_rumbas(),
+            name_to_compare: self.name_to_compare.to_rumbas(),
         }
     }
 }
@@ -612,8 +583,8 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::JMEValueGenerator> for JMEValueGenerator {
     fn to_numbas(&self, locale: &str) -> numbas::exam::JMEValueGenerator {
         numbas::exam::JMEValueGenerator {
-            name: self.name.clone().unwrap().to_numbas(locale),
-            value: self.value.clone().unwrap().to_numbas(locale),
+            name: self.name.to_numbas(locale),
+            value: self.value.to_numbas(locale),
         }
     }
 }
@@ -622,8 +593,8 @@ impl ToRumbas<JMEValueGenerator> for numbas::exam::JMEValueGenerator {
     fn to_rumbas(&self) -> JMEValueGenerator {
         let s: String = self.value.clone().into();
         JMEValueGenerator {
-            name: Value::Normal(self.name.clone().into()),
-            value: Value::Normal(JMEFileString::s(&s[..])),
+            name: self.name.to_rumbas(),
+            value: s.to_rumbas(),
         }
     }
 }

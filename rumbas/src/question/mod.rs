@@ -132,34 +132,17 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
 impl ToRumbas<Question> for numbas::exam::ExamQuestion {
     fn to_rumbas(&self) -> Question {
         Question {
-            statement: Value::Normal(self.statement.to_rumbas()),
-            advice: Value::Normal(self.advice.to_rumbas()),
-            parts: Value::Normal(
-                self.parts
-                    .iter()
-                    .map(|p| Value::Normal(p.to_rumbas()))
-                    .collect(),
-            ),
-            builtin_constants: Value::Normal(self.builtin_constants.to_rumbas()),
-            custom_constants: Value::Normal(
-                self.constants.iter().map(|cc| cc.to_rumbas()).collect(),
-            ),
-            variables: Value::Normal(
-                self.variables
-                    .iter()
-                    .map(|(k, v)| (k.clone(), Value::Normal(v.to_rumbas())))
-                    .collect::<std::collections::HashMap<_, _>>(),
-            ),
-            variables_test: Value::Normal(self.variables_test.to_rumbas()),
-            functions: Value::Normal(
-                self.functions
-                    .iter()
-                    .map(|(k, f)| (k.clone(), Value::Normal(f.to_rumbas())))
-                    .collect::<std::collections::HashMap<_, _>>(),
-            ),
-            preamble: Value::Normal(self.preamble.to_rumbas()),
-            navigation: Value::Normal(self.navigation.to_rumbas()),
-            extensions: Value::Normal(self.extensions.to_rumbas()),
+            statement: self.statement.to_rumbas(),
+            advice: self.advice.to_rumbas(),
+            parts: self.parts.to_rumbas(),
+            builtin_constants: self.builtin_constants.to_rumbas(),
+            custom_constants: self.constants.to_rumbas(),
+            variables: self.variables.to_rumbas(),
+            variables_test: self.variables_test.to_rumbas(),
+            functions: self.functions.to_rumbas(),
+            preamble: self.preamble.to_rumbas(),
+            navigation: self.navigation.to_rumbas(),
+            extensions: self.extensions.to_rumbas(),
             diagnostic_topic_names: Value::Normal(
                 self.tags
                     .iter()
@@ -167,8 +150,8 @@ impl ToRumbas<Question> for numbas::exam::ExamQuestion {
                     .map(|t| t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string().into())
                     .collect(),
             ),
-            resources: Value::Normal(self.resources.to_rumbas()),
-            custom_part_types: Value::Normal(self.custom_part_types.to_rumbas()),
+            resources: self.resources.to_rumbas(),
+            custom_part_types: self.custom_part_types.to_rumbas(),
         }
     }
 }

@@ -64,12 +64,12 @@ impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
         let dimensions = QuestionPartMatrixDimensions { rows, columns };
         create_question_part! {
             QuestionPartMatrix with &self.part_data  => {
-                correct_answer: Value::Normal(self.correct_answer.clone()),
-                display_correct_as_fraction: Value::Normal(self.correct_answer_fractions),
+                correct_answer: self.correct_answer.to_rumbas(),
+                display_correct_as_fraction: self.correct_answer_fractions.to_rumbas(),
                 dimensions: Value::Normal(dimensions),
-                max_absolute_deviation: Value::Normal(self.tolerance),
-                mark_partial_by_cells: Value::Normal(self.mark_per_cell),
-                allow_fractions: Value::Normal(self.allow_fractions)
+                max_absolute_deviation: self.tolerance.to_rumbas(),
+                mark_partial_by_cells: self.mark_per_cell.to_rumbas(),
+                allow_fractions: self.allow_fractions.to_rumbas()
             }
         }
     }

@@ -40,7 +40,7 @@ macro_rules! extensions {
             pub fn from(v: &[String]) -> Self {
                 Extensions {
                     $(
-                        $name: Value::Normal(v.contains(&$path.to_string()))
+                        $name: v.contains(&$path.to_string()).to_rumbas()
                     ),*
                 }
             }

@@ -101,12 +101,9 @@ impl ToRumbas<QuestionPartChooseMultiple> for numbas::exam::ExamQuestionPartChoo
                     .unwrap_or(DEFAULTS.choose_multiple_min_answers)
                     .0
                     .to_rumbas(),
-                should_select_at_most: Value::Normal(
+                should_select_at_most:
                     self.max_answers
-                        .map(|v| v.0)
-                        .map(Noneable::NotNone)
-                        .unwrap_or(Noneable::None),
-                ),
+                        .map(|v| v.0).to_rumbas(),
                 columns: self.display_columns.0.to_rumbas(),
                 wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
             }

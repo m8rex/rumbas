@@ -1,5 +1,5 @@
 use crate::question::part::question_part::QuestionPart;
-use crate::support::file_reference::FileString;
+use crate::support::file_reference::{FileString, JMEFileString};
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
@@ -24,6 +24,16 @@ impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     }
 }
 
+impl<K: Clone + std::hash::Hash + std::cmp::Eq, S, O: ToRumbas<S>>
+    ToRumbas<std::collections::HashMap<K, S>> for std::collections::HashMap<K, O>
+{
+    fn to_rumbas(&self) -> std::collections::HashMap<K, S> {
+        self.iter()
+            .map(|(k, v)| (k.to_owned(), v.to_rumbas()))
+            .collect()
+    }
+}
+
 impl<T, O: ToRumbas<T>> ToRumbas<Option<T>> for Option<O> {
     fn to_rumbas(&self) -> Option<T> {
         self.clone().map(|item| item.to_rumbas())
@@ -33,6 +43,12 @@ impl<T, O: ToRumbas<T>> ToRumbas<Option<T>> for Option<O> {
 impl ToRumbas<FileString> for String {
     fn to_rumbas(&self) -> FileString {
         FileString::s(self)
+    }
+}
+
+impl ToRumbas<JMEFileString> for String {
+    fn to_rumbas(&self) -> JMEFileString {
+        JMEFileString::s(self)
     }
 }
 
