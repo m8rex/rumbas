@@ -9,27 +9,27 @@ use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     pub struct Function {
-        parameters: Vec<(String, numbas::exam::ExamFunctionType)>,
-        output_type: numbas::exam::ExamFunctionType,
+        parameters: Vec<(String, numbas::exam::function::FunctionType)>,
+        output_type: numbas::exam::function::FunctionType,
         #[serde(flatten)]
         definition: FunctionDefinition
     }
 }
-impl_optional_overwrite! {(String, numbas::exam::ExamFunctionType)}
-impl_optional_overwrite!(numbas::exam::ExamFunctionType);
+impl_optional_overwrite! {(String, numbas::exam::function::FunctionType)}
+impl_optional_overwrite!(numbas::exam::function::FunctionType);
 
-impl ToNumbas<numbas::exam::ExamFunction> for Function {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunction {
-        numbas::exam::ExamFunction {
+impl ToNumbas<numbas::exam::function::Function> for Function {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::function::Function {
+        numbas::exam::function::Function {
             parameters: self.parameters.to_numbas(locale),
             output_type: self.output_type.to_numbas(locale),
             definition: self.definition.to_numbas(&locale),
         }
     }
 }
-impl_to_numbas!(numbas::exam::ExamFunctionType);
+impl_to_numbas!(numbas::exam::function::FunctionType);
 
-impl ToRumbas<Function> for numbas::exam::ExamFunction {
+impl ToRumbas<Function> for numbas::exam::function::Function {
     fn to_rumbas(&self) -> Function {
         Function {
             definition: self.definition.to_rumbas(),
@@ -49,28 +49,30 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamFunctionDefinition> for FunctionDefinition {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFunctionDefinition {
+impl ToNumbas<numbas::exam::function::FunctionDefinition> for FunctionDefinition {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::function::FunctionDefinition {
         match self {
-            FunctionDefinition::JME(c) => numbas::exam::ExamFunctionDefinition::JME {
+            FunctionDefinition::JME(c) => numbas::exam::function::FunctionDefinition::JME {
                 definition: c.definition.to_numbas(locale),
             },
-            FunctionDefinition::Javascript(c) => numbas::exam::ExamFunctionDefinition::Javascript {
-                definition: c.definition.to_numbas(locale),
-            },
+            FunctionDefinition::Javascript(c) => {
+                numbas::exam::function::FunctionDefinition::Javascript {
+                    definition: c.definition.to_numbas(locale),
+                }
+            }
         }
     }
 }
 
-impl ToRumbas<FunctionDefinition> for numbas::exam::ExamFunctionDefinition {
+impl ToRumbas<FunctionDefinition> for numbas::exam::function::FunctionDefinition {
     fn to_rumbas(&self) -> FunctionDefinition {
         match self {
-            numbas::exam::ExamFunctionDefinition::JME { definition } => {
+            numbas::exam::function::FunctionDefinition::JME { definition } => {
                 FunctionDefinition::JME(FunctionDefinitionJME {
                     definition: definition.to_rumbas(),
                 })
             }
-            numbas::exam::ExamFunctionDefinition::Javascript { definition } => {
+            numbas::exam::function::FunctionDefinition::Javascript { definition } => {
                 FunctionDefinition::Javascript(FunctionDefinitionJavascript {
                     definition: definition.to_rumbas(),
                 })

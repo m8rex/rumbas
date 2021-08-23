@@ -21,9 +21,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionGroup {
-        numbas::exam::ExamQuestionGroup {
+impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::question_group::QuestionGroup {
+        numbas::exam::question_group::QuestionGroup {
             name: Some(self.name.to_numbas(locale)),
             picking_strategy: self.picking_strategy.to_numbas(locale),
             questions: self.questions.to_numbas(locale),
@@ -31,7 +31,7 @@ impl ToNumbas<numbas::exam::ExamQuestionGroup> for QuestionGroup {
     }
 }
 
-impl ToRumbas<QuestionGroup> for numbas::exam::ExamQuestionGroup {
+impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     fn to_rumbas(&self) -> QuestionGroup {
         QuestionGroup {
             name: self.name.clone().unwrap_or_default().to_rumbas(),
@@ -53,17 +53,20 @@ pub enum PickingStrategy {
 }
 impl_optional_overwrite!(PickingStrategy);
 
-impl ToNumbas<numbas::exam::ExamQuestionGroupPickingStrategy> for PickingStrategy {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestionGroupPickingStrategy {
+impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for PickingStrategy {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::exam::question_group::QuestionGroupPickingStrategy {
         match self {
             PickingStrategy::AllOrdered => {
-                numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered
+                numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered
             }
             PickingStrategy::AllShuffled => {
-                numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled
+                numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled
             }
             PickingStrategy::RandomSubset { pick_questions } => {
-                numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset {
+                numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
                     pick_questions: *pick_questions,
                 }
             }
@@ -71,20 +74,20 @@ impl ToNumbas<numbas::exam::ExamQuestionGroupPickingStrategy> for PickingStrateg
     }
 }
 
-impl ToRumbas<PickingStrategy> for numbas::exam::ExamQuestionGroupPickingStrategy {
+impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPickingStrategy {
     fn to_rumbas(&self) -> PickingStrategy {
         match self {
-            numbas::exam::ExamQuestionGroupPickingStrategy::AllOrdered => {
+            numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered => {
                 PickingStrategy::AllOrdered
             }
-            numbas::exam::ExamQuestionGroupPickingStrategy::AllShuffled => {
+            numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled => {
                 PickingStrategy::AllShuffled
             }
-            numbas::exam::ExamQuestionGroupPickingStrategy::RandomSubset { pick_questions } => {
-                PickingStrategy::RandomSubset {
-                    pick_questions: *pick_questions,
-                }
-            }
+            numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
+                pick_questions,
+            } => PickingStrategy::RandomSubset {
+                pick_questions: *pick_questions,
+            },
         }
     }
 }
@@ -111,15 +114,15 @@ impl OptionalOverwrite<QuestionPath> for QuestionPath {
 }
 impl_optional_overwrite_value!(QuestionPath);
 
-impl ToNumbas<numbas::exam::ExamQuestion> for QuestionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestion {
+impl ToNumbas<numbas::question::question::Question> for QuestionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::question::question::Question {
         self.question_data
             .clone()
             .to_numbas_with_name(locale, self.question_name.clone())
     }
 }
 
-impl ToRumbas<QuestionPath> for numbas::exam::ExamQuestion {
+impl ToRumbas<QuestionPath> for numbas::question::question::Question {
     fn to_rumbas(&self) -> QuestionPath {
         QuestionPath {
             question_name: sanitize(&self.name),

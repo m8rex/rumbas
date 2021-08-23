@@ -38,8 +38,8 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::Exam> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
+impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
         let basic_settings = self.to_numbas(locale);
         let navigation = self.navigation.to_numbas(locale);
 
@@ -53,10 +53,10 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
         //TODO
         let variables = Some(HashMap::new());
 
-        let question_groups: Vec<numbas::exam::ExamQuestionGroup> =
+        let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
             self.question_groups.to_numbas(locale);
 
-        let resources: Vec<numbas::exam::Resource> = self
+        let resources: Vec<numbas::exam::resource::Resource> = self
             .question_groups
             .clone()
             .unwrap()
@@ -91,7 +91,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
 
-        let custom_part_types: Vec<numbas::exam::CustomPartType> = self
+        let custom_part_types: Vec<numbas::exam::custom_part_type::CustomPartType> = self
             .question_groups
             .clone()
             .unwrap()
@@ -109,7 +109,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .collect::<Vec<_>>()
             .to_numbas(locale);
 
-        numbas::exam::Exam {
+        numbas::exam::exam::Exam {
             basic_settings,
             resources,
             extensions,
@@ -125,9 +125,9 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
     }
 }
 
-impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
-        numbas::exam::BasicExamSettings {
+impl ToNumbas<numbas::exam::exam::BasicExamSettings> for NormalExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
+        numbas::exam::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
             duration_in_seconds: self
                 .timing
@@ -164,7 +164,7 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
 
 /// Converts a normal numbas exam to a NormalExam
 pub fn convert_normal_numbas_exam(
-    exam: numbas::exam::Exam,
+    exam: numbas::exam::exam::Exam,
 ) -> (
     NormalExam,
     Vec<QuestionPath>,

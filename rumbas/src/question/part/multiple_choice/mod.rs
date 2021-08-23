@@ -24,18 +24,18 @@ optional_overwrite_enum! {
 optional_overwrite! {
     pub struct MultipleChoiceAnswerDataNumbasLike {
         answers: VariableValued<Vec<TranslatableString>>,
-        marks: VariableValued<Vec<numbas::exam::Primitive>>,
+        marks: VariableValued<Vec<numbas::support::primitive::Primitive>>,
         feedback: Noneable<Vec<TranslatableString>>
     }
 }
 
 #[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRowPrimitive(Vec<numbas::exam::Primitive>);
+struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Row(self.0.clone())
+impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
+        numbas::question::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
 
@@ -43,9 +43,9 @@ impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRowPrimitive {
 struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Row(
+impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRow {
+    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
+        numbas::question::match_answers::MultipleChoiceMatrix::Row(
             self.0
                 .to_numbas(locale)
                 .into_iter()
@@ -56,23 +56,25 @@ impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixRow {
 }
 
 #[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::exam::Primitive>>>);
+struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::exam::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::MultipleChoiceMatrix {
-        numbas::exam::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
+    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
+        numbas::question::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
     }
 }
 
 fn extract_multiple_choice_answer_data(
-    answers: &numbas::exam::VariableValued<Vec<String>>,
-    marking_matrix: &Option<numbas::exam::VariableValued<Vec<numbas::exam::Primitive>>>,
+    answers: &numbas::support::primitive::VariableValued<Vec<String>>,
+    marking_matrix: &Option<
+        numbas::support::primitive::VariableValued<Vec<numbas::support::primitive::Primitive>>,
+    >,
     distractors: &Option<Vec<String>>,
 ) -> MultipleChoiceAnswerData {
     if let (
-        numbas::exam::VariableValued::Value(answer_options),
-        Some(numbas::exam::VariableValued::Value(marking_matrix)),
+        numbas::support::primitive::VariableValued::Value(answer_options),
+        Some(numbas::support::primitive::VariableValued::Value(marking_matrix)),
     ) = (answers.clone(), marking_matrix.clone())
     {
         let answers_data: Vec<_> = match distractors.clone() {
@@ -133,16 +135,16 @@ fn extract_multiple_choice_answer_data(
     }
 }
 
-impl_to_numbas!(numbas::exam::MultipleChoiceMatrix);
-impl_optional_overwrite!(numbas::exam::MultipleChoiceMatrix);
+impl_to_numbas!(numbas::question::match_answers::MultipleChoiceMatrix);
+impl_optional_overwrite!(numbas::question::match_answers::MultipleChoiceMatrix);
 
-impl_to_numbas!(numbas::exam::Primitive);
-impl_optional_overwrite!(numbas::exam::Primitive);
+impl_to_numbas!(numbas::support::primitive::Primitive);
+impl_optional_overwrite!(numbas::support::primitive::Primitive);
 
 optional_overwrite! {
     pub struct MultipleChoiceAnswer {
         statement: TranslatableString,
         feedback: TranslatableString,
-        marks: numbas::exam::Primitive // TODO: variable valued?
+        marks: numbas::support::primitive::Primitive // TODO: variable valued?
     }
 }

@@ -13,7 +13,7 @@ pub trait ToRumbas<RumbasType>: Clone {
 }
 
 impl_to_rumbas!(bool, f64, usize, String, [f64; 2]);
-impl_to_rumbas!(numbas::exam::Primitive);
+impl_to_rumbas!(numbas::support::primitive::Primitive);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
 impl_to_rumbas!(numbas::jme::ContentAreaString);
@@ -77,15 +77,17 @@ impl ToRumbas<ContentAreaTranslatableString> for ContentAreaString {
 }
 
 pub fn extract_part_common_marks(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
-) -> numbas::exam::Primitive {
+    pd: &numbas::question::part::QuestionPartSharedData,
+) -> numbas::support::primitive::Primitive {
     pd.marks
         .clone()
-        .unwrap_or(numbas::exam::Primitive::Natural(DEFAULTS.part_common_marks))
+        .unwrap_or(numbas::support::primitive::Primitive::Natural(
+            DEFAULTS.part_common_marks,
+        ))
 }
 
 pub fn extract_part_common_prompt(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> ContentAreaTranslatableString {
     pd.prompt
         .clone()
@@ -93,61 +95,69 @@ pub fn extract_part_common_prompt(
         .to_rumbas()
 }
 
-pub fn extract_part_common_use_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> bool {
+pub fn extract_part_common_use_custom_name(
+    pd: &numbas::question::part::QuestionPartSharedData,
+) -> bool {
     pd.use_custom_name
         .unwrap_or(DEFAULTS.part_common_use_custom_name)
 }
 
-pub fn extract_part_common_custom_name(pd: &numbas::exam::ExamQuestionPartSharedData) -> String {
+pub fn extract_part_common_custom_name(
+    pd: &numbas::question::part::QuestionPartSharedData,
+) -> String {
     pd.custom_name.clone().unwrap_or_default()
 }
 
-pub fn extract_part_common_steps_penalty(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
+pub fn extract_part_common_steps_penalty(
+    pd: &numbas::question::part::QuestionPartSharedData,
+) -> usize {
     pd.steps_penalty
         .unwrap_or(DEFAULTS.part_common_steps_penalty)
 }
 
 pub fn extract_part_common_enable_minimum_marks(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.enable_minimum_marks
         .unwrap_or(DEFAULTS.part_common_enable_minimum_marks)
 }
 
-pub fn extract_part_common_minimum_marks(pd: &numbas::exam::ExamQuestionPartSharedData) -> usize {
+pub fn extract_part_common_minimum_marks(
+    pd: &numbas::question::part::QuestionPartSharedData,
+) -> usize {
     pd.minimum_marks
         .unwrap_or(DEFAULTS.part_common_minimum_marks)
 }
 
 pub fn extract_part_common_show_correct_answer(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.show_correct_answer
 }
 
 pub fn extract_part_common_show_feedback_icon(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.show_feedback_icon
         .unwrap_or(DEFAULTS.part_common_show_feedback_icon)
 }
 
 pub fn extract_part_common_adaptive_marking_penalty(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> usize {
     pd.adaptive_marking_penalty
         .unwrap_or(DEFAULTS.part_common_adaptive_marking_penalty)
 }
 
 pub fn extract_part_common_extend_base_marking_algorithm(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.extend_base_marking_algorithm
         .unwrap_or(DEFAULTS.part_common_extend_base_marking_algorithm)
 }
 
 pub fn extract_part_common_steps(
-    pd: &numbas::exam::ExamQuestionPartSharedData,
+    pd: &numbas::question::part::QuestionPartSharedData,
 ) -> Vec<QuestionPart> {
     pd.steps.clone().unwrap_or_default().to_rumbas()
 }

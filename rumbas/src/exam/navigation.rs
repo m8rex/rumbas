@@ -17,9 +17,9 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
-        numbas::exam::ExamNavigation {
+impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::Navigation {
+        numbas::exam::navigation::Navigation {
             allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
             allow_steps: Some(self.to_shared_data().show_steps.to_numbas(locale)),
             show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
@@ -35,8 +35,8 @@ impl ToNumbas<numbas::exam::ExamNavigation> for NormalNavigation {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamNavigationMode> for NormalNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigationMode {
+impl ToNumbas<numbas::exam::navigation::NavigationMode> for NormalNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::NavigationMode {
         match self {
             NormalNavigation::Menu(n) => n.to_numbas(locale),
             NormalNavigation::Sequential(n) => n.to_numbas(locale),
@@ -44,10 +44,10 @@ impl ToNumbas<numbas::exam::ExamNavigationMode> for NormalNavigation {
     }
 }
 
-impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
+impl ToRumbas<NormalNavigation> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> NormalNavigation {
         match &self.navigation.navigation_mode {
-            numbas::exam::ExamNavigationMode::Sequential(s) => {
+            numbas::exam::navigation::NavigationMode::Sequential(s) => {
                 NormalNavigation::Sequential(SequentialNavigation {
                     shared_data: self.to_rumbas(),
                     can_move_to_previous: s.can_move_to_previous.to_rumbas(),
@@ -56,10 +56,12 @@ impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
                     on_leave: s.on_leave.to_rumbas(),
                 })
             }
-            numbas::exam::ExamNavigationMode::Menu => NormalNavigation::Menu(MenuNavigation {
-                shared_data: self.to_rumbas(),
-            }),
-            numbas::exam::ExamNavigationMode::Diagnostic(_d) => {
+            numbas::exam::navigation::NavigationMode::Menu => {
+                NormalNavigation::Menu(MenuNavigation {
+                    shared_data: self.to_rumbas(),
+                })
+            }
+            numbas::exam::navigation::NavigationMode::Diagnostic(_d) => {
                 panic!(
                     "{}",
                     "Bug in rumbas: can' create normal exam from diagnostic one."
@@ -96,14 +98,16 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamNavigationMode> for SequentialNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigationMode {
-        numbas::exam::ExamNavigationMode::Sequential(numbas::exam::ExamNavigationModeSequential {
-            on_leave: self.on_leave.to_numbas(locale),
-            show_results_page: self.show_results_page.to_numbas(locale),
-            can_move_to_previous: self.can_move_to_previous.to_numbas(locale),
-            browsing_enabled: self.browsing_enabled.to_numbas(locale),
-        })
+impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::NavigationMode {
+        numbas::exam::navigation::NavigationMode::Sequential(
+            numbas::exam::navigation::NavigationModeSequential {
+                on_leave: self.on_leave.to_numbas(locale),
+                show_results_page: self.show_results_page.to_numbas(locale),
+                can_move_to_previous: self.can_move_to_previous.to_numbas(locale),
+                browsing_enabled: self.browsing_enabled.to_numbas(locale),
+            },
+        )
     }
 }
 
@@ -115,9 +119,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamNavigationMode> for MenuNavigation {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamNavigationMode {
-        numbas::exam::ExamNavigationMode::Menu // TODO: sequential
+impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::navigation::NavigationMode {
+        numbas::exam::navigation::NavigationMode::Menu // TODO: sequential
     }
 }
 
@@ -131,9 +135,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamNavigation> for DiagnosticNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamNavigation {
-        numbas::exam::ExamNavigation {
+impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::Navigation {
+        numbas::exam::navigation::Navigation {
             allow_regenerate: self
                 .shared_data
                 .clone()
@@ -166,8 +170,8 @@ impl ToNumbas<numbas::exam::ExamNavigation> for DiagnosticNavigation {
                 .unwrap()
                 .start_password
                 .map(|s| s.to_numbas(locale)),
-            navigation_mode: numbas::exam::ExamNavigationMode::Diagnostic(
-                numbas::exam::ExamNavigationModeDiagnostic {
+            navigation_mode: numbas::exam::navigation::NavigationMode::Diagnostic(
+                numbas::exam::navigation::NavigationModeDiagnostic {
                     on_leave: self.on_leave.clone().to_numbas(locale),
                 },
             ),
@@ -175,22 +179,22 @@ impl ToNumbas<numbas::exam::ExamNavigation> for DiagnosticNavigation {
     }
 }
 
-impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
+impl ToRumbas<DiagnosticNavigation> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> DiagnosticNavigation {
         match &self.navigation.navigation_mode {
-            numbas::exam::ExamNavigationMode::Sequential(_s) => {
+            numbas::exam::navigation::NavigationMode::Sequential(_s) => {
                 panic!(
                     "{}",
                     "Bug in rumbas: can' create diagnostic exam from normal one."
                 )
             }
-            numbas::exam::ExamNavigationMode::Menu => {
+            numbas::exam::navigation::NavigationMode::Menu => {
                 panic!(
                     "{}",
                     "Bug in rumbas: can' create diagnostic exam from normal one."
                 )
             }
-            numbas::exam::ExamNavigationMode::Diagnostic(d) => DiagnosticNavigation {
+            numbas::exam::navigation::NavigationMode::Diagnostic(d) => DiagnosticNavigation {
                 shared_data: self.to_rumbas(),
                 on_leave: d.on_leave.to_rumbas(),
             },
@@ -206,20 +210,24 @@ pub enum ShowResultsPage {
 }
 impl_optional_overwrite!(ShowResultsPage);
 
-impl ToNumbas<numbas::exam::ExamShowResultsPage> for ShowResultsPage {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamShowResultsPage {
+impl ToNumbas<numbas::exam::navigation::ShowResultsPage> for ShowResultsPage {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::navigation::ShowResultsPage {
         match self {
-            ShowResultsPage::OnCompletion => numbas::exam::ExamShowResultsPage::OnCompletion,
-            ShowResultsPage::Never => numbas::exam::ExamShowResultsPage::Never,
+            ShowResultsPage::OnCompletion => {
+                numbas::exam::navigation::ShowResultsPage::OnCompletion
+            }
+            ShowResultsPage::Never => numbas::exam::navigation::ShowResultsPage::Never,
         }
     }
 }
 
-impl ToRumbas<ShowResultsPage> for numbas::exam::ExamShowResultsPage {
+impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
     fn to_rumbas(&self) -> ShowResultsPage {
         match self {
-            numbas::exam::ExamShowResultsPage::Never => ShowResultsPage::Never,
-            numbas::exam::ExamShowResultsPage::OnCompletion => ShowResultsPage::OnCompletion,
+            numbas::exam::navigation::ShowResultsPage::Never => ShowResultsPage::Never,
+            numbas::exam::navigation::ShowResultsPage::OnCompletion => {
+                ShowResultsPage::OnCompletion
+            }
         }
     }
 }
@@ -234,19 +242,19 @@ pub enum LeaveAction {
 }
 impl_optional_overwrite!(LeaveAction);
 
-impl ToNumbas<numbas::exam::ExamLeaveAction> for LeaveAction {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamLeaveAction {
+impl ToNumbas<numbas::exam::navigation::LeaveAction> for LeaveAction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::LeaveAction {
         match self {
-            LeaveAction::None => numbas::exam::ExamLeaveAction::None {
+            LeaveAction::None => numbas::exam::navigation::LeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
             LeaveAction::WarnIfNotAttempted { message } => {
-                numbas::exam::ExamLeaveAction::WarnIfNotAttempted {
+                numbas::exam::navigation::LeaveAction::WarnIfNotAttempted {
                     message: message.to_string(locale).unwrap(),
                 }
             }
             LeaveAction::PreventIfNotAttempted { message } => {
-                numbas::exam::ExamLeaveAction::PreventIfNotAttempted {
+                numbas::exam::navigation::LeaveAction::PreventIfNotAttempted {
                     message: message.to_string(locale).unwrap(),
                 }
             }
@@ -254,16 +262,16 @@ impl ToNumbas<numbas::exam::ExamLeaveAction> for LeaveAction {
     }
 }
 
-impl ToRumbas<LeaveAction> for numbas::exam::ExamLeaveAction {
+impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
     fn to_rumbas(&self) -> LeaveAction {
         match self {
-            numbas::exam::ExamLeaveAction::None { message: _ } => LeaveAction::None,
-            numbas::exam::ExamLeaveAction::WarnIfNotAttempted { message } => {
+            numbas::exam::navigation::LeaveAction::None { message: _ } => LeaveAction::None,
+            numbas::exam::navigation::LeaveAction::WarnIfNotAttempted { message } => {
                 LeaveAction::WarnIfNotAttempted {
                     message: message.clone().into(),
                 }
             }
-            numbas::exam::ExamLeaveAction::PreventIfNotAttempted { message } => {
+            numbas::exam::navigation::LeaveAction::PreventIfNotAttempted { message } => {
                 LeaveAction::PreventIfNotAttempted {
                     message: message.clone().into(),
                 }
@@ -297,7 +305,7 @@ optional_overwrite! {
     }
 }
 
-impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
+impl ToRumbas<NavigationSharedData> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> NavigationSharedData {
         NavigationSharedData {
             start_password: self

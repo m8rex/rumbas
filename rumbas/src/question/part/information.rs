@@ -12,15 +12,15 @@ question_part_type! {
     pub struct QuestionPartInformation {}
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartInformation> for QuestionPartInformation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartInformation {
-        numbas::exam::ExamQuestionPartInformation {
+impl ToNumbas<numbas::question::information::QuestionPartInformation> for QuestionPartInformation {
+    fn to_numbas(&self, locale: &str) -> numbas::question::information::QuestionPartInformation {
+        numbas::question::information::QuestionPartInformation {
             part_data: self.to_numbas(locale), // TODO: to numbas?
         }
     }
 }
 
-impl ToRumbas<QuestionPartInformation> for numbas::exam::ExamQuestionPartInformation {
+impl ToRumbas<QuestionPartInformation> for numbas::question::information::QuestionPartInformation {
     fn to_rumbas(&self) -> QuestionPartInformation {
         create_question_part!(QuestionPartInformation with &self.part_data => {})
     }

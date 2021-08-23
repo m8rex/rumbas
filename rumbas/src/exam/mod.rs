@@ -36,8 +36,8 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::Exam> for Exam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
+impl ToNumbas<numbas::exam::exam::Exam> for Exam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
         match self {
             Exam::Normal(n) => n.to_numbas(locale),
             Exam::Diagnostic(n) => n.to_numbas(locale),
@@ -143,7 +143,7 @@ impl ExamFileType {
 /// Returns the name of the exam, the resulting exam (as ExamFileType)
 /// and vectors of questions and custom part type definitions
 pub fn convert_numbas_exam(
-    exam: numbas::exam::Exam,
+    exam: numbas::exam::exam::Exam,
 ) -> (
     String,
     ExamFileType,
@@ -151,7 +151,7 @@ pub fn convert_numbas_exam(
     Vec<CustomPartTypeDefinitionPath>,
 ) {
     let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
-        numbas::exam::ExamNavigationMode::Diagnostic(ref _d) => {
+        numbas::exam::navigation::NavigationMode::Diagnostic(ref _d) => {
             let (exam, qgs, cpts) = convert_diagnostic_numbas_exam(exam);
             (
                 exam.name.clone().unwrap(),

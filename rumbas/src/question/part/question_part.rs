@@ -25,22 +25,28 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPart> for QuestionPart {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPart {
+impl ToNumbas<numbas::question::part::QuestionPart> for QuestionPart {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPart {
         match self {
             QuestionPart::Builtin(b) => {
-                numbas::exam::ExamQuestionPart::Builtin(b.to_numbas(locale))
+                numbas::question::part::QuestionPart::Builtin(b.to_numbas(locale))
             }
-            QuestionPart::Custom(b) => numbas::exam::ExamQuestionPart::Custom(b.to_numbas(locale)),
+            QuestionPart::Custom(b) => {
+                numbas::question::part::QuestionPart::Custom(b.to_numbas(locale))
+            }
         }
     }
 }
 
-impl ToRumbas<QuestionPart> for numbas::exam::ExamQuestionPart {
+impl ToRumbas<QuestionPart> for numbas::question::part::QuestionPart {
     fn to_rumbas(&self) -> QuestionPart {
         match self {
-            numbas::exam::ExamQuestionPart::Builtin(bqp) => QuestionPart::Builtin(bqp.to_rumbas()),
-            numbas::exam::ExamQuestionPart::Custom(cqp) => QuestionPart::Custom(cqp.to_rumbas()),
+            numbas::question::part::QuestionPart::Builtin(bqp) => {
+                QuestionPart::Builtin(bqp.to_rumbas())
+            }
+            numbas::question::part::QuestionPart::Custom(cqp) => {
+                QuestionPart::Custom(cqp.to_rumbas())
+            }
         }
     }
 }
@@ -80,74 +86,76 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartBuiltin> for QuestionPartBuiltin {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartBuiltin {
+impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuiltin {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartBuiltin {
         match self {
             QuestionPartBuiltin::JME(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::JME(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::JME(d.to_numbas(locale))
             }
             QuestionPartBuiltin::GapFill(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::GapFill(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::GapFill(d.to_numbas(locale))
             }
             QuestionPartBuiltin::ChooseOne(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::ChooseOne(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::ChooseOne(d.to_numbas(locale))
             }
             QuestionPartBuiltin::ChooseMultiple(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale))
             }
             QuestionPartBuiltin::MatchAnswersWithItems(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(
+                    d.to_numbas(locale),
+                )
             }
             QuestionPartBuiltin::NumberEntry(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::NumberEntry(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::NumberEntry(d.to_numbas(locale))
             }
             QuestionPartBuiltin::PatternMatch(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::PatternMatch(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::PatternMatch(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Information(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::Information(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::Information(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Extension(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::Extension(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::Extension(d.to_numbas(locale))
             }
             QuestionPartBuiltin::Matrix(d) => {
-                numbas::exam::ExamQuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale)))
+                numbas::question::part::QuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale)))
             }
         }
     }
 }
 
-impl ToRumbas<QuestionPartBuiltin> for numbas::exam::ExamQuestionPartBuiltin {
+impl ToRumbas<QuestionPartBuiltin> for numbas::question::part::QuestionPartBuiltin {
     fn to_rumbas(&self) -> QuestionPartBuiltin {
         match self {
-            numbas::exam::ExamQuestionPartBuiltin::JME(p) => {
+            numbas::question::part::QuestionPartBuiltin::JME(p) => {
                 QuestionPartBuiltin::JME(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::NumberEntry(p) => {
+            numbas::question::part::QuestionPartBuiltin::NumberEntry(p) => {
                 QuestionPartBuiltin::NumberEntry(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::Matrix(p) => {
+            numbas::question::part::QuestionPartBuiltin::Matrix(p) => {
                 QuestionPartBuiltin::Matrix((**p).to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::PatternMatch(p) => {
+            numbas::question::part::QuestionPartBuiltin::PatternMatch(p) => {
                 QuestionPartBuiltin::PatternMatch(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::ChooseOne(p) => {
+            numbas::question::part::QuestionPartBuiltin::ChooseOne(p) => {
                 QuestionPartBuiltin::ChooseOne(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::ChooseMultiple(p) => {
+            numbas::question::part::QuestionPartBuiltin::ChooseMultiple(p) => {
                 QuestionPartBuiltin::ChooseMultiple(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::MatchAnswersWithChoices(p) => {
+            numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(p) => {
                 QuestionPartBuiltin::MatchAnswersWithItems(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::GapFill(p) => {
+            numbas::question::part::QuestionPartBuiltin::GapFill(p) => {
                 QuestionPartBuiltin::GapFill(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::Information(p) => {
+            numbas::question::part::QuestionPartBuiltin::Information(p) => {
                 QuestionPartBuiltin::Information(p.to_rumbas())
             }
-            numbas::exam::ExamQuestionPartBuiltin::Extension(p) => {
+            numbas::question::part::QuestionPartBuiltin::Extension(p) => {
                 QuestionPartBuiltin::Extension(p.to_rumbas())
             }
         }
@@ -247,9 +255,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartMarkingNote> for JMENote {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartMarkingNote {
-        numbas::exam::CustomPartMarkingNote {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartMarkingNote> for JMENote {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::custom_part_type::CustomPartMarkingNote {
+        numbas::exam::custom_part_type::CustomPartMarkingNote {
             name: self.name.to_numbas(locale),
             definition: self.expression.to_numbas(&locale),
             description: self.description.unwrap().unwrap_or("".to_string()),
@@ -257,7 +265,7 @@ impl ToNumbas<numbas::exam::CustomPartMarkingNote> for JMENote {
     }
 }
 
-impl ToRumbas<JMENote> for numbas::exam::CustomPartMarkingNote {
+impl ToRumbas<JMENote> for numbas::exam::custom_part_type::CustomPartMarkingNote {
     fn to_rumbas(&self) -> JMENote {
         JMENote {
             name: self.name.to_rumbas(),
@@ -281,7 +289,7 @@ macro_rules! question_part_type {
         optional_overwrite! {
             $(#[$outer])*
             pub struct $struct {
-                marks: numbas::exam::Primitive, // TODO: strict?
+                marks: numbas::support::primitive::Primitive, // TODO: strict?
                 prompt: ContentAreaTranslatableString,
                 use_custom_name: bool,
                 custom_name: String, //Translatable?
@@ -303,9 +311,9 @@ macro_rules! question_part_type {
                 )?
             }
         }
-        impl ToNumbas<numbas::exam::ExamQuestionPartSharedData> for $struct {
-            fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartSharedData {
-                numbas::exam::ExamQuestionPartSharedData {
+        impl ToNumbas<numbas::question::part::QuestionPartSharedData> for $struct {
+            fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartSharedData {
+                numbas::question::part::QuestionPartSharedData {
                     marks: Some(self.marks.to_numbas(locale)),
                     prompt: Some(self.prompt.to_numbas(locale)),
                     use_custom_name: Some(self.use_custom_name.to_numbas(locale)),
@@ -348,35 +356,35 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartInputTypeValue> for CustomPartInputTypeValue {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::CustomPartInputTypeValue {
+impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartInputTypeValue {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::CustomPartInputTypeValue {
         match self {
             CustomPartInputTypeValue::CheckBox(v) => {
-                numbas::exam::CustomPartInputTypeValue::CheckBox(*v)
+                numbas::question::part::CustomPartInputTypeValue::CheckBox(*v)
             }
             CustomPartInputTypeValue::Code(v) => {
-                numbas::exam::CustomPartInputTypeValue::Code(v.clone().into())
+                numbas::question::part::CustomPartInputTypeValue::Code(v.clone().into())
             }
         }
     }
 }
 
-impl ToRumbas<CustomPartInputTypeValue> for numbas::exam::CustomPartInputTypeValue {
+impl ToRumbas<CustomPartInputTypeValue> for numbas::question::part::CustomPartInputTypeValue {
     fn to_rumbas(&self) -> CustomPartInputTypeValue {
         match self {
-            numbas::exam::CustomPartInputTypeValue::CheckBox(v) => {
+            numbas::question::part::CustomPartInputTypeValue::CheckBox(v) => {
                 CustomPartInputTypeValue::CheckBox(*v)
             }
-            numbas::exam::CustomPartInputTypeValue::Code(v) => {
+            numbas::question::part::CustomPartInputTypeValue::Code(v) => {
                 CustomPartInputTypeValue::Code(v.to_string())
             }
         }
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartCustom> for QuestionPartCustom {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartCustom {
-        numbas::exam::ExamQuestionPartCustom {
+impl ToNumbas<numbas::question::part::QuestionPartCustom> for QuestionPartCustom {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartCustom {
+        numbas::question::part::QuestionPartCustom {
             part_data: self.to_numbas(locale),
             r#type: self.r#type.to_numbas(locale),
             settings: self.settings.to_numbas(locale),
@@ -384,7 +392,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartCustom> for QuestionPartCustom {
     }
 }
 
-impl ToRumbas<QuestionPartCustom> for numbas::exam::ExamQuestionPartCustom {
+impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom {
     fn to_rumbas(&self) -> QuestionPartCustom {
         let custom_marking_algorithm_notes: Option<_> =
             self.part_data.custom_marking_algorithm.to_rumbas();
@@ -431,20 +439,20 @@ pub enum VariableReplacementStrategy {
 }
 impl_optional_overwrite!(VariableReplacementStrategy);
 
-impl ToNumbas<numbas::exam::VariableReplacementStrategy> for VariableReplacementStrategy {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::VariableReplacementStrategy {
+impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableReplacementStrategy {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::VariableReplacementStrategy {
         match self {
             VariableReplacementStrategy::OriginalFirst => {
-                numbas::exam::VariableReplacementStrategy::OriginalFirst
+                numbas::question::part::VariableReplacementStrategy::OriginalFirst
             }
         }
     }
 }
 
-impl ToRumbas<VariableReplacementStrategy> for numbas::exam::VariableReplacementStrategy {
+impl ToRumbas<VariableReplacementStrategy> for numbas::question::part::VariableReplacementStrategy {
     fn to_rumbas(&self) -> VariableReplacementStrategy {
         match self {
-            numbas::exam::VariableReplacementStrategy::OriginalFirst => {
+            numbas::question::part::VariableReplacementStrategy::OriginalFirst => {
                 VariableReplacementStrategy::OriginalFirst
             }
         }

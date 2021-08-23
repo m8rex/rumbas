@@ -51,22 +51,32 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValue
 }
 impl_optional_overwrite_value!(VariableValued<T>[T]);
 
-impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::exam::VariableValued<V>>
+impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::support::primitive::VariableValued<V>>
     for VariableValued<T>
 {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::VariableValued<V> {
+    fn to_numbas(&self, locale: &str) -> numbas::support::primitive::VariableValued<V> {
         match self {
-            VariableValued::Variable(v) => numbas::exam::VariableValued::Variable(v.clone()),
-            VariableValued::Value(v) => numbas::exam::VariableValued::Value(v.to_numbas(locale)),
+            VariableValued::Variable(v) => {
+                numbas::support::primitive::VariableValued::Variable(v.clone())
+            }
+            VariableValued::Value(v) => {
+                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale))
+            }
         }
     }
 }
 
-impl<O, T: ToRumbas<O>> ToRumbas<VariableValued<O>> for numbas::exam::VariableValued<T> {
+impl<O, T: ToRumbas<O>> ToRumbas<VariableValued<O>>
+    for numbas::support::primitive::VariableValued<T>
+{
     fn to_rumbas(&self) -> VariableValued<O> {
         match self {
-            numbas::exam::VariableValued::Variable(v) => VariableValued::Variable(v.clone()),
-            numbas::exam::VariableValued::Value(v) => VariableValued::Value(v.to_rumbas()),
+            numbas::support::primitive::VariableValued::Variable(v) => {
+                VariableValued::Variable(v.clone())
+            }
+            numbas::support::primitive::VariableValued::Value(v) => {
+                VariableValued::Value(v.to_rumbas())
+            }
         }
     }
 }

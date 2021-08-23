@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
     pub struct QuestionPartMatrix {
-        correct_answer: numbas::exam::Primitive,
+        correct_answer: numbas::support::primitive::Primitive,
         dimensions: QuestionPartMatrixDimensions,
 
         /// If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.
@@ -26,12 +26,12 @@ question_part_type! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionPartMatrix> for QuestionPartMatrix {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartMatrix {
+impl ToNumbas<numbas::question::matrix::QuestionPartMatrix> for QuestionPartMatrix {
+    fn to_numbas(&self, locale: &str) -> numbas::question::matrix::QuestionPartMatrix {
         let dimensions = self.dimensions.unwrap();
         let rows = dimensions.rows.unwrap();
         let columns = dimensions.columns.unwrap();
-        numbas::exam::ExamQuestionPartMatrix {
+        numbas::question::matrix::QuestionPartMatrix {
             part_data: self.to_numbas(locale),
             correct_answer: self.correct_answer.to_numbas(locale),
             correct_answer_fractions: self.display_correct_as_fraction.to_numbas(locale),
@@ -49,7 +49,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatrix> for QuestionPartMatrix {
     }
 }
 
-impl ToRumbas<QuestionPartMatrix> for numbas::exam::ExamQuestionPartMatrix {
+impl ToRumbas<QuestionPartMatrix> for numbas::question::matrix::QuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
         let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
             self.min_rows.to_rumbas(),

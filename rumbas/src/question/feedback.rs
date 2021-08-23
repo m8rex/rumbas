@@ -26,9 +26,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamFeedback> for Feedback {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFeedback {
-        numbas::exam::ExamFeedback {
+impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::Feedback {
+        numbas::exam::feedback::Feedback {
             show_actual_mark: self.show_current_marks.to_numbas(locale),
             show_total_mark: self.show_maximum_marks.to_numbas(locale),
             show_answer_state: self.show_answer_state.to_numbas(locale),
@@ -41,7 +41,7 @@ impl ToNumbas<numbas::exam::ExamFeedback> for Feedback {
     }
 }
 
-impl ToRumbas<Feedback> for numbas::exam::Exam {
+impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> Feedback {
         let review: Option<_> = self.feedback.review.to_rumbas();
         Feedback {
@@ -76,9 +76,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamReview> for Review {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamReview {
-        numbas::exam::ExamReview {
+impl ToNumbas<numbas::exam::feedback::Review> for Review {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::Review {
+        numbas::exam::feedback::Review {
             show_score: Some(self.show_score.to_numbas(locale)),
             show_feedback: Some(self.show_feedback.to_numbas(locale)),
             show_expected_answer: Some(self.show_expected_answer.to_numbas(locale)),
@@ -87,7 +87,7 @@ impl ToNumbas<numbas::exam::ExamReview> for Review {
     }
 }
 
-impl ToRumbas<Review> for numbas::exam::ExamReview {
+impl ToRumbas<Review> for numbas::exam::feedback::Review {
     fn to_rumbas(&self) -> Review {
         Review {
             show_score: self
@@ -117,16 +117,16 @@ pub struct FeedbackMessage {
 }
 impl_optional_overwrite!(FeedbackMessage);
 
-impl ToNumbas<numbas::exam::ExamFeedbackMessage> for FeedbackMessage {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamFeedbackMessage {
-        numbas::exam::ExamFeedbackMessage {
+impl ToNumbas<numbas::exam::feedback::FeedbackMessage> for FeedbackMessage {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::FeedbackMessage {
+        numbas::exam::feedback::FeedbackMessage {
             message: self.message.to_numbas(locale),
             threshold: self.threshold.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<FeedbackMessage> for numbas::exam::ExamFeedbackMessage {
+impl ToRumbas<FeedbackMessage> for numbas::exam::feedback::FeedbackMessage {
     fn to_rumbas(&self) -> FeedbackMessage {
         FeedbackMessage {
             message: self.message.to_rumbas(),

@@ -63,8 +63,8 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestion> for Question {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamQuestion {
+impl ToNumbas<numbas::question::question::Question> for Question {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::question::Question {
         //TODO?
         panic!(
             "{}",
@@ -72,16 +72,20 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
         )
     }
     //TODO: add to_numbas on Option's to reduce burden?
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamQuestion {
+    fn to_numbas_with_name(
+        &self,
+        locale: &str,
+        name: String,
+    ) -> numbas::question::question::Question {
         if self.variables.unwrap().contains_key("e") {
             panic!("e is not allowed as a variable name"); //TODO is this still the case?
         }
-        numbas::exam::ExamQuestion {
+        numbas::question::question::Question {
             name,
             statement: self.statement.to_numbas(locale),
             advice: self.advice.to_numbas(locale),
             parts: self.parts.to_numbas(locale),
-            builtin_constants: numbas::exam::BuiltinConstants(
+            builtin_constants: numbas::exam::constants::BuiltinConstants(
                 self.builtin_constants.clone().unwrap().to_numbas(locale),
             ),
             constants: self.custom_constants.to_numbas(locale),
@@ -129,7 +133,7 @@ impl ToNumbas<numbas::exam::ExamQuestion> for Question {
     }
 }
 
-impl ToRumbas<Question> for numbas::exam::ExamQuestion {
+impl ToRumbas<Question> for numbas::question::question::Question {
     fn to_rumbas(&self) -> Question {
         Question {
             statement: self.statement.to_rumbas(),

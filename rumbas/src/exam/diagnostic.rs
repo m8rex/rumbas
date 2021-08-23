@@ -40,8 +40,8 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
+impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
         let basic_settings = self.to_numbas(locale);
 
         let navigation = self.navigation.to_numbas(locale);
@@ -56,10 +56,10 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
         //TODO
         let variables = Some(HashMap::new());
 
-        let question_groups: Vec<numbas::exam::ExamQuestionGroup> =
+        let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
             self.question_groups.to_numbas(locale);
 
-        let resources: Vec<numbas::exam::Resource> = self
+        let resources: Vec<numbas::exam::resource::Resource> = self
             .question_groups
             .clone()
             .unwrap()
@@ -94,7 +94,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
 
-        let custom_part_types: Vec<numbas::exam::CustomPartType> = self
+        let custom_part_types: Vec<numbas::exam::custom_part_type::CustomPartType> = self
             .question_groups
             .clone()
             .unwrap()
@@ -114,7 +114,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
 
-        numbas::exam::Exam {
+        numbas::exam::exam::Exam {
             basic_settings,
             resources,
             extensions,
@@ -130,9 +130,9 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
     }
 }
 
-impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
-        numbas::exam::BasicExamSettings {
+impl ToNumbas<numbas::exam::exam::BasicExamSettings> for DiagnosticExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
+        numbas::exam::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
             duration_in_seconds: self
                 .timing
@@ -181,9 +181,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamDiagnostic> for Diagnostic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnostic {
-        numbas::exam::ExamDiagnostic {
+impl ToNumbas<numbas::exam::diagnostic::Diagnostic> for Diagnostic {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::Diagnostic {
+        numbas::exam::diagnostic::Diagnostic {
             knowledge_graph: self.to_numbas(locale),
             script: self.script.to_numbas(locale),
             custom_script: self.script.to_numbas(locale),
@@ -191,16 +191,16 @@ impl ToNumbas<numbas::exam::ExamDiagnostic> for Diagnostic {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraph> for Diagnostic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnosticKnowledgeGraph {
-        numbas::exam::ExamDiagnosticKnowledgeGraph {
+impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraph> for Diagnostic {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraph {
+        numbas::exam::diagnostic::DiagnosticKnowledgeGraph {
             topics: self.topics.to_numbas(locale),
             learning_objectives: self.objectives.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<Diagnostic> for numbas::exam::ExamDiagnostic {
+impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
     fn to_rumbas(&self) -> Diagnostic {
         Diagnostic {
             script: self.to_rumbas(),
@@ -219,12 +219,12 @@ pub enum DiagnosticScript {
 }
 impl_optional_overwrite!(DiagnosticScript);
 
-impl ToNumbas<numbas::exam::ExamDiagnosticScript> for DiagnosticScript {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamDiagnosticScript {
+impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::diagnostic::DiagnosticScript {
         match self {
-            DiagnosticScript::Mastery => numbas::exam::ExamDiagnosticScript::Mastery,
-            DiagnosticScript::Custom(_) => numbas::exam::ExamDiagnosticScript::Custom,
-            DiagnosticScript::Diagnosys => numbas::exam::ExamDiagnosticScript::Diagnosys,
+            DiagnosticScript::Mastery => numbas::exam::diagnostic::DiagnosticScript::Mastery,
+            DiagnosticScript::Custom(_) => numbas::exam::diagnostic::DiagnosticScript::Custom,
+            DiagnosticScript::Diagnosys => numbas::exam::diagnostic::DiagnosticScript::Diagnosys,
         }
     }
 }
@@ -239,12 +239,12 @@ impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
     }
 }
 
-impl ToRumbas<DiagnosticScript> for numbas::exam::ExamDiagnostic {
+impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     fn to_rumbas(&self) -> DiagnosticScript {
         match self.script {
-            numbas::exam::ExamDiagnosticScript::Mastery => DiagnosticScript::Mastery,
-            numbas::exam::ExamDiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
-            numbas::exam::ExamDiagnosticScript::Custom => {
+            numbas::exam::diagnostic::DiagnosticScript::Mastery => DiagnosticScript::Mastery,
+            numbas::exam::diagnostic::DiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
+            numbas::exam::diagnostic::DiagnosticScript::Custom => {
                 DiagnosticScript::Custom(self.custom_script.clone().into())
             }
         }
@@ -261,19 +261,23 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective> for LearningObjective {
+impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective>
+    for LearningObjective
+{
     fn to_numbas(
         &self,
         locale: &str,
-    ) -> numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
-        numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
+    ) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective {
+        numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective {
             name: self.name.to_numbas(locale),
             description: self.description.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<LearningObjective> for numbas::exam::ExamDiagnosticKnowledgeGraphLearningObjective {
+impl ToRumbas<LearningObjective>
+    for numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective
+{
     fn to_rumbas(&self) -> LearningObjective {
         LearningObjective {
             name: self.name.to_rumbas(),
@@ -296,9 +300,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphTopic> for LearningTopic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
-        numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
+impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic> for LearningTopic {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
+        numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
             name: self.name.to_numbas(locale),
             description: self.description.to_numbas(locale),
             learning_objectives: self.objectives.to_numbas(locale),
@@ -307,7 +311,7 @@ impl ToNumbas<numbas::exam::ExamDiagnosticKnowledgeGraphTopic> for LearningTopic
     }
 }
 
-impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic {
+impl ToRumbas<LearningTopic> for numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
     fn to_rumbas(&self) -> LearningTopic {
         LearningTopic {
             name: self.name.to_rumbas(),
@@ -321,7 +325,7 @@ impl ToRumbas<LearningTopic> for numbas::exam::ExamDiagnosticKnowledgeGraphTopic
 /// Converts a diagnostic numbas exam to a DiagnosticExam and extracts questions and
 /// custom_part_types
 pub fn convert_diagnostic_numbas_exam(
-    exam: numbas::exam::Exam,
+    exam: numbas::exam::exam::Exam,
 ) -> (
     DiagnosticExam,
     Vec<QuestionPath>,

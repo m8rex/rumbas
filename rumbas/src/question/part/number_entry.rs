@@ -19,7 +19,7 @@ question_part_type! {
 
         display_correct_in_style: AnswerStyle,
         fractions_must_be_reduced: bool,
-        partial_credit_if_fraction_not_reduced: numbas::exam::Primitive,
+        partial_credit_if_fraction_not_reduced: numbas::support::primitive::Primitive,
 
         hint_fraction: bool
 
@@ -27,11 +27,11 @@ question_part_type! {
     }
 
 }
-impl_optional_overwrite!(numbas::exam::AnswerStyle);
+impl_optional_overwrite!(numbas::support::answer_style::AnswerStyle);
 
-impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberEntry {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartNumberEntry {
-        numbas::exam::ExamQuestionPartNumberEntry {
+impl ToNumbas<numbas::question::number_entry::QuestionPartNumberEntry> for QuestionPartNumberEntry {
+    fn to_numbas(&self, locale: &str) -> numbas::question::number_entry::QuestionPartNumberEntry {
+        numbas::question::number_entry::QuestionPartNumberEntry {
             part_data: self.to_numbas(locale),
             correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
             correct_answer_style: Some(self.display_correct_in_style.to_numbas(locale)),
@@ -51,7 +51,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartNumberEntry> for QuestionPartNumberE
     }
 }
 
-impl ToRumbas<QuestionPartNumberEntry> for numbas::exam::ExamQuestionPartNumberEntry {
+impl ToRumbas<QuestionPartNumberEntry> for numbas::question::number_entry::QuestionPartNumberEntry {
     fn to_rumbas(&self) -> QuestionPartNumberEntry {
         create_question_part! {
             QuestionPartNumberEntry with &self.part_data => {
@@ -91,31 +91,37 @@ pub enum NumberEntryAnswer {
 }
 impl_optional_overwrite!(NumberEntryAnswer);
 
-impl ToNumbas<numbas::exam::NumberEntryAnswerType> for NumberEntryAnswer {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::NumberEntryAnswerType {
+impl ToNumbas<numbas::question::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
+    fn to_numbas(&self, locale: &str) -> numbas::question::number_entry::NumberEntryAnswerType {
         match self {
-            NumberEntryAnswer::Normal(f) => numbas::exam::NumberEntryAnswerType::Answer {
-                answer: numbas::exam::Primitive::String(f.to_numbas(locale)),
-            },
-            NumberEntryAnswer::Range { from, to } => numbas::exam::NumberEntryAnswerType::MinMax {
-                min_value: numbas::exam::Primitive::String(from.to_numbas(locale)),
-                max_value: numbas::exam::Primitive::String(to.to_numbas(locale)),
-            },
+            NumberEntryAnswer::Normal(f) => {
+                numbas::question::number_entry::NumberEntryAnswerType::Answer {
+                    answer: numbas::support::primitive::Primitive::String(f.to_numbas(locale)),
+                }
+            }
+            NumberEntryAnswer::Range { from, to } => {
+                numbas::question::number_entry::NumberEntryAnswerType::MinMax {
+                    min_value: numbas::support::primitive::Primitive::String(
+                        from.to_numbas(locale),
+                    ),
+                    max_value: numbas::support::primitive::Primitive::String(to.to_numbas(locale)),
+                }
+            }
         }
     }
 }
 
-impl ToRumbas<NumberEntryAnswer> for numbas::exam::NumberEntryAnswerType {
+impl ToRumbas<NumberEntryAnswer> for numbas::question::number_entry::NumberEntryAnswerType {
     fn to_rumbas(&self) -> NumberEntryAnswer {
         match self {
-            numbas::exam::NumberEntryAnswerType::MinMax {
+            numbas::question::number_entry::NumberEntryAnswerType::MinMax {
                 min_value,
                 max_value,
             } => NumberEntryAnswer::Range {
                 from: min_value.to_string().to_rumbas(),
                 to: max_value.to_string().to_rumbas(),
             },
-            numbas::exam::NumberEntryAnswerType::Answer { answer } => {
+            numbas::question::number_entry::NumberEntryAnswerType::Answer { answer } => {
                 NumberEntryAnswer::Normal(answer.to_string().to_rumbas())
             }
         }
@@ -154,34 +160,34 @@ pub enum AnswerStyle {
 }
 impl_optional_overwrite!(AnswerStyle);
 
-impl ToNumbas<numbas::exam::AnswerStyle> for AnswerStyle {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::AnswerStyle {
+impl ToNumbas<numbas::support::answer_style::AnswerStyle> for AnswerStyle {
+    fn to_numbas(&self, _locale: &str) -> numbas::support::answer_style::AnswerStyle {
         match self {
-            AnswerStyle::English => numbas::exam::AnswerStyle::English,
-            AnswerStyle::EnglishPlain => numbas::exam::AnswerStyle::EnglishPlain,
-            AnswerStyle::EnglishSI => numbas::exam::AnswerStyle::EnglishSI,
-            AnswerStyle::European => numbas::exam::AnswerStyle::European,
-            AnswerStyle::EuropeanPlain => numbas::exam::AnswerStyle::EuropeanPlain,
-            AnswerStyle::FrenchSI => numbas::exam::AnswerStyle::FrenchSI,
-            AnswerStyle::Indian => numbas::exam::AnswerStyle::Indian,
-            AnswerStyle::Scientific => numbas::exam::AnswerStyle::Scientific,
-            AnswerStyle::Swiss => numbas::exam::AnswerStyle::Swiss,
+            AnswerStyle::English => numbas::support::answer_style::AnswerStyle::English,
+            AnswerStyle::EnglishPlain => numbas::support::answer_style::AnswerStyle::EnglishPlain,
+            AnswerStyle::EnglishSI => numbas::support::answer_style::AnswerStyle::EnglishSI,
+            AnswerStyle::European => numbas::support::answer_style::AnswerStyle::European,
+            AnswerStyle::EuropeanPlain => numbas::support::answer_style::AnswerStyle::EuropeanPlain,
+            AnswerStyle::FrenchSI => numbas::support::answer_style::AnswerStyle::FrenchSI,
+            AnswerStyle::Indian => numbas::support::answer_style::AnswerStyle::Indian,
+            AnswerStyle::Scientific => numbas::support::answer_style::AnswerStyle::Scientific,
+            AnswerStyle::Swiss => numbas::support::answer_style::AnswerStyle::Swiss,
         }
     }
 }
 
-impl ToRumbas<AnswerStyle> for numbas::exam::AnswerStyle {
+impl ToRumbas<AnswerStyle> for numbas::support::answer_style::AnswerStyle {
     fn to_rumbas(&self) -> AnswerStyle {
         match self {
-            numbas::exam::AnswerStyle::English => AnswerStyle::English,
-            numbas::exam::AnswerStyle::EnglishPlain => AnswerStyle::EnglishPlain,
-            numbas::exam::AnswerStyle::EnglishSI => AnswerStyle::EnglishSI,
-            numbas::exam::AnswerStyle::European => AnswerStyle::European,
-            numbas::exam::AnswerStyle::EuropeanPlain => AnswerStyle::EuropeanPlain,
-            numbas::exam::AnswerStyle::FrenchSI => AnswerStyle::FrenchSI,
-            numbas::exam::AnswerStyle::Indian => AnswerStyle::Indian,
-            numbas::exam::AnswerStyle::Scientific => AnswerStyle::Scientific,
-            numbas::exam::AnswerStyle::Swiss => AnswerStyle::Swiss,
+            numbas::support::answer_style::AnswerStyle::English => AnswerStyle::English,
+            numbas::support::answer_style::AnswerStyle::EnglishPlain => AnswerStyle::EnglishPlain,
+            numbas::support::answer_style::AnswerStyle::EnglishSI => AnswerStyle::EnglishSI,
+            numbas::support::answer_style::AnswerStyle::European => AnswerStyle::European,
+            numbas::support::answer_style::AnswerStyle::EuropeanPlain => AnswerStyle::EuropeanPlain,
+            numbas::support::answer_style::AnswerStyle::FrenchSI => AnswerStyle::FrenchSI,
+            numbas::support::answer_style::AnswerStyle::Indian => AnswerStyle::Indian,
+            numbas::support::answer_style::AnswerStyle::Scientific => AnswerStyle::Scientific,
+            numbas::support::answer_style::AnswerStyle::Swiss => AnswerStyle::Swiss,
         }
     }
 }

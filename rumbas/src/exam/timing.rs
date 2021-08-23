@@ -17,9 +17,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamTiming> for Timing {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamTiming {
-        numbas::exam::ExamTiming {
+impl ToNumbas<numbas::exam::timing::Timing> for Timing {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::timing::Timing {
+        numbas::exam::timing::Timing {
             allow_pause: self.allow_pause.to_numbas(locale),
             timeout: self.on_timeout.to_numbas(locale),
             timed_warning: self.timed_warning.to_numbas(locale),
@@ -27,7 +27,7 @@ impl ToNumbas<numbas::exam::ExamTiming> for Timing {
     }
 }
 
-impl ToRumbas<Timing> for numbas::exam::Exam {
+impl ToRumbas<Timing> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> Timing {
         Timing {
             duration_in_seconds: self.basic_settings.duration_in_seconds.to_rumbas(),
@@ -47,24 +47,24 @@ pub enum TimeoutAction {
 }
 impl_optional_overwrite!(TimeoutAction);
 
-impl ToNumbas<numbas::exam::ExamTimeoutAction> for TimeoutAction {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamTimeoutAction {
+impl ToNumbas<numbas::exam::timing::TimeoutAction> for TimeoutAction {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::timing::TimeoutAction {
         match self {
-            TimeoutAction::None => numbas::exam::ExamTimeoutAction::None {
+            TimeoutAction::None => numbas::exam::timing::TimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
-            TimeoutAction::Warn { message } => numbas::exam::ExamTimeoutAction::Warn {
+            TimeoutAction::Warn { message } => numbas::exam::timing::TimeoutAction::Warn {
                 message: message.to_string(locale).unwrap(),
             },
         }
     }
 }
 
-impl ToRumbas<TimeoutAction> for numbas::exam::ExamTimeoutAction {
+impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
     fn to_rumbas(&self) -> TimeoutAction {
         match self {
-            numbas::exam::ExamTimeoutAction::None { message: _ } => TimeoutAction::None,
-            numbas::exam::ExamTimeoutAction::Warn { message } => TimeoutAction::Warn {
+            numbas::exam::timing::TimeoutAction::None { message: _ } => TimeoutAction::None,
+            numbas::exam::timing::TimeoutAction::Warn { message } => TimeoutAction::Warn {
                 message: message.to_owned().into(),
             },
         }
