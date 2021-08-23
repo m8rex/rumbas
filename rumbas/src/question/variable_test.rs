@@ -13,16 +13,16 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamQuestionVariablesTest> for VariablesTest {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionVariablesTest {
-        numbas::exam::ExamQuestionVariablesTest {
+impl ToNumbas<numbas::question::question::QuestionVariablesTest> for VariablesTest {
+    fn to_numbas(&self, locale: &str) -> numbas::question::question::QuestionVariablesTest {
+        numbas::question::question::QuestionVariablesTest {
             condition: self.condition.to_numbas(locale),
             max_runs: self.max_runs.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<VariablesTest> for numbas::exam::ExamQuestionVariablesTest {
+impl ToRumbas<VariablesTest> for numbas::question::question::QuestionVariablesTest {
     fn to_rumbas(&self) -> VariablesTest {
         VariablesTest {
             condition: self.condition.to_rumbas(),

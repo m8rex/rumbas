@@ -18,7 +18,7 @@ macro_rules! create_support_locale {
         #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
         pub enum SupportedLocale {
             $(
-                #[serde(rename = "$key")]
+                #[serde(rename = $key)]
                 $name
             ),*
         }

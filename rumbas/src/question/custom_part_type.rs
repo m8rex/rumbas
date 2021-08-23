@@ -16,7 +16,7 @@ use std::hash::{Hash, Hasher};
 pub struct CustomPartTypeDefinition {
     type_name: TranslatableString,
     description: TranslatableString,
-    settings: Vec<numbas::exam::CustomPartTypeSetting>, // TODO
+    settings: Vec<numbas::exam::custom_part_type::CustomPartTypeSetting>, // TODO
     can_be_gap: bool,
     can_be_step: bool,
     marking_notes: JMENotes,
@@ -33,21 +33,25 @@ impl RumbasCheck for CustomPartTypeDefinition {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinition {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::CustomPartType {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartType> for CustomPartTypeDefinition {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::custom_part_type::CustomPartType {
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
         )
     }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::CustomPartType {
-        numbas::exam::CustomPartType {
+    fn to_numbas_with_name(
+        &self,
+        locale: &str,
+        name: String,
+    ) -> numbas::exam::custom_part_type::CustomPartType {
+        numbas::exam::custom_part_type::CustomPartType {
             short_name: name,
             name: self.type_name.clone().to_string(locale).unwrap(),
             description: self.description.clone().to_string(locale).unwrap(),
             settings: self.settings.clone(), // .to_numbas(&locale).unwrap(),
             help_url: self.help_url.clone().to_string(locale).unwrap(),
-            public_availability: numbas::exam::CustomPartAvailability::Always,
+            public_availability: numbas::exam::custom_part_type::CustomPartAvailability::Always,
             marking_script: self.marking_notes.to_numbas(locale),
             can_be_gap: self.can_be_gap,
             can_be_step: self.can_be_step,
@@ -92,10 +96,14 @@ impl<N: Clone> RumbasCheck for CustomPartInputOptionValue<N> {
 }
 
 impl<N: Clone + RumbasCheck, T: Clone + ToNumbas<N>>
-    ToNumbas<numbas::exam::CustomPartInputOptionValue<N>> for CustomPartInputOptionValue<T>
+    ToNumbas<numbas::exam::custom_part_type::CustomPartInputOptionValue<N>>
+    for CustomPartInputOptionValue<T>
 {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartInputOptionValue<N> {
-        numbas::exam::CustomPartInputOptionValue {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::exam::custom_part_type::CustomPartInputOptionValue<N> {
+        numbas::exam::custom_part_type::CustomPartInputOptionValue {
             value: self.value.clone().to_numbas(locale),
             is_static: self.is_static,
         }
@@ -103,7 +111,7 @@ impl<N: Clone + RumbasCheck, T: Clone + ToNumbas<N>>
 }
 
 impl<V, T: Clone + ToRumbas<V>> ToRumbas<CustomPartInputOptionValue<V>>
-    for numbas::exam::CustomPartInputOptionValue<T>
+    for numbas::exam::custom_part_type::CustomPartInputOptionValue<T>
 where
     V: Clone,
 {
@@ -136,32 +144,34 @@ impl RumbasCheck for CustomPartInputWidget {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartInputWidget> for CustomPartInputWidget {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartInputWidget {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartInputWidget> for CustomPartInputWidget {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::custom_part_type::CustomPartInputWidget {
         match self {
             CustomPartInputWidget::String(s) => {
-                numbas::exam::CustomPartInputWidget::String(s.to_numbas(locale))
+                numbas::exam::custom_part_type::CustomPartInputWidget::String(s.to_numbas(locale))
             }
             CustomPartInputWidget::Number(s) => {
-                numbas::exam::CustomPartInputWidget::Number(s.to_numbas(locale))
+                numbas::exam::custom_part_type::CustomPartInputWidget::Number(s.to_numbas(locale))
             }
             CustomPartInputWidget::RadioGroup(s) => {
-                numbas::exam::CustomPartInputWidget::RadioButtons(s.to_numbas(locale))
+                numbas::exam::custom_part_type::CustomPartInputWidget::RadioButtons(
+                    s.to_numbas(locale),
+                )
             }
         }
     }
 }
 
-impl ToRumbas<CustomPartInputWidget> for numbas::exam::CustomPartInputWidget {
+impl ToRumbas<CustomPartInputWidget> for numbas::exam::custom_part_type::CustomPartInputWidget {
     fn to_rumbas(&self) -> CustomPartInputWidget {
         match self {
-            numbas::exam::CustomPartInputWidget::String(s) => {
+            numbas::exam::custom_part_type::CustomPartInputWidget::String(s) => {
                 CustomPartInputWidget::String(s.to_rumbas())
             }
-            numbas::exam::CustomPartInputWidget::Number(s) => {
+            numbas::exam::custom_part_type::CustomPartInputWidget::Number(s) => {
                 CustomPartInputWidget::Number(s.to_rumbas())
             }
-            numbas::exam::CustomPartInputWidget::RadioButtons(s) => {
+            numbas::exam::custom_part_type::CustomPartInputWidget::RadioButtons(s) => {
                 CustomPartInputWidget::RadioGroup(s.to_rumbas())
             }
         }
@@ -185,9 +195,14 @@ impl RumbasCheck for CustomPartStringInputOptions {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartStringInputOptions> for CustomPartStringInputOptions {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartStringInputOptions {
-        numbas::exam::CustomPartStringInputOptions {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartStringInputOptions>
+    for CustomPartStringInputOptions
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::exam::custom_part_type::CustomPartStringInputOptions {
+        numbas::exam::custom_part_type::CustomPartStringInputOptions {
             hint: self.hint.to_numbas(locale),
             correct_answer: self
                 .correct_answer
@@ -200,7 +215,9 @@ impl ToNumbas<numbas::exam::CustomPartStringInputOptions> for CustomPartStringIn
     }
 }
 
-impl ToRumbas<CustomPartStringInputOptions> for numbas::exam::CustomPartStringInputOptions {
+impl ToRumbas<CustomPartStringInputOptions>
+    for numbas::exam::custom_part_type::CustomPartStringInputOptions
+{
     fn to_rumbas(&self) -> CustomPartStringInputOptions {
         CustomPartStringInputOptions {
             hint: self.hint.to_rumbas(),
@@ -229,9 +246,14 @@ impl RumbasCheck for CustomPartNumberInputOptions {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartNumberInputOptions> for CustomPartNumberInputOptions {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartNumberInputOptions {
-        numbas::exam::CustomPartNumberInputOptions {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartNumberInputOptions>
+    for CustomPartNumberInputOptions
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::exam::custom_part_type::CustomPartNumberInputOptions {
+        numbas::exam::custom_part_type::CustomPartNumberInputOptions {
             hint: self.hint.to_numbas(locale),
             correct_answer: self
                 .correct_answer
@@ -245,7 +267,9 @@ impl ToNumbas<numbas::exam::CustomPartNumberInputOptions> for CustomPartNumberIn
     }
 }
 
-impl ToRumbas<CustomPartNumberInputOptions> for numbas::exam::CustomPartNumberInputOptions {
+impl ToRumbas<CustomPartNumberInputOptions>
+    for numbas::exam::custom_part_type::CustomPartNumberInputOptions
+{
     fn to_rumbas(&self) -> CustomPartNumberInputOptions {
         CustomPartNumberInputOptions {
             hint: self.hint.to_rumbas(),
@@ -273,11 +297,14 @@ impl RumbasCheck for CustomPartRadioGroupInputOptions {
     }
 }
 
-impl ToNumbas<numbas::exam::CustomPartRadioButtonsInputOptions>
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartRadioButtonsInputOptions>
     for CustomPartRadioGroupInputOptions
 {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartRadioButtonsInputOptions {
-        numbas::exam::CustomPartRadioButtonsInputOptions {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::exam::custom_part_type::CustomPartRadioButtonsInputOptions {
+        numbas::exam::custom_part_type::CustomPartRadioButtonsInputOptions {
             hint: self.hint.to_numbas(locale),
             correct_answer: self
                 .correct_answer
@@ -291,7 +318,7 @@ impl ToNumbas<numbas::exam::CustomPartRadioButtonsInputOptions>
 }
 
 impl ToRumbas<CustomPartRadioGroupInputOptions>
-    for numbas::exam::CustomPartRadioButtonsInputOptions
+    for numbas::exam::custom_part_type::CustomPartRadioButtonsInputOptions
 {
     fn to_rumbas(&self) -> CustomPartRadioGroupInputOptions {
         CustomPartRadioGroupInputOptions {
@@ -311,15 +338,15 @@ pub struct CustomPartTypeDefinitionPath {
 }
 impl_optional_overwrite!(CustomPartTypeDefinitionPath);
 
-impl ToNumbas<numbas::exam::CustomPartType> for CustomPartTypeDefinitionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::CustomPartType {
+impl ToNumbas<numbas::exam::custom_part_type::CustomPartType> for CustomPartTypeDefinitionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::custom_part_type::CustomPartType {
         self.custom_part_type_data
             .clone()
             .to_numbas_with_name(locale, self.custom_part_type_name.clone())
     }
 }
 
-impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
+impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::custom_part_type::CustomPartType {
     fn to_rumbas(&self) -> CustomPartTypeDefinitionPath {
         CustomPartTypeDefinitionPath {
             custom_part_type_data: CustomPartTypeDefinition {
@@ -327,7 +354,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::exam::CustomPartType {
                 description: self.description.to_rumbas(),
                 settings: self.settings.clone(),
                 help_url: self.help_url.to_rumbas(),
-                // public_availability: numbas::exam::CustomPartAvailability::Always,
+                // public_availability: numbas::exam::custom_part_type::CustomPartAvailability::Always,
                 can_be_gap: self.can_be_gap,
                 can_be_step: self.can_be_step,
                 marking_notes: JMENotes(self.marking_notes.clone().to_rumbas()),

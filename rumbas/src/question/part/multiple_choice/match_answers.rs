@@ -26,27 +26,30 @@ question_part_type! {
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
-        layout: numbas::exam::MatchAnswersWithChoicesLayout,
+        layout: numbas::question::match_answers::MatchAnswersWithChoicesLayout,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type: numbas::exam::MultipleChoiceWarningType
+        wrong_nb_answers_warning_type: numbas::question::match_answers::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO wrong_nb_choices_warning:
         //TODO other?
     }
 }
 impl_optional_overwrite!(
-    numbas::exam::MatchAnswersWithChoicesLayout,
-    numbas::exam::MatchAnswersWithChoicesDisplayType
+    numbas::question::match_answers::MatchAnswersWithChoicesLayout,
+    numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
 );
 impl_to_numbas!(
-    numbas::exam::MatchAnswersWithChoicesLayout,
-    numbas::exam::MatchAnswersWithChoicesDisplayType
+    numbas::question::match_answers::MatchAnswersWithChoicesLayout,
+    numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
 );
 
-impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
+impl ToNumbas<numbas::question::match_answers::QuestionPartMatchAnswersWithChoices>
     for QuestionPartMatchAnswersWithItems
 {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::match_answers::QuestionPartMatchAnswersWithChoices {
         let (answers, choices, marking_matrix) = match self.answer_data.unwrap() {
             MultipleChoiceMatchAnswerData::ItemBased(data) => (
                 VariableValued::Value(data.answers.clone()).to_numbas(locale),
@@ -94,7 +97,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
                 Some(data.marks.to_numbas(locale)),
             ),
         };
-        numbas::exam::ExamQuestionPartMatchAnswersWithChoices {
+        numbas::question::match_answers::QuestionPartMatchAnswersWithChoices {
             part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
@@ -114,7 +117,7 @@ impl ToNumbas<numbas::exam::ExamQuestionPartMatchAnswersWithChoices>
 }
 
 impl ToRumbas<QuestionPartMatchAnswersWithItems>
-    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
+    for numbas::question::match_answers::QuestionPartMatchAnswersWithChoices
 {
     fn to_rumbas(&self) -> QuestionPartMatchAnswersWithItems {
         create_question_part! {
@@ -141,13 +144,13 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
 }
 
 impl ToRumbas<MultipleChoiceMatchAnswerData>
-    for numbas::exam::ExamQuestionPartMatchAnswersWithChoices
+    for numbas::question::match_answers::QuestionPartMatchAnswersWithChoices
 {
     fn to_rumbas(&self) -> MultipleChoiceMatchAnswerData {
         if let (
-            numbas::exam::VariableValued::Value(answer_options),
-            numbas::exam::VariableValued::Value(choice_options),
-            Some(numbas::exam::VariableValued::Value(marking_matrix)),
+            numbas::support::primitive::VariableValued::Value(answer_options),
+            numbas::support::primitive::VariableValued::Value(choice_options),
+            Some(numbas::support::primitive::VariableValued::Value(marking_matrix)),
         ) = (
             self.answers.clone(),
             self.choices.clone(),
@@ -231,26 +234,33 @@ pub enum MatchAnswerWithItemsDisplay {
 }
 impl_optional_overwrite!(MatchAnswerWithItemsDisplay);
 
-impl ToNumbas<numbas::exam::MatchAnswersWithChoicesDisplayType> for MatchAnswerWithItemsDisplay {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::MatchAnswersWithChoicesDisplayType {
+impl ToNumbas<numbas::question::match_answers::MatchAnswersWithChoicesDisplayType>
+    for MatchAnswerWithItemsDisplay
+{
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::match_answers::MatchAnswersWithChoicesDisplayType {
         match self {
             MatchAnswerWithItemsDisplay::Check => {
-                numbas::exam::MatchAnswersWithChoicesDisplayType::Check
+                numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Check
             }
             MatchAnswerWithItemsDisplay::Radio => {
-                numbas::exam::MatchAnswersWithChoicesDisplayType::Radio
+                numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Radio
             }
         }
     }
 }
 
-impl ToRumbas<MatchAnswerWithItemsDisplay> for numbas::exam::MatchAnswersWithChoicesDisplayType {
+impl ToRumbas<MatchAnswerWithItemsDisplay>
+    for numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
+{
     fn to_rumbas(&self) -> MatchAnswerWithItemsDisplay {
         match self {
-            numbas::exam::MatchAnswersWithChoicesDisplayType::Check => {
+            numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Check => {
                 MatchAnswerWithItemsDisplay::Check
             }
-            numbas::exam::MatchAnswersWithChoicesDisplayType::Radio => {
+            numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Radio => {
                 MatchAnswerWithItemsDisplay::Radio
             }
         }
@@ -271,7 +281,7 @@ optional_overwrite! {
     pub struct MultipleChoiceMatchAnswerDataNumbasLike {
         answers: VariableValued<Vec<TranslatableString>>,
         choices: VariableValued<Vec<TranslatableString>>,
-        marks: VariableValued<Vec<Vec<numbas::exam::Primitive>>>
+        marks: VariableValued<Vec<Vec<numbas::support::primitive::Primitive>>>
     }
 }
 
@@ -294,7 +304,7 @@ optional_overwrite! {
 
 optional_overwrite! {
     pub struct MatchAnswersItemMarks {
-        marks: numbas::exam::Primitive,
+        marks: numbas::support::primitive::Primitive,
         answer: TranslatableString
     }
 }

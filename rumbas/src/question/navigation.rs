@@ -22,9 +22,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::QuestionNavigation {
-        numbas::exam::QuestionNavigation {
+impl ToNumbas<numbas::question::navigation::Navigation> for QuestionNavigation {
+    fn to_numbas(&self, locale: &str) -> numbas::question::navigation::Navigation {
+        numbas::question::navigation::Navigation {
             allow_regenerate: self.can_regenerate.to_numbas(locale),
             show_frontpage: self.show_title_page.to_numbas(locale),
             confirm_when_leaving: Some(self.confirm_when_leaving.to_numbas(locale)),
@@ -32,7 +32,7 @@ impl ToNumbas<numbas::exam::QuestionNavigation> for QuestionNavigation {
     }
 }
 
-impl ToRumbas<QuestionNavigation> for numbas::exam::QuestionNavigation {
+impl ToRumbas<QuestionNavigation> for numbas::question::navigation::Navigation {
     fn to_rumbas(&self) -> QuestionNavigation {
         QuestionNavigation {
             can_regenerate: self.allow_regenerate.to_rumbas(),

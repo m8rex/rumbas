@@ -47,11 +47,11 @@ impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
 }
 impl_optional_overwrite_value!(VariableRepresentation);
 
-impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
+impl ToNumbas<numbas::exam::variable::Variable> for VariableRepresentation {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::variable::Variable {
         self.to_variable().to_numbas_with_name(locale, name)
     }
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::variable::Variable {
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
@@ -59,7 +59,7 @@ impl ToNumbas<numbas::exam::ExamVariable> for VariableRepresentation {
     }
 }
 
-impl ToRumbas<VariableRepresentation> for numbas::exam::ExamVariable {
+impl ToRumbas<VariableRepresentation> for numbas::exam::variable::Variable {
     fn to_rumbas(&self) -> VariableRepresentation {
         VariableRepresentation::Long(Box::new(Variable {
             definition: self.definition.to_rumbas(),
@@ -254,9 +254,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::ExamVariable> for Variable {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::ExamVariable {
-        numbas::exam::ExamVariable {
+impl ToNumbas<numbas::exam::variable::Variable> for Variable {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::exam::variable::Variable {
+        numbas::exam::variable::Variable {
             name,
             definition: self.definition.to_numbas(locale),
             description: self.description.to_numbas(locale),
@@ -265,7 +265,7 @@ impl ToNumbas<numbas::exam::ExamVariable> for Variable {
             can_override: false, // Don't support overriding variables (yet?)
         }
     }
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariable {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::variable::Variable {
         panic!(
             "{}",
             "Should not happen, don't call this method Missing name".to_string(),
@@ -307,44 +307,56 @@ pub enum VariableTemplateType {
 }
 impl_optional_overwrite!(VariableTemplateType);
 
-impl ToNumbas<numbas::exam::ExamVariableTemplateType> for VariableTemplateType {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::ExamVariableTemplateType {
+impl ToNumbas<numbas::exam::variable::VariableTemplateType> for VariableTemplateType {
+    fn to_numbas(&self, _locale: &str) -> numbas::exam::variable::VariableTemplateType {
         match self {
-            VariableTemplateType::Anything => numbas::exam::ExamVariableTemplateType::Anything,
+            VariableTemplateType::Anything => {
+                numbas::exam::variable::VariableTemplateType::Anything
+            }
             VariableTemplateType::ListOfNumbers => {
-                numbas::exam::ExamVariableTemplateType::ListOfNumbers
+                numbas::exam::variable::VariableTemplateType::ListOfNumbers
             }
             VariableTemplateType::ListOfStrings => {
-                numbas::exam::ExamVariableTemplateType::ListOfStrings
+                numbas::exam::variable::VariableTemplateType::ListOfStrings
             }
-            VariableTemplateType::LongString => numbas::exam::ExamVariableTemplateType::LongString,
-            VariableTemplateType::Number => numbas::exam::ExamVariableTemplateType::Number,
-            VariableTemplateType::Range => numbas::exam::ExamVariableTemplateType::Range,
+            VariableTemplateType::LongString => {
+                numbas::exam::variable::VariableTemplateType::LongString
+            }
+            VariableTemplateType::Number => numbas::exam::variable::VariableTemplateType::Number,
+            VariableTemplateType::Range => numbas::exam::variable::VariableTemplateType::Range,
             VariableTemplateType::RandomRange => {
-                numbas::exam::ExamVariableTemplateType::RandomRange
+                numbas::exam::variable::VariableTemplateType::RandomRange
             }
-            VariableTemplateType::r#String => numbas::exam::ExamVariableTemplateType::r#String,
+            VariableTemplateType::r#String => {
+                numbas::exam::variable::VariableTemplateType::r#String
+            }
         }
     }
 }
 
-impl ToRumbas<VariableTemplateType> for numbas::exam::ExamVariableTemplateType {
+impl ToRumbas<VariableTemplateType> for numbas::exam::variable::VariableTemplateType {
     fn to_rumbas(&self) -> VariableTemplateType {
         match self {
-            numbas::exam::ExamVariableTemplateType::Anything => VariableTemplateType::Anything,
-            numbas::exam::ExamVariableTemplateType::ListOfNumbers => {
+            numbas::exam::variable::VariableTemplateType::Anything => {
+                VariableTemplateType::Anything
+            }
+            numbas::exam::variable::VariableTemplateType::ListOfNumbers => {
                 VariableTemplateType::ListOfNumbers
             }
-            numbas::exam::ExamVariableTemplateType::ListOfStrings => {
+            numbas::exam::variable::VariableTemplateType::ListOfStrings => {
                 VariableTemplateType::ListOfStrings
             }
-            numbas::exam::ExamVariableTemplateType::LongString => VariableTemplateType::LongString,
-            numbas::exam::ExamVariableTemplateType::Number => VariableTemplateType::Number,
-            numbas::exam::ExamVariableTemplateType::RandomRange => {
+            numbas::exam::variable::VariableTemplateType::LongString => {
+                VariableTemplateType::LongString
+            }
+            numbas::exam::variable::VariableTemplateType::Number => VariableTemplateType::Number,
+            numbas::exam::variable::VariableTemplateType::RandomRange => {
                 VariableTemplateType::RandomRange
             }
-            numbas::exam::ExamVariableTemplateType::Range => VariableTemplateType::Range,
-            numbas::exam::ExamVariableTemplateType::r#String => VariableTemplateType::r#String,
+            numbas::exam::variable::VariableTemplateType::Range => VariableTemplateType::Range,
+            numbas::exam::variable::VariableTemplateType::r#String => {
+                VariableTemplateType::r#String
+            }
         }
     }
 }

@@ -65,14 +65,14 @@ where
     }
 }
 
-impl ToNumbas<numbas::exam::SafeFloat> for f64 {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::SafeFloat {
+impl ToNumbas<numbas::support::primitive::SafeFloat> for f64 {
+    fn to_numbas(&self, _locale: &str) -> numbas::support::primitive::SafeFloat {
         (*self).into()
     }
 }
 
-impl ToNumbas<numbas::exam::SafeNatural> for usize {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::SafeNatural {
+impl ToNumbas<numbas::support::primitive::SafeNatural> for usize {
+    fn to_numbas(&self, _locale: &str) -> numbas::support::primitive::SafeNatural {
         (*self).into()
     }
 }

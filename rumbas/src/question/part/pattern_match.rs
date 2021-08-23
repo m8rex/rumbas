@@ -17,28 +17,32 @@ question_part_type! {
         partial_credit: f64,
         pattern: TranslatableString, //TODO: type
         display_answer: TranslatableString,
-        match_mode: numbas::exam::PatternMatchMode
+        match_mode: numbas::question::pattern_match::PatternMatchMode
     }
 }
-impl_optional_overwrite!(numbas::exam::PatternMatchMode);
+impl_optional_overwrite!(numbas::question::pattern_match::PatternMatchMode);
 
-impl ToNumbas<numbas::exam::ExamQuestionPartPatternMatch> for QuestionPartPatternMatch {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::ExamQuestionPartPatternMatch {
-        numbas::exam::ExamQuestionPartPatternMatch {
+impl ToNumbas<numbas::question::pattern_match::QuestionPartPatternMatch>
+    for QuestionPartPatternMatch
+{
+    fn to_numbas(&self, locale: &str) -> numbas::question::pattern_match::QuestionPartPatternMatch {
+        numbas::question::pattern_match::QuestionPartPatternMatch {
             part_data: self.to_numbas(locale),
             case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
             partial_credit: Some(self.partial_credit.to_numbas(locale)),
-            answer: numbas::exam::Primitive::String(self.pattern.to_numbas(locale)),
-            display_answer: Some(numbas::exam::Primitive::String(
+            answer: numbas::support::primitive::Primitive::String(self.pattern.to_numbas(locale)),
+            display_answer: Some(numbas::support::primitive::Primitive::String(
                 self.display_answer.to_numbas(locale),
             )),
             match_mode: self.match_mode.to_numbas(locale),
         }
     }
 }
-impl_to_numbas!(numbas::exam::PatternMatchMode);
+impl_to_numbas!(numbas::question::pattern_match::PatternMatchMode);
 
-impl ToRumbas<QuestionPartPatternMatch> for numbas::exam::ExamQuestionPartPatternMatch {
+impl ToRumbas<QuestionPartPatternMatch>
+    for numbas::question::pattern_match::QuestionPartPatternMatch
+{
     fn to_rumbas(&self) -> QuestionPartPatternMatch {
         create_question_part! {
             QuestionPartPatternMatch with &self.part_data => {

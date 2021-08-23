@@ -16,16 +16,16 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::Preamble> for Preamble {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Preamble {
-        numbas::exam::Preamble {
+impl ToNumbas<numbas::exam::preamble::Preamble> for Preamble {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::preamble::Preamble {
+        numbas::exam::preamble::Preamble {
             js: self.js.to_numbas(locale),
             css: self.css.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<Preamble> for numbas::exam::Preamble {
+impl ToRumbas<Preamble> for numbas::exam::preamble::Preamble {
     fn to_rumbas(&self) -> Preamble {
         Preamble {
             js: self.js.to_rumbas(),
