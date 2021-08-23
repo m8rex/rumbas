@@ -13,9 +13,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use std::collections::HashMap;
-//TODO: remove Exam from front of all types?
-//TODO: check what is optional etc
-//TODO: advicethreshold?
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]

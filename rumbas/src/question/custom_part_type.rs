@@ -180,7 +180,7 @@ impl ToRumbas<CustomPartInputWidget> for numbas::exam::custom_part_type::CustomP
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartStringInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
+    //TODO? hint & correctAnswer is shared for all..., use macro?
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.
@@ -229,7 +229,6 @@ impl ToRumbas<CustomPartStringInputOptions>
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartNumberInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.
@@ -282,7 +281,6 @@ impl ToRumbas<CustomPartNumberInputOptions>
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartRadioGroupInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     hint: CustomPartInputOptionValue<TranslatableString>,
     /// A JME expression which evaluates to the expected answer to the part.

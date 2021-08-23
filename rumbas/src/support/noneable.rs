@@ -91,7 +91,7 @@ mod serde_noneable {
             }
         }
     }
-    // TODO: cleanup
+
     impl<'de, T> Deserialize<'de> for Noneable<T>
     where
         T: serde::Deserialize<'de>,
