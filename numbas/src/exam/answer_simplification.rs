@@ -2,9 +2,6 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
-//TODO: remove Exam from front of all types?
-//TODO: check what is optional etc
-//TODO: advicethreshold?
 
 impl std::convert::TryFrom<&str> for AnswerSimplificationType {
     type Error = &'static str;

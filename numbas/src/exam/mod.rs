@@ -1,7 +1,3 @@
-//TODO: remove Exam from front of all types?
-//TODO: check what is optional etc
-//TODO: advicethreshold?
-
 pub mod answer_simplification;
 pub mod constants;
 pub mod custom_part_type;

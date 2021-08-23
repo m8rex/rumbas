@@ -7,9 +7,6 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
-//TODO: remove Exam from front of all types?
-//TODO: check what is optional etc
-//TODO: advicethreshold?
 
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -76,7 +73,7 @@ pub struct CustomPartInputOptionValue<T: Clone> {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartStringInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
+    //TODO? hint & correctAnswer is shared for all..., macro?
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
     pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.
@@ -87,7 +84,6 @@ pub struct CustomPartStringInputOptions {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartNumberInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
     pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.
@@ -100,7 +96,6 @@ pub struct CustomPartNumberInputOptions {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartRadioButtonsInputOptions {
-    //TODO? hint & correctAnswer is shared for all...
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
     pub correct_answer: JMEString, // A JME expression which evaluates to the expected answer to the part.

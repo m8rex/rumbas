@@ -1,9 +1,6 @@
 use crate::jme::JMENotesString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-//TODO: remove  from front of all types?
-//TODO: check what is optional etc
-//TODO: advicethreshold?
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Diagnostic {

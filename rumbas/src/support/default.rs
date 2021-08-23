@@ -7,6 +7,7 @@ use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::timing::Timing;
 use crate::exam::Exam;
 use crate::question::feedback::Feedback;
+use crate::question::part::extension::QuestionPartExtension;
 use crate::question::part::gapfill::QuestionPartGapFill;
 use crate::question::part::information::QuestionPartInformation;
 use crate::question::part::jme::QuestionPartJME;
@@ -105,13 +106,15 @@ create_default_file_type_enums!(
     QuestionPartNumberEntry with type QuestionPartNumberEntry: in "questionpart.number_entry";
     QuestionPartPatternMatch with type QuestionPartPatternMatch: in "questionpart.pattern_match";
     QuestionPartInformation with type QuestionPartInformation: in "questionpart.information";
+    QuestionPartExtension with type QuestionPartExtension: in "questionpart.extension";
     QuestionPartGapFillGapJME with type QuestionPartJME: in "questionpart.gapfill.gap.jme";
     QuestionPartGapFillGapChooseOne with type QuestionPartChooseOne: in "questionpart.gapfill.gap.choose_one";
     QuestionPartGapFillGapChooseMultiple with type QuestionPartChooseMultiple: in "questionpart.gapfill.gap.choose_multiple";
     QuestionPartGapFillGapMatchAnswersWithItems with type QuestionPartMatchAnswersWithItems: in "questionpart.gapfill.gap.match_answers";
     QuestionPartGapFillGapNumberEntry with type QuestionPartNumberEntry: in "questionpart.gapfill.gap.number_entry";
     QuestionPartGapFillGapPatternMatch with type QuestionPartPatternMatch: in "questionpart.gapfill.gap.pattern_match";
-    QuestionPartGapFillGapInformation with type QuestionPartInformation: in "questionpart.gapfill.gap.information"
+    QuestionPartGapFillGapInformation with type QuestionPartInformation: in "questionpart.gapfill.gap.information";
+    QuestionPartGapFillGapExtension with type QuestionPartExtension: in "questionpart.gapfill.gap.extension"
 );
 
 #[derive(Debug)]
@@ -200,9 +203,8 @@ macro_rules! handle {
     // TODO: diagnostic
     log::info!("Found {} default files.", $default_files.len());
     for default_file in $default_files.iter() {
-            log::info!("Reading {}", default_file.get_path().display()); //TODO: debug
+            log::info!("Reading {}", default_file.get_path().display());
             let default_data = default_file.read_as_data().unwrap(); //TODO
-                                                                     //TODO: always call overwrite
             match default_data {
                 DefaultData::SequentialNavigation(n) => {
                     $handle_seq(&n, exam)
@@ -252,6 +254,8 @@ macro_rules! handle {
                 DefaultData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap exam, p, PatternMatch),
                 DefaultData::QuestionPartInformation(p) => handle_question_parts!(exam, p, Information),
                 DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, p, Information),
+                DefaultData::QuestionPartExtension(p) => handle_question_parts!(exam, p, Extension),
+                DefaultData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap exam, p, Extension),
 
             }
 
@@ -273,7 +277,6 @@ macro_rules! handle_question_parts {
                                 if let Some(ValueType::Normal(ref mut parts)) =
                                     question.question_data.parts.0
                                 {
-                                    //TODO: others etc
                                     parts.iter_mut().for_each(|part_value| {
                                         if let Some(ValueType::Normal(QuestionPart::Builtin(
                                             ref mut part,

@@ -292,7 +292,7 @@ macro_rules! question_part_type {
                 marks: numbas::support::primitive::Primitive, // TODO: strict?
                 prompt: ContentAreaTranslatableString,
                 use_custom_name: bool,
-                custom_name: String, //Translatable?
+                custom_name: String, //TODO Translatable?
                 steps_penalty: usize,
                 enable_minimum_marks: bool,
                 minimum_marks: usize, //TODO: separate?
