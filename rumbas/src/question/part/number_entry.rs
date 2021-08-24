@@ -29,9 +29,9 @@ question_part_type! {
 }
 impl_optional_overwrite!(numbas::support::answer_style::AnswerStyle);
 
-impl ToNumbas<numbas::question::number_entry::QuestionPartNumberEntry> for QuestionPartNumberEntry {
-    fn to_numbas(&self, locale: &str) -> numbas::question::number_entry::QuestionPartNumberEntry {
-        numbas::question::number_entry::QuestionPartNumberEntry {
+impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry> for QuestionPartNumberEntry {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::number_entry::QuestionPartNumberEntry {
+        numbas::question::part::number_entry::QuestionPartNumberEntry {
             part_data: self.to_numbas(locale),
             correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
             correct_answer_style: Some(self.display_correct_in_style.to_numbas(locale)),
@@ -51,7 +51,7 @@ impl ToNumbas<numbas::question::number_entry::QuestionPartNumberEntry> for Quest
     }
 }
 
-impl ToRumbas<QuestionPartNumberEntry> for numbas::question::number_entry::QuestionPartNumberEntry {
+impl ToRumbas<QuestionPartNumberEntry> for numbas::question::part::number_entry::QuestionPartNumberEntry {
     fn to_rumbas(&self) -> QuestionPartNumberEntry {
         create_question_part! {
             QuestionPartNumberEntry with &self.part_data => {
@@ -91,16 +91,16 @@ pub enum NumberEntryAnswer {
 }
 impl_optional_overwrite!(NumberEntryAnswer);
 
-impl ToNumbas<numbas::question::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
-    fn to_numbas(&self, locale: &str) -> numbas::question::number_entry::NumberEntryAnswerType {
+impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::number_entry::NumberEntryAnswerType {
         match self {
             NumberEntryAnswer::Normal(f) => {
-                numbas::question::number_entry::NumberEntryAnswerType::Answer {
+                numbas::question::part::number_entry::NumberEntryAnswerType::Answer {
                     answer: numbas::support::primitive::Primitive::String(f.to_numbas(locale)),
                 }
             }
             NumberEntryAnswer::Range { from, to } => {
-                numbas::question::number_entry::NumberEntryAnswerType::MinMax {
+                numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
                     min_value: numbas::support::primitive::Primitive::String(
                         from.to_numbas(locale),
                     ),
@@ -111,17 +111,17 @@ impl ToNumbas<numbas::question::number_entry::NumberEntryAnswerType> for NumberE
     }
 }
 
-impl ToRumbas<NumberEntryAnswer> for numbas::question::number_entry::NumberEntryAnswerType {
+impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::NumberEntryAnswerType {
     fn to_rumbas(&self) -> NumberEntryAnswer {
         match self {
-            numbas::question::number_entry::NumberEntryAnswerType::MinMax {
+            numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
                 min_value,
                 max_value,
             } => NumberEntryAnswer::Range {
                 from: min_value.to_string().to_rumbas(),
                 to: max_value.to_string().to_rumbas(),
             },
-            numbas::question::number_entry::NumberEntryAnswerType::Answer { answer } => {
+            numbas::question::part::number_entry::NumberEntryAnswerType::Answer { answer } => {
                 NumberEntryAnswer::Normal(answer.to_string().to_rumbas())
             }
         }

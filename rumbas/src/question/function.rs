@@ -9,27 +9,27 @@ use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     pub struct Function {
-        parameters: Vec<(String, numbas::exam::function::FunctionType)>,
-        output_type: numbas::exam::function::FunctionType,
+        parameters: Vec<(String, numbas::question::function::FunctionType)>,
+        output_type: numbas::question::function::FunctionType,
         #[serde(flatten)]
         definition: FunctionDefinition
     }
 }
-impl_optional_overwrite! {(String, numbas::exam::function::FunctionType)}
-impl_optional_overwrite!(numbas::exam::function::FunctionType);
+impl_optional_overwrite! {(String, numbas::question::function::FunctionType)}
+impl_optional_overwrite!(numbas::question::function::FunctionType);
 
-impl ToNumbas<numbas::exam::function::Function> for Function {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::function::Function {
-        numbas::exam::function::Function {
+impl ToNumbas<numbas::question::function::Function> for Function {
+    fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {
+        numbas::question::function::Function {
             parameters: self.parameters.to_numbas(locale),
             output_type: self.output_type.to_numbas(locale),
             definition: self.definition.to_numbas(&locale),
         }
     }
 }
-impl_to_numbas!(numbas::exam::function::FunctionType);
+impl_to_numbas!(numbas::question::function::FunctionType);
 
-impl ToRumbas<Function> for numbas::exam::function::Function {
+impl ToRumbas<Function> for numbas::question::function::Function {
     fn to_rumbas(&self) -> Function {
         Function {
             definition: self.definition.to_rumbas(),
@@ -49,14 +49,14 @@ optional_overwrite_enum! {
     }
 }
 
-impl ToNumbas<numbas::exam::function::FunctionDefinition> for FunctionDefinition {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::function::FunctionDefinition {
+impl ToNumbas<numbas::question::function::FunctionDefinition> for FunctionDefinition {
+    fn to_numbas(&self, locale: &str) -> numbas::question::function::FunctionDefinition {
         match self {
-            FunctionDefinition::JME(c) => numbas::exam::function::FunctionDefinition::JME {
+            FunctionDefinition::JME(c) => numbas::question::function::FunctionDefinition::JME {
                 definition: c.definition.to_numbas(locale),
             },
             FunctionDefinition::Javascript(c) => {
-                numbas::exam::function::FunctionDefinition::Javascript {
+                numbas::question::function::FunctionDefinition::Javascript {
                     definition: c.definition.to_numbas(locale),
                 }
             }
@@ -64,15 +64,15 @@ impl ToNumbas<numbas::exam::function::FunctionDefinition> for FunctionDefinition
     }
 }
 
-impl ToRumbas<FunctionDefinition> for numbas::exam::function::FunctionDefinition {
+impl ToRumbas<FunctionDefinition> for numbas::question::function::FunctionDefinition {
     fn to_rumbas(&self) -> FunctionDefinition {
         match self {
-            numbas::exam::function::FunctionDefinition::JME { definition } => {
+            numbas::question::function::FunctionDefinition::JME { definition } => {
                 FunctionDefinition::JME(FunctionDefinitionJME {
                     definition: definition.to_rumbas(),
                 })
             }
-            numbas::exam::function::FunctionDefinition::Javascript { definition } => {
+            numbas::question::function::FunctionDefinition::Javascript { definition } => {
                 FunctionDefinition::Javascript(FunctionDefinitionJavascript {
                     definition: definition.to_rumbas(),
                 })

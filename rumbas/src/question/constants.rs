@@ -38,7 +38,7 @@ macro_rules! builtin_constants {
                 builtin
             }
         }
-        impl ToRumbas<BuiltinConstants> for numbas::exam::constants::BuiltinConstants {
+        impl ToRumbas<BuiltinConstants> for numbas::question::constants::BuiltinConstants {
             fn to_rumbas(&self) -> BuiltinConstants {
                 BuiltinConstants {
                 $(
@@ -74,9 +74,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::constants::QuestionConstant> for CustomConstant {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::constants::QuestionConstant {
-        numbas::exam::constants::QuestionConstant {
+impl ToNumbas<numbas::question::constants::QuestionConstant> for CustomConstant {
+    fn to_numbas(&self, locale: &str) -> numbas::question::constants::QuestionConstant {
+        numbas::question::constants::QuestionConstant {
             name: self.name.to_numbas(locale),
             value: self.value.to_numbas(locale),
             tex: self.tex.to_numbas(locale),
@@ -84,7 +84,7 @@ impl ToNumbas<numbas::exam::constants::QuestionConstant> for CustomConstant {
     }
 }
 
-impl ToRumbas<CustomConstant> for numbas::exam::constants::QuestionConstant {
+impl ToRumbas<CustomConstant> for numbas::question::constants::QuestionConstant {
     fn to_rumbas(&self) -> CustomConstant {
         CustomConstant {
             name: self.name.to_rumbas(),

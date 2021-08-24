@@ -1,3 +1,4 @@
+use crate::exam::feedback::Feedback;
 use crate::exam::locale::Locale;
 use crate::exam::locale::SupportedLocale;
 use crate::exam::navigation::DiagnosticNavigation;
@@ -7,7 +8,6 @@ use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
-use crate::question::feedback::Feedback;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
@@ -59,7 +59,7 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
         let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
             self.question_groups.to_numbas(locale);
 
-        let resources: Vec<numbas::exam::resource::Resource> = self
+        let resources: Vec<numbas::question::resource::Resource> = self
             .question_groups
             .clone()
             .unwrap()
@@ -94,7 +94,7 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
 
-        let custom_part_types: Vec<numbas::exam::custom_part_type::CustomPartType> = self
+        let custom_part_types: Vec<numbas::question::custom_part_type::CustomPartType> = self
             .question_groups
             .clone()
             .unwrap()

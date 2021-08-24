@@ -26,30 +26,30 @@ question_part_type! {
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
-        layout: numbas::question::match_answers::MatchAnswersWithChoicesLayout,
+        layout: numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type: numbas::question::match_answers::MultipleChoiceWarningType
+        wrong_nb_answers_warning_type: numbas::question::part::match_answers::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO wrong_nb_choices_warning:
         //TODO other?
     }
 }
 impl_optional_overwrite!(
-    numbas::question::match_answers::MatchAnswersWithChoicesLayout,
-    numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
+    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
+    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
 );
 impl_to_numbas!(
-    numbas::question::match_answers::MatchAnswersWithChoicesLayout,
-    numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
+    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
+    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
 );
 
-impl ToNumbas<numbas::question::match_answers::QuestionPartMatchAnswersWithChoices>
+impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices>
     for QuestionPartMatchAnswersWithItems
 {
     fn to_numbas(
         &self,
         locale: &str,
-    ) -> numbas::question::match_answers::QuestionPartMatchAnswersWithChoices {
+    ) -> numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
         let (answers, choices, marking_matrix) = match self.answer_data.unwrap() {
             MultipleChoiceMatchAnswerData::ItemBased(data) => (
                 VariableValued::Value(data.answers.clone()).to_numbas(locale),
@@ -97,7 +97,7 @@ impl ToNumbas<numbas::question::match_answers::QuestionPartMatchAnswersWithChoic
                 Some(data.marks.to_numbas(locale)),
             ),
         };
-        numbas::question::match_answers::QuestionPartMatchAnswersWithChoices {
+        numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
             part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
@@ -117,7 +117,7 @@ impl ToNumbas<numbas::question::match_answers::QuestionPartMatchAnswersWithChoic
 }
 
 impl ToRumbas<QuestionPartMatchAnswersWithItems>
-    for numbas::question::match_answers::QuestionPartMatchAnswersWithChoices
+    for numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices
 {
     fn to_rumbas(&self) -> QuestionPartMatchAnswersWithItems {
         create_question_part! {
@@ -144,7 +144,7 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
 }
 
 impl ToRumbas<MultipleChoiceMatchAnswerData>
-    for numbas::question::match_answers::QuestionPartMatchAnswersWithChoices
+    for numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices
 {
     fn to_rumbas(&self) -> MultipleChoiceMatchAnswerData {
         if let (
@@ -234,33 +234,33 @@ pub enum MatchAnswerWithItemsDisplay {
 }
 impl_optional_overwrite!(MatchAnswerWithItemsDisplay);
 
-impl ToNumbas<numbas::question::match_answers::MatchAnswersWithChoicesDisplayType>
+impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType>
     for MatchAnswerWithItemsDisplay
 {
     fn to_numbas(
         &self,
         _locale: &str,
-    ) -> numbas::question::match_answers::MatchAnswersWithChoicesDisplayType {
+    ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType {
         match self {
             MatchAnswerWithItemsDisplay::Check => {
-                numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Check
+                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check
             }
             MatchAnswerWithItemsDisplay::Radio => {
-                numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Radio
+                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio
             }
         }
     }
 }
 
 impl ToRumbas<MatchAnswerWithItemsDisplay>
-    for numbas::question::match_answers::MatchAnswersWithChoicesDisplayType
+    for numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
 {
     fn to_rumbas(&self) -> MatchAnswerWithItemsDisplay {
         match self {
-            numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Check => {
+            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check => {
                 MatchAnswerWithItemsDisplay::Check
             }
-            numbas::question::match_answers::MatchAnswersWithChoicesDisplayType::Radio => {
+            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio => {
                 MatchAnswerWithItemsDisplay::Radio
             }
         }

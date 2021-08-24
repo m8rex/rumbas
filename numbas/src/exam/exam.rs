@@ -1,12 +1,12 @@
-use crate::exam::custom_part_type::CustomPartType;
 use crate::exam::diagnostic::Diagnostic;
 use crate::exam::feedback::Feedback;
-use crate::exam::function::Function;
 use crate::exam::navigation::Navigation;
 use crate::exam::question_group::QuestionGroup;
-use crate::exam::resource::Resource;
 use crate::exam::timing::Timing;
-use crate::exam::variable::Variable;
+use crate::question::custom_part_type::CustomPartType;
+use crate::question::function::Function;
+use crate::question::resource::Resource;
+use crate::question::variable::Variable;
 use crate::support::serde_functions::from_str_optional;
 use schemars::JsonSchema;
 use serde::Deserialize;

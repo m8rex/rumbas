@@ -26,22 +26,22 @@ question_part_type! {
         should_select_at_most: Noneable<usize>,
         columns: usize,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type:  numbas::question::match_answers::MultipleChoiceWarningType
+        wrong_nb_answers_warning_type:  numbas::question::part::match_answers::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO other?
     }
 }
-impl_optional_overwrite!(numbas::question::match_answers::MultipleChoiceWarningType);
-impl_to_numbas!(numbas::question::match_answers::MultipleChoiceWarningType);
-impl_to_rumbas!(numbas::question::match_answers::MultipleChoiceWarningType);
+impl_optional_overwrite!(numbas::question::part::match_answers::MultipleChoiceWarningType);
+impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
+impl_to_rumbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 
-impl ToNumbas<numbas::question::choose_multiple::QuestionPartChooseMultiple>
+impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultiple>
     for QuestionPartChooseMultiple
 {
     fn to_numbas(
         &self,
         locale: &str,
-    ) -> numbas::question::choose_multiple::QuestionPartChooseMultiple {
+    ) -> numbas::question::part::choose_multiple::QuestionPartChooseMultiple {
         // TODO: below is duplicated in CHooseOne
         let (choices, marking_matrix, distractors) = match self.answer_data.unwrap() {
             MultipleChoiceAnswerData::ItemBased(answers) => (
@@ -77,7 +77,7 @@ impl ToNumbas<numbas::question::choose_multiple::QuestionPartChooseMultiple>
                 data.feedback.map(|f| f.to_numbas(locale)).flatten(),
             ),
         };
-        numbas::question::choose_multiple::QuestionPartChooseMultiple {
+        numbas::question::part::choose_multiple::QuestionPartChooseMultiple {
             part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
@@ -95,7 +95,7 @@ impl ToNumbas<numbas::question::choose_multiple::QuestionPartChooseMultiple>
 }
 
 impl ToRumbas<QuestionPartChooseMultiple>
-    for numbas::question::choose_multiple::QuestionPartChooseMultiple
+    for numbas::question::part::choose_multiple::QuestionPartChooseMultiple
 {
     fn to_rumbas(&self) -> QuestionPartChooseMultiple {
         create_question_part! {
@@ -119,7 +119,7 @@ impl ToRumbas<QuestionPartChooseMultiple>
 }
 
 impl ToRumbas<MultipleChoiceAnswerData>
-    for numbas::question::choose_multiple::QuestionPartChooseMultiple
+    for numbas::question::part::choose_multiple::QuestionPartChooseMultiple
 {
     fn to_rumbas(&self) -> MultipleChoiceAnswerData {
         extract_multiple_choice_answer_data(&self.choices, &self.marking_matrix, &self.distractors)

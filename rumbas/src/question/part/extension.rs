@@ -12,15 +12,15 @@ question_part_type! {
     pub struct QuestionPartExtension {}
 }
 
-impl ToNumbas<numbas::question::extension::QuestionPartExtension> for QuestionPartExtension {
-    fn to_numbas(&self, locale: &str) -> numbas::question::extension::QuestionPartExtension {
-        numbas::question::extension::QuestionPartExtension {
+impl ToNumbas<numbas::question::part::extension::QuestionPartExtension> for QuestionPartExtension {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::extension::QuestionPartExtension {
+        numbas::question::part::extension::QuestionPartExtension {
             part_data: self.to_numbas(locale),
         }
     }
 }
 
-impl ToRumbas<QuestionPartExtension> for numbas::question::extension::QuestionPartExtension {
+impl ToRumbas<QuestionPartExtension> for numbas::question::part::extension::QuestionPartExtension {
     fn to_rumbas(&self) -> QuestionPartExtension {
         create_question_part! {QuestionPartExtension with &self.part_data => {}}
     }

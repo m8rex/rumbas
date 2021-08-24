@@ -1,6 +1,6 @@
-use crate::exam::answer_simplification::AnswerSimplificationType;
 use crate::jme::EmbracedJMEString;
 use crate::jme::JMEString;
+use crate::question::answer_simplification::AnswerSimplificationType;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::{SafeFloat, SafeNatural};
 use crate::support::serde_functions::{

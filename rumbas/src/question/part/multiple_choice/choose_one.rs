@@ -30,8 +30,8 @@ question_part_type! {
     }
 }
 
-impl ToNumbas<numbas::question::choose_one::QuestionPartChooseOne> for QuestionPartChooseOne {
-    fn to_numbas(&self, locale: &str) -> numbas::question::choose_one::QuestionPartChooseOne {
+impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for QuestionPartChooseOne {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::choose_one::QuestionPartChooseOne {
         let (answers, marking_matrix, distractors) = match self.answer_data.unwrap() {
             MultipleChoiceAnswerData::ItemBased(answers) => (
                 VariableValued::Value(
@@ -66,7 +66,7 @@ impl ToNumbas<numbas::question::choose_one::QuestionPartChooseOne> for QuestionP
                 data.feedback.map(|f| f.to_numbas(locale)).flatten(),
             ),
         };
-        numbas::question::choose_one::QuestionPartChooseOne {
+        numbas::question::part::choose_one::QuestionPartChooseOne {
             part_data: self.to_numbas(locale),
             min_answers: Some(if self.has_to_select_option.to_numbas(locale) {
                 1
@@ -78,7 +78,7 @@ impl ToNumbas<numbas::question::choose_one::QuestionPartChooseOne> for QuestionP
             display_type: self.display.unwrap().to_numbas(locale),
             columns: self.display.unwrap().get_nb_columns().into(),
             wrong_nb_choices_warning: Some(
-                numbas::question::match_answers::MultipleChoiceWarningType::None,
+                numbas::question::part::match_answers::MultipleChoiceWarningType::None,
             ), //TODO
             show_cell_answer_state: Some(self.show_cell_answer_state.to_numbas(locale)),
             marking_matrix,
@@ -87,7 +87,7 @@ impl ToNumbas<numbas::question::choose_one::QuestionPartChooseOne> for QuestionP
     }
 }
 
-impl ToRumbas<QuestionPartChooseOne> for numbas::question::choose_one::QuestionPartChooseOne {
+impl ToRumbas<QuestionPartChooseOne> for numbas::question::part::choose_one::QuestionPartChooseOne {
     fn to_rumbas(&self) -> QuestionPartChooseOne {
         create_question_part! {
             QuestionPartChooseOne with &self.part_data => {
@@ -106,7 +106,7 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::question::choose_one::QuestionP
     }
 }
 
-impl ToRumbas<MultipleChoiceAnswerData> for numbas::question::choose_one::QuestionPartChooseOne {
+impl ToRumbas<MultipleChoiceAnswerData> for numbas::question::part::choose_one::QuestionPartChooseOne {
     fn to_rumbas(&self) -> MultipleChoiceAnswerData {
         extract_multiple_choice_answer_data(&self.answers, &self.marking_matrix, &self.distractors)
     }
@@ -116,9 +116,9 @@ impl ToRumbas<MultipleChoiceAnswerData> for numbas::question::choose_one::Questi
 struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
 
@@ -126,9 +126,9 @@ impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixR
 struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Row(
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(
             self.0
                 .to_numbas(locale)
                 .into_iter()
@@ -142,9 +142,9 @@ impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixR
 struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
     }
 }
 
@@ -158,26 +158,26 @@ pub enum ChooseOneDisplay {
 }
 impl_optional_overwrite!(ChooseOneDisplay);
 
-impl ToNumbas<numbas::question::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::choose_one::ChooseOneDisplayType {
+impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::choose_one::ChooseOneDisplayType {
         match self {
             ChooseOneDisplay::DropDown => {
-                numbas::question::choose_one::ChooseOneDisplayType::DropDown
+                numbas::question::part::choose_one::ChooseOneDisplayType::DropDown
             }
             ChooseOneDisplay::Radio { columns: _ } => {
-                numbas::question::choose_one::ChooseOneDisplayType::Radio
+                numbas::question::part::choose_one::ChooseOneDisplayType::Radio
             }
         }
     }
 }
 
-impl ToRumbas<ChooseOneDisplay> for numbas::question::choose_one::QuestionPartChooseOne {
+impl ToRumbas<ChooseOneDisplay> for numbas::question::part::choose_one::QuestionPartChooseOne {
     fn to_rumbas(&self) -> ChooseOneDisplay {
         match self.display_type {
-            numbas::question::choose_one::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
+            numbas::question::part::choose_one::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
                 columns: self.columns.0,
             },
-            numbas::question::choose_one::ChooseOneDisplayType::DropDown => {
+            numbas::question::part::choose_one::ChooseOneDisplayType::DropDown => {
                 ChooseOneDisplay::DropDown
             }
         }

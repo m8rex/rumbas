@@ -1,4 +1,4 @@
-use crate::exam::answer_simplification::AnswerSimplificationType;
+use crate::question::answer_simplification::AnswerSimplificationType;
 use std::convert::TryInto;
 use std::fmt::Display;
 use std::str::FromStr;
