@@ -18,6 +18,9 @@ pub struct ResourcePath {
 }
 impl_optional_overwrite!(ResourcePath);
 
+pub type ResourcePaths = Vec<ResourcePath>;
+pub type ResourcePathsInput = Vec<Value<ResourcePathInput>>;
+
 impl ToNumbas<numbas::question::resource::Resource> for ResourcePath {
     fn to_numbas(&self, _locale: &str) -> numbas::question::resource::Resource {
         numbas::question::resource::Resource([

@@ -1,9 +1,12 @@
 use crate::support::file_reference::FileString;
+use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -88,9 +91,9 @@ optional_overwrite! {
         /// Whether the student can move back to previous question
         /// Old name was `reverse`
         #[serde(alias = "reverse")]
-        can_move_to_previous: bool,
+        can_move_to_previous: RumbasBool,
         /// Whether the student can jump to any question.
-        browsing_enabled: bool,
+        browsing_enabled: RumbasBool,
         /// When the results page should be shown
         show_results_page: ShowResultsPage,
         /// Action to execute when a student changes question or tries to end the exam.
@@ -237,8 +240,8 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
 #[serde(tag = "action")]
 pub enum LeaveAction {
     None,
-    WarnIfNotAttempted { message: TranslatableString },
-    PreventIfNotAttempted { message: TranslatableString },
+    WarnIfNotAttempted(LeaveActionMessage),
+    PreventIfNotAttempted(LeaveActionMessage),
 }
 impl_optional_overwrite!(LeaveAction);
 
@@ -248,14 +251,14 @@ impl ToNumbas<numbas::exam::navigation::LeaveAction> for LeaveAction {
             LeaveAction::None => numbas::exam::navigation::LeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
-            LeaveAction::WarnIfNotAttempted { message } => {
+            LeaveAction::WarnIfNotAttempted(m) => {
                 numbas::exam::navigation::LeaveAction::WarnIfNotAttempted {
-                    message: message.to_string(locale).unwrap(),
+                    message: m.message.to_string(locale).unwrap(),
                 }
             }
-            LeaveAction::PreventIfNotAttempted { message } => {
+            LeaveAction::PreventIfNotAttempted(m) => {
                 numbas::exam::navigation::LeaveAction::PreventIfNotAttempted {
-                    message: message.to_string(locale).unwrap(),
+                    message: m.message.to_string(locale).unwrap(),
                 }
             }
         }
@@ -267,16 +270,22 @@ impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
         match self {
             numbas::exam::navigation::LeaveAction::None { message: _ } => LeaveAction::None,
             numbas::exam::navigation::LeaveAction::WarnIfNotAttempted { message } => {
-                LeaveAction::WarnIfNotAttempted {
+                LeaveAction::WarnIfNotAttempted(LeaveActionMessage {
                     message: message.clone().into(),
-                }
+                })
             }
             numbas::exam::navigation::LeaveAction::PreventIfNotAttempted { message } => {
-                LeaveAction::PreventIfNotAttempted {
+                LeaveAction::PreventIfNotAttempted(LeaveActionMessage {
                     message: message.clone().into(),
-                }
+                })
             }
         }
+    }
+}
+
+optional_overwrite! {
+    pub struct LeaveActionMessage {
+        message: TranslatableString
     }
 }
 
@@ -287,21 +296,21 @@ optional_overwrite! {
         /// Whether the student can regenerate questions
         /// Old name was `allow_regenerate`
         #[serde(alias = "allow_regenerate")]
-        can_regenerate: bool,
+        can_regenerate: RumbasBool,
         /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
         /// Old name was `allow_steps`
         #[serde(alias = "allow_steps")]
-        show_steps: bool,
+        show_steps: RumbasBool,
         /// Whether the title page should be shown.
         /// Old name was `show_frontpage`
         #[serde(alias = "show_frontpage")]
-        show_title_page: bool,
+        show_title_page: RumbasBool,
         /// Whether the student will be asked to confirm when leaving the exam.
         #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: bool,
-        show_names_of_question_groups: bool,
+        confirm_when_leaving: RumbasBool,
+        show_names_of_question_groups: RumbasBool,
         /// Whether the student is allowed to print the exam
-        allow_printing: bool
+        allow_printing: RumbasBool
     }
 }
 

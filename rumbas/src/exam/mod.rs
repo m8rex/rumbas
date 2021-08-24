@@ -11,9 +11,11 @@ pub mod timing;
 
 use crate::exam::diagnostic::convert_diagnostic_numbas_exam;
 use crate::exam::diagnostic::DiagnosticExam;
+use crate::exam::diagnostic::DiagnosticExamInput;
 use crate::exam::locale::Locale;
 use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
+use crate::exam::normal::NormalExamInput;
 use crate::exam::question_group::QuestionPath;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::support::optional_overwrite::*;

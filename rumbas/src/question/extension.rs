@@ -1,4 +1,5 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
@@ -19,7 +20,7 @@ macro_rules! extensions {
                     $(
                         #[$inner]
                     )*
-                    $name: bool
+                    $name: RumbasBool
                 ),*
             }
         }

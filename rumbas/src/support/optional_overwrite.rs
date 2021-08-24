@@ -9,7 +9,6 @@ pub trait OptionalOverwrite<Item>: Clone + DeserializeOwned + RumbasCheck {
     fn overwrite(&mut self, other: &Item);
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 }
-impl_optional_overwrite!(String, bool, f64, usize, [f64; 2]);
 
 impl<O: OptionalOverwrite<O>> OptionalOverwrite<Vec<O>> for Vec<O> {
     fn overwrite(&mut self, _other: &Vec<O>) {}

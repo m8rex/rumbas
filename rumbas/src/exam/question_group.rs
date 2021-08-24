@@ -1,13 +1,18 @@
 use crate::question::Question;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use crate::support::yaml::YamlError;
 use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+pub type QuestionGroupsInput = Vec<Value<QuestionGroup>>;
+pub type QuestionGroups = Vec<QuestionGroup>;
 
 optional_overwrite! {
     pub struct QuestionGroup {
@@ -17,7 +22,7 @@ optional_overwrite! {
         #[serde(flatten)]
         picking_strategy: PickingStrategy,
         /// The questions
-        questions: Vec<Value<QuestionPath>>
+        questions: QuestionPaths
     }
 }
 
@@ -41,17 +46,55 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+// TODO: remove this manual code
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(tag = "picking_strategy")]
-pub enum PickingStrategy {
+pub enum PickingStrategyInput {
     #[serde(rename = "all_ordered")]
     AllOrdered,
     #[serde(rename = "all_shuffled")]
     AllShuffled,
     #[serde(rename = "random_subset")]
-    RandomSubset { pick_questions: usize },
+    RandomSubset(PickingStrategyRandomSubsetInput),
 }
-impl_optional_overwrite!(PickingStrategy);
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum PickingStrategy {
+    AllOrdered,
+    AllShuffled,
+    RandomSubset(PickingStrategyRandomSubset),
+}
+
+impl RumbasCheck for PickingStrategyInput {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        match self {
+            PickingStrategyInput::AllOrdered => RumbasCheckResult::empty(),
+            PickingStrategyInput::AllShuffled => RumbasCheckResult::empty(),
+            PickingStrategyInput::RandomSubset(r) => r.check(locale),
+        }
+    }
+}
+impl OptionalOverwrite<PickingStrategyInput> for PickingStrategyInput {
+    fn overwrite(&mut self, other: &PickingStrategyInput) {
+        match (self, other) {
+            (
+                &mut PickingStrategyInput::RandomSubset(ref mut val),
+                &PickingStrategyInput::RandomSubset(ref valo),
+            ) => val.overwrite(&valo),
+            _ => (),
+        };
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match self {
+            PickingStrategyInput::AllOrdered => (),
+            PickingStrategyInput::AllShuffled => (),
+            PickingStrategyInput::RandomSubset(ref mut enum_val) => {
+                enum_val.insert_template_value(&key, &val)
+            }
+        }
+    }
+}
+impl_optional_overwrite_value!(PickingStrategyInput);
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for PickingStrategy {
     fn to_numbas(
@@ -65,9 +108,9 @@ impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for Pi
             PickingStrategy::AllShuffled => {
                 numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled
             }
-            PickingStrategy::RandomSubset { pick_questions } => {
+            PickingStrategy::RandomSubse(p) => {
                 numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
-                    pick_questions: *pick_questions,
+                    pick_questions: *p.pick_questions,
                 }
             }
         }
@@ -85,10 +128,16 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
             }
             numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
                 pick_questions,
-            } => PickingStrategy::RandomSubset {
+            } => PickingStrategy::RandomSubset(PickingStrategyRandomSubset {
                 pick_questions: *pick_questions,
-            },
+            }),
         }
+    }
+}
+
+optional_overwrite! {
+    pub struct PickingStrategyRandomSubset {
+        pick_questions: RumbasNatural
     }
 }
 
@@ -99,6 +148,7 @@ pub struct QuestionPath {
     pub question_name: String,
     pub question_data: Question,
 }
+type QuestionPathInput = QuestionPath;
 
 impl RumbasCheck for QuestionPath {
     fn check(&self, locale: &str) -> RumbasCheckResult {
@@ -158,3 +208,6 @@ impl std::convert::From<QuestionPath> for String {
         q.question_name
     }
 }
+
+pub type QuestionPathsInput = Vec<Value<QuestionPathInput>>;
+pub type QuestionPaths = Vec<QuestionPath>;

@@ -1,9 +1,11 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use crate::support::variable_valued::VariableValued;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -16,16 +18,19 @@ pub mod match_answers;
 optional_overwrite_enum! {
     #[serde(untagged)]
     pub enum MultipleChoiceAnswerData {
-        ItemBased(Vec<MultipleChoiceAnswer>),
-        NumbasLike(Box<MultipleChoiceAnswerDataNumbasLike>)
+        ItemBased(MultipleChoiceAnswers),
+        NumbasLike(BoxMultipleChoiceAnswerDataNumbasLike)
     }
 }
 
+type BoxMultipleChoiceAnswerDataNumbasLike = Box<MultipleChoiceAnswerDataNumbasLike>;
+type BoxMultipleChoiceAnswerDataNumbasLikeInput = Box<MultipleChoiceAnswerDataNumbasLikeInput>;
+
 optional_overwrite! {
     pub struct MultipleChoiceAnswerDataNumbasLike {
-        answers: VariableValued<Vec<TranslatableString>>,
-        marks: VariableValued<Vec<numbas::support::primitive::Primitive>>,
-        feedback: Noneable<Vec<TranslatableString>>
+        answers: VariableValuedTranslatableStrings,
+        marks: VariableValuedPrimitives,
+        feedback: NoneableTranslatableStrings
     }
 }
 
@@ -34,7 +39,10 @@ struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
@@ -44,7 +52,10 @@ struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(
             self.0
                 .to_numbas(locale)
@@ -60,8 +71,13 @@ struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primit
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
-        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(
+            self.0.to_numbas(locale),
+        )
     }
 }
 
@@ -136,15 +152,20 @@ fn extract_multiple_choice_answer_data(
 }
 
 impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
-impl_optional_overwrite!(numbas::question::part::match_answers::MultipleChoiceMatrix);
+type MultipleChoiceMatrix = numbas::question::part::match_answers::MultipleChoiceMatrix;
+impl_optional_overwrite!(MultipleChoiceMatrix);
 
 impl_to_numbas!(numbas::support::primitive::Primitive);
-impl_optional_overwrite!(numbas::support::primitive::Primitive);
+type Primitive = numbas::support::primitive::Primitive;
+impl_optional_overwrite!(Primitive);
 
 optional_overwrite! {
     pub struct MultipleChoiceAnswer {
         statement: TranslatableString,
         feedback: TranslatableString,
-        marks: numbas::support::primitive::Primitive // TODO: variable valued?
+        marks: Primitive // TODO: variable valued?
     }
 }
+
+pub type MultipleChoiceAnswersInput = Vec<Value<MultipleChoiceAnswerInput>>;
+pub type MultipleChoiceAnswers = Vec<MultipleChoiceAnswer>;

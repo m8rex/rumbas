@@ -1,5 +1,7 @@
 use crate::support::file_reference::FileString;
+use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -9,46 +11,23 @@ use serde::{Deserialize, Serialize};
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(untagged)]
-pub enum VariableRepresentation {
-    ListOfStrings(Vec<Value<String>>),
-    ListOfNumbers(Vec<Value<f64>>),
-    Long(Box<Variable>),
-    Number(f64),
-    Other(VariableStringRepresentation),
-}
-
-impl RumbasCheck for VariableRepresentation {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            VariableRepresentation::ListOfStrings(v) => v.check(locale),
-            VariableRepresentation::ListOfNumbers(v) => v.check(locale),
-            VariableRepresentation::Long(v) => v.check(locale),
-            VariableRepresentation::Number(v) => v.check(locale),
-            VariableRepresentation::Other(v) => v.check(locale),
-        }
+optional_overwrite_enum! {
+    #[serde(untagged)]
+    pub enum VariableRepresentation {
+        ListOfStrings(RumbasStrings),
+        ListOfNumbers(RumbasFloats),
+        Long(BoxVariable),
+        Number(RumbasFloat),
+        Other(VariableStringRepresentation)
     }
 }
-
-impl OptionalOverwrite<VariableRepresentation> for VariableRepresentation {
-    fn overwrite(&mut self, _other: &VariableRepresentation) {
-        //TODO?
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            VariableRepresentation::ListOfStrings(v) => v.insert_template_value(key, val),
-            VariableRepresentation::ListOfNumbers(v) => v.insert_template_value(key, val),
-            VariableRepresentation::Long(v) => v.insert_template_value(key, val),
-            VariableRepresentation::Number(v) => v.insert_template_value(key, val),
-            VariableRepresentation::Other(v) => v.insert_template_value(key, val),
-        }
-    }
-}
-impl_optional_overwrite_value!(VariableRepresentation);
 
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::question::variable::Variable {
+    fn to_numbas_with_name(
+        &self,
+        locale: &str,
+        name: String,
+    ) -> numbas::question::variable::Variable {
         self.to_variable().to_numbas_with_name(locale, name)
     }
     fn to_numbas(&self, _locale: &str) -> numbas::question::variable::Variable {
@@ -100,15 +79,15 @@ impl VariableRepresentation {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(from = "String")]
-pub enum VariableStringRepresentation {
-    Anything(String),
-    Range(RangeData),
-    RandomRange(RangeData),
+optional_overwrite_enum! {
+    #[serde(from = "String")]
+    pub enum VariableStringRepresentation {
+        Anything(RumbasString),
+        Range(RangeData),
+        RandomRange(RangeData)
+    }
 }
-impl_optional_overwrite!(VariableStringRepresentation);
-
+/* TODO remove?
 impl JsonSchema for VariableStringRepresentation {
     fn schema_name() -> String {
         "VariableStringRepresentation".to_owned()
@@ -121,7 +100,7 @@ impl JsonSchema for VariableStringRepresentation {
         }
         .into()
     }
-}
+}*/
 
 impl std::convert::From<String> for VariableStringRepresentation {
     fn from(s: String) -> Self {
@@ -135,12 +114,12 @@ impl std::convert::From<String> for VariableStringRepresentation {
     }
 }
 
-// TODO: let this be parsed as JME?
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
-pub struct RangeData {
-    from: f64,
-    to: f64,
-    step: f64,
+optional_overwrite! {
+    pub struct RangeData {
+        from: RumbasFloat,
+        to: RumbasFloat,
+        step: RumbasFloat
+    }
 }
 
 impl RangeData {
@@ -248,14 +227,21 @@ mod test {
 optional_overwrite! {
     pub struct Variable {
         definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
-        description: String,
+        description: RumbasString,
         template_type: VariableTemplateType,
-        group: String //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+        group: RumbasString //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
     }
 }
 
+type BoxVariableInput = Box<VariableInput>;
+type BoxVariable = Box<Variable>;
+
 impl ToNumbas<numbas::question::variable::Variable> for Variable {
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::question::variable::Variable {
+    fn to_numbas_with_name(
+        &self,
+        locale: &str,
+        name: String,
+    ) -> numbas::question::variable::Variable {
         numbas::question::variable::Variable {
             name,
             definition: self.definition.to_numbas(locale),
@@ -322,7 +308,9 @@ impl ToNumbas<numbas::question::variable::VariableTemplateType> for VariableTemp
             VariableTemplateType::LongString => {
                 numbas::question::variable::VariableTemplateType::LongString
             }
-            VariableTemplateType::Number => numbas::question::variable::VariableTemplateType::Number,
+            VariableTemplateType::Number => {
+                numbas::question::variable::VariableTemplateType::Number
+            }
             VariableTemplateType::Range => numbas::question::variable::VariableTemplateType::Range,
             VariableTemplateType::RandomRange => {
                 numbas::question::variable::VariableTemplateType::RandomRange
@@ -349,7 +337,9 @@ impl ToRumbas<VariableTemplateType> for numbas::question::variable::VariableTemp
             numbas::question::variable::VariableTemplateType::LongString => {
                 VariableTemplateType::LongString
             }
-            numbas::question::variable::VariableTemplateType::Number => VariableTemplateType::Number,
+            numbas::question::variable::VariableTemplateType::Number => {
+                VariableTemplateType::Number
+            }
             numbas::question::variable::VariableTemplateType::RandomRange => {
                 VariableTemplateType::RandomRange
             }

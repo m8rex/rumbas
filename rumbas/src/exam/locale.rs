@@ -1,4 +1,5 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -6,11 +7,14 @@ use serde::Serialize;
 
 optional_overwrite! {
     pub struct Locale {
-        name: String, //TODO: document names best used for shareability?
+        name: RumbasString, //TODO: document names best used for shareability?
         /// The locale to use in the Numbas interface
         numbas_locale: SupportedLocale
     }
 }
+
+pub type LocalesInput = Vec<Value<Locale>>;
+pub type Locales = Vec<Locale>;
 
 macro_rules! create_support_locale {
     ($($name: ident => $key: literal),*) => {

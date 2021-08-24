@@ -1,18 +1,33 @@
 use crate::question::part::extension::QuestionPartExtension;
+use crate::question::part::extension::QuestionPartExtensionInput;
 use crate::question::part::gapfill::QuestionPartGapFill;
+use crate::question::part::gapfill::QuestionPartGapFillInput;
 use crate::question::part::information::QuestionPartInformation;
+use crate::question::part::information::QuestionPartInformationInput;
 use crate::question::part::jme::QuestionPartJME;
+use crate::question::part::jme::QuestionPartJMEInput;
 use crate::question::part::matrix::QuestionPartMatrix;
+use crate::question::part::matrix::QuestionPartMatrixInput;
 use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
+use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInput;
 use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOne;
+use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOneInput;
 use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
+use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItemsInput;
 use crate::question::part::number_entry::QuestionPartNumberEntry;
+use crate::question::part::number_entry::QuestionPartNumberEntryInput;
 use crate::question::part::pattern_match::QuestionPartPatternMatch;
+use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+use crate::support::translatable::{
+    ContentAreaTranslatableStringInput, JMETranslatableStringInput,
+};
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -24,6 +39,9 @@ optional_overwrite_enum! {
         Custom(QuestionPartCustom)
     }
 }
+
+pub type QuestionPartsInput = Vec<Value<QuestionPartInput>>;
+pub type QuestionParts = Vec<QuestionPart>;
 
 impl ToNumbas<numbas::question::part::QuestionPart> for QuestionPart {
     fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPart {
@@ -181,7 +199,10 @@ impl QuestionPartBuiltin {
 
 // TODO: create macro so RumbasCheck and OptionalOverwrite are done by itself
 #[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
-pub struct JMENotes(pub Value<Vec<JMENote>>);
+pub struct JMENotes(pub Vec<JMENote>);
+
+#[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
+pub struct JMENotesInput(pub Value<Vec<JMENoteInput>>);
 
 impl RumbasCheck for JMENotes {
     fn check(&self, locale: &str) -> RumbasCheckResult {
@@ -249,8 +270,8 @@ impl Default for JMENotes {
 
 optional_overwrite! {
     pub struct JMENote {
-        name: String,
-        description: Noneable<String>,
+        name: RumbasString,
+        description: NoneableString,
         expression: JMETranslatableString
     }
 }
@@ -289,20 +310,20 @@ macro_rules! question_part_type {
         optional_overwrite! {
             $(#[$outer])*
             pub struct $struct {
-                marks: numbas::support::primitive::Primitive, // TODO: strict?
+                marks: Primitive, // TODO: strict?
                 prompt: ContentAreaTranslatableString,
-                use_custom_name: bool,
-                custom_name: String, //TODO Translatable?
-                steps_penalty: usize,
-                enable_minimum_marks: bool,
-                minimum_marks: usize, //TODO: separate?
-                show_correct_answer: bool,
-                show_feedback_icon: bool,
+                use_custom_name: RumbasBool,
+                custom_name: RumbasString, //TODO Translatable?
+                steps_penalty: RumbasNatural,
+                enable_minimum_marks: RumbasBool,
+                minimum_marks: RumbasNatural, //TODO: separate?
+                show_correct_answer: RumbasBool,
+                show_feedback_icon: RumbasBool,
                 variable_replacement_strategy: VariableReplacementStrategy,
-                adaptive_marking_penalty: usize,
+                adaptive_marking_penalty: RumbasNatural,
                 custom_marking_algorithm_notes: JMENotes,
-                extend_base_marking_algorithm: bool,
-                steps: Vec<QuestionPart>
+                extend_base_marking_algorithm: RumbasBool,
+                steps: QuestionParts
                 $(,
                 $(
                     $(#[$inner])*
@@ -343,16 +364,21 @@ macro_rules! question_part_type {
 
 question_part_type! {
     pub struct QuestionPartCustom {
-        r#type: String,
-        settings: std::collections::HashMap<String, CustomPartInputTypeValue>
+        r#type: RumbasString,
+        settings: MapStringToCustomPartInputTypeValue
     }
 }
+
+type MapStringToCustomPartInputTypeValueInput =
+    std::collections::HashMap<String, CustomPartInputTypeValueInput>;
+type MapStringToCustomPartInputTypeValue =
+    std::collections::HashMap<String, CustomPartInputTypeValue>;
 
 optional_overwrite_enum! {
     #[serde(untagged)]
     pub enum CustomPartInputTypeValue {
-        CheckBox(bool),
-        Code(String)
+        CheckBox(RumbasBool),
+        Code(RumbasString)
     }
 }
 

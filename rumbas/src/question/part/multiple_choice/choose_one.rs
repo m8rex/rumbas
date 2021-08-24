@@ -1,14 +1,22 @@
 use super::{extract_multiple_choice_answer_data, MultipleChoiceAnswerData};
+use crate::question::part::multiple_choice::MultipleChoiceAnswerDataInput;
 use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategyInput;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionParts;
+use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -19,10 +27,10 @@ question_part_type! {
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
-        shuffle_answers: bool,
-        show_cell_answer_state: bool,
+        shuffle_answers: RumbasBool,
+        show_cell_answer_state: RumbasBool,
         /// Whether the student has to select an option (if false: can submit without selecting)
-        has_to_select_option: bool,
+        has_to_select_option: RumbasBool,
         /// !FLATTENED: all its attributes should be added to [QuestionPartChooseOne]
         #[serde(flatten)]
         display: ChooseOneDisplay
@@ -106,7 +114,9 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::question::part::choose_one::Que
     }
 }
 
-impl ToRumbas<MultipleChoiceAnswerData> for numbas::question::part::choose_one::QuestionPartChooseOne {
+impl ToRumbas<MultipleChoiceAnswerData>
+    for numbas::question::part::choose_one::QuestionPartChooseOne
+{
     fn to_rumbas(&self) -> MultipleChoiceAnswerData {
         extract_multiple_choice_answer_data(&self.answers, &self.marking_matrix, &self.distractors)
     }
@@ -117,7 +127,10 @@ struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
@@ -127,7 +140,10 @@ struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(
             self.0
                 .to_numbas(locale)
@@ -143,8 +159,13 @@ struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primit
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
-        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(
+            self.0.to_numbas(locale),
+        )
     }
 }
 
@@ -174,9 +195,11 @@ impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for Choo
 impl ToRumbas<ChooseOneDisplay> for numbas::question::part::choose_one::QuestionPartChooseOne {
     fn to_rumbas(&self) -> ChooseOneDisplay {
         match self.display_type {
-            numbas::question::part::choose_one::ChooseOneDisplayType::Radio => ChooseOneDisplay::Radio {
-                columns: self.columns.0,
-            },
+            numbas::question::part::choose_one::ChooseOneDisplayType::Radio => {
+                ChooseOneDisplay::Radio {
+                    columns: self.columns.0,
+                }
+            }
             numbas::question::part::choose_one::ChooseOneDisplayType::DropDown => {
                 ChooseOneDisplay::DropDown
             }

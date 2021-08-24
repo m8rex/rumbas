@@ -1,11 +1,15 @@
 use crate::exam::feedback::Feedback;
-use crate::exam::locale::Locale;
+use crate::exam::feedback::FeedbackInput;
 use crate::exam::locale::SupportedLocale;
+use crate::exam::locale::{Locale, Locales, LocalesInput};
 use crate::exam::navigation::NormalNavigation;
+use crate::exam::navigation::NormalNavigationInput;
 use crate::exam::numbas_settings::NumbasSettings;
-use crate::exam::question_group::QuestionGroup;
+use crate::exam::numbas_settings::NumbasSettingsInput;
 use crate::exam::question_group::QuestionPath;
+use crate::exam::question_group::{QuestionGroup, QuestionGroups, QuestionGroupsInput};
 use crate::exam::timing::Timing;
+use crate::exam::timing::TimingInput;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
 use crate::support::optional_overwrite::*;
@@ -13,6 +17,7 @@ use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -22,7 +27,7 @@ optional_overwrite! {
     /// An Exam
     pub struct NormalExam {
         /// All locales for which the exam should be generated
-        locales: Vec<Value<Locale>>,
+        locales: Locales,
         /// The name of the exam
         name: TranslatableString,
         /// The navigation settings for this exam
@@ -32,7 +37,7 @@ optional_overwrite! {
         /// The feedback settings for this exam
         feedback: Feedback,
         /// The questions groups for this exam
-        question_groups: Vec<Value<QuestionGroup>>,
+        question_groups: QuestionGroups,
         /// The settings to set for numbas
         numbas_settings: NumbasSettings
     }

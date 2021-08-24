@@ -1,4 +1,5 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -11,14 +12,14 @@ optional_overwrite! {
         /// Whether the student can regenerate the question
         /// Old name was `allow_regenerate`
         #[serde(alias = "allow_regenerate")]
-        can_regenerate: bool,
+        can_regenerate: RumbasBool,
         /// Whether the title page should be shown.
         /// Old name was `show_frontpage`
         #[serde(alias = "show_frontpage")]
-        show_title_page: bool,
+        show_title_page: RumbasBool,
         /// Whether the student will be asked to confirm when leaving the exam.
         #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: bool
+        confirm_when_leaving: RumbasBool
     }
 }
 
