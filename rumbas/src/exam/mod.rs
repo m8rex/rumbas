@@ -1,6 +1,7 @@
 //! Contains all the exam types
 
 pub mod diagnostic;
+pub mod feedback;
 pub mod locale;
 pub mod navigation;
 pub mod normal;

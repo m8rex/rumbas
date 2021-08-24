@@ -1,15 +1,5 @@
 use crate::jme::ContentAreaString;
 use crate::jme::JMENotesString;
-use crate::question::choose_multiple::QuestionPartChooseMultiple;
-use crate::question::choose_one::QuestionPartChooseOne;
-use crate::question::extension::QuestionPartExtension;
-use crate::question::gapfill::QuestionPartGapFill;
-use crate::question::information::QuestionPartInformation;
-use crate::question::jme::QuestionPartJME;
-use crate::question::match_answers::QuestionPartMatchAnswersWithChoices;
-use crate::question::matrix::QuestionPartMatrix;
-use crate::question::number_entry::QuestionPartNumberEntry;
-use crate::question::pattern_match::QuestionPartPatternMatch;
 use crate::support::primitive::Primitive;
 use crate::support::serde_functions::from_str_optional;
 use schemars::JsonSchema;
@@ -17,6 +7,28 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Error;
 use serde_with::skip_serializing_none;
+
+pub mod choose_multiple;
+pub mod choose_one;
+pub mod extension;
+pub mod gapfill;
+pub mod information;
+pub mod jme;
+pub mod match_answers;
+pub mod matrix;
+pub mod number_entry;
+pub mod pattern_match;
+
+use choose_multiple::QuestionPartChooseMultiple;
+use choose_one::QuestionPartChooseOne;
+use extension::QuestionPartExtension;
+use gapfill::QuestionPartGapFill;
+use information::QuestionPartInformation;
+use jme::QuestionPartJME;
+use match_answers::QuestionPartMatchAnswersWithChoices;
+use matrix::QuestionPartMatrix;
+use number_entry::QuestionPartNumberEntry;
+use pattern_match::QuestionPartPatternMatch;
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "std::collections::BTreeMap<String, serde_json::Value>")]

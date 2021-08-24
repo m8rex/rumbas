@@ -1,4 +1,4 @@
-use crate::question::match_answers::MultipleChoiceWarningType;
+use crate::question::part::match_answers::MultipleChoiceWarningType;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::Primitive;
 use crate::support::primitive::SafeNatural;

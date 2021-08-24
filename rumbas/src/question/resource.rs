@@ -18,9 +18,9 @@ pub struct ResourcePath {
 }
 impl_optional_overwrite!(ResourcePath);
 
-impl ToNumbas<numbas::exam::resource::Resource> for ResourcePath {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::resource::Resource {
-        numbas::exam::resource::Resource([
+impl ToNumbas<numbas::question::resource::Resource> for ResourcePath {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::resource::Resource {
+        numbas::question::resource::Resource([
             self.resource_name.clone(),
             self.resource_path
                 .canonicalize()
@@ -32,7 +32,7 @@ impl ToNumbas<numbas::exam::resource::Resource> for ResourcePath {
     }
 }
 
-impl ToRumbas<ResourcePath> for numbas::exam::resource::Resource {
+impl ToRumbas<ResourcePath> for numbas::question::resource::Resource {
     fn to_rumbas(&self) -> ResourcePath {
         ResourcePath {
             resource_name: self.0[0].clone(),

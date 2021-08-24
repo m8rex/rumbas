@@ -1,4 +1,5 @@
 use crate::exam::diagnostic::DiagnosticExam;
+use crate::exam::feedback::Feedback;
 use crate::exam::navigation::{
     DiagnosticNavigation, MenuNavigation, NormalNavigation, SequentialNavigation,
 };
@@ -6,7 +7,6 @@ use crate::exam::normal::NormalExam;
 use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::timing::Timing;
 use crate::exam::Exam;
-use crate::question::feedback::Feedback;
 use crate::question::part::extension::QuestionPartExtension;
 use crate::question::part::gapfill::QuestionPartGapFill;
 use crate::question::part::information::QuestionPartInformation;

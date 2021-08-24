@@ -33,9 +33,9 @@ optional_overwrite! {
 struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
 
@@ -43,9 +43,9 @@ impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixR
 struct MatrixRow(Vec<TranslatableString>);
 impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Row(
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(
             self.0
                 .to_numbas(locale)
                 .into_iter()
@@ -59,9 +59,9 @@ impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixR
 struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
-impl ToNumbas<numbas::question::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(&self, locale: &str) -> numbas::question::match_answers::MultipleChoiceMatrix {
-        numbas::question::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
+        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(self.0.to_numbas(locale))
     }
 }
 
@@ -135,8 +135,8 @@ fn extract_multiple_choice_answer_data(
     }
 }
 
-impl_to_numbas!(numbas::question::match_answers::MultipleChoiceMatrix);
-impl_optional_overwrite!(numbas::question::match_answers::MultipleChoiceMatrix);
+impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
+impl_optional_overwrite!(numbas::question::part::match_answers::MultipleChoiceMatrix);
 
 impl_to_numbas!(numbas::support::primitive::Primitive);
 impl_optional_overwrite!(numbas::support::primitive::Primitive);

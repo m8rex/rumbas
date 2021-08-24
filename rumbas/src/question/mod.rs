@@ -3,7 +3,6 @@
 pub mod constants;
 pub mod custom_part_type;
 pub mod extension;
-pub mod feedback;
 pub mod function;
 pub mod navigation;
 pub mod part;
@@ -85,7 +84,7 @@ impl ToNumbas<numbas::question::question::Question> for Question {
             statement: self.statement.to_numbas(locale),
             advice: self.advice.to_numbas(locale),
             parts: self.parts.to_numbas(locale),
-            builtin_constants: numbas::exam::constants::BuiltinConstants(
+            builtin_constants: numbas::question::constants::BuiltinConstants(
                 self.builtin_constants.clone().unwrap().to_numbas(locale),
             ),
             constants: self.custom_constants.to_numbas(locale),

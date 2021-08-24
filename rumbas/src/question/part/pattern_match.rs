@@ -17,16 +17,16 @@ question_part_type! {
         partial_credit: f64,
         pattern: TranslatableString, //TODO: type
         display_answer: TranslatableString,
-        match_mode: numbas::question::pattern_match::PatternMatchMode
+        match_mode: numbas::question::part::pattern_match::PatternMatchMode
     }
 }
-impl_optional_overwrite!(numbas::question::pattern_match::PatternMatchMode);
+impl_optional_overwrite!(numbas::question::part::pattern_match::PatternMatchMode);
 
-impl ToNumbas<numbas::question::pattern_match::QuestionPartPatternMatch>
+impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     for QuestionPartPatternMatch
 {
-    fn to_numbas(&self, locale: &str) -> numbas::question::pattern_match::QuestionPartPatternMatch {
-        numbas::question::pattern_match::QuestionPartPatternMatch {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::pattern_match::QuestionPartPatternMatch {
+        numbas::question::part::pattern_match::QuestionPartPatternMatch {
             part_data: self.to_numbas(locale),
             case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
             partial_credit: Some(self.partial_credit.to_numbas(locale)),
@@ -38,10 +38,10 @@ impl ToNumbas<numbas::question::pattern_match::QuestionPartPatternMatch>
         }
     }
 }
-impl_to_numbas!(numbas::question::pattern_match::PatternMatchMode);
+impl_to_numbas!(numbas::question::part::pattern_match::PatternMatchMode);
 
 impl ToRumbas<QuestionPartPatternMatch>
-    for numbas::question::pattern_match::QuestionPartPatternMatch
+    for numbas::question::part::pattern_match::QuestionPartPatternMatch
 {
     fn to_rumbas(&self) -> QuestionPartPatternMatch {
         create_question_part! {

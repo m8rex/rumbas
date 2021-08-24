@@ -255,9 +255,9 @@ optional_overwrite! {
     }
 }
 
-impl ToNumbas<numbas::exam::custom_part_type::CustomPartMarkingNote> for JMENote {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::custom_part_type::CustomPartMarkingNote {
-        numbas::exam::custom_part_type::CustomPartMarkingNote {
+impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JMENote {
+    fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartMarkingNote {
+        numbas::question::custom_part_type::CustomPartMarkingNote {
             name: self.name.to_numbas(locale),
             definition: self.expression.to_numbas(&locale),
             description: self.description.unwrap().unwrap_or("".to_string()),
@@ -265,7 +265,7 @@ impl ToNumbas<numbas::exam::custom_part_type::CustomPartMarkingNote> for JMENote
     }
 }
 
-impl ToRumbas<JMENote> for numbas::exam::custom_part_type::CustomPartMarkingNote {
+impl ToRumbas<JMENote> for numbas::question::custom_part_type::CustomPartMarkingNote {
     fn to_rumbas(&self) -> JMENote {
         JMENote {
             name: self.name.to_rumbas(),

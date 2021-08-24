@@ -26,12 +26,12 @@ question_part_type! {
     }
 }
 
-impl ToNumbas<numbas::question::matrix::QuestionPartMatrix> for QuestionPartMatrix {
-    fn to_numbas(&self, locale: &str) -> numbas::question::matrix::QuestionPartMatrix {
+impl ToNumbas<numbas::question::part::matrix::QuestionPartMatrix> for QuestionPartMatrix {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::matrix::QuestionPartMatrix {
         let dimensions = self.dimensions.unwrap();
         let rows = dimensions.rows.unwrap();
         let columns = dimensions.columns.unwrap();
-        numbas::question::matrix::QuestionPartMatrix {
+        numbas::question::part::matrix::QuestionPartMatrix {
             part_data: self.to_numbas(locale),
             correct_answer: self.correct_answer.to_numbas(locale),
             correct_answer_fractions: self.display_correct_as_fraction.to_numbas(locale),
@@ -49,7 +49,7 @@ impl ToNumbas<numbas::question::matrix::QuestionPartMatrix> for QuestionPartMatr
     }
 }
 
-impl ToRumbas<QuestionPartMatrix> for numbas::question::matrix::QuestionPartMatrix {
+impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
         let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
             self.min_rows.to_rumbas(),
