@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MatchAnswerWithItemsDisplay",""],["MultipleChoiceMatchAnswerData",""]],"struct":[["MatchAnswersItem",""],["MatchAnswersItemMarks",""],["MultipleChoiceMatchAnswerDataNumbasLike",""],["MultipleChoiceMatchAnswers",""],["QuestionPartMatchAnswersWithItems",""]]});

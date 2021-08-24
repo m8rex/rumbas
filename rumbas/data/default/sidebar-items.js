@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["DefaultData",""],["DefaultFileType",""]],"fn":[["combine_with_default_files",""]],"struct":[["DefaultFile",""]]});

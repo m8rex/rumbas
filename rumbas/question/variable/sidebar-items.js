@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["UNGROUPED_GROUP",""]],"enum":[["VariableRepresentation",""],["VariableStringRepresentation",""],["VariableTemplateType","The different template_types for a variable"]],"struct":[["RangeData",""],["Variable",""]]});

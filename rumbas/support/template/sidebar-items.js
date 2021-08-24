@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"enum":[["ValueType",""]],"struct":[["MyYamlValue",""],["TemplateData",""],["TemplateString",""],["Value",""]]});

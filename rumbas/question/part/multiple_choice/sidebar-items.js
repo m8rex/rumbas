@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MultipleChoiceAnswerData",""]],"mod":[["choose_multiple",""],["choose_one",""],["match_answers",""]],"struct":[["MultipleChoiceAnswer",""],["MultipleChoiceAnswerDataNumbasLike",""]]});

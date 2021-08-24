@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DefaultData",""],["DefaultFileType",""]],"fn":[["combine_with_default_files","Combine an exam with all data from the default files"]]});
