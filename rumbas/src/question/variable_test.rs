@@ -1,4 +1,5 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -6,10 +7,12 @@ use numbas::jme::JMEString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+type JMEStringInput = numbas::jme::JMEString;
+
 optional_overwrite! {
     pub struct VariablesTest {
         condition: JMEString,
-        max_runs: usize
+        max_runs: RumbasNatural
     }
 }
 

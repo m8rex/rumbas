@@ -4,19 +4,26 @@ use crate::support::to_numbas::impl_to_numbas;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::{JMETranslatableString, TranslatableString};
+use crate::support::translatable::{JMETranslatableStringInput, TranslatableStringInput};
+use numbas::question::function::FunctionType as NumbasFunctionType;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+// TODO: don't directly use numbas type
+type StringFunctionTypeTuple = (String, NumbasFunctionType);
+type StringFunctionTypeTuples = Vec<StringFunctionTypeTuple>;
+type StringFunctionTypeTuplesInput = Vec<Value<StringFunctionTypeTuple>>;
+
 optional_overwrite! {
     pub struct Function {
-        parameters: Vec<(String, numbas::question::function::FunctionType)>,
-        output_type: numbas::question::function::FunctionType,
+        parameters: StringFunctionTypeTuples,
+        output_type: NumbasFunctionType,
         #[serde(flatten)]
         definition: FunctionDefinition
     }
 }
-impl_optional_overwrite! {(String, numbas::question::function::FunctionType)}
-impl_optional_overwrite!(numbas::question::function::FunctionType);
+impl_optional_overwrite!(NumbasFunctionType);
+impl_optional_overwrite! {StringFunctionTypeTuple}
 
 impl ToNumbas<numbas::question::function::Function> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {
@@ -27,7 +34,6 @@ impl ToNumbas<numbas::question::function::Function> for Function {
         }
     }
 }
-impl_to_numbas!(numbas::question::function::FunctionType);
 
 impl ToRumbas<Function> for numbas::question::function::Function {
     fn to_rumbas(&self) -> Function {

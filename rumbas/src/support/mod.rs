@@ -12,6 +12,7 @@ pub mod input_string;
 pub mod noneable;
 pub mod optional_overwrite;
 pub mod rumbas_check;
+pub mod rumbas_types;
 pub mod template;
 pub mod translatable;
 pub mod variable_valued;

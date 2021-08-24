@@ -1,11 +1,14 @@
 use crate::exam::feedback::Feedback;
-use crate::exam::locale::Locale;
+use crate::exam::feedback::FeedbackInput;
 use crate::exam::locale::SupportedLocale;
+use crate::exam::locale::{Locale, Locales, LocalesInput};
 use crate::exam::navigation::DiagnosticNavigation;
+use crate::exam::navigation::DiagnosticNavigationInput;
 use crate::exam::numbas_settings::NumbasSettings;
-use crate::exam::question_group::QuestionGroup;
+use crate::exam::numbas_settings::NumbasSettingsInput;
 use crate::exam::question_group::QuestionPath;
-use crate::exam::timing::Timing;
+use crate::exam::question_group::{QuestionGroup, QuestionGroups, QuestionGroupsInput};
+use crate::exam::timing::{Timing, TimingInput};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
 use crate::support::optional_overwrite::*;
@@ -13,7 +16,11 @@ use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMENotesTranslatableString;
+use crate::support::translatable::JMENotesTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
+use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableStringsInput;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -22,7 +29,7 @@ optional_overwrite! {
     /// A Diagnostic Exam
     pub struct DiagnosticExam {
         /// All locales for which the exam should be generated
-        locales: Vec<Value<Locale>>,
+        locales: Locales,
         /// The name of the exam
         name: TranslatableString,
         /// The navigation settings for this exam
@@ -32,7 +39,7 @@ optional_overwrite! {
         /// The feedback settings for this exam
         feedback: Feedback,
         /// The questions groups for this exam
-        question_groups: Vec<Value<QuestionGroup>>,
+        question_groups: QuestionGroups,
         /// The settings to set for numbas
         numbas_settings: NumbasSettings,
         /// The diagnostic data
@@ -175,9 +182,9 @@ optional_overwrite! {
         /// The script to use
         script: DiagnosticScript,
         /// The learning objectives,
-        objectives: Vec<LearningObjective>,
+        objectives: LearningObjectives,
         /// The learning topics
-        topics: Vec<LearningTopic>
+        topics: LearningTopics
     }
 }
 
@@ -251,6 +258,9 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
+pub type LearningObjectivesInput = Vec<Value<LearningObjectiveInput>>;
+pub type LearningObjectives = Vec<LearningObjective>;
+
 optional_overwrite! {
     /// A Learning Objective
     pub struct LearningObjective {
@@ -286,6 +296,9 @@ impl ToRumbas<LearningObjective>
     }
 }
 
+pub type LearningTopicsInput = Vec<Value<LearningTopicInput>>;
+pub type LearningTopics = Vec<LearningTopic>;
+
 optional_overwrite! {
     /// A learning Topic
     pub struct  LearningTopic {
@@ -294,9 +307,9 @@ optional_overwrite! {
         /// A description
         description: TranslatableString,
         /// List of names of objectives
-        objectives: Vec<TranslatableString>,
+        objectives: TranslatableStrings,
         /// List of names of topic on which this topic depends
-        depends_on: Vec<TranslatableString>
+        depends_on: TranslatableStrings
     }
 }
 

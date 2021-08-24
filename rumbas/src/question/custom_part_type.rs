@@ -148,10 +148,14 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartInputWidget> for Cus
     fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartInputWidget {
         match self {
             CustomPartInputWidget::String(s) => {
-                numbas::question::custom_part_type::CustomPartInputWidget::String(s.to_numbas(locale))
+                numbas::question::custom_part_type::CustomPartInputWidget::String(
+                    s.to_numbas(locale),
+                )
             }
             CustomPartInputWidget::Number(s) => {
-                numbas::question::custom_part_type::CustomPartInputWidget::Number(s.to_numbas(locale))
+                numbas::question::custom_part_type::CustomPartInputWidget::Number(
+                    s.to_numbas(locale),
+                )
             }
             CustomPartInputWidget::RadioGroup(s) => {
                 numbas::question::custom_part_type::CustomPartInputWidget::RadioButtons(
@@ -335,6 +339,9 @@ pub struct CustomPartTypeDefinitionPath {
     pub custom_part_type_data: CustomPartTypeDefinition,
 }
 impl_optional_overwrite!(CustomPartTypeDefinitionPath);
+
+pub type CustomPartTypeDefinitionPaths = Vec<CustomPartTypeDefinitionPath>;
+pub type CustomPartTypeDefinitionPathsInput = Vec<Value<CustomPartTypeDefinitionPathInput>>;
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinitionPath {
     fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartType {

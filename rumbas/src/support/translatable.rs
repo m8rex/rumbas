@@ -1,4 +1,5 @@
 use crate::support::file_reference::FileString;
+use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
@@ -75,14 +76,14 @@ translatable_type! {
 
 #[cfg(test)]
 mod test {
-    use super::TranslatableString::*;
+    use super::TranslatableStringInput::*;
     use super::*;
-    use crate::support::file_reference::FileString;
+    use crate::support::file_reference::FileStringInput;
 
     #[test]
     fn no_translation() {
         let val = "some string".to_string();
-        let t = NotTranslated(FileString::s(&val));
+        let t = NotTranslated(FileStringInput::s(&val));
         assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
     }
 
@@ -93,11 +94,11 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_nl))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_en))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_en))),
         );
         let t = Translated(m);
         assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
@@ -111,21 +112,21 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_nl))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_en))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_en))),
         );
         let val1 = "x^2";
         let val2 = "e^x";
         m.insert(
             "{0}".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val1.to_string()))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val1.to_string()))),
         );
         m.insert(
             "{func}".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val2.to_string()))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val2.to_string()))),
         );
         let t = Translated(m);
         assert_eq!(
@@ -145,34 +146,34 @@ mod test {
         let mut m = HashMap::new();
         m.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_nl))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_nl))),
         );
         m.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val_en))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val_en))),
         );
         let val1 = "x^2";
         let val2 = "e^x ({cond})";
         m.insert(
             "{0}".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val1.to_string()))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val1.to_string()))),
         );
         let mut m2 = HashMap::new();
         m2.insert(
             "content".to_string(),
-            Value::Normal(NotTranslated(FileString::s(&val2.to_string()))),
+            Value::Normal(NotTranslated(FileStringInput::s(&val2.to_string()))),
         );
 
         let mut m3 = HashMap::new();
         m3.insert(
             "nl".to_string(),
-            Value::Normal(NotTranslated(FileString::s(
+            Value::Normal(NotTranslated(FileStringInput::s(
                 &"met x groter dan 0".to_string(),
             ))),
         );
         m3.insert(
             "en".to_string(),
-            Value::Normal(NotTranslated(FileString::s(
+            Value::Normal(NotTranslated(FileStringInput::s(
                 &"with x larger than 0".to_string(),
             ))),
         );
@@ -204,114 +205,121 @@ macro_rules! translatable_type {
         subtype $subtype: ty,
         rumbas_check $check_expr: expr
     ) => {
-        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-        #[serde(untagged)]
-        pub enum $type {
-            //TODO: custom reader that checks for missing values etc?
-            /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-            Translated(HashMap<String, Value<$type>>),
-            /// A file reference or string
-            NotTranslated(FileString),
-        }
-
-        impl_to_rumbas!($type);
-
-        impl std::convert::From<$subtype> for $type {
-            fn from(sub: $subtype) -> Self {
-                let s: String = sub.into();
-                $type::NotTranslated(FileString::s(&s))
+        paste::paste! {
+            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+            #[serde(untagged)]
+            pub enum [<$type Input>] {
+                //TODO: custom reader that checks for missing values etc?
+                /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
+                Translated(HashMap<String, Value<[<$type Input>]>>),
+                /// A file reference or string
+                NotTranslated(FileStringInput),
             }
-        }
 
-        impl RumbasCheck for $type {
-            fn check(&self, locale: &str) -> RumbasCheckResult {
-                let content = self.to_string(locale);
-                match content {
-                    Some(c) => {
-                        let conversion_res: Result<$subtype, _> = c.try_into();
-                        match conversion_res {
-                            Ok(_) => RumbasCheckResult::empty(),
-                            Err(e) => $check_expr(e),
+            impl_to_rumbas!([<$type Input>]);
+
+            impl std::convert::From<$subtype> for [<$type Input>] {
+                fn from(sub: $subtype) -> Self {
+                    let s: String = sub.into();
+                    [<$type Input>]::NotTranslated(FileStringInput::s(&s))
+                }
+            }
+
+            impl RumbasCheck for [<$type Input>] {
+                fn check(&self, locale: &str) -> RumbasCheckResult {
+                    let content = self.to_string(locale);
+                    match content {
+                        Some(c) => {
+                            let conversion_res: Result<$subtype, _> = c.try_into();
+                            match conversion_res {
+                                Ok(_) => RumbasCheckResult::empty(),
+                                Err(e) => $check_expr(e),
+                            }
                         }
+                        None => RumbasCheckResult::from_missing(Some(locale.to_owned())),
                     }
-                    None => RumbasCheckResult::from_missing(Some(locale.to_owned())),
                 }
             }
-        }
 
-        impl ToNumbas<$subtype> for $type {
-            fn to_numbas(&self, locale: &str) -> $subtype {
-                self.to_string(locale).unwrap().try_into().unwrap()
-            }
-        }
-
-        impl OptionalOverwrite<$type> for $type {
-            fn overwrite(&mut self, _other: &$type) {
-                //TODO: Maybe add languages of other that are missing in self?
-                // These default values should be read before language is interpreted
-            }
-            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-                match self {
-                    $type::Translated(m) => m.insert_template_value(key, val),
-                    $type::NotTranslated(f) => f.insert_template_value(key, val),
+            impl ToNumbas<$subtype> for [<$type Input>] {
+                fn to_numbas(&self, locale: &str) -> $subtype {
+                    self.to_string(locale).unwrap().try_into().unwrap()
                 }
             }
-        }
-        impl_optional_overwrite_value!($type);
 
-        impl $type {
-            pub fn to_string(&self, locale: &str) -> Option<String> {
-                //TODO: check for infinite loops / recursion? -> don't substitute something that is already
-                //substituted
-                fn substitute(
-                    pattern: &Option<String>,
-                    locale: &str,
-                    map: &HashMap<String, Value<$type>>,
-                ) -> Option<String> {
-                    pattern
-                        .as_ref()
-                        .map(|pattern| {
-                            let mut result = pattern.to_string();
-                            let mut substituted = false;
-                            for (key, val) in map.iter() {
-                                if key.starts_with('{') && key.ends_with('}') {
-                                    let before = result.clone();
-                                    if let Some(v) = val.unwrap().to_string(locale) {
-                                        result = result.replace(key, &v);
-                                        substituted = substituted || before != result;
-                                    } else {
-                                        return None;
+            impl OptionalOverwrite<[<$type Input>]> for [<$type Input>] {
+                fn overwrite(&mut self, _other: &[<$type Input>]) {
+                    //TODO: Maybe add languages of other that are missing in self?
+                    // These default values should be read before language is interpreted
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+                    match self {
+                        [<$type Input>]::Translated(m) => m.insert_template_value(key, val),
+                        [<$type Input>]::NotTranslated(f) => f.insert_template_value(key, val),
+                    }
+                }
+            }
+            impl_optional_overwrite_value!([<$type Input>]);
+
+            impl [<$type Input>] {
+                pub fn to_string(&self, locale: &str) -> Option<String> {
+                    //TODO: check for infinite loops / recursion? -> don't substitute something that is already
+                    //substituted
+                    fn substitute(
+                        pattern: &Option<String>,
+                        locale: &str,
+                        map: &HashMap<String, Value<[<$type Input>]>>,
+                    ) -> Option<String> {
+                        pattern
+                            .as_ref()
+                            .map(|pattern| {
+                                let mut result = pattern.to_string();
+                                let mut substituted = false;
+                                for (key, val) in map.iter() {
+                                    if key.starts_with('{') && key.ends_with('}') {
+                                        let before = result.clone();
+                                        if let Some(v) = val.unwrap().to_string(locale) {
+                                            result = result.replace(key, &v);
+                                            substituted = substituted || before != result;
+                                        } else {
+                                            return None;
+                                        }
                                     }
                                 }
-                            }
-                            if substituted {
-                                substitute(&Some(result), locale, map)
-                            } else {
-                                Some(result)
-                            }
-                        })
-                        .flatten()
-                }
-                match self {
-                    //TODO: just use unwrap on values?
-                    $type::NotTranslated(s) => s.get_content(locale),
-                    $type::Translated(m_value) => {
-                        let m = m_value.clone();
-                        m.get(locale)
-                            .or_else(|| m.get("content")) //TODO
-                            .map(|t_value| {
-                                let t = t_value.unwrap();
-                                match t {
-                                    $type::NotTranslated(s) => {
-                                        substitute(&s.get_content(locale), locale, &m)
-                                    }
-                                    _ => t.to_string(locale),
+                                if substituted {
+                                    substitute(&Some(result), locale, map)
+                                } else {
+                                    Some(result)
                                 }
                             })
                             .flatten()
-                    } //TODO content to static string
+                    }
+                    match self {
+                        //TODO: just use unwrap on values?
+                        [<$type Input>]::NotTranslated(s) => s.get_content(locale),
+                        [<$type Input>]::Translated(m_value) => {
+                            let m = m_value.clone();
+                            m.get(locale)
+                                .or_else(|| m.get("content")) //TODO
+                                .map(|t_value| {
+                                    let t = t_value.unwrap();
+                                    match t {
+                                        [<$type Input>]::NotTranslated(s) => {
+                                            substitute(&s.get_content(locale), locale, &m)
+                                        }
+                                        _ => t.to_string(locale),
+                                    }
+                                })
+                                .flatten()
+                        } //TODO content to static string
+                    }
                 }
             }
+        }
+        pub type $type = $subtype;
+        paste::paste! {
+            pub type [<$type sInput>] = Vec<Value<[<$type Input>]>>;
+            pub type [<$type s>] = Vec<$subtype>;
         }
     };
 }

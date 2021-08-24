@@ -11,29 +11,46 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
+use crate::question::custom_part_type::CustomPartTypeDefinitionPaths;
+use crate::question::custom_part_type::CustomPartTypeDefinitionPathsInput;
+use crate::question::variable_test::VariablesTestInput;
 use crate::support::optional_overwrite::*;
 use crate::support::template::TemplateData;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use crate::support::yaml::{YamlError, YamlResult};
 use constants::BuiltinConstants;
-use constants::CustomConstant;
+use constants::BuiltinConstantsInput;
+use constants::CustomConstants;
+use constants::CustomConstantsInput;
 use custom_part_type::CustomPartTypeDefinitionPath;
+use custom_part_type::CustomPartTypeDefinitionPathInput;
 use extension::Extensions;
+use extension::ExtensionsInput;
 use function::Function;
+use function::FunctionInput;
 use navigation::QuestionNavigation;
+use navigation::QuestionNavigationInput;
 use part::question_part::QuestionPart;
+use part::question_part::QuestionPartInput;
+use part::question_part::QuestionParts;
+use part::question_part::QuestionPartsInput;
 use preamble::Preamble;
-use resource::ResourcePath;
+use preamble::PreambleInput;
+use resource::ResourcePaths;
+use resource::ResourcePathsInput;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use variable::VariableRepresentation;
+use variable::VariableRepresentationInput;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
@@ -44,23 +61,29 @@ optional_overwrite! {
         /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
         /// The advice area is normally used to present a worked solution to the question.
         advice: ContentAreaTranslatableString,
-        parts: Vec<Value<QuestionPart>>,
+        parts: QuestionParts,
         builtin_constants: BuiltinConstants,
-        custom_constants: Vec<CustomConstant>,
-        variables: HashMap<String, Value<VariableRepresentation>>,
+        custom_constants: CustomConstants,
+        variables: StringToVariableRepresentation,
         variables_test: VariablesTest,
-        functions: HashMap<String, Value<Function>>,
+        functions: StringToFunction,
         preamble: Preamble,
         navigation: QuestionNavigation,
         extensions: Extensions,
         /// The names of the topics used in diagnostic exams that this question belongs to
-        diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
-        resources: Vec<Value<ResourcePath>>,
+        diagnostic_topic_names: TranslatableString, // TODO: validate? / warnings?
+        resources: ResourcePaths,
         /// The custom part types used in this exam
-        custom_part_types: Vec<CustomPartTypeDefinitionPath>
+        custom_part_types: CustomPartTypeDefinitionPaths
         //TODO a lot of options
     }
 }
+
+type StringToVariableRepresentationInput = HashMap<String, Value<VariableRepresentationInput>>;
+type StringToVariableRepresentation = HashMap<String, VariableRepresentation>;
+
+type StringToFunctionInput = HashMap<String, Value<FunctionInput>>;
+type StringToFunction = HashMap<String, Function>;
 
 impl ToNumbas<numbas::question::question::Question> for Question {
     fn to_numbas(&self, _locale: &str) -> numbas::question::question::Question {

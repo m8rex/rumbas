@@ -12,11 +12,11 @@ pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
 }
 
-impl_to_rumbas!(bool, f64, usize, String, [f64; 2]);
+impl_to_rumbas!(bool, f64, usize, [f64; 2]);
 impl_to_rumbas!(numbas::support::primitive::Primitive);
-impl_to_rumbas!(numbas::jme::JMEString);
-impl_to_rumbas!(numbas::jme::EmbracedJMEString);
-impl_to_rumbas!(numbas::jme::ContentAreaString);
+//impl_to_rumbas!(numbas::jme::JMEString);
+//impl_to_rumbas!(numbas::jme::EmbracedJMEString);
+//impl_to_rumbas!(numbas::jme::ContentAreaString);
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {

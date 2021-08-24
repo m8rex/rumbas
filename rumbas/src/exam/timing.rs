@@ -1,15 +1,17 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     pub struct Timing {
-        duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
-        allow_pause: bool,
+        duration_in_seconds: NoneableNatural, // if "none" (or 0) -> unlimited time
+        allow_pause: RumbasBool,
         /// Action to do on timeout
         on_timeout: TimeoutAction,
         /// Action to do five minutes before timeout
@@ -38,12 +40,13 @@ impl ToRumbas<Timing> for numbas::exam::exam::Exam {
     }
 }
 
+// TODO: optional_overwrite
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum TimeoutAction {
     None,
-    Warn { message: TranslatableString },
+    Warn(TimeoutActionWarn),
 }
 impl_optional_overwrite!(TimeoutAction);
 
@@ -53,8 +56,8 @@ impl ToNumbas<numbas::exam::timing::TimeoutAction> for TimeoutAction {
             TimeoutAction::None => numbas::exam::timing::TimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything
             },
-            TimeoutAction::Warn { message } => numbas::exam::timing::TimeoutAction::Warn {
-                message: message.to_string(locale).unwrap(),
+            TimeoutAction::Warn(wm) => numbas::exam::timing::TimeoutAction::Warn {
+                message: wm.message.to_string(locale).unwrap(),
             },
         }
     }
@@ -64,9 +67,17 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
     fn to_rumbas(&self) -> TimeoutAction {
         match self {
             numbas::exam::timing::TimeoutAction::None { message: _ } => TimeoutAction::None,
-            numbas::exam::timing::TimeoutAction::Warn { message } => TimeoutAction::Warn {
-                message: message.to_owned().into(),
-            },
+            numbas::exam::timing::TimeoutAction::Warn { message } => {
+                TimeoutAction::Warn(TimeoutActionWarn {
+                    message: message.to_owned().into(),
+                })
+            }
         }
+    }
+}
+
+optional_overwrite! {
+    pub struct TimeoutActionWarn {
+        message: TranslatableString
     }
 }

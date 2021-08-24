@@ -1,36 +1,49 @@
 use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategyInput;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionParts;
+use crate::question::QuestionPartsInput;
 use crate::support::file_reference::FileString;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use numbas::defaults::DEFAULTS;
+use numbas::support::answer_style::AnswerStyle as NumbasAnswerStyle;
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
     pub struct QuestionPartNumberEntry {
         answer: NumberEntryAnswer,
-        display_correct_as_fraction: bool,
-        allow_fractions: bool,
-        allowed_notation_styles: Vec<AnswerStyle>,
+        display_correct_as_fraction: RumbasBool,
+        allow_fractions: RumbasBool,
+        allowed_notation_styles: AnswerStyles,
 
         display_correct_in_style: AnswerStyle,
-        fractions_must_be_reduced: bool,
-        partial_credit_if_fraction_not_reduced: numbas::support::primitive::Primitive,
+        fractions_must_be_reduced: RumbasBool,
+        partial_credit_if_fraction_not_reduced: Primitive,
 
-        hint_fraction: bool
+        hint_fraction: RumbasBool
 
         //TODO: precision, show_precision_hint
     }
 
 }
-impl_optional_overwrite!(numbas::support::answer_style::AnswerStyle);
+impl_optional_overwrite!(NumbasAnswerStyle);
 
-impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry> for QuestionPartNumberEntry {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::number_entry::QuestionPartNumberEntry {
+impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
+    for QuestionPartNumberEntry
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::number_entry::QuestionPartNumberEntry {
         numbas::question::part::number_entry::QuestionPartNumberEntry {
             part_data: self.to_numbas(locale),
             correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
@@ -51,7 +64,9 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry> for
     }
 }
 
-impl ToRumbas<QuestionPartNumberEntry> for numbas::question::part::number_entry::QuestionPartNumberEntry {
+impl ToRumbas<QuestionPartNumberEntry>
+    for numbas::question::part::number_entry::QuestionPartNumberEntry
+{
     fn to_rumbas(&self) -> QuestionPartNumberEntry {
         create_question_part! {
             QuestionPartNumberEntry with &self.part_data => {
@@ -92,7 +107,10 @@ pub enum NumberEntryAnswer {
 impl_optional_overwrite!(NumberEntryAnswer);
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::number_entry::NumberEntryAnswerType {
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::number_entry::NumberEntryAnswerType {
         match self {
             NumberEntryAnswer::Normal(f) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::Answer {
@@ -191,3 +209,6 @@ impl ToRumbas<AnswerStyle> for numbas::support::answer_style::AnswerStyle {
         }
     }
 }
+
+pub type AnswerStylesInput = Vec<Value<AnswerStyleInput>>;
+pub type AnswerStyles = Vec<AnswerStyle>;

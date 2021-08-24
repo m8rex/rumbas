@@ -1,14 +1,25 @@
+use crate::question::part::multiple_choice::choose_multiple::MultipleChoiceWarningTypeInput;
 use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategyInput;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionParts;
+use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
+use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -18,26 +29,32 @@ question_part_type! {
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceMatchAnswerData,
-        shuffle_answers: bool,
-        shuffle_items: bool,
-        show_cell_answer_state: bool,
-        should_select_at_least: usize,
-        should_select_at_most: Noneable<usize>,
+        shuffle_answers: RumbasBool,
+        shuffle_items: RumbasBool,
+        show_cell_answer_state: RumbasBool,
+        should_select_at_least: RumbasNatural,
+        should_select_at_most: NoneableNatural,
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
-        layout: numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
+        layout: MatchAnswersWithChoicesLayout,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type: numbas::question::part::match_answers::MultipleChoiceWarningType
+        wrong_nb_answers_warning_type: MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO wrong_nb_choices_warning:
         //TODO other?
     }
 }
-impl_optional_overwrite!(
-    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
-    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
-);
+
+type MatchAnswersWithChoicesLayout =
+    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
+impl_optional_overwrite!(MatchAnswersWithChoicesLayout);
+type MatchAnswersWithChoicesDisplayType =
+    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType;
+impl_optional_overwrite!(MatchAnswersWithChoicesDisplayType);
+
+type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
+
 impl_to_numbas!(
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
     numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
@@ -279,18 +296,18 @@ optional_overwrite_enum! {
 
 optional_overwrite! {
     pub struct MultipleChoiceMatchAnswerDataNumbasLike {
-        answers: VariableValued<Vec<TranslatableString>>,
-        choices: VariableValued<Vec<TranslatableString>>,
-        marks: VariableValued<Vec<Vec<numbas::support::primitive::Primitive>>>
+        answers: VariableValuedTranslatableStrings,
+        choices: VariableValuedTranslatableStrings,
+        marks: VariableValuedPrimitivess
     }
 }
 
 optional_overwrite! {
     pub struct MultipleChoiceMatchAnswers {
         /// Values of the answers
-        answers: Vec<Value<TranslatableString>>,
+        answers: TranslatableStrings,
         /// Items for which the answer can be selected
-        items: Vec<Value<MatchAnswersItem>>
+        items: MatchAnswersItems
     }
 }
 
@@ -298,13 +315,19 @@ optional_overwrite! {
     pub struct MatchAnswersItem {
         statement: TranslatableString,
         /// Map points to strings of answers ! use anchors in yaml
-        answer_marks: Vec<MatchAnswersItemMarks>
+        answer_marks: MatchAnswersItemMarksList
     }
 }
 
+type MatchAnswersItemsInput = Vec<Value<MatchAnswersItemInput>>;
+type MatchAnswersItems = Vec<MatchAnswersItem>;
+
 optional_overwrite! {
     pub struct MatchAnswersItemMarks {
-        marks: numbas::support::primitive::Primitive,
+        marks: Primitive,
         answer: TranslatableString
     }
 }
+
+type MatchAnswersItemMarksListInput = Vec<Value<MatchAnswersItemMarksInput>>;
+type MatchAnswersItemMarksList = Vec<MatchAnswersItemMarks>;

@@ -1,28 +1,30 @@
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 optional_overwrite! {
     pub struct Feedback {
-        percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
-        show_name_of_student: bool,
+        percentage_needed_to_pass: NoneableFloat, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
+        show_name_of_student: RumbasBool,
         /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
-        show_current_marks: bool,
+        show_current_marks: RumbasBool,
         /// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
-        show_maximum_marks: bool,
+        show_maximum_marks: RumbasBool,
         /// Whether answer feedback is shown (right or wrong etc)
-        show_answer_state: bool,
+        show_answer_state: RumbasBool,
         /// Whether the 'reveal answer' button is present
-        allow_reveal_answer: bool,
+        allow_reveal_answer: RumbasBool,
         review: Review, // If none, everything is true???
         advice: TranslatableString,
         intro: TranslatableString,
-        feedback_messages: Vec<Value<FeedbackMessage>>
+        feedback_messages: FeedbackMessages
     }
 }
 
@@ -66,13 +68,13 @@ impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
 optional_overwrite! {
     pub struct Review {
         /// Whether to show score in result overview page
-        show_score: bool,
+        show_score: RumbasBool,
         /// Show feedback while reviewing
-        show_feedback: bool,
+        show_feedback: RumbasBool,
         /// Show expected answer while reviewing
-        show_expected_answer: bool,
+        show_expected_answer: RumbasBool,
         /// Show advice while reviewing
-        show_advice: bool
+        show_advice: RumbasBool
     }
 }
 
@@ -134,3 +136,6 @@ impl ToRumbas<FeedbackMessage> for numbas::exam::feedback::FeedbackMessage {
         }
     }
 }
+
+pub type FeedbackMessagesInput = Vec<Value<FeedbackMessageInput>>;
+pub type FeedbackMessages = Vec<FeedbackMessage>;

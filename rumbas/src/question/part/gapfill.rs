@@ -1,11 +1,20 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::{
+    QuestionPart, QuestionParts, VariableReplacementStrategy,
+};
+use crate::question::part::question_part::{
+    QuestionPartInput, QuestionPartsInput, VariableReplacementStrategyInput,
+};
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use numbas::defaults::DEFAULTS;
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -13,9 +22,9 @@ question_part_type! {
     // The Gap fill question part type
     pub struct QuestionPartGapFill {
         /// Whether the answers should be sorted
-        sort_answers: bool,
+        sort_answers: RumbasBool,
         /// The gaps
-        gaps: Vec<QuestionPart>
+        gaps: QuestionParts
     }
 }
 

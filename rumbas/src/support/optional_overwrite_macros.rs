@@ -14,6 +14,44 @@ macro_rules! optional_overwrite {
             ),+
         }
     ) => {
+        paste::paste!{
+            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+            $(
+                #[$outer]
+            )*
+            pub struct [<$struct Input>] {
+                $(
+                    $(#[$inner])*
+                    pub $field: Value<[<$type Input>]>
+                ),*
+            }
+            impl RumbasCheck for [<$struct Input>] {
+                fn check(&self, locale: &str) -> RumbasCheckResult {
+                    let mut result = RumbasCheckResult::empty();
+                    $(
+                        {
+                        let mut previous_result = self.$field.check(locale);
+                        previous_result.extend_path(stringify!($field).to_string());
+                        result.union(&previous_result);
+                        }
+                    )*
+                    result
+                }
+            }
+            impl OptionalOverwrite<[<$struct Input>]> for [<$struct Input>] {
+                fn overwrite(&mut self, other: &[<$struct Input>]) {
+                    $(
+                        self.$field.overwrite(&other.$field);
+                    )*
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    $(
+                        self.$field.insert_template_value(&key, &val);
+                    )*
+                }
+            }
+            impl_optional_overwrite_value!([<$struct Input>]);
+        }
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
         $(
             #[$outer]
@@ -21,41 +59,9 @@ macro_rules! optional_overwrite {
         pub struct $struct {
             $(
                 $(#[$inner])*
-                pub $field: Value<$type>
+                pub $field: $type
             ),*
         }
-        impl RumbasCheck for $struct {
-            fn check(&self, locale: &str) -> RumbasCheckResult {
-                let mut result = RumbasCheckResult::empty();
-                $(
-                    {
-                    let mut previous_result = self.$field.check(locale);
-                    previous_result.extend_path(stringify!($field).to_string());
-                    result.union(&previous_result);
-                    }
-                )*
-                result
-            }
-        }
-        impl OptionalOverwrite<$struct> for $struct {
-            fn overwrite(&mut self, other: &$struct) {
-                $(
-                    self.$field.overwrite(&other.$field);
-                )*
-            }
-            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                $(
-                    self.$field.insert_template_value(&key, &val);
-                )*
-            }
-        }
-
-        impl std::convert::From<$struct> for Value<$struct> {
-            fn from(val: $struct) -> Self {
-                Value::Normal(val)
-            }
-        }
-        impl_optional_overwrite_value!($struct);
     }
 }
 
@@ -68,49 +74,61 @@ macro_rules! optional_overwrite_enum {
         pub enum $enum: ident {
             $(
                 $(#[$inner:meta])*
-                $field: ident($type: ty)
+                $variant: ident($type: ty)
             ),+
         }
     ) => {
+        paste::paste!{
+            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+            $(
+                #[$outer]
+            )*
+            pub enum [<$enum Input>] {
+                $(
+                    $(
+                        #[$inner]
+                    )*
+                    $variant([<$type Input>])
+                ),*
+            }
+            impl RumbasCheck for [<$enum Input>] {
+                fn check(&self, locale: &str) -> RumbasCheckResult {
+                    match self {
+                        $(
+                           [<$enum Input>]::$variant(val) => val.check(locale),
+                        )*
+                        _ => RumbasCheckResult::empty()
+                    }
+                }
+            }
+            impl OptionalOverwrite<[<$enum Input>]> for [<$enum Input>] {
+                fn overwrite(&mut self, other: &[<$enum Input>]) {
+                    match (self, other) {
+                    $(
+                        (&mut [<$enum Input>]::$variant(ref mut val), &[<$enum Input>]::$variant(ref valo)) => val.overwrite(&valo)
+                    ),*
+                        , _ => ()
+                    };
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    match self {
+                    $(
+                        &mut [<$enum Input>]::$variant(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
+                    ),*
+                    };
+                }
+            }
+            impl_optional_overwrite_value!([<$enum Input>]);
+        }
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
-        $(
-            #[$outer]
-        )*
         pub enum $enum {
             $(
                 $(
                     #[$inner]
                 )*
-                $field($type)
+                $variant($type)
             ),*
         }
-        impl RumbasCheck for $enum {
-            fn check(&self, locale: &str) -> RumbasCheckResult {
-                match self {
-                $(
-                    $enum::$field(val) => val.check(locale)
-                ),*
-                }
-            }
-        }
-        impl OptionalOverwrite<$enum> for $enum {
-            fn overwrite(&mut self, other: &$enum) {
-                match (self, other) {
-                $(
-                    (&mut $enum::$field(ref mut val), &$enum::$field(ref valo)) => val.overwrite(&valo)
-                ),*
-                    , _ => ()
-                };
-            }
-            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                match self {
-                $(
-                    &mut $enum::$field(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
-                ),*
-                };
-            }
-        }
-        impl_optional_overwrite_value!($enum);
     }
 }
 
@@ -169,7 +187,7 @@ macro_rules! impl_optional_overwrite_value {
 
 /// Implement the RumbasCheck and OptionalOverwrite traits with blanket implementations
 macro_rules! impl_optional_overwrite {
-    ($($type: ty), *) => {
+    ($($type: ident), *) => {
         $(
         impl RumbasCheck for $type {
             fn check(&self, _locale: &str) -> RumbasCheckResult {
@@ -181,6 +199,7 @@ macro_rules! impl_optional_overwrite {
             fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
         }
         impl_optional_overwrite_value!($type);
+        crate::support::rumbas_types::create_input_alias!($type, $type);
         )*
     };
 }

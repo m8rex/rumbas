@@ -1,27 +1,34 @@
 use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
+use crate::question::QuestionParts;
+use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
+use crate::support::rumbas_types::*;
 use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::variable_valued::VariableValued;
+use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
     pub struct QuestionPartMatrix {
-        correct_answer: numbas::support::primitive::Primitive,
+        correct_answer: Primitive,
         dimensions: QuestionPartMatrixDimensions,
 
         /// If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.
-        max_absolute_deviation: f64,
+        max_absolute_deviation: RumbasFloat,
         /// If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.
-        mark_partial_by_cells: bool,
+        mark_partial_by_cells: RumbasBool,
 
-        display_correct_as_fraction: bool,
-        allow_fractions: bool
+        display_correct_as_fraction: RumbasBool,
+        allow_fractions: RumbasBool
         // todo: precision
     }
 }
@@ -90,10 +97,13 @@ impl QuestionPartMatrixDimensions {
 
 optional_overwrite_enum! {
     pub enum QuestionPartMatrixDimension {
-        Fixed(VariableValued<usize>),
-        Resizable(Box<QuestionPartMatrixRangedDimension>)
+        Fixed(VariableValuedNatural),
+        Resizable(BoxQuestionPartMatrixRangedDimension)
     }
 }
+
+type BoxQuestionPartMatrixRangedDimension = Box<QuestionPartMatrixRangedDimension>;
+type BoxQuestionPartMatrixRangedDimensionInput = Box<QuestionPartMatrixRangedDimensionInput>;
 
 impl QuestionPartMatrixDimension {
     pub fn default(&self) -> VariableValued<usize> {
@@ -144,10 +154,10 @@ impl QuestionPartMatrixDimension {
 optional_overwrite! {
     pub struct QuestionPartMatrixRangedDimension {
         /// The default size
-        default: VariableValued<usize>,
+        default: VariableValuedNatural,
         /// The minimal size
-        min: VariableValued<usize>,
+        min: VariableValuedNatural,
         /// The maximal size, if this is none, there is no limit
-        max: Noneable<VariableValued<usize>>
+        max: NoneableVariableValuedNatural
     }
 }
