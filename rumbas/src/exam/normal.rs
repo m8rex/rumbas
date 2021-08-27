@@ -7,13 +7,13 @@ use crate::exam::navigation::NormalNavigationInput;
 use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::numbas_settings::NumbasSettingsInput;
 use crate::exam::question_group::QuestionPath;
-use crate::exam::question_group::{QuestionGroup, QuestionGroups, QuestionGroupsInput};
+use crate::exam::question_group::{QuestionGroups, QuestionGroupsInput};
 use crate::exam::timing::Timing;
 use crate::exam::timing::TimingInput;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
 use crate::support::optional_overwrite::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -63,18 +63,13 @@ impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
 
         let resources: Vec<numbas::question::resource::Resource> = self
             .question_groups
-            .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .flat_map(|q| q.unwrap().question_data.resources.unwrap())
+                    .flat_map(|q| q.question_data.resources)
             })
-            .map(|r| r.unwrap())
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
@@ -82,16 +77,12 @@ impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
 
         let extensions: Vec<String> = self
             .question_groups
-            .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .map(|q| q.unwrap().question_data.extensions.unwrap())
+                    .map(|q| q.question_data.extensions)
             })
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
@@ -99,15 +90,12 @@ impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
         let custom_part_types: Vec<numbas::question::custom_part_type::CustomPartType> = self
             .question_groups
             .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .flat_map(|q| q.unwrap().question_data.custom_part_types.unwrap())
+                    .flat_map(|q| q.question_data.custom_part_types)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -134,35 +122,15 @@ impl ToNumbas<numbas::exam::exam::BasicExamSettings> for NormalExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
         numbas::exam::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
-            duration_in_seconds: self
-                .timing
-                .clone()
-                .unwrap()
-                .duration_in_seconds
-                .to_numbas(locale),
-            percentage_needed_to_pass: self
-                .feedback
-                .clone()
-                .unwrap()
-                .percentage_needed_to_pass
-                .to_numbas(locale),
+            duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale),
+            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
             show_question_group_names: Some(
                 self.navigation
-                    .clone()
-                    .unwrap()
                     .to_shared_data()
-                    .show_names_of_question_groups
-                    .unwrap(),
+                    .show_names_of_question_groups,
             ),
-            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
-            allow_printing: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .to_shared_data()
-                    .allow_printing
-                    .unwrap(),
-            ),
+            show_student_name: Some(self.feedback.show_name_of_student),
+            allow_printing: Some(self.navigation.to_shared_data().allow_printing),
         }
     }
 }
@@ -175,32 +143,26 @@ pub fn convert_normal_numbas_exam(
     Vec<QuestionPath>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
-    let question_groups: Vec<Value<_>> = exam.question_groups.to_rumbas();
+    let question_groups: Vec<_> = exam.question_groups.to_rumbas();
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         NormalExam {
-            locales: Value::Normal(vec![Value::Normal(Locale {
-                name: Value::Normal("en".to_string()),
-                numbas_locale: Value::Normal(SupportedLocale::EnGB),
-            })]), // todo: argument?
+            locales: vec![Locale {
+                name: "en".to_string(),
+                numbas_locale: SupportedLocale::EnGB,
+            }], // todo: argument?
             name: exam.basic_settings.name.to_rumbas(),
             navigation: exam.to_rumbas(),
             timing: exam.to_rumbas(),
             feedback: exam.to_rumbas(),
-            question_groups: Value::Normal(question_groups.clone()),
-            numbas_settings: Value::Normal(NumbasSettings {
-                theme: Value::Normal("default".to_string()),
-            }), // todo: argument?
+            question_groups: question_groups.clone(),
+            numbas_settings: NumbasSettings {
+                theme: "default".to_string(),
+            }, // todo: argument?
         },
         question_groups
             .into_iter()
-            .flat_map(|qg| {
-                qg.unwrap()
-                    .questions
-                    .unwrap()
-                    .into_iter()
-                    .map(|q| q.unwrap())
-            })
+            .flat_map(|qg| qg.questions.into_iter())
             .collect(),
         custom_part_types,
     )

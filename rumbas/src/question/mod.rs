@@ -15,28 +15,25 @@ use crate::question::custom_part_type::CustomPartTypeDefinitionPaths;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPathsInput;
 use crate::question::variable_test::VariablesTestInput;
 use crate::support::optional_overwrite::*;
-use crate::support::template::TemplateData;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
+use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::ContentAreaTranslatableStringInput;
-use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
+use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableStringsInput;
 use crate::support::yaml::{YamlError, YamlResult};
 use constants::BuiltinConstants;
 use constants::BuiltinConstantsInput;
 use constants::CustomConstants;
 use constants::CustomConstantsInput;
-use custom_part_type::CustomPartTypeDefinitionPath;
-use custom_part_type::CustomPartTypeDefinitionPathInput;
 use extension::Extensions;
 use extension::ExtensionsInput;
 use function::Function;
 use function::FunctionInput;
 use navigation::QuestionNavigation;
 use navigation::QuestionNavigationInput;
-use part::question_part::QuestionPart;
 use part::question_part::QuestionPartInput;
 use part::question_part::QuestionParts;
 use part::question_part::QuestionPartsInput;
@@ -71,7 +68,7 @@ optional_overwrite! {
         navigation: QuestionNavigation,
         extensions: Extensions,
         /// The names of the topics used in diagnostic exams that this question belongs to
-        diagnostic_topic_names: TranslatableString, // TODO: validate? / warnings?
+        diagnostic_topic_names: TranslatableStrings, // TODO: validate? / warnings?
         resources: ResourcePaths,
         /// The custom part types used in this exam
         custom_part_types: CustomPartTypeDefinitionPaths
@@ -99,7 +96,7 @@ impl ToNumbas<numbas::question::question::Question> for Question {
         locale: &str,
         name: String,
     ) -> numbas::question::question::Question {
-        if self.variables.unwrap().contains_key("e") {
+        if self.variables.contains_key("e") {
             panic!("e is not allowed as a variable name"); //TODO is this still the case?
         }
         numbas::question::question::Question {
@@ -108,47 +105,41 @@ impl ToNumbas<numbas::question::question::Question> for Question {
             advice: self.advice.to_numbas(locale),
             parts: self.parts.to_numbas(locale),
             builtin_constants: numbas::question::constants::BuiltinConstants(
-                self.builtin_constants.clone().unwrap().to_numbas(locale),
+                self.builtin_constants.clone().to_numbas(locale),
             ),
             constants: self.custom_constants.to_numbas(locale),
             variables: self
                 .variables
                 .clone()
-                .unwrap()
                 .into_iter()
                 .map(|(k, v)| (k.clone(), v.to_numbas_with_name(locale, k)))
                 .collect(),
-            variables_test: self.variables_test.clone().unwrap().to_numbas(locale),
+            variables_test: self.variables_test.clone().to_numbas(locale),
             functions: self.functions.to_numbas(locale),
             ungrouped_variables: self
                 .variables
                 .clone()
-                .unwrap()
                 .into_iter()
-                .filter(|(_k, v)| &v.unwrap().to_variable().group.unwrap()[..] == UNGROUPED_GROUP)
+                .filter(|(_k, v)| &v.to_variable().group[..] == UNGROUPED_GROUP)
                 .map(|(k, _)| k)
                 .collect(),
             variable_groups: Vec::new(), // Don't add variable groups
             rulesets: HashMap::new(),    //TODO: add to Question type ?
-            preamble: self.preamble.clone().unwrap().to_numbas(locale),
-            navigation: self.navigation.clone().unwrap().to_numbas(locale),
-            extensions: self.extensions.clone().unwrap().to_numbas(locale),
+            preamble: self.preamble.to_numbas(locale),
+            navigation: self.navigation.to_numbas(locale),
+            extensions: self.extensions.to_numbas(locale),
             tags: self
                 .diagnostic_topic_names
-                .clone()
-                .unwrap()
-                .into_iter()
+                .iter()
                 .map(|t| format!("skill: {}", t.to_string(locale).unwrap()))
                 .collect(),
             resources: self.resources.to_numbas(locale),
             custom_part_types: self
                 .custom_part_types
-                .clone()
-                .unwrap()
-                .into_iter()
+                .iter()
                 .map(|c| {
                     c.custom_part_type_data
-                        .to_numbas_with_name(locale, c.custom_part_type_name)
+                        .to_numbas_with_name(locale, c.custom_part_type_name.to_owned())
                 })
                 .collect(),
         }
@@ -169,22 +160,21 @@ impl ToRumbas<Question> for numbas::question::question::Question {
             preamble: self.preamble.to_rumbas(),
             navigation: self.navigation.to_rumbas(),
             extensions: self.extensions.to_rumbas(),
-            diagnostic_topic_names: Value::Normal(
-                self.tags
-                    .iter()
-                    .filter(|t| t.starts_with("skill: "))
-                    .map(|t| t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string().into())
-                    .collect(),
-            ),
+            diagnostic_topic_names: self
+                .tags
+                .iter()
+                .filter(|t| t.starts_with("skill: "))
+                .map(|t| t.splitn(2, ": ").collect::<Vec<_>>()[1].to_string().into())
+                .collect(),
             resources: self.resources.to_rumbas(),
             custom_part_types: self.custom_part_types.to_rumbas(),
         }
     }
 }
 
-impl Question {
-    pub fn from_name(name: &str) -> YamlResult<Question> {
-        use QuestionFileType::*;
+impl QuestionInput {
+    pub fn from_name(name: &str) -> YamlResult<QuestionInput> {
+        use QuestionFileTypeInput::*;
         let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
         let yaml = fs::read_to_string(&file).expect(
             &format!(
@@ -192,12 +182,13 @@ impl Question {
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        let input: std::result::Result<QuestionFileType, serde_yaml::Error> =
+        let input: std::result::Result<QuestionFileTypeInput, serde_yaml::Error> =
             serde_yaml::from_str(&yaml);
         input
             .map(|e| match e {
                 Normal(e) => Ok(*e),
-                Template(t) => {
+                Template(t_res) => {
+                    let t = t_res.to_normal(); // TODO?
                     let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)
                         .join(format!("{}.yaml", t.relative_template_path));
                     let template_yaml = fs::read_to_string(&template_file).expect(
@@ -206,7 +197,7 @@ impl Question {
                             template_file.to_str().map_or("invalid filename", |s| s)
                         )[..],
                     );
-                    let mut question: Question = serde_yaml::from_str(&template_yaml).unwrap();
+                    let mut question: QuestionInput = serde_yaml::from_str(&template_yaml).unwrap();
                     t.data.iter().for_each(|(k, v)| {
                         question.insert_template_value(k, &v.0);
                     });
@@ -218,15 +209,25 @@ impl Question {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum QuestionFileType {
-    Template(TemplateData),
-    Normal(Box<Question>),
+optional_overwrite_enum! {
+    #[serde(rename_all = "snake_case")]
+    #[serde(tag = "type")]
+    pub enum QuestionFileType {
+        Template(TemplateFile),
+        Normal(BoxQuestion)
+    }
 }
 
+type BoxQuestion = Box<Question>;
+type BoxQuestionInput = Box<QuestionInput>;
+
 impl QuestionFileType {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        QuestionFileTypeInput::from_normal(self.to_owned()).to_yaml()
+    }
+}
+
+impl QuestionFileTypeInput {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
     }

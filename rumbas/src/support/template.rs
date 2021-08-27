@@ -1,22 +1,53 @@
 use crate::support::optional_overwrite::*;
-use crate::support::to_numbas::ToNumbas;
-use crate::support::to_rumbas::ToRumbas;
+use crate::support::rumbas_types::*;
 use schemars::JsonSchema;
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-pub struct TemplateData {
-    #[serde(rename = "template")]
-    pub relative_template_path: String,
-    #[serde(flatten)]
-    pub data: HashMap<String, MyYamlValue>,
+optional_overwrite! {
+    pub struct TemplateFile {
+        #[serde(rename = "template")]
+        relative_template_path: RumbasString,
+        #[serde(flatten)]
+        data: TemplateData
+    }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+type TemplateData = HashMap<String, MyYamlValue>;
+type TemplateDataInput = HashMap<String, MyYamlValue>;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyYamlValue(pub serde_yaml::Value);
+
+impl OptionalOverwrite<MyYamlValue> for MyYamlValue {
+    fn overwrite(&mut self, _other: &Self) {}
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+}
+
+impl OptionalCheck for MyYamlValue {
+    fn find_missing(&self) -> OptionalCheckResult {
+        OptionalCheckResult::empty()
+    }
+}
+
+impl RumbasCheck for MyYamlValue {
+    fn check(&self, _locale: &str) -> RumbasCheckResult {
+        RumbasCheckResult::empty()
+    }
+}
+
+impl Input for MyYamlValue {
+    type Normal = MyYamlValue;
+    fn to_normal(&self) -> Self::Normal {
+        self.to_owned()
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        normal
+    }
+}
 
 impl JsonSchema for MyYamlValue {
     fn schema_name() -> String {
@@ -41,13 +72,29 @@ pub struct TemplateString {
     pub error_message: Option<String>,
 }
 
+impl OptionalCheck for TemplateString {
+    fn find_missing(&self) -> OptionalCheckResult {
+        if let Some(e) = &self.error_message {
+            OptionalCheckResult::from_missing(Some(e.clone())) // TODO: seperate missing files? (also see FileString)
+        } else {
+            OptionalCheckResult::empty()
+        }
+    }
+}
+
 impl RumbasCheck for TemplateString {
     fn check(&self, _locale: &str) -> RumbasCheckResult {
-        if let Some(e) = &self.error_message {
-            RumbasCheckResult::from_missing(Some(e.clone())) // TODO: seperate missing files? (also see FileString)
-        } else {
-            RumbasCheckResult::empty()
-        }
+        RumbasCheckResult::empty()
+    }
+}
+
+impl Input for TemplateString {
+    type Normal = TemplateString;
+    fn to_normal(&self) -> Self::Normal {
+        self.to_owned()
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        normal
     }
 }
 
@@ -55,7 +102,6 @@ impl OptionalOverwrite<TemplateString> for TemplateString {
     fn overwrite(&mut self, _other: &TemplateString) {}
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
-impl_optional_overwrite_value!(TemplateString);
 
 impl JsonSchema for TemplateString {
     fn schema_name() -> String {
@@ -174,39 +220,45 @@ mod value_type_schema {
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
 
-impl<T: RumbasCheck> RumbasCheck for Value<T> {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match &self.0 {
-            Some(ValueType::Normal(val)) => val.check(locale),
-            Some(ValueType::Template(ts)) => RumbasCheckResult::from_missing(Some(ts.yaml())),
-            Some(ValueType::Invalid(v)) => RumbasCheckResult::from_invalid(v),
-            None => RumbasCheckResult::from_missing(None),
+impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<Value<T>> for Value<T> {
+    fn overwrite(&mut self, other: &Value<T>) {
+        if let Some(ValueType::Normal(ref mut val)) = self.0 {
+            if let Some(ValueType::Normal(other_val)) = &other.0 {
+                val.overwrite(&other_val);
+            }
+        } else if self.0.is_none() {
+            *self = other.clone();
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        if let Some(ValueType::Template(ts)) = &self.0 {
+            if ts.key == Some(key.to_string()) {
+                *self = Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
+            }
+        } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
+            v.insert_template_value(key, val);
         }
     }
 }
 
-impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<S> for Value<T> {
-    fn to_numbas(&self, locale: &str) -> S {
+impl<T: OptionalCheck> OptionalCheck for Value<T> {
+    fn find_missing(&self) -> OptionalCheckResult {
         match &self.0 {
-            Some(ValueType::Normal(val)) => val.to_numbas(locale),
-            Some(ValueType::Template(_ts)) => unreachable!(),
-            Some(ValueType::Invalid(_v)) => unreachable!(),
-            None => unreachable!(),
-        }
-    }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> S {
-        match &self.0 {
-            Some(ValueType::Normal(val)) => val.to_numbas_with_name(locale, name),
-            Some(ValueType::Template(_ts)) => unreachable!(),
-            Some(ValueType::Invalid(_v)) => unreachable!(),
-            None => unreachable!(),
+            Some(ValueType::Normal(val)) => val.find_missing(),
+            Some(ValueType::Template(ts)) => OptionalCheckResult::from_missing(Some(ts.yaml())),
+            Some(ValueType::Invalid(v)) => OptionalCheckResult::from_invalid(v),
+            None => OptionalCheckResult::from_missing(None),
         }
     }
 }
 
-impl<T, O: ToRumbas<T>> ToRumbas<Value<T>> for O {
-    fn to_rumbas(&self) -> Value<T> {
-        Value::Normal(self.to_rumbas())
+impl<T: Input> Input for Value<T> {
+    type Normal = <T as Input>::Normal;
+    fn to_normal(&self) -> Self::Normal {
+        self.clone().unwrap().to_normal()
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        Value::Normal(<T as Input>::from_normal(normal))
     }
 }
 

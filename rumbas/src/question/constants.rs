@@ -1,6 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::variable_valued::JMEStringInput;
@@ -35,7 +35,7 @@ macro_rules! builtin_constants {
             fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
                 let mut builtin = std::collections::HashMap::new();
                 $(
-                    builtin.insert($name.to_string(), self.$field.unwrap());
+                    builtin.insert($name.to_string(), self.$field);
                 )*
                 builtin
             }
@@ -44,7 +44,7 @@ macro_rules! builtin_constants {
             fn to_rumbas(&self) -> BuiltinConstants {
                 BuiltinConstants {
                 $(
-                    $field: Value::Normal(*self.0.get(&$name.to_string()).unwrap_or(&DEFAULTS.$default))
+                    $field: *self.0.get(&$name.to_string()).unwrap_or(&DEFAULTS.$default)
                 ),*
                 }
             }

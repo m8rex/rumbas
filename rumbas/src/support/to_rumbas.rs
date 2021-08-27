@@ -12,11 +12,11 @@ pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;
 }
 
-impl_to_rumbas!(bool, f64, usize, [f64; 2]);
+impl_to_rumbas!(String, bool, f64, usize, [f64; 2]);
 impl_to_rumbas!(numbas::support::primitive::Primitive);
-//impl_to_rumbas!(numbas::jme::JMEString);
-//impl_to_rumbas!(numbas::jme::EmbracedJMEString);
-//impl_to_rumbas!(numbas::jme::ContentAreaString);
+impl_to_rumbas!(numbas::jme::JMEString);
+impl_to_rumbas!(numbas::jme::EmbracedJMEString);
+impl_to_rumbas!(numbas::jme::ContentAreaString);
 
 impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     fn to_rumbas(&self) -> Vec<T> {
@@ -174,7 +174,7 @@ macro_rules! create_question_part {
     ) => {
         {
             let part_data = $part_data;
-            let custom_marking_algorithm_notes: Value<JMENotes> = part_data
+            let custom_marking_algorithm_notes: JMENotes = part_data
                 .custom_marking_algorithm
                 .clone()
                 .unwrap_or_default()
@@ -182,7 +182,7 @@ macro_rules! create_question_part {
             $type {
                 // Default section
                 marks: extract_part_common_marks(&part_data).to_rumbas(),
-                prompt: extract_part_common_prompt(&part_data).to_rumbas(),
+                prompt: extract_part_common_prompt(&part_data),
                 use_custom_name: extract_part_common_use_custom_name(&part_data).to_rumbas(),
                 custom_name: extract_part_common_custom_name(&part_data).to_rumbas(),
                 steps_penalty: extract_part_common_steps_penalty(&part_data).to_rumbas(),
@@ -200,7 +200,7 @@ macro_rules! create_question_part {
                     &part_data,
                 )
                 .to_rumbas(),
-                steps: Value::Normal(extract_part_common_steps(&part_data)),
+                steps: extract_part_common_steps(&part_data),
                 $(
                     $field: $val
                 ),*

@@ -1,13 +1,15 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::VariableReplacementStrategyInput;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionPartInput;
 use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::file_reference::FileString;
+use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -98,13 +100,19 @@ impl ToRumbas<QuestionPartNumberEntry>
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(untagged)]
-pub enum NumberEntryAnswer {
-    Normal(FileString), //TODO: filestrings?
-    Range { from: FileString, to: FileString },
+optional_overwrite_enum! {
+    #[serde(untagged)]
+    pub enum NumberEntryAnswer {
+        Normal(FileString), //TODO: filestrings?
+        Range(NumberEntryAnswerRange)
+    }
 }
-impl_optional_overwrite!(NumberEntryAnswer);
+optional_overwrite! { // TODO, better (add toRumbas etc)
+    pub struct NumberEntryAnswerRange {
+        from: FileString,
+        to: FileString
+    }
+}
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
     fn to_numbas(
@@ -117,12 +125,14 @@ impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for N
                     answer: numbas::support::primitive::Primitive::String(f.to_numbas(locale)),
                 }
             }
-            NumberEntryAnswer::Range { from, to } => {
+            NumberEntryAnswer::Range(range) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
                     min_value: numbas::support::primitive::Primitive::String(
-                        from.to_numbas(locale),
+                        range.from.to_numbas(locale),
                     ),
-                    max_value: numbas::support::primitive::Primitive::String(to.to_numbas(locale)),
+                    max_value: numbas::support::primitive::Primitive::String(
+                        range.to.to_numbas(locale),
+                    ),
                 }
             }
         }
@@ -135,10 +145,10 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
             numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
                 min_value,
                 max_value,
-            } => NumberEntryAnswer::Range {
+            } => NumberEntryAnswer::Range(NumberEntryAnswerRange {
                 from: min_value.to_string().to_rumbas(),
                 to: max_value.to_string().to_rumbas(),
-            },
+            }),
             numbas::question::part::number_entry::NumberEntryAnswerType::Answer { answer } => {
                 NumberEntryAnswer::Normal(answer.to_string().to_rumbas())
             }

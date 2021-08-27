@@ -1,6 +1,5 @@
 use crate::support::input_string::InputString;
 use crate::support::optional_overwrite::*;
-use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use schemars::JsonSchema;
@@ -33,22 +32,36 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            impl RumbasCheck for [<$type Input>] {
-                fn check(&self, locale: &str) -> RumbasCheckResult {
+            #[derive(Debug, Clone, PartialEq)]
+            $(
+                #[$outer]
+            )*
+            pub struct $type {
+                file_name: Option<String>,
+                content: Option<String>,
+                translated_content: HashMap<String, String>,
+            }
+            impl OptionalCheck for [<$type Input>] {
+                fn find_missing(&self) -> OptionalCheckResult {
                     if let Some(e) = &self.error_message {
-                        RumbasCheckResult::from_missing(Some(e.clone()))
+                        OptionalCheckResult::from_missing(Some(e.clone()))
                     } else {
-                        let content = self.get_content(locale);
-                        match content {
-                            Some(c) => {
-                                let conversion_res: Result<$subtype, _> = c.try_into();
-                                match conversion_res {
-                                    Ok(_) => RumbasCheckResult::empty(),
-                                    Err(e) => $check_expr(e),
-                                }
+                        OptionalCheckResult::empty()
+                    }
+                }
+            }
+            impl RumbasCheck for $type {
+                fn check(&self, locale: &str) -> RumbasCheckResult {
+                    let content = self.get_content(locale);
+                    match content {
+                        Some(c) => {
+                            let conversion_res: Result<$subtype, _> = c.try_into();
+                            match conversion_res {
+                                Ok(_) => RumbasCheckResult::empty(),
+                                Err(e) => $check_expr(e),
                             }
-                            None => RumbasCheckResult::from_missing(Some(locale.to_string())),
                         }
+                        None => RumbasCheckResult::from_missing_translation(Some(locale.to_string())),
                     }
                 }
             }
@@ -56,17 +69,42 @@ macro_rules! file_type {
                 fn overwrite(&mut self, _other: &[<$type Input>]) {}
                 fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
             }
-            impl_optional_overwrite_value!([<$type Input>]);
 
-            impl ToNumbas<String> for [<$type Input>] {
+            impl ToNumbas<String> for $type {
                 fn to_numbas(&self, locale: &str)-> String {
                     self.get_content(locale).unwrap()
                 }
             }
 
-            impl ToNumbas<$subtype> for [<$type Input>] {
+            impl ToNumbas<$subtype> for $type {
                 fn to_numbas(&self, locale: &str)-> $subtype {
                     self.get_content(locale).unwrap().try_into().unwrap()
+                }
+            }
+
+            impl JsonSchema for $type { // TODO: needed?
+                fn schema_name() -> String {
+                    stringify!($type).to_owned()
+                }
+
+                fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+                    let file_schema = schemars::schema::SchemaObject {
+                        instance_type: Some(schemars::schema::InstanceType::String.into()),
+                        string: Some(Box::new(schemars::schema::StringValidation {
+                            min_length: Some(1 + (FILE_PREFIX.len() as u32)),
+                            max_length: None,
+                            pattern: Some(format!("^{}:.*$", FILE_PREFIX)),
+                        })),
+                        ..Default::default()
+                    };
+                    schemars::schema::SchemaObject {
+                        subschemas: Some(Box::new(schemars::schema::SubschemaValidation {
+                            any_of: Some(vec![file_schema.into(), gen.subschema_for::<String>()]),
+                            ..Default::default()
+                        })),
+                        ..Default::default()
+                    }
+                    .into()
                 }
             }
 
@@ -157,24 +195,13 @@ macro_rules! file_type {
                                         error_message: Some(relative_file_name.to_string()),
                                     }
                                 } else {
-                                    if let Some(content) = content {
-                                        let content = content.try_into().ok();
-                                        if content.is_some() {
+                                    if let Some(_) = content {
                                             Self {
                                                 file_name: Some(relative_file_name.to_string()),
                                                 content,
                                                 translated_content,
                                                 error_message: None,
                                             }
-                                        }
-                                        else {
-                                            Self {
-                                                file_name: Some(relative_file_name.to_string()),
-                                                content: None,
-                                                translated_content,
-                                                error_message: Some(format!("Failed converting content in {}", file_path.display())),
-                                            }
-                                        }
                                     } else {
                                         Self {
                                             file_name: Some(relative_file_name.to_string()),
@@ -210,7 +237,7 @@ macro_rules! file_type {
                 }
             }
 
-            impl [<$type Input>] {
+            impl $type {
                 pub fn get_content(&self, locale: &str) -> Option<String> {
                     if let Some(c) = self.translated_content.get(locale) {
                         Some(c.clone().into())
@@ -218,21 +245,45 @@ macro_rules! file_type {
                         self.content.as_ref().map(|c| c.clone().into())
                     }
                 }
-                pub fn s(content: &str) -> $type {
+                pub fn s(content: &str) -> Self {
                     let content = content.to_string().try_into();
-                    let error_message = if let Err(ref e) = content {
-                        Some(format!("Invalid file content: {}", e))
-                    } else { None };
-                    $type {
+                    Self {
                         file_name: None,
                         content: content.clone().ok(),
                         translated_content: HashMap::new(),
-                        error_message,
+                    }
+                }
+            }
+            impl [<$type Input>] {
+                pub fn s(content: &str) -> Self {
+                    let content = content.to_string();
+                    Self {
+                        file_name: None,
+                        content: Some(content),
+                        translated_content: HashMap::new(),
+                        error_message: None,
+                    }
+                }
+            }
+            impl Input for [<$type Input>] {
+                type Normal = $type;
+                fn to_normal(&self) -> Self::Normal {
+                    Self::Normal {
+                        file_name: self.file_name.to_owned(),
+                        content: self.content.to_owned(),
+                        translated_content: self.translated_content.to_owned(),
+                    }
+                }
+                fn from_normal(normal: Self::Normal) -> Self {
+                    Self {
+                        file_name: normal.file_name,
+                        content: normal.content,
+                        translated_content: normal.translated_content,
+                        error_message: None
                     }
                 }
             }
         }
-        pub type $type = $subtype;
     }
 }
 

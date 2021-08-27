@@ -1,6 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::defaults::DEFAULTS;

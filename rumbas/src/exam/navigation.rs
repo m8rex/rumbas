@@ -2,7 +2,7 @@ use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -29,10 +29,7 @@ impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
             confirm_when_leaving: Some(
                 self.to_shared_data().confirm_when_leaving.to_numbas(locale),
             ),
-            start_password: self
-                .to_shared_data()
-                .start_password
-                .map(|s| s.to_numbas(locale)),
+            start_password: Some(self.to_shared_data().start_password.to_numbas(locale)),
             navigation_mode: self.to_numbas(locale),
         }
     }
@@ -77,8 +74,8 @@ impl ToRumbas<NormalNavigation> for numbas::exam::exam::Exam {
 impl NormalNavigation {
     pub fn to_shared_data(&self) -> NavigationSharedData {
         match self {
-            NormalNavigation::Menu(m) => m.shared_data.clone().unwrap(),
-            NormalNavigation::Sequential(m) => m.shared_data.clone().unwrap(),
+            NormalNavigation::Menu(m) => m.shared_data.clone(),
+            NormalNavigation::Sequential(m) => m.shared_data.clone(),
         }
     }
 }
@@ -141,38 +138,11 @@ optional_overwrite! {
 impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
     fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::Navigation {
         numbas::exam::navigation::Navigation {
-            allow_regenerate: self
-                .shared_data
-                .clone()
-                .unwrap()
-                .can_regenerate
-                .to_numbas(locale),
-            allow_steps: Some(
-                self.shared_data
-                    .clone()
-                    .unwrap()
-                    .show_steps
-                    .to_numbas(locale),
-            ),
-            show_frontpage: self
-                .shared_data
-                .clone()
-                .unwrap()
-                .show_title_page
-                .to_numbas(locale),
-            confirm_when_leaving: Some(
-                self.shared_data
-                    .clone()
-                    .unwrap()
-                    .confirm_when_leaving
-                    .to_numbas(locale),
-            ),
-            start_password: self
-                .shared_data
-                .clone()
-                .unwrap()
-                .start_password
-                .map(|s| s.to_numbas(locale)),
+            allow_regenerate: self.shared_data.can_regenerate.to_numbas(locale),
+            allow_steps: Some(self.shared_data.show_steps.to_numbas(locale)),
+            show_frontpage: self.shared_data.show_title_page.to_numbas(locale),
+            confirm_when_leaving: Some(self.shared_data.confirm_when_leaving.to_numbas(locale)),
+            start_password: Some(self.shared_data.start_password.to_numbas(locale)),
             navigation_mode: numbas::exam::navigation::NavigationMode::Diagnostic(
                 numbas::exam::navigation::NavigationModeDiagnostic {
                     on_leave: self.on_leave.clone().to_numbas(locale),
@@ -235,15 +205,87 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "action")]
+#[derive(Debug, Clone)]
 pub enum LeaveAction {
     None,
     WarnIfNotAttempted(LeaveActionMessage),
     PreventIfNotAttempted(LeaveActionMessage),
 }
-impl_optional_overwrite!(LeaveAction);
+
+impl RumbasCheck for LeaveAction {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        match self {
+            Self::None => RumbasCheckResult::empty(),
+            Self::WarnIfNotAttempted(l) => l.check(locale),
+            Self::PreventIfNotAttempted(l) => l.check(locale),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "action")]
+pub enum LeaveActionInput {
+    None,
+    WarnIfNotAttempted(LeaveActionMessageInput),
+    PreventIfNotAttempted(LeaveActionMessageInput),
+}
+
+impl OptionalCheck for LeaveActionInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            Self::None => OptionalCheckResult::empty(),
+            Self::WarnIfNotAttempted(l) => l.find_missing(),
+            Self::PreventIfNotAttempted(l) => l.find_missing(),
+        }
+    }
+}
+
+impl Input for LeaveActionInput {
+    type Normal = LeaveAction;
+    fn to_normal(&self) -> Self::Normal {
+        match self {
+            Self::None => Self::Normal::None,
+            Self::WarnIfNotAttempted(t) => Self::Normal::WarnIfNotAttempted(t.to_normal()),
+            Self::PreventIfNotAttempted(t) => Self::Normal::PreventIfNotAttempted(t.to_normal()),
+        }
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        match normal {
+            Self::Normal::None => Self::None,
+            Self::Normal::WarnIfNotAttempted(t) => Self::WarnIfNotAttempted(Input::from_normal(t)),
+            Self::Normal::PreventIfNotAttempted(t) => {
+                Self::PreventIfNotAttempted(Input::from_normal(t))
+            }
+        }
+    }
+}
+
+impl OptionalOverwrite<LeaveActionInput> for LeaveActionInput {
+    fn overwrite(&mut self, other: &LeaveActionInput) {
+        match (self, other) {
+            (&mut Self::WarnIfNotAttempted(ref mut val), Self::WarnIfNotAttempted(ref valo)) => {
+                val.overwrite(&valo)
+            }
+            (
+                &mut Self::PreventIfNotAttempted(ref mut val),
+                Self::PreventIfNotAttempted(ref valo),
+            ) => val.overwrite(&valo),
+            _ => (),
+        };
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match self {
+            &mut Self::WarnIfNotAttempted(ref mut enum_val) => {
+                enum_val.insert_template_value(&key, &val)
+            }
+            &mut Self::PreventIfNotAttempted(ref mut enum_val) => {
+                enum_val.insert_template_value(&key, &val)
+            }
+            _ => (),
+        };
+    }
+}
 
 impl ToNumbas<numbas::exam::navigation::LeaveAction> for LeaveAction {
     fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::LeaveAction {

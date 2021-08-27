@@ -19,7 +19,7 @@ use crate::exam::normal::NormalExamInput;
 use crate::exam::question_group::QuestionPath;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::support::optional_overwrite::*;
-use crate::support::template::{TemplateData, Value, ValueType};
+use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
@@ -49,23 +49,24 @@ impl ToNumbas<numbas::exam::exam::Exam> for Exam {
 }
 
 impl Exam {
-    pub fn locales(&self) -> Value<Vec<Value<Locale>>> {
+    pub fn locales(&self) -> Vec<Locale> {
         match self {
             Exam::Normal(n) => n.locales.clone(),
             Exam::Diagnostic(n) => n.locales.clone(),
         }
     }
 
-    pub fn numbas_settings(&self) -> Value<crate::exam::numbas_settings::NumbasSettings> {
+    pub fn numbas_settings(&self) -> crate::exam::numbas_settings::NumbasSettings {
         match self {
             Exam::Normal(n) => n.numbas_settings.clone(),
             Exam::Diagnostic(n) => n.numbas_settings.clone(),
         }
     }
-
-    pub fn from_file(file: &Path) -> Result<Exam, ParseError> {
-        use ExamFileType::*;
-        let input: std::result::Result<ExamFileType, serde_yaml::Error> =
+}
+impl ExamInput {
+    pub fn from_file(file: &Path) -> Result<ExamInput, ParseError> {
+        use ExamFileTypeInput::*;
+        let input: std::result::Result<ExamFileTypeInput, serde_yaml::Error> =
             if file.starts_with(crate::EXAMS_FOLDER) {
                 let yaml = fs::read_to_string(file).map_err(ParseError::IOError)?;
                 serde_yaml::from_str(&yaml)
@@ -82,11 +83,11 @@ impl Exam {
                     )
                     .into(),
                 );
-                let t = TemplateData {
+                let t = TemplateFile {
                     relative_template_path: crate::QUESTION_PREVIEW_TEMPLATE_NAME.to_string(),
                     data,
                 };
-                Ok(Template(t))
+                Ok(Template(TemplateFileInput::from_normal(t)))
             } else {
                 panic!(
                     "{} should start with {}/ or {}/",
@@ -97,11 +98,12 @@ impl Exam {
             };
         input
             .map(|e| match e {
-                Normal(e) => Ok(Exam::Normal(e)),
-                Diagnostic(e) => Ok(Exam::Diagnostic(e)),
-                Template(t) => {
+                Normal(e) => Ok(ExamInput::Normal(e)),
+                Diagnostic(e) => Ok(ExamInput::Diagnostic(e)),
+                Template(t_val) => {
+                    let t = t_val.to_normal();
                     let template_file = Path::new(crate::EXAM_TEMPLATES_FOLDER)
-                        .join(format!("{}.yaml", t.relative_template_path));
+                        .join(format!("{}.yaml", t.relative_template_path)); // TODO: check for missing fields.....
                     let template_yaml = fs::read_to_string(&template_file).expect(
                         &format!(
                             "Failed to read {}",
@@ -109,7 +111,7 @@ impl Exam {
                         )[..],
                     );
 
-                    let mut exam: Exam = serde_yaml::from_str(&template_yaml).unwrap();
+                    let mut exam: ExamInput = serde_yaml::from_str(&template_yaml).unwrap();
                     t.data.iter().for_each(|(k, v)| {
                         exam.insert_template_value(k, &v.0);
                     });
@@ -127,18 +129,25 @@ pub enum ParseError {
     IOError(std::io::Error),
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "type")]
-pub enum ExamFileType {
-    Template(TemplateData),
-    Normal(NormalExam),
-    Diagnostic(DiagnosticExam),
+optional_overwrite_enum! {
+    #[serde(rename_all = "snake_case")]
+    #[serde(tag = "type")]
+    pub enum ExamFileType {
+        Template(TemplateFile),
+        Normal(NormalExam),
+        Diagnostic(DiagnosticExam)
+    }
+}
+
+impl ExamFileTypeInput {
+    pub fn to_yaml(&self) -> serde_yaml::Result<String> {
+        serde_yaml::to_string(self)
+    }
 }
 
 impl ExamFileType {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self)
+        ExamFileTypeInput::from_normal(self.to_owned()).to_yaml()
     }
 }
 
@@ -156,21 +165,11 @@ pub fn convert_numbas_exam(
     let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
         numbas::exam::navigation::NavigationMode::Diagnostic(ref _d) => {
             let (exam, qgs, cpts) = convert_diagnostic_numbas_exam(exam);
-            (
-                exam.name.clone().unwrap(),
-                ExamFileType::Diagnostic(exam),
-                qgs,
-                cpts,
-            )
+            (exam.name.clone(), ExamFileType::Diagnostic(exam), qgs, cpts)
         }
         _ => {
             let (exam, qgs, cpts) = convert_normal_numbas_exam(exam);
-            (
-                exam.name.clone().unwrap(),
-                ExamFileType::Normal(exam),
-                qgs,
-                cpts,
-            )
+            (exam.name.clone(), ExamFileType::Normal(exam), qgs, cpts)
         }
     };
     (

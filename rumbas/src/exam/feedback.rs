@@ -1,6 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -35,8 +35,8 @@ impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
             show_total_mark: self.show_maximum_marks.to_numbas(locale),
             show_answer_state: self.show_answer_state.to_numbas(locale),
             allow_reveal_answer: self.allow_reveal_answer.to_numbas(locale),
-            review: self.review.clone().map(|o| o.to_numbas(locale)),
-            advice: self.advice.clone().map(|o| o.to_string(locale)).flatten(),
+            review: Some(self.review.clone().to_numbas(locale)),
+            advice: self.advice.clone().to_string(locale),
             intro: self.intro.clone().to_numbas(locale),
             feedback_messages: self.feedback_messages.to_numbas(locale),
         }
@@ -45,7 +45,7 @@ impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
 
 impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
     fn to_rumbas(&self) -> Feedback {
-        let review: Option<_> = self.feedback.review.to_rumbas();
+        let review: Review = self.feedback.review.clone().unwrap().to_rumbas(); // TODO: fix this unwrap
         Feedback {
             percentage_needed_to_pass: self.basic_settings.percentage_needed_to_pass.to_rumbas(),
             show_name_of_student: self
@@ -57,7 +57,7 @@ impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
             show_maximum_marks: self.feedback.show_total_mark.to_rumbas(),
             show_answer_state: self.feedback.show_answer_state.to_rumbas(),
             allow_reveal_answer: self.feedback.allow_reveal_answer.to_rumbas(),
-            review: Value::Normal(review.unwrap()), // TODO: fix this unwrap
+            review,
             advice: self.feedback.advice.clone().unwrap_or_default().to_rumbas(),
             intro: self.feedback.intro.to_rumbas(),
             feedback_messages: self.feedback.feedback_messages.to_rumbas(),
@@ -131,8 +131,8 @@ impl ToNumbas<numbas::exam::feedback::FeedbackMessage> for FeedbackMessage {
 impl ToRumbas<FeedbackMessage> for numbas::exam::feedback::FeedbackMessage {
     fn to_rumbas(&self) -> FeedbackMessage {
         FeedbackMessage {
-            message: self.message.to_rumbas(),
-            threshold: self.threshold.to_rumbas(),
+            message: self.message.clone(),
+            threshold: self.threshold.clone(),
         }
     }
 }

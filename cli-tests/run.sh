@@ -6,14 +6,14 @@ import_and_compile(){
   FILE=$1
   EXAM_NAME=$2
   rumbas import $FILE".exam"
-  rumbas compile "exams/$EXAM_NAME.yaml"
+  rumbas -v compile "exams/$EXAM_NAME.yaml"
 }
 
 import_and_compile_q(){
   FILE=$1
   QUESTION_NAME=$2
   rumbas import -q $FILE".exam"
-  rumbas compile "questions/$QUESTION_NAME.yaml"
+  rumbas -v compile "questions/$QUESTION_NAME.yaml"
 }
 
 import_and_compile exam-110396-getting-started "Getting Started"

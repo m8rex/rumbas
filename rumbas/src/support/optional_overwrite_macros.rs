@@ -15,7 +15,7 @@ macro_rules! optional_overwrite {
         }
     ) => {
         paste::paste!{
-            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
             $(
                 #[$outer]
             )*
@@ -25,12 +25,25 @@ macro_rules! optional_overwrite {
                     pub $field: Value<[<$type Input>]>
                 ),*
             }
-            impl RumbasCheck for [<$struct Input>] {
+            impl RumbasCheck for $struct {
                 fn check(&self, locale: &str) -> RumbasCheckResult {
                     let mut result = RumbasCheckResult::empty();
                     $(
                         {
                         let mut previous_result = self.$field.check(locale);
+                        previous_result.extend_path(stringify!($field).to_string());
+                        result.union(&previous_result);
+                        }
+                    )*
+                    result
+                }
+            }
+            impl OptionalCheck for [<$struct Input>] {
+                fn find_missing(&self) -> OptionalCheckResult {
+                    let mut result = OptionalCheckResult::empty();
+                    $(
+                        {
+                        let mut previous_result = self.$field.find_missing();
                         previous_result.extend_path(stringify!($field).to_string());
                         result.union(&previous_result);
                         }
@@ -50,17 +63,75 @@ macro_rules! optional_overwrite {
                     )*
                 }
             }
-            impl_optional_overwrite_value!([<$struct Input>]);
+            #[derive(Debug, Clone)]
+            pub struct $struct {
+                $(
+                    pub $field: $type
+                ),*
+            }
+            impl Input for [<$struct Input>] {
+                type Normal = $struct;
+                fn to_normal(&self) -> <Self as Input>::Normal {
+                    Self::Normal {
+                        $(
+                        $field: self.$field.to_normal()
+                        ),*
+                    }
+                }
+                fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                    Self {
+                        $(
+                        $field: Value::Normal([<$type Input>]::from_normal(normal.$field))
+                        ),*
+                    }
+                }
+            }
+
         }
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
-        $(
-            #[$outer]
-        )*
-        pub struct $struct {
+    }
+}
+
+macro_rules! optional_overwrite_newtype {
+    (
+        $(#[$outer:meta])*
+        pub struct $struct: ident($type: ty)
+    ) => {
+        paste::paste!{
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
             $(
-                $(#[$inner])*
-                pub $field: $type
-            ),*
+                #[$outer]
+            )*
+            pub struct [<$struct Input>](pub Value<[<$type Input>]>);
+            impl RumbasCheck for $struct {
+                fn check(&self, locale: &str) -> RumbasCheckResult {
+                    self.0.check(locale)
+                }
+            }
+            impl OptionalCheck for [<$struct Input>] {
+                fn find_missing(&self) -> OptionalCheckResult {
+                    self.0.find_missing()
+                }
+            }
+            impl OptionalOverwrite<[<$struct Input>]> for [<$struct Input>] {
+                fn overwrite(&mut self, other: &[<$struct Input>]) {
+                    self.0.overwrite(&other.0);
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    self.0.insert_template_value(&key, &val);
+                }
+            }
+            #[derive(Debug, Clone)]
+            pub struct $struct(pub $type);
+            impl Input for [<$struct Input>] {
+                type Normal = $struct;
+                fn to_normal(&self) -> <Self as Input>::Normal {
+                    $struct(self.0.to_normal())
+                }
+                fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                    Self(Value::Normal([<$type Input>]::from_normal(normal.0)))
+                }
+            }
+
         }
     }
 }
@@ -79,7 +150,7 @@ macro_rules! optional_overwrite_enum {
         }
     ) => {
         paste::paste!{
-            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
             $(
                 #[$outer]
             )*
@@ -91,13 +162,21 @@ macro_rules! optional_overwrite_enum {
                     $variant([<$type Input>])
                 ),*
             }
-            impl RumbasCheck for [<$enum Input>] {
+            impl RumbasCheck for $enum {
                 fn check(&self, locale: &str) -> RumbasCheckResult {
                     match self {
                         $(
-                           [<$enum Input>]::$variant(val) => val.check(locale),
+                           $enum::$variant(val) => val.check(locale),
                         )*
-                        _ => RumbasCheckResult::empty()
+                    }
+                }
+            }
+            impl OptionalCheck for [<$enum Input>] {
+                fn find_missing(&self) -> OptionalCheckResult {
+                    match self {
+                        $(
+                           [<$enum Input>]::$variant(val) => val.find_missing(),
+                        )*
                     }
                 }
             }
@@ -118,71 +197,32 @@ macro_rules! optional_overwrite_enum {
                     };
                 }
             }
-            impl_optional_overwrite_value!([<$enum Input>]);
-        }
-        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
-        pub enum $enum {
-            $(
+            #[derive(Debug, Clone)]
+            pub enum $enum {
                 $(
-                    #[$inner]
-                )*
-                $variant($type)
-            ),*
+                    $variant($type)
+                ),*
+            }
+            impl Input for [<$enum Input>] {
+                type Normal = $enum;
+                fn to_normal(&self) -> <Self as Input>::Normal {
+                    match self {
+                        $(
+                        Self::$variant(a) => $enum::$variant(a.to_normal())
+                        ),*
+                    }
+                }
+                fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                    match normal {
+                        $(
+                        $enum::$variant(a) => [<$enum Input>]::$variant([<$type Input>]::from_normal(a))
+                        ),*
+
+                    }
+                }
+            }
         }
     }
-}
-
-macro_rules! impl_optional_overwrite_value_only {
-    ($($type: ty$([$($gen: tt), *])?), *) => {
-        $(
-        impl$(< $($gen: OptionalOverwrite<$gen> + DeserializeOwned),* >)? OptionalOverwrite<Value<$type>> for Value<$type> {
-            fn overwrite(&mut self, other: &Value<$type>) {
-                if let Some(ValueType::Normal(ref mut val)) = self.0 {
-                    if let Some(ValueType::Normal(other_val)) = &other.0 {
-                        val.overwrite(&other_val);
-                    }
-                } else if self.0.is_none() {
-                    *self = other.clone();
-                }
-            }
-            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                if let Some(ValueType::Template(ts)) = &self.0 {
-                    if ts.key == Some(key.to_string()) {
-                        *self=Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
-                    }
-                } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
-                    v.insert_template_value(key, val);
-                }
-            }
-        }
-
-        )*
-    };
-}
-
-macro_rules! impl_optional_overwrite_value {
-    ($($type: ty$([$($gen: tt), *])?), *) => {
-        $(
-        impl_optional_overwrite_value_only!($type$([ $($gen),* ])?);
-        impl$(< $($gen: OptionalOverwrite<$gen>),* >)? OptionalOverwrite<Noneable<$type>> for Noneable<$type> {
-            fn overwrite(&mut self, other: &Noneable<$type>) {
-                if let Noneable::NotNone(ref mut val) = self {
-                    if let Noneable::NotNone(other_val) = &other {
-                        val.overwrite(&other_val);
-                    }
-                } else {
-                    // Do nothing, none is a valid value
-                }
-            }
-            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                if let Noneable::NotNone(item) = self {
-                    item.insert_template_value(&key, &val);
-                }
-            }
-        }
-        impl_optional_overwrite_value_only!(Noneable<$type>$([ $($gen),* ])?);
-        )*
-    };
 }
 
 /// Implement the RumbasCheck and OptionalOverwrite traits with blanket implementations
@@ -194,18 +234,32 @@ macro_rules! impl_optional_overwrite {
                 RumbasCheckResult::empty()
             }
         }
+        impl OptionalCheck for $type {
+            fn find_missing(&self) -> OptionalCheckResult {
+                OptionalCheckResult::empty()
+            }
+        }
         impl OptionalOverwrite<$type> for $type {
             fn overwrite(&mut self, _other: &$type) {}
             fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
         }
-        impl_optional_overwrite_value!($type);
         crate::support::rumbas_types::create_input_alias!($type, $type);
+        paste::paste! {
+            impl Input for [<$type Input>] {
+                type Normal = $type;
+                fn to_normal(&self) -> <Self as Input>::Normal {
+                    self.to_owned()
+                }
+                fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                    normal
+                }
+            }
+        }
         )*
     };
 }
 
 pub(crate) use impl_optional_overwrite;
-pub(crate) use impl_optional_overwrite_value;
-pub(crate) use impl_optional_overwrite_value_only;
 pub(crate) use optional_overwrite;
 pub(crate) use optional_overwrite_enum;
+pub(crate) use optional_overwrite_newtype;
