@@ -20,7 +20,7 @@ use crate::question::part::pattern_match::QuestionPartPatternMatch;
 use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
@@ -69,11 +69,11 @@ impl ToRumbas<QuestionPart> for numbas::question::part::QuestionPart {
     }
 }
 
-impl QuestionPart {
-    pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
+impl QuestionPartInput {
+    pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
         match self {
-            QuestionPart::Builtin(b) => b.get_steps(),
-            QuestionPart::Custom(b) => b.get_steps(),
+            QuestionPartInput::Builtin(b) => b.get_steps(),
+            QuestionPartInput::Custom(b) => b.get_steps(),
         }
     }
 }
@@ -180,29 +180,29 @@ impl ToRumbas<QuestionPartBuiltin> for numbas::question::part::QuestionPartBuilt
     }
 }
 
-impl QuestionPartBuiltin {
-    pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
+impl QuestionPartBuiltinInput {
+    pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
         match self {
-            QuestionPartBuiltin::JME(d) => d.get_steps(),
-            QuestionPartBuiltin::GapFill(d) => d.get_steps(),
-            QuestionPartBuiltin::ChooseOne(d) => d.get_steps(),
-            QuestionPartBuiltin::ChooseMultiple(d) => d.get_steps(),
-            QuestionPartBuiltin::MatchAnswersWithItems(d) => d.get_steps(),
-            QuestionPartBuiltin::NumberEntry(d) => d.get_steps(),
-            QuestionPartBuiltin::PatternMatch(d) => d.get_steps(),
-            QuestionPartBuiltin::Information(d) => d.get_steps(),
-            QuestionPartBuiltin::Extension(d) => d.get_steps(),
-            QuestionPartBuiltin::Matrix(d) => d.get_steps(),
+            QuestionPartBuiltinInput::JME(d) => d.get_steps(),
+            QuestionPartBuiltinInput::GapFill(d) => d.get_steps(),
+            QuestionPartBuiltinInput::ChooseOne(d) => d.get_steps(),
+            QuestionPartBuiltinInput::ChooseMultiple(d) => d.get_steps(),
+            QuestionPartBuiltinInput::MatchAnswersWithItems(d) => d.get_steps(),
+            QuestionPartBuiltinInput::NumberEntry(d) => d.get_steps(),
+            QuestionPartBuiltinInput::PatternMatch(d) => d.get_steps(),
+            QuestionPartBuiltinInput::Information(d) => d.get_steps(),
+            QuestionPartBuiltinInput::Extension(d) => d.get_steps(),
+            QuestionPartBuiltinInput::Matrix(d) => d.get_steps(),
         }
     }
 }
 
 // TODO: create macro so RumbasCheck and OptionalOverwrite are done by itself
-#[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
+#[derive(Debug, Clone)]
 pub struct JMENotes(pub Vec<JMENote>);
 
-#[derive(Debug, Clone, PartialEq, JsonSchema, Deserialize, Serialize)]
-pub struct JMENotesInput(pub Value<Vec<JMENoteInput>>);
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize)]
+pub struct JMENotesInput(pub Value<Vec<Value<JMENoteInput>>>);
 
 impl RumbasCheck for JMENotes {
     fn check(&self, locale: &str) -> RumbasCheckResult {
@@ -210,30 +210,44 @@ impl RumbasCheck for JMENotes {
     }
 }
 
-impl OptionalOverwrite<JMENotes> for JMENotes {
-    fn overwrite(&mut self, other: &JMENotes) {
+impl OptionalCheck for JMENotesInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        self.0.find_missing()
+    }
+}
+
+impl Input for JMENotesInput {
+    type Normal = JMENotes;
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        JMENotes(self.0.to_normal())
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        Self(Value::Normal(Input::from_normal(normal.0)))
+    }
+}
+
+impl OptionalOverwrite<JMENotesInput> for JMENotesInput {
+    fn overwrite(&mut self, other: &JMENotesInput) {
         self.0.overwrite(&other.0)
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         self.0.insert_template_value(key, val)
     }
 }
-impl_optional_overwrite_value!(JMENotes);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
     fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
         self.0
-            .unwrap()
             .iter()
             .map(|v| {
-                let description = if let Noneable::NotNone(d) = v.description.unwrap() {
+                let description = if let Noneable::NotNone(d) = &v.description {
                     format!("({})", d)
                 } else {
                     "".to_string()
                 };
                 format!(
                     "{}{}:{}",
-                    v.name.unwrap(),
+                    v.name,
                     description,
                     v.expression.to_numbas(locale)
                 )
@@ -247,7 +261,7 @@ impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
 
 impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
     fn to_rumbas(&self) -> JMENotes {
-        JMENotes(Value::Normal(if let Some(ref notes) = self.notes {
+        JMENotes(if let Some(ref notes) = self.notes {
             notes
                 .iter()
                 .map(|n| JMENote {
@@ -258,13 +272,13 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
                 .collect()
         } else {
             vec![]
-        }))
+        })
     }
 }
 
 impl Default for JMENotes {
     fn default() -> Self {
-        JMENotes(Value::Normal(vec![]))
+        JMENotes(vec![])
     }
 }
 
@@ -281,7 +295,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JME
         numbas::question::custom_part_type::CustomPartMarkingNote {
             name: self.name.to_numbas(locale),
             definition: self.expression.to_numbas(&locale),
-            description: self.description.unwrap().unwrap_or("".to_string()),
+            description: self.description.unwrap_or("".to_string()),
         }
     }
 }
@@ -291,7 +305,7 @@ impl ToRumbas<JMENote> for numbas::question::custom_part_type::CustomPartMarking
         JMENote {
             name: self.name.to_rumbas(),
             expression: self.definition.to_rumbas(),
-            description: Value::Normal(Noneable::NotNone(self.description.to_rumbas())),
+            description: Noneable::NotNone(self.description.to_rumbas()),
         }
     }
 }
@@ -353,10 +367,11 @@ macro_rules! question_part_type {
 
             }
         }
-
-        impl $struct {
-            pub fn get_steps(&mut self) -> &mut Value<Vec<QuestionPart>> {
-                &mut self.steps
+        paste::paste! {
+            impl [<$struct Input>] {
+                pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
+                    &mut self.steps
+                }
             }
         }
     }
@@ -425,40 +440,30 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
 
         QuestionPartCustom {
             // Default section
-            marks: Value::Normal(extract_part_common_marks(&self.part_data)),
-            prompt: Value::Normal(extract_part_common_prompt(&self.part_data)),
-            use_custom_name: Value::Normal(extract_part_common_use_custom_name(&self.part_data)),
-            custom_name: Value::Normal(extract_part_common_custom_name(&self.part_data)),
-            steps_penalty: Value::Normal(extract_part_common_steps_penalty(&self.part_data)),
-            enable_minimum_marks: Value::Normal(extract_part_common_enable_minimum_marks(
-                &self.part_data,
-            )),
-            minimum_marks: Value::Normal(extract_part_common_minimum_marks(&self.part_data)),
-            show_correct_answer: Value::Normal(extract_part_common_show_correct_answer(
-                &self.part_data,
-            )),
-            show_feedback_icon: Value::Normal(extract_part_common_show_feedback_icon(
-                &self.part_data,
-            )),
+            marks: extract_part_common_marks(&self.part_data),
+            prompt: extract_part_common_prompt(&self.part_data),
+            use_custom_name: extract_part_common_use_custom_name(&self.part_data),
+            custom_name: extract_part_common_custom_name(&self.part_data),
+            steps_penalty: extract_part_common_steps_penalty(&self.part_data),
+            enable_minimum_marks: extract_part_common_enable_minimum_marks(&self.part_data),
+            minimum_marks: extract_part_common_minimum_marks(&self.part_data),
+            show_correct_answer: extract_part_common_show_correct_answer(&self.part_data),
+            show_feedback_icon: extract_part_common_show_feedback_icon(&self.part_data),
             variable_replacement_strategy: self.part_data.variable_replacement_strategy.to_rumbas(),
-            adaptive_marking_penalty: Value::Normal(extract_part_common_adaptive_marking_penalty(
+            adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(&self.part_data),
+            custom_marking_algorithm_notes: custom_marking_algorithm_notes.unwrap_or_default(),
+            extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
                 &self.part_data,
-            )),
-            custom_marking_algorithm_notes: Value::Normal(
-                custom_marking_algorithm_notes.unwrap_or_default(),
             ),
-            extend_base_marking_algorithm: Value::Normal(
-                extract_part_common_extend_base_marking_algorithm(&self.part_data),
-            ),
-            steps: Value::Normal(extract_part_common_steps(&self.part_data)),
+            steps: extract_part_common_steps(&self.part_data),
 
-            r#type: Value::Normal(self.r#type.clone()),
+            r#type: self.r#type.clone(),
             settings: self.settings.to_rumbas(),
         }
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
     OriginalFirst,

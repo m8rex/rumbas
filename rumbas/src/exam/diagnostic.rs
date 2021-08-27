@@ -7,12 +7,12 @@ use crate::exam::navigation::DiagnosticNavigationInput;
 use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::numbas_settings::NumbasSettingsInput;
 use crate::exam::question_group::QuestionPath;
-use crate::exam::question_group::{QuestionGroup, QuestionGroups, QuestionGroupsInput};
+use crate::exam::question_group::{QuestionGroups, QuestionGroupsInput};
 use crate::exam::timing::{Timing, TimingInput};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
 use crate::support::optional_overwrite::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMENotesTranslatableString;
@@ -68,18 +68,13 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
 
         let resources: Vec<numbas::question::resource::Resource> = self
             .question_groups
-            .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .flat_map(|q| q.unwrap().question_data.resources.unwrap())
+                    .flat_map(|q| q.question_data.resources)
             })
-            .map(|r| r.unwrap())
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
@@ -87,32 +82,24 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
 
         let extensions: Vec<String> = self
             .question_groups
-            .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .map(|q| q.unwrap().question_data.extensions.unwrap()) // todo: extract?
+                    .map(|q| q.question_data.extensions) // todo: extract?
             })
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
 
         let custom_part_types: Vec<numbas::question::custom_part_type::CustomPartType> = self
             .question_groups
-            .clone()
-            .unwrap()
             .iter()
             .flat_map(|qg| {
                 qg.clone()
-                    .unwrap()
                     .questions
-                    .unwrap()
                     .into_iter()
-                    .flat_map(|q| q.unwrap().question_data.custom_part_types.unwrap())
+                    .flat_map(|q| q.question_data.custom_part_types)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -141,37 +128,13 @@ impl ToNumbas<numbas::exam::exam::BasicExamSettings> for DiagnosticExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
         numbas::exam::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
-            duration_in_seconds: self
-                .timing
-                .clone()
-                .unwrap()
-                .duration_in_seconds
-                .to_numbas(locale),
-            percentage_needed_to_pass: self
-                .feedback
-                .clone()
-                .unwrap()
-                .percentage_needed_to_pass
-                .to_numbas(locale),
+            duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale),
+            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
             show_question_group_names: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .shared_data
-                    .unwrap()
-                    .show_names_of_question_groups
-                    .unwrap(),
+                self.navigation.shared_data.show_names_of_question_groups,
             ),
-            show_student_name: Some(self.feedback.clone().unwrap().show_name_of_student.unwrap()),
-            allow_printing: Some(
-                self.navigation
-                    .clone()
-                    .unwrap()
-                    .shared_data
-                    .unwrap()
-                    .allow_printing
-                    .unwrap(),
-            ),
+            show_student_name: Some(self.feedback.clone().show_name_of_student),
+            allow_printing: Some(self.navigation.shared_data.allow_printing),
         }
     }
 }
@@ -217,14 +180,62 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(rename_all = "lowercase")]
+#[derive(Debug, Clone, PartialEq)]
 pub enum DiagnosticScript {
     Mastery,
     Diagnosys,
     Custom(JMENotesTranslatableString),
 }
-impl_optional_overwrite!(DiagnosticScript);
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum DiagnosticScriptInput {
+    Mastery,
+    Diagnosys,
+    Custom(JMENotesTranslatableStringInput),
+}
+
+impl OptionalCheck for DiagnosticScriptInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            Self::Mastery => OptionalCheckResult::empty(),
+            Self::Diagnosys => OptionalCheckResult::empty(),
+            Self::Custom(c) => c.find_missing(),
+        }
+    }
+}
+
+impl Input for DiagnosticScriptInput {
+    type Normal = DiagnosticScript;
+    fn from_normal(normal: Self::Normal) -> Self {
+        match normal {
+            Self::Normal::Mastery => Self::Mastery,
+            Self::Normal::Diagnosys => Self::Diagnosys,
+            Self::Normal::Custom(c) => Self::Custom(Input::from_normal(c)),
+        }
+    }
+    fn to_normal(&self) -> Self::Normal {
+        match self {
+            Self::Mastery => Self::Normal::Mastery,
+            Self::Diagnosys => Self::Normal::Diagnosys,
+            Self::Custom(c) => Self::Normal::Custom(c.to_normal()),
+        }
+    }
+}
+
+impl OptionalOverwrite<DiagnosticScriptInput> for DiagnosticScriptInput {
+    fn overwrite(&mut self, other: &DiagnosticScriptInput) {
+        match (self, other) {
+            (&mut Self::Custom(ref mut val), Self::Custom(ref valo)) => val.overwrite(&valo),
+            _ => (),
+        };
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match self {
+            &mut Self::Custom(ref mut enum_val) => enum_val.insert_template_value(&key, &val),
+            _ => (),
+        };
+    }
+}
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::diagnostic::DiagnosticScript {
@@ -242,6 +253,16 @@ impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
             DiagnosticScript::Custom(s) => s.to_numbas(locale),
             DiagnosticScript::Diagnosys => Default::default(),
             DiagnosticScript::Mastery => Default::default(),
+        }
+    }
+}
+
+impl RumbasCheck for DiagnosticScript {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        match self {
+            Self::Mastery => RumbasCheckResult::empty(),
+            Self::Diagnosys => RumbasCheckResult::empty(),
+            Self::Custom(c) => c.check(locale),
         }
     }
 }
@@ -344,33 +365,27 @@ pub fn convert_diagnostic_numbas_exam(
     Vec<QuestionPath>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
-    let question_groups: Vec<Value<_>> = exam.question_groups.to_rumbas();
+    let question_groups: Vec<_> = exam.question_groups.to_rumbas();
     let custom_part_types = exam.custom_part_types.to_rumbas();
     (
         DiagnosticExam {
-            locales: Value::Normal(vec![Value::Normal(Locale {
-                name: Value::Normal("en".to_string()),
-                numbas_locale: Value::Normal(SupportedLocale::EnGB),
-            })]), // todo: argument?
+            locales: vec![Locale {
+                name: "en".to_string(),
+                numbas_locale: SupportedLocale::EnGB,
+            }], // todo: argument?
             name: exam.basic_settings.name.to_rumbas(),
             navigation: exam.to_rumbas(),
             timing: exam.to_rumbas(),
             feedback: exam.to_rumbas(),
-            question_groups: Value::Normal(question_groups.clone()),
-            numbas_settings: Value::Normal(NumbasSettings {
-                theme: Value::Normal("default".to_string()),
-            }), // todo: argument?
+            question_groups: question_groups.clone(),
+            numbas_settings: NumbasSettings {
+                theme: "default".to_string(),
+            }, // todo: argument?
             diagnostic: exam.diagnostic.unwrap().to_rumbas(), // Always set for a diagnostic exam
         },
         question_groups
             .into_iter()
-            .flat_map(|qg| {
-                qg.unwrap()
-                    .questions
-                    .unwrap()
-                    .into_iter()
-                    .map(|q| q.unwrap())
-            })
+            .flat_map(|qg| qg.questions)
             .collect(),
         custom_part_types,
     )

@@ -1,6 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -13,7 +13,7 @@ optional_overwrite! {
     }
 }
 
-pub type LocalesInput = Vec<Value<Locale>>;
+pub type LocalesInput = Vec<Value<LocaleInput>>;
 pub type Locales = Vec<Locale>;
 
 macro_rules! create_support_locale {

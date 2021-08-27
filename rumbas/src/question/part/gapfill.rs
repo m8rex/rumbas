@@ -1,14 +1,12 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::{
-    QuestionPart, QuestionParts, VariableReplacementStrategy,
-};
-use crate::question::part::question_part::{
     QuestionPartInput, QuestionPartsInput, VariableReplacementStrategyInput,
 };
+use crate::question::part::question_part::{QuestionParts, VariableReplacementStrategy};
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;

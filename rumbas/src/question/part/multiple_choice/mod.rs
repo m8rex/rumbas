@@ -1,11 +1,13 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStringInput;
+use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -34,9 +36,11 @@ optional_overwrite! {
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
-impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
+type Primitives = Vec<numbas::support::primitive::Primitive>;
+type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
+optional_overwrite_newtype! {
+    pub struct MatrixRowPrimitive(Primitives)
+}
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -46,10 +50,9 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
-
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRow(Vec<TranslatableString>);
-impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
+optional_overwrite_newtype! {
+    pub struct MatrixRow(TranslatableStrings)
+}
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -67,7 +70,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 }
 
 #[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
+pub struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
@@ -110,43 +113,39 @@ fn extract_multiple_choice_answer_data(
             answers_data
                 .into_iter()
                 .map(|(a, b, c)| MultipleChoiceAnswer {
-                    statement: Value::Normal(a.into()),
-                    marks: Value::Normal(b),
-                    feedback: Value::Normal(c.into()),
+                    statement: a.into(),
+                    marks: b,
+                    feedback: c.into(),
                 })
                 .collect(),
         )
     } else {
         MultipleChoiceAnswerData::NumbasLike(Box::new(MultipleChoiceAnswerDataNumbasLike {
-            answers: Value::Normal(
-                answers
-                    .clone()
-                    .map(|v| {
-                        v.iter()
-                            .map(|vv| vv.clone().into())
-                            .collect::<Vec<TranslatableString>>()
-                    })
-                    .to_rumbas(),
-            ),
-            marks: Value::Normal(
-                marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?"),
-            ),
-            feedback: Value::Normal(
-                distractors
-                    .clone()
-                    .map(|v| {
-                        Noneable::NotNone(
-                            v.into_iter()
-                                .map(|f| f.into())
-                                .collect::<Vec<TranslatableString>>()
-                                .to_rumbas(),
-                        )
-                    })
-                    .unwrap_or(Noneable::None),
-            ),
+            answers: answers
+                .clone()
+                /* .map(|v| {
+                    v.iter()
+                        .map(|vv| vv.clone().into())
+                        .collect::<Vec<TranslatableString>>()
+                })*/
+                .to_rumbas(),
+
+            marks: marking_matrix
+                .clone()
+                .map(|m| m.to_rumbas())
+                .expect("How can the marking matrix be optional?"),
+
+            feedback: distractors
+                .clone()
+                .map(|v| {
+                    Noneable::NotNone(
+                        v /*.into_iter()
+                            .map(|f| f.into())
+                            .collect::<Vec<TranslatableString>>()*/
+                            .to_rumbas(),
+                    )
+                })
+                .unwrap_or(Noneable::None),
         }))
     }
 }

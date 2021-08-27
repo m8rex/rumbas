@@ -1,12 +1,12 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
 use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -35,9 +35,9 @@ question_part_type! {
 
 impl ToNumbas<numbas::question::part::matrix::QuestionPartMatrix> for QuestionPartMatrix {
     fn to_numbas(&self, locale: &str) -> numbas::question::part::matrix::QuestionPartMatrix {
-        let dimensions = self.dimensions.unwrap();
-        let rows = dimensions.rows.unwrap();
-        let columns = dimensions.columns.unwrap();
+        let dimensions = self.dimensions.clone();
+        let rows = dimensions.rows.clone();
+        let columns = dimensions.columns.clone();
         numbas::question::part::matrix::QuestionPartMatrix {
             part_data: self.to_numbas(locale),
             correct_answer: self.correct_answer.to_numbas(locale),
@@ -58,22 +58,22 @@ impl ToNumbas<numbas::question::part::matrix::QuestionPartMatrix> for QuestionPa
 
 impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPartMatrix {
     fn to_rumbas(&self) -> QuestionPartMatrix {
-        let rows = Value::Normal(QuestionPartMatrixDimension::from_range(
+        let rows = QuestionPartMatrixDimension::from_range(
             self.min_rows.to_rumbas(),
             self.num_rows.clone().map(|v| v.0).to_rumbas(),
             self.max_rows.to_rumbas(),
-        ));
-        let columns = Value::Normal(QuestionPartMatrixDimension::from_range(
+        );
+        let columns = QuestionPartMatrixDimension::from_range(
             self.min_columns.to_rumbas(),
             self.num_columns.clone().map(|v| v.0).to_rumbas(),
             self.max_columns.to_rumbas(),
-        ));
+        );
         let dimensions = QuestionPartMatrixDimensions { rows, columns };
         create_question_part! {
             QuestionPartMatrix with &self.part_data  => {
                 correct_answer: self.correct_answer.to_rumbas(),
                 display_correct_as_fraction: self.correct_answer_fractions.to_rumbas(),
-                dimensions: Value::Normal(dimensions),
+                dimensions: dimensions,
                 max_absolute_deviation: self.tolerance.to_rumbas(),
                 mark_partial_by_cells: self.mark_per_cell.to_rumbas(),
                 allow_fractions: self.allow_fractions.to_rumbas()
@@ -91,7 +91,7 @@ optional_overwrite! {
 
 impl QuestionPartMatrixDimensions {
     pub fn is_resizable(&self) -> bool {
-        self.rows.unwrap().is_resizable() || self.columns.unwrap().is_resizable()
+        self.rows.is_resizable() || self.columns.is_resizable()
     }
 }
 
@@ -109,21 +109,21 @@ impl QuestionPartMatrixDimension {
     pub fn default(&self) -> VariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
-            QuestionPartMatrixDimension::Resizable(r) => r.default.unwrap(),
+            QuestionPartMatrixDimension::Resizable(r) => r.default.clone(),
         }
     }
     pub fn min(&self) -> VariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
-            QuestionPartMatrixDimension::Resizable(r) => r.min.unwrap(),
+            QuestionPartMatrixDimension::Resizable(r) => r.min.clone(),
         }
     }
     pub fn max(&self) -> VariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
-            QuestionPartMatrixDimension::Resizable(r) => match r.max.unwrap() {
+            QuestionPartMatrixDimension::Resizable(r) => match &r.max {
                 Noneable::None => VariableValued::Value(0),
-                Noneable::NotNone(f) => f,
+                Noneable::NotNone(f) => f.clone(),
             },
         }
     }
@@ -139,13 +139,13 @@ impl QuestionPartMatrixDimension {
             Self::Fixed(min)
         } else {
             Self::Resizable(Box::new(QuestionPartMatrixRangedDimension {
-                default: Value::Normal(default),
-                min: Value::Normal(min),
-                max: Value::Normal(if max == VariableValued::Value(0) {
+                default,
+                min,
+                max: if max == VariableValued::Value(0) {
                     Noneable::None
                 } else {
                     Noneable::NotNone(max)
-                }),
+                },
             }))
         }
     }

@@ -26,12 +26,7 @@ pub fn import(matches: &clap::ArgMatches) {
         match question_res {
             Ok(question) => {
                 let rumbas_question: QuestionPath = question.to_rumbas();
-                for cpt in rumbas_question
-                    .question_data
-                    .custom_part_types
-                    .unwrap()
-                    .iter()
-                {
+                for cpt in rumbas_question.question_data.custom_part_types.iter() {
                     create_custom_part_type(cpt.to_owned());
                 }
                 create_question(rumbas_question);

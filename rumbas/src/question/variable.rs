@@ -2,7 +2,7 @@ use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use regex::Regex;
@@ -54,11 +54,11 @@ impl VariableRepresentation {
         match self {
             VariableRepresentation::ListOfStrings(l) => Variable::ungrouped(
                 VariableTemplateType::ListOfStrings,
-                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
+                &serde_json::to_string(&l).unwrap(),
             ),
             VariableRepresentation::ListOfNumbers(l) => Variable::ungrouped(
                 VariableTemplateType::ListOfNumbers,
-                &serde_json::to_string(&l.iter().map(|e| e.unwrap()).collect::<Vec<_>>()).unwrap(),
+                &serde_json::to_string(&l).unwrap(),
             ),
             VariableRepresentation::Long(v) => *(v.clone()),
             VariableRepresentation::Number(n) => {
@@ -69,10 +69,10 @@ impl VariableRepresentation {
                     Variable::ungrouped(VariableTemplateType::Anything, &s)
                 }
                 VariableStringRepresentation::Range(r) => {
-                    Variable::ungrouped(VariableTemplateType::Range, &r.to_range())
+                    Variable::ungrouped(VariableTemplateType::Range, &r.as_range())
                 }
                 VariableStringRepresentation::RandomRange(r) => {
-                    Variable::ungrouped(VariableTemplateType::RandomRange, &r.to_random_range())
+                    Variable::ungrouped(VariableTemplateType::RandomRange, &r.as_random_range())
                 }
             },
         }
@@ -114,7 +114,15 @@ impl std::convert::From<String> for VariableStringRepresentation {
     }
 }
 
+impl std::convert::From<String> for VariableStringRepresentationInput {
+    fn from(s: String) -> Self {
+        let v = VariableStringRepresentation::from(s);
+        Self::from_normal(v)
+    }
+}
+
 optional_overwrite! {
+    #[derive(PartialEq)]
     pub struct RangeData {
         from: RumbasFloat,
         to: RumbasFloat,
@@ -135,7 +143,7 @@ impl RangeData {
         }
         None
     }
-    pub fn to_range(self) -> String {
+    pub fn as_range(&self) -> String {
         format!("{} .. {}#{}", self.from, self.to, self.step)
     }
     pub fn try_from_random_range(s: &str) -> Option<RangeData> {
@@ -144,8 +152,8 @@ impl RangeData {
         }
         None
     }
-    pub fn to_random_range(self) -> String {
-        format!("random({})", self.to_range())
+    pub fn as_random_range(&self) -> String {
+        format!("random({})", self.as_range())
     }
 }
 
@@ -153,74 +161,80 @@ impl RangeData {
 mod test {
     use super::*;
 
+    macro_rules! i {
+        ($expr: expr) => {
+            RangeDataInput::from_normal($expr)
+        };
+    }
+
     #[test]
     fn range_ints() {
         let s = "2 .. 10#1".to_string();
         assert_eq!(
-            Some(RangeData {
+            Some(i!(RangeData {
                 from: 2.0,
                 to: 10.0,
                 step: 1.0
-            }),
-            RangeData::try_from_range(&s)
+            })),
+            RangeData::try_from_range(&s).map(|a| i!(a))
         );
-        assert_eq!(None, RangeData::try_from_random_range(&s));
+        assert_eq!(None, RangeData::try_from_random_range(&s).map(|a| i!(a)));
     }
 
     #[test]
     fn random_range_ints() {
         let s = "random(2 .. 10#2)".to_string();
         assert_eq!(
-            Some(RangeData {
+            Some(i!(RangeData {
                 from: 2.0,
                 to: 10.0,
                 step: 2.0
-            }),
-            RangeData::try_from_random_range(&s)
+            })),
+            RangeData::try_from_random_range(&s).map(|a| i!(a))
         );
-        assert_eq!(None, RangeData::try_from_range(&s));
+        assert_eq!(None, RangeData::try_from_range(&s).map(|a| i!(a)));
     }
 
     #[test]
     fn random_range_ints_without_step() {
         let s = "random(2..10)".to_string();
         assert_eq!(
-            Some(RangeData {
+            Some(i!(RangeData {
                 from: 2.0,
                 to: 10.0,
                 step: 1.0
-            }),
-            RangeData::try_from_random_range(&s)
+            })),
+            RangeData::try_from_random_range(&s).map(|a| i!(a))
         );
-        assert_eq!(None, RangeData::try_from_range(&s));
+        assert_eq!(None, RangeData::try_from_range(&s).map(|a| i!(a)));
     }
 
     #[test]
     fn range_floats() {
         let s = "2.1 .. 10.5#1.99".to_string();
         assert_eq!(
-            Some(RangeData {
+            Some(i!(RangeData {
                 from: 2.1,
                 to: 10.5,
                 step: 1.99
-            }),
-            RangeData::try_from_range(&s)
+            })),
+            RangeData::try_from_range(&s).map(|a| i!(a))
         );
-        assert_eq!(None, RangeData::try_from_random_range(&s));
+        assert_eq!(None, RangeData::try_from_random_range(&s).map(|a| i!(a)));
     }
 
     #[test]
     fn random_range_floats() {
         let s = "random(20.222 .. 100.0#19.57)".to_string();
         assert_eq!(
-            Some(RangeData {
+            Some(i!(RangeData {
                 from: 20.222,
                 to: 100.0,
                 step: 19.57
-            }),
-            RangeData::try_from_random_range(&s)
+            })),
+            RangeData::try_from_random_range(&s).map(|a| i!(a))
         );
-        assert_eq!(None, RangeData::try_from_range(&s));
+        assert_eq!(None, RangeData::try_from_range(&s).map(|a| i!(a)));
     }
 }
 
@@ -262,7 +276,7 @@ impl ToNumbas<numbas::question::variable::Variable> for Variable {
 impl Variable {
     fn ungrouped(template_type: VariableTemplateType, definition: &str) -> Variable {
         Variable {
-            template_type: Value::Normal(template_type),
+            template_type,
             definition: definition.to_string().to_rumbas(),
             description: String::new().to_rumbas(),
             group: UNGROUPED_GROUP.to_string().to_rumbas(),

@@ -1,7 +1,5 @@
-use crate::support::noneable::Noneable;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_check::{RumbasCheck, RumbasCheckResult};
-use crate::support::template::{Value, ValueType};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
@@ -28,6 +26,25 @@ impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     }
 }
 
+impl<T: OptionalCheck> OptionalCheck for VariableValued<T> {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            VariableValued::Variable(s) => s.find_missing(),
+            VariableValued::Value(v) => v.find_missing(),
+        }
+    }
+}
+
+impl<T: Input> Input for VariableValued<T> {
+    type Normal = VariableValued<<T as Input>::Normal>;
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        self.clone().map(|a| a.to_normal())
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        normal.map(<T as Input>::from_normal)
+    }
+}
+
 impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValued<T>>
     for VariableValued<T>
 {
@@ -49,7 +66,6 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValue
         };
     }
 }
-impl_optional_overwrite_value!(VariableValued<T>[T]);
 
 impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::support::primitive::VariableValued<V>>
     for VariableValued<T>

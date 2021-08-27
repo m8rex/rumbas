@@ -1,13 +1,14 @@
 use crate::question::part::multiple_choice::choose_multiple::MultipleChoiceWarningTypeInput;
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::VariableReplacementStrategyInput;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionPartInput;
 use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
@@ -67,39 +68,30 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
         &self,
         locale: &str,
     ) -> numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
-        let (answers, choices, marking_matrix) = match self.answer_data.unwrap() {
+        let (answers, choices, marking_matrix) = match &self.answer_data {
             MultipleChoiceMatchAnswerData::ItemBased(data) => (
                 VariableValued::Value(data.answers.clone()).to_numbas(locale),
                 VariableValued::Value(
                     data.items
-                        .clone()
-                        .map(|v| {
-                            v.iter()
-                                .map(|a| a.clone().unwrap().statement)
-                                .collect::<Vec<_>>()
-                        })
-                        .unwrap(),
+                        .iter()
+                        .map(|a| a.clone().statement)
+                        .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
                 Some(
                     VariableValued::Value(
-                        data.items // TODO: better handling
-                            .unwrap(),
+                        data.items.clone(), // TODO: better handling
                     )
                     .map(|v| {
                         v.iter()
                             .map(|i| {
                                 data.answers
-                                    .clone()
-                                    .unwrap()
                                     .iter()
                                     .map(|a| {
-                                        i.unwrap()
-                                            .answer_marks
-                                            .unwrap()
+                                        i.answer_marks
                                             .iter()
-                                            .find(|am| am.answer.unwrap() == a.unwrap())
-                                            .map_or_else(|| 0usize.into(), |v| v.marks.unwrap())
+                                            .find(|am| &am.answer == a)
+                                            .map_or_else(|| 0usize.into(), |v| v.marks.clone())
                                     })
                                     .collect::<Vec<_>>()
                             })
@@ -153,7 +145,7 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                         .map(|v| v.0).to_rumbas()
                 ,
                 display: self.display_type.to_rumbas(),
-                layout: Value::Normal(self.layout.clone()),
+                layout: self.layout.clone(),
                 wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
             }
         }
@@ -179,63 +171,54 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                 .collect();
 
             MultipleChoiceMatchAnswerData::ItemBased({
-                let answers: Vec<_> = answer_options
-                    .iter()
-                    .map(|a| Value::Normal(a.clone().into()))
-                    .collect();
+                let answers: Vec<_> = answer_options.iter().map(|a| a.clone().into()).collect();
                 MultipleChoiceMatchAnswers {
-                    answers: Value::Normal(answers.clone()),
-                    items: Value::Normal(
-                        items_data
-                            .into_iter()
-                            .map(|(statement, marks)| {
-                                Value::Normal(MatchAnswersItem {
-                                    // TODO: extract to ToRumbas?
-                                    statement: Value::Normal(statement.into()),
-                                    answer_marks: Value::Normal(
-                                        marks
-                                            .into_iter()
-                                            .enumerate()
-                                            .map(|(i, m)| MatchAnswersItemMarks {
-                                                marks: Value::Normal(m),
-                                                answer: answers.get(i).unwrap().clone(),
-                                            })
-                                            .collect(),
-                                    ),
-                                })
-                            })
-                            .collect(),
-                    ),
+                    answers: answers.clone(),
+                    items: items_data
+                        .into_iter()
+                        .map(|(statement, marks)| {
+                            MatchAnswersItem {
+                                // TODO: extract to ToRumbas?
+                                statement: statement.into(),
+                                answer_marks: marks
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(i, m)| MatchAnswersItemMarks {
+                                        marks: m,
+                                        answer: answers.get(i).unwrap().clone(),
+                                    })
+                                    .collect(),
+                            }
+                        })
+                        .collect(),
                 }
             })
         } else {
             MultipleChoiceMatchAnswerData::NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike {
-                answers: Value::Normal(
-                    self.answers
-                        .clone()
-                        .map(|v| {
-                            v.iter()
-                                .map(|vv| vv.clone().into())
-                                .collect::<Vec<TranslatableString>>()
-                        })
-                        .to_rumbas(),
-                ),
-                choices: Value::Normal(
-                    self.choices
-                        .clone()
-                        .map(|v| {
-                            v.iter()
-                                .map(|vv| vv.clone().into())
-                                .collect::<Vec<TranslatableString>>()
-                        })
-                        .to_rumbas(),
-                ),
-                marks: Value::Normal(
-                    self.marking_matrix
-                        .clone()
-                        .map(|m| m.to_rumbas())
-                        .expect("How can the marking matrix be optional?"),
-                ),
+                answers: self
+                    .answers
+                    .clone()
+                    /* .map(|v| {
+                        v.iter()
+                            .map(|vv| vv.clone().into())
+                            .collect::<Vec<TranslatableString>>()
+                    })*/
+                    .to_rumbas(),
+                choices: self
+                    .choices
+                    .clone()
+                    /* .map(|v| {
+                        v.iter()
+                            .map(|vv| vv.clone().into())
+                            .collect::<Vec<TranslatableString>>()
+                    })*/
+                    .to_rumbas(),
+
+                marks: self
+                    .marking_matrix
+                    .clone()
+                    .map(|m| m.to_rumbas())
+                    .expect("How can the marking matrix be optional?"),
             })
         }
     }

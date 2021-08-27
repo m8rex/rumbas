@@ -1,11 +1,11 @@
 use crate::question::part::question_part::{JMENotes, JMENotesInput};
 use crate::question::part::question_part::{
-    QuestionPart, QuestionPartInput, VariableReplacementStrategy, VariableReplacementStrategyInput,
+    QuestionPartInput, VariableReplacementStrategy, VariableReplacementStrategyInput,
 };
 use crate::question::part::question_part::{QuestionParts, QuestionPartsInput};
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
@@ -71,7 +71,7 @@ impl ToRumbas<QuestionPartPatternMatch>
                         .map(|d| d.to_string())
                         .unwrap_or_else(|| self.answer.to_string())
                         .to_rumbas(),
-                match_mode: Value::Normal(self.match_mode)
+                match_mode: self.match_mode
             }
         }
     }

@@ -1,6 +1,6 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use schemars::JsonSchema;
@@ -49,7 +49,7 @@ macro_rules! extensions {
             pub fn combine(e: Extensions, f: Extensions) -> Extensions {
                 Extensions {
                     $(
-                    $name: Value::Normal(e.$name.unwrap() || f.$name.unwrap())
+                    $name: e.$name || f.$name
                     ),*
                 }
             }
@@ -59,7 +59,7 @@ macro_rules! extensions {
                     .expect(&format!("{} to be set", crate::NUMBAS_FOLDER_ENV)[..]);
                 let mut paths = Vec::new();
                 $(
-                    if self.$name.unwrap() {
+                    if self.$name {
                         paths.push($path);
                     }
                 )*
@@ -74,7 +74,7 @@ macro_rules! extensions {
             fn default() -> Extensions {
                 Extensions {
                     $(
-                        $name: Value::Normal(false)
+                        $name: false
                     ),*
                 }
             }

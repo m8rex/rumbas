@@ -9,6 +9,42 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
+impl<T: Input> Input for Noneable<T> {
+    type Normal = Noneable<<T as Input>::Normal>;
+    fn to_normal(&self) -> Noneable<<T as Input>::Normal> {
+        self.clone().map(|a| a.to_normal())
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        normal.map(<T as Input>::from_normal)
+    }
+}
+
+impl<T: OptionalOverwrite<T>> OptionalOverwrite<Noneable<T>> for Noneable<T> {
+    fn overwrite(&mut self, other: &Noneable<T>) {
+        if let Noneable::NotNone(ref mut val) = self {
+            if let Noneable::NotNone(other_val) = &other {
+                val.overwrite(&other_val);
+            }
+        } else {
+            // Do nothing, none is a valid value
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        if let Noneable::NotNone(item) = self {
+            item.insert_template_value(&key, &val);
+        }
+    }
+}
+
+impl<T: OptionalCheck> OptionalCheck for Noneable<T> {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            Noneable::NotNone(val) => val.find_missing(),
+            _ => OptionalCheckResult::empty(),
+        }
+    }
+}
+
 impl<T: RumbasCheck> RumbasCheck for Noneable<T> {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         match self {
@@ -69,6 +105,24 @@ impl<T: std::clone::Clone> Noneable<T> {
         match self {
             Noneable::None => other,
             Noneable::NotNone(nn) => nn.clone(),
+        }
+    }
+}
+
+impl<T> Noneable<T> {
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Noneable<U> {
+        match self {
+            Noneable::None => Noneable::None,
+            Noneable::NotNone(x) => Noneable::NotNone(f(x)),
+        }
+    }
+}
+
+impl<T> std::convert::From<Noneable<T>> for Option<T> {
+    fn from(n: Noneable<T>) -> Self {
+        match n {
+            Noneable::None => Self::None,
+            Noneable::NotNone(n) => Self::Some(n),
         }
     }
 }

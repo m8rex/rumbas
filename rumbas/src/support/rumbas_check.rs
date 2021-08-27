@@ -33,35 +33,23 @@ impl<T: RumbasCheck> RumbasCheck for HashMap<String, T> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct RumbasCheckResult {
     // When adding a field, do also add it to is_empty
-    missing_values: Vec<RumbasCheckMissingData>,
-    invalid_yaml_values: Vec<RumbasCheckInvalidYamlData>,
+    missing_translations: Vec<RumbasCheckMissingData>,
     invalid_jme_strings: Vec<RumbasCheckInvalidJMEStringData>,
 }
 
 impl RumbasCheckResult {
-    pub fn from_missing(os: Option<String>) -> RumbasCheckResult {
+    pub fn from_missing_translation(os: Option<String>) -> RumbasCheckResult {
         RumbasCheckResult {
-            missing_values: vec![RumbasCheckMissingData {
+            missing_translations: vec![RumbasCheckMissingData {
                 path: RumbasCheckPath::with_last(os),
             }],
-            invalid_yaml_values: vec![],
             invalid_jme_strings: vec![],
         }
     }
-    pub fn from_invalid(v: &serde_yaml::Value) -> RumbasCheckResult {
-        RumbasCheckResult {
-            missing_values: vec![],
-            invalid_yaml_values: vec![RumbasCheckInvalidYamlData {
-                path: RumbasCheckPath::without_last(),
-                data: v.clone(),
-            }],
-            invalid_jme_strings: vec![],
-        }
-    }
+
     pub fn from_invalid_jme(e: &numbas::jme::parser::ConsumeError) -> RumbasCheckResult {
         RumbasCheckResult {
-            missing_values: vec![],
-            invalid_yaml_values: vec![],
+            missing_translations: vec![],
             invalid_jme_strings: vec![RumbasCheckInvalidJMEStringData {
                 path: RumbasCheckPath::without_last(),
                 error: e.clone(),
@@ -70,39 +58,29 @@ impl RumbasCheckResult {
     }
     pub fn empty() -> RumbasCheckResult {
         RumbasCheckResult {
-            missing_values: vec![],
-            invalid_yaml_values: vec![],
+            missing_translations: vec![],
             invalid_jme_strings: vec![],
         }
     }
     pub fn is_empty(&self) -> bool {
-        self.missing_values.len() == 0
-            && self.invalid_yaml_values.len() == 0
-            && self.invalid_jme_strings.len() == 0
+        self.missing_translations.len() == 0 && self.invalid_jme_strings.len() == 0
     }
     pub fn extend_path(&mut self, s: String) {
-        for missing_value in self.missing_values.iter_mut() {
+        for missing_value in self.missing_translations.iter_mut() {
             missing_value.path.add(s.clone());
-        }
-        for invalid_value in self.invalid_yaml_values.iter_mut() {
-            invalid_value.path.add(s.clone());
         }
         for invalid_value in self.invalid_jme_strings.iter_mut() {
             invalid_value.path.add(s.clone());
         }
     }
     pub fn union(&mut self, other: &Self) {
-        self.missing_values.extend(other.missing_values.clone());
-        self.invalid_yaml_values
-            .extend(other.invalid_yaml_values.clone());
+        self.missing_translations
+            .extend(other.missing_translations.clone());
         self.invalid_jme_strings
             .extend(other.invalid_jme_strings.clone());
     }
-    pub fn missing_fields(&self) -> Vec<RumbasCheckMissingData> {
-        self.missing_values.clone()
-    }
-    pub fn invalid_yaml_fields(&self) -> Vec<RumbasCheckInvalidYamlData> {
-        self.invalid_yaml_values.clone()
+    pub fn missing_translations(&self) -> Vec<RumbasCheckMissingData> {
+        self.missing_translations.clone()
     }
     pub fn invalid_jme_fields(&self) -> Vec<RumbasCheckInvalidJMEStringData> {
         self.invalid_jme_strings.clone()
@@ -153,27 +131,6 @@ pub struct RumbasCheckMissingData {
 impl std::fmt::Display for RumbasCheckMissingData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.path.to_string())
-    }
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct RumbasCheckInvalidYamlData {
-    path: RumbasCheckPath,
-    data: serde_yaml::Value,
-}
-
-impl std::fmt::Display for RumbasCheckInvalidYamlData {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let p = self.path.to_string();
-        write!(
-            f,
-            "{}",
-            if let Ok(s) = serde_yaml::to_string(&self.data) {
-                format!("{}\n With yaml:\n{}", p, s)
-            } else {
-                p
-            }
-        )
     }
 }
 

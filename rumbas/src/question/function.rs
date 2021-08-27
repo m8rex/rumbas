@@ -1,5 +1,5 @@
 use crate::support::optional_overwrite::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::impl_to_numbas;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -13,6 +13,8 @@ use serde::{Deserialize, Serialize};
 type StringFunctionTypeTuple = (String, NumbasFunctionType);
 type StringFunctionTypeTuples = Vec<StringFunctionTypeTuple>;
 type StringFunctionTypeTuplesInput = Vec<Value<StringFunctionTypeTuple>>;
+
+impl_to_numbas!(NumbasFunctionType);
 
 optional_overwrite! {
     pub struct Function {
@@ -39,8 +41,8 @@ impl ToRumbas<Function> for numbas::question::function::Function {
     fn to_rumbas(&self) -> Function {
         Function {
             definition: self.definition.to_rumbas(),
-            output_type: Value::Normal(self.output_type),
-            parameters: Value::Normal(self.parameters.clone().into_iter().collect()),
+            output_type: self.output_type,
+            parameters: self.parameters.clone().into_iter().collect(),
         }
     }
 }

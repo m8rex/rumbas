@@ -4,13 +4,13 @@ use crate::question::part::multiple_choice::{
 };
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
 use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
@@ -52,21 +52,18 @@ impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultipl
         locale: &str,
     ) -> numbas::question::part::choose_multiple::QuestionPartChooseMultiple {
         // TODO: below is duplicated in CHooseOne
-        let (choices, marking_matrix, distractors) = match self.answer_data.unwrap() {
+        let (choices, marking_matrix, distractors) = match &self.answer_data {
             MultipleChoiceAnswerData::ItemBased(answers) => (
                 VariableValued::Value(
                     answers
                         .iter()
-                        .map(|a| a.statement.clone().unwrap())
+                        .map(|a| a.statement.clone())
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
                 Some(
                     VariableValued::Value(
-                        answers
-                            .iter()
-                            .map(|a| a.marks.clone().unwrap())
-                            .collect::<Vec<_>>(),
+                        answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>(),
                     )
                     .to_numbas(locale),
                 ),
@@ -74,7 +71,7 @@ impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultipl
                     answers
                         .iter()
                         .map(|a| {
-                            a.feedback.clone().unwrap() //TODO
+                            a.feedback.clone() //TODO
                         })
                         .collect::<Vec<_>>()
                         .to_numbas(locale),
@@ -83,7 +80,7 @@ impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultipl
             MultipleChoiceAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
                 Some(data.marks.to_numbas(locale)),
-                data.feedback.map(|f| f.to_numbas(locale)).flatten(),
+                data.feedback.clone().map(|f| f.to_numbas(locale)).into(),
             ),
         };
         numbas::question::part::choose_multiple::QuestionPartChooseMultiple {

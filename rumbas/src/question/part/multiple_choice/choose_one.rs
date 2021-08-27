@@ -2,18 +2,20 @@ use super::{extract_multiple_choice_answer_data, MultipleChoiceAnswerData};
 use crate::question::part::multiple_choice::MultipleChoiceAnswerDataInput;
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::VariableReplacementStrategyInput;
-use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::question::QuestionPartInput;
 use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::ContentAreaTranslatableStringInput;
-use crate::support::translatable::TranslatableString;
+use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
@@ -40,21 +42,18 @@ question_part_type! {
 
 impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for QuestionPartChooseOne {
     fn to_numbas(&self, locale: &str) -> numbas::question::part::choose_one::QuestionPartChooseOne {
-        let (answers, marking_matrix, distractors) = match self.answer_data.unwrap() {
+        let (answers, marking_matrix, distractors) = match &self.answer_data {
             MultipleChoiceAnswerData::ItemBased(answers) => (
                 VariableValued::Value(
                     answers
                         .iter()
-                        .map(|a| a.statement.clone().unwrap())
+                        .map(|a| a.statement.clone())
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
                 Some(
                     VariableValued::Value(
-                        answers
-                            .iter()
-                            .map(|a| a.marks.clone().unwrap())
-                            .collect::<Vec<_>>(),
+                        answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>(),
                     )
                     .to_numbas(locale),
                 ),
@@ -62,7 +61,7 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
                     answers
                         .iter()
                         .map(|a| {
-                            a.feedback.clone().unwrap() //TODO
+                            a.feedback.clone() //TODO
                         })
                         .collect::<Vec<_>>()
                         .to_numbas(locale),
@@ -71,7 +70,7 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
             MultipleChoiceAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
                 Some(data.marks.to_numbas(locale)),
-                data.feedback.map(|f| f.to_numbas(locale)).flatten(),
+                data.feedback.clone().map(|f| f.to_numbas(locale)).into(),
             ),
         };
         numbas::question::part::choose_one::QuestionPartChooseOne {
@@ -83,8 +82,8 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
             }),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             answers,
-            display_type: self.display.unwrap().to_numbas(locale),
-            columns: self.display.unwrap().get_nb_columns().into(),
+            display_type: self.display.to_numbas(locale),
+            columns: self.display.get_nb_columns().into(),
             wrong_nb_choices_warning: Some(
                 numbas::question::part::match_answers::MultipleChoiceWarningType::None,
             ), //TODO
@@ -122,9 +121,12 @@ impl ToRumbas<MultipleChoiceAnswerData>
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
-impl_optional_overwrite!(MatrixRowPrimitive); // TODO: Does this do what it needs to do?
+optional_overwrite_newtype! {
+    pub struct MatrixRowPrimitive(Primitives)
+}
+
+type Primitives = Vec<numbas::support::primitive::Primitive>;
+type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -135,9 +137,9 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixRow(Vec<TranslatableString>);
-impl_optional_overwrite!(MatrixRow); // TODO: Does this do what it needs to do?
+optional_overwrite_newtype! {
+    pub struct MatrixRow(TranslatableStrings)
+}
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -154,9 +156,13 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
-struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
-impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
+pub type VariableValuedsPrimitivessInput =
+    Vec<Value<VariableValued<Vec<Value<numbas::support::primitive::Primitive>>>>>;
+pub type VariableValuedsPrimitivess =
+    Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>;
+optional_overwrite_newtype! {
+    pub struct MatrixPrimitive(VariableValuedsPrimitivess)
+}
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(
@@ -169,15 +175,78 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "display")]
-pub enum ChooseOneDisplay {
+pub enum ChooseOneDisplayInput {
     #[serde(rename = "dropdown")]
     DropDown,
     #[serde(rename = "radio")]
+    Radio { columns: Value<RumbasNatural> },
+}
+
+impl OptionalOverwrite<ChooseOneDisplayInput> for ChooseOneDisplayInput {
+    fn overwrite(&mut self, other: &ChooseOneDisplayInput) {
+        match (self, other) {
+            (
+                &mut Self::Radio { ref mut columns },
+                Self::Radio {
+                    columns: ref columns2,
+                },
+            ) => columns.overwrite(&columns2),
+            _ => (),
+        };
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match self {
+            &mut Self::Radio { ref mut columns } => columns.insert_template_value(&key, &val),
+            _ => (),
+        };
+    }
+}
+
+impl Input for ChooseOneDisplayInput {
+    type Normal = ChooseOneDisplay;
+    fn to_normal(&self) -> Self::Normal {
+        match self {
+            Self::DropDown => Self::Normal::DropDown,
+            Self::Radio { columns } => Self::Normal::Radio {
+                columns: columns.unwrap(),
+            },
+        }
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        match normal {
+            Self::Normal::DropDown => Self::DropDown,
+            Self::Normal::Radio { columns } => Self::Radio {
+                columns: Value::Normal(columns),
+            },
+        }
+    }
+}
+
+impl OptionalCheck for ChooseOneDisplayInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            Self::DropDown => OptionalCheckResult::empty(),
+            Self::Radio { columns } => columns.find_missing(),
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum ChooseOneDisplay {
+    DropDown,
     Radio { columns: usize },
 }
-impl_optional_overwrite!(ChooseOneDisplay);
+
+impl RumbasCheck for ChooseOneDisplay {
+    fn check(&self, _locale: &str) -> RumbasCheckResult {
+        match self {
+            Self::DropDown => RumbasCheckResult::empty(),
+            Self::Radio { columns: _ } => RumbasCheckResult::empty(),
+        }
+    }
+}
 
 impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {
     fn to_numbas(&self, _locale: &str) -> numbas::question::part::choose_one::ChooseOneDisplayType {

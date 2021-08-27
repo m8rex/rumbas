@@ -1,7 +1,8 @@
 use crate::question::Question;
+use crate::question::QuestionInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::{Value, ValueType};
+use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -11,7 +12,7 @@ use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-pub type QuestionGroupsInput = Vec<Value<QuestionGroup>>;
+pub type QuestionGroupsInput = Vec<Value<QuestionGroupInput>>;
 pub type QuestionGroups = Vec<QuestionGroup>;
 
 optional_overwrite! {
@@ -47,7 +48,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 }
 
 // TODO: remove this manual code
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategyInput {
     #[serde(rename = "all_ordered")]
@@ -58,19 +59,47 @@ pub enum PickingStrategyInput {
     RandomSubset(PickingStrategyRandomSubsetInput),
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub enum PickingStrategy {
     AllOrdered,
     AllShuffled,
     RandomSubset(PickingStrategyRandomSubset),
 }
 
-impl RumbasCheck for PickingStrategyInput {
+impl RumbasCheck for PickingStrategy {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         match self {
-            PickingStrategyInput::AllOrdered => RumbasCheckResult::empty(),
-            PickingStrategyInput::AllShuffled => RumbasCheckResult::empty(),
-            PickingStrategyInput::RandomSubset(r) => r.check(locale),
+            PickingStrategy::AllOrdered => RumbasCheckResult::empty(),
+            PickingStrategy::AllShuffled => RumbasCheckResult::empty(),
+            PickingStrategy::RandomSubset(r) => r.check(locale),
+        }
+    }
+}
+impl OptionalCheck for PickingStrategyInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        match self {
+            PickingStrategyInput::AllOrdered => OptionalCheckResult::empty(),
+            PickingStrategyInput::AllShuffled => OptionalCheckResult::empty(),
+            PickingStrategyInput::RandomSubset(r) => r.find_missing(),
+        }
+    }
+}
+impl Input for PickingStrategyInput {
+    type Normal = PickingStrategy;
+    fn to_normal(&self) -> Self::Normal {
+        match self {
+            Self::AllOrdered => Self::Normal::AllOrdered,
+            Self::AllShuffled => Self::Normal::AllShuffled,
+            Self::RandomSubset(s) => Self::Normal::RandomSubset(s.to_normal()),
+        }
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        match normal {
+            Self::Normal::AllOrdered => Self::AllOrdered,
+            Self::Normal::AllShuffled => Self::AllShuffled,
+            Self::Normal::RandomSubset(s) => {
+                Self::RandomSubset(PickingStrategyRandomSubsetInput::from_normal(s))
+            }
         }
     }
 }
@@ -94,7 +123,6 @@ impl OptionalOverwrite<PickingStrategyInput> for PickingStrategyInput {
         }
     }
 }
-impl_optional_overwrite_value!(PickingStrategyInput);
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for PickingStrategy {
     fn to_numbas(
@@ -108,9 +136,9 @@ impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for Pi
             PickingStrategy::AllShuffled => {
                 numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled
             }
-            PickingStrategy::RandomSubse(p) => {
+            PickingStrategy::RandomSubset(p) => {
                 numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
-                    pick_questions: *p.pick_questions,
+                    pick_questions: p.pick_questions,
                 }
             }
         }
@@ -141,28 +169,52 @@ optional_overwrite! {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(try_from = "String")]
-#[serde(into = "String")]
+#[derive(Debug, Clone)]
 pub struct QuestionPath {
     pub question_name: String,
     pub question_data: Question,
 }
-type QuestionPathInput = QuestionPath;
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(try_from = "String")]
+#[serde(into = "String")]
+pub struct QuestionPathInput {
+    pub question_name: String,
+    pub question_data: QuestionInput,
+}
 
+impl Input for QuestionPathInput {
+    type Normal = QuestionPath;
+    fn to_normal(&self) -> Self::Normal {
+        Self::Normal {
+            question_name: self.question_name.to_owned(),
+            question_data: self.question_data.to_normal(),
+        }
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        Self {
+            question_name: normal.question_name,
+            question_data: Input::from_normal(normal.question_data),
+        }
+    }
+}
+
+impl OptionalCheck for QuestionPathInput {
+    fn find_missing(&self) -> OptionalCheckResult {
+        self.question_data.find_missing()
+    }
+}
 impl RumbasCheck for QuestionPath {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         self.question_data.check(locale)
     }
 }
 
-impl OptionalOverwrite<QuestionPath> for QuestionPath {
+impl OptionalOverwrite<QuestionPathInput> for QuestionPathInput {
     fn overwrite(&mut self, _other: &Self) {}
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         self.question_data.insert_template_value(key, val);
     }
 }
-impl_optional_overwrite_value!(QuestionPath);
 
 impl ToNumbas<numbas::question::question::Question> for QuestionPath {
     fn to_numbas(&self, locale: &str) -> numbas::question::question::Question {
@@ -181,7 +233,7 @@ impl ToRumbas<QuestionPath> for numbas::question::question::Question {
     }
 }
 
-impl JsonSchema for QuestionPath {
+impl JsonSchema for QuestionPathInput {
     fn schema_name() -> String {
         "QuestionPath".to_owned()
     }
@@ -191,20 +243,20 @@ impl JsonSchema for QuestionPath {
     }
 }
 
-impl std::convert::TryFrom<String> for QuestionPath {
+impl std::convert::TryFrom<String> for QuestionPathInput {
     type Error = YamlError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = Question::from_name(&s).map_err(|e| e)?;
-        Ok(QuestionPath {
+        let question_data = QuestionInput::from_name(&s).map_err(|e| e)?;
+        Ok(QuestionPathInput {
             question_name: s,
             question_data,
         })
     }
 }
 
-impl std::convert::From<QuestionPath> for String {
-    fn from(q: QuestionPath) -> Self {
+impl std::convert::From<QuestionPathInput> for String {
+    fn from(q: QuestionPathInput) -> Self {
         q.question_name
     }
 }

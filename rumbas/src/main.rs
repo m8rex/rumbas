@@ -30,12 +30,12 @@ fn main() {
     cli::logger::setup(log_level).expect("Working logger");
 
     if let Some(matches) = matches.subcommand_matches("import") {
-        cli::import(&matches)
+        cli::import(matches)
     } else if let Some(matches) = matches.subcommand_matches("compile") {
-        cli::compile(&matches)
+        cli::compile(matches)
     } else if let Some(matches) = matches.subcommand_matches("init") {
-        cli::init(&matches)
+        cli::init(matches)
     } else if let Some(matches) = matches.subcommand_matches("schema") {
-        cli::schema(&matches)
+        cli::schema(matches)
     }
 }
