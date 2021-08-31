@@ -94,7 +94,10 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<Value<T>> for
 impl<T: Input> InputInverse for Value<T> {
     type Input = Self;
 }
-impl<T: Input> Input for Value<T> {
+impl<T: Input> Input for Value<T>
+where
+    T: serde::de::DeserializeOwned,
+{
     type Normal = <T as Input>::Normal;
     fn to_normal(&self) -> Self::Normal {
         self.clone().unwrap().to_normal()
@@ -108,6 +111,15 @@ impl<T: Input> Input for Value<T> {
             Some(ValueType::Template(ts)) => InputCheckResult::from_missing(Some(ts.yaml())),
             Some(ValueType::Invalid(v)) => InputCheckResult::from_invalid(v),
             None => InputCheckResult::from_missing(None),
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        if let Some(ValueType::Template(ts)) = &self.0 {
+            if ts.key == Some(key.to_string()) {
+                *self = Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
+            }
+        } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
+            v.insert_template_value(key, val);
         }
     }
 }
@@ -182,6 +194,7 @@ impl Input for TemplateString {
             InputCheckResult::empty()
         }
     }
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
 /* TODO
 impl OptionalOverwrite<TemplateString> for TemplateString {
