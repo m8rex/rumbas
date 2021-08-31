@@ -15,3 +15,5 @@ syn = "1.0.75"
 
 [dev-dependencies]
 rumbas_support = { path = "../rumbas_support" }
+serde = { version="1.0.110", features=["derive"]}
+serde_yaml = "0.8.13"

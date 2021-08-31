@@ -455,6 +455,8 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rumbas_support",
+ "serde",
+ "serde_yaml",
  "syn",
 ]
 

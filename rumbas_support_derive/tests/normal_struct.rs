@@ -4,9 +4,11 @@ extern crate rumbas_support_derive;
 use rumbas_support::input::Input;
 use rumbas_support::input::InputCheckResult;
 use rumbas_support::input::InputInverse;
+use rumbas_support::overwrite::Overwrite;
 use rumbas_support::value::Value;
+use serde::Deserialize;
 
-#[derive(Clone, Input)]
+#[derive(Clone, Deserialize, Input)]
 #[input(name = "TestInput")]
 pub struct Test {
     field1: bool,
@@ -15,10 +17,17 @@ pub struct Test {
 
 type TestInputs = Vec<Test>;
 
-#[derive(Clone, Input)]
+#[derive(Clone, Deserialize, Input)]
 #[input(name = "Test2Input")]
 pub struct Test2 {
     field1: TestInputs,
+    field2: f64,
+}
+
+#[derive(Clone, Input, Deserialize, Overwrite)]
+#[input(name = "TestOverwriteInput")]
+pub struct TestOverwrite {
+    field1: bool,
     field2: f64,
 }
 

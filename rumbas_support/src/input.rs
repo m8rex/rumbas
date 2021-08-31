@@ -19,6 +19,8 @@ pub trait Input: Clone {
     fn find_missing(&self) -> InputCheckResult;
 
     fn from_normal(normal: Self::Normal) -> Self;
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 }
 
 pub trait InputInverse {
@@ -46,6 +48,12 @@ impl<O: Input> Input for Vec<O> {
             result.union(&previous_result)
         }
         result
+    }
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        for (_i, item) in self.iter_mut().enumerate() {
+            item.insert_template_value(key, val);
+        }
     }
 }
 
@@ -77,6 +85,12 @@ impl<O: Input> Input for HashMap<String, O> {
         }
         result
     }
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        for (_i, (_key, item)) in self.iter_mut().enumerate() {
+            item.insert_template_value(key, val);
+        }
+    }
 }
 
 impl<O: InputInverse> InputInverse for Box<O> {
@@ -95,6 +109,10 @@ impl<O: Input> Input for Box<O> {
 
     fn find_missing(&self) -> InputCheckResult {
         (**self).find_missing()
+    }
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        (**self).insert_template_value(key, val)
     }
 }
 
@@ -117,6 +135,10 @@ macro_rules! impl_input {
 
             fn find_missing(&self) -> InputCheckResult {
                 InputCheckResult::empty()
+            }
+
+            fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {
+
             }
         }
         )*

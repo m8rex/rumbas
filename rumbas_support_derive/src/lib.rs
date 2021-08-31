@@ -132,7 +132,7 @@ impl ToTokens for InputReceiver {
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
         tokens.extend(quote! {
-            #[derive(Clone)]
+            #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
             pub struct #input_ident #ty #wher {
                 #(pub #field_names: Value<<#input_type_tys as InputInverse>::Input>),*
             }
@@ -156,7 +156,128 @@ impl ToTokens for InputReceiver {
                     }
                 }
                 fn find_missing(&self) -> InputCheckResult {
-                    InputCheckResult::empty() // TODO
+                    let mut result = InputCheckResult::empty();
+                    #(
+                        let mut previous_result = self.#field_names.find_missing();
+                        previous_result.extend_path(stringify!(#field_names).to_string());
+                        result.union(&previous_result);
+                    )*
+                    result
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    #(self.#field_names.insert_template_value(key, val);)*
+                }
+            }
+        });
+    }
+}
+
+#[proc_macro_derive(Overwrite)]
+pub fn derive_overwrite(input: TokenStream) -> TokenStream {
+    let derive_input = parse_macro_input!(input as syn::DeriveInput);
+
+    let machine = match OverwriteReceiver::from_derive_input(&derive_input) {
+        Ok(sm) => sm,
+        Err(e) => panic!("error in derive(Overwrite): {}", e),
+    };
+
+    quote!(#machine).into()
+}
+
+#[derive(Debug, FromField)]
+struct OverwriteFieldReceiver {
+    /// Get the ident of the field. For fields in tuple or newtype structs or
+    /// enum bodies, this can be `None`.
+    ident: Option<syn::Ident>,
+
+    /// This magic field name pulls the type from the input.
+    ty: syn::Type,
+}
+
+#[derive(FromDeriveInput)]
+#[darling(attributes(input))]
+#[darling(supports(struct_any), forward_attrs(doc, derive))]
+struct OverwriteReceiver {
+    /// The struct ident.
+    ident: syn::Ident,
+
+    /// The type's generics. You'll need these any time your trait is expected
+    /// to work with types that declare generics.
+    generics: syn::Generics,
+
+    /// Receives the body of the struct or enum. We don't care about
+    /// struct fields because we previously told darling we only accept structs.
+    data: ast::Data<(), InputFieldReceiver>,
+    attrs: Vec<syn::Attribute>,
+
+    #[darling(rename = "name")]
+    input_name: String,
+}
+impl ToTokens for OverwriteReceiver {
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        let OverwriteReceiver {
+            ref ident,
+            ref generics,
+            ref data,
+            ref attrs,
+            ref input_name,
+        } = *self;
+
+        /*let derive_attrs = attrs
+            .iter()
+            .filter(|a| a.path.is_ident("derive"))
+            .collect::<Vec<_>>();
+        eprintln!("{:?}", derive_attrs);*/
+
+        let (imp, ty, wher) = generics.split_for_impl();
+        let fields = data
+            .as_ref()
+            .take_struct()
+            .expect("Should never be enum")
+            .fields;
+
+        // Generate the actual values to fill the format string.
+        let field_names = fields
+            .iter()
+            .enumerate()
+            .map(|(i, f)| {
+                // This works with named or indexed fields, so we'll fall back to the index so we can
+                // write the output as a key-value pair.
+                let field_ident = f.ident.as_ref().map(|v| quote!(#v)).unwrap_or_else(|| {
+                    let i = syn::Index::from(i);
+                    quote!(#i)
+                });
+                field_ident
+            })
+            .collect::<Vec<_>>();
+
+        let input_type_tys = fields
+            .into_iter()
+            .enumerate()
+            .map(|(_i, f)| {
+                // This works with named or indexed fields, so we'll fall back to the index so we can
+                // write the output as a key-value pair.
+                match &f.ty {
+                    syn::Type::Path(p) => {
+                        let ident_opt = p.path.get_ident();
+                        if let Some(ident) = ident_opt {
+                            ident.to_owned()
+                        } else {
+                            panic!("{:?} is not a valid type for an Input struct.", p)
+                        }
+                    }
+                    _ => panic!("{:?} is not a valid type for an Input struct.", f.ty),
+                }
+                //f.ty.clone()
+            })
+            .collect::<Vec<_>>();
+        let input_ident = syn::Ident::new(&input_name, ident.span());
+
+        tokens.extend(quote! {
+            #[automatically_derived]
+            impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
+                fn overwrite(&mut self, other: &Self){
+                    #(self.#field_names.overwrite(&other.#field_names);)*
                 }
             }
         });
