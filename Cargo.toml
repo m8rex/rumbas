@@ -2,4 +2,6 @@
 members = [
   "numbas",
   "rumbas",
+  "rumbas_support",
+  "rumbas_support_derive",
 ]
