@@ -132,47 +132,67 @@ impl_input!(bool);
 #[derive(Debug, Clone, PartialEq)]
 pub struct InputCheckResult {
     // When adding a field, do also add it to is_empty
-    missing_values: Vec<OptionalCheckMissingData>,
+    missing_values: Vec<InputCheckMissingData>,
+    invalid_yaml_values: Vec<InputCheckInvalidYamlData>,
 }
 
 impl InputCheckResult {
     pub fn from_missing(os: Option<String>) -> InputCheckResult {
         InputCheckResult {
-            missing_values: vec![OptionalCheckMissingData {
-                path: OptionalCheckPath::with_last(os),
+            missing_values: vec![InputCheckMissingData {
+                path: InputCheckPath::with_last(os),
+            }],
+            invalid_yaml_values: vec![],
+        }
+    }
+    pub fn from_invalid(v: &serde_yaml::Value) -> InputCheckResult {
+        InputCheckResult {
+            missing_values: vec![],
+            invalid_yaml_values: vec![InputCheckInvalidYamlData {
+                path: InputCheckPath::without_last(),
+                data: v.clone(),
             }],
         }
     }
     pub fn empty() -> InputCheckResult {
         InputCheckResult {
             missing_values: vec![],
+            invalid_yaml_values: vec![],
         }
     }
     pub fn is_empty(&self) -> bool {
-        self.missing_values.len() == 0
+        self.missing_values.len() == 0 && self.invalid_yaml_values.len() == 0
     }
     pub fn extend_path(&mut self, s: String) {
         for missing_value in self.missing_values.iter_mut() {
             missing_value.path.add(s.clone());
         }
+        for invalid_value in self.invalid_yaml_values.iter_mut() {
+            invalid_value.path.add(s.clone());
+        }
     }
     pub fn union(&mut self, other: &Self) {
         self.missing_values.extend(other.missing_values.clone());
+        self.invalid_yaml_values
+            .extend(other.invalid_yaml_values.clone());
     }
-    pub fn missing_fields(&self) -> Vec<OptionalCheckMissingData> {
+    pub fn missing_fields(&self) -> Vec<InputCheckMissingData> {
         self.missing_values.clone()
+    }
+    pub fn invalid_yaml_fields(&self) -> Vec<InputCheckInvalidYamlData> {
+        self.invalid_yaml_values.clone()
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct OptionalCheckPath {
+pub struct InputCheckPath {
     parts: Vec<String>,
     last_part: Option<String>,
 }
 
-impl OptionalCheckPath {
+impl InputCheckPath {
     pub fn with_last(os: Option<String>) -> Self {
-        OptionalCheckPath {
+        InputCheckPath {
             parts: vec![],
             last_part: os,
         }
@@ -185,7 +205,7 @@ impl OptionalCheckPath {
     }
 }
 
-impl std::fmt::Display for OptionalCheckPath {
+impl std::fmt::Display for InputCheckPath {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let base = self.parts.join(".");
         write!(
@@ -201,12 +221,33 @@ impl std::fmt::Display for OptionalCheckPath {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct OptionalCheckMissingData {
-    path: OptionalCheckPath,
+pub struct InputCheckMissingData {
+    path: InputCheckPath,
 }
 
-impl std::fmt::Display for OptionalCheckMissingData {
+impl std::fmt::Display for InputCheckMissingData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.path.to_string())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct InputCheckInvalidYamlData {
+    path: InputCheckPath,
+    data: serde_yaml::Value,
+}
+
+impl std::fmt::Display for InputCheckInvalidYamlData {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let p = self.path.to_string();
+        write!(
+            f,
+            "{}",
+            if let Ok(s) = serde_yaml::to_string(&self.data) {
+                format!("{}\n With yaml:\n{}", p, s)
+            } else {
+                p
+            }
+        )
     }
 }

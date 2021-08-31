@@ -156,7 +156,6 @@ impl std::convert::TryFrom<String> for TemplateString {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
-//#[serde(try_from = "serde_yaml::Value")]
 pub enum ValueType<T> {
     Template(TemplateString),
     Normal(T),
