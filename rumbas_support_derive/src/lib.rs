@@ -134,7 +134,7 @@ impl ToTokens for InputReceiver {
         tokens.extend(quote! {
             #[derive(Clone)]
             pub struct #input_ident #ty #wher {
-                #(pub #field_names: <#input_type_tys as InputInverse>::Input),*
+                #(pub #field_names: Value<<#input_type_tys as InputInverse>::Input>),*
             }
         });
         tokens.extend(quote! {
@@ -152,7 +152,7 @@ impl ToTokens for InputReceiver {
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
                     Self {
-                        #(#field_names: Input::from_normal(normal.#field_names)),*
+                        #(#field_names: Value::Normal(Input::from_normal(normal.#field_names))),*
                     }
                 }
                 fn find_missing(&self) -> InputCheckResult {
