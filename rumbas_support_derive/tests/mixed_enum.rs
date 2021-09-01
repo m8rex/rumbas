@@ -25,13 +25,13 @@ pub struct Test2 {
     field2: f64,
 }
 
-/*
 #[derive(Clone, Input, Deserialize, Overwrite)]
 #[input(name = "TestOverwriteInput")]
-pub struct TestOverwrite {
-    field1: bool,
-    field2: f64,
-}*/
+pub enum TestOverwrite {
+    Unit,
+    Tuple(bool, f64),
+    Struct { field1: bool, field2: f64 },
+}
 
 #[cfg(test)]
 mod test {
