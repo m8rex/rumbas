@@ -188,6 +188,115 @@ impl ToTokens for InputReceiver {
                     }
                 }).collect::<Vec<_>>();
 
+                let find_missing_variants = v
+                    .iter()
+                    .map(|variant| {
+                        let variant_ident = &variant.ident;
+                        match variant.fields.style {
+                            ast::Style::Unit => {
+                                quote! {
+                                    #input_ident::#variant_ident => InputCheckResult::empty()
+                                }
+                            }
+                            ast::Style::Tuple => {
+                                let items = variant
+                                    .fields
+                                    .fields
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(i, _)| {
+                                        syn::Ident::new(
+                                            &format!("elem{}", i)[..],
+                                            proc_macro2::Span::call_site(),
+                                        )
+                                    })
+                                    .collect::<Vec<_>>();
+                                let numbers = variant.fields.fields.iter().enumerate()
+                                .map(|(i,_)| {
+                                        let i = syn::Index::from(i);
+                                        quote!(#i)
+                                }).collect::<Vec<_>>();
+                                quote! {
+                                    #input_ident::#variant_ident(#(#items),*) => {
+                                        let mut result = InputCheckResult::empty();
+                                        #(
+                                            let mut previous_result = #items.find_missing();
+                                            previous_result.extend_path(stringify!(#numbers).to_string());
+                                            result.union(&previous_result);
+                                        )*
+                                        result
+                                    }
+                                }
+                            }
+                            ast::Style::Struct => {
+                                let items = variant
+                                    .fields
+                                    .fields
+                                    .iter()
+                                    .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                                    .collect::<Vec<_>>();
+                                quote! {
+                                    #input_ident::#variant_ident { #(#items),* } => {
+                                        let mut result = InputCheckResult::empty();
+                                        #(
+                                            let mut previous_result = #items.find_missing();
+                                            previous_result.extend_path(stringify!(#items).to_string());
+                                            result.union(&previous_result);
+                                        )*
+                                        result
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .collect::<Vec<_>>();
+
+                let insert_template_value_variants = v
+                    .iter()
+                    .map(|variant| {
+                        let variant_ident = &variant.ident;
+                        match variant.fields.style {
+                            ast::Style::Unit => {
+                                quote! {
+                                    #input_ident::#variant_ident => ()
+                                }
+                            }
+                            ast::Style::Tuple => {
+                                let items = variant
+                                    .fields
+                                    .fields
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(i, _)| {
+                                        syn::Ident::new(
+                                            &format!("elem{}", i)[..],
+                                            proc_macro2::Span::call_site(),
+                                        )
+                                    })
+                                    .collect::<Vec<_>>();
+                                quote! {
+                                    #input_ident::#variant_ident(#(#items),*) => {
+                                        #(#items.insert_template_value(key, val));*
+                                    }
+                                }
+                            }
+                            ast::Style::Struct => {
+                                let items = variant
+                                    .fields
+                                    .fields
+                                    .iter()
+                                    .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                                    .collect::<Vec<_>>();
+                                quote! {
+                                    #input_ident::#variant_ident { #(#items),* } => {
+                                        #(#items.insert_template_value(key, val));*
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .collect::<Vec<_>>();
+
                 tokens.extend(quote! {
                     #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
                     pub enum #input_ident #ty #wher {
@@ -209,16 +318,14 @@ impl ToTokens for InputReceiver {
                             }
                         }
                         fn find_missing(&self) -> InputCheckResult {
-                            let mut result = InputCheckResult::empty();
-                            /*#(
-                                let mut previous_result = self.#field_names.find_missing();
-                                previous_result.extend_path(stringify!(#field_names).to_string());
-                                result.union(&previous_result);
-                            )**/
-                            result
+                            match self {
+                                #(#find_missing_variants),*
+                            }
                         }
                         fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                            //#(self.#field_names.insert_template_value(key, val);)*
+                            match self {
+                                #(#insert_template_value_variants),*
+                            }
                         }
                     }
                 });
