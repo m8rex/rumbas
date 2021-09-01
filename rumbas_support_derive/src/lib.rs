@@ -7,7 +7,7 @@ extern crate quote;
 extern crate syn;
 
 use darling::ast;
-use darling::{FromDeriveInput, FromField};
+use darling::{FromDeriveInput, FromField, FromVariant};
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 
@@ -26,12 +26,12 @@ struct InputVariantReceiver {
     /// The identifier of the passed-in variant
     ident: syn::Ident,
     // The fields associated with the variant
-    //fields: Option<ast::Fields<InputFieldReceiver>>,
+    fields: ast::Fields<InputFieldReceiver>,
 }
 
 #[derive(FromDeriveInput)]
 #[darling(attributes(input))]
-#[darling(supports(struct_any), forward_attrs(doc, derive))]
+#[darling(forward_attrs(doc, derive))]
 struct InputReceiver {
     /// The struct ident.
     ident: syn::Ident,
@@ -81,15 +81,56 @@ impl ToTokens for InputReceiver {
         let input_ident = syn::Ident::new(&input_name, ident.span());
 
         match data {
-            ast::Data::Enum(v) => (), // TODO
+            ast::Data::Enum(v) => {
+                let variant_names = v
+                    .iter()
+                    .map(|variant| {
+                        let ident = &variant.ident;
+                        quote! {#ident}
+                    })
+                    .collect::<Vec<_>>();
+
+                tokens.extend(quote! {
+                    #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
+                    pub enum #input_ident #ty #wher {
+                        #(#variant_names),*
+                    }
+                });
+                tokens.extend(quote! {
+                    #[automatically_derived]
+                    impl #imp Input for #input_ident #ty #wher {
+                        type Normal = #ident #ty;
+                        fn to_normal(&self) -> <Self as Input>::Normal {
+                            match self {
+                                #(#input_ident::#variant_names => #ident::#variant_names),*
+                            }
+                        }
+                        fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                            match normal {
+                                #(#ident::#variant_names => #input_ident::#variant_names),*
+                            }
+                        }
+                        fn find_missing(&self) -> InputCheckResult {
+                            let mut result = InputCheckResult::empty();
+                            /*#(
+                                let mut previous_result = self.#field_names.find_missing();
+                                previous_result.extend_path(stringify!(#field_names).to_string());
+                                result.union(&previous_result);
+                            )**/
+                            result
+                        }
+                        fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                            //#(self.#field_names.insert_template_value(key, val);)*
+                        }
+                    }
+                });
+            }
             ast::Data::Struct(fields) => {
                 match fields.style {
                     ast::Style::Struct => {
-                        // Generate the actual values to fill the format string.
                         let field_names = fields
                             .iter()
-                            .enumerate()
-                            .map(|(_i, f)| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
+                            .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
                             .collect::<Vec<_>>();
 
                         let input_type_tys = fields
