@@ -197,3 +197,54 @@ fn check_vec_ofcomplex_structs() {
         vec!["1.other", "1.t.name", "2.other", "2.t", "3.other", "3.t.name", "3.t.test"]
     );
 }
+
+#[test]
+fn check_enums() {
+    let mut unit1 = TempEnumInput::Unit;
+    let unit2 = TempEnumInput::Unit;
+
+    unit1.overwrite(&unit2);
+    assert_no_missing!(unit1);
+
+    let t = TempInput {
+        name: Value::Normal("val".to_string()),
+        test: Value::None(),
+    };
+
+    let tt = TempInput {
+        name: Value::Normal("val5".to_string()),
+        test: Value::Normal("name".to_string()),
+    };
+
+    let t2 = Temp2Input {
+        other: Value::Normal("val".to_string()),
+        t: Value::Normal(TempInput {
+            name: Value::Normal("val".to_string()),
+            test: Value::None(),
+        }),
+    };
+
+    let tt2 = Temp2Input {
+        other: Value::None(),
+        t: Value::Normal(TempInput {
+            name: Value::None(),
+            test: Value::Normal("name".to_string()),
+        }),
+    };
+
+    let mut tuple1 = TempEnumInput::Tuple(Value::Normal(t.clone()), Value::Normal(t2));
+    let tuple2 = TempEnumInput::Tuple(Value::Normal(tt.clone()), Value::Normal(tt2));
+    tuple1.overwrite(&tuple2);
+    assert_no_missing!(tuple1);
+
+    let mut struct1 = TempEnumInput::Struct {
+        a: Value::Normal(t),
+        b: Value::None(),
+    };
+    let struct2 = TempEnumInput::Struct {
+        a: Value::Normal(tt),
+        b: Value::Normal(true),
+    };
+    struct1.overwrite(&struct2);
+    assert_no_missing!(struct1);
+}
