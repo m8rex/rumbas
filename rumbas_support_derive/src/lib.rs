@@ -90,10 +90,108 @@ impl ToTokens for InputReceiver {
                     })
                     .collect::<Vec<_>>();
 
+                let input_variants = v.iter().map(|variant| {
+                    let input_type_tys = variant.fields.fields
+                        .iter()
+                        .enumerate()
+                        .map(|(_i, f)| {
+                            // This works with named or indexed fields, so we'll fall back to the index so we can
+                            // write the output as a key-value pair.
+                            match &f.ty {
+                                syn::Type::Path(p) => {
+                                    let ident_opt = p.path.get_ident();
+                                    if let Some(ident) = ident_opt {
+                                        ident.to_owned()
+                                    } else {
+                                        panic!(
+                                            "{:?} is not a valid type for an Input struct.",
+                                            p
+                                        )
+                                    }
+                                }
+                                _ => panic!(
+                                    "{:?} is not a valid type for an Input struct.",
+                                    f.ty
+                                ),
+                            }
+                            //f.ty.clone()
+                        })
+                    .collect::<Vec<_>>();
+                    let variant_ident = &variant.ident;
+                    match variant.fields.style {
+                        ast::Style::Unit => {
+                            quote!{
+                                #variant_ident
+                            }
+                        }
+                        ast::Style::Tuple => {
+                            quote!{
+                                #variant_ident(#(Value<<#input_type_tys as InputInverse>::Input>),*)
+                            }
+                        }
+                        ast::Style::Struct => {
+                            let items = variant.fields.fields.iter().map(|f| f.ident.as_ref().map(|a|  quote!(#a)).unwrap()).collect::<Vec<_>>();
+                            quote!{
+                                #variant_ident {
+                                    #(
+                                    #items: Value<<#input_type_tys as InputInverse>::Input>
+                                    ),*
+                                }
+                            }
+                        }
+                    }
+                }).collect::<Vec<_>>();
+
+                let to_normal_variants = v.iter().map(|variant| {
+                    let variant_ident = &variant.ident;
+                    match variant.fields.style {
+                        ast::Style::Unit => {
+                            quote!{
+                                #input_ident::#variant_ident => #ident::#variant_ident
+                            }
+                        }
+                        ast::Style::Tuple => {
+                            let items = variant.fields.fields.iter().enumerate().map(|(i,_)| syn::Ident::new(&format!("elem{}",i)[..], proc_macro2::Span::call_site())).collect::<Vec<_>>();
+                            quote!{
+                                #input_ident::#variant_ident(#(#items),*) => #ident::#variant_ident(#(#items.to_normal()),*)
+                            }
+                        }
+                        ast::Style::Struct => {
+                            let items = variant.fields.fields.iter().map(|f| f.ident.as_ref().map(|a|  quote!(#a)).unwrap()).collect::<Vec<_>>();
+                            quote!{
+                                #input_ident::#variant_ident { #(#items),* } => #ident::#variant_ident { #(#items: #items.to_normal()),* }
+                            }
+                        }
+                    }
+                }).collect::<Vec<_>>();
+
+                let from_normal_variants = v.iter().map(|variant| {
+                    let variant_ident = &variant.ident;
+                    match variant.fields.style {
+                        ast::Style::Unit => {
+                            quote!{
+                                #ident::#variant_ident => #input_ident::#variant_ident
+                            }
+                        }
+                        ast::Style::Tuple => {
+                            let items = variant.fields.fields.iter().enumerate().map(|(i,_)| syn::Ident::new(&format!("elem{}",i)[..], proc_macro2::Span::call_site())).collect::<Vec<_>>();
+                            quote!{
+                                #ident::#variant_ident(#(#items),*) => #input_ident::#variant_ident(#(Input::from_normal(#items)),*)
+                            }
+                        }
+                        ast::Style::Struct => {
+                            let items = variant.fields.fields.iter().map(|f| f.ident.as_ref().map(|a|  quote!(#a)).unwrap()).collect::<Vec<_>>();
+                            quote!{
+                                #ident::#variant_ident { #(#items),* } => #input_ident::#variant_ident { #(#items: Input::from_normal(#items)),* }
+                            }
+                        }
+                    }
+                }).collect::<Vec<_>>();
+
                 tokens.extend(quote! {
                     #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
                     pub enum #input_ident #ty #wher {
-                        #(#variant_names),*
+                        #(#input_variants),*
                     }
                 });
                 tokens.extend(quote! {
@@ -102,12 +200,12 @@ impl ToTokens for InputReceiver {
                         type Normal = #ident #ty;
                         fn to_normal(&self) -> <Self as Input>::Normal {
                             match self {
-                                #(#input_ident::#variant_names => #ident::#variant_names),*
+                                #(#to_normal_variants),*
                             }
                         }
                         fn from_normal(normal: <Self as Input>::Normal) -> Self {
                             match normal {
-                                #(#ident::#variant_names => #input_ident::#variant_names),*
+                                #(#from_normal_variants),*
                             }
                         }
                         fn find_missing(&self) -> InputCheckResult {
