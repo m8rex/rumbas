@@ -1,0 +1,23 @@
+macro_rules! assert_no_missing {
+    ($expr: expr) => {
+        let item = $expr;
+        let missing = item.find_missing();
+        assert!(missing.is_empty());
+    };
+}
+
+macro_rules! assert_missing_fields {
+    ($expr: expr, $fields: expr) => {
+        let item = $expr;
+        let missing = item.find_missing();
+        assert_eq!(
+            missing
+                .missing_fields()
+                .iter()
+                .map(|p| p.to_string())
+                .collect::<Vec<_>>(),
+            $fields
+        );
+        assert!(missing.invalid_yaml_fields().is_empty());
+    };
+}
