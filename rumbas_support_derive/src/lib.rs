@@ -1,7 +1,5 @@
-#[macro_use]
 extern crate darling;
 extern crate proc_macro;
-#[macro_use]
 extern crate quote;
 #[macro_use]
 extern crate syn;
@@ -60,6 +58,30 @@ pub fn derive_input(input: TokenStream) -> TokenStream {
 
     quote!(#machine).into()
 }
+
+fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> {
+    fields
+        .iter()
+        .enumerate()
+        .map(|(_i, f)| {
+            // This works with named or indexed fields, so we'll fall back to the index so we can
+            // write the output as a key-value pair.
+            match &f.ty {
+                syn::Type::Path(p) => {
+                    let ident_opt = p.path.get_ident();
+                    if let Some(ident) = ident_opt {
+                        ident.to_owned()
+                    } else {
+                        panic!("{:?} is not a valid type for an Input struct.", p)
+                    }
+                }
+                _ => panic!("{:?} is not a valid type for an Input struct.", f.ty),
+            }
+            //f.ty.clone()
+        })
+        .collect::<Vec<_>>()
+}
+
 impl ToTokens for InputReceiver {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let InputReceiver {
@@ -82,41 +104,8 @@ impl ToTokens for InputReceiver {
 
         match data {
             ast::Data::Enum(v) => {
-                let variant_names = v
-                    .iter()
-                    .map(|variant| {
-                        let ident = &variant.ident;
-                        quote! {#ident}
-                    })
-                    .collect::<Vec<_>>();
-
                 let input_variants = v.iter().map(|variant| {
-                    let input_type_tys = variant.fields.fields
-                        .iter()
-                        .enumerate()
-                        .map(|(_i, f)| {
-                            // This works with named or indexed fields, so we'll fall back to the index so we can
-                            // write the output as a key-value pair.
-                            match &f.ty {
-                                syn::Type::Path(p) => {
-                                    let ident_opt = p.path.get_ident();
-                                    if let Some(ident) = ident_opt {
-                                        ident.to_owned()
-                                    } else {
-                                        panic!(
-                                            "{:?} is not a valid type for an Input struct.",
-                                            p
-                                        )
-                                    }
-                                }
-                                _ => panic!(
-                                    "{:?} is not a valid type for an Input struct.",
-                                    f.ty
-                                ),
-                            }
-                            //f.ty.clone()
-                        })
-                    .collect::<Vec<_>>();
+                    let input_type_tys = get_input_types(&variant.fields.fields);
                     let variant_ident = &variant.ident;
                     match variant.fields.style {
                         ast::Style::Unit => {
@@ -331,36 +320,12 @@ impl ToTokens for InputReceiver {
                 });
             }
             ast::Data::Struct(fields) => {
+                let input_type_tys = get_input_types(&fields.fields);
                 match fields.style {
                     ast::Style::Struct => {
                         let field_names = fields
                             .iter()
                             .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
-                            .collect::<Vec<_>>();
-
-                        let input_type_tys = fields
-                            .iter()
-                            .enumerate()
-                            .map(|(_i, f)| {
-                                match &f.ty {
-                                    syn::Type::Path(p) => {
-                                        let ident_opt = p.path.get_ident();
-                                        if let Some(ident) = ident_opt {
-                                            ident.to_owned()
-                                        } else {
-                                            panic!(
-                                                "{:?} is not a valid type for an Input struct.",
-                                                p
-                                            )
-                                        }
-                                    }
-                                    _ => panic!(
-                                        "{:?} is not a valid type for an Input struct.",
-                                        f.ty
-                                    ),
-                                }
-                                //f.ty.clone()
-                            })
                             .collect::<Vec<_>>();
 
                         tokens.extend(quote! {
@@ -409,32 +374,6 @@ impl ToTokens for InputReceiver {
                             })
                             .collect::<Vec<_>>();
 
-                        let input_type_tys = fields
-                            .iter()
-                            .enumerate()
-                            .map(|(_i, f)| {
-                                // This works with named or indexed fields, so we'll fall back to the index so we can
-                                // write the output as a key-value pair.
-                                match &f.ty {
-                                    syn::Type::Path(p) => {
-                                        let ident_opt = p.path.get_ident();
-                                        if let Some(ident) = ident_opt {
-                                            ident.to_owned()
-                                        } else {
-                                            panic!(
-                                                "{:?} is not a valid type for an Input struct.",
-                                                p
-                                            )
-                                        }
-                                    }
-                                    _ => panic!(
-                                        "{:?} is not a valid type for an Input struct.",
-                                        f.ty
-                                    ),
-                                }
-                                //f.ty.clone()
-                            })
-                            .collect::<Vec<_>>();
                         tokens.extend(quote! {
                                 #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
                                 pub struct #input_ident #ty(#(Value<<#input_type_tys as InputInverse>::Input>),*) #wher;
@@ -578,26 +517,6 @@ impl ToTokens for OverwriteReceiver {
             })
             .collect::<Vec<_>>();
 
-        let input_type_tys = fields
-            .into_iter()
-            .enumerate()
-            .map(|(_i, f)| {
-                // This works with named or indexed fields, so we'll fall back to the index so we can
-                // write the output as a key-value pair.
-                match &f.ty {
-                    syn::Type::Path(p) => {
-                        let ident_opt = p.path.get_ident();
-                        if let Some(ident) = ident_opt {
-                            ident.to_owned()
-                        } else {
-                            panic!("{:?} is not a valid type for an Input struct.", p)
-                        }
-                    }
-                    _ => panic!("{:?} is not a valid type for an Input struct.", f.ty),
-                }
-                //f.ty.clone()
-            })
-            .collect::<Vec<_>>();
         let input_ident = syn::Ident::new(&input_name, ident.span());
 
         tokens.extend(quote! {
