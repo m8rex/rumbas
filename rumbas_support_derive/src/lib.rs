@@ -562,7 +562,7 @@ struct OverwriteFieldReceiver {
 
 #[derive(FromDeriveInput)]
 #[darling(attributes(input))]
-#[darling(supports(struct_any), forward_attrs(doc, derive))]
+#[darling(forward_attrs(doc, derive))]
 struct OverwriteReceiver {
     /// The struct ident.
     ident: syn::Ident,
@@ -573,7 +573,7 @@ struct OverwriteReceiver {
 
     /// Receives the body of the struct or enum. We don't care about
     /// struct fields because we previously told darling we only accept structs.
-    data: ast::Data<(), InputFieldReceiver>,
+    data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
     attrs: Vec<syn::Attribute>,
 
     #[darling(rename = "name")]
@@ -595,37 +595,196 @@ impl ToTokens for OverwriteReceiver {
             .collect::<Vec<_>>();
         eprintln!("{:?}", derive_attrs);*/
 
-        let (imp, ty, wher) = generics.split_for_impl();
-        let fields = data
-            .as_ref()
-            .take_struct()
-            .expect("Should never be enum")
-            .fields;
-
-        // Generate the actual values to fill the format string.
-        let field_names = fields
-            .iter()
-            .enumerate()
-            .map(|(i, f)| {
-                // This works with named or indexed fields, so we'll fall back to the index so we can
-                // write the output as a key-value pair.
-                let field_ident = f.ident.as_ref().map(|v| quote!(#v)).unwrap_or_else(|| {
-                    let i = syn::Index::from(i);
-                    quote!(#i)
-                });
-                field_ident
-            })
-            .collect::<Vec<_>>();
-
         let input_ident = syn::Ident::new(&input_name, ident.span());
 
-        tokens.extend(quote! {
+        match data {
+            ast::Data::Enum(v) => overwrite_handle_enum(v, ident, &input_ident, generics, tokens),
+            ast::Data::Struct(fields) => {
+                overwrite_handle_struct(fields, ident, &input_ident, generics, tokens)
+            }
+        }
+    }
+}
+
+fn overwrite_handle_unit_struct(
+    ident: &syn::Ident,
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    let (imp, ty, wher) = generics.split_for_impl();
+    tokens.extend(quote! {
+            #[automatically_derived]
+            impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
+                fn overwrite(&mut self, _other: &Self){
+
+                }
+            }
+    });
+}
+
+fn overwrite_handle_tuple_struct(
+    fields: &ast::Fields<InputFieldReceiver>,
+    ident: &syn::Ident,
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    let (imp, ty, wher) = generics.split_for_impl();
+    let field_indexes = fields
+        .iter()
+        .enumerate()
+        .map(|(i, _f)| {
+            let i = syn::Index::from(i);
+            quote!(#i)
+        })
+        .collect::<Vec<_>>();
+
+    tokens.extend(quote! {
             #[automatically_derived]
             impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
                 fn overwrite(&mut self, other: &Self){
-                    #(self.#field_names.overwrite(&other.#field_names);)*
+                    #(self.#field_indexes.overwrite(&other.#field_indexes);)*
                 }
             }
-        });
+    });
+}
+
+fn overwrite_handle_struct_struct(
+    fields: &ast::Fields<InputFieldReceiver>,
+    ident: &syn::Ident,
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    let (imp, ty, wher) = generics.split_for_impl();
+    let field_names = fields
+        .iter()
+        .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
+        .collect::<Vec<_>>();
+
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
+            fn overwrite(&mut self, other: &Self){
+                #(self.#field_names.overwrite(&other.#field_names);)*
+            }
+        }
+    });
+}
+
+fn overwrite_handle_struct(
+    fields: &ast::Fields<InputFieldReceiver>,
+    ident: &syn::Ident,
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    match fields.style {
+        ast::Style::Struct => {
+            overwrite_handle_struct_struct(fields, ident, input_ident, generics, tokens)
+        }
+        ast::Style::Tuple => {
+            overwrite_handle_tuple_struct(fields, ident, input_ident, generics, tokens)
+        }
+        ast::Style::Unit => overwrite_handle_unit_struct(ident, input_ident, generics, tokens),
     }
+}
+
+fn overwrite_handle_enum(
+    v: &Vec<InputVariantReceiver>,
+    ident: &syn::Ident,
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    let (imp, ty, wher) = generics.split_for_impl();
+
+    let overwrite_variants = overwrite_handle_enum_variants(v, input_ident);
+
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
+            fn overwrite(&mut self, other: &Self){
+                match (self, other) {
+                    #(#overwrite_variants),*
+                    _ => ()
+                }
+            }
+        }
+    });
+}
+
+fn overwrite_handle_enum_variants(
+    v: &Vec<InputVariantReceiver>,
+    input_ident: &syn::Ident,
+) -> Vec<proc_macro2::TokenStream> {
+    v.iter()
+        .map(|variant| {
+            let variant_ident = &variant.ident;
+            match variant.fields.style {
+                ast::Style::Unit => {
+                    quote! {
+                        (#input_ident::#variant_ident, #input_ident::#variant_ident) => ()
+                    }
+                }
+                ast::Style::Tuple => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    let items2 = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("other_elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        (#input_ident::#variant_ident(#(#items),*), #input_ident::#variant_ident(#(#items2),*), ) => {
+                            #(#items.overwrite(#items2));*
+                        }
+                    }
+                }
+                ast::Style::Struct => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                        .collect::<Vec<_>>();
+                    let items2 = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("other_elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        (#input_ident::#variant_ident { #(#items),* }, #input_ident::#variant_ident { #(#items:#items2),* }) => {
+                            #(#items.overwrite(#items2));*
+                        }
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>()
 }
