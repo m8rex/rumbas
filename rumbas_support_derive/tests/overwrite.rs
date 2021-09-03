@@ -12,7 +12,7 @@ use serde::Deserialize;
 
 #[derive(Input, Overwrite)]
 #[input(name = "TempInput")]
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct Temp {
     name: String,
     test: String,
@@ -20,7 +20,7 @@ pub struct Temp {
 
 #[derive(Input, Overwrite)]
 #[input(name = "Temp2Input")]
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct Temp2 {
     other: String,
     t: Temp,
@@ -28,7 +28,7 @@ pub struct Temp2 {
 
 #[derive(Input, Overwrite)]
 #[input(name = "TempEnumInput")]
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
 pub enum TempEnum {
     Unit,
     Tuple(Temp, Temp2),
