@@ -443,6 +443,7 @@ dependencies = [
 name = "rumbas_support"
 version = "0.1.0"
 dependencies = [
+ "numbas",
  "serde",
  "serde_yaml",
 ]

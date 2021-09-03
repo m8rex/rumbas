@@ -40,7 +40,7 @@ pub struct InputReceiver {
     input_name: String,
 }
 
-fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> {
+pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> {
     fields
         .iter()
         .enumerate()
