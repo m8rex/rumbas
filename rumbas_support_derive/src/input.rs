@@ -22,7 +22,7 @@ pub struct InputVariantReceiver {
 
 #[derive(FromDeriveInput)]
 #[darling(attributes(input))]
-#[darling(forward_attrs(doc))]
+#[darling(forward_attrs)]
 pub struct InputReceiver {
     /// The struct ident.
     ident: syn::Ident,
@@ -63,15 +63,44 @@ fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> 
         .collect::<Vec<_>>()
 }
 
+fn get_derives(attrs: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
+    let derive_attrs = attrs
+        .iter()
+        .filter(|a| a.path.is_ident("derive"))
+        .flat_map(|a| {
+            let group = a.tokens.clone().into_iter().next().expect("Invalid derive");
+            match group {
+                proc_macro2::TokenTree::Group(g) => g
+                    .stream()
+                    .into_iter()
+                    .flat_map(|tt| {
+                        if let proc_macro2::TokenTree::Ident(i) = tt {
+                            vec![i]
+                        } else {
+                            vec![]
+                        }
+                    })
+                    .collect::<Vec<_>>(),
+                _ => panic!("Invalid derive"),
+            }
+        })
+        .collect::<Vec<_>>();
+    //println!("{:#?}", derive_attrs);
+    let tokens = quote!(#[derive(#(#derive_attrs),*)]);
+    //println!("{:#?}", tokens);
+    tokens
+}
+
 fn input_handle_unit_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
+    input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
     tokens.extend(quote! {
-        #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
+        #input_derive
         pub struct #input_ident #ty #wher;
     });
     tokens.extend(quote! {
@@ -98,6 +127,7 @@ fn input_handle_tuple_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
+    input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
@@ -112,7 +142,7 @@ fn input_handle_tuple_struct(
         .collect::<Vec<_>>();
 
     tokens.extend(quote! {
-        #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
+        #input_derive
         pub struct #input_ident #ty(#(Value<<#input_type_tys as InputInverse>::Input>),*) #wher;
     });
     tokens.extend(quote! {
@@ -146,6 +176,7 @@ fn input_handle_struct_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
+    input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
@@ -156,7 +187,7 @@ fn input_handle_struct_struct(
         .collect::<Vec<_>>();
 
     tokens.extend(quote! {
-        #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
+        #input_derive
         pub struct #input_ident #ty #wher {
             #(pub #field_names: Value<<#input_type_tys as InputInverse>::Input>),*
         }
@@ -196,16 +227,19 @@ fn input_handle_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
+    input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     match fields.style {
         ast::Style::Struct => {
-            input_handle_struct_struct(fields, ident, input_ident, generics, tokens)
+            input_handle_struct_struct(fields, ident, input_ident, generics, input_derive, tokens)
         }
         ast::Style::Tuple => {
-            input_handle_tuple_struct(fields, ident, input_ident, generics, tokens)
+            input_handle_tuple_struct(fields, ident, input_ident, generics, input_derive, tokens)
         }
-        ast::Style::Unit => input_handle_unit_struct(ident, input_ident, generics, tokens),
+        ast::Style::Unit => {
+            input_handle_unit_struct(ident, input_ident, generics, input_derive, tokens)
+        }
     }
 }
 
@@ -434,6 +468,7 @@ fn input_handle_enum(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
+    input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
@@ -450,7 +485,7 @@ fn input_handle_enum(
         input_handle_enum_insert_template_value_variants(v, input_ident);
 
     tokens.extend(quote! {
-        #[derive(Clone, Deserialize, Debug, PartialEq)] // TODO
+        #input_derive
         pub enum #input_ident #ty #wher {
             #(#input_variants),*
         }
@@ -504,11 +539,14 @@ impl ToTokens for InputReceiver {
         let (imp, ty, wher) = generics.split_for_impl();
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
+        let input_derive = get_derives(&attrs);
 
         match data {
-            ast::Data::Enum(v) => input_handle_enum(v, ident, &input_ident, generics, tokens),
+            ast::Data::Enum(v) => {
+                input_handle_enum(v, ident, &input_ident, generics, &input_derive, tokens)
+            }
             ast::Data::Struct(fields) => {
-                input_handle_struct(fields, ident, &input_ident, generics, tokens)
+                input_handle_struct(fields, ident, &input_ident, generics, &input_derive, tokens)
             }
         }
         // Also implement InputInverse

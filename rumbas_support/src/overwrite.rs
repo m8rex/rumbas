@@ -1,6 +1,5 @@
 use crate::input::Input;
 use crate::value::{Value, ValueType};
-use serde::de::DeserializeOwned;
 use std::collections::HashMap;
 
 pub trait Overwrite<Item>: Clone + Input {
