@@ -13,9 +13,9 @@ struct OverwriteFieldReceiver {
     ty: syn::Type,
 }
 
-#[derive(FromDeriveInput)]
+#[derive(FromDeriveInput, Debug)]
 #[darling(attributes(input))]
-#[darling(forward_attrs(doc, derive))]
+#[darling(forward_attrs)]
 pub struct OverwriteReceiver {
     /// The struct ident.
     ident: syn::Ident,
@@ -29,6 +29,10 @@ pub struct OverwriteReceiver {
     data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
     attrs: Vec<syn::Attribute>,
 
+    /// I guess we can't get other derives into `attrs` so we have to create our
+    /// own derive list.
+    //derive: darling::util::PathList,
+
     #[darling(rename = "name")]
     input_name: String,
 }
@@ -40,13 +44,36 @@ impl ToTokens for OverwriteReceiver {
             ref data,
             ref attrs,
             ref input_name,
+            //ref derive,
         } = *self;
 
-        /*let derive_attrs = attrs
+        println!("{:?}", ident);
+        let derive_attrs = attrs
             .iter()
             .filter(|a| a.path.is_ident("derive"))
             .collect::<Vec<_>>();
-        eprintln!("{:?}", derive_attrs);*/
+        println!("{:#?}", derive_attrs);
+        let to_derive = derive_attrs
+            .iter()
+            .flat_map(|a| {
+                let group = a.tokens.clone().into_iter().next().expect("Invalid derive");
+                match group {
+                    proc_macro2::TokenTree::Group(g) => g
+                        .stream()
+                        .into_iter()
+                        .flat_map(|tt| {
+                            if let proc_macro2::TokenTree::Ident(i) = tt {
+                                vec![i]
+                            } else {
+                                vec![]
+                            }
+                        })
+                        .collect::<Vec<_>>(),
+                    _ => panic!("Invalid derive"),
+                }
+            })
+            .collect::<Vec<_>>();
+        println!("{:?}", to_derive);
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
 
@@ -231,4 +258,24 @@ fn overwrite_handle_enum_variants(
             }
         })
         .collect::<Vec<_>>()
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn used_to_debug() {
+        let derive_input = syn::parse_str(
+            r#"/// Some comment
+            #[derive(Clone, Input, Overwrite)]
+            #[input(name="test")]
+            pub struct A {
+                /// Hi
+                d: bool
+            }"#,
+        )
+        .unwrap();
+        let parsed = OverwriteReceiver::from_derive_input(&derive_input).unwrap();
+        assert_eq!(false, true);
+    }
 }
