@@ -22,7 +22,7 @@ pub struct InputVariantReceiver {
 
 #[derive(FromDeriveInput)]
 #[darling(attributes(input))]
-#[darling(forward_attrs(doc, derive))]
+#[darling(forward_attrs(doc))]
 pub struct InputReceiver {
     /// The struct ident.
     ident: syn::Ident,
@@ -492,6 +492,8 @@ impl ToTokens for InputReceiver {
             ref attrs,
             ref input_name,
         } = *self;
+
+        //println!("{:?}", attrs);
 
         /*let derive_attrs = attrs
             .iter()

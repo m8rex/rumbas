@@ -27,8 +27,10 @@ pub struct Test2 {
     field2: f64,
 }
 
-#[derive(Clone, Input, Deserialize, Overwrite)]
+#[derive(Input, Overwrite)]
 #[input(name = "TestOverwriteInput")]
+#[derive(Debug, Clone, Deserialize)]
+///  Hi there
 pub enum TestOverwrite {
     Unit,
     Tuple(bool, f64),

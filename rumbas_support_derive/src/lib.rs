@@ -23,14 +23,18 @@ pub fn derive_input(input: TokenStream) -> TokenStream {
     quote!(#input).into()
 }
 
-#[proc_macro_derive(Overwrite)]
+//#[proc_macro_derive(Overwrite, attributes(input, derive, cfg, doc))]
+#[proc_macro_derive(Overwrite, attributes(input))]
 pub fn derive_overwrite(input: TokenStream) -> TokenStream {
+    //println!("{:#?}", input);
     let derive_input = parse_macro_input!(input as syn::DeriveInput);
 
     let overwrite = match overwrite::OverwriteReceiver::from_derive_input(&derive_input) {
         Ok(sm) => sm,
         Err(e) => panic!("error in derive(Overwrite): {}", e),
     };
+
+    //println!("{:#?}", overwrite);
 
     quote!(#overwrite).into()
 }
