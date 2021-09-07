@@ -44,3 +44,6 @@ subcommands:
       about: |-
         Creates files with the json schemas (beta).
         See https://github.com/m8rex/rumbas-examples/tree/main/.vscode for usage instructions
+  - serve:
+      about: |-
+        Serve the generated exams
