@@ -2,7 +2,6 @@ use crate::question::Question;
 use crate::question::QuestionInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -47,81 +46,17 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     }
 }
 
-// TODO: remove this manual code
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "PickingStrategyInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "picking_strategy")]
-pub enum PickingStrategyInput {
+pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
     AllOrdered,
     #[serde(rename = "all_shuffled")]
     AllShuffled,
     #[serde(rename = "random_subset")]
-    RandomSubset(PickingStrategyRandomSubsetInput),
-}
-
-#[derive(Debug, Clone)]
-pub enum PickingStrategy {
-    AllOrdered,
-    AllShuffled,
     RandomSubset(PickingStrategyRandomSubset),
-}
-
-impl RumbasCheck for PickingStrategy {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            PickingStrategy::AllOrdered => RumbasCheckResult::empty(),
-            PickingStrategy::AllShuffled => RumbasCheckResult::empty(),
-            PickingStrategy::RandomSubset(r) => r.check(locale),
-        }
-    }
-}
-impl OptionalCheck for PickingStrategyInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            PickingStrategyInput::AllOrdered => OptionalCheckResult::empty(),
-            PickingStrategyInput::AllShuffled => OptionalCheckResult::empty(),
-            PickingStrategyInput::RandomSubset(r) => r.find_missing(),
-        }
-    }
-}
-impl Input for PickingStrategyInput {
-    type Normal = PickingStrategy;
-    fn to_normal(&self) -> Self::Normal {
-        match self {
-            Self::AllOrdered => Self::Normal::AllOrdered,
-            Self::AllShuffled => Self::Normal::AllShuffled,
-            Self::RandomSubset(s) => Self::Normal::RandomSubset(s.to_normal()),
-        }
-    }
-    fn from_normal(normal: Self::Normal) -> Self {
-        match normal {
-            Self::Normal::AllOrdered => Self::AllOrdered,
-            Self::Normal::AllShuffled => Self::AllShuffled,
-            Self::Normal::RandomSubset(s) => {
-                Self::RandomSubset(PickingStrategyRandomSubsetInput::from_normal(s))
-            }
-        }
-    }
-}
-impl OptionalOverwrite<PickingStrategyInput> for PickingStrategyInput {
-    fn overwrite(&mut self, other: &PickingStrategyInput) {
-        match (self, other) {
-            (
-                &mut PickingStrategyInput::RandomSubset(ref mut val),
-                &PickingStrategyInput::RandomSubset(ref valo),
-            ) => val.overwrite(&valo),
-            _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            PickingStrategyInput::AllOrdered => (),
-            PickingStrategyInput::AllShuffled => (),
-            PickingStrategyInput::RandomSubset(ref mut enum_val) => {
-                enum_val.insert_template_value(&key, &val)
-            }
-        }
-    }
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for PickingStrategy {
@@ -196,24 +131,22 @@ impl Input for QuestionPathInput {
             question_data: Input::from_normal(normal.question_data),
         }
     }
-}
-
-impl OptionalCheck for QuestionPathInput {
-    fn find_missing(&self) -> OptionalCheckResult {
+    fn find_missing(&self) -> InputCheckResult {
         self.question_data.find_missing()
     }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        self.question_data.insert_template_value(key, val);
+    }
 }
+
 impl RumbasCheck for QuestionPath {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         self.question_data.check(locale)
     }
 }
 
-impl OptionalOverwrite<QuestionPathInput> for QuestionPathInput {
+impl Overwrite<QuestionPathInput> for QuestionPathInput {
     fn overwrite(&mut self, _other: &Self) {}
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        self.question_data.insert_template_value(key, val);
-    }
 }
 
 impl ToNumbas<numbas::question::question::Question> for QuestionPath {

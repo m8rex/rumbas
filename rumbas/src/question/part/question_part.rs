@@ -20,7 +20,6 @@ use crate::question::part::pattern_match::QuestionPartPatternMatch;
 use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
@@ -197,43 +196,13 @@ impl QuestionPartBuiltinInput {
     }
 }
 
-// TODO: create macro so RumbasCheck and OptionalOverwrite are done by itself
-#[derive(Debug, Clone)]
-pub struct JMENotes(pub Vec<JMENote>);
+pub type JMENotesVecInput = Vec<Value<JMENoteInput>>;
+pub type JMENotesVec = Vec<JMENote>;
 
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMENotesInput")]
 #[derive(Debug, Clone, JsonSchema, Deserialize, Serialize)]
-pub struct JMENotesInput(pub Value<Vec<Value<JMENoteInput>>>);
-
-impl RumbasCheck for JMENotes {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        self.0.check(locale)
-    }
-}
-
-impl OptionalCheck for JMENotesInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        self.0.find_missing()
-    }
-}
-
-impl Input for JMENotesInput {
-    type Normal = JMENotes;
-    fn to_normal(&self) -> <Self as Input>::Normal {
-        JMENotes(self.0.to_normal())
-    }
-    fn from_normal(normal: <Self as Input>::Normal) -> Self {
-        Self(Value::Normal(Input::from_normal(normal.0)))
-    }
-}
-
-impl OptionalOverwrite<JMENotesInput> for JMENotesInput {
-    fn overwrite(&mut self, other: &JMENotesInput) {
-        self.0.overwrite(&other.0)
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        self.0.insert_template_value(key, val)
-    }
-}
+pub struct JMENotes(pub JMENotesVec);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
     fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {

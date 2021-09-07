@@ -9,7 +9,6 @@ use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -175,77 +174,15 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ChooseOneDisplayInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "display")]
-pub enum ChooseOneDisplayInput {
+pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
     DropDown,
     #[serde(rename = "radio")]
-    Radio { columns: Value<RumbasNatural> },
-}
-
-impl OptionalOverwrite<ChooseOneDisplayInput> for ChooseOneDisplayInput {
-    fn overwrite(&mut self, other: &ChooseOneDisplayInput) {
-        match (self, other) {
-            (
-                &mut Self::Radio { ref mut columns },
-                Self::Radio {
-                    columns: ref columns2,
-                },
-            ) => columns.overwrite(&columns2),
-            _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            &mut Self::Radio { ref mut columns } => columns.insert_template_value(&key, &val),
-            _ => (),
-        };
-    }
-}
-
-impl Input for ChooseOneDisplayInput {
-    type Normal = ChooseOneDisplay;
-    fn to_normal(&self) -> Self::Normal {
-        match self {
-            Self::DropDown => Self::Normal::DropDown,
-            Self::Radio { columns } => Self::Normal::Radio {
-                columns: columns.unwrap(),
-            },
-        }
-    }
-    fn from_normal(normal: Self::Normal) -> Self {
-        match normal {
-            Self::Normal::DropDown => Self::DropDown,
-            Self::Normal::Radio { columns } => Self::Radio {
-                columns: Value::Normal(columns),
-            },
-        }
-    }
-}
-
-impl OptionalCheck for ChooseOneDisplayInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            Self::DropDown => OptionalCheckResult::empty(),
-            Self::Radio { columns } => columns.find_missing(),
-        }
-    }
-}
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum ChooseOneDisplay {
-    DropDown,
-    Radio { columns: usize },
-}
-
-impl RumbasCheck for ChooseOneDisplay {
-    fn check(&self, _locale: &str) -> RumbasCheckResult {
-        match self {
-            Self::DropDown => RumbasCheckResult::empty(),
-            Self::Radio { columns: _ } => RumbasCheckResult::empty(),
-        }
-    }
+    Radio { columns: RumbasNatural },
 }
 
 impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {

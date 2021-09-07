@@ -10,7 +10,6 @@ use crate::question::QuestionParts;
 use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;

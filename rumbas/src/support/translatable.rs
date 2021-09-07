@@ -1,9 +1,9 @@
 use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMENotesString, JMEString};
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -207,15 +207,6 @@ macro_rules! translatable_type {
                 }
             }
 
-            impl OptionalCheck for [<$type Input>] {
-                fn find_missing(&self) -> OptionalCheckResult {
-                    match self {
-                        Self::Translated(s) => s.find_missing(),
-                        Self::NotTranslated(s) => s.find_missing()
-                    }
-                }
-            }
-
             impl RumbasCheck for $type {
                 fn check(&self, locale: &str) -> RumbasCheckResult {
                     let content = self.to_string(locale);
@@ -261,18 +252,24 @@ macro_rules! translatable_type {
                         $type::NotTranslated(f) => [<$type Input>]::NotTranslated(FileStringInput::from_normal(f)),
                     }
                 }
-            }
-
-            impl OptionalOverwrite<[<$type Input>]> for [<$type Input>] {
-                fn overwrite(&mut self, _other: &[<$type Input>]) {
-                    //TODO: Maybe add languages of other that are missing in self?
-                    // These default values should be read before language is interpreted
+                fn find_missing(&self) -> InputCheckResult {
+                    match self {
+                        Self::Translated(s) => s.find_missing(),
+                        Self::NotTranslated(s) => s.find_missing()
+                    }
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
                     match self {
                         [<$type Input>]::Translated(m) => m.insert_template_value(key, val),
                         [<$type Input>]::NotTranslated(f) => f.insert_template_value(key, val),
                     }
+                }
+            }
+
+            impl Overwrite<[<$type Input>]> for [<$type Input>] {
+                fn overwrite(&mut self, _other: &[<$type Input>]) {
+                    //TODO: Maybe add languages of other that are missing in self?
+                    // These default values should be read before language is interpreted
                 }
             }
 

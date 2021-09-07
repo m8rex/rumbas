@@ -5,7 +5,6 @@ use crate::question::part::question_part::{
 use crate::question::part::question_part::{QuestionParts, QuestionPartsInput};
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;

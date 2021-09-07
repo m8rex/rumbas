@@ -1,7 +1,7 @@
 use crate::support::input_string::InputString;
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -41,15 +41,6 @@ macro_rules! file_type {
                 content: Option<String>,
                 translated_content: HashMap<String, String>,
             }
-            impl OptionalCheck for [<$type Input>] {
-                fn find_missing(&self) -> OptionalCheckResult {
-                    if let Some(e) = &self.error_message {
-                        OptionalCheckResult::from_missing(Some(e.clone()))
-                    } else {
-                        OptionalCheckResult::empty()
-                    }
-                }
-            }
             impl RumbasCheck for $type {
                 fn check(&self, locale: &str) -> RumbasCheckResult {
                     let content = self.get_content(locale);
@@ -65,9 +56,8 @@ macro_rules! file_type {
                     }
                 }
             }
-            impl OptionalOverwrite< [<$type Input>]> for  [<$type Input>] {
+            impl Overwrite< [<$type Input>]> for  [<$type Input>] {
                 fn overwrite(&mut self, _other: &[<$type Input>]) {}
-                fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
             }
 
             impl ToNumbas<String> for $type {
@@ -282,6 +272,15 @@ macro_rules! file_type {
                         error_message: None
                     }
                 }
+                fn find_missing(&self) -> InputCheckResult {
+                    if let Some(e) = &self.error_message {
+                        InputCheckResult::from_missing(Some(e.clone()))
+                    } else {
+                        InputCheckResult::empty()
+                    }
+                }
+
+                fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
             }
         }
     }

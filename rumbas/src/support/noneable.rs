@@ -1,6 +1,6 @@
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -17,16 +17,10 @@ impl<T: Input> Input for Noneable<T> {
     fn from_normal(normal: <Self as Input>::Normal) -> Self {
         normal.map(<T as Input>::from_normal)
     }
-}
-
-impl<T: OptionalOverwrite<T>> OptionalOverwrite<Noneable<T>> for Noneable<T> {
-    fn overwrite(&mut self, other: &Noneable<T>) {
-        if let Noneable::NotNone(ref mut val) = self {
-            if let Noneable::NotNone(other_val) = &other {
-                val.overwrite(&other_val);
-            }
-        } else {
-            // Do nothing, none is a valid value
+    fn find_missing(&self) -> InputCheckResult {
+        match self {
+            Noneable::NotNone(val) => val.find_missing(),
+            _ => InputCheckResult::empty(),
         }
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
@@ -36,11 +30,14 @@ impl<T: OptionalOverwrite<T>> OptionalOverwrite<Noneable<T>> for Noneable<T> {
     }
 }
 
-impl<T: OptionalCheck> OptionalCheck for Noneable<T> {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            Noneable::NotNone(val) => val.find_missing(),
-            _ => OptionalCheckResult::empty(),
+impl<T: Overwrite<T>> Overwrite<Noneable<T>> for Noneable<T> {
+    fn overwrite(&mut self, other: &Noneable<T>) {
+        if let Noneable::NotNone(ref mut val) = self {
+            if let Noneable::NotNone(other_val) = &other {
+                val.overwrite(&other_val);
+            }
+        } else {
+            // Do nothing, none is a valid value
         }
     }
 }

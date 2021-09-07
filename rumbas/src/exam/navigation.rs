@@ -2,7 +2,6 @@ use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -205,86 +204,15 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "LeaveActionInput")]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "action")]
 pub enum LeaveAction {
     None,
     WarnIfNotAttempted(LeaveActionMessage),
     PreventIfNotAttempted(LeaveActionMessage),
-}
-
-impl RumbasCheck for LeaveAction {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            Self::None => RumbasCheckResult::empty(),
-            Self::WarnIfNotAttempted(l) => l.check(locale),
-            Self::PreventIfNotAttempted(l) => l.check(locale),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "action")]
-pub enum LeaveActionInput {
-    None,
-    WarnIfNotAttempted(LeaveActionMessageInput),
-    PreventIfNotAttempted(LeaveActionMessageInput),
-}
-
-impl OptionalCheck for LeaveActionInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            Self::None => OptionalCheckResult::empty(),
-            Self::WarnIfNotAttempted(l) => l.find_missing(),
-            Self::PreventIfNotAttempted(l) => l.find_missing(),
-        }
-    }
-}
-
-impl Input for LeaveActionInput {
-    type Normal = LeaveAction;
-    fn to_normal(&self) -> Self::Normal {
-        match self {
-            Self::None => Self::Normal::None,
-            Self::WarnIfNotAttempted(t) => Self::Normal::WarnIfNotAttempted(t.to_normal()),
-            Self::PreventIfNotAttempted(t) => Self::Normal::PreventIfNotAttempted(t.to_normal()),
-        }
-    }
-    fn from_normal(normal: Self::Normal) -> Self {
-        match normal {
-            Self::Normal::None => Self::None,
-            Self::Normal::WarnIfNotAttempted(t) => Self::WarnIfNotAttempted(Input::from_normal(t)),
-            Self::Normal::PreventIfNotAttempted(t) => {
-                Self::PreventIfNotAttempted(Input::from_normal(t))
-            }
-        }
-    }
-}
-
-impl OptionalOverwrite<LeaveActionInput> for LeaveActionInput {
-    fn overwrite(&mut self, other: &LeaveActionInput) {
-        match (self, other) {
-            (&mut Self::WarnIfNotAttempted(ref mut val), Self::WarnIfNotAttempted(ref valo)) => {
-                val.overwrite(&valo)
-            }
-            (
-                &mut Self::PreventIfNotAttempted(ref mut val),
-                Self::PreventIfNotAttempted(ref valo),
-            ) => val.overwrite(&valo),
-            _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            &mut Self::WarnIfNotAttempted(ref mut enum_val) => {
-                enum_val.insert_template_value(&key, &val)
-            }
-            &mut Self::PreventIfNotAttempted(ref mut enum_val) => {
-                enum_val.insert_template_value(&key, &val)
-            }
-            _ => (),
-        };
-    }
 }
 
 impl ToNumbas<numbas::exam::navigation::LeaveAction> for LeaveAction {

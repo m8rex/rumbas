@@ -1,5 +1,4 @@
 use crate::support::optional_overwrite::*;
-use crate::support::rumbas_check::{RumbasCheck, RumbasCheckResult};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
@@ -7,6 +6,7 @@ use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 
+//TODO use derive for Input & overwrite
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
@@ -26,15 +26,6 @@ impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     }
 }
 
-impl<T: OptionalCheck> OptionalCheck for VariableValued<T> {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            VariableValued::Variable(s) => s.find_missing(),
-            VariableValued::Value(v) => v.find_missing(),
-        }
-    }
-}
-
 impl<T: Input> Input for VariableValued<T> {
     type Normal = VariableValued<<T as Input>::Normal>;
     fn to_normal(&self) -> <Self as Input>::Normal {
@@ -43,11 +34,21 @@ impl<T: Input> Input for VariableValued<T> {
     fn from_normal(normal: <Self as Input>::Normal) -> Self {
         normal.map(<T as Input>::from_normal)
     }
+    fn find_missing(&self) -> InputCheckResult {
+        match self {
+            VariableValued::Variable(s) => s.find_missing(),
+            VariableValued::Value(v) => v.find_missing(),
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match *self {
+            VariableValued::Variable(ref mut s) => s.insert_template_value(key, val),
+            VariableValued::Value(ref mut v) => v.insert_template_value(key, val),
+        };
+    }
 }
 
-impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValued<T>>
-    for VariableValued<T>
-{
+impl<T: Overwrite<T> + DeserializeOwned> Overwrite<VariableValued<T>> for VariableValued<T> {
     fn overwrite(&mut self, other: &VariableValued<T>) {
         match (self, other) {
             (&mut VariableValued::Variable(ref mut val), &VariableValued::Variable(ref valo)) => {
@@ -57,12 +58,6 @@ impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<VariableValue
                 val.overwrite(valo)
             }
             _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match *self {
-            VariableValued::Variable(ref mut s) => s.insert_template_value(key, val),
-            VariableValued::Value(ref mut v) => v.insert_template_value(key, val),
         };
     }
 }

@@ -13,7 +13,6 @@ use crate::exam::timing::TimingInput;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
 use crate::support::optional_overwrite::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;

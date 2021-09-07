@@ -432,6 +432,7 @@ dependencies = [
  "numbas",
  "paste",
  "regex",
+ "rumbas_support",
  "sanitize-filename",
  "schemars",
  "serde",
@@ -444,6 +445,7 @@ name = "rumbas_support"
 version = "0.1.0"
 dependencies = [
  "numbas",
+ "rumbas_support_derive",
  "serde",
  "serde_yaml",
 ]
