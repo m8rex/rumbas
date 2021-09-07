@@ -40,26 +40,26 @@ pub struct InputReceiver {
     input_name: String,
 }
 
+fn get_input_type(t: &syn::Type) -> proc_macro2::Ident {
+    match t {
+        syn::Type::Path(p) => {
+            let ident_opt = p.path.get_ident();
+            if let Some(ident) = ident_opt {
+                ident.to_owned()
+            } else {
+                panic!("{:?} is not a valid type for an Input struct.", p)
+            }
+        }
+        syn::Type::Group(g) => get_input_type(&*g.elem),
+        _ => panic!("{:?} is not a valid type for an Input struct.", t),
+    }
+}
+
 pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> {
     fields
         .iter()
         .enumerate()
-        .map(|(_i, f)| {
-            // This works with named or indexed fields, so we'll fall back to the index so we can
-            // write the output as a key-value pair.
-            match &f.ty {
-                syn::Type::Path(p) => {
-                    let ident_opt = p.path.get_ident();
-                    if let Some(ident) = ident_opt {
-                        ident.to_owned()
-                    } else {
-                        panic!("{:?} is not a valid type for an Input struct.", p)
-                    }
-                }
-                _ => panic!("{:?} is not a valid type for an Input struct.", f.ty),
-            }
-            //f.ty.clone()
-        })
+        .map(|(_i, f)| get_input_type(&f.ty))
         .collect::<Vec<_>>()
 }
 
@@ -179,6 +179,17 @@ fn input_handle_struct_struct(
     input_derive: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
+    // Beginning of fixing generics
+    /*let mut new_generics = generics.clone();
+    if new_generics.params.len() > 0 {
+        let new_where = new_generics.make_where_clause();
+        new_where
+            .predicates
+            .push(parse_quote! {T : Input + InputInverse});
+    }
+    let (input_imp, input_ty, input_wher) = new_generics.split_for_impl();
+        */
+
     let (imp, ty, wher) = generics.split_for_impl();
     let input_type_tys = get_input_types(&fields.fields);
     let field_names = fields

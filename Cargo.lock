@@ -446,6 +446,7 @@ version = "0.1.0"
 dependencies = [
  "numbas",
  "rumbas_support_derive",
+ "schemars",
  "serde",
  "serde_yaml",
 ]

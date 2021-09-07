@@ -1,3 +1,4 @@
+use crate::value::Value;
 use std::collections::HashMap;
 
 pub trait Input: Clone {
@@ -28,7 +29,7 @@ pub trait InputInverse {
 }
 
 impl<O: InputInverse> InputInverse for Vec<O> {
-    type Input = Vec<<O as InputInverse>::Input>;
+    type Input = Vec<Value<<O as InputInverse>::Input>>;
 }
 impl<O: Input> Input for Vec<O> {
     type Normal = Vec<<O as Input>::Normal>;
@@ -58,7 +59,7 @@ impl<O: Input> Input for Vec<O> {
 }
 
 impl<O: InputInverse> InputInverse for HashMap<String, O> {
-    type Input = HashMap<String, <O as InputInverse>::Input>;
+    type Input = HashMap<String, Value<<O as InputInverse>::Input>>;
 }
 impl<O: Input> Input for HashMap<String, O> {
     type Normal = HashMap<String, <O as Input>::Normal>;
@@ -116,6 +117,44 @@ impl<O: Input> Input for Box<O> {
     }
 }
 
+impl<A: InputInverse, B: InputInverse> InputInverse for (A, B) {
+    type Input = (
+        Value<<A as InputInverse>::Input>,
+        Value<<B as InputInverse>::Input>,
+    );
+}
+impl<A: Input, B: Input> Input for (A, B) {
+    type Normal = (<A as Input>::Normal, <B as Input>::Normal);
+
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        (self.0.to_normal(), self.1.to_normal())
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        (
+            <A as Input>::from_normal(normal.0),
+            <B as Input>::from_normal(normal.1),
+        )
+    }
+
+    fn find_missing(&self) -> InputCheckResult {
+        let mut result = InputCheckResult::empty();
+        let i = 0;
+        let mut previous_result = self.0.find_missing();
+        previous_result.extend_path(i.to_string());
+        result.union(&previous_result);
+        let i = 1;
+        let mut previous_result = self.1.find_missing();
+        previous_result.extend_path(i.to_string());
+        result.union(&previous_result);
+        result
+    }
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        self.0.insert_template_value(key, val);
+        self.1.insert_template_value(key, val);
+    }
+}
+
 macro_rules! impl_input {
     ($($t: ty),*) => {
         $(
@@ -146,10 +185,22 @@ macro_rules! impl_input {
 }
 
 impl_input!(String);
-impl_input!(f64, f32);
+impl_input!(f64, f32, [f64; 2]);
 impl_input!(u128, u64, u32, u16, u8, usize);
 impl_input!(i128, i64, i32, i16, i8, isize);
 impl_input!(bool);
+
+impl_input!(numbas::jme::ContentAreaString);
+impl_input!(numbas::jme::EmbracedJMEString);
+impl_input!(numbas::jme::JMEString);
+impl_input!(numbas::question::part::match_answers::MatchAnswersWithChoicesLayout);
+impl_input!(numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType);
+impl_input!(numbas::question::part::match_answers::MultipleChoiceWarningType);
+impl_input!(numbas::question::part::pattern_match::PatternMatchMode);
+impl_input!(numbas::support::answer_style::AnswerStyle);
+impl_input!(numbas::question::function::FunctionType);
+impl_input!(numbas::question::custom_part_type::CustomPartTypeSetting);
+impl_input!(numbas::support::primitive::Primitive);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct InputCheckResult {

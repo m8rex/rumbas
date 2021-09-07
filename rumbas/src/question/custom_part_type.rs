@@ -37,7 +37,6 @@ optional_overwrite! {
 
 type NCustomPartTypeSettingsInput = Vec<Value<NCustomPartTypeSetting>>;
 type NCustomPartTypeSettings = Vec<NCustomPartTypeSetting>;
-impl_optional_overwrite!(NCustomPartTypeSetting);
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinition {
     fn to_numbas(&self, _locale: &str) -> numbas::question::custom_part_type::CustomPartType {
@@ -92,44 +91,78 @@ impl CustomPartTypeDefinition {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
-#[input(name = "CustomPartInputOptionValueInput")]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-pub struct CustomPartInputOptionValue<T: Clone> {
-    /// The value
-    value: T,
-    /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
-    #[serde(rename = "static")]
-    is_static: bool,
+macro_rules! create_input_option_value {
+    ($struct: ident, $input: literal, $type: ty, $numbas_subtype: ty) => {
+        #[derive(Input, Overwrite, RumbasCheck)]
+        #[input(name = $input)]
+        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+        pub struct $struct {
+            /// The value
+            value: $type,
+            /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
+            #[serde(rename = "static")]
+            is_static: bool,
+        }
+
+        impl
+            ToNumbas<
+                numbas::question::custom_part_type::CustomPartInputOptionValue<$numbas_subtype>,
+            > for $struct
+        {
+            fn to_numbas(
+                &self,
+                locale: &str,
+            ) -> numbas::question::custom_part_type::CustomPartInputOptionValue<$numbas_subtype>
+            {
+                numbas::question::custom_part_type::CustomPartInputOptionValue {
+                    value: self.value.clone().to_numbas(locale),
+                    is_static: self.is_static,
+                }
+            }
+        }
+
+        impl ToRumbas<$struct>
+            for numbas::question::custom_part_type::CustomPartInputOptionValue<$numbas_subtype>
+        {
+            fn to_rumbas(&self) -> $struct {
+                $struct {
+                    value: self.value.clone().to_rumbas(),
+                    is_static: self.is_static,
+                }
+            }
+        }
+    };
 }
 
-impl<N: Clone + RumbasCheck, T: Clone + ToNumbas<N>>
-    ToNumbas<numbas::question::custom_part_type::CustomPartInputOptionValue<N>>
-    for CustomPartInputOptionValue<T>
-{
-    fn to_numbas(
-        &self,
-        locale: &str,
-    ) -> numbas::question::custom_part_type::CustomPartInputOptionValue<N> {
-        numbas::question::custom_part_type::CustomPartInputOptionValue {
-            value: self.value.clone().to_numbas(locale),
-            is_static: self.is_static,
-        }
-    }
-}
+create_input_option_value!(
+    CustomPartInputOptionValueBool,
+    "CustomPartInputOptionValueBoolInput",
+    RumbasBool,
+    bool
+);
 
-impl<V, T: Clone + ToRumbas<V>> ToRumbas<CustomPartInputOptionValue<V>>
-    for numbas::question::custom_part_type::CustomPartInputOptionValue<T>
-where
-    V: Clone,
-{
-    fn to_rumbas(&self) -> CustomPartInputOptionValue<V> {
-        CustomPartInputOptionValue {
-            value: self.value.clone().to_rumbas(),
-            is_static: self.is_static,
-        }
-    }
-}
+create_input_option_value!(
+    CustomPartInputOptionValueTranslatableString,
+    "CustomPartInputOptionValueTranslatableStringInput",
+    TranslatableString,
+    String
+);
+create_input_option_value!(
+    CustomPartInputOptionValueTranslatableStrings,
+    "CustomPartInputOptionValueTranslatableStringsInput",
+    TranslatableStrings,
+    Vec<String>
+);
+
+type AnswerStyles = Vec<crate::question::part::number_entry::AnswerStyle>;
+type AnswerStylesInput = Vec<Value<crate::question::part::number_entry::AnswerStyle>>;
+
+create_input_option_value!(
+    CustomPartInputOptionValueAnswerStyles,
+    "CustomPartInputOptionValueAnswerStylesInput",
+    AnswerStyles,
+    Vec<numbas::support::answer_style::AnswerStyle>
+);
 
 optional_overwrite_enum! {
     #[serde(tag = "type")]
@@ -197,18 +230,6 @@ optional_overwrite! {
     }
 }
 
-type CustomPartInputOptionValueTranslatableString = CustomPartInputOptionValue<TranslatableString>;
-type CustomPartInputOptionValueTranslatableStringInput =
-    CustomPartInputOptionValueInput<TranslatableStringInput>;
-
-type CustomPartInputOptionValueTranslatableStrings =
-    CustomPartInputOptionValue<TranslatableStrings>;
-type CustomPartInputOptionValueTranslatableStringsInput =
-    CustomPartInputOptionValueInput<TranslatableStringsInput>;
-
-type CustomPartInputOptionValueBool = CustomPartInputOptionValue<RumbasBool>;
-type CustomPartInputOptionValueBoolInput = CustomPartInputOptionValueInput<RumbasBool>;
-
 impl ToNumbas<numbas::question::custom_part_type::CustomPartStringInputOptions>
     for CustomPartStringInputOptions
 {
@@ -253,11 +274,6 @@ optional_overwrite! {
             CustomPartInputOptionValueAnswerStyles
     }
 }
-
-type CustomPartInputOptionValueAnswerStyles =
-    CustomPartInputOptionValue<Vec<crate::question::part::number_entry::AnswerStyle>>;
-type CustomPartInputOptionValueAnswerStylesInput =
-    CustomPartInputOptionValueInput<Vec<crate::question::part::number_entry::AnswerStyle>>; // TODO
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartNumberInputOptions>
     for CustomPartNumberInputOptions
@@ -336,13 +352,14 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
     }
 }
 
-optional_overwrite! {
-    #[serde(try_from = "String")]
-    #[serde(into = "String")]
-    pub struct CustomPartTypeDefinitionPath {
-        custom_part_type_name: RumbasString,
-        custom_part_type_data: CustomPartTypeDefinition
-    }
+#[derive(Input, Overwrite, RumbasCheck, JsonSchema)]
+#[input(name = "CustomPartTypeDefinitionPathInput")]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(try_from = "String")]
+#[serde(into = "String")]
+pub struct CustomPartTypeDefinitionPath {
+    pub custom_part_type_name: RumbasString,
+    pub custom_part_type_data: CustomPartTypeDefinition,
 }
 
 pub type CustomPartTypeDefinitionPaths = Vec<CustomPartTypeDefinitionPath>;
@@ -377,7 +394,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::question::custom_part_ty
     }
 }
 
-impl JsonSchema for CustomPartTypeDefinitionPath {
+impl JsonSchema for CustomPartTypeDefinitionPathInput {
     fn schema_name() -> String {
         "CustomPartTypeDefinitionPath".to_owned()
     }
@@ -402,6 +419,23 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPathInput {
 impl std::convert::From<CustomPartTypeDefinitionPathInput> for String {
     fn from(q: CustomPartTypeDefinitionPathInput) -> Self {
         q.custom_part_type_name.unwrap()
+    }
+}
+
+// Remove these impl's etc, should not ser / deser
+impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
+    type Error = YamlError;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let data: CustomPartTypeDefinitionPathInput = s.try_into()?;
+        Ok(data.to_normal())
+    }
+}
+
+// Remove these impl's etc, should not ser / deser
+impl std::convert::From<CustomPartTypeDefinitionPath> for String {
+    fn from(q: CustomPartTypeDefinitionPath) -> Self {
+        q.custom_part_type_name
     }
 }
 

@@ -229,7 +229,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize)]
             pub enum $type {
                 //TODO: custom reader that checks for missing values etc?
                 /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
@@ -264,6 +264,10 @@ macro_rules! translatable_type {
                         [<$type Input>]::NotTranslated(f) => f.insert_template_value(key, val),
                     }
                 }
+            }
+
+            impl InputInverse for $type {
+                type Input = [<$type Input>];
             }
 
             impl Overwrite<[<$type Input>]> for [<$type Input>] {

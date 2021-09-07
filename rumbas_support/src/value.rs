@@ -1,4 +1,5 @@
 use crate::input::*;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 pub const TEMPLATE_PREFIX: &str = "template";
@@ -41,7 +42,6 @@ impl<T: std::clone::Clone> ValueType<T> {
     }
 }
 
-/* TODO:
 mod value_type_schema {
     use super::{TemplateString, ValueType};
     use schemars::JsonSchema;
@@ -63,33 +63,11 @@ mod value_type_schema {
             gen.subschema_for::<ValidValueType<T>>()
         }
     }
-}*/
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
-
-/*TODO
-impl<T: OptionalOverwrite<T> + DeserializeOwned> OptionalOverwrite<Value<T>> for Value<T> {
-    fn overwrite(&mut self, other: &Value<T>) {
-        if let Some(ValueType::Normal(ref mut val)) = self.0 {
-            if let Some(ValueType::Normal(other_val)) = &other.0 {
-                val.overwrite(&other_val);
-            }
-        } else if self.0.is_none() {
-            *self = other.clone();
-        }
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        if let Some(ValueType::Template(ts)) = &self.0 {
-            if ts.key == Some(key.to_string()) {
-                *self = Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
-            }
-        } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
-            v.insert_template_value(key, val);
-        }
-    }
-}*/
 
 impl<T: Input> InputInverse for Value<T> {
     type Input = Self;
@@ -124,7 +102,6 @@ where
     }
 }
 
-/* TODO
 impl<T: JsonSchema> JsonSchema for Value<T> {
     fn schema_name() -> String {
         format!("Value_{}", T::schema_name())
@@ -133,7 +110,7 @@ impl<T: JsonSchema> JsonSchema for Value<T> {
     fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
         gen.subschema_for::<ValueType<T>>() // Didn't add the option
     }
-}*/
+}
 
 impl<T: std::clone::Clone> Value<T> {
     #[inline]
@@ -169,7 +146,7 @@ impl<T> Value<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(try_from = "String")]
 pub struct TemplateString {
     pub key: Option<String>,

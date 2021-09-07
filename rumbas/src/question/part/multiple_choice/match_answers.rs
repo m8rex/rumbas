@@ -1,4 +1,3 @@
-use crate::question::part::multiple_choice::choose_multiple::MultipleChoiceWarningTypeInput;
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
@@ -48,12 +47,10 @@ question_part_type! {
 
 type MatchAnswersWithChoicesLayout =
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
-impl_optional_overwrite!(MatchAnswersWithChoicesLayout);
-type MatchAnswersWithChoicesDisplayType =
-    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType;
-impl_optional_overwrite!(MatchAnswersWithChoicesDisplayType);
+type MatchAnswersWithChoicesLayoutInput = MatchAnswersWithChoicesLayout;
 
 type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
+type MultipleChoiceWarningTypeInput = MultipleChoiceWarningType;
 
 impl_to_numbas!(
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,

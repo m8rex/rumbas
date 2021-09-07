@@ -19,6 +19,8 @@ use numbas::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+type NumbasAnswerStyleInput = NumbasAnswerStyle;
+
 question_part_type! {
     pub struct QuestionPartNumberEntry {
         answer: NumberEntryAnswer,
@@ -36,7 +38,6 @@ question_part_type! {
     }
 
 }
-impl_optional_overwrite!(NumbasAnswerStyle);
 
 impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
     for QuestionPartNumberEntry

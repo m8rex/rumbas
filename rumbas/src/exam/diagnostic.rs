@@ -24,27 +24,27 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Input, Overwrite)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "DiagnosticExamInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 /// A Diagnostic Exam
 pub struct DiagnosticExam {
     /// All locales for which the exam should be generated
-    locales: Locales,
+    pub locales: Locales,
     /// The name of the exam
-    name: TranslatableString,
+    pub name: TranslatableString,
     /// The navigation settings for this exam
-    navigation: DiagnosticNavigation,
+    pub navigation: DiagnosticNavigation,
     /// The timing settings for this exam
-    timing: Timing,
+    pub timing: Timing,
     /// The feedback settings for this exam
-    feedback: Feedback,
+    pub feedback: Feedback,
     /// The questions groups for this exam
-    question_groups: QuestionGroups,
+    pub question_groups: QuestionGroups,
     /// The settings to set for numbas
-    numbas_settings: NumbasSettings,
+    pub numbas_settings: NumbasSettings,
     /// The diagnostic data
-    diagnostic: Diagnostic,
+    pub diagnostic: Diagnostic,
 }
 
 impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
@@ -139,7 +139,7 @@ impl ToNumbas<numbas::exam::exam::BasicExamSettings> for DiagnosticExam {
     }
 }
 
-#[derive(Input, Overwrite)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "DiagnosticInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 /// Information needed for a diagnostic test
@@ -181,7 +181,7 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-#[derive(Input, Overwrite)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "DiagnosticScriptInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -211,16 +211,6 @@ impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
     }
 }
 
-impl RumbasCheck for DiagnosticScript {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            Self::Mastery => RumbasCheckResult::empty(),
-            Self::Diagnosys => RumbasCheckResult::empty(),
-            Self::Custom(c) => c.check(locale),
-        }
-    }
-}
-
 impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     fn to_rumbas(&self) -> DiagnosticScript {
         match self.script {
@@ -236,7 +226,7 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
 pub type LearningObjectivesInput = Vec<Value<LearningObjectiveInput>>;
 pub type LearningObjectives = Vec<LearningObjective>;
 
-#[derive(Input, Overwrite)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "LearningObjectiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A Learning Objective
@@ -275,7 +265,7 @@ impl ToRumbas<LearningObjective>
 pub type LearningTopicsInput = Vec<Value<LearningTopicInput>>;
 pub type LearningTopics = Vec<LearningTopic>;
 
-#[derive(Input, Overwrite)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "LearningTopicInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A learning Topic

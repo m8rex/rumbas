@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 type StringFunctionTypeTuple = (String, NumbasFunctionType);
 type StringFunctionTypeTuples = Vec<StringFunctionTypeTuple>;
 type StringFunctionTypeTuplesInput = Vec<Value<StringFunctionTypeTuple>>;
+type NumbasFunctionTypeInput = NumbasFunctionType;
 
 impl_to_numbas!(NumbasFunctionType);
 
@@ -23,8 +24,6 @@ optional_overwrite! {
         definition: FunctionDefinition
     }
 }
-impl_optional_overwrite!(NumbasFunctionType);
-impl_optional_overwrite! {StringFunctionTypeTuple}
 
 impl ToNumbas<numbas::question::function::Function> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {

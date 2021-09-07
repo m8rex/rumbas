@@ -10,13 +10,14 @@ use numbas::defaults::DEFAULTS;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite_enum! {
-    #[serde(rename_all = "snake_case")]
-    #[serde(tag = "mode")]
-    pub enum NormalNavigation {
-        Sequential(SequentialNavigation),
-        Menu(MenuNavigation)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "NormalNavigationInput")]
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Debug)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "mode")]
+pub enum NormalNavigation {
+    Sequential(SequentialNavigation),
+    Menu(MenuNavigation),
 }
 
 impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
