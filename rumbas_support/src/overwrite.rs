@@ -35,6 +35,13 @@ where
     }
 }
 
+impl<A: Overwrite<A>, B: Overwrite<B>> Overwrite<(A, B)> for (A, B) {
+    fn overwrite(&mut self, other: &(A, B)) {
+        self.0.overwrite(&other.0);
+        self.1.overwrite(&other.1);
+    }
+}
+
 macro_rules! impl_overwrite {
     ($($t: ty),*) => {
         $(
@@ -47,7 +54,19 @@ macro_rules! impl_overwrite {
 }
 
 impl_overwrite!(String);
-impl_overwrite!(f64, f32);
+impl_overwrite!(f64, f32, [f64; 2]);
 impl_overwrite!(u128, u64, u32, u16, u8, usize);
 impl_overwrite!(i128, i64, i32, i16, i8, isize);
 impl_overwrite!(bool);
+
+impl_overwrite!(numbas::jme::ContentAreaString);
+impl_overwrite!(numbas::jme::EmbracedJMEString);
+impl_overwrite!(numbas::jme::JMEString);
+impl_overwrite!(numbas::question::part::match_answers::MatchAnswersWithChoicesLayout);
+impl_overwrite!(numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType);
+impl_overwrite!(numbas::question::part::match_answers::MultipleChoiceWarningType);
+impl_overwrite!(numbas::question::part::pattern_match::PatternMatchMode);
+impl_overwrite!(numbas::support::answer_style::AnswerStyle);
+impl_overwrite!(numbas::question::function::FunctionType);
+impl_overwrite!(numbas::question::custom_part_type::CustomPartTypeSetting);
+impl_overwrite!(numbas::support::primitive::Primitive);

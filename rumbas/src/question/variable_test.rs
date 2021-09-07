@@ -6,7 +6,7 @@ use numbas::jme::JMEString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-type JMEStringInput = numbas::jme::JMEString;
+pub type JMEStringInput = numbas::jme::JMEString;
 
 optional_overwrite! {
     pub struct VariablesTest {

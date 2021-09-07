@@ -27,7 +27,7 @@ question_part_type! {
     }
 }
 type PatternMatchMode = numbas::question::part::pattern_match::PatternMatchMode;
-impl_optional_overwrite!(PatternMatchMode);
+type PatternMatchModeInput = PatternMatchMode;
 
 impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     for QuestionPartPatternMatch

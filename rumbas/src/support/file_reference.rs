@@ -32,7 +32,7 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            #[derive(Debug, Clone, PartialEq)]
+            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
             $(
                 #[$outer]
             )*
@@ -281,6 +281,9 @@ macro_rules! file_type {
                 }
 
                 fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+            }
+            impl InputInverse for $type {
+                type Input = [<$type Input>];
             }
         }
     }

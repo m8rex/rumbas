@@ -104,7 +104,8 @@ optional_overwrite! {
     }
 }
 
-#[derive(Debug, Clone)]
+// TODO: remove this JsonSchema
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct QuestionPath {
     pub question_name: String,
     pub question_data: Question,

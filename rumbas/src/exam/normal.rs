@@ -22,24 +22,25 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
-optional_overwrite! {
-    /// An Exam
-    pub struct NormalExam {
-        /// All locales for which the exam should be generated
-        locales: Locales,
-        /// The name of the exam
-        name: TranslatableString,
-        /// The navigation settings for this exam
-        navigation: NormalNavigation,
-        /// The timing settings for this exam
-        timing: Timing,
-        /// The feedback settings for this exam
-        feedback: Feedback,
-        /// The questions groups for this exam
-        question_groups: QuestionGroups,
-        /// The settings to set for numbas
-        numbas_settings: NumbasSettings
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "NormalExamInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+/// An Exam
+pub struct NormalExam {
+    /// All locales for which the exam should be generated
+    pub locales: Locales,
+    /// The name of the exam
+    pub name: TranslatableString,
+    /// The navigation settings for this exam
+    pub navigation: NormalNavigation,
+    /// The timing settings for this exam
+    pub timing: Timing,
+    /// The feedback settings for this exam
+    pub feedback: Feedback,
+    /// The questions groups for this exam
+    pub question_groups: QuestionGroups,
+    /// The settings to set for numbas
+    pub numbas_settings: NumbasSettings,
 }
 
 impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {

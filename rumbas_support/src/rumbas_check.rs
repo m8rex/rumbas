@@ -36,6 +36,21 @@ impl<O: RumbasCheck> RumbasCheck for Box<O> {
     }
 }
 
+impl<A: RumbasCheck, B: RumbasCheck> RumbasCheck for (A, B) {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        let mut result = RumbasCheckResult::empty();
+        let i = 0;
+        let mut previous_result = self.0.check(locale);
+        previous_result.extend_path(i.to_string());
+        result.union(&previous_result);
+        let i = 1;
+        let mut previous_result = self.1.check(locale);
+        previous_result.extend_path(i.to_string());
+        result.union(&previous_result);
+        result
+    }
+}
+
 macro_rules! impl_rumbas_check {
     ($($t: ty),*) => {
         $(
@@ -49,10 +64,23 @@ macro_rules! impl_rumbas_check {
 }
 
 impl_rumbas_check!(String);
-impl_rumbas_check!(f64, f32);
+impl_rumbas_check!(f64, f32, [f64; 2]);
 impl_rumbas_check!(u128, u64, u32, u16, u8, usize);
 impl_rumbas_check!(i128, i64, i32, i16, i8, isize);
 impl_rumbas_check!(bool);
+
+impl_rumbas_check!(numbas::jme::ContentAreaString);
+impl_rumbas_check!(numbas::jme::EmbracedJMEString);
+impl_rumbas_check!(numbas::jme::JMEString);
+impl_rumbas_check!(numbas::question::part::match_answers::MatchAnswersWithChoicesLayout);
+impl_rumbas_check!(numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType);
+impl_rumbas_check!(numbas::question::part::match_answers::MultipleChoiceWarningType);
+impl_rumbas_check!(numbas::question::part::pattern_match::PatternMatchMode);
+impl_rumbas_check!(numbas::support::answer_style::AnswerStyle);
+impl_rumbas_check!(numbas::question::part::match_answers::MultipleChoiceMatrix);
+impl_rumbas_check!(numbas::support::primitive::Primitive);
+impl_rumbas_check!(numbas::question::function::FunctionType);
+impl_rumbas_check!(numbas::question::custom_part_type::CustomPartTypeSetting);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct RumbasCheckResult {

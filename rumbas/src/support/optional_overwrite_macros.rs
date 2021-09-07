@@ -44,7 +44,7 @@ macro_rules! optional_overwrite {
                     )*
                 }
             }
-            #[derive(Debug, Clone)]
+            #[derive(Debug, Clone, JsonSchema, Serialize, Deserialize)]
             pub struct $struct {
                 $(
                     pub $field: $type
@@ -83,7 +83,9 @@ macro_rules! optional_overwrite {
                     )*
                 }
             }
-
+            impl InputInverse for $struct {
+                type Input = [<$struct Input>];
+            }
         }
     }
 }
@@ -109,7 +111,7 @@ macro_rules! optional_overwrite_newtype {
                     self.0.overwrite(&other.0);
                 }
             }
-            #[derive(Debug, Clone)]
+            #[derive(Debug, Clone, JsonSchema, Serialize, Deserialize)]
             pub struct $struct(pub $type);
             impl Input for [<$struct Input>] {
                 type Normal = $struct;
@@ -126,7 +128,9 @@ macro_rules! optional_overwrite_newtype {
                     self.0.insert_template_value(&key, &val);
                 }
             }
-
+            impl InputInverse for $struct {
+                type Input = [<$struct Input>];
+            }
         }
     }
 }
@@ -176,7 +180,7 @@ macro_rules! optional_overwrite_enum {
                     };
                 }
             }
-            #[derive(Debug, Clone)]
+            #[derive(Debug, Clone, JsonSchema, Serialize, Deserialize)]
             pub enum $enum {
                 $(
                     $variant($type)
@@ -214,6 +218,9 @@ macro_rules! optional_overwrite_enum {
                     }
                 }
             }
+            impl InputInverse for $enum {
+                type Input = [<$enum Input>];
+            }
         }
     }
 }
@@ -244,6 +251,9 @@ macro_rules! impl_optional_overwrite {
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
                     normal
                 }
+            }
+            impl InputInverse for [<$type Input>] {
+                type Input = $type;
             }
         }
         )*

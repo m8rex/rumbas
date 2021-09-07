@@ -39,7 +39,7 @@ question_part_type! {
     }
 }
 type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
-impl_optional_overwrite!(MultipleChoiceWarningType);
+type MultipleChoiceWarningTypeInput = MultipleChoiceWarningType;
 impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 impl_to_rumbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 

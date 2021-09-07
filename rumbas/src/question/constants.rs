@@ -1,8 +1,8 @@
+use crate::question::variable_test::JMEStringInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
-use crate::support::variable_valued::JMEStringInput;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
 use schemars::JsonSchema;

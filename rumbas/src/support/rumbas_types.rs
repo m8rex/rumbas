@@ -1,10 +1,10 @@
 use crate::support::noneable::*;
 use crate::support::optional_overwrite::*;
-use rumbas_support::preamble::*;
 use crate::support::translatable::TranslatableStrings;
 use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 
 macro_rules! create_input_alias {
     ($name: ident, $type: ty) => {
@@ -17,7 +17,7 @@ macro_rules! create_input_alias {
 macro_rules! create_rumbas_type {
     ($name: ident, $type: ty) => {
         pub type $name = $type;
-        impl_optional_overwrite!($name);
+        create_input_alias!($name, $name);
     };
 }
 

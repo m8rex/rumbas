@@ -13,9 +13,6 @@ pub enum VariableValued<T> {
     Variable(JMEString),
     Value(T),
 }
-impl_optional_overwrite!(JMEString);
-impl_optional_overwrite!(EmbracedJMEString);
-impl_optional_overwrite!(ContentAreaString);
 
 impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     fn check(&self, locale: &str) -> RumbasCheckResult {

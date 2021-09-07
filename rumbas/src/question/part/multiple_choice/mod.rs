@@ -151,11 +151,9 @@ fn extract_multiple_choice_answer_data(
 
 impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
 type MultipleChoiceMatrix = numbas::question::part::match_answers::MultipleChoiceMatrix;
-impl_optional_overwrite!(MultipleChoiceMatrix);
 
 impl_to_numbas!(numbas::support::primitive::Primitive);
 type Primitive = numbas::support::primitive::Primitive;
-impl_optional_overwrite!(Primitive);
 
 optional_overwrite! {
     pub struct MultipleChoiceAnswer {
