@@ -1,8 +1,7 @@
 pub use crate::support::noneable::Noneable;
-pub use crate::support::rumbas_check::{RumbasCheck, RumbasCheckResult};
 
 /// This macro creates a struct with all optional fields (see [Value] struct)
-/// It also implements toe RumbasCheck and OptionalOverwrite traits
+/// It also implements toe RumbasCheck and Overwrite traits
 /// on both the created struct as Value<struct>
 macro_rules! optional_overwrite {
     (
@@ -38,28 +37,10 @@ macro_rules! optional_overwrite {
                     result
                 }
             }
-            impl OptionalCheck for [<$struct Input>] {
-                fn find_missing(&self) -> OptionalCheckResult {
-                    let mut result = OptionalCheckResult::empty();
-                    $(
-                        {
-                        let mut previous_result = self.$field.find_missing();
-                        previous_result.extend_path(stringify!($field).to_string());
-                        result.union(&previous_result);
-                        }
-                    )*
-                    result
-                }
-            }
-            impl OptionalOverwrite<[<$struct Input>]> for [<$struct Input>] {
+            impl Overwrite<[<$struct Input>]> for [<$struct Input>] {
                 fn overwrite(&mut self, other: &[<$struct Input>]) {
                     $(
                         self.$field.overwrite(&other.$field);
-                    )*
-                }
-                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                    $(
-                        self.$field.insert_template_value(&key, &val);
                     )*
                 }
             }
@@ -85,6 +66,22 @@ macro_rules! optional_overwrite {
                         ),*
                     }
                 }
+                fn find_missing(&self) -> InputCheckResult {
+                    let mut result = InputCheckResult::empty();
+                    $(
+                        {
+                        let mut previous_result = self.$field.find_missing();
+                        previous_result.extend_path(stringify!($field).to_string());
+                        result.union(&previous_result);
+                        }
+                    )*
+                    result
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    $(
+                        self.$field.insert_template_value(&key, &val);
+                    )*
+                }
             }
 
         }
@@ -107,17 +104,9 @@ macro_rules! optional_overwrite_newtype {
                     self.0.check(locale)
                 }
             }
-            impl OptionalCheck for [<$struct Input>] {
-                fn find_missing(&self) -> OptionalCheckResult {
-                    self.0.find_missing()
-                }
-            }
-            impl OptionalOverwrite<[<$struct Input>]> for [<$struct Input>] {
+            impl Overwrite<[<$struct Input>]> for [<$struct Input>] {
                 fn overwrite(&mut self, other: &[<$struct Input>]) {
                     self.0.overwrite(&other.0);
-                }
-                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                    self.0.insert_template_value(&key, &val);
                 }
             }
             #[derive(Debug, Clone)]
@@ -130,13 +119,19 @@ macro_rules! optional_overwrite_newtype {
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
                     Self(Value::Normal([<$type Input>]::from_normal(normal.0)))
                 }
+                fn find_missing(&self) -> InputCheckResult {
+                    self.0.find_missing()
+                }
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    self.0.insert_template_value(&key, &val);
+                }
             }
 
         }
     }
 }
 
-/// This macro creates an enum and implements toe RumbasCheck and OptionalOverwrite traits
+/// This macro creates an enum and implements toe RumbasCheck and Overwrite traits
 /// on both the created enum as Value<enum>
 macro_rules! optional_overwrite_enum {
     (
@@ -171,29 +166,13 @@ macro_rules! optional_overwrite_enum {
                     }
                 }
             }
-            impl OptionalCheck for [<$enum Input>] {
-                fn find_missing(&self) -> OptionalCheckResult {
-                    match self {
-                        $(
-                           [<$enum Input>]::$variant(val) => val.find_missing(),
-                        )*
-                    }
-                }
-            }
-            impl OptionalOverwrite<[<$enum Input>]> for [<$enum Input>] {
+            impl Overwrite<[<$enum Input>]> for [<$enum Input>] {
                 fn overwrite(&mut self, other: &[<$enum Input>]) {
                     match (self, other) {
                     $(
                         (&mut [<$enum Input>]::$variant(ref mut val), &[<$enum Input>]::$variant(ref valo)) => val.overwrite(&valo)
                     ),*
                         , _ => ()
-                    };
-                }
-                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
-                    match self {
-                    $(
-                        &mut [<$enum Input>]::$variant(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
-                    ),*
                     };
                 }
             }
@@ -205,6 +184,20 @@ macro_rules! optional_overwrite_enum {
             }
             impl Input for [<$enum Input>] {
                 type Normal = $enum;
+                fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                    match self {
+                    $(
+                        &mut [<$enum Input>]::$variant(ref mut enum_val) => enum_val.insert_template_value(&key, &val)
+                    ),*
+                    };
+                }
+                fn find_missing(&self) -> InputCheckResult {
+                    match self {
+                        $(
+                           [<$enum Input>]::$variant(val) => val.find_missing(),
+                        )*
+                    }
+                }
                 fn to_normal(&self) -> <Self as Input>::Normal {
                     match self {
                         $(
@@ -225,7 +218,7 @@ macro_rules! optional_overwrite_enum {
     }
 }
 
-/// Implement the RumbasCheck and OptionalOverwrite traits with blanket implementations
+/// Implement the RumbasCheck and Overwrite traits with blanket implementations
 macro_rules! impl_optional_overwrite {
     ($($type: ident), *) => {
         $(
@@ -234,19 +227,17 @@ macro_rules! impl_optional_overwrite {
                 RumbasCheckResult::empty()
             }
         }
-        impl OptionalCheck for $type {
-            fn find_missing(&self) -> OptionalCheckResult {
-                OptionalCheckResult::empty()
-            }
-        }
-        impl OptionalOverwrite<$type> for $type {
+        impl Overwrite<$type> for $type {
             fn overwrite(&mut self, _other: &$type) {}
-            fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
         }
         crate::support::rumbas_types::create_input_alias!($type, $type);
         paste::paste! {
             impl Input for [<$type Input>] {
                 type Normal = $type;
+            fn find_missing(&self) -> InputCheckResult {
+                InputCheckResult::empty()
+            }
+            fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
                 fn to_normal(&self) -> <Self as Input>::Normal {
                     self.to_owned()
                 }

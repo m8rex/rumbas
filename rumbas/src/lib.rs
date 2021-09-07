@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate enum_display_derive;
+#[macro_use]
+extern crate rumbas_support;
 
 pub mod exam;
 pub mod question;

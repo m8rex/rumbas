@@ -15,7 +15,6 @@ use crate::question::custom_part_type::CustomPartTypeDefinitionPaths;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPathsInput;
 use crate::question::variable_test::VariablesTestInput;
 use crate::support::optional_overwrite::*;
-use crate::support::template::Value;
 use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;

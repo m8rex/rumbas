@@ -11,8 +11,6 @@ use crate::exam::question_group::{QuestionGroups, QuestionGroupsInput};
 use crate::exam::timing::{Timing, TimingInput};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
-use crate::support::optional_overwrite::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMENotesTranslatableString;
@@ -21,30 +19,32 @@ use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
 use crate::support::translatable::TranslatableStringsInput;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-optional_overwrite! {
-    /// A Diagnostic Exam
-    pub struct DiagnosticExam {
-        /// All locales for which the exam should be generated
-        locales: Locales,
-        /// The name of the exam
-        name: TranslatableString,
-        /// The navigation settings for this exam
-        navigation: DiagnosticNavigation,
-        /// The timing settings for this exam
-        timing: Timing,
-        /// The feedback settings for this exam
-        feedback: Feedback,
-        /// The questions groups for this exam
-        question_groups: QuestionGroups,
-        /// The settings to set for numbas
-        numbas_settings: NumbasSettings,
-        /// The diagnostic data
-        diagnostic: Diagnostic
-    }
+#[derive(Input, Overwrite)]
+#[input(name = "DiagnosticExamInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+/// A Diagnostic Exam
+pub struct DiagnosticExam {
+    /// All locales for which the exam should be generated
+    locales: Locales,
+    /// The name of the exam
+    name: TranslatableString,
+    /// The navigation settings for this exam
+    navigation: DiagnosticNavigation,
+    /// The timing settings for this exam
+    timing: Timing,
+    /// The feedback settings for this exam
+    feedback: Feedback,
+    /// The questions groups for this exam
+    question_groups: QuestionGroups,
+    /// The settings to set for numbas
+    numbas_settings: NumbasSettings,
+    /// The diagnostic data
+    diagnostic: Diagnostic,
 }
 
 impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
@@ -139,16 +139,17 @@ impl ToNumbas<numbas::exam::exam::BasicExamSettings> for DiagnosticExam {
     }
 }
 
-optional_overwrite! {
-    /// Information needed for a diagnostic test
-    pub struct Diagnostic {
-        /// The script to use
-        script: DiagnosticScript,
-        /// The learning objectives,
-        objectives: LearningObjectives,
-        /// The learning topics
-        topics: LearningTopics
-    }
+#[derive(Input, Overwrite)]
+#[input(name = "DiagnosticInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+/// Information needed for a diagnostic test
+pub struct Diagnostic {
+    /// The script to use
+    script: DiagnosticScript,
+    /// The learning objectives,
+    objectives: LearningObjectives,
+    /// The learning topics
+    topics: LearningTopics,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::Diagnostic> for Diagnostic {
@@ -180,61 +181,14 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Input, Overwrite)]
+#[input(name = "DiagnosticScriptInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(rename_all = "lowercase")]
 pub enum DiagnosticScript {
     Mastery,
     Diagnosys,
     Custom(JMENotesTranslatableString),
-}
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(rename_all = "lowercase")]
-pub enum DiagnosticScriptInput {
-    Mastery,
-    Diagnosys,
-    Custom(JMENotesTranslatableStringInput),
-}
-
-impl OptionalCheck for DiagnosticScriptInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            Self::Mastery => OptionalCheckResult::empty(),
-            Self::Diagnosys => OptionalCheckResult::empty(),
-            Self::Custom(c) => c.find_missing(),
-        }
-    }
-}
-
-impl Input for DiagnosticScriptInput {
-    type Normal = DiagnosticScript;
-    fn from_normal(normal: Self::Normal) -> Self {
-        match normal {
-            Self::Normal::Mastery => Self::Mastery,
-            Self::Normal::Diagnosys => Self::Diagnosys,
-            Self::Normal::Custom(c) => Self::Custom(Input::from_normal(c)),
-        }
-    }
-    fn to_normal(&self) -> Self::Normal {
-        match self {
-            Self::Mastery => Self::Normal::Mastery,
-            Self::Diagnosys => Self::Normal::Diagnosys,
-            Self::Custom(c) => Self::Normal::Custom(c.to_normal()),
-        }
-    }
-}
-
-impl OptionalOverwrite<DiagnosticScriptInput> for DiagnosticScriptInput {
-    fn overwrite(&mut self, other: &DiagnosticScriptInput) {
-        match (self, other) {
-            (&mut Self::Custom(ref mut val), Self::Custom(ref valo)) => val.overwrite(&valo),
-            _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            &mut Self::Custom(ref mut enum_val) => enum_val.insert_template_value(&key, &val),
-            _ => (),
-        };
-    }
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
@@ -282,14 +236,15 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
 pub type LearningObjectivesInput = Vec<Value<LearningObjectiveInput>>;
 pub type LearningObjectives = Vec<LearningObjective>;
 
-optional_overwrite! {
-    /// A Learning Objective
-    pub struct LearningObjective {
-        /// The name
-        name: TranslatableString,
-        /// A description
-        description: TranslatableString
-    }
+#[derive(Input, Overwrite)]
+#[input(name = "LearningObjectiveInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+/// A Learning Objective
+pub struct LearningObjective {
+    /// The name
+    name: TranslatableString,
+    /// A description
+    description: TranslatableString,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective>
@@ -320,18 +275,19 @@ impl ToRumbas<LearningObjective>
 pub type LearningTopicsInput = Vec<Value<LearningTopicInput>>;
 pub type LearningTopics = Vec<LearningTopic>;
 
-optional_overwrite! {
-    /// A learning Topic
-    pub struct  LearningTopic {
-        /// The name
-        name: TranslatableString,
-        /// A description
-        description: TranslatableString,
-        /// List of names of objectives
-        objectives: TranslatableStrings,
-        /// List of names of topic on which this topic depends
-        depends_on: TranslatableStrings
-    }
+#[derive(Input, Overwrite)]
+#[input(name = "LearningTopicInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+/// A learning Topic
+pub struct LearningTopic {
+    /// The name
+    name: TranslatableString,
+    /// A description
+    description: TranslatableString,
+    /// List of names of objectives
+    objectives: TranslatableStrings,
+    /// List of names of topic on which this topic depends
+    depends_on: TranslatableStrings,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic> for LearningTopic {

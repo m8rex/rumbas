@@ -34,3 +34,5 @@ enum-display-derive = "0.1.1"
 schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged-enums-as-if-else" }
 
 paste = "1.0"
+
+rumbas_support = { path="../rumbas_support" }

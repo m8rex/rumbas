@@ -9,3 +9,8 @@ edition = "2018"
 serde = {version="1.0.110", features=["derive"]}                                
 serde_yaml = "0.8.13"
 numbas = { path = "../numbas" }
+rumbas_support_derive = { path = "../rumbas_support_derive" }
+
+[features]
+default = [ "derive"]
+derive=  []

@@ -1,6 +1,5 @@
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -40,68 +39,14 @@ impl ToRumbas<Timing> for numbas::exam::exam::Exam {
     }
 }
 
-// TODO: optional_overwrite
-#[derive(Debug, Clone)]
-pub enum TimeoutAction {
-    None,
-    Warn(TimeoutActionWarn),
-}
-
-impl RumbasCheck for TimeoutAction {
-    fn check(&self, locale: &str) -> RumbasCheckResult {
-        match self {
-            Self::None => RumbasCheckResult::empty(),
-            Self::Warn(l) => l.check(locale),
-        }
-    }
-}
-
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "TimeoutActionInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
-pub enum TimeoutActionInput {
+pub enum TimeoutAction {
     None,
-    Warn(TimeoutActionWarnInput),
-}
-
-impl Input for TimeoutActionInput {
-    type Normal = TimeoutAction;
-    fn from_normal(normal: Self::Normal) -> Self {
-        match normal {
-            Self::Normal::None => Self::None,
-            Self::Normal::Warn(c) => Self::Warn(Input::from_normal(c)),
-        }
-    }
-    fn to_normal(&self) -> Self::Normal {
-        match self {
-            Self::None => Self::Normal::None,
-            Self::Warn(c) => Self::Normal::Warn(c.to_normal()),
-        }
-    }
-}
-
-impl OptionalOverwrite<TimeoutActionInput> for TimeoutActionInput {
-    fn overwrite(&mut self, other: &TimeoutActionInput) {
-        match (self, other) {
-            (&mut Self::Warn(ref mut val), Self::Warn(ref valo)) => val.overwrite(&valo),
-            _ => (),
-        };
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        match self {
-            &mut Self::Warn(ref mut enum_val) => enum_val.insert_template_value(&key, &val),
-            _ => (),
-        };
-    }
-}
-
-impl OptionalCheck for TimeoutActionInput {
-    fn find_missing(&self) -> OptionalCheckResult {
-        match self {
-            Self::None => OptionalCheckResult::empty(),
-            Self::Warn(l) => l.find_missing(),
-        }
-    }
+    Warn(TimeoutActionWarn),
 }
 
 impl ToNumbas<numbas::exam::timing::TimeoutAction> for TimeoutAction {

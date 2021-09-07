@@ -4,7 +4,6 @@ use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
-use crate::support::template::Value;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMETranslatableString;
@@ -93,67 +92,15 @@ impl CustomPartTypeDefinition {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartInputOptionValueInput")]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartInputOptionValue<T: Clone> {
     /// The value
     value: T,
     /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
-    is_static: bool,
-}
-
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-pub struct CustomPartInputOptionValueInput<T: Clone + OptionalCheck + Input> {
-    /// The value
-    value: Value<T>,
-    /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
     #[serde(rename = "static")]
     is_static: bool,
-}
-
-impl<T: Input + OptionalCheck + Clone> Input for CustomPartInputOptionValueInput<T>
-where
-    T::Normal: Clone,
-{
-    type Normal = CustomPartInputOptionValue<<T as Input>::Normal>;
-    fn from_normal(normal: Self::Normal) -> Self {
-        Self {
-            value: Value::Normal(T::from_normal(normal.value)),
-            is_static: normal.is_static,
-        }
-    }
-    fn to_normal(&self) -> Self::Normal {
-        Self::Normal {
-            value: self.value.to_normal(),
-            is_static: self.is_static,
-        }
-    }
-}
-
-impl<T: OptionalOverwrite<T> + OptionalCheck + Clone>
-    OptionalOverwrite<CustomPartInputOptionValueInput<T>> for CustomPartInputOptionValueInput<T>
-where
-    T::Normal: Clone,
-{
-    fn overwrite(&mut self, other: &Self) {
-        self.value.overwrite(&other.value);
-    }
-    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        self.value.insert_template_value(&key, &val);
-    }
-}
-// TODO
-//impl_optional_overwrite_value!(CustomPartInputOptionValueInput<T>[T]);
-
-impl<N: Clone + OptionalCheck + Input> OptionalCheck for CustomPartInputOptionValueInput<N> {
-    fn find_missing(&self) -> OptionalCheckResult {
-        self.value.find_missing() // TODO: extend path...
-    }
-}
-
-impl<N: Clone> RumbasCheck for CustomPartInputOptionValue<N> {
-    fn check(&self, _locale: &str) -> RumbasCheckResult {
-        RumbasCheckResult::empty()
-    }
 }
 
 impl<N: Clone + RumbasCheck, T: Clone + ToNumbas<N>>
