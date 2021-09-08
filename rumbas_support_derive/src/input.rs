@@ -63,7 +63,7 @@ pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ide
         .collect::<Vec<_>>()
 }
 
-fn get_derives(attrs: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
+fn handle_attributes(attrs: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
     let derive_attrs = attrs
         .iter()
         .filter(|a| a.path.is_ident("derive"))
@@ -86,7 +86,13 @@ fn get_derives(attrs: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
         })
         .collect::<Vec<_>>();
     //println!("{:#?}", derive_attrs);
-    let tokens = quote!(#[derive(#(#derive_attrs),*)]);
+    let mut tokens = quote!(#[derive(#(#derive_attrs),*)]);
+    let other_attrs = attrs
+        .iter()
+        .filter(|a| !a.path.is_ident("derive"))
+        .map(|a| quote! {#a})
+        .collect::<Vec<_>>();
+    tokens.extend(quote!(#(#other_attrs)*));
     //println!("{:#?}", tokens);
     tokens
 }
@@ -95,12 +101,12 @@ fn input_handle_unit_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_derive: &proc_macro2::TokenStream,
+    input_attributes: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
     tokens.extend(quote! {
-        #input_derive
+        #input_attributes
         pub struct #input_ident #ty #wher;
     });
     tokens.extend(quote! {
@@ -127,7 +133,7 @@ fn input_handle_tuple_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_derive: &proc_macro2::TokenStream,
+    input_attributes: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
@@ -142,8 +148,8 @@ fn input_handle_tuple_struct(
         .collect::<Vec<_>>();
 
     tokens.extend(quote! {
-        #input_derive
-        pub struct #input_ident #ty(#(Value<<#input_type_tys as InputInverse>::Input>),*) #wher;
+        #input_attributes
+        pub struct #input_ident #ty(#(ValueType<<#input_type_tys as InputInverse>::Input>),*) #wher;
     });
     tokens.extend(quote! {
             #[automatically_derived]
@@ -153,7 +159,7 @@ fn input_handle_tuple_struct(
                     #ident(#(self.#field_indexes.to_normal()),*)
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
-                    Self(#(Value::Normal(Input::from_normal(normal.#field_indexes))),*)
+                    Self(#(ValueType::Normal(Input::from_normal(normal.#field_indexes))),*)
                 }
                 fn find_missing(&self) -> InputCheckResult {
                     let mut result = InputCheckResult::empty();
@@ -176,7 +182,7 @@ fn input_handle_struct_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_derive: &proc_macro2::TokenStream,
+    input_attributes: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     // Beginning of fixing generics
@@ -198,7 +204,7 @@ fn input_handle_struct_struct(
         .collect::<Vec<_>>();
 
     tokens.extend(quote! {
-        #input_derive
+        #input_attributes
         pub struct #input_ident #ty #wher {
             #(pub #field_names: Value<<#input_type_tys as InputInverse>::Input>),*
         }
@@ -238,18 +244,28 @@ fn input_handle_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_derive: &proc_macro2::TokenStream,
+    input_attributes: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     match fields.style {
-        ast::Style::Struct => {
-            input_handle_struct_struct(fields, ident, input_ident, generics, input_derive, tokens)
-        }
-        ast::Style::Tuple => {
-            input_handle_tuple_struct(fields, ident, input_ident, generics, input_derive, tokens)
-        }
+        ast::Style::Struct => input_handle_struct_struct(
+            fields,
+            ident,
+            input_ident,
+            generics,
+            input_attributes,
+            tokens,
+        ),
+        ast::Style::Tuple => input_handle_tuple_struct(
+            fields,
+            ident,
+            input_ident,
+            generics,
+            input_attributes,
+            tokens,
+        ),
         ast::Style::Unit => {
-            input_handle_unit_struct(ident, input_ident, generics, input_derive, tokens)
+            input_handle_unit_struct(ident, input_ident, generics, input_attributes, tokens)
         }
     }
 }
@@ -479,7 +495,7 @@ fn input_handle_enum(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_derive: &proc_macro2::TokenStream,
+    input_attributes: &proc_macro2::TokenStream,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
@@ -496,7 +512,7 @@ fn input_handle_enum(
         input_handle_enum_insert_template_value_variants(v, input_ident);
 
     tokens.extend(quote! {
-        #input_derive
+        #input_attributes
         pub enum #input_ident #ty #wher {
             #(#input_variants),*
         }
@@ -550,15 +566,20 @@ impl ToTokens for InputReceiver {
         let (imp, ty, wher) = generics.split_for_impl();
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
-        let input_derive = get_derives(&attrs);
+        let input_attributes = handle_attributes(&attrs);
 
         match data {
             ast::Data::Enum(v) => {
-                input_handle_enum(v, ident, &input_ident, generics, &input_derive, tokens)
+                input_handle_enum(v, ident, &input_ident, generics, &input_attributes, tokens)
             }
-            ast::Data::Struct(fields) => {
-                input_handle_struct(fields, ident, &input_ident, generics, &input_derive, tokens)
-            }
+            ast::Data::Struct(fields) => input_handle_struct(
+                fields,
+                ident,
+                &input_ident,
+                generics,
+                &input_attributes,
+                tokens,
+            ),
         }
         // Also implement InputInverse
         tokens.extend(quote! {

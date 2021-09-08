@@ -36,10 +36,12 @@ pub fn combine_with_default_files(path: &Path, exam: &mut ExamInput) {
             default_files,
             e,
             |n: &SequentialNavigationInput, e: &mut NormalExamInput| e.navigation.overwrite(
-                &Value::Normal(NormalNavigationInput::Sequential(Value::Normal(n.clone())))
+                &Value::Normal(NormalNavigationInput::Sequential(ValueType::Normal(
+                    n.clone()
+                )))
             ),
             |n: &MenuNavigationInput, e: &mut NormalExamInput| e.navigation.overwrite(
-                &Value::Normal(NormalNavigationInput::Menu(Value::Normal(n.clone())))
+                &Value::Normal(NormalNavigationInput::Menu(ValueType::Normal(n.clone())))
             ),
             |_n: &DiagnosticNavigationInput, _e: &mut NormalExamInput| ()
         );

@@ -12,6 +12,39 @@ pub enum ValueType<T> {
     Invalid(serde_yaml::Value),
 }
 
+impl<T: Input> InputInverse for ValueType<T> {
+    type Input = Self;
+}
+
+impl<T: Input> Input for ValueType<T>
+where
+    T: serde::de::DeserializeOwned,
+{
+    type Normal = <T as Input>::Normal;
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        self.clone().unwrap().to_normal()
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        ValueType::Normal(<T as Input>::from_normal(normal))
+    }
+    fn find_missing(&self) -> InputCheckResult {
+        match &self {
+            ValueType::Normal(val) => val.find_missing(),
+            ValueType::Template(ts) => InputCheckResult::from_missing(Some(ts.yaml())),
+            ValueType::Invalid(v) => InputCheckResult::from_invalid(v),
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        if let ValueType::Template(ts) = &self {
+            if ts.key == Some(key.to_string()) {
+                *self = ValueType::Normal(serde_yaml::from_value(val.clone()).unwrap());
+            }
+        } else if let ValueType::Normal(ref mut v) = self {
+            v.insert_template_value(key, val);
+        }
+    }
+}
+
 impl<T: std::clone::Clone> ValueType<T> {
     #[inline]
     pub fn unwrap(&self) -> T {
@@ -85,18 +118,12 @@ where
     }
     fn find_missing(&self) -> InputCheckResult {
         match &self.0 {
-            Some(ValueType::Normal(val)) => val.find_missing(),
-            Some(ValueType::Template(ts)) => InputCheckResult::from_missing(Some(ts.yaml())),
-            Some(ValueType::Invalid(v)) => InputCheckResult::from_invalid(v),
+            Some(v) => v.find_missing(),
             None => InputCheckResult::from_missing(None),
         }
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        if let Some(ValueType::Template(ts)) = &self.0 {
-            if ts.key == Some(key.to_string()) {
-                *self = Value::Normal(serde_yaml::from_value(val.clone()).unwrap());
-            }
-        } else if let Some(ValueType::Normal(ref mut v)) = &mut self.0 {
+        if let Some(ref mut v) = self.0 {
             v.insert_template_value(key, val);
         }
     }

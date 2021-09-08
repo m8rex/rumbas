@@ -20,13 +20,26 @@ impl<T: Overwrite<T>> Overwrite<Box<T>> for Box<T> {
     }
 }
 
+impl<T: Overwrite<T>> Overwrite<ValueType<T>> for ValueType<T>
+where
+    T: serde::de::DeserializeOwned,
+{
+    fn overwrite(&mut self, other: &ValueType<T>) {
+        if let ValueType::Normal(ref mut val) = self {
+            if let ValueType::Normal(other_val) = &other {
+                val.overwrite(&other_val);
+            }
+        }
+    }
+}
+
 impl<T: Overwrite<T>> Overwrite<Value<T>> for Value<T>
 where
     T: serde::de::DeserializeOwned,
 {
     fn overwrite(&mut self, other: &Value<T>) {
-        if let Some(ValueType::Normal(ref mut val)) = self.0 {
-            if let Some(ValueType::Normal(other_val)) = &other.0 {
+        if let Some(ref mut val) = self.0 {
+            if let Some(other_val) = &other.0 {
                 val.overwrite(&other_val);
             }
         } else if self.0.is_none() {
