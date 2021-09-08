@@ -1,38 +1,33 @@
 use crate::question::extension::Extensions;
-use crate::question::extension::ExtensionsInput;
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMETranslatableString;
-use crate::support::translatable::JMETranslatableStringInput;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use crate::support::yaml::{YamlError, YamlResult};
 use numbas::question::custom_part_type::CustomPartTypeSetting as NCustomPartTypeSetting;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 
-optional_overwrite! {
-    pub struct CustomPartTypeDefinition {
-        type_name: TranslatableString,
-        description: TranslatableString,
-        settings: NCustomPartTypeSettings, // TODO
-        can_be_gap: RumbasBool,
-        can_be_step: RumbasBool,
-        marking_notes: JMENotes,
-        help_url: TranslatableString,
-        published: RumbasBool,
-        extensions: Extensions,
-        input_widget: CustomPartInputWidget
-        //TODO source
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartTypeDefinitionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CustomPartTypeDefinition {
+    type_name: TranslatableString,
+    description: TranslatableString,
+    settings: NCustomPartTypeSettings, // TODO
+    can_be_gap: bool,
+    can_be_step: bool,
+    marking_notes: JMENotes,
+    help_url: TranslatableString,
+    published: bool,
+    extensions: Extensions,
+    input_widget: CustomPartInputWidget, //TODO source
 }
 
 type NCustomPartTypeSettingsInput = Vec<Value<NCustomPartTypeSetting>>;
@@ -137,7 +132,7 @@ macro_rules! create_input_option_value {
 create_input_option_value!(
     CustomPartInputOptionValueBool,
     "CustomPartInputOptionValueBoolInput",
-    RumbasBool,
+    bool,
     bool
 );
 
@@ -164,20 +159,21 @@ create_input_option_value!(
     Vec<numbas::support::answer_style::AnswerStyle>
 );
 
-optional_overwrite_enum! {
-    #[serde(tag = "type")]
-    pub enum CustomPartInputWidget {
-        //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
-        #[serde(rename = "string")]
-        /// The student enters a single line of text.
-        String(CustomPartStringInputOptions),
-        #[serde(rename = "number")]
-        /// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.
-        Number(CustomPartNumberInputOptions),
-        #[serde(rename = "radiogroup")]
-        /// The student chooses one from a list of choices by selecting a radio button.
-        RadioGroup(CustomPartRadioGroupInputOptions)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartInputWidgetInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(tag = "type")]
+pub enum CustomPartInputWidget {
+    //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
+    #[serde(rename = "string")]
+    /// The student enters a single line of text.
+    String(CustomPartStringInputOptions),
+    #[serde(rename = "number")]
+    /// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.
+    Number(CustomPartNumberInputOptions),
+    #[serde(rename = "radiogroup")]
+    /// The student chooses one from a list of choices by selecting a radio button.
+    RadioGroup(CustomPartRadioGroupInputOptions),
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartInputWidget> for CustomPartInputWidget {
@@ -218,16 +214,17 @@ impl ToRumbas<CustomPartInputWidget> for numbas::question::custom_part_type::Cus
     }
 }
 
-optional_overwrite! {
-    pub struct CustomPartStringInputOptions {
-        //TODO? hint & correctAnswer is shared for all..., use macro?
-        /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-        hint: CustomPartInputOptionValueTranslatableString,
-        /// A JME expression which evaluates to the expected answer to the part.
-        correct_answer: JMETranslatableString,
-        /// If false, the part will only be marked if their answer is non-empty.
-        allow_empty: CustomPartInputOptionValueBool
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartStringInputOptionsInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CustomPartStringInputOptions {
+    //TODO? hint & correctAnswer is shared for all..., use macro?
+    /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    hint: CustomPartInputOptionValueTranslatableString,
+    /// A JME expression which evaluates to the expected answer to the part.
+    correct_answer: JMETranslatableString,
+    /// If false, the part will only be marked if their answer is non-empty.
+    allow_empty: CustomPartInputOptionValueBool,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartStringInputOptions>
@@ -262,17 +259,17 @@ impl ToRumbas<CustomPartStringInputOptions>
     }
 }
 
-optional_overwrite! {
-    pub struct CustomPartNumberInputOptions {
-        /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-        hint: CustomPartInputOptionValueTranslatableString,
-        /// A JME expression which evaluates to the expected answer to the part.
-        correct_answer: JMETranslatableString,
-        ///Allow the student to enter their answer as a fraction?
-        allow_fractions: CustomPartInputOptionValueBool,
-        allowed_notation_styles:
-            CustomPartInputOptionValueAnswerStyles
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartNumberInputOptionsInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CustomPartNumberInputOptions {
+    /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    hint: CustomPartInputOptionValueTranslatableString,
+    /// A JME expression which evaluates to the expected answer to the part.
+    correct_answer: JMETranslatableString,
+    ///Allow the student to enter their answer as a fraction?
+    allow_fractions: CustomPartInputOptionValueBool,
+    allowed_notation_styles: CustomPartInputOptionValueAnswerStyles,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartNumberInputOptions>
@@ -309,15 +306,16 @@ impl ToRumbas<CustomPartNumberInputOptions>
     }
 }
 
-optional_overwrite! {
-    pub struct CustomPartRadioGroupInputOptions {
-        /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-        hint: CustomPartInputOptionValueTranslatableString,
-        /// A JME expression which evaluates to the expected answer to the part.
-        correct_answer: JMETranslatableString,
-        /// The labels for the choices to offer to the student.
-        choices: CustomPartInputOptionValueTranslatableStrings
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartRadioGroupInputOptionsInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CustomPartRadioGroupInputOptions {
+    /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    hint: CustomPartInputOptionValueTranslatableString,
+    /// A JME expression which evaluates to the expected answer to the part.
+    correct_answer: JMETranslatableString,
+    /// The labels for the choices to offer to the student.
+    choices: CustomPartInputOptionValueTranslatableStrings,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions>

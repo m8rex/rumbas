@@ -1,19 +1,19 @@
 use crate::support::file_reference::FileString;
-use crate::support::file_reference::FileStringInput;
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // TODO: maybe translatable? So different text's can be set for different languages?
-optional_overwrite! {
-    pub struct Preamble {
-        /// The JavaScript to add to the outputfiles
-        js: FileString,
-        /// The CSS to add to the outputfiles
-        css: FileString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "PreambleInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Preamble {
+    /// The JavaScript to add to the outputfiles
+    pub js: FileString,
+    /// The CSS to add to the outputfiles
+    pub css: FileString,
 }
 
 impl ToNumbas<numbas::question::preamble::Preamble> for Preamble {

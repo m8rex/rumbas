@@ -1,7 +1,6 @@
-use crate::support::optional_overwrite::*;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -12,17 +11,18 @@ macro_rules! extensions {
             $name: ident: $path: literal
         ),+
     ) => {
-        optional_overwrite! {
+            #[derive(Input, Overwrite, RumbasCheck)]
+            #[input(name = "ExtensionsInput")]
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
             /// Specify which extensions should be enabled
             pub struct Extensions {
                 $(
                     $(
                         #[$inner]
                     )*
-                    $name: RumbasBool
+                    $name: bool
                 ),*
             }
-        }
 
         impl ToNumbas<Vec<String>> for Extensions {
             fn to_numbas(&self, locale: &str) -> Vec<String> {

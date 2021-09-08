@@ -1,24 +1,24 @@
 use crate::support::file_reference::FileString;
-use crate::support::file_reference::FileStringInput;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use regex::Regex;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
-optional_overwrite_enum! {
-    #[serde(untagged)]
-    pub enum VariableRepresentation {
-        ListOfStrings(RumbasStrings),
-        ListOfNumbers(RumbasFloats),
-        Long(BoxVariable),
-        Number(RumbasFloat),
-        Other(VariableStringRepresentation)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "VariableRepresentationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum VariableRepresentation {
+    ListOfStrings(RumbasStrings),
+    ListOfNumbers(RumbasFloats),
+    Long(BoxVariable),
+    Number(RumbasFloat),
+    Other(VariableStringRepresentation),
 }
 
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
@@ -78,13 +78,14 @@ impl VariableRepresentation {
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(from = "String")]
-    pub enum VariableStringRepresentation {
-        Anything(RumbasString),
-        Range(RangeData),
-        RandomRange(RangeData)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "VariableStringRepresentationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(from = "String")]
+pub enum VariableStringRepresentation {
+    Anything(RumbasString),
+    Range(RangeData),
+    RandomRange(RangeData),
 }
 /* TODO remove?
 impl JsonSchema for VariableStringRepresentation {
@@ -120,13 +121,13 @@ impl std::convert::From<String> for VariableStringRepresentationInput {
     }
 }
 
-optional_overwrite! {
-    #[derive(PartialEq)]
-    pub struct RangeData {
-        from: RumbasFloat,
-        to: RumbasFloat,
-        step: RumbasFloat
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "RangeDataInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+pub struct RangeData {
+    from: RumbasFloat,
+    to: RumbasFloat,
+    step: RumbasFloat,
 }
 
 impl RangeData {
@@ -237,13 +238,14 @@ mod test {
     }
 }
 
-optional_overwrite! {
-    pub struct Variable {
-        definition: FileString,//TODO: definition dependant of template type, for random_range: start, end and step instead
-        description: RumbasString,
-        template_type: VariableTemplateType,
-        group: RumbasString //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "VariableInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Variable {
+    definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
+    description: RumbasString,
+    template_type: VariableTemplateType,
+    group: RumbasString, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
 
 type BoxVariableInput = Box<VariableInput>;
@@ -283,6 +285,8 @@ impl Variable {
     }
 }
 
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -304,7 +308,6 @@ pub enum VariableTemplateType {
     /// A string
     r#String,
 }
-impl_optional_overwrite!(VariableTemplateType);
 
 impl ToNumbas<numbas::question::variable::VariableTemplateType> for VariableTemplateType {
     fn to_numbas(&self, _locale: &str) -> numbas::question::variable::VariableTemplateType {

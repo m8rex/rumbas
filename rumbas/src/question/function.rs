@@ -16,13 +16,14 @@ type NumbasFunctionTypeInput = NumbasFunctionType;
 
 impl_to_numbas!(NumbasFunctionType);
 
-optional_overwrite! {
-    pub struct Function {
-        parameters: StringFunctionTypeTuples,
-        output_type: NumbasFunctionType,
-        #[serde(flatten)]
-        definition: FunctionDefinition
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FunctionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Function {
+    parameters: StringFunctionTypeTuples,
+    output_type: NumbasFunctionType,
+    #[serde(flatten)]
+    definition: FunctionDefinition,
 }
 
 impl ToNumbas<numbas::question::function::Function> for Function {
@@ -45,14 +46,15 @@ impl ToRumbas<Function> for numbas::question::function::Function {
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(tag = "language")]
-    pub enum FunctionDefinition {
-        #[serde(rename="jme")]
-        JME(FunctionDefinitionJME),
-        #[serde(rename="js")]
-        Javascript(FunctionDefinitionJavascript)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FunctionDefinitionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(tag = "language")]
+pub enum FunctionDefinition {
+    #[serde(rename = "jme")]
+    JME(FunctionDefinitionJME),
+    #[serde(rename = "js")]
+    Javascript(FunctionDefinitionJavascript),
 }
 
 impl ToNumbas<numbas::question::function::FunctionDefinition> for FunctionDefinition {
@@ -87,14 +89,16 @@ impl ToRumbas<FunctionDefinition> for numbas::question::function::FunctionDefini
     }
 }
 
-optional_overwrite! {
-    pub struct FunctionDefinitionJME {
-        definition: JMETranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FunctionDefinitionJMEInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct FunctionDefinitionJME {
+    definition: JMETranslatableString,
 }
 
-optional_overwrite! {
-    pub struct FunctionDefinitionJavascript {
-        definition: TranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FunctionDefinitionJavascriptInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct FunctionDefinitionJavascript {
+    definition: TranslatableString,
 }

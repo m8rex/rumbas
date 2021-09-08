@@ -1,6 +1,6 @@
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::hash::{Hash, Hasher};
@@ -8,14 +8,16 @@ use std::hash::{Hash, Hasher};
 // TODO Optional overwrite
 // TODO TranslatableString
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
+// TODO: fix ovewrite?
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ResourcePathInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct ResourcePath {
     pub resource_name: String,
     pub resource_path: std::path::PathBuf,
 }
-impl_optional_overwrite!(ResourcePath);
 
 pub type ResourcePaths = Vec<ResourcePath>;
 pub type ResourcePathsInput = Vec<Value<ResourcePathInput>>;
