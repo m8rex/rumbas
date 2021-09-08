@@ -3,6 +3,7 @@ use darling::{FromDeriveInput, FromField, FromVariant};
 use quote::{quote, ToTokens};
 
 #[derive(Debug, FromField)]
+#[darling(forward_attrs)]
 pub struct InputFieldReceiver {
     /// Get the ident of the field. For fields in tuple or newtype structs or
     /// enum bodies, this can be `None`.
@@ -10,14 +11,17 @@ pub struct InputFieldReceiver {
 
     /// This magic field name pulls the type from the input.
     pub ty: syn::Type,
+    pub attrs: Vec<syn::Attribute>,
 }
 
 #[derive(Debug, FromVariant)]
+#[darling(forward_attrs)]
 pub struct InputVariantReceiver {
     /// The identifier of the passed-in variant
     pub ident: syn::Ident,
     // The fields associated with the variant
     pub fields: ast::Fields<InputFieldReceiver>,
+    pub attrs: Vec<syn::Attribute>,
 }
 
 #[derive(FromDeriveInput)]
@@ -203,10 +207,19 @@ fn input_handle_struct_struct(
         .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
         .collect::<Vec<_>>();
 
+    let field_attributes = fields
+        .iter()
+        .map(|f| f.attrs.iter().map(|a| quote!(#a)).collect::<Vec<_>>())
+        .map(|a| quote!(#(#a)*))
+        .collect::<Vec<_>>();
+
     tokens.extend(quote! {
         #input_attributes
         pub struct #input_ident #ty #wher {
-            #(pub #field_names: Value<<#input_type_tys as InputInverse>::Input>),*
+            #(
+                #field_attributes
+                pub #field_names: Value<<#input_type_tys as InputInverse>::Input>
+            ),*
         }
     });
     tokens.extend(quote! {
@@ -278,15 +291,19 @@ fn input_handle_enum_input_variants(
         .map(|variant| {
             let input_type_tys = get_input_types(&variant.fields.fields);
             let variant_ident = &variant.ident;
+
+            let variant_attributes = variant.attrs.iter().map(|a| quote!(#a)).collect::<Vec<_>>();
             match variant.fields.style {
                 ast::Style::Unit => {
                     quote! {
+                        #(#variant_attributes)*
                         #variant_ident
                     }
                 }
                 ast::Style::Tuple => {
                     quote! {
-                        #variant_ident(#(Value<<#input_type_tys as InputInverse>::Input>),*)
+                        #(#variant_attributes)*
+                        #variant_ident(#(ValueType<<#input_type_tys as InputInverse>::Input>),*)
                     }
                 }
                 ast::Style::Struct => {
@@ -296,9 +313,19 @@ fn input_handle_enum_input_variants(
                         .iter()
                         .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
                         .collect::<Vec<_>>();
+
+                    let field_attributes = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.attrs.iter().map(|a| quote!(#a)).collect::<Vec<_>>())
+                        .map(|a| quote!(#(#a)*))
+                        .collect::<Vec<_>>();
                     quote! {
+                        #(#variant_attributes)*
                         #variant_ident {
                             #(
+                            #field_attributes
                             #items: Value<<#input_type_tys as InputInverse>::Input>
                             ),*
                         }
