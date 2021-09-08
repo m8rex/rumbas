@@ -9,6 +9,10 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
+impl<T: InputInverse> InputInverse for Noneable<T> {
+    type Input = Noneable<<T as InputInverse>::Input>;
+}
+
 impl<T: Input> Input for Noneable<T> {
     type Normal = Noneable<<T as Input>::Normal>;
     fn to_normal(&self) -> Noneable<<T as Input>::Normal> {

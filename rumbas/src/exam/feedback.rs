@@ -1,30 +1,30 @@
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite! {
-    pub struct Feedback {
-        percentage_needed_to_pass: NoneableFloat, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
-        show_name_of_student: RumbasBool,
-        /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
-        show_current_marks: RumbasBool,
-        /// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
-        show_maximum_marks: RumbasBool,
-        /// Whether answer feedback is shown (right or wrong etc)
-        show_answer_state: RumbasBool,
-        /// Whether the 'reveal answer' button is present
-        allow_reveal_answer: RumbasBool,
-        review: Review, // If none, everything is true???
-        advice: TranslatableString,
-        intro: TranslatableString,
-        feedback_messages: FeedbackMessages
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FeedbackInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Feedback {
+    pub percentage_needed_to_pass: NoneableFloat, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
+    pub show_name_of_student: bool,
+    /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
+    pub show_current_marks: bool,
+    /// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
+    pub show_maximum_marks: bool,
+    /// Whether answer feedback is shown (right or wrong etc)
+    pub show_answer_state: bool,
+    /// Whether the 'reveal answer' button is present
+    pub allow_reveal_answer: bool,
+    pub review: Review, // If none, everything is true???
+    pub advice: TranslatableString,
+    pub intro: TranslatableString,
+    pub feedback_messages: FeedbackMessages,
 }
 
 impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
@@ -64,17 +64,18 @@ impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
     }
 }
 
-optional_overwrite! {
-    pub struct Review {
-        /// Whether to show score in result overview page
-        show_score: RumbasBool,
-        /// Show feedback while reviewing
-        show_feedback: RumbasBool,
-        /// Show expected answer while reviewing
-        show_expected_answer: RumbasBool,
-        /// Show advice while reviewing
-        show_advice: RumbasBool
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ReviewInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Review {
+    /// Whether to show score in result overview page
+    pub show_score: bool,
+    /// Show feedback while reviewing
+    pub show_feedback: bool,
+    /// Show expected answer while reviewing
+    pub show_expected_answer: bool,
+    /// Show advice while reviewing
+    pub show_advice: bool,
 }
 
 impl ToNumbas<numbas::exam::feedback::Review> for Review {
@@ -111,12 +112,13 @@ impl ToRumbas<Review> for numbas::exam::feedback::Review {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "FeedbackMessageInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FeedbackMessage {
     pub message: String,   //TODO: inputstring or filestring?
     pub threshold: String, //TODO type
 }
-impl_optional_overwrite!(FeedbackMessage);
 
 impl ToNumbas<numbas::exam::feedback::FeedbackMessage> for FeedbackMessage {
     fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::FeedbackMessage {

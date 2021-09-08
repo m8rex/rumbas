@@ -1,21 +1,22 @@
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStringInput;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite! {
-    pub struct Timing {
-        duration_in_seconds: NoneableNatural, // if "none" (or 0) -> unlimited time
-        allow_pause: RumbasBool,
-        /// Action to do on timeout
-        on_timeout: TimeoutAction,
-        /// Action to do five minutes before timeout
-        timed_warning: TimeoutAction
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "TimingInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Timing {
+    pub duration_in_seconds: NoneableNatural, // if "none" (or 0) -> unlimited time
+    pub allow_pause: bool,
+    /// Action to do on timeout
+    pub on_timeout: TimeoutAction,
+    /// Action to do five minutes before timeout
+    pub timed_warning: TimeoutAction,
 }
 
 impl ToNumbas<numbas::exam::timing::Timing> for Timing {
@@ -75,8 +76,9 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
     }
 }
 
-optional_overwrite! {
-    pub struct TimeoutActionWarn {
-        message: TranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "TimeoutActionWarnInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct TimeoutActionWarn {
+    pub message: TranslatableString,
 }

@@ -151,7 +151,7 @@ fn overwrite_handle_enum(
         impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
             fn overwrite(&mut self, other: &Self){
                 match (self, other) {
-                    #(#overwrite_variants),*
+                    #(#overwrite_variants,)*
                     _ => ()
                 }
             }

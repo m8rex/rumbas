@@ -16,6 +16,7 @@ macro_rules! create_input_alias {
 
 macro_rules! create_rumbas_type {
     ($name: ident, $type: ty) => {
+        //#[deprecated]
         pub type $name = $type;
         create_input_alias!($name, $name);
     };

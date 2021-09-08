@@ -1,12 +1,11 @@
 use crate::question::Question;
 use crate::question::QuestionInput;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use crate::support::yaml::YamlError;
+use rumbas_support::preamble::*;
 use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -14,16 +13,17 @@ use serde::{Deserialize, Serialize};
 pub type QuestionGroupsInput = Vec<Value<QuestionGroupInput>>;
 pub type QuestionGroups = Vec<QuestionGroup>;
 
-optional_overwrite! {
-    pub struct QuestionGroup {
-        /// The name
-        name: TranslatableString,
-        /// The strategy to use to pick the questions to show
-        #[serde(flatten)]
-        picking_strategy: PickingStrategy,
-        /// The questions
-        questions: QuestionPaths
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionGroupInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct QuestionGroup {
+    /// The name
+    pub name: TranslatableString,
+    /// The strategy to use to pick the questions to show
+    #[serde(flatten)]
+    pub picking_strategy: PickingStrategy,
+    /// The questions
+    pub questions: QuestionPaths,
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
@@ -98,10 +98,11 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
     }
 }
 
-optional_overwrite! {
-    pub struct PickingStrategyRandomSubset {
-        pick_questions: RumbasNatural
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "PickingStrategyRandomSubsetInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct PickingStrategyRandomSubset {
+    pick_questions: usize,
 }
 
 // TODO: remove this JsonSchema
@@ -116,6 +117,10 @@ pub struct QuestionPath {
 pub struct QuestionPathInput {
     pub question_name: String,
     pub question_data: QuestionInput,
+}
+
+impl InputInverse for QuestionPath {
+    type Input = QuestionPathInput;
 }
 
 impl Input for QuestionPathInput {
