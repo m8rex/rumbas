@@ -1,25 +1,25 @@
-use crate::support::optional_overwrite::*;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::defaults::DEFAULTS;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-optional_overwrite! {
-    pub struct QuestionNavigation {
-        /// Whether the student can regenerate the question
-        /// Old name was `allow_regenerate`
-        #[serde(alias = "allow_regenerate")]
-        can_regenerate: RumbasBool,
-        /// Whether the title page should be shown.
-        /// Old name was `show_frontpage`
-        #[serde(alias = "show_frontpage")]
-        show_title_page: RumbasBool,
-        /// Whether the student will be asked to confirm when leaving the exam.
-        #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: RumbasBool
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionNavigationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct QuestionNavigation {
+    /// Whether the student can regenerate the question
+    /// Old name was `allow_regenerate`
+    #[serde(alias = "allow_regenerate")]
+    pub can_regenerate: bool,
+    /// Whether the title page should be shown.
+    /// Old name was `show_frontpage`
+    #[serde(alias = "show_frontpage")]
+    pub show_title_page: bool,
+    /// Whether the student will be asked to confirm when leaving the exam.
+    #[serde(alias = "prevent_leaving")]
+    pub confirm_when_leaving: bool,
 }
 
 impl ToNumbas<numbas::question::navigation::Navigation> for QuestionNavigation {

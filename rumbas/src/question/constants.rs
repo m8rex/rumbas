@@ -1,10 +1,9 @@
-use crate::question::variable_test::JMEStringInput;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -19,16 +18,14 @@ macro_rules! builtin_constants {
             ),+
         }
     ) => {
-        optional_overwrite! {
+        $(
+            #[$outer]
+        )*
+        pub struct $struct {
             $(
-                #[$outer]
-            )*
-            pub struct $struct {
-                $(
-                    $(#[$inner])*
-                    $field: $type
-                ),*
-            }
+                $(#[$inner])*
+                $field: $type
+            ),*
         }
         impl ToNumbas<std::collections::HashMap<String, bool>> for $struct {
             fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
@@ -52,6 +49,9 @@ macro_rules! builtin_constants {
 }
 
 builtin_constants! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "BuiltinConstantsInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
@@ -63,16 +63,17 @@ builtin_constants! {
     }
 }
 
-optional_overwrite! {
-    /// A custom constant
-    pub struct CustomConstant {
-        /// The name of the constant
-        name: RumbasString,
-        /// The value of the constant
-        value: JMEString,
-        /// The tex code use to display the constant
-        tex: RumbasString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomConstantInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+/// A custom constant
+pub struct CustomConstant {
+    /// The name of the constant
+    name: RumbasString,
+    /// The value of the constant
+    value: JMEString,
+    /// The tex code use to display the constant
+    tex: RumbasString,
 }
 
 impl ToNumbas<numbas::question::constants::QuestionConstant> for CustomConstant {

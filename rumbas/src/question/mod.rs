@@ -12,34 +12,22 @@ pub mod variable;
 pub mod variable_test;
 
 use crate::question::custom_part_type::CustomPartTypeDefinitionPaths;
-use crate::question::custom_part_type::CustomPartTypeDefinitionPathsInput;
-use crate::question::variable_test::VariablesTestInput;
-use crate::support::optional_overwrite::*;
-use crate::support::template::{TemplateFile, TemplateFileInput};
+use crate::support::template::TemplateFile;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use crate::support::yaml::{YamlError, YamlResult};
 use constants::BuiltinConstants;
-use constants::BuiltinConstantsInput;
 use constants::CustomConstants;
-use constants::CustomConstantsInput;
 use extension::Extensions;
-use extension::ExtensionsInput;
 use function::Function;
 use function::FunctionInput;
 use navigation::QuestionNavigation;
-use navigation::QuestionNavigationInput;
-use part::question_part::QuestionPartInput;
 use part::question_part::QuestionParts;
-use part::question_part::QuestionPartsInput;
 use preamble::Preamble;
-use preamble::PreambleInput;
 use resource::ResourcePaths;
-use resource::ResourcePathsInput;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -50,29 +38,29 @@ use variable::VariableRepresentationInput;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
-optional_overwrite! {
-    pub struct Question {
-        /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
-        statement: ContentAreaTranslatableString,
-        /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
-        /// The advice area is normally used to present a worked solution to the question.
-        advice: ContentAreaTranslatableString,
-        parts: QuestionParts,
-        builtin_constants: BuiltinConstants,
-        custom_constants: CustomConstants,
-        variables: StringToVariableRepresentation,
-        variables_test: VariablesTest,
-        functions: StringToFunction,
-        preamble: Preamble,
-        navigation: QuestionNavigation,
-        extensions: Extensions,
-        /// The names of the topics used in diagnostic exams that this question belongs to
-        diagnostic_topic_names: TranslatableStrings, // TODO: validate? / warnings?
-        resources: ResourcePaths,
-        /// The custom part types used in this exam
-        custom_part_types: CustomPartTypeDefinitionPaths
-        //TODO a lot of options
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Question {
+    /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
+    pub statement: ContentAreaTranslatableString,
+    /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
+    /// The advice area is normally used to present a worked solution to the question.
+    pub advice: ContentAreaTranslatableString,
+    pub parts: QuestionParts,
+    pub builtin_constants: BuiltinConstants,
+    pub custom_constants: CustomConstants,
+    pub variables: StringToVariableRepresentation,
+    pub variables_test: VariablesTest,
+    pub functions: StringToFunction,
+    pub preamble: Preamble,
+    pub navigation: QuestionNavigation,
+    pub extensions: Extensions,
+    /// The names of the topics used in diagnostic exams that this question belongs to
+    pub diagnostic_topic_names: TranslatableStrings, // TODO: validate? / warnings?
+    pub resources: ResourcePaths,
+    /// The custom part types used in this exam
+    pub custom_part_types: CustomPartTypeDefinitionPaths, //TODO a lot of options
 }
 
 type StringToVariableRepresentationInput = HashMap<String, Value<VariableRepresentationInput>>;
@@ -208,13 +196,14 @@ impl QuestionInput {
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(rename_all = "snake_case")]
-    #[serde(tag = "type")]
-    pub enum QuestionFileType {
-        Template(TemplateFile),
-        Normal(BoxQuestion)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionFileTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum QuestionFileType {
+    Template(TemplateFile),
+    Normal(BoxQuestion),
 }
 
 type BoxQuestion = Box<Question>;
