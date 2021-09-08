@@ -1,15 +1,15 @@
 use crate::support::optional_overwrite::*;
-use crate::support::rumbas_types::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 
-optional_overwrite! {
-    pub struct Locale {
-        name: RumbasString, //TODO: document names best used for shareability?
-        /// The locale to use in the Numbas interface
-        numbas_locale: SupportedLocale
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "LocaleInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct Locale {
+    pub name: String, //TODO: document names best used for shareability?
+    /// The locale to use in the Numbas interface
+    pub numbas_locale: SupportedLocale,
 }
 
 pub type LocalesInput = Vec<Value<LocaleInput>>;
@@ -17,6 +17,8 @@ pub type Locales = Vec<Locale>;
 
 macro_rules! create_support_locale {
     ($($name: ident => $key: literal),*) => {
+        #[derive(Input, Overwrite, RumbasCheck)]
+        #[input(name = "SupportedLocaleInput")]
         /// Locales supported by Numbas
         #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
         pub enum SupportedLocale {
@@ -25,7 +27,6 @@ macro_rules! create_support_locale {
                 $name
             ),*
         }
-        impl_optional_overwrite!(SupportedLocale);
 
         //TODO? macro to reduce duplication?
         impl SupportedLocale {

@@ -1,12 +1,9 @@
 use crate::support::file_reference::FileString;
-use crate::support::file_reference::FileStringInput;
-use crate::support::optional_overwrite::*;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -80,22 +77,23 @@ impl NormalNavigation {
     }
 }
 
-optional_overwrite! {
-    pub struct SequentialNavigation {
-        /// (flattened field) The data shared between all types of navigation
-        #[serde(flatten)]
-        shared_data: NavigationSharedData,
-        /// Whether the student can move back to previous question
-        /// Old name was `reverse`
-        #[serde(alias = "reverse")]
-        can_move_to_previous: RumbasBool,
-        /// Whether the student can jump to any question.
-        browsing_enabled: RumbasBool,
-        /// When the results page should be shown
-        show_results_page: ShowResultsPage,
-        /// Action to execute when a student changes question or tries to end the exam.
-        on_leave: LeaveAction
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "SequentialNavigationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct SequentialNavigation {
+    /// (flattened field) The data shared between all types of navigation
+    #[serde(flatten)]
+    pub shared_data: NavigationSharedData,
+    /// Whether the student can move back to previous question
+    /// Old name was `reverse`
+    #[serde(alias = "reverse")]
+    pub can_move_to_previous: bool,
+    /// Whether the student can jump to any question.
+    pub browsing_enabled: bool,
+    /// When the results page should be shown
+    pub show_results_page: ShowResultsPage,
+    /// Action to execute when a student changes question or tries to end the exam.
+    pub on_leave: LeaveAction,
 }
 
 impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation {
@@ -111,12 +109,13 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation
     }
 }
 
-optional_overwrite! {
-    pub struct MenuNavigation {
-        /// (flattened field) The data shared between all types of navigation
-        #[serde(flatten)]
-        shared_data: NavigationSharedData
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MenuNavigationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MenuNavigation {
+    /// (flattened field) The data shared between all types of navigation
+    #[serde(flatten)]
+    pub shared_data: NavigationSharedData,
 }
 
 impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
@@ -125,14 +124,15 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
     }
 }
 
-optional_overwrite! {
-    pub struct DiagnosticNavigation {
-        /// (flattened field) The data shared between all types of navigation
-        #[serde(flatten)]
-        shared_data: NavigationSharedData,
-        /// Action to execute when a student changes question or tries to end the exam.
-        on_leave: LeaveAction
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "DiagnosticNavigationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct DiagnosticNavigation {
+    /// (flattened field) The data shared between all types of navigation
+    #[serde(flatten)]
+    pub shared_data: NavigationSharedData,
+    /// Action to execute when a student changes question or tries to end the exam.
+    pub on_leave: LeaveAction,
 }
 
 impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
@@ -175,13 +175,14 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::exam::Exam {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ShowResultsPageInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowResultsPage {
     OnCompletion,
     Never,
 }
-impl_optional_overwrite!(ShowResultsPage);
 
 impl ToNumbas<numbas::exam::navigation::ShowResultsPage> for ShowResultsPage {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::navigation::ShowResultsPage {
@@ -254,35 +255,37 @@ impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
     }
 }
 
-optional_overwrite! {
-    pub struct LeaveActionMessage {
-        message: TranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "LeaveActionMessageInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct LeaveActionMessage {
+    pub message: TranslatableString,
 }
 
-optional_overwrite! {
-    pub struct NavigationSharedData {
-        /// Password to begin the exam
-        start_password: FileString, //TODO: Noneable, but "" is none in this case?
-        /// Whether the student can regenerate questions
-        /// Old name was `allow_regenerate`
-        #[serde(alias = "allow_regenerate")]
-        can_regenerate: RumbasBool,
-        /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
-        /// Old name was `allow_steps`
-        #[serde(alias = "allow_steps")]
-        show_steps: RumbasBool,
-        /// Whether the title page should be shown.
-        /// Old name was `show_frontpage`
-        #[serde(alias = "show_frontpage")]
-        show_title_page: RumbasBool,
-        /// Whether the student will be asked to confirm when leaving the exam.
-        #[serde(alias = "prevent_leaving")]
-        confirm_when_leaving: RumbasBool,
-        show_names_of_question_groups: RumbasBool,
-        /// Whether the student is allowed to print the exam
-        allow_printing: RumbasBool
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "NavigationSharedDataInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct NavigationSharedData {
+    /// Password to begin the exam
+    pub start_password: FileString, //TODO: Noneable, but "" is none in this case?
+    /// Whether the student can regenerate questions
+    /// Old name was `allow_regenerate`
+    #[serde(alias = "allow_regenerate")]
+    pub can_regenerate: bool,
+    /// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
+    /// Old name was `allow_steps`
+    #[serde(alias = "allow_steps")]
+    pub show_steps: bool,
+    /// Whether the title page should be shown.
+    /// Old name was `show_frontpage`
+    #[serde(alias = "show_frontpage")]
+    pub show_title_page: bool,
+    /// Whether the student will be asked to confirm when leaving the exam.
+    #[serde(alias = "prevent_leaving")]
+    pub confirm_when_leaving: bool,
+    pub show_names_of_question_groups: bool,
+    /// Whether the student is allowed to print the exam
+    pub allow_printing: bool,
 }
 
 impl ToRumbas<NavigationSharedData> for numbas::exam::exam::Exam {

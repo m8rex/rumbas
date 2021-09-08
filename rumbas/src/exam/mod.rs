@@ -11,18 +11,16 @@ pub mod timing;
 
 use crate::exam::diagnostic::convert_diagnostic_numbas_exam;
 use crate::exam::diagnostic::DiagnosticExam;
-use crate::exam::diagnostic::DiagnosticExamInput;
 use crate::exam::locale::Locale;
 use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
-use crate::exam::normal::NormalExamInput;
 use crate::exam::question_group::QuestionPath;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
-use crate::support::optional_overwrite::*;
 use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -30,13 +28,14 @@ use std::fmt::Display;
 use std::fs;
 use std::path::Path;
 
-optional_overwrite_enum! {
-    #[serde(rename_all = "snake_case")]
-    #[serde(tag = "type")]
-    pub enum Exam {
-        Normal(NormalExam),
-        Diagnostic(DiagnosticExam)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ExamInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum Exam {
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
 }
 
 impl ToNumbas<numbas::exam::exam::Exam> for Exam {
@@ -129,14 +128,15 @@ pub enum ParseError {
     IOError(std::io::Error),
 }
 
-optional_overwrite_enum! {
-    #[serde(rename_all = "snake_case")]
-    #[serde(tag = "type")]
-    pub enum ExamFileType {
-        Template(TemplateFile),
-        Normal(NormalExam),
-        Diagnostic(DiagnosticExam)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "ExamFileTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum ExamFileType {
+    Template(TemplateFile),
+    Normal(NormalExam),
+    Diagnostic(DiagnosticExam),
 }
 
 impl ExamFileTypeInput {

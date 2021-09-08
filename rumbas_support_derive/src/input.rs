@@ -301,9 +301,11 @@ fn input_handle_enum_input_variants(
                     }
                 }
                 ast::Style::Tuple => {
+                    let items = quote!(#(<#input_type_tys as InputInverse>::Input),*);
+
                     quote! {
                         #(#variant_attributes)*
-                        #variant_ident(#(ValueType<<#input_type_tys as InputInverse>::Input>),*)
+                        #variant_ident(#items)
                     }
                 }
                 ast::Style::Struct => {
