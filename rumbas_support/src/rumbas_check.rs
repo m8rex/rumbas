@@ -69,6 +69,8 @@ impl_rumbas_check!(u128, u64, u32, u16, u8, usize);
 impl_rumbas_check!(i128, i64, i32, i16, i8, isize);
 impl_rumbas_check!(bool);
 
+impl_rumbas_check!(std::path::PathBuf);
+
 impl_rumbas_check!(numbas::jme::ContentAreaString);
 impl_rumbas_check!(numbas::jme::EmbracedJMEString);
 impl_rumbas_check!(numbas::jme::JMEString);

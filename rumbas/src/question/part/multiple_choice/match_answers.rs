@@ -1,17 +1,12 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::part::question_part::VariableReplacementStrategyInput;
-use crate::question::QuestionPartInput;
 use crate::question::QuestionParts;
-use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
@@ -24,6 +19,9 @@ use serde::{Deserialize, Serialize};
 use std::convert::Into;
 
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartMatchAnswersWithItemsInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartMatchAnswersWithItems {
         /// Old name was `answers`
         #[serde(alias = "answers")]

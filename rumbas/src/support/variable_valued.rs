@@ -45,6 +45,10 @@ impl<T: Input> Input for VariableValued<T> {
     }
 }
 
+impl<T: InputInverse> InputInverse for VariableValued<T> {
+    type Input = VariableValued<<T as InputInverse>::Input>;
+}
+
 impl<T: Overwrite<T> + DeserializeOwned> Overwrite<VariableValued<T>> for VariableValued<T> {
     fn overwrite(&mut self, other: &VariableValued<T>) {
         match (self, other) {

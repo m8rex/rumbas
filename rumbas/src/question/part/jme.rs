@@ -1,42 +1,40 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
 use crate::question::QuestionParts;
-use crate::question::QuestionPartsInput;
 use crate::support::file_reference::{FileString, JMEFileString};
 use crate::support::file_reference::{FileStringInput, JMEFileStringInput};
-use crate::support::optional_overwrite::*;
+use crate::support::optional_overwrite::Noneable;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::EmbracedJMETranslatableString;
-use crate::support::translatable::EmbracedJMETranslatableStringInput;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartJMEInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartJME {
         answer: EmbracedJMETranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
-        show_preview: RumbasBool,
+        show_preview: bool,
         answer_check: CheckingType,
-        failure_rate:RumbasFloat,
+        failure_rate: f64,
         vset_range: RumbasFloats2, // TODO: seperate (flattened) struct for vset items & checking items etc?
         vset_range_points: RumbasNatural,
-        check_variable_names: RumbasBool,
-        single_letter_variables: RumbasBool,
-        allow_unknown_functions: RumbasBool,
-        implicit_function_composition: RumbasBool,
+        check_variable_names: bool,
+        single_letter_variables: bool,
+        allow_unknown_functions: bool,
+        implicit_function_composition: bool,
         max_length: NoneableJMELengthRestriction,
         min_length: NoneableJMELengthRestriction,
         must_have: NoneableJMEStringRestriction,
@@ -128,32 +126,33 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
 
 // See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
 //TODO: rename etc
-optional_overwrite! {
-    pub struct JMEAnswerSimplification {
-        simplify_basic: RumbasBool,
-        simplify_unit_factor: RumbasBool,
-        simplify_unit_power: RumbasBool,
-        simplify_unit_denominator: RumbasBool,
-        simplify_zero_factor: RumbasBool,
-        simplify_zero_term: RumbasBool,
-        simplify_zero_power: RumbasBool,
-        simplify_zero_base: RumbasBool,
-        collect_numbers: RumbasBool,
-        constants_first: RumbasBool,
-        simplify_sqrt_products: RumbasBool,
-        simplify_sqrt_division: RumbasBool,
-        simplify_sqrt_square: RumbasBool,
-        simplify_other_numbers: RumbasBool,
-        simplify_no_leading_minus: RumbasBool,
-        simplify_fractions: RumbasBool,
-        simplify_trigonometric: RumbasBool,
-        cancel_terms: RumbasBool,
-        cancel_factors: RumbasBool,
-        collect_like_fractions: RumbasBool,
-        order_canonical: RumbasBool,
-        use_times_dot: RumbasBool, // Use \cdot instead of \times
-        expand_brackets: RumbasBool
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMEAnswerSimplificationInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMEAnswerSimplification {
+    simplify_basic: bool,
+    simplify_unit_factor: bool,
+    simplify_unit_power: bool,
+    simplify_unit_denominator: bool,
+    simplify_zero_factor: bool,
+    simplify_zero_term: bool,
+    simplify_zero_power: bool,
+    simplify_zero_base: bool,
+    collect_numbers: bool,
+    constants_first: bool,
+    simplify_sqrt_products: bool,
+    simplify_sqrt_division: bool,
+    simplify_sqrt_square: bool,
+    simplify_other_numbers: bool,
+    simplify_no_leading_minus: bool,
+    simplify_fractions: bool,
+    simplify_trigonometric: bool,
+    cancel_terms: bool,
+    cancel_factors: bool,
+    collect_like_fractions: bool,
+    order_canonical: bool,
+    use_times_dot: bool, // Use \cdot instead of \times
+    expand_brackets: bool,
 }
 
 // TODO: macro?
@@ -448,10 +447,11 @@ impl ToRumbas<JMEAnswerSimplification>
     }
 }
 
-optional_overwrite! {
-    pub struct CheckingTypeDataFloat {
-        max_difference: RumbasFloat
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CheckingTypeDataFloatInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CheckingTypeDataFloat {
+    max_difference: f64,
 }
 
 impl
@@ -470,10 +470,11 @@ impl
     }
 }
 
-optional_overwrite! {
-    pub struct CheckingTypeDataNatural {
-        amount: RumbasNatural
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CheckingTypeDataNaturalInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct CheckingTypeDataNatural {
+    amount: usize,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for CheckingTypeDataNatural {
@@ -484,15 +485,16 @@ impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for Check
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(rename_all = "snake_case")]
-    #[serde(tag = "type")]
-    pub enum CheckingType {
-        RelativeDifference(CheckingTypeDataFloat),
-        AbsoluteDifference(CheckingTypeDataFloat),
-        DecimalPlaces(CheckingTypeDataNatural),
-        SignificantFigures(CheckingTypeDataNatural)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CheckingTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "type")]
+pub enum CheckingType {
+    RelativeDifference(CheckingTypeDataFloat),
+    AbsoluteDifference(CheckingTypeDataFloat),
+    DecimalPlaces(CheckingTypeDataNatural),
+    SignificantFigures(CheckingTypeDataNatural),
 }
 
 impl ToNumbas<numbas::question::part::jme::JMECheckingType> for CheckingType {
@@ -547,12 +549,13 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
     }
 }
 
-optional_overwrite! {
-    pub struct JMERestriction {
-        // name: TranslatableString,
-        partial_credit: RumbasFloat, //TODO, is number, so maybe usize?
-        message: TranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMERestrictionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMERestriction {
+    // name: TranslatableString,
+    partial_credit: RumbasFloat, //TODO, is number, so maybe usize?
+    message: TranslatableString,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMERestriction> for JMERestriction {
@@ -575,12 +578,13 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
     }
 }
 
-optional_overwrite! {
-    pub struct JMELengthRestriction {
-        #[serde(flatten)]
-        restriction: JMERestriction,
-        length: RumbasNatural
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMELengthRestrictionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMELengthRestriction {
+    #[serde(flatten)]
+    restriction: JMERestriction,
+    length: RumbasNatural,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMELengthRestriction> for JMELengthRestriction {
@@ -605,13 +609,14 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
     }
 }
 
-optional_overwrite! {
-    pub struct JMEStringRestriction {
-        #[serde(flatten)]
-        restriction: JMERestriction,
-        show_strings: RumbasBool,
-        strings: TranslatableStrings
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMEStringRestrictionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMEStringRestriction {
+    #[serde(flatten)]
+    restriction: JMERestriction,
+    show_strings: bool,
+    strings: TranslatableStrings,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEStringRestriction> for JMEStringRestriction {
@@ -634,13 +639,14 @@ impl ToRumbas<JMEStringRestriction> for numbas::question::part::jme::JMEStringRe
     }
 }
 
-optional_overwrite! {
-    pub struct JMEPatternRestriction {
-        partial_credit: RumbasFloat, //TODO, is number, so maybe usize?
-        message: TranslatableString,
-        pattern: RumbasString, //TODO type? If string -> InputString?
-        name_to_compare: RumbasString //TODO, translateable?
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMEPatternRestrictionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMEPatternRestriction {
+    partial_credit: f64, //TODO, is number, so maybe usize?
+    message: TranslatableString,
+    pattern: String,         //TODO type? If string -> InputString?
+    name_to_compare: String, //TODO, translateable?
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEPatternRestriction> for JMEPatternRestriction {
@@ -665,11 +671,12 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
     }
 }
 
-optional_overwrite! {
-    pub struct JMEValueGenerator {
-        name: FileString,
-        value: JMEFileString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMEValueGeneratorInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMEValueGenerator {
+    name: FileString,
+    value: JMEFileString,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEValueGenerator> for JMEValueGenerator {

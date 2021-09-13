@@ -72,6 +72,8 @@ impl_overwrite!(u128, u64, u32, u16, u8, usize);
 impl_overwrite!(i128, i64, i32, i16, i8, isize);
 impl_overwrite!(bool);
 
+impl_overwrite!(std::path::PathBuf);
+
 impl_overwrite!(numbas::jme::ContentAreaString);
 impl_overwrite!(numbas::jme::EmbracedJMEString);
 impl_overwrite!(numbas::jme::JMEString);

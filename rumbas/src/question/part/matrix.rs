@@ -1,10 +1,8 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
 use crate::question::QuestionParts;
-use crate::question::QuestionPartsInput;
-use crate::support::optional_overwrite::*;
+use crate::support::noneable::Noneable;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
@@ -12,23 +10,26 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartMatrixInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartMatrix {
         correct_answer: Primitive,
         dimensions: QuestionPartMatrixDimensions,
 
         /// If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.
-        max_absolute_deviation: RumbasFloat,
+        max_absolute_deviation: f64,
         /// If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.
-        mark_partial_by_cells: RumbasBool,
+        mark_partial_by_cells: bool,
 
-        display_correct_as_fraction: RumbasBool,
-        allow_fractions: RumbasBool
-        // todo: precision
+        display_correct_as_fraction: bool,
+        allow_fractions: bool // todo: precision
     }
 }
 
@@ -81,11 +82,12 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
     }
 }
 
-optional_overwrite! {
-    pub struct QuestionPartMatrixDimensions {
-        rows: QuestionPartMatrixDimension,
-        columns: QuestionPartMatrixDimension
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionPartMatrixDimensionsInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct QuestionPartMatrixDimensions {
+    rows: QuestionPartMatrixDimension,
+    columns: QuestionPartMatrixDimension,
 }
 
 impl QuestionPartMatrixDimensions {
@@ -94,11 +96,12 @@ impl QuestionPartMatrixDimensions {
     }
 }
 
-optional_overwrite_enum! {
-    pub enum QuestionPartMatrixDimension {
-        Fixed(VariableValuedNatural),
-        Resizable(BoxQuestionPartMatrixRangedDimension)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionPartMatrixDimensionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub enum QuestionPartMatrixDimension {
+    Fixed(VariableValuedNatural),
+    Resizable(BoxQuestionPartMatrixRangedDimension),
 }
 
 type BoxQuestionPartMatrixRangedDimension = Box<QuestionPartMatrixRangedDimension>;
@@ -150,13 +153,14 @@ impl QuestionPartMatrixDimension {
     }
 }
 
-optional_overwrite! {
-    pub struct QuestionPartMatrixRangedDimension {
-        /// The default size
-        default: VariableValuedNatural,
-        /// The minimal size
-        min: VariableValuedNatural,
-        /// The maximal size, if this is none, there is no limit
-        max: NoneableVariableValuedNatural
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionPartMatrixRangedDimensionInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct QuestionPartMatrixRangedDimension {
+    /// The default size
+    default: VariableValuedNatural,
+    /// The minimal size
+    min: VariableValuedNatural,
+    /// The maximal size, if this is none, there is no limit
+    max: NoneableVariableValuedNatural,
 }

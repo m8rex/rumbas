@@ -3,7 +3,9 @@ use crate::support::to_rumbas::ToRumbas;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
+use std::path::PathBuf;
 
 // TODO Optional overwrite
 // TODO TranslatableString
@@ -16,7 +18,7 @@ use std::hash::{Hash, Hasher};
 #[serde(into = "String")]
 pub struct ResourcePath {
     pub resource_name: String,
-    pub resource_path: std::path::PathBuf,
+    pub resource_path: PathBuf,
 }
 
 pub type ResourcePaths = Vec<ResourcePath>;
@@ -45,19 +47,34 @@ impl ToRumbas<ResourcePath> for numbas::question::resource::Resource {
     }
 }
 
-impl std::convert::TryFrom<String> for ResourcePath {
+impl std::convert::TryFrom<String> for ResourcePathInput {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
         if path.exists() {
-            Ok(ResourcePath {
-                resource_name: s,
-                resource_path: path,
+            Ok(ResourcePathInput {
+                resource_name: Value::Normal(s),
+                resource_path: Value::Normal(path),
             })
         } else {
             Err(format!("Missing resource {}", path.display()))
         }
+    }
+}
+
+impl std::convert::From<ResourcePathInput> for String {
+    fn from(q: ResourcePathInput) -> Self {
+        q.resource_name.unwrap()
+    }
+}
+
+impl std::convert::TryFrom<String> for ResourcePath {
+    type Error = String;
+
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        let data: ResourcePathInput = s.try_into()?;
+        Ok(data.to_normal())
     }
 }
 
