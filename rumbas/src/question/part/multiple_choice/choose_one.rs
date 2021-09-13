@@ -4,9 +4,7 @@ use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::part::question_part::VariableReplacementStrategyInput;
-use crate::question::QuestionPartInput;
 use crate::question::QuestionParts;
-use crate::question::QuestionPartsInput;
 use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
@@ -24,6 +22,9 @@ use std::convert::Into;
 
 //TODO: defaults
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartChooseOneInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartChooseOne {
         /// Old name was `answers`
         #[serde(alias = "answers")]

@@ -190,6 +190,8 @@ impl_input!(u128, u64, u32, u16, u8, usize);
 impl_input!(i128, i64, i32, i16, i8, isize);
 impl_input!(bool);
 
+impl_input!(std::path::PathBuf);
+
 impl_input!(numbas::jme::ContentAreaString);
 impl_input!(numbas::jme::EmbracedJMEString);
 impl_input!(numbas::jme::JMEString);

@@ -289,31 +289,30 @@ macro_rules! question_part_type {
                 $field: ident: $type: ty
              ),+)?
         }
-    )=> {
-        optional_overwrite! {
-            $(#[$outer])*
-            pub struct $struct {
-                marks: Primitive, // TODO: strict?
-                prompt: ContentAreaTranslatableString,
-                use_custom_name: RumbasBool,
-                custom_name: RumbasString, //TODO Translatable?
-                steps_penalty: RumbasNatural,
-                enable_minimum_marks: RumbasBool,
-                minimum_marks: RumbasNatural, //TODO: separate?
-                show_correct_answer: RumbasBool,
-                show_feedback_icon: RumbasBool,
-                variable_replacement_strategy: VariableReplacementStrategy,
-                adaptive_marking_penalty: RumbasNatural,
-                custom_marking_algorithm_notes: JMENotes,
-                extend_base_marking_algorithm: RumbasBool,
-                steps: QuestionParts
-                $(,
-                $(
-                    $(#[$inner])*
-                    $field: $type
-                ),+
-                )?
-            }
+    )=>
+    {
+        $(#[$outer])*
+        pub struct $struct {
+            marks: Primitive, // TODO: strict?
+            prompt: ContentAreaTranslatableString,
+            use_custom_name: bool,
+            custom_name: String, //TODO Translatable?
+            steps_penalty: usize,
+            enable_minimum_marks: bool,
+            minimum_marks: usize, //TODO: separate?
+            show_correct_answer: bool,
+            show_feedback_icon: bool,
+            variable_replacement_strategy: VariableReplacementStrategy,
+            adaptive_marking_penalty: usize,
+            custom_marking_algorithm_notes: JMENotes,
+            extend_base_marking_algorithm: bool,
+            steps: QuestionParts
+            $(,
+            $(
+                $(#[$inner])*
+                $field: $type
+            ),+
+            )?
         }
         impl ToNumbas<numbas::question::part::QuestionPartSharedData> for $struct {
             fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartSharedData {
@@ -338,7 +337,7 @@ macro_rules! question_part_type {
         }
         paste::paste! {
             impl [<$struct Input>] {
-                pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
+                pub fn get_steps(&mut self) -> &mut Value<Vec<Value<<crate::question::part::question_part::QuestionPart as InputInverse>::Input>>> {
                     &mut self.steps
                 }
             }
@@ -347,8 +346,11 @@ macro_rules! question_part_type {
 }
 
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartCustomInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartCustom {
-        r#type: RumbasString,
+        r#type: String,
         settings: MapStringToCustomPartInputTypeValue
     }
 }
@@ -358,12 +360,13 @@ type MapStringToCustomPartInputTypeValueInput =
 type MapStringToCustomPartInputTypeValue =
     std::collections::HashMap<String, CustomPartInputTypeValue>;
 
-optional_overwrite_enum! {
-    #[serde(untagged)]
-    pub enum CustomPartInputTypeValue {
-        CheckBox(RumbasBool),
-        Code(RumbasString)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "CustomPartInputTypeValueInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum CustomPartInputTypeValue {
+    CheckBox(bool),
+    Code(RumbasString),
 }
 
 impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartInputTypeValue {

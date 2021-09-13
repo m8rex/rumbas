@@ -125,9 +125,9 @@ impl std::convert::From<String> for VariableStringRepresentationInput {
 #[input(name = "RangeDataInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct RangeData {
-    from: RumbasFloat,
-    to: RumbasFloat,
-    step: RumbasFloat,
+    pub from: RumbasFloat,
+    pub to: RumbasFloat,
+    pub step: RumbasFloat,
 }
 
 impl RangeData {
@@ -242,10 +242,10 @@ mod test {
 #[input(name = "VariableInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Variable {
-    definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
-    description: RumbasString,
-    template_type: VariableTemplateType,
-    group: RumbasString, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
+    pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
+    pub description: String,
+    pub template_type: VariableTemplateType,
+    pub group: String, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
 
 type BoxVariableInput = Box<VariableInput>;

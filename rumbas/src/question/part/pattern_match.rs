@@ -18,6 +18,9 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
+    #[derive(Input, Overwrite, RumbasCheck)]
+    #[input(name = "QuestionPartPatternMatchInput")]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartPatternMatch {
         case_sensitive: RumbasBool,
         partial_credit: RumbasFloat,
