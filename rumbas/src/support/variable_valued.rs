@@ -1,7 +1,7 @@
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};

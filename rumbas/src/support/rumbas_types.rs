@@ -1,5 +1,4 @@
 use crate::support::noneable::*;
-use crate::support::optional_overwrite::*;
 use crate::support::translatable::TranslatableStrings;
 use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
@@ -16,7 +15,7 @@ macro_rules! create_input_alias {
 
 macro_rules! create_rumbas_type {
     ($name: ident, $type: ty) => {
-        //#[deprecated]
+        #[deprecated]
         pub type $name = $type;
         create_input_alias!($name, $name);
     };

@@ -7,13 +7,14 @@ use std::collections::HashMap;
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-optional_overwrite! {
-    pub struct TemplateFile {
-        #[serde(rename = "template")]
-        relative_template_path: RumbasString,
-        #[serde(flatten)]
-        data: TemplateData
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "TemplateFileInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct TemplateFile {
+    #[serde(rename = "template")]
+    pub relative_template_path: RumbasString,
+    #[serde(flatten)]
+    pub data: TemplateData,
 }
 
 type TemplateData = HashMap<String, MyYamlValue>;
@@ -44,6 +45,10 @@ impl Input for MyYamlValue {
         InputCheckResult::empty()
     }
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+}
+
+impl InputInverse for MyYamlValue {
+    type Input = MyYamlValue;
 }
 
 impl JsonSchema for MyYamlValue {

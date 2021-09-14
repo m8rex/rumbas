@@ -1,18 +1,15 @@
-use crate::support::optional_overwrite::*;
 use crate::support::to_numbas::impl_to_numbas;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::{JMETranslatableString, TranslatableString};
-use crate::support::translatable::{JMETranslatableStringInput, TranslatableStringInput};
 use numbas::question::function::FunctionType as NumbasFunctionType;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // TODO: don't directly use numbas type
 type StringFunctionTypeTuple = (String, NumbasFunctionType);
 type StringFunctionTypeTuples = Vec<StringFunctionTypeTuple>;
-type StringFunctionTypeTuplesInput = Vec<Value<StringFunctionTypeTuple>>;
-type NumbasFunctionTypeInput = NumbasFunctionType;
 
 impl_to_numbas!(NumbasFunctionType);
 

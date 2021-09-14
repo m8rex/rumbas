@@ -1,21 +1,17 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
 use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::support::answer_style::AnswerStyle as NumbasAnswerStyle;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-
-type NumbasAnswerStyleInput = NumbasAnswerStyle;
 
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck)]
@@ -99,18 +95,22 @@ impl ToRumbas<QuestionPartNumberEntry>
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(untagged)]
-    pub enum NumberEntryAnswer {
-        Normal(FileString), //TODO: filestrings?
-        Range(NumberEntryAnswerRange)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "NumberEntryAnswerInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum NumberEntryAnswer {
+    Normal(FileString), //TODO: filestrings?
+    Range(NumberEntryAnswerRange),
 }
-optional_overwrite! { // TODO, better (add toRumbas etc)
-    pub struct NumberEntryAnswerRange {
-        from: FileString,
-        to: FileString
-    }
+
+// TODO, better (add toRumbas etc)
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "NumberEntryAnswerRangeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct NumberEntryAnswerRange {
+    from: FileString,
+    to: FileString,
 }
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
@@ -155,7 +155,9 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "AnswerStyleInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub enum AnswerStyle {
     /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "english")]
@@ -185,7 +187,6 @@ pub enum AnswerStyle {
     #[serde(rename = "swiss")]
     Swiss,
 }
-impl_optional_overwrite!(AnswerStyle);
 
 impl ToNumbas<numbas::support::answer_style::AnswerStyle> for AnswerStyle {
     fn to_numbas(&self, _locale: &str) -> numbas::support::answer_style::AnswerStyle {

@@ -8,6 +8,7 @@ use rumbas_support::overwrite::Overwrite;
 use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
+use rumbas_support::value::ValueType;
 use serde::Deserialize;
 
 #[derive(Input, RumbasCheck)]
@@ -35,8 +36,11 @@ mod test {
         let _test2 = Test2(vec![Test(true, 64.8)], 65.0);
 
         let _test2 = Test2Input(
-            Value::Normal(vec![TestInput(Value::Normal(true), Value::Normal(64.8))]),
-            Value::Normal(65.0),
+            ValueType::Normal(vec![Value::Normal(TestInput(
+                ValueType::Normal(true),
+                ValueType::Normal(64.8),
+            ))]),
+            ValueType::Normal(65.0),
         );
     }
 }

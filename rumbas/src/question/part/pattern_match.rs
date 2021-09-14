@@ -3,7 +3,6 @@ use crate::question::part::question_part::{
     QuestionPartInput, VariableReplacementStrategy, VariableReplacementStrategyInput,
 };
 use crate::question::part::question_part::{QuestionParts, QuestionPartsInput};
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
@@ -14,6 +13,7 @@ use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -30,7 +30,6 @@ question_part_type! {
     }
 }
 type PatternMatchMode = numbas::question::part::pattern_match::PatternMatchMode;
-type PatternMatchModeInput = PatternMatchMode;
 
 impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     for QuestionPartPatternMatch

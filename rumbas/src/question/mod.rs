@@ -63,10 +63,8 @@ pub struct Question {
     pub custom_part_types: CustomPartTypeDefinitionPaths, //TODO a lot of options
 }
 
-type StringToVariableRepresentationInput = HashMap<String, Value<VariableRepresentationInput>>;
 type StringToVariableRepresentation = HashMap<String, VariableRepresentation>;
 
-type StringToFunctionInput = HashMap<String, Value<FunctionInput>>;
 type StringToFunction = HashMap<String, Function>;
 
 impl ToNumbas<numbas::question::question::Question> for Question {
@@ -207,7 +205,6 @@ pub enum QuestionFileType {
 }
 
 type BoxQuestion = Box<Question>;
-type BoxQuestionInput = Box<QuestionInput>;
 
 impl QuestionFileType {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {

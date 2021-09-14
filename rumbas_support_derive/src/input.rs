@@ -44,22 +44,17 @@ pub struct InputReceiver {
     input_name: String,
 }
 
-fn get_input_type(t: &syn::Type) -> proc_macro2::Ident {
+fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
     match t {
         syn::Type::Path(p) => {
-            let ident_opt = p.path.get_ident();
-            if let Some(ident) = ident_opt {
-                ident.to_owned()
-            } else {
-                panic!("{:?} is not a valid type for an Input struct.", p)
-            }
+            quote!(#p)
         }
         syn::Type::Group(g) => get_input_type(&*g.elem),
-        _ => panic!("{:?} is not a valid type for an Input struct.", t),
+        _ => panic!("{:?} is not a valid type for an Input struct.", t), // Needed?
     }
 }
 
-pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Ident> {
+pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::TokenStream> {
     fields
         .iter()
         .enumerate()

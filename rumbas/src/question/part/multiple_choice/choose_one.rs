@@ -1,21 +1,16 @@
 use super::{extract_multiple_choice_answer_data, MultipleChoiceAnswerData};
-use crate::question::part::multiple_choice::MultipleChoiceAnswerDataInput;
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::JMENotesInput;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::part::question_part::VariableReplacementStrategyInput;
 use crate::question::QuestionParts;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -121,9 +116,10 @@ impl ToRumbas<MultipleChoiceAnswerData>
     }
 }
 
-optional_overwrite_newtype! {
-    pub struct MatrixRowPrimitive(Primitives)
-}
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixRowPrimitiveInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatrixRowPrimitive(Primitives);
 
 type Primitives = Vec<numbas::support::primitive::Primitive>;
 type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
@@ -137,9 +133,10 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-optional_overwrite_newtype! {
-    pub struct MatrixRow(TranslatableStrings)
-}
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixRowInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatrixRow(TranslatableStrings);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -160,9 +157,11 @@ pub type VariableValuedsPrimitivessInput =
     Vec<Value<VariableValued<Vec<Value<numbas::support::primitive::Primitive>>>>>;
 pub type VariableValuedsPrimitivess =
     Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>;
-optional_overwrite_newtype! {
-    pub struct MatrixPrimitive(VariableValuedsPrimitivess)
-}
+
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixPrimitiveInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatrixPrimitive(VariableValuedsPrimitivess);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(

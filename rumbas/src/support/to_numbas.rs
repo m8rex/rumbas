@@ -1,4 +1,4 @@
-use crate::support::optional_overwrite::*;
+use rumbas_support::rumbas_check::{RumbasCheck, RumbasCheckResult};
 
 pub type NumbasResult<T> = Result<T, RumbasCheckResult>;
 
