@@ -28,15 +28,15 @@ pub enum MultipleChoiceAnswerData {
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
-    answers: VariableValued<Vec<TranslatableString>>,
-    marks: VariableValued<Vec<Primitive>>,
-    feedback: Noneable<Vec<TranslatableString>>,
+    pub answers: VariableValued<Vec<TranslatableString>>,
+    pub marks: VariableValued<Vec<Primitive>>,
+    pub feedback: Noneable<Vec<TranslatableString>>,
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRowPrimitive(Vec<Primitive>);
+pub struct MatrixRowPrimitive(pub Vec<Primitive>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -50,7 +50,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRow(TranslatableStrings);
+pub struct MatrixRow(pub TranslatableStrings);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -70,7 +70,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
+pub struct MatrixPrimitive(pub Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(
@@ -157,7 +157,7 @@ impl_to_numbas!(Primitive);
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswer {
-    statement: TranslatableString,
-    feedback: TranslatableString,
-    marks: Primitive, // TODO: variable valued?
+    pub statement: TranslatableString,
+    pub feedback: TranslatableString,
+    pub marks: Primitive, // TODO: variable valued?
 }

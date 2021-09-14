@@ -9,8 +9,8 @@ use serde::{Deserialize, Serialize};
 #[input(name = "VariablesTestInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct VariablesTest {
-    condition: JMEString,
-    max_runs: usize,
+    pub condition: JMEString,
+    pub max_runs: usize,
 }
 
 impl ToNumbas<numbas::question::QuestionVariablesTest> for VariablesTest {

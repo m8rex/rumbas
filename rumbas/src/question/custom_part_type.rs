@@ -17,16 +17,16 @@ use std::hash::{Hash, Hasher};
 #[input(name = "CustomPartTypeDefinitionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartTypeDefinition {
-    type_name: TranslatableString,
-    description: TranslatableString,
-    settings: Vec<NCustomPartTypeSetting>, // TODO
-    can_be_gap: bool,
-    can_be_step: bool,
-    marking_notes: JMENotes,
-    help_url: TranslatableString,
-    published: bool,
-    extensions: Extensions,
-    input_widget: CustomPartInputWidget, //TODO source
+    pub type_name: TranslatableString,
+    pub description: TranslatableString,
+    pub settings: Vec<NCustomPartTypeSetting>, // TODO
+    pub can_be_gap: bool,
+    pub can_be_step: bool,
+    pub marking_notes: JMENotes,
+    pub help_url: TranslatableString,
+    pub published: bool,
+    pub extensions: Extensions,
+    pub input_widget: CustomPartInputWidget, //TODO source
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinition {
@@ -213,11 +213,11 @@ impl ToRumbas<CustomPartInputWidget> for numbas::question::custom_part_type::Cus
 pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all..., use macro?
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-    hint: CustomPartInputOptionValueTranslatableString,
+    pub hint: CustomPartInputOptionValueTranslatableString,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: JMETranslatableString,
+    pub correct_answer: JMETranslatableString,
     /// If false, the part will only be marked if their answer is non-empty.
-    allow_empty: CustomPartInputOptionValueBool,
+    pub allow_empty: CustomPartInputOptionValueBool,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartStringInputOptions>
@@ -257,12 +257,12 @@ impl ToRumbas<CustomPartStringInputOptions>
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartNumberInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-    hint: CustomPartInputOptionValueTranslatableString,
+    pub hint: CustomPartInputOptionValueTranslatableString,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: JMETranslatableString,
+    pub correct_answer: JMETranslatableString,
     ///Allow the student to enter their answer as a fraction?
-    allow_fractions: CustomPartInputOptionValueBool,
-    allowed_notation_styles: CustomPartInputOptionValueAnswerStyles,
+    pub allow_fractions: CustomPartInputOptionValueBool,
+    pub allowed_notation_styles: CustomPartInputOptionValueAnswerStyles,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartNumberInputOptions>
@@ -304,11 +304,11 @@ impl ToRumbas<CustomPartNumberInputOptions>
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartRadioGroupInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
-    hint: CustomPartInputOptionValueTranslatableString,
+    pub hint: CustomPartInputOptionValueTranslatableString,
     /// A JME expression which evaluates to the expected answer to the part.
-    correct_answer: JMETranslatableString,
+    pub correct_answer: JMETranslatableString,
     /// The labels for the choices to offer to the student.
-    choices: CustomPartInputOptionValueTranslatableStrings,
+    pub choices: CustomPartInputOptionValueTranslatableStrings,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions>

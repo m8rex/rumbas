@@ -238,9 +238,9 @@ impl Default for JMENotes {
 #[input(name = "JMENoteInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMENote {
-    name: String,
-    description: Noneable<String>,
-    expression: JMETranslatableString,
+    pub name: String,
+    pub description: Noneable<String>,
+    pub expression: JMETranslatableString,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JMENote {
@@ -277,24 +277,24 @@ macro_rules! question_part_type {
     {
         $(#[$outer])*
         pub struct $struct {
-            marks: Primitive, // TODO: strict?
-            prompt: ContentAreaTranslatableString,
-            use_custom_name: bool,
-            custom_name: String, //TODO Translatable?
-            steps_penalty: usize,
-            enable_minimum_marks: bool,
-            minimum_marks: usize, //TODO: separate?
-            show_correct_answer: bool,
-            show_feedback_icon: bool,
-            variable_replacement_strategy: VariableReplacementStrategy,
-            adaptive_marking_penalty: usize,
-            custom_marking_algorithm_notes: JMENotes,
-            extend_base_marking_algorithm: bool,
-            steps: Vec<QuestionPart>
+            pub marks: Primitive, // TODO: strict?
+            pub prompt: ContentAreaTranslatableString,
+            pub use_custom_name: bool,
+            pub custom_name: String, //TODO Translatable?
+            pub steps_penalty: usize,
+            pub enable_minimum_marks: bool,
+            pub minimum_marks: usize, //TODO: separate?
+            pub show_correct_answer: bool,
+            pub show_feedback_icon: bool,
+            pub variable_replacement_strategy: VariableReplacementStrategy,
+            pub adaptive_marking_penalty: usize,
+            pub custom_marking_algorithm_notes: JMENotes,
+            pub extend_base_marking_algorithm: bool,
+            pub steps: Vec<QuestionPart>
             $(,
             $(
                 $(#[$inner])*
-                $field: $type
+                pub $field: $type
             ),+
             )?
         }

@@ -12,10 +12,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Function {
     // TODO: don't directly use numbas type
-    parameters: Vec<(String, NumbasFunctionType)>,
-    output_type: NumbasFunctionType,
+    pub parameters: Vec<(String, NumbasFunctionType)>,
+    pub output_type: NumbasFunctionType,
     #[serde(flatten)]
-    definition: FunctionDefinition,
+    pub definition: FunctionDefinition,
 }
 impl_to_numbas!(NumbasFunctionType);
 
@@ -86,12 +86,12 @@ impl ToRumbas<FunctionDefinition> for numbas::question::function::FunctionDefini
 #[input(name = "FunctionDefinitionJMEInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FunctionDefinitionJME {
-    definition: JMETranslatableString,
+    pub definition: JMETranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "FunctionDefinitionJavascriptInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FunctionDefinitionJavascript {
-    definition: TranslatableString,
+    pub definition: TranslatableString,
 }

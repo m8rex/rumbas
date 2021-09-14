@@ -23,7 +23,7 @@ macro_rules! builtin_constants {
         pub struct $struct {
             $(
                 $(#[$inner])*
-                $field: $type
+                pub $field: $type
             ),*
         }
         impl ToNumbas<std::collections::HashMap<String, bool>> for $struct {
@@ -68,11 +68,11 @@ builtin_constants! {
 /// A custom constant
 pub struct CustomConstant {
     /// The name of the constant
-    name: String,
+    pub name: String,
     /// The value of the constant
-    value: JMEString,
+    pub value: JMEString,
     /// The tex code use to display the constant
-    tex: String,
+    pub tex: String,
 }
 
 impl ToNumbas<numbas::question::constants::QuestionConstant> for CustomConstant {

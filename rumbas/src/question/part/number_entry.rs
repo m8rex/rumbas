@@ -107,8 +107,8 @@ pub enum NumberEntryAnswer {
 #[input(name = "NumberEntryAnswerRangeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct NumberEntryAnswerRange {
-    from: FileString,
-    to: FileString,
+    pub from: FileString,
+    pub to: FileString,
 }
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
