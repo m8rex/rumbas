@@ -54,7 +54,6 @@ impl ToNumbas<numbas::question::part::matrix::QuestionPartMatrix> for QuestionPa
 }
 
 impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPartMatrix {
-    #[allow(clippy::redundant_field_names)]
     fn to_rumbas(&self) -> QuestionPartMatrix {
         let rows = QuestionPartMatrixDimension::from_range(
             self.min_rows.to_rumbas(),
@@ -71,7 +70,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
             QuestionPartMatrix with &self.part_data  => {
                 correct_answer: self.correct_answer.to_rumbas(),
                 display_correct_as_fraction: self.correct_answer_fractions.to_rumbas(),
-                dimensions: dimensions,
+                dimensions,
                 max_absolute_deviation: self.tolerance.to_rumbas(),
                 mark_partial_by_cells: self.mark_per_cell.to_rumbas(),
                 allow_fractions: self.allow_fractions.to_rumbas()
