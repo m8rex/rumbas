@@ -77,19 +77,19 @@ impl VariableRepresentation {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, JsonSchema)]
 #[input(name = "VariableStringRepresentationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
     Anything(String),
     Range(RangeData),
     RandomRange(RangeData),
 }
-/* TODO remove?
-impl JsonSchema for VariableStringRepresentation {
+
+impl JsonSchema for VariableStringRepresentationInput {
     fn schema_name() -> String {
-        "VariableStringRepresentation".to_owned()
+        "VariableStringRepresentationInput".to_owned()
     }
 
     fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
@@ -99,7 +99,7 @@ impl JsonSchema for VariableStringRepresentation {
         }
         .into()
     }
-}*/
+}
 
 impl std::convert::From<String> for VariableStringRepresentation {
     fn from(s: String) -> Self {
