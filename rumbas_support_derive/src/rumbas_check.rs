@@ -108,7 +108,7 @@ fn rumbas_check_handle_struct(
 }
 
 fn rumbas_check_handle_enum_check_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
@@ -180,7 +180,7 @@ fn rumbas_check_handle_enum_check_variants(
 }
 
 fn rumbas_check_handle_enum(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,

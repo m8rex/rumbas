@@ -137,7 +137,7 @@ fn overwrite_handle_struct(
 }
 
 fn overwrite_handle_enum(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
@@ -160,7 +160,7 @@ fn overwrite_handle_enum(
 }
 
 fn overwrite_handle_enum_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
