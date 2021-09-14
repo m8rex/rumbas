@@ -120,14 +120,7 @@ fn extract_multiple_choice_answer_data(
         )
     } else {
         MultipleChoiceAnswerData::NumbasLike(Box::new(MultipleChoiceAnswerDataNumbasLike {
-            answers: answers
-                .clone()
-                /* .map(|v| {
-                    v.iter()
-                        .map(|vv| vv.clone().into())
-                        .collect::<Vec<TranslatableString>>()
-                })*/
-                .to_rumbas(),
+            answers: answers.to_rumbas(),
 
             marks: marking_matrix
                 .clone()
@@ -136,14 +129,7 @@ fn extract_multiple_choice_answer_data(
 
             feedback: distractors
                 .clone()
-                .map(|v| {
-                    Noneable::NotNone(
-                        v /*.into_iter()
-                            .map(|f| f.into())
-                            .collect::<Vec<TranslatableString>>()*/
-                            .to_rumbas(),
-                    )
-                })
+                .map(|v| Noneable::NotNone(v.to_rumbas()))
                 .unwrap_or(Noneable::None),
         }))
     }
