@@ -1,4 +1,4 @@
-use crate::question::question::Question;
+use crate::question::Question;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;

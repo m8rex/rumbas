@@ -183,32 +183,34 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                 }
             })
         } else {
-            MultipleChoiceMatchAnswerData::NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike {
-                answers: self
-                    .answers
-                    .clone()
-                    /* .map(|v| {
-                        v.iter()
-                            .map(|vv| vv.clone().into())
-                            .collect::<Vec<TranslatableString>>()
-                    })*/
-                    .to_rumbas(),
-                choices: self
-                    .choices
-                    .clone()
-                    /* .map(|v| {
-                        v.iter()
-                            .map(|vv| vv.clone().into())
-                            .collect::<Vec<TranslatableString>>()
-                    })*/
-                    .to_rumbas(),
+            MultipleChoiceMatchAnswerData::NumbasLike(Box::new(
+                MultipleChoiceMatchAnswerDataNumbasLike {
+                    answers: self
+                        .answers
+                        .clone()
+                        /* .map(|v| {
+                            v.iter()
+                                .map(|vv| vv.clone().into())
+                                .collect::<Vec<TranslatableString>>()
+                        })*/
+                        .to_rumbas(),
+                    choices: self
+                        .choices
+                        .clone()
+                        /* .map(|v| {
+                            v.iter()
+                                .map(|vv| vv.clone().into())
+                                .collect::<Vec<TranslatableString>>()
+                        })*/
+                        .to_rumbas(),
 
-                marks: self
-                    .marking_matrix
-                    .clone()
-                    .map(|m| m.to_rumbas())
-                    .expect("How can the marking matrix be optional?"),
-            })
+                    marks: self
+                        .marking_matrix
+                        .clone()
+                        .map(|m| m.to_rumbas())
+                        .expect("How can the marking matrix be optional?"),
+                },
+            ))
         }
     }
 }
@@ -265,7 +267,7 @@ pub enum MultipleChoiceMatchAnswerData {
     #[serde(rename = "item_based")]
     ItemBased(MultipleChoiceMatchAnswers),
     #[serde(rename = "numbas_like")]
-    NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike),
+    NumbasLike(Box<MultipleChoiceMatchAnswerDataNumbasLike>),
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]

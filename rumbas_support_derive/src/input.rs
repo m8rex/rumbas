@@ -48,7 +48,7 @@ fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
     quote!(#t)
 }
 
-pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::TokenStream> {
+pub fn get_input_types(fields: &[InputFieldReceiver]) -> Vec<proc_macro2::TokenStream> {
     fields
         .iter()
         .enumerate()
@@ -56,7 +56,7 @@ pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::Tok
         .collect::<Vec<_>>()
 }
 
-fn handle_attributes(attrs: &Vec<syn::Attribute>) -> proc_macro2::TokenStream {
+fn handle_attributes(attrs: &[syn::Attribute]) -> proc_macro2::TokenStream {
     let derive_attrs = attrs
         .iter()
         .filter(|a| a.path.is_ident("derive"))
@@ -273,9 +273,7 @@ fn input_handle_struct(
 }
 
 // Create all enum variants for the input enum
-fn input_handle_enum_input_variants(
-    v: &Vec<InputVariantReceiver>,
-) -> Vec<proc_macro2::TokenStream> {
+fn input_handle_enum_input_variants(v: &[InputVariantReceiver]) -> Vec<proc_macro2::TokenStream> {
     v.iter()
         .map(|variant| {
             let input_type_tys = get_input_types(&variant.fields.fields);
@@ -329,7 +327,7 @@ fn input_handle_enum_input_variants(
 
 //
 fn input_handle_enum_to_normal_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     ident: &syn::Ident,
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
@@ -358,7 +356,7 @@ fn input_handle_enum_to_normal_variants(
 }
 
 fn input_handle_enum_from_normal_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     ident: &syn::Ident,
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
@@ -387,7 +385,7 @@ fn input_handle_enum_from_normal_variants(
 }
 
 fn input_handle_enum_find_missing_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
@@ -459,7 +457,7 @@ fn input_handle_enum_find_missing_variants(
 }
 
 fn input_handle_enum_insert_template_value_variants(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
@@ -509,7 +507,7 @@ fn input_handle_enum_insert_template_value_variants(
 }
 
 fn input_handle_enum(
-    v: &Vec<InputVariantReceiver>,
+    v: &[InputVariantReceiver],
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
