@@ -28,7 +28,7 @@ impl ToNumbas<numbas::exam::timing::Timing> for Timing {
     }
 }
 
-impl ToRumbas<Timing> for numbas::exam::exam::Exam {
+impl ToRumbas<Timing> for numbas::exam::Exam {
     fn to_rumbas(&self) -> Timing {
         Timing {
             duration_in_seconds: self.basic_settings.duration_in_seconds.to_rumbas(),

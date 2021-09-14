@@ -42,7 +42,7 @@ impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
     }
 }
 
-impl ToRumbas<Feedback> for numbas::exam::exam::Exam {
+impl ToRumbas<Feedback> for numbas::exam::Exam {
     fn to_rumbas(&self) -> Feedback {
         let review: Review = self.feedback.review.clone().unwrap().to_rumbas(); // TODO: fix this unwrap
         Feedback {

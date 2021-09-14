@@ -65,8 +65,8 @@ type StringToVariableRepresentation = HashMap<String, VariableRepresentation>;
 
 type StringToFunction = HashMap<String, Function>;
 
-impl ToNumbas<numbas::question::question::Question> for Question {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::question::Question {
+impl ToNumbas<numbas::question::Question> for Question {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::Question {
         //TODO?
         panic!(
             "{}",
@@ -74,15 +74,11 @@ impl ToNumbas<numbas::question::question::Question> for Question {
         )
     }
     //TODO: add to_numbas on Option's to reduce burden?
-    fn to_numbas_with_name(
-        &self,
-        locale: &str,
-        name: String,
-    ) -> numbas::question::question::Question {
+    fn to_numbas_with_name(&self, locale: &str, name: String) -> numbas::question::Question {
         if self.variables.contains_key("e") {
             panic!("e is not allowed as a variable name"); //TODO is this still the case?
         }
-        numbas::question::question::Question {
+        numbas::question::Question {
             name,
             statement: self.statement.to_numbas(locale),
             advice: self.advice.to_numbas(locale),
@@ -129,7 +125,7 @@ impl ToNumbas<numbas::question::question::Question> for Question {
     }
 }
 
-impl ToRumbas<Question> for numbas::question::question::Question {
+impl ToRumbas<Question> for numbas::question::Question {
     fn to_rumbas(&self) -> Question {
         Question {
             statement: self.statement.to_rumbas(),

@@ -38,8 +38,8 @@ pub struct NormalExam {
     pub numbas_settings: NumbasSettings,
 }
 
-impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
+impl ToNumbas<numbas::exam::Exam> for NormalExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         let basic_settings = self.to_numbas(locale);
         let navigation = self.navigation.to_numbas(locale);
 
@@ -97,7 +97,7 @@ impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
             .collect::<Vec<_>>()
             .to_numbas(locale);
 
-        numbas::exam::exam::Exam {
+        numbas::exam::Exam {
             basic_settings,
             resources,
             extensions,
@@ -113,9 +113,9 @@ impl ToNumbas<numbas::exam::exam::Exam> for NormalExam {
     }
 }
 
-impl ToNumbas<numbas::exam::exam::BasicExamSettings> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
-        numbas::exam::exam::BasicExamSettings {
+impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+        numbas::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
             duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale),
             percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
@@ -132,7 +132,7 @@ impl ToNumbas<numbas::exam::exam::BasicExamSettings> for NormalExam {
 
 /// Converts a normal numbas exam to a NormalExam
 pub fn convert_normal_numbas_exam(
-    exam: numbas::exam::exam::Exam,
+    exam: numbas::exam::Exam,
 ) -> (
     NormalExam,
     Vec<QuestionPath>,

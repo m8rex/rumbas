@@ -41,7 +41,7 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for NormalNavigation {
     }
 }
 
-impl ToRumbas<NormalNavigation> for numbas::exam::exam::Exam {
+impl ToRumbas<NormalNavigation> for numbas::exam::Exam {
     fn to_rumbas(&self) -> NormalNavigation {
         match &self.navigation.navigation_mode {
             numbas::exam::navigation::NavigationMode::Sequential(s) => {
@@ -152,7 +152,7 @@ impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
     }
 }
 
-impl ToRumbas<DiagnosticNavigation> for numbas::exam::exam::Exam {
+impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
     fn to_rumbas(&self) -> DiagnosticNavigation {
         match &self.navigation.navigation_mode {
             numbas::exam::navigation::NavigationMode::Sequential(_s) => {
@@ -288,7 +288,7 @@ pub struct NavigationSharedData {
     pub allow_printing: bool,
 }
 
-impl ToRumbas<NavigationSharedData> for numbas::exam::exam::Exam {
+impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
     fn to_rumbas(&self) -> NavigationSharedData {
         NavigationSharedData {
             start_password: self

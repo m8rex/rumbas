@@ -38,8 +38,8 @@ pub enum Exam {
     Diagnostic(DiagnosticExam),
 }
 
-impl ToNumbas<numbas::exam::exam::Exam> for Exam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
+impl ToNumbas<numbas::exam::Exam> for Exam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         match self {
             Exam::Normal(n) => n.to_numbas(locale),
             Exam::Diagnostic(n) => n.to_numbas(locale),
@@ -155,7 +155,7 @@ impl ExamFileType {
 /// Returns the name of the exam, the resulting exam (as ExamFileType)
 /// and vectors of questions and custom part type definitions
 pub fn convert_numbas_exam(
-    exam: numbas::exam::exam::Exam,
+    exam: numbas::exam::Exam,
 ) -> (
     String,
     ExamFileType,
