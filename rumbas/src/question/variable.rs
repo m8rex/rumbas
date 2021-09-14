@@ -248,7 +248,6 @@ pub struct Variable {
     pub group: String, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
 
-type BoxVariableInput = Box<VariableInput>;
 type BoxVariable = Box<Variable>;
 
 impl ToNumbas<numbas::question::variable::Variable> for Variable {

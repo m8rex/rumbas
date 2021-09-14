@@ -17,7 +17,7 @@ use serde::Deserialize;
 #[derive(Clone, Deserialize)]
 pub enum Test {
     Unit,
-    Tuple(f64, bool, String),
+    Tuple(TestOverwrite, bool, String),
     Struct { a: f64 },
 }
 
@@ -49,9 +49,9 @@ fn create_test2() {
     };
 
     let _test2 = Test2Input {
-        field1: Value::Normal(vec![TestInput::Struct {
+        field1: Value::Normal(vec![Value::Normal(TestInput::Struct {
             a: Value::Normal(5.8),
-        }]),
+        })]),
         field2: Value::Normal(65.0),
     };
 }
@@ -61,38 +61,29 @@ fn find_missing() {
     assert_no_missing!(TestInput::Unit);
 
     assert_no_missing!(TestInput::Tuple(
-        Value::Normal(5.8),
-        Value::Normal(true),
-        Value::Normal("s".to_owned())
+        TestOverwriteInput::Struct {
+            field1: Value::Normal(true),
+            field2: Value::Normal(5.8)
+        },
+        true,
+        "s".to_owned()
     ));
-    assert_missing_fields!(
-        TestInput::Tuple(
-            Value::None(),
-            Value::Normal(true),
-            Value::Normal("s".to_owned())
-        ),
-        vec!["0"] // TODO
-    );
-    assert_missing_fields!(
-        TestInput::Tuple(
-            Value::Normal(5.8),
-            Value::None(),
-            Value::Normal("s".to_owned())
-        ),
-        vec!["1"]
-    );
-    assert_missing_fields!(
-        TestInput::Tuple(Value::Normal(5.8), Value::Normal(true), Value::None()),
-        vec!["2"]
-    );
-    assert_missing_fields!(
-        TestInput::Tuple(Value::None(), Value::Normal(true), Value::None()),
-        vec!["0", "2"]
-    );
 
     assert_no_missing!(TestInput::Struct {
         a: Value::Normal(5.8)
     });
 
     assert_missing_fields!(TestInput::Struct { a: Value::None() }, vec!["a"]);
+
+    assert_missing_fields!(
+        TestInput::Tuple(
+            TestOverwriteInput::Struct {
+                field1: Value::None(),
+                field2: Value::Normal(5.8)
+            },
+            true,
+            "s".to_owned()
+        ),
+        vec!["0.field1"] // TODO
+    );
 }

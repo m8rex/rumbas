@@ -1,19 +1,17 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
-use crate::support::optional_overwrite::*;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -45,10 +43,8 @@ question_part_type! {
 
 type MatchAnswersWithChoicesLayout =
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
-type MatchAnswersWithChoicesLayoutInput = MatchAnswersWithChoicesLayout;
 
 type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
-type MultipleChoiceWarningTypeInput = MultipleChoiceWarningType;
 
 impl_to_numbas!(
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
@@ -218,6 +214,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
     }
 }
 
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatchAnswerWithItemsDisplayInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
 pub enum MatchAnswerWithItemsDisplay {
@@ -226,7 +224,6 @@ pub enum MatchAnswerWithItemsDisplay {
     #[serde(rename = "check")]
     Check,
 }
-impl_optional_overwrite!(MatchAnswerWithItemsDisplay);
 
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType>
     for MatchAnswerWithItemsDisplay
@@ -261,50 +258,53 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(tag = "type")]
-    pub enum MultipleChoiceMatchAnswerData {
-        #[serde(rename = "item_based")]
-        ItemBased(MultipleChoiceMatchAnswers),
-        #[serde(rename = "numbas_like")]
-        NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceMatchAnswerDataInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(tag = "type")]
+pub enum MultipleChoiceMatchAnswerData {
+    #[serde(rename = "item_based")]
+    ItemBased(MultipleChoiceMatchAnswers),
+    #[serde(rename = "numbas_like")]
+    NumbasLike(MultipleChoiceMatchAnswerDataNumbasLike),
 }
 
-optional_overwrite! {
-    pub struct MultipleChoiceMatchAnswerDataNumbasLike {
-        answers: VariableValuedTranslatableStrings,
-        choices: VariableValuedTranslatableStrings,
-        marks: VariableValuedPrimitivess
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MultipleChoiceMatchAnswerDataNumbasLike {
+    answers: VariableValuedTranslatableStrings,
+    choices: VariableValuedTranslatableStrings,
+    marks: VariableValuedPrimitivess,
 }
 
-optional_overwrite! {
-    pub struct MultipleChoiceMatchAnswers {
-        /// Values of the answers
-        answers: TranslatableStrings,
-        /// Items for which the answer can be selected
-        items: MatchAnswersItems
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceMatchAnswersInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MultipleChoiceMatchAnswers {
+    /// Values of the answers
+    answers: TranslatableStrings,
+    /// Items for which the answer can be selected
+    items: MatchAnswersItems,
 }
 
-optional_overwrite! {
-    pub struct MatchAnswersItem {
-        statement: TranslatableString,
-        /// Map points to strings of answers ! use anchors in yaml
-        answer_marks: MatchAnswersItemMarksList
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatchAnswersItemInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatchAnswersItem {
+    statement: TranslatableString,
+    /// Map points to strings of answers ! use anchors in yaml
+    answer_marks: MatchAnswersItemMarksList,
 }
 
-type MatchAnswersItemsInput = Vec<Value<MatchAnswersItemInput>>;
 type MatchAnswersItems = Vec<MatchAnswersItem>;
 
-optional_overwrite! {
-    pub struct MatchAnswersItemMarks {
-        marks: Primitive,
-        answer: TranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatchAnswersItemMarksInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatchAnswersItemMarks {
+    marks: Primitive,
+    answer: TranslatableString,
 }
 
-type MatchAnswersItemMarksListInput = Vec<Value<MatchAnswersItemMarksInput>>;
 type MatchAnswersItemMarksList = Vec<MatchAnswersItemMarks>;

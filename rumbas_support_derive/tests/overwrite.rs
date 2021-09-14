@@ -235,8 +235,8 @@ fn check_enums() {
         }),
     };
 
-    let mut tuple1 = TempEnumInput::Tuple(Value::Normal(t.clone()), Value::Normal(t2));
-    let tuple2 = TempEnumInput::Tuple(Value::Normal(tt.clone()), Value::Normal(tt2));
+    let mut tuple1 = TempEnumInput::Tuple(t.clone(), t2);
+    let tuple2 = TempEnumInput::Tuple(tt.clone(), tt2);
     tuple1.overwrite(&tuple2);
     assert_no_missing!(tuple1);
 

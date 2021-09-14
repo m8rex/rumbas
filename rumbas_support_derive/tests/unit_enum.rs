@@ -47,7 +47,7 @@ mod test {
         };
 
         let _test2 = Test2Input {
-            field1: Value::Normal(vec![TestInput::First]),
+            field1: Value::Normal(vec![Value::Normal(TestInput::First)]),
             field2: Value::Normal(65.0),
         };
     }

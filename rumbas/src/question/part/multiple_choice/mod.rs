@@ -1,13 +1,12 @@
-use crate::support::optional_overwrite::*;
+use crate::support::noneable::Noneable;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use crate::support::translatable::TranslatableStrings;
-use crate::support::translatable::TranslatableStringsInput;
 use crate::support::variable_valued::VariableValued;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -16,30 +15,34 @@ pub mod choose_multiple;
 pub mod choose_one;
 pub mod match_answers;
 
-optional_overwrite_enum! {
-    #[serde(untagged)]
-    pub enum MultipleChoiceAnswerData {
-        ItemBased(MultipleChoiceAnswers),
-        NumbasLike(BoxMultipleChoiceAnswerDataNumbasLike)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceAnswerDataInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum MultipleChoiceAnswerData {
+    ItemBased(MultipleChoiceAnswers),
+    NumbasLike(BoxMultipleChoiceAnswerDataNumbasLike),
 }
 
 type BoxMultipleChoiceAnswerDataNumbasLike = Box<MultipleChoiceAnswerDataNumbasLike>;
 type BoxMultipleChoiceAnswerDataNumbasLikeInput = Box<MultipleChoiceAnswerDataNumbasLikeInput>;
 
-optional_overwrite! {
-    pub struct MultipleChoiceAnswerDataNumbasLike {
-        answers: VariableValuedTranslatableStrings,
-        marks: VariableValuedPrimitives,
-        feedback: NoneableTranslatableStrings
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MultipleChoiceAnswerDataNumbasLike {
+    answers: VariableValuedTranslatableStrings,
+    marks: VariableValuedPrimitives,
+    feedback: NoneableTranslatableStrings,
 }
 
 type Primitives = Vec<numbas::support::primitive::Primitive>;
 type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
-optional_overwrite_newtype! {
-    pub struct MatrixRowPrimitive(Primitives)
-}
+
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixRowPrimitiveInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatrixRowPrimitive(Primitives);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -49,9 +52,11 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
         numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
     }
 }
-optional_overwrite_newtype! {
-    pub struct MatrixRow(TranslatableStrings)
-}
+
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixRowInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatrixRow(TranslatableStrings);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -68,9 +73,10 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Debug, Deserialize, JsonSchema, Clone, PartialEq)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MatrixPrimitiveInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
-impl_optional_overwrite!(MatrixPrimitive); // TODO: Does this do what it needs to do?
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(
@@ -155,12 +161,13 @@ type MultipleChoiceMatrix = numbas::question::part::match_answers::MultipleChoic
 impl_to_numbas!(numbas::support::primitive::Primitive);
 type Primitive = numbas::support::primitive::Primitive;
 
-optional_overwrite! {
-    pub struct MultipleChoiceAnswer {
-        statement: TranslatableString,
-        feedback: TranslatableString,
-        marks: Primitive // TODO: variable valued?
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "MultipleChoiceAnswerInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MultipleChoiceAnswer {
+    statement: TranslatableString,
+    feedback: TranslatableString,
+    marks: Primitive, // TODO: variable valued?
 }
 
 pub type MultipleChoiceAnswersInput = Vec<Value<MultipleChoiceAnswerInput>>;

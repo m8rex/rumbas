@@ -1,42 +1,31 @@
 use crate::question::part::extension::QuestionPartExtension;
-use crate::question::part::extension::QuestionPartExtensionInput;
 use crate::question::part::gapfill::QuestionPartGapFill;
-use crate::question::part::gapfill::QuestionPartGapFillInput;
 use crate::question::part::information::QuestionPartInformation;
-use crate::question::part::information::QuestionPartInformationInput;
 use crate::question::part::jme::QuestionPartJME;
-use crate::question::part::jme::QuestionPartJMEInput;
 use crate::question::part::matrix::QuestionPartMatrix;
-use crate::question::part::matrix::QuestionPartMatrixInput;
 use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
-use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInput;
 use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOne;
-use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOneInput;
 use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
-use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItemsInput;
 use crate::question::part::number_entry::QuestionPartNumberEntry;
-use crate::question::part::number_entry::QuestionPartNumberEntryInput;
 use crate::question::part::pattern_match::QuestionPartPatternMatch;
-use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
-use crate::support::optional_overwrite::*;
+use crate::support::noneable::Noneable;
 use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
-use crate::support::translatable::{
-    ContentAreaTranslatableStringInput, JMETranslatableStringInput,
-};
 use numbas::support::primitive::Primitive;
+use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 
-optional_overwrite_enum! {
-    #[serde(untagged)]
-    pub enum QuestionPart {
-        Builtin(QuestionPartBuiltin),
-        Custom(QuestionPartCustom)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionPartInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(untagged)]
+pub enum QuestionPart {
+    Builtin(QuestionPartBuiltin),
+    Custom(QuestionPartCustom),
 }
 
 pub type QuestionPartsInput = Vec<Value<QuestionPartInput>>;
@@ -77,30 +66,31 @@ impl QuestionPartInput {
     }
 }
 
-optional_overwrite_enum! {
-    #[serde(tag="type")]
-    pub enum QuestionPartBuiltin {
-        #[serde(rename = "jme")]
-        JME(QuestionPartJME),
-        #[serde(rename = "gapfill")]
-        GapFill(QuestionPartGapFill),
-        #[serde(rename = "choose_one")]
-        ChooseOne(QuestionPartChooseOne),
-        #[serde(rename = "choose_multiple")]
-        ChooseMultiple(QuestionPartChooseMultiple),
-        #[serde(rename= "match_answers")]
-        MatchAnswersWithItems(QuestionPartMatchAnswersWithItems),
-        #[serde(rename = "number_entry")]
-        NumberEntry(QuestionPartNumberEntry),
-        #[serde(rename = "pattern_match")]
-        PatternMatch(QuestionPartPatternMatch),
-        #[serde(rename = "information")]
-        Information(QuestionPartInformation),
-        #[serde(rename = "extension")]
-        Extension(QuestionPartExtension),
-        #[serde(rename = "matrix")]
-        Matrix(QuestionPartMatrix)
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "QuestionPartBuiltinInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(tag = "type")]
+pub enum QuestionPartBuiltin {
+    #[serde(rename = "jme")]
+    JME(QuestionPartJME),
+    #[serde(rename = "gapfill")]
+    GapFill(QuestionPartGapFill),
+    #[serde(rename = "choose_one")]
+    ChooseOne(QuestionPartChooseOne),
+    #[serde(rename = "choose_multiple")]
+    ChooseMultiple(QuestionPartChooseMultiple),
+    #[serde(rename = "match_answers")]
+    MatchAnswersWithItems(QuestionPartMatchAnswersWithItems),
+    #[serde(rename = "number_entry")]
+    NumberEntry(QuestionPartNumberEntry),
+    #[serde(rename = "pattern_match")]
+    PatternMatch(QuestionPartPatternMatch),
+    #[serde(rename = "information")]
+    Information(QuestionPartInformation),
+    #[serde(rename = "extension")]
+    Extension(QuestionPartExtension),
+    #[serde(rename = "matrix")]
+    Matrix(QuestionPartMatrix),
 }
 
 impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuiltin {
@@ -251,12 +241,13 @@ impl Default for JMENotes {
     }
 }
 
-optional_overwrite! {
-    pub struct JMENote {
-        name: RumbasString,
-        description: NoneableString,
-        expression: JMETranslatableString
-    }
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "JMENoteInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct JMENote {
+    name: RumbasString,
+    description: NoneableString,
+    expression: JMETranslatableString,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JMENote {
@@ -435,12 +426,13 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
+#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = "VariableReplacementStrategyInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
     OriginalFirst,
 }
-impl_optional_overwrite!(VariableReplacementStrategy);
 
 impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableReplacementStrategy {
     fn to_numbas(&self, _locale: &str) -> numbas::question::part::VariableReplacementStrategy {
