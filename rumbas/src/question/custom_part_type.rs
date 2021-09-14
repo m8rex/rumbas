@@ -89,10 +89,10 @@ macro_rules! create_input_option_value {
         #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
         pub struct $struct {
             /// The value
-            value: $type,
+            pub value: $type,
             /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
             #[serde(rename = "static")]
-            is_static: bool,
+            pub is_static: bool,
         }
 
         impl
