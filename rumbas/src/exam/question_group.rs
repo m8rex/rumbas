@@ -9,9 +9,6 @@ use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-pub type QuestionGroupsInput = Vec<Value<QuestionGroupInput>>;
-pub type QuestionGroups = Vec<QuestionGroup>;
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "QuestionGroupInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
@@ -22,7 +19,7 @@ pub struct QuestionGroup {
     #[serde(flatten)]
     pub picking_strategy: PickingStrategy,
     /// The questions
-    pub questions: QuestionPaths,
+    pub questions: Vec<QuestionPath>,
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
@@ -198,6 +195,3 @@ impl std::convert::From<QuestionPathInput> for String {
         q.question_name
     }
 }
-
-pub type QuestionPathsInput = Vec<Value<QuestionPathInput>>;
-pub type QuestionPaths = Vec<QuestionPath>;

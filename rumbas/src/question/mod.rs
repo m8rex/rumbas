@@ -11,7 +11,8 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
-use crate::question::custom_part_type::CustomPartTypeDefinitionPaths;
+use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::question::part::question_part::QuestionPart;
 use crate::support::template::TemplateFile;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -23,9 +24,8 @@ use constants::CustomConstant;
 use extension::Extensions;
 use function::Function;
 use navigation::QuestionNavigation;
-use part::question_part::QuestionParts;
 use preamble::Preamble;
-use resource::ResourcePaths;
+use resource::ResourcePath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -45,25 +45,21 @@ pub struct Question {
     /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
     /// The advice area is normally used to present a worked solution to the question.
     pub advice: ContentAreaTranslatableString,
-    pub parts: QuestionParts,
+    pub parts: Vec<QuestionPart>,
     pub builtin_constants: BuiltinConstants,
     pub custom_constants: Vec<CustomConstant>,
-    pub variables: StringToVariableRepresentation,
+    pub variables: HashMap<String, VariableRepresentation>,
     pub variables_test: VariablesTest,
-    pub functions: StringToFunction,
+    pub functions: HashMap<String, Function>,
     pub preamble: Preamble,
     pub navigation: QuestionNavigation,
     pub extensions: Extensions,
     /// The names of the topics used in diagnostic exams that this question belongs to
     pub diagnostic_topic_names: TranslatableStrings, // TODO: validate? / warnings?
-    pub resources: ResourcePaths,
+    pub resources: Vec<ResourcePath>,
     /// The custom part types used in this exam
-    pub custom_part_types: CustomPartTypeDefinitionPaths, //TODO a lot of options
+    pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options
 }
-
-type StringToVariableRepresentation = HashMap<String, VariableRepresentation>;
-
-type StringToFunction = HashMap<String, Function>;
 
 impl ToNumbas<numbas::question::Question> for Question {
     fn to_numbas(&self, _locale: &str) -> numbas::question::Question {
@@ -195,10 +191,8 @@ impl QuestionInput {
 #[serde(tag = "type")]
 pub enum QuestionFileType {
     Template(TemplateFile),
-    Normal(BoxQuestion),
+    Normal(Box<Question>),
 }
-
-type BoxQuestion = Box<Question>;
 
 impl QuestionFileType {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {

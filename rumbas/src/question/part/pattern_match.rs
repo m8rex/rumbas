@@ -1,5 +1,5 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::QuestionParts;
+use crate::question::part::question_part::QuestionPart;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
@@ -21,10 +21,9 @@ question_part_type! {
         partial_credit: f64,
         pattern: TranslatableString, //TODO: type
         display_answer: TranslatableString,
-        match_mode: PatternMatchMode
+        match_mode: numbas::question::part::pattern_match::PatternMatchMode
     }
 }
-type PatternMatchMode = numbas::question::part::pattern_match::PatternMatchMode;
 
 impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     for QuestionPartPatternMatch

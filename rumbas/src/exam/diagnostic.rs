@@ -1,9 +1,9 @@
 use crate::exam::feedback::Feedback;
+use crate::exam::locale::Locale;
 use crate::exam::locale::SupportedLocale;
-use crate::exam::locale::{Locale, Locales};
 use crate::exam::navigation::DiagnosticNavigation;
 use crate::exam::numbas_settings::NumbasSettings;
-use crate::exam::question_group::QuestionGroups;
+use crate::exam::question_group::QuestionGroup;
 use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
@@ -24,7 +24,7 @@ use std::collections::HashMap;
 /// A Diagnostic Exam
 pub struct DiagnosticExam {
     /// All locales for which the exam should be generated
-    pub locales: Locales,
+    pub locales: Vec<Locale>,
     /// The name of the exam
     pub name: TranslatableString,
     /// The navigation settings for this exam
@@ -34,7 +34,7 @@ pub struct DiagnosticExam {
     /// The feedback settings for this exam
     pub feedback: Feedback,
     /// The questions groups for this exam
-    pub question_groups: QuestionGroups,
+    pub question_groups: Vec<QuestionGroup>,
     /// The settings to set for numbas
     pub numbas_settings: NumbasSettings,
     /// The diagnostic data
@@ -141,9 +141,9 @@ pub struct Diagnostic {
     /// The script to use
     script: DiagnosticScript,
     /// The learning objectives,
-    objectives: LearningObjectives,
+    objectives: Vec<LearningObjective>,
     /// The learning topics
-    topics: LearningTopics,
+    topics: Vec<LearningTopic>,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::Diagnostic> for Diagnostic {
@@ -217,9 +217,6 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-pub type LearningObjectivesInput = Vec<Value<LearningObjectiveInput>>;
-pub type LearningObjectives = Vec<LearningObjective>;
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "LearningObjectiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
@@ -255,9 +252,6 @@ impl ToRumbas<LearningObjective>
         }
     }
 }
-
-pub type LearningTopicsInput = Vec<Value<LearningTopicInput>>;
-pub type LearningTopics = Vec<LearningTopic>;
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "LearningTopicInput")]

@@ -1,6 +1,6 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::QuestionParts;
+use crate::question::QuestionPart;
 use crate::support::file_reference::{FileString, JMEFileString};
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
@@ -37,7 +37,7 @@ question_part_type! {
         must_have: Noneable<JMEStringRestriction>,
         may_not_have: Noneable<JMEStringRestriction>,
         must_match_pattern: Noneable<JMEPatternRestriction>,
-        value_generators: Noneable<JMEValueGenerators>
+        value_generators: Noneable<Vec<JMEValueGenerator>>
     }
 }
 
@@ -684,6 +684,3 @@ impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenera
         }
     }
 }
-
-pub type JMEValueGeneratorsInput = Vec<Value<JMEValueGeneratorInput>>;
-pub type JMEValueGenerators = Vec<JMEValueGenerator>;

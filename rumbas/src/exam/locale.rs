@@ -12,9 +12,6 @@ pub struct Locale {
     pub numbas_locale: SupportedLocale,
 }
 
-pub type LocalesInput = Vec<Value<LocaleInput>>;
-pub type Locales = Vec<Locale>;
-
 macro_rules! create_support_locale {
     ($($name: ident => $key: literal),*) => {
         #[derive(Input, Overwrite, RumbasCheck)]

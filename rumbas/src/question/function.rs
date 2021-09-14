@@ -7,21 +7,17 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-// TODO: don't directly use numbas type
-type StringFunctionTypeTuple = (String, NumbasFunctionType);
-type StringFunctionTypeTuples = Vec<StringFunctionTypeTuple>;
-
-impl_to_numbas!(NumbasFunctionType);
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "FunctionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Function {
-    parameters: StringFunctionTypeTuples,
+    // TODO: don't directly use numbas type
+    parameters: Vec<(String, NumbasFunctionType)>,
     output_type: NumbasFunctionType,
     #[serde(flatten)]
     definition: FunctionDefinition,
 }
+impl_to_numbas!(NumbasFunctionType);
 
 impl ToNumbas<numbas::question::function::Function> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {

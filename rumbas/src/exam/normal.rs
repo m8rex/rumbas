@@ -1,9 +1,9 @@
 use crate::exam::feedback::Feedback;
+use crate::exam::locale::Locale;
 use crate::exam::locale::SupportedLocale;
-use crate::exam::locale::{Locale, Locales};
 use crate::exam::navigation::NormalNavigation;
 use crate::exam::numbas_settings::NumbasSettings;
-use crate::exam::question_group::QuestionGroups;
+use crate::exam::question_group::QuestionGroup;
 use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
@@ -23,7 +23,7 @@ use std::collections::HashMap;
 /// An Exam
 pub struct NormalExam {
     /// All locales for which the exam should be generated
-    pub locales: Locales,
+    pub locales: Vec<Locale>,
     /// The name of the exam
     pub name: TranslatableString,
     /// The navigation settings for this exam
@@ -33,7 +33,7 @@ pub struct NormalExam {
     /// The feedback settings for this exam
     pub feedback: Feedback,
     /// The questions groups for this exam
-    pub question_groups: QuestionGroups,
+    pub question_groups: Vec<QuestionGroup>,
     /// The settings to set for numbas
     pub numbas_settings: NumbasSettings,
 }
