@@ -1,11 +1,11 @@
 use crate::support::noneable::Noneable;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::TranslatableString;
 use crate::support::translatable::TranslatableStrings;
 use crate::support::variable_valued::VariableValued;
+use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -20,29 +20,23 @@ pub mod match_answers;
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
 pub enum MultipleChoiceAnswerData {
-    ItemBased(MultipleChoiceAnswers),
-    NumbasLike(BoxMultipleChoiceAnswerDataNumbasLike),
+    ItemBased(Vec<MultipleChoiceAnswer>),
+    NumbasLike(Box<MultipleChoiceAnswerDataNumbasLike>),
 }
-
-type BoxMultipleChoiceAnswerDataNumbasLike = Box<MultipleChoiceAnswerDataNumbasLike>;
-type BoxMultipleChoiceAnswerDataNumbasLikeInput = Box<MultipleChoiceAnswerDataNumbasLikeInput>;
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
-    answers: VariableValuedTranslatableStrings,
-    marks: VariableValuedPrimitives,
-    feedback: NoneableTranslatableStrings,
+    answers: VariableValued<Vec<TranslatableString>>,
+    marks: VariableValued<Vec<Primitive>>,
+    feedback: Noneable<Vec<TranslatableString>>,
 }
-
-type Primitives = Vec<numbas::support::primitive::Primitive>;
-type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRowPrimitive(Primitives);
+pub struct MatrixRowPrimitive(Vec<Primitive>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -156,10 +150,8 @@ fn extract_multiple_choice_answer_data(
 }
 
 impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
-type MultipleChoiceMatrix = numbas::question::part::match_answers::MultipleChoiceMatrix;
 
-impl_to_numbas!(numbas::support::primitive::Primitive);
-type Primitive = numbas::support::primitive::Primitive;
+impl_to_numbas!(Primitive);
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MultipleChoiceAnswerInput")]
@@ -169,6 +161,3 @@ pub struct MultipleChoiceAnswer {
     feedback: TranslatableString,
     marks: Primitive, // TODO: variable valued?
 }
-
-pub type MultipleChoiceAnswersInput = Vec<Value<MultipleChoiceAnswerInput>>;
-pub type MultipleChoiceAnswers = Vec<MultipleChoiceAnswer>;

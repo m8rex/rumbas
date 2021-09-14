@@ -4,7 +4,7 @@ use crate::question::part::multiple_choice::{
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
-use crate::support::rumbas_types::*;
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
@@ -25,19 +25,17 @@ question_part_type! {
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
-        shuffle_answers: RumbasBool,
-        show_cell_answer_state: RumbasBool,
-        should_select_at_least: RumbasNatural,
-        should_select_at_most: NoneableNatural,
-        columns: RumbasNatural,
+        shuffle_answers: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize,
+        should_select_at_most: Noneable<usize>,
+        columns: usize,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type:  MultipleChoiceWarningType
+        wrong_nb_answers_warning_type: numbas::question::part::match_answers::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO other?
     }
 }
-type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
-type MultipleChoiceWarningTypeInput = MultipleChoiceWarningType;
 impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 impl_to_rumbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 

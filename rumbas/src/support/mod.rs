@@ -8,7 +8,6 @@ pub mod default;
 pub mod file_reference;
 pub mod input_string;
 pub mod noneable;
-pub mod rumbas_types;
 pub mod template;
 pub mod translatable;
 pub mod variable_valued;

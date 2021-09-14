@@ -1,5 +1,4 @@
 use crate::support::file_reference::FileString;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use regex::Regex;
@@ -14,10 +13,10 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
-    ListOfStrings(RumbasStrings),
-    ListOfNumbers(RumbasFloats),
-    Long(BoxVariable),
-    Number(RumbasFloat),
+    ListOfStrings(Vec<String>),
+    ListOfNumbers(Vec<f64>),
+    Long(Box<Variable>),
+    Number(f64),
     Other(VariableStringRepresentation),
 }
 
@@ -83,7 +82,7 @@ impl VariableRepresentation {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
-    Anything(RumbasString),
+    Anything(String),
     Range(RangeData),
     RandomRange(RangeData),
 }
@@ -125,9 +124,9 @@ impl std::convert::From<String> for VariableStringRepresentationInput {
 #[input(name = "RangeDataInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct RangeData {
-    pub from: RumbasFloat,
-    pub to: RumbasFloat,
-    pub step: RumbasFloat,
+    pub from: f64,
+    pub to: f64,
+    pub step: f64,
 }
 
 impl RangeData {
@@ -247,8 +246,6 @@ pub struct Variable {
     pub template_type: VariableTemplateType,
     pub group: String, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
-
-type BoxVariable = Box<Variable>;
 
 impl ToNumbas<numbas::question::variable::Variable> for Variable {
     fn to_numbas_with_name(

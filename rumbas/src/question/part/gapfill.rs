@@ -1,7 +1,4 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::{
-    QuestionPartInput, QuestionPartsInput, VariableReplacementStrategyInput,
-};
 use crate::question::part::question_part::{QuestionParts, VariableReplacementStrategy};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;

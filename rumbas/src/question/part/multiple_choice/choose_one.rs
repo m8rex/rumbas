@@ -2,7 +2,6 @@ use super::{extract_multiple_choice_answer_data, MultipleChoiceAnswerData};
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -24,10 +23,10 @@ question_part_type! {
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
-        shuffle_answers: RumbasBool,
-        show_cell_answer_state: RumbasBool,
+        shuffle_answers: bool,
+        show_cell_answer_state: bool,
         /// Whether the student has to select an option (if false: can submit without selecting)
-        has_to_select_option: RumbasBool,
+        has_to_select_option: bool,
         /// !FLATTENED: all its attributes should be added to [QuestionPartChooseOne]
         #[serde(flatten)]
         display: ChooseOneDisplay
@@ -119,10 +118,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRowPrimitive(Primitives);
-
-type Primitives = Vec<numbas::support::primitive::Primitive>;
-type PrimitivesInput = Vec<Value<numbas::support::primitive::Primitive>>;
+pub struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -153,15 +149,10 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-pub type VariableValuedsPrimitivessInput =
-    Vec<Value<VariableValued<Vec<Value<numbas::support::primitive::Primitive>>>>>;
-pub type VariableValuedsPrimitivess =
-    Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>;
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixPrimitive(VariableValuedsPrimitivess);
+pub struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(
@@ -182,7 +173,7 @@ pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
     DropDown,
     #[serde(rename = "radio")]
-    Radio { columns: RumbasNatural },
+    Radio { columns: usize },
 }
 
 impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {

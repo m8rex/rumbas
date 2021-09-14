@@ -19,10 +19,9 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableStrings;
 use crate::support::yaml::{YamlError, YamlResult};
 use constants::BuiltinConstants;
-use constants::CustomConstants;
+use constants::CustomConstant;
 use extension::Extensions;
 use function::Function;
-use function::FunctionInput;
 use navigation::QuestionNavigation;
 use part::question_part::QuestionParts;
 use preamble::Preamble;
@@ -34,7 +33,6 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use variable::VariableRepresentation;
-use variable::VariableRepresentationInput;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
@@ -49,7 +47,7 @@ pub struct Question {
     pub advice: ContentAreaTranslatableString,
     pub parts: QuestionParts,
     pub builtin_constants: BuiltinConstants,
-    pub custom_constants: CustomConstants,
+    pub custom_constants: Vec<CustomConstant>,
     pub variables: StringToVariableRepresentation,
     pub variables_test: VariablesTest,
     pub functions: StringToFunction,

@@ -1,4 +1,4 @@
-use crate::support::rumbas_types::*;
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 #[input(name = "FeedbackInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Feedback {
-    pub percentage_needed_to_pass: NoneableFloat, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
+    pub percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
     pub show_name_of_student: bool,
     /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
     pub show_current_marks: bool,

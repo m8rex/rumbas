@@ -1,13 +1,12 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
-use crate::support::rumbas_types::*;
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStrings;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
@@ -24,11 +23,11 @@ question_part_type! {
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceMatchAnswerData,
-        shuffle_answers: RumbasBool,
-        shuffle_items: RumbasBool,
-        show_cell_answer_state: RumbasBool,
-        should_select_at_least: RumbasNatural,
-        should_select_at_most: NoneableNatural,
+        shuffle_answers: bool,
+        shuffle_items: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize,
+        should_select_at_most: Noneable<usize>,
         /// !FLATTENED
         #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
@@ -273,9 +272,9 @@ pub enum MultipleChoiceMatchAnswerData {
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
-    answers: VariableValuedTranslatableStrings,
-    choices: VariableValuedTranslatableStrings,
-    marks: VariableValuedPrimitivess,
+    answers: VariableValued<Vec<TranslatableString>>,
+    choices: VariableValued<Vec<TranslatableString>>,
+    marks: VariableValued<Vec<Vec<Primitive>>>,
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]
@@ -283,9 +282,9 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswers {
     /// Values of the answers
-    answers: TranslatableStrings,
+    answers: Vec<TranslatableString>,
     /// Items for which the answer can be selected
-    items: MatchAnswersItems,
+    items: Vec<MatchAnswersItem>,
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]
@@ -294,10 +293,8 @@ pub struct MultipleChoiceMatchAnswers {
 pub struct MatchAnswersItem {
     statement: TranslatableString,
     /// Map points to strings of answers ! use anchors in yaml
-    answer_marks: MatchAnswersItemMarksList,
+    answer_marks: Vec<MatchAnswersItemMarks>,
 }
-
-type MatchAnswersItems = Vec<MatchAnswersItem>;
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatchAnswersItemMarksInput")]
@@ -306,5 +303,3 @@ pub struct MatchAnswersItemMarks {
     marks: Primitive,
     answer: TranslatableString,
 }
-
-type MatchAnswersItemMarksList = Vec<MatchAnswersItemMarks>;

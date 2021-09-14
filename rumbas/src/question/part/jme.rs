@@ -3,7 +3,6 @@ use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
 use crate::support::file_reference::{FileString, JMEFileString};
 use crate::support::noneable::Noneable;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::to_rumbas::*;
@@ -27,30 +26,20 @@ question_part_type! {
         show_preview: bool,
         answer_check: CheckingType,
         failure_rate: f64,
-        vset_range: RumbasFloats2, // TODO: seperate (flattened) struct for vset items & checking items etc?
-        vset_range_points: RumbasNatural,
+        vset_range: [f64; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+        vset_range_points: usize,
         check_variable_names: bool,
         single_letter_variables: bool,
         allow_unknown_functions: bool,
         implicit_function_composition: bool,
-        max_length: NoneableJMELengthRestriction,
-        min_length: NoneableJMELengthRestriction,
-        must_have: NoneableJMEStringRestriction,
-        may_not_have: NoneableJMEStringRestriction,
-        must_match_pattern: NoneableJMEPatternRestriction,
-        value_generators: NoneableJMEValueGenerators
+        max_length: Noneable<JMELengthRestriction>,
+        min_length: Noneable<JMELengthRestriction>,
+        must_have: Noneable<JMEStringRestriction>,
+        may_not_have: Noneable<JMEStringRestriction>,
+        must_match_pattern: Noneable<JMEPatternRestriction>,
+        value_generators: Noneable<JMEValueGenerators>
     }
 }
-
-pub type NoneableJMELengthRestriction = Noneable<JMELengthRestriction>;
-pub type NoneableJMELengthRestrictionInput = Noneable<JMELengthRestrictionInput>;
-pub type NoneableJMEStringRestriction = Noneable<JMEStringRestriction>;
-pub type NoneableJMEStringRestrictionInput = Noneable<JMEStringRestrictionInput>;
-pub type NoneableJMEPatternRestriction = Noneable<JMEPatternRestriction>;
-pub type NoneableJMEPatternRestrictionInput = Noneable<JMEPatternRestrictionInput>;
-
-pub type NoneableJMEValueGeneratorsInput = Noneable<JMEValueGeneratorsInput>;
-pub type NoneableJMEValueGenerators = Noneable<JMEValueGenerators>;
 
 impl ToNumbas<numbas::question::part::jme::QuestionPartJME> for QuestionPartJME {
     fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::QuestionPartJME {
@@ -552,7 +541,7 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMERestriction {
     // name: TranslatableString,
-    partial_credit: RumbasFloat, //TODO, is number, so maybe usize?
+    partial_credit: f64, //TODO, is number, so maybe usize?
     message: TranslatableString,
 }
 
@@ -582,7 +571,7 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     restriction: JMERestriction,
-    length: RumbasNatural,
+    length: usize,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMELengthRestriction> for JMELengthRestriction {
@@ -688,7 +677,7 @@ impl ToNumbas<numbas::question::part::jme::JMEValueGenerator> for JMEValueGenera
 
 impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenerator {
     fn to_rumbas(&self) -> JMEValueGenerator {
-        let s: RumbasString = self.value.clone().into();
+        let s: String = self.value.clone().into();
         JMEValueGenerator {
             name: self.name.to_rumbas(),
             value: s.to_rumbas(),

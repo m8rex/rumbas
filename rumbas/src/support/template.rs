@@ -1,7 +1,5 @@
-use crate::support::rumbas_types::*;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
-use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -12,13 +10,10 @@ pub const TEMPLATE_PREFIX: &str = "template";
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
-    pub relative_template_path: RumbasString,
+    pub relative_template_path: String,
     #[serde(flatten)]
-    pub data: TemplateData,
+    pub data: HashMap<String, MyYamlValue>,
 }
-
-type TemplateData = HashMap<String, MyYamlValue>;
-type TemplateDataInput = HashMap<String, MyYamlValue>;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyYamlValue(pub serde_yaml::Value);
