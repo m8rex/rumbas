@@ -168,7 +168,7 @@ macro_rules! create_question_part {
     (
         $type: ident with $part_data: expr => {
             $(
-                $field: ident: $val: expr
+                $field: ident$(: $val: expr)?
             ),*
         }
     ) => {
@@ -202,7 +202,7 @@ macro_rules! create_question_part {
                 .to_rumbas(),
                 steps: extract_part_common_steps(&part_data),
                 $(
-                    $field: $val
+                    $field$(: $val)?
                 ),*
             }
         }
