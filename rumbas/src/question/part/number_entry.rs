@@ -2,8 +2,6 @@ use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionParts;
 use crate::support::file_reference::FileString;
-use crate::support::file_reference::FileStringInput;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -19,15 +17,15 @@ question_part_type! {
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartNumberEntry {
         answer: NumberEntryAnswer,
-        display_correct_as_fraction: RumbasBool,
-        allow_fractions: RumbasBool,
+        display_correct_as_fraction: bool,
+        allow_fractions: bool,
         allowed_notation_styles: AnswerStyles,
 
         display_correct_in_style: AnswerStyle,
-        fractions_must_be_reduced: RumbasBool,
+        fractions_must_be_reduced: bool,
         partial_credit_if_fraction_not_reduced: Primitive,
 
-        hint_fraction: RumbasBool
+        hint_fraction: bool
 
         //TODO: precision, show_precision_hint
     }

@@ -1,4 +1,3 @@
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::jme::JMEString;
@@ -13,7 +12,7 @@ pub type JMEStringInput = numbas::jme::JMEString;
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct VariablesTest {
     condition: JMEString,
-    max_runs: RumbasNatural,
+    max_runs: usize,
 }
 
 impl ToNumbas<numbas::question::question::QuestionVariablesTest> for VariablesTest {

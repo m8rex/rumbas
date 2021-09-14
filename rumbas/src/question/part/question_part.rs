@@ -9,7 +9,6 @@ use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnsw
 use crate::question::part::number_entry::QuestionPartNumberEntry;
 use crate::question::part::pattern_match::QuestionPartPatternMatch;
 use crate::support::noneable::Noneable;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
@@ -245,8 +244,8 @@ impl Default for JMENotes {
 #[input(name = "JMENoteInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMENote {
-    name: RumbasString,
-    description: NoneableString,
+    name: String,
+    description: Noneable<String>,
     expression: JMETranslatableString,
 }
 
@@ -342,14 +341,9 @@ question_part_type! {
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartCustom {
         r#type: String,
-        settings: MapStringToCustomPartInputTypeValue
+        settings: std::collections::HashMap<String, CustomPartInputTypeValue>
     }
 }
-
-type MapStringToCustomPartInputTypeValueInput =
-    std::collections::HashMap<String, CustomPartInputTypeValueInput>;
-type MapStringToCustomPartInputTypeValue =
-    std::collections::HashMap<String, CustomPartInputTypeValue>;
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "CustomPartInputTypeValueInput")]
@@ -357,7 +351,7 @@ type MapStringToCustomPartInputTypeValue =
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
-    Code(RumbasString),
+    Code(String),
 }
 
 impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartInputTypeValue {

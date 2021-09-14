@@ -1,13 +1,10 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::part::question_part::{QuestionPartInput, VariableReplacementStrategyInput};
 use crate::question::QuestionParts;
 use crate::support::noneable::Noneable;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::variable_valued::VariableValued;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
@@ -100,12 +97,9 @@ impl QuestionPartMatrixDimensions {
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub enum QuestionPartMatrixDimension {
-    Fixed(VariableValuedNatural),
-    Resizable(BoxQuestionPartMatrixRangedDimension),
+    Fixed(VariableValued<usize>),
+    Resizable(Box<QuestionPartMatrixRangedDimension>),
 }
-
-type BoxQuestionPartMatrixRangedDimension = Box<QuestionPartMatrixRangedDimension>;
-type BoxQuestionPartMatrixRangedDimensionInput = Box<QuestionPartMatrixRangedDimensionInput>;
 
 impl QuestionPartMatrixDimension {
     pub fn default(&self) -> VariableValued<usize> {
@@ -158,9 +152,9 @@ impl QuestionPartMatrixDimension {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
-    default: VariableValuedNatural,
+    default: VariableValued<usize>,
     /// The minimal size
-    min: VariableValuedNatural,
+    min: VariableValued<usize>,
     /// The maximal size, if this is none, there is no limit
-    max: NoneableVariableValuedNatural,
+    max: Noneable<VariableValued<usize>>,
 }

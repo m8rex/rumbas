@@ -1,6 +1,5 @@
 use crate::question::extension::Extensions;
 use crate::question::part::question_part::JMENotes;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMETranslatableString;
@@ -20,7 +19,7 @@ use std::hash::{Hash, Hasher};
 pub struct CustomPartTypeDefinition {
     type_name: TranslatableString,
     description: TranslatableString,
-    settings: NCustomPartTypeSettings, // TODO
+    settings: Vec<NCustomPartTypeSetting>, // TODO
     can_be_gap: bool,
     can_be_step: bool,
     marking_notes: JMENotes,
@@ -29,9 +28,6 @@ pub struct CustomPartTypeDefinition {
     extensions: Extensions,
     input_widget: CustomPartInputWidget, //TODO source
 }
-
-type NCustomPartTypeSettingsInput = Vec<Value<NCustomPartTypeSetting>>;
-type NCustomPartTypeSettings = Vec<NCustomPartTypeSetting>;
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinition {
     fn to_numbas(&self, _locale: &str) -> numbas::question::custom_part_type::CustomPartType {
@@ -149,13 +145,10 @@ create_input_option_value!(
     Vec<String>
 );
 
-type AnswerStyles = Vec<crate::question::part::number_entry::AnswerStyle>;
-type AnswerStylesInput = Vec<Value<crate::question::part::number_entry::AnswerStyle>>;
-
 create_input_option_value!(
     CustomPartInputOptionValueAnswerStyles,
     "CustomPartInputOptionValueAnswerStylesInput",
-    AnswerStyles,
+    Vec<crate::question::part::number_entry::AnswerStyle>,
     Vec<numbas::support::answer_style::AnswerStyle>
 );
 
@@ -356,7 +349,7 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct CustomPartTypeDefinitionPath {
-    pub custom_part_type_name: RumbasString,
+    pub custom_part_type_name: String,
     pub custom_part_type_data: CustomPartTypeDefinition,
 }
 

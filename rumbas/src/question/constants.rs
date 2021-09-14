@@ -1,4 +1,3 @@
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use numbas::defaults::DEFAULTS;
@@ -55,11 +54,11 @@ builtin_constants! {
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
-        e: RumbasBool: "e": builtin_constants_e,
+        e: bool: "e": builtin_constants_e,
         /// Whether the constant pi is enabled
-        pi: RumbasBool: "pi,\u{03c0}": builtin_constants_pi,
+        pi: bool: "pi,\u{03c0}": builtin_constants_pi,
         /// Whether the constant i is enabled-
-        i: RumbasBool: "i": builtin_constants_i
+        i: bool: "i": builtin_constants_i
     }
 }
 
@@ -69,11 +68,11 @@ builtin_constants! {
 /// A custom constant
 pub struct CustomConstant {
     /// The name of the constant
-    name: RumbasString,
+    name: String,
     /// The value of the constant
     value: JMEString,
     /// The tex code use to display the constant
-    tex: RumbasString,
+    tex: String,
 }
 
 impl ToNumbas<numbas::question::constants::QuestionConstant> for CustomConstant {
@@ -95,6 +94,3 @@ impl ToRumbas<CustomConstant> for numbas::question::constants::QuestionConstant 
         }
     }
 }
-
-pub type CustomConstants = Vec<CustomConstant>;
-pub type CustomConstantsInput = Vec<Value<CustomConstantInput>>;

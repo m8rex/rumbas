@@ -1,6 +1,5 @@
 use crate::question::Question;
 use crate::question::QuestionInput;
-use crate::support::rumbas_types::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;

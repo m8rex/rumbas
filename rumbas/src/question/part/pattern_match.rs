@@ -1,16 +1,11 @@
-use crate::question::part::question_part::{JMENotes, JMENotesInput};
-use crate::question::part::question_part::{
-    QuestionPartInput, VariableReplacementStrategy, VariableReplacementStrategyInput,
-};
-use crate::question::part::question_part::{QuestionParts, QuestionPartsInput};
-use crate::support::rumbas_types::*;
+use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::QuestionParts;
+use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::ContentAreaTranslatableStringInput;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
@@ -22,8 +17,8 @@ question_part_type! {
     #[input(name = "QuestionPartPatternMatchInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartPatternMatch {
-        case_sensitive: RumbasBool,
-        partial_credit: RumbasFloat,
+        case_sensitive: bool,
+        partial_credit: f64,
         pattern: TranslatableString, //TODO: type
         display_answer: TranslatableString,
         match_mode: PatternMatchMode

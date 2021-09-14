@@ -1,8 +1,7 @@
-use crate::support::rumbas_types::*;
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStringInput;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -11,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[input(name = "TimingInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Timing {
-    pub duration_in_seconds: NoneableNatural, // if "none" (or 0) -> unlimited time
+    pub duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
     pub allow_pause: bool,
     /// Action to do on timeout
     pub on_timeout: TimeoutAction,

@@ -45,13 +45,7 @@ pub struct InputReceiver {
 }
 
 fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
-    match t {
-        syn::Type::Path(p) => {
-            quote!(#p)
-        }
-        syn::Type::Group(g) => get_input_type(&*g.elem),
-        _ => panic!("{:?} is not a valid type for an Input struct.", t), // Needed?
-    }
+    quote!(#t)
 }
 
 pub fn get_input_types(fields: &Vec<InputFieldReceiver>) -> Vec<proc_macro2::TokenStream> {
