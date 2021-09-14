@@ -154,15 +154,15 @@ impl Overwrite<QuestionPathInput> for QuestionPathInput {
     fn overwrite(&mut self, _other: &Self) {}
 }
 
-impl ToNumbas<numbas::question::question::Question> for QuestionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::question::question::Question {
+impl ToNumbas<numbas::question::Question> for QuestionPath {
+    fn to_numbas(&self, locale: &str) -> numbas::question::Question {
         self.question_data
             .clone()
             .to_numbas_with_name(locale, self.question_name.clone())
     }
 }
 
-impl ToRumbas<QuestionPath> for numbas::question::question::Question {
+impl ToRumbas<QuestionPath> for numbas::question::Question {
     fn to_rumbas(&self) -> QuestionPath {
         QuestionPath {
             question_name: sanitize(&self.name),

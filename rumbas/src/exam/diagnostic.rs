@@ -41,8 +41,8 @@ pub struct DiagnosticExam {
     pub diagnostic: Diagnostic,
 }
 
-impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::Exam {
+impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
         let basic_settings = self.to_numbas(locale);
 
         let navigation = self.navigation.to_numbas(locale);
@@ -102,7 +102,7 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
 
-        numbas::exam::exam::Exam {
+        numbas::exam::Exam {
             basic_settings,
             resources,
             extensions,
@@ -118,9 +118,9 @@ impl ToNumbas<numbas::exam::exam::Exam> for DiagnosticExam {
     }
 }
 
-impl ToNumbas<numbas::exam::exam::BasicExamSettings> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::exam::BasicExamSettings {
-        numbas::exam::exam::BasicExamSettings {
+impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
+    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+        numbas::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
             duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale),
             percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
@@ -299,7 +299,7 @@ impl ToRumbas<LearningTopic> for numbas::exam::diagnostic::DiagnosticKnowledgeGr
 /// Converts a diagnostic numbas exam to a DiagnosticExam and extracts questions and
 /// custom_part_types
 pub fn convert_diagnostic_numbas_exam(
-    exam: numbas::exam::exam::Exam,
+    exam: numbas::exam::Exam,
 ) -> (
     DiagnosticExam,
     Vec<QuestionPath>,

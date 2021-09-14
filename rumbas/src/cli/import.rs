@@ -1,4 +1,4 @@
-use numbas::exam::exam::Exam as NExam;
+use numbas::exam::Exam as NExam;
 use rumbas::exam::convert_numbas_exam;
 use rumbas::exam::question_group::QuestionPath;
 use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
@@ -15,7 +15,7 @@ macro_rules! read_exam {
 macro_rules! read_question {
     ($file_name: expr) => {{
         let content = std::fs::read_to_string($file_name).expect("Invalid file path");
-        numbas::question::question::Question::from_question_exam_str(content.as_ref())
+        numbas::question::Question::from_question_exam_str(content.as_ref())
     }};
 }
 

@@ -78,21 +78,21 @@ pub fn compile(matches: &clap::ArgMatches) {
                                     let exam_write_res =
                                         res.write(numbas_exam_path.to_str().unwrap());
                                     match exam_write_res {
-                                        numbas::exam::exam::WriteResult::IOError(e) => {
+                                        numbas::exam::WriteResult::IOError(e) => {
                                             log::error!(
                                                 "Failed saving the exam file because of {}.",
                                                 e
                                             );
                                             something_failed = true;
                                         }
-                                        numbas::exam::exam::WriteResult::JSONError(e) => {
+                                        numbas::exam::WriteResult::JSONError(e) => {
                                             log::error!(
                                                 "Failed generating the exam file because of {}.",
                                                 e
                                             );
                                             something_failed = true;
                                         }
-                                        numbas::exam::exam::WriteResult::Ok => {
+                                        numbas::exam::WriteResult::Ok => {
                                             log::info!(
                                                 "Generated and saved exam file for locale {}.",
                                                 locale
