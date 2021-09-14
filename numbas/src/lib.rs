@@ -13,9 +13,9 @@ mod tests {
     use super::*;
     use serde_json::Result;
     use std::fs;
-    fn exam_from_file(file: &str) -> Result<exam::exam::Exam> {
+    fn exam_from_file(file: &str) -> Result<exam::Exam> {
         let s = fs::read_to_string(file).expect(&format!("Failed to read {}", file)[..]);
-        exam::exam::Exam::from_exam_str(&s)
+        exam::Exam::from_exam_str(&s)
     }
     #[test]
     #[ignore]
