@@ -27,9 +27,6 @@ pub enum QuestionPart {
     Custom(QuestionPartCustom),
 }
 
-pub type QuestionPartsInput = Vec<Value<QuestionPartInput>>;
-pub type QuestionParts = Vec<QuestionPart>;
-
 impl ToNumbas<numbas::question::part::QuestionPart> for QuestionPart {
     fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPart {
         match self {
@@ -185,13 +182,10 @@ impl QuestionPartBuiltinInput {
     }
 }
 
-pub type JMENotesVecInput = Vec<Value<JMENoteInput>>;
-pub type JMENotesVec = Vec<JMENote>;
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "JMENotesInput")]
 #[derive(Debug, Clone, JsonSchema, Deserialize, Serialize)]
-pub struct JMENotes(pub JMENotesVec);
+pub struct JMENotes(pub Vec<JMENote>);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
     fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
@@ -296,7 +290,7 @@ macro_rules! question_part_type {
             adaptive_marking_penalty: usize,
             custom_marking_algorithm_notes: JMENotes,
             extend_base_marking_algorithm: bool,
-            steps: QuestionParts
+            steps: Vec<QuestionPart>
             $(,
             $(
                 $(#[$inner])*

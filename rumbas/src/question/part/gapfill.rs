@@ -1,5 +1,5 @@
 use crate::question::part::question_part::JMENotes;
-use crate::question::part::question_part::{QuestionParts, VariableReplacementStrategy};
+use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -18,7 +18,7 @@ question_part_type! {
         /// Whether the answers should be sorted
         sort_answers: bool,
         /// The gaps
-        gaps: QuestionParts
+        gaps: Vec<QuestionPart>
     }
 }
 

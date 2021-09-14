@@ -5,8 +5,6 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-pub type JMEStringInput = numbas::jme::JMEString;
-
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "VariablesTestInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]

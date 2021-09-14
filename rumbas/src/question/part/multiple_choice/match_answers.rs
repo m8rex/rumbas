@@ -1,6 +1,6 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::QuestionParts;
+use crate::question::QuestionPart;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
@@ -9,6 +9,8 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
+use numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
+use numbas::question::part::match_answers::MultipleChoiceWarningType;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
@@ -39,11 +41,6 @@ question_part_type! {
         //TODO other?
     }
 }
-
-type MatchAnswersWithChoicesLayout =
-    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
-
-type MultipleChoiceWarningType = numbas::question::part::match_answers::MultipleChoiceWarningType;
 
 impl_to_numbas!(
     numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,

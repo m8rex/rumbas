@@ -353,9 +353,6 @@ pub struct CustomPartTypeDefinitionPath {
     pub custom_part_type_data: CustomPartTypeDefinition,
 }
 
-pub type CustomPartTypeDefinitionPaths = Vec<CustomPartTypeDefinitionPath>;
-pub type CustomPartTypeDefinitionPathsInput = Vec<Value<CustomPartTypeDefinitionPathInput>>;
-
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinitionPath {
     fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartType {
         self.custom_part_type_data

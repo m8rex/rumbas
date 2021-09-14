@@ -24,7 +24,7 @@ pub struct Feedback {
     pub review: Review, // If none, everything is true???
     pub advice: TranslatableString,
     pub intro: TranslatableString,
-    pub feedback_messages: FeedbackMessages,
+    pub feedback_messages: Vec<FeedbackMessage>,
 }
 
 impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
@@ -137,6 +137,3 @@ impl ToRumbas<FeedbackMessage> for numbas::exam::feedback::FeedbackMessage {
         }
     }
 }
-
-pub type FeedbackMessagesInput = Vec<Value<FeedbackMessageInput>>;
-pub type FeedbackMessages = Vec<FeedbackMessage>;

@@ -1,6 +1,6 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
-use crate::question::QuestionParts;
+use crate::question::QuestionPart;
 use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
@@ -19,7 +19,7 @@ question_part_type! {
         answer: NumberEntryAnswer,
         display_correct_as_fraction: bool,
         allow_fractions: bool,
-        allowed_notation_styles: AnswerStyles,
+        allowed_notation_styles: Vec<AnswerStyle>,
 
         display_correct_in_style: AnswerStyle,
         fractions_must_be_reduced: bool,
@@ -217,6 +217,3 @@ impl ToRumbas<AnswerStyle> for numbas::support::answer_style::AnswerStyle {
         }
     }
 }
-
-pub type AnswerStylesInput = Vec<Value<AnswerStyleInput>>;
-pub type AnswerStyles = Vec<AnswerStyle>;
