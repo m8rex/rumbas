@@ -48,13 +48,13 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build
         run: cargo build --verbose
-        working-directory: &derive rumbas_support_derive
+        working-directory: rumbas_support_derive
       - name: Run tests
         run: cargo test --verbose
-        working-directory: *derive
+        working-directory: rumbas_support_derive
       - name: Run doc
         run: cargo doc --no-deps
-        working-directory: *derive
+        working-directory: rumbas_support_derive
   check_rumbas:
     runs-on: ubuntu-latest
 
