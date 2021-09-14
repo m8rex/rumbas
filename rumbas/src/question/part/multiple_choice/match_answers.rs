@@ -182,24 +182,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
         } else {
             MultipleChoiceMatchAnswerData::NumbasLike(Box::new(
                 MultipleChoiceMatchAnswerDataNumbasLike {
-                    answers: self
-                        .answers
-                        .clone()
-                        /* .map(|v| {
-                            v.iter()
-                                .map(|vv| vv.clone().into())
-                                .collect::<Vec<TranslatableString>>()
-                        })*/
-                        .to_rumbas(),
-                    choices: self
-                        .choices
-                        .clone()
-                        /* .map(|v| {
-                            v.iter()
-                                .map(|vv| vv.clone().into())
-                                .collect::<Vec<TranslatableString>>()
-                        })*/
-                        .to_rumbas(),
+                    answers: self.answers.to_rumbas(),
+                    choices: self.choices.to_rumbas(),
 
                     marks: self
                         .marking_matrix
