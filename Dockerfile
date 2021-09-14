@@ -3,11 +3,19 @@ FROM rust:1.53.0-slim as builder
 WORKDIR /usr/app
 RUN rustup target add x86_64-unknown-linux-musl
 
-#use tricks of https://shaneutt.com/blog/rust-fast-small-docker-image-builds/
 RUN mkdir numbas
 COPY numbas/Cargo* numbas/
 COPY numbas/src numbas/src
 
+RUN mkdir rumbas_support 
+COPY rumbas_support/Cargo* rumbas_support/
+COPY rumbas_support/src rumbas_support/src
+
+RUN mkdir rumbas_support_derive
+COPY rumbas_support_derive/Cargo* rumbas_support_derive/
+COPY rumbas_support_derive/src rumbas_support_derive/src
+
+#use tricks of https://shaneutt.com/blog/rust-fast-small-docker-image-builds/
 RUN mkdir -p rumbas/src
 COPY rumbas/Cargo* rumbas/
 COPY rumbas/src/lib.rs rumbas/src/lib.rs
