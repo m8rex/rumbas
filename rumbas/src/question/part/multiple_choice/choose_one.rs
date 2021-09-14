@@ -118,7 +118,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRowPrimitive(Vec<numbas::support::primitive::Primitive>);
+pub struct MatrixRowPrimitive(pub Vec<numbas::support::primitive::Primitive>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
     fn to_numbas(
@@ -132,7 +132,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRow(TranslatableStrings);
+pub struct MatrixRow(pub TranslatableStrings);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
@@ -152,7 +152,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixPrimitive(Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
+pub struct MatrixPrimitive(pub Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
     fn to_numbas(

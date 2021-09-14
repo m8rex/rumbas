@@ -84,8 +84,8 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
 #[input(name = "QuestionPartMatrixDimensionsInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionPartMatrixDimensions {
-    rows: QuestionPartMatrixDimension,
-    columns: QuestionPartMatrixDimension,
+    pub rows: QuestionPartMatrixDimension,
+    pub columns: QuestionPartMatrixDimension,
 }
 
 impl QuestionPartMatrixDimensions {
@@ -153,9 +153,9 @@ impl QuestionPartMatrixDimension {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
-    default: VariableValued<usize>,
+    pub default: VariableValued<usize>,
     /// The minimal size
-    min: VariableValued<usize>,
+    pub min: VariableValued<usize>,
     /// The maximal size, if this is none, there is no limit
-    max: Noneable<VariableValued<usize>>,
+    pub max: Noneable<VariableValued<usize>>,
 }

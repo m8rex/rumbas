@@ -139,11 +139,11 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
 /// Information needed for a diagnostic test
 pub struct Diagnostic {
     /// The script to use
-    script: DiagnosticScript,
+    pub script: DiagnosticScript,
     /// The learning objectives,
-    objectives: Vec<LearningObjective>,
+    pub objectives: Vec<LearningObjective>,
     /// The learning topics
-    topics: Vec<LearningTopic>,
+    pub topics: Vec<LearningTopic>,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::Diagnostic> for Diagnostic {
@@ -223,9 +223,9 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
 /// A Learning Objective
 pub struct LearningObjective {
     /// The name
-    name: TranslatableString,
+    pub name: TranslatableString,
     /// A description
-    description: TranslatableString,
+    pub description: TranslatableString,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective>
@@ -259,13 +259,13 @@ impl ToRumbas<LearningObjective>
 /// A learning Topic
 pub struct LearningTopic {
     /// The name
-    name: TranslatableString,
+    pub name: TranslatableString,
     /// A description
-    description: TranslatableString,
+    pub description: TranslatableString,
     /// List of names of objectives
-    objectives: TranslatableStrings,
+    pub objectives: TranslatableStrings,
     /// List of names of topic on which this topic depends
-    depends_on: TranslatableStrings,
+    pub depends_on: TranslatableStrings,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic> for LearningTopic {

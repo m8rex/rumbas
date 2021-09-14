@@ -20,7 +20,7 @@ macro_rules! extensions {
                     $(
                         #[$inner]
                     )*
-                    $name: bool
+                    pub $name: bool
                 ),*
             }
 

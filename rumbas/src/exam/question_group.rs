@@ -98,7 +98,7 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
 #[input(name = "PickingStrategyRandomSubsetInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct PickingStrategyRandomSubset {
-    pick_questions: usize,
+    pub pick_questions: usize,
 }
 
 // TODO: remove this JsonSchema

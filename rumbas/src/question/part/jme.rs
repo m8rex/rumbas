@@ -117,29 +117,29 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
 #[input(name = "JMEAnswerSimplificationInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEAnswerSimplification {
-    simplify_basic: bool,
-    simplify_unit_factor: bool,
-    simplify_unit_power: bool,
-    simplify_unit_denominator: bool,
-    simplify_zero_factor: bool,
-    simplify_zero_term: bool,
-    simplify_zero_power: bool,
-    simplify_zero_base: bool,
-    collect_numbers: bool,
-    constants_first: bool,
-    simplify_sqrt_products: bool,
-    simplify_sqrt_division: bool,
-    simplify_sqrt_square: bool,
-    simplify_other_numbers: bool,
-    simplify_no_leading_minus: bool,
-    simplify_fractions: bool,
-    simplify_trigonometric: bool,
-    cancel_terms: bool,
-    cancel_factors: bool,
-    collect_like_fractions: bool,
-    order_canonical: bool,
-    use_times_dot: bool, // Use \cdot instead of \times
-    expand_brackets: bool,
+    pub simplify_basic: bool,
+    pub simplify_unit_factor: bool,
+    pub simplify_unit_power: bool,
+    pub simplify_unit_denominator: bool,
+    pub simplify_zero_factor: bool,
+    pub simplify_zero_term: bool,
+    pub simplify_zero_power: bool,
+    pub simplify_zero_base: bool,
+    pub collect_numbers: bool,
+    pub constants_first: bool,
+    pub simplify_sqrt_products: bool,
+    pub simplify_sqrt_division: bool,
+    pub simplify_sqrt_square: bool,
+    pub simplify_other_numbers: bool,
+    pub simplify_no_leading_minus: bool,
+    pub simplify_fractions: bool,
+    pub simplify_trigonometric: bool,
+    pub cancel_terms: bool,
+    pub cancel_factors: bool,
+    pub collect_like_fractions: bool,
+    pub order_canonical: bool,
+    pub use_times_dot: bool, // Use \cdot instead of \times
+    pub expand_brackets: bool,
 }
 
 // TODO: macro?
@@ -438,7 +438,7 @@ impl ToRumbas<JMEAnswerSimplification>
 #[input(name = "CheckingTypeDataFloatInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CheckingTypeDataFloat {
-    max_difference: f64,
+    pub max_difference: f64,
 }
 
 impl
@@ -461,7 +461,7 @@ impl
 #[input(name = "CheckingTypeDataNaturalInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CheckingTypeDataNatural {
-    amount: usize,
+    pub amount: usize,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for CheckingTypeDataNatural {
@@ -541,8 +541,8 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMERestriction {
     // name: TranslatableString,
-    partial_credit: f64, //TODO, is number, so maybe usize?
-    message: TranslatableString,
+    pub partial_credit: f64, //TODO, is number, so maybe usize?
+    pub message: TranslatableString,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMERestriction> for JMERestriction {
@@ -570,8 +570,8 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
-    restriction: JMERestriction,
-    length: usize,
+    pub restriction: JMERestriction,
+    pub length: usize,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMELengthRestriction> for JMELengthRestriction {
@@ -601,9 +601,9 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEStringRestriction {
     #[serde(flatten)]
-    restriction: JMERestriction,
-    show_strings: bool,
-    strings: TranslatableStrings,
+    pub restriction: JMERestriction,
+    pub show_strings: bool,
+    pub strings: TranslatableStrings,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEStringRestriction> for JMEStringRestriction {
@@ -630,10 +630,10 @@ impl ToRumbas<JMEStringRestriction> for numbas::question::part::jme::JMEStringRe
 #[input(name = "JMEPatternRestrictionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEPatternRestriction {
-    partial_credit: f64, //TODO, is number, so maybe usize?
-    message: TranslatableString,
-    pattern: String,         //TODO type? If string -> InputString?
-    name_to_compare: String, //TODO, translateable?
+    pub partial_credit: f64, //TODO, is number, so maybe usize?
+    pub message: TranslatableString,
+    pub pattern: String,         //TODO type? If string -> InputString?
+    pub name_to_compare: String, //TODO, translateable?
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEPatternRestriction> for JMEPatternRestriction {
@@ -662,8 +662,8 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
 #[input(name = "JMEValueGeneratorInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEValueGenerator {
-    name: FileString,
-    value: JMEFileString,
+    pub name: FileString,
+    pub value: JMEFileString,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEValueGenerator> for JMEValueGenerator {
