@@ -4,7 +4,6 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStrings;
 use crate::support::yaml::{YamlError, YamlResult};
 use numbas::question::custom_part_type::CustomPartTypeSetting as NCustomPartTypeSetting;
 use rumbas_support::preamble::*;
@@ -138,10 +137,11 @@ create_input_option_value!(
     TranslatableString,
     String
 );
+
 create_input_option_value!(
     CustomPartInputOptionValueTranslatableStrings,
     "CustomPartInputOptionValueTranslatableStringsInput",
-    TranslatableStrings,
+    Vec<TranslatableString>,
     Vec<String>
 );
 

@@ -12,7 +12,6 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::JMENotesTranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStrings;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -263,9 +262,9 @@ pub struct LearningTopic {
     /// A description
     pub description: TranslatableString,
     /// List of names of objectives
-    pub objectives: TranslatableStrings,
+    pub objectives: Vec<TranslatableString>,
     /// List of names of topic on which this topic depends
-    pub depends_on: TranslatableStrings,
+    pub depends_on: Vec<TranslatableString>,
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic> for LearningTopic {

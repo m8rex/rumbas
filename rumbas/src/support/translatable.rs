@@ -330,10 +330,6 @@ macro_rules! translatable_type {
                 }
             }
         }
-        paste::paste! {
-            pub type [<$type sInput>] = Vec<Value<[<$type Input>]>>;
-            pub type [<$type s>] = Vec<$type>;
-        }
     };
 }
 
