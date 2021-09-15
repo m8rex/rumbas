@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["BooledPrimitive",""],["Primitive",""],["VariableValued",""]],"struct":[["SafeBool","A boolean that can be parsed from (booled) primitive"],["SafeFloat","A decimal number (float) that can be parsed from primitive"],["SafeNatural","A natural number (unsigned int) that can be parsed from primitive"]]});

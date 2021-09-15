@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["PatternMatchMode",""]],"struct":[["QuestionPartPatternMatch",""]]});

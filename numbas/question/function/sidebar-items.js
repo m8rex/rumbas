@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["FunctionDefinition",""],["FunctionType",""]],"struct":[["Function",""]],"type":[["FunctionParameter",""]]});

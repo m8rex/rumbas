@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["WriteResult",""]],"fn":[["hacky_fix_exam",""]],"mod":[["diagnostic",""],["feedback",""],["navigation",""],["question_group",""],["timing",""]],"struct":[["BasicExamSettings",""],["Exam",""]]});

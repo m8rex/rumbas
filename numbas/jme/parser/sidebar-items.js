@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ConsumeError",""],["ParserExpr",""],["ScriptParserExpr",""]],"fn":[["consume_content_area_expressions",""],["consume_expressions",""],["consume_notes",""],["consume_one_expression",""],["parse_as_content_area",""],["parse_as_embraced_jme",""],["parse_as_jme",""],["parse_as_jme_script",""]],"struct":[["ParserNode",""],["ScriptParserNode",""]]});

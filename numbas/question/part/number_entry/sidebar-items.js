@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CheckingType",""],["NumberEntryAnswerType",""],["QuestionPrecisionType",""]],"struct":[["QuestionPartNumberEntry",""],["QuestionPrecision",""]]});

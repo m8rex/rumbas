@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JMECheckingType",""]],"struct":[["JMECheckingTypeData",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["JMEValueGenerator",""],["QuestionPartJME",""]]});
