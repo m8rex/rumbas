@@ -17,7 +17,7 @@ use crate::support::template::TemplateFile;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::TranslatableStrings;
+use crate::support::translatable::TranslatableString;
 use crate::support::yaml::{YamlError, YamlResult};
 use constants::BuiltinConstants;
 use constants::CustomConstant;
@@ -55,7 +55,7 @@ pub struct Question {
     pub navigation: QuestionNavigation,
     pub extensions: Extensions,
     /// The names of the topics used in diagnostic exams that this question belongs to
-    pub diagnostic_topic_names: TranslatableStrings, // TODO: validate? / warnings?
+    pub diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
     pub resources: Vec<ResourcePath>,
     /// The custom part types used in this exam
     pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options

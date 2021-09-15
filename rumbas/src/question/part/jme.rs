@@ -9,7 +9,6 @@ use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStrings;
 use numbas::defaults::DEFAULTS;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
@@ -603,7 +602,7 @@ pub struct JMEStringRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
     pub show_strings: bool,
-    pub strings: TranslatableStrings,
+    pub strings: Vec<TranslatableString>,
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEStringRestriction> for JMEStringRestriction {

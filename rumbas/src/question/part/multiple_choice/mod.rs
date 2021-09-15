@@ -3,7 +3,6 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::TranslatableString;
-use crate::support::translatable::TranslatableStrings;
 use crate::support::variable_valued::VariableValued;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
@@ -50,7 +49,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "MatrixRowInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRow(pub TranslatableStrings);
+pub struct MatrixRow(pub Vec<TranslatableString>);
 
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
     fn to_numbas(
