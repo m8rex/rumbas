@@ -169,8 +169,8 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                                 answer_marks: marks
                                     .into_iter()
                                     .enumerate()
-                                    .map(|(i, m)| MatchAnswersItemMarks {
-                                        marks: m,
+                                    .map(|(i, marks)| MatchAnswersItemMarks {
+                                        marks,
                                         answer: answers.get(i).unwrap().clone(),
                                     })
                                     .collect(),
