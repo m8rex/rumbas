@@ -1,8 +1,8 @@
-name: Rust
+name: Doc
 
 on:
   push:
-    branches: [main, documentation]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,13 +13,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+            rumbas_support/target
+            rumbas_support_derive/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Add nightly
+        run: |-
+          rustup install nightly
       - name: Run doc
-        run: cargo doc --no-deps
-        working-directory: rumbas
+        run: RUSTDOCFLAGS="--enable-index-page -Zunstable-options" cargo +nightly doc --no-deps
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: rumbas/target/doc # The folder the action should deploy.
+          FOLDER: target/doc/ # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
