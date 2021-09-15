@@ -22,6 +22,7 @@ question_part_type! {
     pub struct QuestionPartJME {
         answer: EmbracedJMETranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
+        answer_display: JMEAnswerDisplay,
         show_preview: bool,
         answer_check: CheckingType,
         failure_rate: f64,
@@ -74,6 +75,7 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
             QuestionPartJME with &self.part_data => {
                 answer: self.answer.to_rumbas(),
                 answer_simplification: self.answer_simplification.to_rumbas(),
+                answer_display: self.answer_simplification.to_rumbas(),
                 show_preview: self.show_preview.to_rumbas(),
                 answer_check: self.checking_type.to_rumbas(),
                 failure_rate: self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate).to_rumbas(),
@@ -111,15 +113,15 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
 }
 
 macro_rules! create_answer_simplification {
-    ($($name: ident: $numbas_name: ident),*) => {
+    ($struct: ident: $input: literal: $variant: ident: $variant_struct: ident, $($name: ident: $numbas_name: ident: $default: ident: $partofall: expr),*) => {
         #[derive(Input, Overwrite, RumbasCheck)]
-        #[input(name = "JMEAnswerSimplificationInput")]
+        #[input(name = $input)]
         #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-        pub struct JMEAnswerSimplification {
+        pub struct $struct {
             $(pub $name: bool),*
         }
         impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
-            for JMEAnswerSimplification
+            for $struct
         {
             fn to_numbas(
                 &self,
@@ -127,58 +129,40 @@ macro_rules! create_answer_simplification {
             ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
                 let mut v = Vec::new();
                 $(if self.$name {
-                    v.push(numbas::question::answer_simplification::AnswerSimplificationType::$numbas_name(true));
+                    v.push(
+                        numbas::question::answer_simplification::AnswerSimplificationType::$variant(
+                            numbas::question::answer_simplification::$variant_struct::$numbas_name(true)
+                        )
+                    );
                 })*
                 v
             }
         }
 
-        impl ToRumbas<JMEAnswerSimplification>
+        impl ToRumbas<$struct>
             for Option<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
         {
-            fn to_rumbas(&self) -> JMEAnswerSimplification {
-                let mut result = JMEAnswerSimplification {
-                    simplify_basic: DEFAULTS.jme_simplification_simplify_basic,
-                    simplify_unit_factor: DEFAULTS.jme_simplification_simplify_unit_factor,
-                    simplify_unit_power: DEFAULTS.jme_simplification_simplify_unit_power,
-                    simplify_unit_denominator: DEFAULTS.jme_simplification_simplify_unit_denominator,
-                    simplify_zero_factor: DEFAULTS.jme_simplification_simplify_zero_factor,
-                    simplify_zero_term: DEFAULTS.jme_simplification_simplify_zero_term,
-                    simplify_zero_power: DEFAULTS.jme_simplification_simplify_zero_power,
-                    simplify_zero_base: DEFAULTS.jme_simplification_simplify_zero_base,
-                    collect_numbers: DEFAULTS.jme_simplification_collect_numbers,
-                    constants_first: DEFAULTS.jme_simplification_constants_first,
-                    simplify_sqrt_products: DEFAULTS.jme_simplification_simplify_sqrt_products,
-                    simplify_sqrt_division: DEFAULTS.jme_simplification_simplify_sqrt_division,
-                    simplify_sqrt_square: DEFAULTS.jme_simplification_simplify_sqrt_square,
-                    simplify_other_numbers: DEFAULTS.jme_simplification_simplify_other_numbers,
-                    simplify_no_leading_minus: DEFAULTS.jme_simplification_simplify_no_leading_minus,
-                    simplify_fractions: DEFAULTS.jme_simplification_simplify_fractions,
-                    simplify_trigonometric: DEFAULTS.jme_simplification_simplify_trigonometric,
-                    cancel_terms: DEFAULTS.jme_simplification_cancel_terms,
-                    cancel_factors: DEFAULTS.jme_simplification_cancel_factors,
-                    collect_like_fractions: DEFAULTS.jme_simplification_collect_like_fractions,
-                    order_canonical: DEFAULTS.jme_simplification_order_canonical,
-                    use_times_dot: DEFAULTS.jme_simplification_use_times_dot,
-                    expand_brackets: DEFAULTS.jme_simplification_expand_brackets,
+            fn to_rumbas(&self) -> $struct {
+                let mut result = $struct {
+                    $(
+                        $name: DEFAULTS.$default
+                    ),*
                 }; // Numbas default
                 if let Some(v) = self {
                     for a in v.iter() {
                         match a {
-                            numbas::question::answer_simplification::AnswerSimplificationType::All(b) => {
-                                $(result.$name = *b);*
-                            }
-                            $(numbas::question::answer_simplification::AnswerSimplificationType::$numbas_name(b) => {
-                                result.$name = *b;
-                            })*
-                            numbas::question::answer_simplification::AnswerSimplificationType::Unknown((name, val)) => {
-                                // TODO: remove, add display options
-                                log::info!(
-                                    "Found unknown answer simplification type {}{}",
-                                    if *val { "!" } else { "" },
-                                    name
-                                )
-                            }
+                            numbas::question::answer_simplification::AnswerSimplificationType::$variant(r) =>
+                                match r {
+                                    numbas::question::answer_simplification::$variant_struct::All(b) => {
+                                        $(if $partofall {
+                                            result.$name = *b;
+                                        })*
+                                    }
+                                    $(numbas::question::answer_simplification::$variant_struct::$numbas_name(b) => {
+                                        result.$name = *b;
+                                    })*
+                                }
+                            _ => ()
                         }
                     }
                 }
@@ -192,29 +176,97 @@ macro_rules! create_answer_simplification {
 // See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
 //TODO: rename etc
 create_answer_simplification! {
-    simplify_basic: Basic,
-    simplify_unit_factor: UnitFactor,
-    simplify_unit_power: UnitPower,
-    simplify_unit_denominator: UnitDenominator,
-    simplify_zero_factor: ZeroFactor,
-    simplify_zero_term: ZeroTerm,
-    simplify_zero_power: ZeroPower,
-    simplify_zero_base: ZeroBase,
-    collect_numbers: CollectNumbers,
-    constants_first: ConstantsFirst,
-    simplify_sqrt_products: SqrtProduct,
-    simplify_sqrt_division: SqrtDivision,
-    simplify_sqrt_square: SqrtSquare,
-    simplify_other_numbers: OtherNumbers,
-    simplify_no_leading_minus: NoLeadingMinus,
-    simplify_fractions: Fractions,
-    simplify_trigonometric: Trigonometric,
-    cancel_terms: CancelTerms,
-    cancel_factors: CancelFactors,
-    collect_like_fractions: CollectLikeFractions,
-    order_canonical: CanonicalOrder,
-    use_times_dot: TimesDot, // Use \cdot instead of \times
-    expand_brackets: ExpandBrackets
+    JMEAnswerSimplification: "JMEAnswerSimplificationInput": Rule: AnswerSimplificationRule,
+    simplify_basic: Basic: jme_simplification_simplify_basic: true,
+    simplify_unit_factor: CancelUnitFactor: jme_simplification_simplify_unit_factor: true,
+    simplify_unit_power: CancelUnitPower: jme_simplification_simplify_unit_power: true,
+    simplify_unit_denominator: CancelUnitDenominator: jme_simplification_simplify_unit_denominator: true,
+    simplify_zero_factor: CancelZeroFactor: jme_simplification_simplify_zero_factor: true,
+    simplify_zero_term: OmitZeroTerm: jme_simplification_simplify_zero_term: true,
+    simplify_zero_power: CancelZeroPower: jme_simplification_simplify_zero_power: true,
+    simplify_zero_base: CancelZeroBase: jme_simplification_simplify_zero_base: true,
+    collect_numbers: CollectNumbers: jme_simplification_collect_numbers: true,
+    constants_first: ConstantsFirst: jme_simplification_constants_first: true,
+    simplify_sqrt_products: CollectSqrtProducts: jme_simplification_simplify_sqrt_products: true,
+    simplify_sqrt_division: CollectSqrtDivisions: jme_simplification_simplify_sqrt_division: true,
+    simplify_sqrt_square: CancelSqrtSquare: jme_simplification_simplify_sqrt_square: true,
+    simplify_other_numbers: EvaluatePowersOfNumbers: jme_simplification_simplify_other_numbers: true,
+    simplify_no_leading_minus: NoLeadingMinus: jme_simplification_simplify_no_leading_minus: true,
+    simplify_fractions: Fractions: jme_simplification_simplify_fractions: true,
+    simplify_trigonometric: Trigonometric: jme_simplification_simplify_trigonometric: true,
+    cancel_terms: CollectTerms: jme_simplification_cancel_terms: true,
+    cancel_factors: CollectPowersOfCommonFactors: jme_simplification_cancel_factors: true,
+    collect_like_fractions: CollectLikeFractions: jme_simplification_collect_like_fractions: true,
+    order_canonical: CanonicalOrder: jme_simplification_order_canonical: false,
+    expand_brackets: ExpandBrackets: jme_simplification_expand_brackets: false
+}
+
+macro_rules! create_answer_display_type {
+    ($struct: ident: $input: literal: $variant: ident: $variant_struct: ident, $($name: ident: $numbas_name: ident: $default: ident),*) => {
+        #[derive(Input, Overwrite, RumbasCheck)]
+        #[input(name = $input)]
+        #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+        pub struct $struct {
+            $(pub $name: bool),*
+        }
+        impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
+            for $struct
+        {
+            fn to_numbas(
+                &self,
+                _locale: &str,
+            ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
+                let mut v = Vec::new();
+                $(if self.$name {
+                    v.push(
+                        numbas::question::answer_simplification::AnswerSimplificationType::$variant(
+                            numbas::question::answer_simplification::$variant_struct::$numbas_name(true)
+                        )
+                    );
+                })*
+                v
+            }
+        }
+
+        impl ToRumbas<$struct>
+            for Option<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
+        {
+            fn to_rumbas(&self) -> $struct {
+                let mut result = $struct {
+                    $(
+                        $name: DEFAULTS.$default
+                    ),*
+                }; // Numbas default
+                if let Some(v) = self {
+                    for a in v.iter() {
+                        match a {
+                            numbas::question::answer_simplification::AnswerSimplificationType::$variant(r) =>
+                                match r {
+                                    $(numbas::question::answer_simplification::$variant_struct::$numbas_name(b) => {
+                                        result.$name = *b;
+                                    })*
+                                }
+                            _ => ()
+                        }
+                    }
+                }
+
+                result
+            }
+        }
+    }
+}
+
+// TODO: rename
+create_answer_display_type! {
+    JMEAnswerDisplay: "JMEAnswerDisplayInput": DisplayOption: AnswerSimplificationDisplayOption,
+    broken_as_fractions: Fractions: jme_display_fraction_numbers,
+    mixed_fractions: MixedFractions: jme_display_mixed_fractions,
+    flat_fractions: FlatFractions: jme_display_flat_fractions,
+    vector_as_row: RowVector: jme_display_row_vector,
+    always_show_multiplication_sign: AlwaysShowMultiplicationSign : jme_display_always_times,
+    use_times_dot: DotAsMultiplicationSign: jme_display_use_times_dot, // Use \cdot instead of \times TODO
+    matrices_without_parentheses: MatricesWithoutParentheses: jme_display_bare_matrices
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]

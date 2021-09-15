@@ -64,8 +64,16 @@ pub struct NumbasDefaults {
     pub jme_simplification_cancel_factors: bool,
     pub jme_simplification_collect_like_fractions: bool,
     pub jme_simplification_order_canonical: bool,
-    pub jme_simplification_use_times_dot: bool,
     pub jme_simplification_expand_brackets: bool,
+
+    pub jme_display_fraction_numbers: bool,
+    pub jme_display_mixed_fractions: bool,
+    pub jme_display_flat_fractions: bool,
+    pub jme_display_row_vector: bool,
+    pub jme_display_always_times: bool,
+    pub jme_display_use_times_dot: bool,
+    pub jme_display_bare_matrices: bool,
+
     pub jme_failure_rate: f64,
 }
 
@@ -140,8 +148,15 @@ pub const DEFAULTS: NumbasDefaults = NumbasDefaults {
     jme_simplification_cancel_factors: true,
     jme_simplification_collect_like_fractions: true,
     jme_simplification_order_canonical: false,
-    jme_simplification_use_times_dot: true,
     jme_simplification_expand_brackets: false,
+
+    jme_display_fraction_numbers: false,
+    jme_display_mixed_fractions: false,
+    jme_display_flat_fractions: false,
+    jme_display_row_vector: false,
+    jme_display_always_times: false,
+    jme_display_use_times_dot: false,
+    jme_display_bare_matrices: false,
 
     jme_failure_rate: 1.0,
 };
