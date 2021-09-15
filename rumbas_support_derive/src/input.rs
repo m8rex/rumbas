@@ -9,7 +9,6 @@ pub struct InputFieldReceiver {
     /// enum bodies, this can be `None`.
     pub ident: Option<syn::Ident>,
 
-    /// This magic field name pulls the type from the input.
     pub ty: syn::Type,
     pub attrs: Vec<syn::Attribute>,
 }
@@ -17,9 +16,7 @@ pub struct InputFieldReceiver {
 #[derive(Debug, FromVariant)]
 #[darling(forward_attrs)]
 pub struct InputVariantReceiver {
-    /// The identifier of the passed-in variant
     pub ident: syn::Ident,
-    // The fields associated with the variant
     pub fields: ast::Fields<InputFieldReceiver>,
     pub attrs: Vec<syn::Attribute>,
 }
@@ -28,15 +25,12 @@ pub struct InputVariantReceiver {
 #[darling(attributes(input))]
 #[darling(forward_attrs)]
 pub struct InputReceiver {
-    /// The struct ident.
     ident: syn::Ident,
 
     /// The type's generics. You'll need these any time your trait is expected
     /// to work with types that declare generics.
     generics: syn::Generics,
 
-    /// Receives the body of the struct or enum. We don't care about
-    /// struct fields because we previously told darling we only accept structs.
     data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
     attrs: Vec<syn::Attribute>,
 
@@ -78,7 +72,7 @@ fn handle_attributes(attrs: &[syn::Attribute]) -> proc_macro2::TokenStream {
             }
         })
         .collect::<Vec<_>>();
-    //println!("{:#?}", derive_attrs);
+
     let mut tokens = quote!(#[derive(#(#derive_attrs),*)]);
     let other_attrs = attrs
         .iter()
@@ -86,7 +80,7 @@ fn handle_attributes(attrs: &[syn::Attribute]) -> proc_macro2::TokenStream {
         .map(|a| quote! {#a})
         .collect::<Vec<_>>();
     tokens.extend(quote!(#(#other_attrs)*));
-    //println!("{:#?}", tokens);
+
     tokens
 }
 
@@ -325,7 +319,7 @@ fn input_handle_enum_input_variants(v: &[InputVariantReceiver]) -> Vec<proc_macr
         .collect::<Vec<_>>()
 }
 
-//
+// Create tokens for each enum variant for the to_normal method
 fn input_handle_enum_to_normal_variants(
     v: &[InputVariantReceiver],
     ident: &syn::Ident,
@@ -355,6 +349,7 @@ fn input_handle_enum_to_normal_variants(
     }).collect::<Vec<_>>()
 }
 
+// Create tokens for each enum variant for the from_normal method
 fn input_handle_enum_from_normal_variants(
     v: &[InputVariantReceiver],
     ident: &syn::Ident,
@@ -384,6 +379,7 @@ fn input_handle_enum_from_normal_variants(
     }).collect::<Vec<_>>()
 }
 
+// Create tokens for each enum variant for the find_missing method
 fn input_handle_enum_find_missing_variants(
     v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
@@ -456,6 +452,7 @@ fn input_handle_enum_find_missing_variants(
         .collect::<Vec<_>>()
 }
 
+// Create tokens for each enum variant for the insert_template_value_variants method
 fn input_handle_enum_insert_template_value_variants(
     v: &[InputVariantReceiver],
     input_ident: &syn::Ident,
@@ -506,6 +503,7 @@ fn input_handle_enum_insert_template_value_variants(
         .collect::<Vec<_>>()
 }
 
+// Handle derivation for enums
 fn input_handle_enum(
     v: &[InputVariantReceiver],
     ident: &syn::Ident,
@@ -570,14 +568,6 @@ impl ToTokens for InputReceiver {
             ref attrs,
             ref input_name,
         } = *self;
-
-        //println!("{:?}", attrs);
-
-        /*let derive_attrs = attrs
-            .iter()
-            .filter(|a| a.path.is_ident("derive"))
-            .collect::<Vec<_>>();
-        eprintln!("{:?}", derive_attrs);*/
 
         let (imp, ty, wher) = generics.split_for_impl();
 
