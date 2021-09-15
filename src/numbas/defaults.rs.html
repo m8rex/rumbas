@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/defaults.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>defaults.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
-<link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../numbas/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas&#x2F;src&#x2F;defaults.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>defaults.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../numbas/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -147,16 +145,15 @@
 <span id="145">145</span>
 <span id="146">146</span>
 <span id="147">147</span>
-</pre><pre class="rust">
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NumbasDefaults</span> {
+</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NumbasDefaults</span> {
     <span class="kw">pub</span> <span class="ident">navigation_reverse</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">navigation_browsing_enabled</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">navigation_allow_steps</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">navigation_prevent_leaving</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">navigation_show_results_page</span>: <span class="kw">crate</span><span class="ident">::exam::navigation::ShowResultsPage</span>,
+    <span class="kw">pub</span> <span class="ident">navigation_show_results_page</span>: <span class="ident"><span class="kw">crate</span>::exam::navigation::ShowResultsPage</span>,
     <span class="kw">pub</span> <span class="ident">navigation_show_names_of_question_groups</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">navigation_start_password</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">navigation_on_leave</span>: <span class="kw">crate</span><span class="ident">::exam::navigation::LeaveAction</span>,
+    <span class="kw">pub</span> <span class="ident">navigation_on_leave</span>: <span class="ident"><span class="kw">crate</span>::exam::navigation::LeaveAction</span>,
     <span class="kw">pub</span> <span class="ident">question_navigation_prevent_leaving</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">basic_settings_show_student_name</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">basic_settings_allow_printing</span>: <span class="ident">bool</span>,
@@ -175,20 +172,20 @@
     <span class="kw">pub</span> <span class="ident">part_common_show_feedback_icon</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">part_common_adaptive_marking_penalty</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span> <span class="ident">part_common_extend_base_marking_algorithm</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">number_entry_correct_answer_style</span>: <span class="kw">crate</span><span class="ident">::support::answer_style::AnswerStyle</span>,
+    <span class="kw">pub</span> <span class="ident">number_entry_correct_answer_style</span>: <span class="ident"><span class="kw">crate</span>::support::answer_style::AnswerStyle</span>,
     <span class="kw">pub</span> <span class="ident">length_restriction_length</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span> <span class="ident">number_entry_fractions_must_be_reduced</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">number_entry_partial_credit_if_fraction_not_reduced</span>: <span class="kw">crate</span><span class="ident">::support::primitive::Primitive</span>,
+    <span class="kw">pub</span> <span class="ident">number_entry_partial_credit_if_fraction_not_reduced</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::Primitive</span>,
     <span class="kw">pub</span> <span class="ident">number_entry_hint_fraction</span>: <span class="ident">bool</span>,
 
     <span class="kw">pub</span> <span class="ident">choose_one_has_to_select_option</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">choose_one_show_cell_answer_state</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">gapfill_sort_answers</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">match_answers_with_items_min_answers</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeNatural</span>,
-    <span class="kw">pub</span> <span class="ident">choose_multiple_min_answers</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeNatural</span>,
+    <span class="kw">pub</span> <span class="ident">match_answers_with_items_min_answers</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>,
+    <span class="kw">pub</span> <span class="ident">choose_multiple_min_answers</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>,
 
     <span class="kw">pub</span> <span class="ident">pattern_match_case_sensitive</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">pattern_match_partial_credit</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeFloat</span>,
+    <span class="kw">pub</span> <span class="ident">pattern_match_partial_credit</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeFloat</span>,
 
     <span class="kw">pub</span> <span class="ident">jme_single_letter_variables</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">jme_allow_unknown_functions</span>: <span class="ident">bool</span>,
@@ -225,10 +222,10 @@
     <span class="ident">navigation_browsing_enabled</span>: <span class="bool-val">true</span>,
     <span class="ident">navigation_allow_steps</span>: <span class="bool-val">true</span>,
     <span class="ident">navigation_prevent_leaving</span>: <span class="bool-val">true</span>,
-    <span class="ident">navigation_show_results_page</span>: <span class="kw">crate</span><span class="ident">::exam::navigation::ShowResultsPage::Never</span>,
+    <span class="ident">navigation_show_results_page</span>: <span class="ident"><span class="kw">crate</span>::exam::navigation::ShowResultsPage::Never</span>,
     <span class="ident">navigation_show_names_of_question_groups</span>: <span class="bool-val">true</span>,
     <span class="ident">navigation_start_password</span>: <span class="ident">String::new</span>(),
-    <span class="ident">navigation_on_leave</span>: <span class="kw">crate</span><span class="ident">::exam::navigation::LeaveAction::None</span> {
+    <span class="ident">navigation_on_leave</span>: <span class="ident"><span class="kw">crate</span>::exam::navigation::LeaveAction::None</span> {
         <span class="ident">message</span>: <span class="ident">String::new</span>(),
     },
     <span class="ident">question_navigation_prevent_leaving</span>: <span class="bool-val">true</span>,
@@ -249,21 +246,21 @@
     <span class="ident">part_common_show_feedback_icon</span>: <span class="bool-val">true</span>,
     <span class="ident">part_common_adaptive_marking_penalty</span>: <span class="number">0</span>,
     <span class="ident">part_common_extend_base_marking_algorithm</span>: <span class="bool-val">true</span>,
-    <span class="ident">number_entry_correct_answer_style</span>: <span class="kw">crate</span><span class="ident">::support::answer_style::AnswerStyle::EnglishPlain</span>,
+    <span class="ident">number_entry_correct_answer_style</span>: <span class="ident"><span class="kw">crate</span>::support::answer_style::AnswerStyle::EnglishPlain</span>,
     <span class="ident">length_restriction_length</span>: <span class="number">0</span>,
 
     <span class="ident">choose_one_has_to_select_option</span>: <span class="bool-val">true</span>,
     <span class="ident">choose_one_show_cell_answer_state</span>: <span class="bool-val">true</span>,
     <span class="ident">gapfill_sort_answers</span>: <span class="bool-val">true</span>,
-    <span class="ident">match_answers_with_items_min_answers</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeNatural</span>(<span class="number">0</span>),
-    <span class="ident">choose_multiple_min_answers</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeNatural</span>(<span class="number">0</span>),
+    <span class="ident">match_answers_with_items_min_answers</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>(<span class="number">0</span>),
+    <span class="ident">choose_multiple_min_answers</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>(<span class="number">0</span>),
 
     <span class="ident">pattern_match_case_sensitive</span>: <span class="bool-val">false</span>,
-    <span class="ident">pattern_match_partial_credit</span>: <span class="kw">crate</span><span class="ident">::support::primitive::SafeFloat</span>(<span class="number">0.0</span>),
+    <span class="ident">pattern_match_partial_credit</span>: <span class="ident"><span class="kw">crate</span>::support::primitive::SafeFloat</span>(<span class="number">0.0</span>),
 
     <span class="ident">number_entry_fractions_must_be_reduced</span>: <span class="bool-val">false</span>,
     <span class="ident">number_entry_partial_credit_if_fraction_not_reduced</span>:
-        <span class="kw">crate</span><span class="ident">::support::primitive::Primitive::Natural</span>(<span class="number">0</span>),
+        <span class="ident"><span class="kw">crate</span>::support::primitive::Primitive::Natural</span>(<span class="number">0</span>),
     <span class="ident">number_entry_hint_fraction</span>: <span class="bool-val">true</span>,
 
     <span class="ident">jme_single_letter_variables</span>: <span class="bool-val">false</span>,
@@ -295,5 +292,7 @@
 
     <span class="ident">jme_failure_rate</span>: <span class="number">1.0</span>,
 };
-</pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="numbas" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>
+</code></pre></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="numbas" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>
+</body></html>
