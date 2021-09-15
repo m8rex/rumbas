@@ -9,7 +9,6 @@ struct OverwriteFieldReceiver {
     /// enum bodies, this can be `None`.
     ident: Option<syn::Ident>,
 
-    /// This magic field name pulls the type from the input.
     ty: syn::Type,
 }
 
@@ -17,20 +16,13 @@ struct OverwriteFieldReceiver {
 #[darling(attributes(input))]
 #[darling(forward_attrs)]
 pub struct OverwriteReceiver {
-    /// The struct ident.
     ident: syn::Ident,
 
     /// The type's generics. You'll need these any time your trait is expected
     /// to work with types that declare generics.
     generics: syn::Generics,
 
-    /// Receives the body of the struct or enum. We don't care about
-    /// struct fields because we previously told darling we only accept structs.
     data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
-    //attrs: Vec<syn::Attribute>,
-    /// I guess we can't get other derives into `attrs` so we have to create our
-    /// own derive list.
-    //derive: darling::util::PathList,
 
     #[darling(rename = "name")]
     input_name: String,
@@ -41,12 +33,8 @@ impl ToTokens for OverwriteReceiver {
             ref ident,
             ref generics,
             ref data,
-            //  ref attrs,
             ref input_name,
-            //ref derive,
         } = *self;
-
-        //println!("{:?}", ident);
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
 

@@ -5,17 +5,13 @@ use quote::{quote, ToTokens};
 
 #[derive(FromDeriveInput)]
 pub struct RumbasCheckReceiver {
-    /// The struct ident.
     ident: syn::Ident,
 
     /// The type's generics. You'll need these any time your trait is expected
     /// to work with types that declare generics.
     generics: syn::Generics,
 
-    /// Receives the body of the struct or enum. We don't care about
-    /// struct fields because we previously told darling we only accept structs.
     data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
-    // attrs: Vec<syn::Attribute>,
 }
 
 fn rumbas_check_handle_unit_struct(
@@ -207,7 +203,6 @@ impl ToTokens for RumbasCheckReceiver {
             ref ident,
             ref generics,
             ref data,
-            //ref attrs,
         } = *self;
 
         match data {
