@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"struct":[["MyYamlValue",""],["TemplateFile",""],["TemplateFileInput",""]]});

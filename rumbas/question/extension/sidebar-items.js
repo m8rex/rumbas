@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Extensions","Specify which extensions should be enabled"]]});

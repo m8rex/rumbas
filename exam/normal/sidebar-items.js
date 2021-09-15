@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["convert_normal_numbas_exam","Converts a normal numbas exam to a NormalExam"]],"struct":[["NormalExam","An Exam"],["NormalExamInput","An Exam"]]});

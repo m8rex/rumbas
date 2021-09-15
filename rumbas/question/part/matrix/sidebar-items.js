@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["QuestionPartMatrixDimension",""]],"struct":[["QuestionPartMatrix",""],["QuestionPartMatrixDimensions",""],["QuestionPartMatrixRangedDimension",""]]});

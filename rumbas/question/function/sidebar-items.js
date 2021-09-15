@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["FunctionDefinition",""]],"struct":[["Function",""],["FunctionDefinitionJME",""],["FunctionDefinitionJavascript",""]]});

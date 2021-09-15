@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["QuestionPartGapFill","The Gap fill question part type"],["QuestionPartGapFillInput","The Gap fill question part type"]]});

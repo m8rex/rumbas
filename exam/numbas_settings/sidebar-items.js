@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["NumbasSettings",""],["NumbasSettingsInput",""]]});

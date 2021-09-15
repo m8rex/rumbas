@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["AnswerStyle",""],["AnswerStyleInput",""],["NumberEntryAnswer",""],["NumberEntryAnswerInput",""]],"struct":[["NumberEntryAnswerRange",""],["NumberEntryAnswerRangeInput",""],["QuestionPartNumberEntry",""],["QuestionPartNumberEntryInput",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ChooseOneDisplay",""],["ChooseOneDisplayInput",""]],"struct":[["MatrixPrimitive",""],["MatrixPrimitiveInput",""],["MatrixRow",""],["MatrixRowInput",""],["MatrixRowPrimitive",""],["MatrixRowPrimitiveInput",""],["QuestionPartChooseOne",""],["QuestionPartChooseOneInput",""]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["RumbasCheckInvalidJMEStringData",""],["RumbasCheckInvalidYamlData",""],["RumbasCheckMissingData",""],["RumbasCheckPath",""],["RumbasCheckResult",""]],"trait":[["RumbasCheck",""]]});

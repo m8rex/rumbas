@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["FunctionDefinition",""],["FunctionDefinitionInput",""]],"struct":[["Function",""],["FunctionDefinitionJME",""],["FunctionDefinitionJMEInput",""],["FunctionDefinitionJavascript",""],["FunctionDefinitionJavascriptInput",""],["FunctionInput",""]]});

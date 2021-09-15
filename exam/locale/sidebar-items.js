@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["SupportedLocale","Locales supported by Numbas"],["SupportedLocaleInput","Locales supported by Numbas"]],"struct":[["Locale",""],["LocaleInput",""]]});

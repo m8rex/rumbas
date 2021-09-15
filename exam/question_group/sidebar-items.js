@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["PickingStrategy",""],["PickingStrategyInput",""]],"struct":[["PickingStrategyRandomSubset",""],["PickingStrategyRandomSubsetInput",""],["QuestionGroup",""],["QuestionGroupInput",""],["QuestionPath",""],["QuestionPathInput",""]]});

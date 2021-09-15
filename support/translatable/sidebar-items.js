@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ContentAreaTranslatableString",""],["ContentAreaTranslatableStringInput",""],["EmbracedJMETranslatableString",""],["EmbracedJMETranslatableStringInput",""],["JMENotesTranslatableString",""],["JMENotesTranslatableStringInput",""],["JMETranslatableString",""],["JMETranslatableStringInput",""],["TranslatableString",""],["TranslatableStringInput",""]]});

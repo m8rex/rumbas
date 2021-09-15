@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["PickingStrategy",""]],"struct":[["QuestionGroup",""],["QuestionPath",""]]});
