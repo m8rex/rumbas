@@ -111,10 +111,10 @@ fn extract_multiple_choice_answer_data(
         MultipleChoiceAnswerData::ItemBased(
             answers_data
                 .into_iter()
-                .map(|(a, b, c)| MultipleChoiceAnswer {
-                    statement: a.into(),
-                    marks: b,
-                    feedback: c.into(),
+                .map(|(statement, marks, feedback)| MultipleChoiceAnswer {
+                    statement: statement.into(),
+                    marks,
+                    feedback: feedback.into(),
                 })
                 .collect(),
         )
