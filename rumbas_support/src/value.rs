@@ -173,7 +173,7 @@ impl<T> Value<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 pub struct TemplateString {
     pub key: Option<String>,
@@ -200,13 +200,7 @@ impl Input for TemplateString {
     }
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 }
-/* TODO
-impl OptionalOverwrite<TemplateString> for TemplateString {
-    fn overwrite(&mut self, _other: &TemplateString) {}
-    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
-}
-*/
-/* TODO
+
 impl JsonSchema for TemplateString {
     fn schema_name() -> String {
         "TemplateString".to_owned()
@@ -224,7 +218,7 @@ impl JsonSchema for TemplateString {
         }
         .into()
     }
-}*/
+}
 
 impl TemplateString {
     pub fn yaml(&self) -> String {
