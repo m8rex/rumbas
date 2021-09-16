@@ -180,6 +180,7 @@ pub fn compile(matches: &clap::ArgMatches) {
                             log::error!("{}\t{}", idx + 1, error.to_string());
                         }
                     }
+                    std::process::exit(1)
                 }
             }
         }
