@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `answer_display` field to `jme` part type.
+
 ### Changed
 
 - Renamed `custom_marking_algorithm` to `custom_marking_algorithm_notes`
@@ -15,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Previously they were parsed as strings
   - Now they are parsed as JME expressions / ContentAreas
 - Better error message when there is something wrong in the yaml of a question_part
+- Moved `use_times_dot` field from `JMEAnswerSimplification` to `JMEAnswerDisplay` and renamed it to `always_show_multiplication_sign`.
+- Renamed fields of `JMEAnswerSimplification`:
+  - The new names should be much more clear
+  - The old names are still valid
 
 ## [0.4.0] - 2021-08-04
 

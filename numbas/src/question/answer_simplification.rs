@@ -130,17 +130,17 @@ create_simplification! {
         /// Basic simplifications like unary plus removal etc
         Basic: "basic": "basic",
         /// Cancel products of 1
-        CancelUnitFactor: "unitFactor": "unitfactor",
+        CancelUnitFactors: "unitFactor": "unitfactor",
         /// Cancel exponents of 1
-        CancelUnitPower: "unitPower": "unitpower",
+        CancelUnitPowers: "unitPower": "unitpower",
         /// Cancel fractions with denominator 1
-        CancelUnitDenominator: "unitDenominator": "unitdenominator",
+        CancelUnitDenominators: "unitDenominator": "unitdenominator",
         /// Cancel products of zero to zero
-        CancelZeroFactor: "zeroFactor": "zerofactor",
+        CancelZeroFactors: "zeroFactor": "zerofactor",
         /// Omit zero terms
-        OmitZeroTerm: "zeroTerm": "zeroterm",
+        OmitZeroTerms: "zeroTerm": "zeroterm",
         /// Cancel exponents of 0
-        CancelZeroPower: "zeroPower" : "zeropower",
+        CancelZeroPowers: "zeroPower" : "zeropower",
         /// Rearrange expressions so they don’t start with a unary minus
         NoLeadingMinus: "noLeadingMinus": "noleadingminus",
         /// Collect together numerical (as opposed to variable) products and sums.
@@ -148,7 +148,7 @@ create_simplification! {
         /// Cancel fractions to lowest form.
         Fractions: "simplifyFractions": "simplifyfractions",
         /// Cancel any power of zero
-        CancelZeroBase: "zeroBase": "zerobase",
+        CancelPowersWithBaseZero: "zeroBase": "zerobase",
         /// Numbers go to the left of multiplications
         ConstantsFirst: "constantsFirst": "constantsfirst",
         /// Collect products of square roots
@@ -156,7 +156,7 @@ create_simplification! {
         /// Collect fractions of square roots
         CollectSqrtDivisions: "sqrtDivision": "sqrtdivision",
         /// Cancel square roots of squares, and squares of square roots
-        CancelSqrtSquare: "sqrtSquare": "sqrtsquare",
+        CancelSqrtSquares: "sqrtSquare": "sqrtsquare",
         /// Simplify some trigonometric identities
         Trigonometric: "trig": "trig",
         /// Evaluate powers of numbers.
