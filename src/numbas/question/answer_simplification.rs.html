@@ -152,52 +152,76 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+
+<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;&amp;str&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerSimplificationType</span> {
+    <span class="ident">Rule</span>(<span class="ident">AnswerSimplificationRule</span>),
+    <span class="ident">DisplayOption</span>(<span class="ident">AnswerSimplificationDisplayOption</span>),
+}
 
 <span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AnswerSimplificationType</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">whole_item</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">item</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">whole_item</span>.<span class="ident">starts_with</span>(<span class="string">&#39;!&#39;</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">whole_item</span>.<span class="ident">chars</span>();
-            <span class="ident">chars</span>.<span class="ident">next</span>();
-            (<span class="ident">chars</span>.<span class="ident">as_str</span>(), <span class="bool-val">false</span>)
+        <span class="kw">let</span> <span class="ident">rule</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationRule</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">whole_item</span>.<span class="ident">clone</span>().<span class="ident">try_into</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">rule</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::Rule</span>(<span class="ident">r</span>))
         } <span class="kw">else</span> {
-            (<span class="ident">whole_item</span>, <span class="bool-val">true</span>)
-        };
-        <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">to_lowercase</span>().<span class="ident">as_ref</span>() {
-            <span class="string">&quot;all&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::All</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;basic&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::Basic</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;unitfactor&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::UnitFactor</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;unitpower&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::UnitPower</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;unitdenominator&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::UnitDenominator</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;zerofactor&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ZeroFactor</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;zeroterm&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ZeroTerm</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;zeropower&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ZeroPower</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;collectnumbers&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::CollectNumbers</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;zerobase&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ZeroBase</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;constantsfirst&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ConstantsFirst</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;sqrtproduct&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::SqrtProduct</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;sqrtfivision&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::SqrtDivision</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;sqrtdquare&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::SqrtSquare</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;othernumbers&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::OtherNumbers</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;timesdot&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::TimesDot</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;expandbrackets&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::ExpandBrackets</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;noleadingminus&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::NoLeadingMinus</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;trig&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::Trigonometric</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;collectlikefractions&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::CollectLikeFractions</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;canonicalorder&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::CanonicalOrder</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;cancelfactors&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::CancelFactors</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;cancelterms&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::CancelTerms</span>(<span class="ident">value</span>)),
-            <span class="string">&quot;simplifyfractions&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::Fractions</span>(<span class="ident">value</span>)),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">/*       Err(serde::de::Error::custom(format!(
-                    &quot;unknown answer simplification type {}&quot;,
-                    item
-                )))*/</span>
-                <span class="prelude-val">Ok</span>(<span class="ident">AnswerSimplificationType::Unknown</span>((<span class="ident">item</span>.<span class="ident">to_string</span>(), <span class="ident">value</span>)))
+            <span class="kw">let</span> <span class="ident">display_option</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationDisplayOption</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span>
+                <span class="ident">whole_item</span>.<span class="ident">try_into</span>();
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">d</span>) <span class="op">=</span> <span class="ident">display_option</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::DisplayOption</span>(<span class="ident">d</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">whole_item</span>.<span class="ident">to_string</span>())
             }
         }
     }
@@ -205,66 +229,10 @@
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">AnswerSimplificationType</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
-        <span class="macro">write!</span>(
-            <span class="ident">f</span>,
-            <span class="string">&quot;{}&quot;</span>,
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">AnswerSimplificationType::All</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;all&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::All</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!all&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Basic</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;basic&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Basic</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!basic&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitFactor</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;unitFactor&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitFactor</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!unitFactor&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitPower</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;unitPower&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitPower</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!unitPower&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitDenominator</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;unitDenominator&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::UnitDenominator</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!unitDenominator&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroFactor</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;zeroFactor&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroFactor</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!zeroFactor&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroTerm</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;zeroTerm&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroTerm</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!zeroTerm&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroPower</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;zeroPower&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroPower</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!zeroPower&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CollectNumbers</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;collectNumbers&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CollectNumbers</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!collectNumbers&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroBase</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;zeroBase&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ZeroBase</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!zeroBase&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ConstantsFirst</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;constantsFirst&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ConstantsFirst</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!constantsFirst&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtProduct</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;sqrtProduct&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtProduct</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!sqrtProduct&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtDivision</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;sqrtDivision&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtDivision</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!sqrtDivision&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtSquare</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;sqrtSquare&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::SqrtSquare</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!sqrtSquare&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::OtherNumbers</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;otherNumbers&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::OtherNumbers</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!otherNumbers&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::TimesDot</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;timesDot&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::TimesDot</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!timesDot&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ExpandBrackets</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;expandBrackets&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::ExpandBrackets</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!expandBrackets&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::NoLeadingMinus</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;noLeadingMinus&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::NoLeadingMinus</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!noLeadingMinus&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Trigonometric</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;trig&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Trigonometric</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!trig&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CollectLikeFractions</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="string">&quot;collectLikeFractions&quot;</span>.<span class="ident">to_string</span>()
-                }
-                <span class="ident">AnswerSimplificationType::CollectLikeFractions</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="string">&quot;!collectLikeFractions&quot;</span>.<span class="ident">to_string</span>()
-                }
-                <span class="ident">AnswerSimplificationType::CanonicalOrder</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;canonicalOrder&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CanonicalOrder</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!canonicalOrder&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CancelFactors</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;cancelFactors&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CancelFactors</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!cancelFactors&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CancelTerms</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;cancelTerms&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::CancelTerms</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!cancelTerms&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Fractions</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;simplifyFractions&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Fractions</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;!simplifyFractions&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Unknown</span>((<span class="ident">n</span>, <span class="bool-val">true</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_string</span>(),
-                <span class="ident">AnswerSimplificationType::Unknown</span>((<span class="ident">n</span>, <span class="bool-val">false</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;!{}&quot;</span>, <span class="ident">n</span>),
-            }
-        )
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident"><span class="self">Self</span>::Rule</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">r</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::DisplayOption</span>(<span class="ident">d</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">d</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+        }
     }
 }
 
@@ -274,37 +242,153 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;&amp;str&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerSimplificationType</span> {
-    <span class="comment">//TODO casing?</span>
-    <span class="ident">All</span>(<span class="ident">bool</span>),
-    <span class="ident">Basic</span>(<span class="ident">bool</span>),
-    <span class="ident">UnitFactor</span>(<span class="ident">bool</span>),
-    <span class="ident">UnitPower</span>(<span class="ident">bool</span>),
-    <span class="ident">UnitDenominator</span>(<span class="ident">bool</span>),
-    <span class="ident">ZeroFactor</span>(<span class="ident">bool</span>),
-    <span class="ident">ZeroTerm</span>(<span class="ident">bool</span>),
-    <span class="ident">ZeroPower</span>(<span class="ident">bool</span>),
-    <span class="ident">CollectNumbers</span>(<span class="ident">bool</span>),
-    <span class="ident">ZeroBase</span>(<span class="ident">bool</span>),
-    <span class="ident">ConstantsFirst</span>(<span class="ident">bool</span>),
-    <span class="ident">SqrtProduct</span>(<span class="ident">bool</span>),
-    <span class="ident">SqrtDivision</span>(<span class="ident">bool</span>),
-    <span class="ident">SqrtSquare</span>(<span class="ident">bool</span>),
-    <span class="ident">OtherNumbers</span>(<span class="ident">bool</span>),
-    <span class="ident">TimesDot</span>(<span class="ident">bool</span>),
-    <span class="ident">ExpandBrackets</span>(<span class="ident">bool</span>),
-    <span class="ident">CollectLikeFractions</span>(<span class="ident">bool</span>),
-    <span class="ident">CanonicalOrder</span>(<span class="ident">bool</span>),
-    <span class="ident">NoLeadingMinus</span>(<span class="ident">bool</span>),
-    <span class="ident">Fractions</span>(<span class="ident">bool</span>),
-    <span class="ident">Trigonometric</span>(<span class="ident">bool</span>),
-    <span class="ident">CancelTerms</span>(<span class="ident">bool</span>),
-    <span class="ident">CancelFactors</span>(<span class="ident">bool</span>),
-    <span class="ident">Unknown</span>((<span class="ident">String</span>, <span class="ident">bool</span>)),
+<span class="macro">macro_rules!</span> <span class="ident">create_simplification</span> {
+    (
+        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="macro-nonterminal">$</span><span class="kw">enum</span>: <span class="macro-nonterminal">ident</span> {
+            $(
+                $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">literal</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lowercase_name</span>: <span class="ident">literal</span>
+            ),<span class="op">+</span>
+        }
+    ) <span class="op">=</span><span class="op">&gt;</span> {
+ $(
+            <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>]</span>
+        )<span class="op">*</span>
+        <span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;&amp;str&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="macro-nonterminal">$</span><span class="kw">enum</span> {
+            $(
+                $(
+                    <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>]</span>
+                )<span class="op">*</span>
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">bool</span>)
+            ),<span class="op">*</span>
+        }
+
+        <span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">enum</span> {
+            <span class="kw">type</span> <span class="macro-nonterminal">Error</span> <span class="op">=</span> <span class="ident">String</span>;
+            <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">whole_item</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+                $(
+                    <span class="macro">assert_eq!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">lowercase_name</span>.<span class="ident">to_string</span>(), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">to_lowercase</span>());
+                )<span class="op">*</span>
+                <span class="kw">let</span> (<span class="ident">item</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">whole_item</span>.<span class="ident">starts_with</span>(<span class="string">&#39;!&#39;</span>) {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">whole_item</span>.<span class="ident">chars</span>();
+                    <span class="ident">chars</span>.<span class="ident">next</span>();
+                    (<span class="ident">chars</span>.<span class="ident">as_str</span>(), <span class="bool-val">false</span>)
+                } <span class="kw">else</span> {
+                    (<span class="ident">whole_item</span>, <span class="bool-val">true</span>)
+                };
+                <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">to_lowercase</span>().<span class="ident">as_ref</span>() {
+                    $(
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lowercase_name</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">value</span>)),
+                    )<span class="op">*</span>
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Unknown answer simplification type {}&quot;</span>, <span class="ident">item</span>))
+                    }
+                }
+            }
+        }
+
+        <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">enum</span> {
+            <span class="kw">fn</span> <span class="macro-nonterminal">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+                <span class="macro">write!</span>(
+                    <span class="ident">f</span>,
+                    <span class="string">&quot;{}&quot;</span>,
+                    <span class="kw">match</span> <span class="self">self</span> {
+                    $(
+                        <span class="self">Self</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="bool-val">true</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>.<span class="ident">to_string</span>(),
+                        <span class="self">Self</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">format!</span>(<span class="string">&quot;!{}&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>)
+                    ),<span class="op">*</span>
+                    }
+                )
+            }
+        }
+
+        <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">enum</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">String</span> {
+            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">a</span>: <span class="macro-nonterminal">$</span><span class="kw">enum</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">String</span> {
+                <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">a</span>)
+            }
+        }
+
+
+    };
+}
+
+<span class="macro">create_simplification!</span> {
+    <span class="doccomment">/// See https://docs.numbas.org.uk/en/latest/simplification.html#id1 for examples</span>
+    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerSimplificationRule</span> {
+        <span class="doccomment">/// To turn all built-in rules on, use the name all. To turn all built-in rules off, use !all.</span>
+        <span class="doccomment">/// Note: Because they can conflict with other rules, the canonicalOrder and expandBrackets rules are not included in all. You must include them separately.</span>
+        <span class="ident">All</span>: <span class="string">&quot;all&quot;</span>: <span class="string">&quot;all&quot;</span>,
+        <span class="doccomment">/// Basic simplifications like unary plus removal etc</span>
+        <span class="ident">Basic</span>: <span class="string">&quot;basic&quot;</span>: <span class="string">&quot;basic&quot;</span>,
+        <span class="doccomment">/// Cancel products of 1</span>
+        <span class="ident">CancelUnitFactors</span>: <span class="string">&quot;unitFactor&quot;</span>: <span class="string">&quot;unitfactor&quot;</span>,
+        <span class="doccomment">/// Cancel exponents of 1</span>
+        <span class="ident">CancelUnitPowers</span>: <span class="string">&quot;unitPower&quot;</span>: <span class="string">&quot;unitpower&quot;</span>,
+        <span class="doccomment">/// Cancel fractions with denominator 1</span>
+        <span class="ident">CancelUnitDenominators</span>: <span class="string">&quot;unitDenominator&quot;</span>: <span class="string">&quot;unitdenominator&quot;</span>,
+        <span class="doccomment">/// Cancel products of zero to zero</span>
+        <span class="ident">CancelZeroFactors</span>: <span class="string">&quot;zeroFactor&quot;</span>: <span class="string">&quot;zerofactor&quot;</span>,
+        <span class="doccomment">/// Omit zero terms</span>
+        <span class="ident">OmitZeroTerms</span>: <span class="string">&quot;zeroTerm&quot;</span>: <span class="string">&quot;zeroterm&quot;</span>,
+        <span class="doccomment">/// Cancel exponents of 0</span>
+        <span class="ident">CancelZeroPowers</span>: <span class="string">&quot;zeroPower&quot;</span> : <span class="string">&quot;zeropower&quot;</span>,
+        <span class="doccomment">/// Rearrange expressions so they don’t start with a unary minus</span>
+        <span class="ident">NoLeadingMinus</span>: <span class="string">&quot;noLeadingMinus&quot;</span>: <span class="string">&quot;noleadingminus&quot;</span>,
+        <span class="doccomment">/// Collect together numerical (as opposed to variable) products and sums.</span>
+        <span class="ident">CollectNumbers</span>: <span class="string">&quot;collectNumbers&quot;</span>: <span class="string">&quot;collectnumbers&quot;</span>,
+        <span class="doccomment">/// Cancel fractions to lowest form.</span>
+        <span class="ident">Fractions</span>: <span class="string">&quot;simplifyFractions&quot;</span>: <span class="string">&quot;simplifyfractions&quot;</span>,
+        <span class="doccomment">/// Cancel any power of zero</span>
+        <span class="ident">CancelPowersWithBaseZero</span>: <span class="string">&quot;zeroBase&quot;</span>: <span class="string">&quot;zerobase&quot;</span>,
+        <span class="doccomment">/// Numbers go to the left of multiplications</span>
+        <span class="ident">ConstantsFirst</span>: <span class="string">&quot;constantsFirst&quot;</span>: <span class="string">&quot;constantsfirst&quot;</span>,
+        <span class="doccomment">/// Collect products of square roots</span>
+        <span class="ident">CollectSqrtProducts</span>: <span class="string">&quot;sqrtProduct&quot;</span>: <span class="string">&quot;sqrtproduct&quot;</span>,
+        <span class="doccomment">/// Collect fractions of square roots</span>
+        <span class="ident">CollectSqrtDivisions</span>: <span class="string">&quot;sqrtDivision&quot;</span>: <span class="string">&quot;sqrtdivision&quot;</span>,
+        <span class="doccomment">/// Cancel square roots of squares, and squares of square roots</span>
+        <span class="ident">CancelSqrtSquares</span>: <span class="string">&quot;sqrtSquare&quot;</span>: <span class="string">&quot;sqrtsquare&quot;</span>,
+        <span class="doccomment">/// Simplify some trigonometric identities</span>
+        <span class="ident">Trigonometric</span>: <span class="string">&quot;trig&quot;</span>: <span class="string">&quot;trig&quot;</span>,
+        <span class="doccomment">/// Evaluate powers of numbers.</span>
+        <span class="ident">EvaluatePowersOfNumbers</span>: <span class="string">&quot;otherNumbers&quot;</span>: <span class="string">&quot;othernumbers&quot;</span>,
+        <span class="doccomment">/// Collect together and cancel terms. Like collectNumbers, but for any kind of term.</span>
+        <span class="ident">CollectTerms</span>: <span class="string">&quot;cancelTerms&quot;</span>: <span class="string">&quot;cancelterms&quot;</span>,
+        <span class="doccomment">/// Collect together powers of common factors.</span>
+        <span class="ident">CollectPowersOfCommonFactors</span>: <span class="string">&quot;cancelFactors&quot;</span>: <span class="string">&quot;cancelfactors&quot;</span>,
+        <span class="doccomment">/// Collect together fractions over the same denominator.</span>
+        <span class="ident">CollectLikeFractions</span>: <span class="string">&quot;collectLikeFractions&quot;</span>: <span class="string">&quot;collectlikefractions&quot;</span>,
+        <span class="doccomment">/// earrange the expression into a “canonical” order, using canonical_compare().</span>
+        <span class="doccomment">/// Note: This rule can not be used at the same time as noLeadingMinus - it can lead to an infinite loop.</span>
+        <span class="ident">CanonicalOrder</span>: <span class="string">&quot;canonicalOrder&quot;</span>: <span class="string">&quot;canonicalorder&quot;</span>,
+        <span class="doccomment">/// Expand out products of sums. (distributivity)</span>
+        <span class="ident">ExpandBrackets</span>: <span class="string">&quot;expandBrackets&quot;</span>: <span class="string">&quot;expandbrackets&quot;</span>
+    }
+}
+
+<span class="macro">create_simplification!</span> {
+    <span class="doccomment">/// Se https://docs.numbas.org.uk/en/latest/simplification.html#display-options for examples</span>
+    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerSimplificationDisplayOption</span> {
+        <span class="doccomment">/// This rule doesn’t rewrite expressions, but tells the maths renderer that you’d like non-integer numbers to be displayed as fractions instead of decimals.</span>
+        <span class="ident">Fractions</span>: <span class="string">&quot;fractionNumbers&quot;</span>: <span class="string">&quot;fractionnumbers&quot;</span>,
+        <span class="doccomment">/// Improper fractions (with numerator larger than the denominator) are displayed in mixed form, as an integer next to a proper fraction.</span>
+        <span class="ident">MixedFractions</span>: <span class="string">&quot;mixedFractions&quot;</span>: <span class="string">&quot;mixedfractions&quot;</span>,
+        <span class="doccomment">/// Fractions are displayed on a single line, with a slash between the numerator and denominator.</span>
+        <span class="ident">FlatFractions</span>: <span class="string">&quot;flatFractions&quot;</span>: <span class="string">&quot;flatfractions&quot;</span>,
+        <span class="doccomment">/// This rule doesn’t rewrite expressions, but tells the maths renderer that you’d like vectors to be rendered as rows instead of columns.</span>
+        <span class="ident">RowVector</span>: <span class="string">&quot;rowVector&quot;</span>: <span class="string">&quot;rowvector&quot;</span>,
+        <span class="doccomment">/// The multiplication symbol is always included between multiplicands.</span>
+        <span class="ident">AlwaysShowMultiplicationSign</span>: <span class="string">&quot;alwaysTimes&quot;</span>: <span class="string">&quot;alwaystimes&quot;</span>,
+        <span class="doccomment">/// Use a dot for the multiplication symbol instead of a cross.</span>
+        <span class="ident">DotAsMultiplicationSign</span>: <span class="string">&quot;timesDot&quot;</span>: <span class="string">&quot;timesdot&quot;</span>,
+        <span class="doccomment">/// Matrices are rendered without parentheses.</span>
+        <span class="ident">MatricesWithoutParentheses</span>: <span class="string">&quot;bareMatrices&quot;</span> : <span class="string">&quot;barematrices&quot;</span>
+    }
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

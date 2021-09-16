@@ -145,6 +145,21 @@
 <span id="145">145</span>
 <span id="146">146</span>
 <span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NumbasDefaults</span> {
     <span class="kw">pub</span> <span class="ident">navigation_reverse</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">navigation_browsing_enabled</span>: <span class="ident">bool</span>,
@@ -211,8 +226,16 @@
     <span class="kw">pub</span> <span class="ident">jme_simplification_cancel_factors</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">jme_simplification_collect_like_fractions</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">jme_simplification_order_canonical</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">jme_simplification_use_times_dot</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">jme_simplification_expand_brackets</span>: <span class="ident">bool</span>,
+
+    <span class="kw">pub</span> <span class="ident">jme_display_fraction_numbers</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_mixed_fractions</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_flat_fractions</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_row_vector</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_always_times</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_use_times_dot</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">jme_display_bare_matrices</span>: <span class="ident">bool</span>,
+
     <span class="kw">pub</span> <span class="ident">jme_failure_rate</span>: <span class="ident">f64</span>,
 }
 
@@ -287,8 +310,15 @@
     <span class="ident">jme_simplification_cancel_factors</span>: <span class="bool-val">true</span>,
     <span class="ident">jme_simplification_collect_like_fractions</span>: <span class="bool-val">true</span>,
     <span class="ident">jme_simplification_order_canonical</span>: <span class="bool-val">false</span>,
-    <span class="ident">jme_simplification_use_times_dot</span>: <span class="bool-val">true</span>,
     <span class="ident">jme_simplification_expand_brackets</span>: <span class="bool-val">false</span>,
+
+    <span class="ident">jme_display_fraction_numbers</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_mixed_fractions</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_flat_fractions</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_row_vector</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_always_times</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_use_times_dot</span>: <span class="bool-val">false</span>,
+    <span class="ident">jme_display_bare_matrices</span>: <span class="bool-val">false</span>,
 
     <span class="ident">jme_failure_rate</span>: <span class="number">1.0</span>,
 };
