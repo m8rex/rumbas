@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `answer_display` field to `jme` part type.
+- Sqlite extension
 
 ### Changed
 

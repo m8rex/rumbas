@@ -98,6 +98,7 @@ extensions! {
         quantities: "quantities",
         random_person: "random_person",
         stats: "stats",
+        sqlite: "sqlite",
         written_number: "written-number"
 }
 
