@@ -86,20 +86,20 @@
 }
 
 <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">MyYamlValue</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
         <span class="ident">RumbasCheckResult::empty</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">MyYamlValue</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">MyYamlValue</span>;
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
         <span class="self">self</span>.<span class="ident">to_owned</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">normal</span>
     }
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="ident">InputCheckResult::empty</span>()
     }
     <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">_val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {}
@@ -110,17 +110,17 @@
 }
 
 <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">MyYamlValue</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
         <span class="string">&quot;YamlValue&quot;</span>.<span class="ident">to_owned</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">_gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">_gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
         <span class="ident">schemars::schema::Schema::Bool</span>(<span class="bool-val">true</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">serde_yaml::Value</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MyYamlValue</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">serde_yaml::Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">serde_yaml::Value</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">v</span>)
     }
 }

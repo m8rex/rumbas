@@ -589,7 +589,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::QuestionPartJME</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartJME</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
         <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
             <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -617,9 +617,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartJME</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">QuestionPartJME</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartJME</span> {
         <span class="macro">create_question_part!</span> {
-            <span class="ident">QuestionPartJME</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">QuestionPartJME</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {
                 <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">answer_simplification</span>: <span class="self">self</span>.<span class="ident">answer_simplification</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">answer_display</span>: <span class="self">self</span>.<span class="ident">answer_simplification</span>.<span class="ident">to_rumbas</span>(),
@@ -664,7 +664,7 @@
         $(
             $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">default</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">partofall</span>: <span class="ident">expr</span>
-        ),<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        ),<span class="kw-2">*</span>) =&gt; {
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>)]</span>
         <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>)]</span>
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>)]</span>
@@ -680,7 +680,7 @@
             <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
+            ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
                 $(<span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
                     <span class="ident">v</span>.<span class="ident">push</span>(
@@ -696,7 +696,7 @@
         <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="op">&gt;</span>
             <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>
         {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">result</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
                     $(
                         <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">DEFAULTS</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">default</span>
@@ -705,18 +705,18 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="self">self</span> {
                     <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="ident">v</span>.<span class="ident">iter</span>() {
                         <span class="kw">match</span> <span class="ident">a</span> {
-                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span>
+                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) =&gt;
                                 <span class="kw">match</span> <span class="ident">r</span> {
-                                    <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct::All</span>(<span class="ident">b</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                                    <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct::All</span>(<span class="ident">b</span>) =&gt; {
                                         $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">partofall</span> {
                                             <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
                                         })<span class="op">*</span>
                                     }
-                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) =&gt; {
                                         <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
                                     })<span class="op">*</span>
                                 }
-                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> ()
+                            <span class="kw">_</span> =&gt; ()
                         }
                     }
                 }
@@ -773,7 +773,7 @@
         $(
             $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">default</span>: <span class="ident">ident</span>
-        ),<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        ),<span class="kw-2">*</span>) =&gt; {
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>)]</span>
         <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>)]</span>
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>)]</span>
@@ -789,7 +789,7 @@
             <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
+            ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
                 $(<span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
                     <span class="ident">v</span>.<span class="ident">push</span>(
@@ -805,7 +805,7 @@
         <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="op">&gt;</span>
             <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>
         {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">result</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
                     $(
                         <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">DEFAULTS</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">default</span>
@@ -814,13 +814,13 @@
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="self">self</span> {
                     <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="ident">v</span>.<span class="ident">iter</span>() {
                         <span class="kw">match</span> <span class="ident">a</span> {
-                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span>
+                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) =&gt;
                                 <span class="kw">match</span> <span class="ident">r</span> {
-                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) =&gt; {
                                         <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
                                     })<span class="op">*</span>
                                 }
-                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> ()
+                            <span class="kw">_</span> =&gt; ()
                         }
                     }
                 }
@@ -857,7 +857,7 @@
     <span class="kw">fn</span> <span class="ident">to_numbas</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeFloat</span><span class="op">&gt;</span>
+    ) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeFloat</span><span class="op">&gt;</span>
     {
         <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span> {
             <span class="ident">checking_accuracy</span>: <span class="self">self</span>.<span class="ident">max_difference</span>.<span class="ident">into</span>(),
@@ -873,7 +873,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CheckingTypeDataNatural</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span> {
             <span class="ident">checking_accuracy</span>: <span class="self">self</span>.<span class="ident">amount</span>,
         }
@@ -893,22 +893,22 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMECheckingType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CheckingType</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMECheckingType</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingType</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CheckingType::RelativeDifference</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CheckingType::RelativeDifference</span>(<span class="ident">f</span>) =&gt; {
                 <span class="ident">numbas::question::part::jme::JMECheckingType::RelativeDifference</span>(
                     <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 )
             }
-            <span class="ident">CheckingType::AbsoluteDifference</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CheckingType::AbsoluteDifference</span>(<span class="ident">f</span>) =&gt; {
                 <span class="ident">numbas::question::part::jme::JMECheckingType::AbsoluteDifference</span>(
                     <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 )
             }
-            <span class="ident">CheckingType::DecimalPlaces</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CheckingType::DecimalPlaces</span>(<span class="ident">f</span>) =&gt; {
                 <span class="ident">numbas::question::part::jme::JMECheckingType::DecimalPlaces</span>(<span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
             }
-            <span class="ident">CheckingType::SignificantFigures</span>(<span class="ident">f</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CheckingType::SignificantFigures</span>(<span class="ident">f</span>) =&gt; {
                 <span class="ident">numbas::question::part::jme::JMECheckingType::SignificantFigures</span>(
                     <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
                 )
@@ -918,24 +918,24 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CheckingType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMECheckingType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CheckingType</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CheckingType</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::jme::JMECheckingType::RelativeDifference</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::part::jme::JMECheckingType::RelativeDifference</span>(<span class="ident">v</span>) =&gt; {
                 <span class="ident">CheckingType::RelativeDifference</span>(<span class="ident">CheckingTypeDataFloat</span> {
                     <span class="ident">max_difference</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::AbsoluteDifference</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::part::jme::JMECheckingType::AbsoluteDifference</span>(<span class="ident">v</span>) =&gt; {
                 <span class="ident">CheckingType::AbsoluteDifference</span>(<span class="ident">CheckingTypeDataFloat</span> {
                     <span class="ident">max_difference</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::DecimalPlaces</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::part::jme::JMECheckingType::DecimalPlaces</span>(<span class="ident">v</span>) =&gt; {
                 <span class="ident">CheckingType::DecimalPlaces</span>(<span class="ident">CheckingTypeDataNatural</span> {
                     <span class="ident">amount</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="ident">to_rumbas</span>(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::SignificantFigures</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::part::jme::JMECheckingType::SignificantFigures</span>(<span class="ident">v</span>) =&gt; {
                 <span class="ident">CheckingType::SignificantFigures</span>(<span class="ident">CheckingTypeDataNatural</span> {
                     <span class="ident">amount</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="ident">to_rumbas</span>(),
                 })
@@ -954,7 +954,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMERestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMERestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMERestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMERestriction</span> {
         <span class="ident">numbas::question::part::jme::JMERestriction</span> {
             <span class="comment">// name: self.name.clone().to_string(locale),</span>
             <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -964,7 +964,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMERestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMERestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JMERestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMERestriction</span> {
         <span class="ident">JMERestriction</span> {
             <span class="comment">//name: TranslatableString::s(&amp;self.name)),</span>
             <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
@@ -983,7 +983,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMELengthRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMELengthRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
         <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
             <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">length</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">length</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
@@ -992,7 +992,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JMELengthRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMELengthRestriction</span> {
         <span class="ident">JMELengthRestriction</span> {
             <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">length</span>: <span class="self">self</span>
@@ -1015,7 +1015,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEStringRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEStringRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
         <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
             <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">show_strings</span>: <span class="self">self</span>.<span class="ident">show_strings</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -1025,7 +1025,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JMEStringRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEStringRestriction</span> {
         <span class="ident">JMEStringRestriction</span> {
             <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">show_strings</span>: <span class="self">self</span>.<span class="ident">show_strings</span>.<span class="ident">to_rumbas</span>(),
@@ -1045,7 +1045,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEPatternRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEPatternRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
         <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
             <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -1056,7 +1056,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEPatternRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JMEPatternRestriction</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEPatternRestriction</span> {
         <span class="ident">JMEPatternRestriction</span> {
             <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_rumbas</span>(),
@@ -1075,7 +1075,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEValueGenerator</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEValueGenerator</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
         <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -1084,7 +1084,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEValueGenerator</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">JMEValueGenerator</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEValueGenerator</span> {
         <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">String</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">clone</span>().<span class="ident">into</span>();
         <span class="ident">JMEValueGenerator</span> {
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),

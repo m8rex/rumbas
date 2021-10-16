@@ -226,31 +226,31 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::Exam</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::Exam</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::Exam</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Exam</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locales</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Locale</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locales</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Locale</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">locales</span>.<span class="ident">clone</span>(),
-            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">locales</span>.<span class="ident">clone</span>(),
+            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">locales</span>.<span class="ident">clone</span>(),
+            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">locales</span>.<span class="ident">clone</span>(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">numbas_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::exam::numbas_settings::NumbasSettings</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">numbas_settings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">crate</span>::exam::numbas_settings::NumbasSettings</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">numbas_settings</span>.<span class="ident">clone</span>(),
-            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">n</span>.<span class="ident">numbas_settings</span>.<span class="ident">clone</span>(),
+            <span class="ident">Exam::Normal</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">numbas_settings</span>.<span class="ident">clone</span>(),
+            <span class="ident">Exam::Diagnostic</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">numbas_settings</span>.<span class="ident">clone</span>(),
         }
     }
 }
 <span class="kw">impl</span> <span class="ident">ExamInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_file</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ExamInput</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_file</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ExamInput</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">ExamFileTypeInput</span>::<span class="kw-2">*</span>;
         <span class="kw">let</span> <span class="ident">input</span>: <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">ExamFileTypeInput</span>, <span class="ident">serde_yaml::Error</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="kw">if</span> <span class="ident">file</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::EXAMS_FOLDER</span>) {
@@ -284,9 +284,9 @@
             };
         <span class="ident">input</span>
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
-                <span class="ident">Normal</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ExamInput::Normal</span>(<span class="ident">e</span>)),
-                <span class="ident">Diagnostic</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ExamInput::Diagnostic</span>(<span class="ident">e</span>)),
-                <span class="ident">Template</span>(<span class="ident">t_val</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Normal</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ExamInput::Normal</span>(<span class="ident">e</span>)),
+                <span class="ident">Diagnostic</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ExamInput::Diagnostic</span>(<span class="ident">e</span>)),
+                <span class="ident">Template</span>(<span class="ident">t_val</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">t_val</span>.<span class="ident">to_normal</span>();
                     <span class="kw">let</span> <span class="ident">template_file</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident"><span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER</span>)
                         .<span class="ident">join</span>(<span class="macro">format!</span>(<span class="string">&quot;{}.yaml&quot;</span>, <span class="ident">t</span>.<span class="ident">relative_template_path</span>)); <span class="comment">// TODO: check for missing fields.....</span>
@@ -327,13 +327,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ExamFileTypeInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="ident">serde_yaml::to_string</span>(<span class="self">self</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">ExamFileType</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="ident">ExamFileTypeInput::from_normal</span>(<span class="self">self</span>.<span class="ident">to_owned</span>()).<span class="ident">to_yaml</span>()
     }
 }
@@ -343,18 +343,18 @@
 <span class="doccomment">/// and vectors of questions and custom part type definitions</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_numbas_exam</span>(
     <span class="ident">exam</span>: <span class="ident">numbas::exam::Exam</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (
+) -&gt; (
     <span class="ident">String</span>,
     <span class="ident">ExamFileType</span>,
     <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPath</span><span class="op">&gt;</span>,
     <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeDefinitionPath</span><span class="op">&gt;</span>,
 ) {
     <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">exam</span>, <span class="ident">qgs</span>, <span class="ident">cpts</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">exam</span>.<span class="ident">navigation</span>.<span class="ident">navigation_mode</span> {
-        <span class="ident">numbas::exam::navigation::NavigationMode::Diagnostic</span>(<span class="kw-2">ref</span> <span class="ident">_d</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">numbas::exam::navigation::NavigationMode::Diagnostic</span>(<span class="kw-2">ref</span> <span class="ident">_d</span>) =&gt; {
             <span class="kw">let</span> (<span class="ident">exam</span>, <span class="ident">qgs</span>, <span class="ident">cpts</span>) <span class="op">=</span> <span class="ident">convert_diagnostic_numbas_exam</span>(<span class="ident">exam</span>);
             (<span class="ident">exam</span>.<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">ExamFileType::Diagnostic</span>(<span class="ident">exam</span>), <span class="ident">qgs</span>, <span class="ident">cpts</span>)
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="kw">_</span> =&gt; {
             <span class="kw">let</span> (<span class="ident">exam</span>, <span class="ident">qgs</span>, <span class="ident">cpts</span>) <span class="op">=</span> <span class="ident">convert_normal_numbas_exam</span>(<span class="ident">exam</span>);
             (<span class="ident">exam</span>.<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">ExamFileType::Normal</span>(<span class="ident">exam</span>), <span class="ident">qgs</span>, <span class="ident">cpts</span>)
         }

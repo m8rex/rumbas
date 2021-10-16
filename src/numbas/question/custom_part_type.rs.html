@@ -242,7 +242,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::jme::ast::Note</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartMarkingNote</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">note</span>: <span class="ident"><span class="kw">crate</span>::jme::ast::Note</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">note</span>: <span class="ident"><span class="kw">crate</span>::jme::ast::Note</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">CustomPartMarkingNote</span> {
             <span class="ident">name</span>: <span class="ident">note</span>.<span class="ident">name</span>.<span class="ident">to_string</span>(),
             <span class="ident">definition</span>: <span class="ident">note</span>.<span class="ident">expression_string</span>(),

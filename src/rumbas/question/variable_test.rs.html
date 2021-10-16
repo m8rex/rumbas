@@ -46,7 +46,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::QuestionVariablesTest</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariablesTest</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::QuestionVariablesTest</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::QuestionVariablesTest</span> {
         <span class="ident">numbas::question::QuestionVariablesTest</span> {
             <span class="ident">condition</span>: <span class="self">self</span>.<span class="ident">condition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">max_runs</span>: <span class="self">self</span>.<span class="ident">max_runs</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -55,7 +55,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariablesTest</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::QuestionVariablesTest</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariablesTest</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariablesTest</span> {
         <span class="ident">VariablesTest</span> {
             <span class="ident">condition</span>: <span class="self">self</span>.<span class="ident">condition</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">max_runs</span>: <span class="self">self</span>.<span class="ident">max_runs</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),

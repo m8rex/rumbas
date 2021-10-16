@@ -274,22 +274,22 @@
     <span class="ident">T</span>: <span class="ident">serde::de::DeserializeOwned</span>,
 {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>;
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
         <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_normal</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">ValueType::Normal</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>(<span class="ident">normal</span>))
     }
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
-            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">find_missing</span>(),
-            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">ts</span>.<span class="ident">yaml</span>())),
-            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">InputCheckResult::from_invalid</span>(<span class="ident">v</span>),
+            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">find_missing</span>(),
+            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) =&gt; <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">ts</span>.<span class="ident">yaml</span>())),
+            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) =&gt; <span class="ident">InputCheckResult::from_invalid</span>(<span class="ident">v</span>),
         }
     }
     <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
-            <span class="kw">if</span> <span class="ident">ts</span>.<span class="ident">key</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">to_string</span>()) {
+            <span class="kw">if</span> <span class="ident">ts</span>.<span class="ident">key</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">to_string</span>()) {
                 <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">ValueType::Normal</span>(<span class="ident">serde_yaml::from_value</span>(<span class="ident">val</span>.<span class="ident">clone</span>()).<span class="ident">unwrap</span>());
             }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueType::Normal</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=</span> <span class="self">self</span> {
@@ -300,15 +300,15 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::clone::Clone</span><span class="op">&gt;</span> <span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">T</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, <span class="ident">ts</span>.<span class="ident">clone</span>().<span class="ident">key</span>.<span class="ident">unwrap</span>())
             }
-            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">serde_yaml::to_string</span>(<span class="ident">v</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, <span class="ident">s</span>),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml&quot;</span>),
+            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) =&gt; <span class="kw">match</span> <span class="ident">serde_yaml::to_string</span>(<span class="ident">v</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, <span class="ident">s</span>),
+                <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml&quot;</span>),
             },
         }
     }
@@ -316,13 +316,13 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::clone::Clone</span><span class="op">&gt;</span> <span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>(<span class="ident">val</span>)),
-            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, <span class="ident">ts</span>.<span class="ident">key</span>.<span class="ident">unwrap</span>()),
-            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">serde_yaml::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, <span class="ident">s</span>),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml&quot;</span>),
+            <span class="ident">ValueType::Normal</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">f</span>(<span class="ident">val</span>)),
+            <span class="ident">ValueType::Template</span>(<span class="ident">ts</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, <span class="ident">ts</span>.<span class="ident">key</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">ValueType::Invalid</span>(<span class="ident">v</span>) =&gt; <span class="kw">match</span> <span class="ident">serde_yaml::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, <span class="ident">s</span>),
+                <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml&quot;</span>),
             },
         }
     }
@@ -341,11 +341,11 @@
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">JsonSchema</span><span class="op">&gt;</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+        <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
             <span class="macro">format!</span>(<span class="string">&quot;ValueType_{}&quot;</span>, <span class="ident">T::schema_name</span>())
         }
 
-        <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+        <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
             <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">ValidValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>()
         }
     }
@@ -363,16 +363,16 @@
     <span class="ident">T</span>: <span class="ident">serde::de::DeserializeOwned</span>,
 {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>;
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
         <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_normal</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Value::Normal</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>(<span class="ident">normal</span>))
     }
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">find_missing</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">find_missing</span>(),
+            <span class="prelude-val">None</span> =&gt; <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">None</span>),
         }
     }
     <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {
@@ -383,25 +383,25 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">JsonSchema</span><span class="op">&gt;</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="string">&quot;Value_{}&quot;</span>, <span class="ident">T::schema_name</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
         <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="comment">// Didn&#39;t add the option</span>
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::clone::Clone</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">T</span> {
         <span class="self">self</span>.<span class="ident">clone</span>().<span class="number">0</span>.<span class="ident">unwrap</span>().<span class="ident">unwrap</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::clone::Clone</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">unwrap</span>().<span class="ident">map</span>(<span class="ident">f</span>)
     }
 }
@@ -409,19 +409,19 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Normal</span>(<span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Normal</span>(<span class="ident">val</span>: <span class="ident">T</span>) -&gt; <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">ValueType::Normal</span>(<span class="ident">val</span>)))
     }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Template</span>(<span class="ident">ts</span>: <span class="ident">TemplateString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Template</span>(<span class="ident">ts</span>: <span class="ident">TemplateString</span>) -&gt; <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">ValueType::Template</span>(<span class="ident">ts</span>)))
     }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="prelude-val">None</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="prelude-val">None</span>() -&gt; <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Value</span>(<span class="prelude-val">None</span>)
     }
 }
@@ -438,13 +438,13 @@
 }
 <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">TemplateString</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">TemplateString</span>;
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
         <span class="self">self</span>.<span class="ident">to_owned</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">normal</span>
     }
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">error_message</span> {
             <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">clone</span>())) <span class="comment">// TODO: seperate missing files? (also see FileString)</span>
         } <span class="kw">else</span> {
@@ -455,11 +455,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">TemplateString</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
         <span class="string">&quot;TemplateString&quot;</span>.<span class="ident">to_owned</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
         <span class="ident">schemars::schema::SchemaObject</span> {
             <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
             <span class="ident">string</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::StringValidation</span> {
@@ -474,7 +474,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">TemplateString</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">TEMPLATE_PREFIX</span>, <span class="self">self</span>.<span class="ident">key</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>())
     }
 }
@@ -483,11 +483,11 @@
 <span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TemplateString</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="ident">TEMPLATE_PREFIX</span>.<span class="ident">to_owned</span>();
         <span class="ident">prefix</span>.<span class="ident">push</span>(<span class="string">&#39;:&#39;</span>);
         <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="ident">prefix</span>) {
-            <span class="kw">if</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="ident">prefix</span> {
+            <span class="kw">if</span> <span class="ident">s</span> <span class="op">==</span> <span class="ident">prefix</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">TemplateString</span> {
                     <span class="ident">key</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
                     <span class="ident">error_message</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;Missing template key&quot;</span>.<span class="ident">to_string</span>()),

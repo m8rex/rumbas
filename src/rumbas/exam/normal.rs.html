@@ -203,7 +203,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::Exam</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalExam</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::Exam</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::Exam</span> {
         <span class="kw">let</span> <span class="ident">basic_settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
         <span class="kw">let</span> <span class="ident">navigation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
 
@@ -278,7 +278,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::BasicExamSettings</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalExam</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::BasicExamSettings</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::BasicExamSettings</span> {
         <span class="ident">numbas::exam::BasicExamSettings</span> {
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">duration_in_seconds</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -297,7 +297,7 @@
 <span class="doccomment">/// Converts a normal numbas exam to a NormalExam</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_normal_numbas_exam</span>(
     <span class="ident">exam</span>: <span class="ident">numbas::exam::Exam</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (
+) -&gt; (
     <span class="ident">NormalExam</span>,
     <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPath</span><span class="op">&gt;</span>,
     <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeDefinitionPath</span><span class="op">&gt;</span>,

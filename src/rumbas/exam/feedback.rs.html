@@ -167,7 +167,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::Feedback</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Feedback</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::feedback::Feedback</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::Feedback</span> {
         <span class="ident">numbas::exam::feedback::Feedback</span> {
             <span class="ident">show_actual_mark</span>: <span class="self">self</span>.<span class="ident">show_current_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">show_total_mark</span>: <span class="self">self</span>.<span class="ident">show_maximum_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -182,7 +182,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Feedback</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Feedback</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Feedback</span> {
         <span class="kw">let</span> <span class="ident">review</span>: <span class="ident">Review</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">review</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>().<span class="ident">to_rumbas</span>(); <span class="comment">// TODO: fix this unwrap</span>
         <span class="ident">Feedback</span> {
             <span class="ident">percentage_needed_to_pass</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">percentage_needed_to_pass</span>.<span class="ident">to_rumbas</span>(),
@@ -218,7 +218,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::Review</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Review</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::feedback::Review</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::Review</span> {
         <span class="ident">numbas::exam::feedback::Review</span> {
             <span class="ident">show_score</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">show_score</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
             <span class="ident">show_feedback</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">show_feedback</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
@@ -229,7 +229,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Review</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::feedback::Review</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Review</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Review</span> {
         <span class="ident">Review</span> {
             <span class="ident">show_score</span>: <span class="self">self</span>
                 .<span class="ident">show_score</span>
@@ -260,7 +260,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::FeedbackMessage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FeedbackMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
         <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
             <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">threshold</span>: <span class="self">self</span>.<span class="ident">threshold</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -269,7 +269,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">FeedbackMessage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FeedbackMessage</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FeedbackMessage</span> {
         <span class="ident">FeedbackMessage</span> {
             <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">clone</span>(),
             <span class="ident">threshold</span>: <span class="self">self</span>.<span class="ident">threshold</span>.<span class="ident">clone</span>(),

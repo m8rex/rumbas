@@ -102,7 +102,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::timing::Timing</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Timing</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::timing::Timing</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::timing::Timing</span> {
         <span class="ident">numbas::exam::timing::Timing</span> {
             <span class="ident">allow_pause</span>: <span class="self">self</span>.<span class="ident">allow_pause</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">timeout</span>: <span class="self">self</span>.<span class="ident">on_timeout</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -112,7 +112,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Timing</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Timing</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Timing</span> {
         <span class="ident">Timing</span> {
             <span class="ident">duration_in_seconds</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">allow_pause</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">allow_pause</span>.<span class="ident">to_rumbas</span>(),
@@ -133,12 +133,12 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::timing::TimeoutAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TimeoutAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::exam::timing::TimeoutAction</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::timing::TimeoutAction</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TimeoutAction::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::timing::TimeoutAction::None</span> {
+            <span class="ident">TimeoutAction::None</span> =&gt; <span class="ident">numbas::exam::timing::TimeoutAction::None</span> {
                 <span class="ident">message</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(), <span class="comment">// message doesn&#39;t mean anything</span>
             },
-            <span class="ident">TimeoutAction::Warn</span>(<span class="ident">wm</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> {
+            <span class="ident">TimeoutAction::Warn</span>(<span class="ident">wm</span>) =&gt; <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> {
                 <span class="ident">message</span>: <span class="ident">wm</span>.<span class="ident">message</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
             },
         }
@@ -146,10 +146,10 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">TimeoutAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::timing::TimeoutAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TimeoutAction</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TimeoutAction</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::exam::timing::TimeoutAction::None</span> { <span class="ident">message</span>: <span class="kw">_</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TimeoutAction::None</span>,
-            <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> { <span class="ident">message</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::exam::timing::TimeoutAction::None</span> { <span class="ident">message</span>: <span class="kw">_</span> } =&gt; <span class="ident">TimeoutAction::None</span>,
+            <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> { <span class="ident">message</span> } =&gt; {
                 <span class="ident">TimeoutAction::Warn</span>(<span class="ident">TimeoutActionWarn</span> {
                     <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">to_owned</span>().<span class="ident">into</span>(),
                 })

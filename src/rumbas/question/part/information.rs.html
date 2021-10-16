@@ -60,7 +60,7 @@
     <span class="kw">fn</span> <span class="ident">to_numbas</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::part::information::QuestionPartInformation</span> {
+    ) -&gt; <span class="ident">numbas::question::part::information::QuestionPartInformation</span> {
         <span class="ident">numbas::question::part::information::QuestionPartInformation</span> {
             <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>), <span class="comment">// TODO: to numbas?</span>
         }
@@ -70,8 +70,8 @@
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartInformation</span><span class="op">&gt;</span>
     <span class="kw">for</span> <span class="ident">numbas::question::part::information::QuestionPartInformation</span>
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">QuestionPartInformation</span> {
-        <span class="macro">create_question_part!</span>(<span class="ident">QuestionPartInformation</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> <span class="op">=</span><span class="op">&gt;</span> {})
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartInformation</span> {
+        <span class="macro">create_question_part!</span>(<span class="ident">QuestionPartInformation</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {})
     }
 }
 </code></pre></div>

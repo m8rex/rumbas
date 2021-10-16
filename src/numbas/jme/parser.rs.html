@@ -830,45 +830,45 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ast::Expr</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Expr</span> {
         <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">into</span>()
     }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ast::Expr</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Expr</span> {
         <span class="kw">match</span> <span class="ident">expr</span> {
-            <span class="ident">ParserExpr::Str</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Str</span>(<span class="ident">s</span>),
-            <span class="ident">ParserExpr::Int</span>(<span class="ident">i</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Int</span>(<span class="ident">i</span>),
-            <span class="ident">ParserExpr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>),
-            <span class="ident">ParserExpr::Bool</span>(<span class="ident">b</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Bool</span>(<span class="ident">b</span>),
-            <span class="ident">ParserExpr::Range</span>(<span class="ident">o</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::Str</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Str</span>(<span class="ident">s</span>),
+            <span class="ident">ParserExpr::Int</span>(<span class="ident">i</span>) =&gt; <span class="ident">ast::Expr::Int</span>(<span class="ident">i</span>),
+            <span class="ident">ParserExpr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>),
+            <span class="ident">ParserExpr::Bool</span>(<span class="ident">b</span>) =&gt; <span class="ident">ast::Expr::Bool</span>(<span class="ident">b</span>),
+            <span class="ident">ParserExpr::Range</span>(<span class="ident">o</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Range</span>(<span class="ident">o</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
-            <span class="ident">ParserExpr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
-            <span class="ident">ParserExpr::AnnotatedIdent</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Ident</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
-            <span class="ident">ParserExpr::AnnotatedConstant</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Constant</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
-            <span class="ident">ParserExpr::Relation</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::AnnotatedIdent</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Ident</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
+            <span class="ident">ParserExpr::AnnotatedConstant</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Constant</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
+            <span class="ident">ParserExpr::Relation</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Relation</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
-            <span class="ident">ParserExpr::Logic</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::Logic</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Logic</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
-            <span class="ident">ParserExpr::List</span>(<span class="ident">n1</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::List</span>(<span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>()),
-            <span class="ident">ParserExpr::Dictionary</span>(<span class="ident">n1</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::List</span>(<span class="ident">n1</span>) =&gt; <span class="ident">ast::Expr::List</span>(<span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>()),
+            <span class="ident">ParserExpr::Dictionary</span>(<span class="ident">n1</span>) =&gt; {
                 <span class="ident">ast::Expr::Dictionary</span>(<span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">into</span>(), <span class="ident">v</span>.<span class="ident">into</span>())).<span class="ident">collect</span>())
             }
-            <span class="ident">ParserExpr::FunctionApplication</span>(<span class="ident">s</span>, <span class="ident">n1</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::FunctionApplication</span>(<span class="ident">s</span>, <span class="ident">n1</span>) =&gt; {
                 <span class="ident">ast::Expr::FunctionApplication</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>())
             }
-            <span class="ident">ParserExpr::Prefix</span>(<span class="ident">s</span>, <span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Prefix</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
-            <span class="ident">ParserExpr::Faculty</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Faculty</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
-            <span class="ident">ParserExpr::Indexation</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ast::Expr::Indexation</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
-            <span class="ident">ParserExpr::Cast</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::Prefix</span>(<span class="ident">s</span>, <span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Prefix</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
+            <span class="ident">ParserExpr::Faculty</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Faculty</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
+            <span class="ident">ParserExpr::Indexation</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Indexation</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
+            <span class="ident">ParserExpr::Cast</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Cast</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
-            <span class="ident">ParserExpr::Sequence</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParserExpr::Sequence</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
                 <span class="ident">ast::Expr::Sequence</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
             }
         }
@@ -876,14 +876,14 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ast::Note</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Note</span> {
         <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">into</span>()
     }
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ast::Note</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Note</span> {
         <span class="kw">match</span> <span class="ident">expr</span> {
-            <span class="ident">ScriptParserExpr::Note</span>(<span class="ident">name</span>, <span class="ident">description</span>, <span class="ident">expression</span>, <span class="ident">expression_string</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ScriptParserExpr::Note</span>(<span class="ident">name</span>, <span class="ident">description</span>, <span class="ident">expression</span>, <span class="ident">expression_string</span>) =&gt; {
                 <span class="ident">ast::Note::create</span>(
                     <span class="ident">name</span>.<span class="ident">into</span>(),
                     <span class="ident">description</span>,
@@ -903,9 +903,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">ConsumeError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">errors</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">errors</span>) =&gt; {
                 <span class="macro">write!</span>(
                     <span class="ident">f</span>,
                     <span class="string">&quot;Error while parsing JME:\n{}&quot;</span>,
@@ -916,7 +916,7 @@
                         .<span class="ident">join</span>(<span class="string">&quot;\n&quot;</span>)
                 )
             }
-            <span class="ident">ConsumeError::HTMLParseError</span>(<span class="ident">errors</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ConsumeError::HTMLParseError</span>(<span class="ident">errors</span>) =&gt; {
                 <span class="macro">write!</span>(
                     <span class="ident">f</span>,
                     <span class="string">&quot;Error while parsing HTML:\n{}&quot;</span>,
@@ -927,17 +927,17 @@
                         .<span class="ident">join</span>(<span class="string">&quot;\n&quot;</span>)
                 )
             }
-            <span class="ident">ConsumeError::UnknownParseError</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Unknown parse error, please report.&quot;</span>),
+            <span class="ident">ConsumeError::UnknownParseError</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Unknown parse error, please report.&quot;</span>),
         }
     }
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_content_area_expressions</span>(
     <span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">HTMLRule</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">clone</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into_inner</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">asts</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">HTMLRule::expression</span>) {
+    <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">HTMLRule::expression</span>) {
         <span class="kw">let</span> <span class="ident">parsed_jme</span> <span class="op">=</span>
             <span class="ident">parse_as_jme</span>(<span class="ident">expression</span>.<span class="ident">as_str</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">ConsumeError::JMEParseError</span>(<span class="macro">vec!</span>[<span class="ident">e</span>]))<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">parsed_jme</span>)<span class="question-mark">?</span>;
@@ -946,7 +946,7 @@
     <span class="prelude-val">Ok</span>(<span class="ident">asts</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_notes</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Note</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_notes</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Note</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">clone</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into_inner</span>();
     <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">std::panic::catch_unwind</span>(<span class="op">|</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>)<span class="question-mark">?</span>;
@@ -958,12 +958,12 @@
         }*/</span>
     });
     <span class="kw">match</span> <span class="ident">res_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
+        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) =&gt; <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">clone</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into_inner</span>();
     <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">std::panic::catch_unwind</span>(<span class="op">|</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>)<span class="question-mark">?</span>;
@@ -975,29 +975,29 @@
         }*/</span>
     });
     <span class="kw">match</span> <span class="ident">res_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
+        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) =&gt; <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ast::Expr</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ast::Expr</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
     <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">for</span> <span class="ident">note</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::note</span>) {
+    <span class="kw">for</span> <span class="ident">note</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::note</span>) {
         <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">consume_note</span>(<span class="ident">note</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>())<span class="question-mark">?</span>);
     }
     <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">consume_note</span>(<span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_note</span>(<span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
     <span class="comment">//let start = first.as_span().start();</span>
     <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">first</span>.<span class="ident">as_str</span>().<span class="ident">to_string</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::description</span> {
+    <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::description</span> {
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">to_string</span>());
         <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
         <span class="ident">res</span>
@@ -1014,15 +1014,15 @@
     })
 }
 
-<span class="kw">fn</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::expression</span>) {
+    <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::expression</span>) {
         <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">consume_expression</span>(<span class="ident">expression</span>)<span class="question-mark">?</span>);
     }
     <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">consume_expression</span>(<span class="ident">expression</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_expression</span>(<span class="ident">expression</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">climber</span> <span class="op">=</span> <span class="ident">PrecClimber::new</span>(<span class="macro">vec!</span>[
         <span class="ident">Operator::new</span>(<span class="ident">Rule::sequence_operator</span>, <span class="ident">Assoc::Left</span>),
         <span class="ident">Operator::new</span>(<span class="ident">Rule::logic_binary_operator</span>, <span class="ident">Assoc::Left</span>),
@@ -1044,15 +1044,15 @@
 <span class="kw">fn</span> <span class="ident">consume_expression_internal</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>(
     <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">climber</span>: <span class="kw-2">&amp;</span><span class="ident">PrecClimber</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">unaries</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>(
         <span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">climber</span>: <span class="kw-2">&amp;</span><span class="ident">PrecClimber</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() {
-            <span class="ident">Rule::prefix_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Rule::prefix_operator</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">unaries</span>(<span class="ident">pairs</span>, <span class="ident">climber</span>)<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">end_pos</span>();
 
@@ -1061,20 +1061,20 @@
                     <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">start_pos</span>().<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
                 }
             }
-            <span class="ident">other_rule</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">other_rule</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">other_rule</span> {
-                    <span class="ident">Rule::expression</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::expression</span> =&gt; {
                         <span class="ident">consume_expression_internal</span>(<span class="ident">pair</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(), <span class="ident">climber</span>)<span class="question-mark">?</span>
                     }
-                    <span class="ident">Rule::ident</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ParserNode</span> {
+                    <span class="ident">Rule::ident</span> =&gt; <span class="ident">ParserNode</span> {
                         <span class="ident">expr</span>: <span class="ident">ParserExpr::AnnotatedIdent</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>()),
                         <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                     },
-                    <span class="ident">Rule::constant</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ParserNode</span> {
+                    <span class="ident">Rule::constant</span> =&gt; <span class="ident">ParserNode</span> {
                         <span class="ident">expr</span>: <span class="ident">ParserExpr::AnnotatedConstant</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>()),
                         <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                     },
-                    <span class="ident">Rule::string</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::string</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span>
                             <span class="ident">unescape</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>()).<span class="ident">expect</span>(<span class="string">&quot;incorrect string literal&quot;</span>);
                         <span class="ident">ParserNode</span> {
@@ -1082,7 +1082,7 @@
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                         }
                     }
-                    <span class="ident">Rule::boolean</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::boolean</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">b</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="ident">pair</span>
                             .<span class="ident">as_str</span>()
                             .<span class="ident">trim</span>()
@@ -1093,7 +1093,7 @@
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                         }
                     }
-                    <span class="ident">Rule::integer</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::integer</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">integer</span>: <span class="ident">isize</span> <span class="op">=</span> <span class="ident">pair</span>
                             .<span class="ident">as_str</span>()
                             .<span class="ident">trim</span>()
@@ -1104,7 +1104,7 @@
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                         }
                     }
-                    <span class="ident">Rule::broken_number</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::broken_number</span> =&gt; {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
                         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
                         <span class="kw">let</span> <span class="ident">integer</span>: <span class="ident">isize</span> <span class="op">=</span> <span class="ident">pair</span>
@@ -1119,11 +1119,11 @@
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
                         }
                     }
-                    <span class="ident">Rule::list</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::list</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_span</span>();
                         <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::expression</span>) {
+                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::expression</span>) {
                             <span class="ident">elements</span>.<span class="ident">push</span>(<span class="ident">consume_expression_internal</span>(
                                 <span class="ident">p</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(),
                                 <span class="ident">climber</span>,
@@ -1134,11 +1134,11 @@
                             <span class="ident">span</span>,
                         }
                     }
-                    <span class="ident">Rule::dictionary</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::dictionary</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_span</span>();
                         <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::expression</span>) {
+                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::expression</span>) {
                             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">item</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">into_inner</span>();
                             <span class="kw">let</span> <span class="ident">key_pair</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
                             <span class="kw">let</span> <span class="ident">value_pair</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
@@ -1158,7 +1158,7 @@
                             <span class="ident">span</span>,
                         }
                     }
-                    <span class="ident">Rule::function_application</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Rule::function_application</span> =&gt; {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
                         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
                         <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_str</span>();
@@ -1168,7 +1168,7 @@
                         <span class="kw">let</span> <span class="ident">end_pos</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>();
                         <span class="kw">let</span> <span class="ident">inner_pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">arguments</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">inner_pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">Rule::expression</span>) {
+                        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">inner_pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::expression</span>) {
                             <span class="ident">arguments</span>.<span class="ident">push</span>(<span class="ident">consume_expression_internal</span>(
                                 <span class="ident">p</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(),
                                 <span class="ident">climber</span>,
@@ -1179,7 +1179,7 @@
                             <span class="ident">span</span>: <span class="ident">start_pos</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end_pos</span>),
                         }
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
                 };
 
                 <span class="ident">pairs</span>.<span class="ident">fold</span>(
@@ -1187,21 +1187,21 @@
                     <span class="op">|</span><span class="ident">node</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pair</span><span class="op">|</span> {
                         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span><span class="question-mark">?</span>;
                         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() {
-                            <span class="ident">Rule::faculty_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">Rule::faculty_operator</span> =&gt; {
                                 <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
                                 <span class="ident">ParserNode</span> {
                                     <span class="ident">expr</span>: <span class="ident">ParserExpr::Faculty</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
                                     <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
                                 }
                             }
-                            <span class="ident">Rule::index_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">Rule::index_operator</span> =&gt; {
                                 <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
                                 <span class="ident">ParserNode</span> {
                                     <span class="ident">expr</span>: <span class="ident">ParserExpr::Indexation</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
                                     <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
                                 }
                             }
-                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
                         };
 
                         <span class="prelude-val">Ok</span>(<span class="ident">node</span>)
@@ -1216,7 +1216,7 @@
     <span class="kw">let</span> <span class="ident">infix</span> <span class="op">=</span> <span class="op">|</span><span class="ident">lhs</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
                  <span class="ident">op</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span>,
                  <span class="ident">rhs</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">op</span>.<span class="ident">as_rule</span>() {
-        <span class="ident">Rule::add</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::add</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1232,7 +1232,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::subtract</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::subtract</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1248,7 +1248,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::except</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::except</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1264,7 +1264,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::multiply</span> <span class="op">|</span> <span class="ident">Rule::implicit_multiplication_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::multiply</span> <span class="op">|</span> <span class="ident">Rule::implicit_multiplication_operator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1280,7 +1280,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::divide</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::divide</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1296,7 +1296,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::power</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::power</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1312,7 +1312,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::range_separator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::range_separator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1324,7 +1324,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::range_step_separator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::range_step_separator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1336,7 +1336,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::cast_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::cast_operator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1348,7 +1348,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::relational_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::relational_operator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1360,7 +1360,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::logic_binary_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::logic_binary_operator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1372,7 +1372,7 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="ident">Rule::sequence_operator</span> <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Rule::sequence_operator</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
 
@@ -1384,52 +1384,52 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     };
 
     <span class="ident">climber</span>.<span class="ident">climb</span>(<span class="ident">pairs</span>, <span class="ident">term</span>, <span class="ident">infix</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">unescape</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">unescape</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">String::new</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">string</span>.<span class="ident">chars</span>();
 
     <span class="kw">loop</span> {
         <span class="kw">match</span> <span class="ident">chars</span>.<span class="ident">next</span>() {
-            <span class="prelude-val">Some</span>(<span class="string">&#39;\\&#39;</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">chars</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
-                <span class="string">&#39;&quot;&#39;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;&quot;&#39;</span>),
-                <span class="string">&#39;\&#39;&#39;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\&#39;&#39;</span>),
-                <span class="string">&#39;n&#39;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\n&#39;</span>),
-                <span class="string">&#39;{&#39;</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="string">&#39;\\&#39;</span>) =&gt; <span class="kw">match</span> <span class="ident">chars</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
+                <span class="string">&#39;&quot;&#39;</span> =&gt; <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;&quot;&#39;</span>),
+                <span class="string">&#39;\&#39;&#39;</span> =&gt; <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\&#39;&#39;</span>),
+                <span class="string">&#39;n&#39;</span> =&gt; <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\n&#39;</span>),
+                <span class="string">&#39;{&#39;</span> =&gt; {
                     <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\\&#39;</span>);
                     <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;{&#39;</span>)
                 }
-                <span class="string">&#39;}&#39;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="string">&#39;}&#39;</span> =&gt; {
                     <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\\&#39;</span>);
                     <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;}&#39;</span>)
                 }
-                <span class="string">&#39;\\&#39;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\\&#39;</span>),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+                <span class="string">&#39;\\&#39;</span> =&gt; <span class="ident">result</span>.<span class="ident">push</span>(<span class="string">&#39;\\&#39;</span>),
+                <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
             },
-            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">c</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>),
+            <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">c</span>),
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>),
         };
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::jme</span>, <span class="ident">s</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_embraced_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_embraced_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::embraced_jme</span>, <span class="ident">s</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_content_area</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">HTMLRule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">HTMLRule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_content_area</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">HTMLRule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">HTMLRule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">html::HTMLParser::parse</span>(<span class="ident">HTMLRule::content_area</span>, <span class="ident">s</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme_script</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme_script</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::script</span>, <span class="ident">s</span>)
 }
 

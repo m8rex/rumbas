@@ -344,7 +344,7 @@
         <span class="kw">type</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
         <span class="ident">subtype</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>: <span class="ident">ty</span>,
         <span class="ident">rumbas_check</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>: <span class="ident">expr</span>
-    ) <span class="op">=</span><span class="op">&gt;</span> {
+    ) =&gt; {
         <span class="macro">paste::paste!</span> {
             <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
             <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
@@ -368,17 +368,17 @@
                 <span class="ident">translated_content</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
             }
             <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult</span> {
+                <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
                     <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>);
                     <span class="kw">match</span> <span class="ident">content</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; {
                             <span class="kw">let</span> <span class="ident">conversion_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">try_into</span>();
                             <span class="kw">match</span> <span class="ident">conversion_res</span> {
-                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult::empty</span>(),
-                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>(<span class="ident">e</span>),
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="ident">RumbasCheckResult::empty</span>(),
+                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>(<span class="ident">e</span>),
                             }
                         }
-                        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">RumbasCheckResult::from_missing_translation</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>.<span class="ident">to_string</span>())),
+                        <span class="prelude-val">None</span> =&gt; <span class="ident">RumbasCheckResult::from_missing_translation</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>.<span class="ident">to_string</span>())),
                     }
                 }
             }
@@ -387,23 +387,23 @@
             }
 
             <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)<span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)-&gt; <span class="ident">String</span> {
                     <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()
                 }
             }
 
             <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)<span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span> {
+                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)-&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span> {
                     <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>()
                 }
             }
 
             <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> { <span class="comment">// TODO: needed?</span>
-                <span class="kw">fn</span> <span class="macro-nonterminal">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+                <span class="kw">fn</span> <span class="macro-nonterminal">schema_name</span>() -&gt; <span class="ident">String</span> {
                     <span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="kw">type</span>).<span class="macro-nonterminal">to_owned</span>()
                 }
 
-                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
                     <span class="kw">let</span> <span class="ident">file_schema</span> <span class="op">=</span> <span class="ident">schemars::schema::SchemaObject</span> {
                         <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
                         <span class="ident">string</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::StringValidation</span> {
@@ -425,11 +425,11 @@
             }
 
             <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+                <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
                     <span class="macro">stringify!</span>([<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]).<span class="ident">to_owned</span>()
                 }
 
-                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
                     <span class="kw">let</span> <span class="ident">file_schema</span> <span class="op">=</span> <span class="ident">schemars::schema::SchemaObject</span> {
                         <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
                         <span class="ident">string</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::StringValidation</span> {
@@ -451,11 +451,11 @@
             }
 
             <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="ident">FILE_PREFIX</span>.<span class="ident">to_owned</span>();
                     <span class="ident">prefix</span>.<span class="ident">push</span>(<span class="string">&#39;:&#39;</span>);
                     <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="ident">prefix</span>) {
-                        <span class="kw">if</span> <span class="ident">s</span> <span class="op">=</span><span class="op">=</span> <span class="ident">prefix</span> {
+                        <span class="kw">if</span> <span class="ident">s</span> <span class="op">==</span> <span class="ident">prefix</span> {
                             <span class="self">Self</span> {
                                 <span class="ident">file_name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
                                 <span class="ident">content</span>: <span class="prelude-val">None</span>,
@@ -545,7 +545,7 @@
             <span class="comment">// Currently only implemented for conversion from numbas to rumbas: so not with translations or</span>
             <span class="comment">// file references</span>
             <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">fs</span>: [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">fs</span>: [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]) -&gt; <span class="self">Self</span> {
                     <span class="kw">if</span> <span class="ident">fs</span>.<span class="ident">file_name</span>.<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">fs</span>.<span class="ident">translated_content</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">fs</span>.<span class="ident">content</span>.<span class="ident">is_none</span>() {
                         <span class="macro">panic!</span>(<span class="string">&quot;Deserializing FileRef only supported when plain String&quot;</span>)
                     }
@@ -554,14 +554,14 @@
             }
 
             <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">get_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+                <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">get_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">translated_content</span>.<span class="ident">get</span>(<span class="ident">locale</span>) {
                         <span class="prelude-val">Some</span>(<span class="ident">c</span>.<span class="ident">clone</span>().<span class="ident">into</span>())
                     } <span class="kw">else</span> {
                         <span class="self">self</span>.<span class="ident">content</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">clone</span>().<span class="ident">into</span>())
                     }
                 }
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
                     <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>();
                     <span class="self">Self</span> {
                         <span class="ident">file_name</span>: <span class="prelude-val">None</span>,
@@ -571,7 +571,7 @@
                 }
             }
             <span class="kw">impl</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
                     <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>();
                     <span class="self">Self</span> {
                         <span class="ident">file_name</span>: <span class="prelude-val">None</span>,
@@ -583,14 +583,14 @@
             }
             <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
                 <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>;
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Normal</span> {
+                <span class="kw">fn</span> <span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
                     <span class="ident"><span class="self">Self</span>::Normal</span> {
                         <span class="ident">file_name</span>: <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">to_owned</span>(),
                         <span class="ident">content</span>: <span class="self">self</span>.<span class="ident">content</span>.<span class="ident">to_owned</span>(),
                         <span class="ident">translated_content</span>: <span class="self">self</span>.<span class="ident">translated_content</span>.<span class="ident">to_owned</span>(),
                     }
                 }
-                <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
                     <span class="self">Self</span> {
                         <span class="ident">file_name</span>: <span class="ident">normal</span>.<span class="ident">file_name</span>,
                         <span class="ident">content</span>: <span class="ident">normal</span>.<span class="ident">content</span>,
@@ -598,7 +598,7 @@
                         <span class="ident">error_message</span>: <span class="prelude-val">None</span>
                     }
                 }
-                <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+                <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">error_message</span> {
                         <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">clone</span>()))
                     } <span class="kw">else</span> {

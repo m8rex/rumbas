@@ -332,10 +332,10 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Input</span>: <span class="ident">Clone</span> {
     <span class="kw">type</span> <span class="ident">Normal</span>;
     <span class="doccomment">/// This method assumes that it is called by a function that is initially called from `to_normal_safe`</span>
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Normal</span>;
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span>;
 
     <span class="doccomment">/// Method that safely convets the input type to the normal type</span>
-    <span class="kw">fn</span> <span class="ident">to_normal_safe</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Normal</span>, <span class="ident">InputCheckResult</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal_safe</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Normal</span>, <span class="ident">InputCheckResult</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_missing</span>();
         <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
             <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">to_normal</span>())
@@ -345,9 +345,9 @@
     }
 
     <span class="doccomment">/// Check the optional data</span>
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span>;
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span>;
 
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>;
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span>;
 
     <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>);
 }
@@ -362,14 +362,14 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
         <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_normal</span>()).<span class="ident">collect</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">normal</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>).<span class="ident">collect</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">InputCheckResult::empty</span>();
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">find_missing</span>();
@@ -392,19 +392,19 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">O</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
         <span class="self">self</span>.<span class="ident">iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">s</span>, <span class="ident">a</span>)<span class="op">|</span> (<span class="ident">s</span>.<span class="ident">to_owned</span>(), <span class="ident">a</span>.<span class="ident">to_normal</span>()))
             .<span class="ident">collect</span>()
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">normal</span>
             .<span class="ident">into_iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">s</span>, <span class="ident">a</span>)<span class="op">|</span> (<span class="ident">s</span>, <span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>(<span class="ident">a</span>)))
             .<span class="ident">collect</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">InputCheckResult::empty</span>();
         <span class="comment">// Key is not displayable, so show an index, just to differentiate</span>
         <span class="kw">for</span> (<span class="ident">i</span>, (<span class="ident">_key</span>, <span class="ident">item</span>)) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
@@ -428,15 +428,15 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
         <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">to_normal</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">Box::new</span>(<span class="ident">Input::from_normal</span>(<span class="kw-2">*</span><span class="ident">normal</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">find_missing</span>()
     }
 
@@ -454,17 +454,17 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Input</span>, <span class="ident">B</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">B</span>) {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> (<span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>, <span class="op">&lt;</span><span class="ident">B</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>);
 
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
         (<span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_normal</span>(), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_normal</span>())
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
         (
             <span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>(<span class="ident">normal</span>.<span class="number">0</span>),
             <span class="op">&lt;</span><span class="ident">B</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>(<span class="ident">normal</span>.<span class="number">1</span>),
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">InputCheckResult::empty</span>();
         <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">find_missing</span>();
@@ -484,7 +484,7 @@
 }
 
 <span class="macro">macro_rules!</span> <span class="ident">impl_input</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ty</span>),<span class="kw-2">*</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ty</span>),<span class="kw-2">*</span>) =&gt; {
         $(
         <span class="kw">impl</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
             <span class="kw">type</span> <span class="ident">Input</span> <span class="op">=</span> <span class="self">Self</span>;
@@ -492,15 +492,15 @@
         <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
             <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="self">Self</span>;
 
-            <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
+            <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
                 <span class="self">self</span>.<span class="ident">to_owned</span>()
             }
 
-            <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+            <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
                 <span class="ident">normal</span>
             }
 
-            <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+            <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
                 <span class="ident">InputCheckResult::empty</span>()
             }
 
@@ -540,7 +540,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputCheckResult</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_missing</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_missing</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="ident">InputCheckResult</span> {
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[<span class="ident">InputCheckMissingData</span> {
                 <span class="ident">path</span>: <span class="ident">InputCheckPath::with_last</span>(<span class="ident">os</span>),
@@ -548,7 +548,7 @@
             <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_invalid</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_invalid</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) -&gt; <span class="ident">InputCheckResult</span> {
         <span class="ident">InputCheckResult</span> {
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[],
             <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[<span class="ident">InputCheckInvalidYamlData</span> {
@@ -557,14 +557,14 @@
             }],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">InputCheckResult</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() -&gt; <span class="ident">InputCheckResult</span> {
         <span class="ident">InputCheckResult</span> {
             <span class="ident">missing_values</span>: <span class="macro">vec!</span>[],
             <span class="ident">invalid_yaml_values</span>: <span class="macro">vec!</span>[],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extend_path</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="ident">String</span>) {
         <span class="kw">for</span> <span class="ident">missing_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">iter_mut</span>() {
@@ -579,10 +579,10 @@
         <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>
             .<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">clone</span>());
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">missing_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">InputCheckMissingData</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">missing_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">InputCheckMissingData</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">missing_values</span>.<span class="ident">clone</span>()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_yaml_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">InputCheckInvalidYamlData</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_yaml_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">InputCheckInvalidYamlData</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">invalid_yaml_values</span>.<span class="ident">clone</span>()
     }
 }
@@ -594,13 +594,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">InputCheckPath</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_last</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_last</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">InputCheckPath</span> {
             <span class="ident">parts</span>: <span class="macro">vec!</span>[],
             <span class="ident">last_part</span>: <span class="ident">os</span>,
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">without_last</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">without_last</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::with_last</span>(<span class="prelude-val">None</span>)
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="ident">String</span>) {
@@ -609,7 +609,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">InputCheckPath</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parts</span>.<span class="ident">join</span>(<span class="string">&quot;.&quot;</span>);
         <span class="macro">write!</span>(
             <span class="ident">f</span>,
@@ -629,7 +629,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">InputCheckMissingData</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>())
     }
 }
@@ -641,7 +641,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">InputCheckInvalidYamlData</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>();
         <span class="macro">write!</span>(
             <span class="ident">f</span>,

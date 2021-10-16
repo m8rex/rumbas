@@ -389,10 +389,10 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">name</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::Variable</span> {
+    ) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
         <span class="self">self</span>.<span class="ident">to_variable</span>().<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="ident">name</span>)
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::Variable</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
@@ -401,7 +401,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariableRepresentation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::variable::Variable</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariableRepresentation</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariableRepresentation</span> {
         <span class="ident">VariableRepresentation::Long</span>(<span class="ident">Box::new</span>(<span class="ident">Variable</span> {
             <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">to_rumbas</span>(),
@@ -412,28 +412,28 @@
 }
 
 <span class="kw">impl</span> <span class="ident">VariableRepresentation</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_variable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Variable</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_variable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Variable</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableRepresentation::ListOfStrings</span>(<span class="ident">l</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Variable::ungrouped</span>(
+            <span class="ident">VariableRepresentation::ListOfStrings</span>(<span class="ident">l</span>) =&gt; <span class="ident">Variable::ungrouped</span>(
                 <span class="ident">VariableTemplateType::ListOfStrings</span>,
                 <span class="kw-2">&amp;</span><span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>).<span class="ident">unwrap</span>(),
             ),
-            <span class="ident">VariableRepresentation::ListOfNumbers</span>(<span class="ident">l</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Variable::ungrouped</span>(
+            <span class="ident">VariableRepresentation::ListOfNumbers</span>(<span class="ident">l</span>) =&gt; <span class="ident">Variable::ungrouped</span>(
                 <span class="ident">VariableTemplateType::ListOfNumbers</span>,
                 <span class="kw-2">&amp;</span><span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>).<span class="ident">unwrap</span>(),
             ),
-            <span class="ident">VariableRepresentation::Long</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span>(<span class="ident">v</span>.<span class="ident">clone</span>()),
-            <span class="ident">VariableRepresentation::Number</span>(<span class="ident">n</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableRepresentation::Long</span>(<span class="ident">v</span>) =&gt; <span class="kw-2">*</span>(<span class="ident">v</span>.<span class="ident">clone</span>()),
+            <span class="ident">VariableRepresentation::Number</span>(<span class="ident">n</span>) =&gt; {
                 <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Number</span>, <span class="kw-2">&amp;</span><span class="ident">n</span>.<span class="ident">to_string</span>())
             }
-            <span class="ident">VariableRepresentation::Other</span>(<span class="ident">o</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">o</span> {
-                <span class="ident">VariableStringRepresentation::Anything</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableRepresentation::Other</span>(<span class="ident">o</span>) =&gt; <span class="kw">match</span> <span class="ident">o</span> {
+                <span class="ident">VariableStringRepresentation::Anything</span>(<span class="ident">s</span>) =&gt; {
                     <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Anything</span>, <span class="kw-2">&amp;</span><span class="ident">s</span>)
                 }
-                <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>) =&gt; {
                     <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Range</span>, <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">as_range</span>())
                 }
-                <span class="ident">VariableStringRepresentation::RandomRange</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">VariableStringRepresentation::RandomRange</span>(<span class="ident">r</span>) =&gt; {
                     <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::RandomRange</span>, <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">as_random_range</span>())
                 }
             },
@@ -452,11 +452,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentationInput</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
         <span class="string">&quot;VariableStringRepresentationInput&quot;</span>.<span class="ident">to_owned</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schemars::schema::Schema</span> {
+    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
         <span class="ident">schemars::schema::SchemaObject</span> {
             <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
             ..<span class="ident">Default::default</span>()
@@ -466,7 +466,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentation</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
             <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>)
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
@@ -478,7 +478,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentationInput</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">VariableStringRepresentation::from</span>(<span class="ident">s</span>);
         <span class="ident"><span class="self">Self</span>::from_normal</span>(<span class="ident">v</span>)
     }
@@ -494,7 +494,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">RangeData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">re</span> <span class="op">=</span> <span class="ident">Regex::new</span>(<span class="string">r&quot;^(\d+(?:\.\d*)?)\s*\.\.\s*(\d+(?:\.\d*)?)(\#(\d+(?:\.\d*)?))?$&quot;</span>)
             .<span class="ident">expect</span>(<span class="string">&quot;It to be a valid regex&quot;</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">re</span>.<span class="ident">captures</span>(<span class="ident">s</span>) {
@@ -506,16 +506,16 @@
         }
         <span class="prelude-val">None</span>
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="string">&quot;{} .. {}#{}&quot;</span>, <span class="self">self</span>.<span class="ident">from</span>, <span class="self">self</span>.<span class="ident">to</span>, <span class="self">self</span>.<span class="ident">step</span>)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_random_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_random_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&quot;random(&quot;</span>) <span class="op">&amp;&amp;</span> <span class="ident">s</span>.<span class="ident">ends_with</span>(<span class="string">&#39;)&#39;</span>) {
             <span class="kw">return</span> <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="number">7</span>..<span class="ident">s</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_string</span>());
         }
         <span class="prelude-val">None</span>
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_random_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_random_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="string">&quot;random({})&quot;</span>, <span class="self">self</span>.<span class="ident">as_range</span>())
     }
 }
@@ -525,7 +525,7 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
     <span class="macro">macro_rules!</span> <span class="ident">i</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expr</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expr</span>: <span class="ident">expr</span>) =&gt; {
             <span class="ident">RangeDataInput::from_normal</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expr</span>)
         };
     }
@@ -616,7 +616,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">name</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::Variable</span> {
+    ) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
         <span class="ident">numbas::question::variable::Variable</span> {
             <span class="ident">name</span>,
             <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
@@ -626,7 +626,7 @@
             <span class="ident">can_override</span>: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)</span>
         }
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::Variable</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
             <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
@@ -635,7 +635,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Variable</span> {
-    <span class="kw">fn</span> <span class="ident">ungrouped</span>(<span class="ident">template_type</span>: <span class="ident">VariableTemplateType</span>, <span class="ident">definition</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Variable</span> {
+    <span class="kw">fn</span> <span class="ident">ungrouped</span>(<span class="ident">template_type</span>: <span class="ident">VariableTemplateType</span>, <span class="ident">definition</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Variable</span> {
         <span class="ident">Variable</span> {
             <span class="ident">template_type</span>,
             <span class="ident">definition</span>: <span class="ident">definition</span>.<span class="ident">to_string</span>().<span class="ident">to_rumbas</span>(),
@@ -670,28 +670,28 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::variable::VariableTemplateType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableTemplateType</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::VariableTemplateType</span> {
+    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::VariableTemplateType</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableTemplateType::Anything</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::Anything</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::Anything</span>
             }
-            <span class="ident">VariableTemplateType::ListOfNumbers</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::ListOfNumbers</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::ListOfNumbers</span>
             }
-            <span class="ident">VariableTemplateType::ListOfStrings</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::ListOfStrings</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::ListOfStrings</span>
             }
-            <span class="ident">VariableTemplateType::LongString</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::LongString</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::LongString</span>
             }
-            <span class="ident">VariableTemplateType::Number</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::Number</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::Number</span>
             }
-            <span class="ident">VariableTemplateType::Range</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">numbas::question::variable::VariableTemplateType::Range</span>,
-            <span class="ident">VariableTemplateType::RandomRange</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType::Range</span> =&gt; <span class="ident">numbas::question::variable::VariableTemplateType::Range</span>,
+            <span class="ident">VariableTemplateType::RandomRange</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType::RandomRange</span>
             }
-            <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span> =&gt; {
                 <span class="ident">numbas::question::variable::VariableTemplateType</span>::<span class="ident">r#String</span>
             }
         }
@@ -699,28 +699,28 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariableTemplateType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::variable::VariableTemplateType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">VariableTemplateType</span> {
+    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariableTemplateType</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::variable::VariableTemplateType::Anything</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::Anything</span> =&gt; {
                 <span class="ident">VariableTemplateType::Anything</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfNumbers</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfNumbers</span> =&gt; {
                 <span class="ident">VariableTemplateType::ListOfNumbers</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfStrings</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfStrings</span> =&gt; {
                 <span class="ident">VariableTemplateType::ListOfStrings</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::LongString</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::LongString</span> =&gt; {
                 <span class="ident">VariableTemplateType::LongString</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::Number</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::Number</span> =&gt; {
                 <span class="ident">VariableTemplateType::Number</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::RandomRange</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::RandomRange</span> =&gt; {
                 <span class="ident">VariableTemplateType::RandomRange</span>
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::Range</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">VariableTemplateType::Range</span>,
-            <span class="ident">numbas::question::variable::VariableTemplateType</span>::<span class="ident">r#String</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">numbas::question::variable::VariableTemplateType::Range</span> =&gt; <span class="ident">VariableTemplateType::Range</span>,
+            <span class="ident">numbas::question::variable::VariableTemplateType</span>::<span class="ident">r#String</span> =&gt; {
                 <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span>
             }
         }
