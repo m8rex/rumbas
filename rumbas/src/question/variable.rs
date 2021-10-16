@@ -1,10 +1,13 @@
 use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::translatable::TranslatableString;
+use numbas::jme::JMEString;
 use regex::Regex;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
@@ -15,9 +18,10 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 pub enum VariableRepresentation {
     ListOfStrings(Vec<String>),
     ListOfNumbers(Vec<f64>),
-    Long(Box<Variable>),
     Number(f64),
     Other(VariableStringRepresentation),
+    TranslatableString(TranslatableString),
+    Long(Box<Variable>),
 }
 
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
@@ -26,7 +30,7 @@ impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
         locale: &str,
         name: String,
     ) -> numbas::question::variable::Variable {
-        self.to_variable().to_numbas_with_name(locale, name)
+        self.to_variable(locale).to_numbas_with_name(locale, name)
     }
     fn to_numbas(&self, _locale: &str) -> numbas::question::variable::Variable {
         panic!(
@@ -48,7 +52,7 @@ impl ToRumbas<VariableRepresentation> for numbas::question::variable::Variable {
 }
 
 impl VariableRepresentation {
-    pub fn to_variable(&self) -> Variable {
+    pub fn to_variable(&self, locale: &str) -> Variable {
         match self {
             VariableRepresentation::ListOfStrings(l) => Variable::ungrouped(
                 VariableTemplateType::ListOfStrings,
@@ -64,7 +68,7 @@ impl VariableRepresentation {
             }
             VariableRepresentation::Other(o) => match o {
                 VariableStringRepresentation::Anything(s) => {
-                    Variable::ungrouped(VariableTemplateType::Anything, &s)
+                    Variable::ungrouped(VariableTemplateType::Anything, &s.to_string())
                 }
                 VariableStringRepresentation::Range(r) => {
                     Variable::ungrouped(VariableTemplateType::Range, &r.as_range())
@@ -72,7 +76,14 @@ impl VariableRepresentation {
                 VariableStringRepresentation::RandomRange(r) => {
                     Variable::ungrouped(VariableTemplateType::RandomRange, &r.as_random_range())
                 }
+                VariableStringRepresentation::r#String(s) => {
+                    Variable::ungrouped(VariableTemplateType::r#String, &s)
+                }
             },
+            VariableRepresentation::TranslatableString(l) => Variable::ungrouped(
+                VariableTemplateType::r#String,
+                &l.to_string(locale).unwrap(),
+            ),
         }
     }
 }
@@ -82,7 +93,8 @@ impl VariableRepresentation {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
-    Anything(String),
+    Anything(JMEString),
+    r#String(String),
     Range(RangeData),
     RandomRange(RangeData),
 }
@@ -107,8 +119,10 @@ impl std::convert::From<String> for VariableStringRepresentation {
             VariableStringRepresentation::Range(r)
         } else if let Some(r) = RangeData::try_from_random_range(&s) {
             VariableStringRepresentation::RandomRange(r)
+        } else if let Ok(r) = JMEString::try_from(s.clone()) {
+            VariableStringRepresentation::Anything(r)
         } else {
-            VariableStringRepresentation::Anything(s)
+            VariableStringRepresentation::String(s)
         }
     }
 }
