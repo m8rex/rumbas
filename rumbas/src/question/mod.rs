@@ -95,7 +95,7 @@ impl ToNumbas<numbas::question::Question> for Question {
                 .variables
                 .clone()
                 .into_iter()
-                .filter(|(_k, v)| &v.to_variable().group[..] == UNGROUPED_GROUP)
+                .filter(|(_k, v)| &v.to_variable(locale).group[..] == UNGROUPED_GROUP)
                 .map(|(k, _)| k)
                 .collect(),
             variable_groups: Vec::new(), // Don't add variable groups
