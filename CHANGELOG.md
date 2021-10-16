@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed fields of `JMEAnswerSimplification`:
   - The new names should be much more clear
   - The old names are still valid
+- Syntax for `TranslatableString` is changed.
+  - Instead of a map that contains `content`, some locale fields and some placeholders that are surrounded with brackets (`{<placeholder>}`)
+  - It now is a map with fields `content` en `placeholders`
+    - `content` is either a map (with locales mapping to strings) or just a string (not locale dependant)
+    - 'placeholders`is a map that maps placeholders (strings) to`TranslatableString`s
 
 ## [0.4.0] - 2021-08-04
 
