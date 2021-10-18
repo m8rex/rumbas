@@ -1,16 +1,7 @@
 use crate::input::{InputFieldReceiver, InputVariantReceiver};
 use darling::ast;
-use darling::{FromDeriveInput, FromField};
+use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
-
-#[derive(Debug, FromField)]
-struct OverwriteFieldReceiver {
-    /// Get the ident of the field. For fields in tuple or newtype structs or
-    /// enum bodies, this can be `None`.
-    ident: Option<syn::Ident>,
-
-    ty: syn::Type,
-}
 
 #[derive(FromDeriveInput, Debug)]
 #[darling(attributes(input))]

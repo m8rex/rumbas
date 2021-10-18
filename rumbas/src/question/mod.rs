@@ -196,7 +196,7 @@ pub enum QuestionFileType {
 
 impl QuestionFileType {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        QuestionFileTypeInput::from_normal(self.to_owned()).to_yaml()
+        serde_yaml::to_string(self)
     }
 }
 
