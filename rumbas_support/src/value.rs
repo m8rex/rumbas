@@ -139,6 +139,18 @@ impl<T: JsonSchema> JsonSchema for Value<T> {
     }
 }
 
+impl<T> Value<T> {
+    #[inline]
+    pub fn is_some(&self) -> bool {
+        self.0.is_some()
+    }
+
+    #[inline]
+    pub fn is_none(&self) -> bool {
+        self.0.is_none()
+    }
+}
+
 impl<T: std::clone::Clone> Value<T> {
     #[inline]
     pub fn unwrap(&self) -> T {

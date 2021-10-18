@@ -323,6 +323,7 @@ macro_rules! translatable_type {
             }
 
             #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize)]
+            #[serde(untagged)]
             pub enum $type {
                 //TODO: custom reader that checks for missing values etc?
                 /// Maps locales on formattable strings and parts like "{func}" (between {}) to values

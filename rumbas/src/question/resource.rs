@@ -44,13 +44,13 @@ impl ToRumbas<ResourcePath> for numbas::question::resource::Resource {
     }
 }
 
-impl std::convert::TryFrom<String> for ResourcePathInput {
+impl std::convert::TryFrom<String> for ResourcePathInputDummy {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
         if path.exists() {
-            Ok(ResourcePathInput {
+            Ok(ResourcePathInputDummy {
                 resource_name: Value::Normal(s),
                 resource_path: Value::Normal(path),
             })
@@ -60,8 +60,8 @@ impl std::convert::TryFrom<String> for ResourcePathInput {
     }
 }
 
-impl std::convert::From<ResourcePathInput> for String {
-    fn from(q: ResourcePathInput) -> Self {
+impl std::convert::From<ResourcePathInputDummy> for String {
+    fn from(q: ResourcePathInputDummy) -> Self {
         q.resource_name.unwrap()
     }
 }
@@ -70,7 +70,8 @@ impl std::convert::TryFrom<String> for ResourcePath {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let data: ResourcePathInput = s.try_into()?;
+        let data: ResourcePathInputDummy = s.try_into()?;
+        let data: ResourcePathInput = data.try_into()?;
         Ok(data.to_normal())
     }
 }
@@ -97,5 +98,30 @@ impl Eq for ResourcePath {}
 impl ResourcePath {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::path::Path;
+
+    #[test]
+    fn yaml() {
+        let r = ResourcePath {
+            resource_name: "test".to_string(),
+            resource_path: Path::new("tmp").to_path_buf(),
+        };
+        assert_eq!(
+            r.to_yaml().unwrap(),
+            r"---
+test
+"
+        );
+        let rid = ResourcePathInputDummy {
+            resource_name: Value::Normal("test".to_string()),
+            resource_path: Value::Normal(Path::new("tmp").to_path_buf()),
+        };
+        assert_eq!(r.to_yaml().unwrap(), serde_yaml::to_string(&rid).unwrap());
     }
 }

@@ -33,6 +33,7 @@ macro_rules! file_type {
                 error_message: Option<String>,
             }
             #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+            #[serde(into = "String")]
             $(
                 #[$outer]
             )*
@@ -220,6 +221,17 @@ macro_rules! file_type {
             // file references
             impl std::convert::From<[<$type Input>]> for String {
                 fn from(fs: [<$type Input>]) -> Self {
+                    if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
+                        panic!("Deserializing FileRef only supported when plain String")
+                    }
+                    fs.content.unwrap().into()
+                }
+            }
+
+            // Currently only implemented for conversion from numbas to rumbas: so not with translations or
+            // file references
+            impl std::convert::From<[<$type>]> for String {
+                fn from(fs: [<$type>]) -> Self {
                     if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
                         panic!("Deserializing FileRef only supported when plain String")
                     }

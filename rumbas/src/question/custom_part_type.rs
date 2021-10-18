@@ -392,30 +392,47 @@ impl JsonSchema for CustomPartTypeDefinitionPathInput {
     }
 }
 
-impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPathInput {
+impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPathInputDummy {
     type Error = YamlError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let custom_part_type_data = CustomPartTypeDefinitionInput::from_name(&s).map_err(|e| e)?;
-        Ok(CustomPartTypeDefinitionPathInput {
+        Ok(CustomPartTypeDefinitionPathInputDummy {
             custom_part_type_name: Value::Normal(s),
             custom_part_type_data: Value::Normal(custom_part_type_data),
         })
     }
 }
 
-impl std::convert::From<CustomPartTypeDefinitionPathInput> for String {
-    fn from(q: CustomPartTypeDefinitionPathInput) -> Self {
+impl std::convert::From<CustomPartTypeDefinitionPathInputDummy> for String {
+    fn from(q: CustomPartTypeDefinitionPathInputDummy) -> Self {
         q.custom_part_type_name.unwrap()
+    }
+}
+
+pub enum CustomPartTypeDefinitionError {
+    Yaml(YamlError),
+    Empty(&'static str),
+}
+
+impl std::fmt::Display for CustomPartTypeDefinitionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Yaml(y) => write!(f, "{}", y),
+            Self::Empty(e) => write!(f, "{}", e),
+        }
     }
 }
 
 // Remove these impl's etc, should not ser / deser
 impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
-    type Error = YamlError;
+    type Error = CustomPartTypeDefinitionError;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let data: CustomPartTypeDefinitionPathInput = s.try_into()?;
+        let data: CustomPartTypeDefinitionPathInputDummy =
+            s.try_into().map_err(Self::Error::Yaml)?;
+        let data: CustomPartTypeDefinitionPathInput =
+            data.try_into().map_err(Self::Error::Empty)?;
         Ok(data.to_normal())
     }
 }
