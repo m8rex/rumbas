@@ -50,7 +50,11 @@ pub fn get_input_types(fields: &[InputFieldReceiver]) -> Vec<proc_macro2::TokenS
         .collect::<Vec<_>>()
 }
 
-fn handle_attributes(attrs: &[syn::Attribute]) -> proc_macro2::TokenStream {
+// First result is for the main type (Input or shadow), the second for the Input when there is a
+// shadow
+fn handle_attributes(
+    attrs: &[syn::Attribute],
+) -> (proc_macro2::TokenStream, proc_macro2::TokenStream) {
     let derive_attrs = attrs
         .iter()
         .filter(|a| a.path.is_ident("derive"))
@@ -73,15 +77,23 @@ fn handle_attributes(attrs: &[syn::Attribute]) -> proc_macro2::TokenStream {
         })
         .collect::<Vec<_>>();
 
-    let mut tokens = quote!(#[derive(#(#derive_attrs),*)]);
+    let mut tokens_main = quote!(#[derive(#(#derive_attrs),*)]);
+    let mut tokens_second = quote!(#[derive(#(#derive_attrs),*)]);
     let other_attrs = attrs
         .iter()
         .filter(|a| !a.path.is_ident("derive"))
         .map(|a| quote! {#a})
         .collect::<Vec<_>>();
-    tokens.extend(quote!(#(#other_attrs)*));
+    tokens_main.extend(quote!(#(#other_attrs)*));
 
-    tokens
+    let other_attrs = attrs
+        .iter()
+        .filter(|a| !a.path.is_ident("derive") && !a.path.is_ident("serde"))
+        .map(|a| quote! {#a})
+        .collect::<Vec<_>>();
+    tokens_second.extend(quote!(#(#other_attrs)*));
+
+    (tokens_main, tokens_second)
 }
 
 fn input_handle_unit_struct(
@@ -169,7 +181,7 @@ fn input_handle_struct_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_attributes: &proc_macro2::TokenStream,
+    input_attributes: &(proc_macro2::TokenStream, proc_macro2::TokenStream),
     tokens: &mut proc_macro2::TokenStream,
 ) {
     // Beginning of fixing generics
@@ -196,8 +208,27 @@ fn input_handle_struct_struct(
         .map(|a| quote!(#(#a)*))
         .collect::<Vec<_>>();
 
+    let input_ident_dummy = syn::Ident::new(
+        &format!("{}Dummy", input_ident.to_string())[..],
+        input_ident.span(),
+    );
+    let input_attributes_dummy = &input_attributes.0;
+    let input_attributes_input = &input_attributes.1;
+
     tokens.extend(quote! {
-        #input_attributes
+        #input_attributes_dummy
+        pub struct #input_ident_dummy #ty #wher {
+            #(
+                #field_attributes
+                pub #field_names: Value<<#input_type_tys as InputInverse>::Input>
+            ),*
+        }
+    });
+
+    let try_from_value = input_ident_dummy.to_string();
+    tokens.extend(quote! {
+        #input_attributes_input
+        #[serde(try_from = #try_from_value)]
         pub struct #input_ident #ty #wher {
             #(
                 #field_attributes
@@ -233,6 +264,30 @@ fn input_handle_struct_struct(
             }
         }
     });
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl std::convert::TryFrom<#input_ident_dummy #ty> for #input_ident #ty #wher {
+            type Error = &'static str;
+
+            fn try_from(value: #input_ident_dummy) -> Result<Self, Self::Error> {
+                let mut ok = false;
+                #(
+                    if value.#field_names.is_some() {
+                        ok = true;
+                    }
+                )*
+                if ok {
+                    Ok(Self {
+                        #(
+                            #field_names: value.#field_names
+                        ),*
+                    })
+                } else {
+                    Err("No field is set to a not-none value.")
+                }
+            }
+        }
+    })
 }
 
 fn input_handle_struct(
@@ -240,7 +295,7 @@ fn input_handle_struct(
     ident: &syn::Ident,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
-    input_attributes: &proc_macro2::TokenStream,
+    input_attributes: &(proc_macro2::TokenStream, proc_macro2::TokenStream),
     tokens: &mut proc_macro2::TokenStream,
 ) {
     match fields.style {
@@ -257,11 +312,11 @@ fn input_handle_struct(
             ident,
             input_ident,
             generics,
-            input_attributes,
+            &input_attributes.0,
             tokens,
         ),
         ast::Style::Unit => {
-            input_handle_unit_struct(ident, input_ident, generics, input_attributes, tokens)
+            input_handle_unit_struct(ident, input_ident, generics, &input_attributes.0, tokens)
         }
     }
 }
@@ -575,9 +630,14 @@ impl ToTokens for InputReceiver {
         let input_attributes = handle_attributes(&attrs);
 
         match data {
-            ast::Data::Enum(v) => {
-                input_handle_enum(v, ident, &input_ident, generics, &input_attributes, tokens)
-            }
+            ast::Data::Enum(v) => input_handle_enum(
+                v,
+                ident,
+                &input_ident,
+                generics,
+                &input_attributes.0,
+                tokens,
+            ),
             ast::Data::Struct(fields) => input_handle_struct(
                 fields,
                 ident,

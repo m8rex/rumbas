@@ -57,4 +57,25 @@ mod test {
             field2: Value::Normal(65.0),
         };
     }
+
+    #[test]
+    fn parse_yaml_test_no_fields() {
+        let fail: Result<Test2Input, _> = serde_yaml::from_str(
+            r"---
+other_field1: true
+",
+        );
+        assert!(fail.is_err());
+    }
+
+    #[test]
+    fn parse_yaml_test() {
+        let ok: Result<Test2Input, _> = serde_yaml::from_str(
+            r"---
+field1: true
+",
+        );
+
+        assert!(ok.is_ok());
+    }
 }
