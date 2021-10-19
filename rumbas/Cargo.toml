@@ -1,6 +1,6 @@
 [package]
 name = "rumbas"
-version = "0.4.1-rc"
+version = "0.5.0-rc"
 authors = ["Jesse Hoobergs <jesse@hoobergs.be>"]
 edition = "2018"
 
