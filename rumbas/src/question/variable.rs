@@ -24,6 +24,45 @@ pub enum VariableRepresentation {
     Long(Box<Variable>),
 }
 
+#[cfg(test)]
+trait Examples {
+    fn get_examples() -> Vec<Self>
+    where
+        Self: Sized;
+}
+
+#[cfg(test)]
+impl Examples for VariableRepresentationInput {
+    fn get_examples() -> Vec<Self> {
+        vec![VariableRepresentationInput::ListOfStrings(vec![
+            Value::Normal("test".to_string()),
+        ])]
+    }
+}
+
+#[cfg(test)]
+mod example_test {
+    use super::Examples;
+    use super::VariableRepresentationInput;
+    #[test]
+    fn compile_examples() {
+        for example in VariableRepresentationInput::get_examples() {
+            let item = serde_yaml::to_string(&example);
+            assert!(item.is_ok());
+            let item = item.unwrap();
+            let parsed: Result<VariableRepresentationInput, _> = serde_yaml::from_str(&item[..]);
+            assert!(parsed.is_ok());
+            match (parsed.unwrap(), example) {
+                (
+                    VariableRepresentationInput::ListOfStrings(s),
+                    VariableRepresentationInput::ListOfStrings(s2),
+                ) => assert_eq!(s, s2),
+                _ => unreachable!(),
+            };
+        }
+    }
+}
+
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
     fn to_numbas_with_name(
         &self,
