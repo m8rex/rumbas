@@ -23,6 +23,9 @@ subcommands:
         - zip:
             short: z
             help: Create a zip file instead of a directory
+        - no-minification:
+            long: no-minification
+            help: Don't perform minification on the created js in the exam. Useful if you don't have uglifyjs or want to debug something.
   - import:
       about: |-
         Import a numbas .exam file
