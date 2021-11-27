@@ -42,6 +42,10 @@ pub fn compile(matches: &clap::ArgMatches) {
                                         use_scorm: matches.is_present("scorm"),
                                         as_zip: matches.is_present("zip"),
                                         exam_path: path.to_path_buf(),
+                                        numbas_locale: locale_item
+                                            .numbas_locale
+                                            .to_str()
+                                            .to_string(),
                                         locale,
                                         theme: exam.numbas_settings().theme,
                                         exam: res,
@@ -114,6 +118,7 @@ pub struct NumbasCompiler {
     as_zip: bool,
     exam_path: PathBuf,
     locale: String,
+    numbas_locale: String,
     theme: String,
     exam: numbas::exam::Exam,
 }
@@ -172,39 +177,57 @@ impl NumbasCompiler {
         let numbas_path = env::var(rumbas::NUMBAS_FOLDER_ENV)
             .expect(&format!("{} to be set", rumbas::NUMBAS_FOLDER_ENV)[..]);
 
-        let mut extra_args: Vec<&str> = Vec::new();
+        let mut args: Vec<&str> = Vec::new();
+
+        args.push("-l");
+        args.push(&self.numbas_locale[..]);
+
+        args.push("-t");
+        args.push(&self.theme[..]);
+
         if self.use_scorm {
-            extra_args.push("-s");
+            args.push("-s");
         }
         if self.as_zip {
-            extra_args.push("-z");
+            args.push("-z");
         }
+
+        args.push("-o");
+        let output_path = self.output_path();
+        args.push(output_path.to_str().unwrap());
+
+        let exam_path = self.numbas_exam_path().canonicalize().unwrap();
+        args.push(exam_path.to_str().unwrap());
+
+        log::debug!("Compile numbas with args {:?}", args.join(", "));
 
         std::process::Command::new("python3")
             .current_dir(numbas_path.clone())
             .arg("bin/numbas.py")
-            .arg("-l")
-            .arg(&self.locale)
-            .arg("-t")
-            .arg(&self.theme)
-            .args(&extra_args)
-            .arg("-o")
-            .arg(self.output_path())
-            .arg(self.numbas_exam_path().canonicalize().unwrap())
+            .args(&args)
             .output()
             .expect("failed to execute numbas process")
     }
     /// Compile the numbas exam
     pub fn compile(&self) -> bool {
         self.create_folder_structure();
-        let exam_write_res = self.exam.write(self.numbas_exam_path().to_str().unwrap());
+        let exam_file_path = self.numbas_exam_path();
+        let exam_write_res = self.exam.write(exam_file_path.to_str().unwrap());
         match exam_write_res {
             numbas::exam::WriteResult::IOError(e) => {
-                log::error!("Failed saving the exam file because of {}.", e);
+                log::error!(
+                    "Failed saving the exam file {} because of {}.",
+                    exam_file_path.to_str().unwrap(),
+                    e
+                );
                 return false;
             }
             numbas::exam::WriteResult::JSONError(e) => {
-                log::error!("Failed generating the exam file because of {}.", e);
+                log::error!(
+                    "Failed generating the exam file {} because of {}.",
+                    exam_file_path.to_str().unwrap(),
+                    e
+                );
                 return false;
             }
             numbas::exam::WriteResult::Ok => {
