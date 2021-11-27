@@ -46,7 +46,7 @@ impl ToRumbas<Function> for numbas::question::function::Function {
 pub enum FunctionDefinition {
     #[serde(rename = "jme")]
     JME(FunctionDefinitionJME),
-    #[serde(rename = "js")]
+    #[serde(rename = "javascript")]
     Javascript(FunctionDefinitionJavascript),
 }
 
