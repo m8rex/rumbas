@@ -49,6 +49,7 @@ pub fn compile(matches: &clap::ArgMatches) {
                                         locale,
                                         theme: exam.numbas_settings().theme,
                                         exam: res,
+                                        minify: !matches.is_present("no-minification"),
                                     };
                                     if !compiler.compile() {
                                         something_failed = true;
@@ -120,6 +121,7 @@ pub struct NumbasCompiler {
     locale: String,
     numbas_locale: String,
     theme: String,
+    minify: bool,
     exam: numbas::exam::Exam,
 }
 
@@ -190,6 +192,10 @@ impl NumbasCompiler {
         }
         if self.as_zip {
             args.push("-z");
+        }
+        if self.minify {
+            args.push("--minify");
+            args.push("uglifyjs");
         }
 
         args.push("-o");
