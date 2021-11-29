@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed fields of `JMEAnswerSimplification`:
   - The new names should be much more clear
   - The old names are still valid
+- Dockerfile: updated numbas version (so minify_css is supported)
 
 ## [0.4.0] - 2021-08-04
 

@@ -1,4 +1,4 @@
-FROM rust:1.53.0-slim as builder
+FROM rust:1.55.0-slim as builder
 
 WORKDIR /usr/app
 RUN rustup target add x86_64-unknown-linux-musl
@@ -38,7 +38,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
-RUN git fetch && git checkout v6.0
+RUN git fetch && git checkout 7fb4fd4a24410316c36c3f140227fe240c5207a3
 
 # Fetch jsx graph extension
 FROM alpine as jsxgraph_fetcher
@@ -155,6 +155,9 @@ WORKDIR /usr/app/sqlite
 # Main image
 FROM python:3.6.10-alpine 
 WORKDIR /usr/app/Numbas
+
+RUN apk add yarn
+RUN yarn global add uglify-js uglifycss
 
 COPY --from=numbas_fetcher /usr/app/Numbas /usr/app/Numbas
 RUN pip install -r requirements.txt
