@@ -196,6 +196,9 @@ impl NumbasCompiler {
         if self.minify {
             args.push("--minify");
             args.push("uglifyjs");
+
+            args.push("--minifycss");
+            args.push("uglifycss");
         }
 
         args.push("-o");
