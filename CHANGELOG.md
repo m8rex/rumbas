@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `answer_display` field to `jme` part type.
 - Sqlite extension
+- `--no-minification` flag for `compile` command to suppress the `js` and `css` minification of Numbas. Before this addition, minification was not performed, now it is enabled by default.
 
 ### Changed
 
