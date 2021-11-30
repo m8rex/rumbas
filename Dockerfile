@@ -39,6 +39,7 @@ RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
 RUN git fetch && git checkout 7fb4fd4a24410316c36c3f140227fe240c5207a3
+RUN rm -r docs .git tests # remove large folders
 
 # Fetch jsx graph extension
 FROM alpine as jsxgraph_fetcher
@@ -47,6 +48,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-jsxgraph.git jsxgraph
 WORKDIR /usr/app/jsxgraph
 RUN git fetch && git checkout 9bc865f695009cf1942060be4e725e3dc687895b 
+RUN rm -r .git # remove large folders
 
 # Fetch stats extension
 FROM alpine as stats_fetcher
@@ -55,6 +57,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-stats.git stats
 WORKDIR /usr/app/stats
 RUN git fetch && git checkout 62ed29f8ef06dafef7b9fc47dc843d668e119966
+RUN rm -r .git # remove large folders
 
 # Fetch euklides extension
 FROM alpine as eukleides_fetcher
@@ -63,6 +66,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-eukleides.git eukleides
 WORKDIR /usr/app/eukleides
 RUN git fetch && git checkout bac3d060cd70d79fb6f897f0a54076ec916b8e14
+RUN rm -r .git # remove large folders
 
 # Fetch geogebra extension
 FROM alpine as geogebra_fetcher
@@ -71,6 +75,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-geogebra.git geogebra
 WORKDIR /usr/app/geogebra
 RUN git fetch && git checkout 14fdb023341357134b6376f5f6084834587d6f8f
+RUN rm -r .git # remove large folders
 
 # Fetch random_person extension
 FROM alpine as random_person_fetcher
@@ -79,6 +84,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-random-person.git random_person
 WORKDIR /usr/app/random_person
 RUN git fetch && git checkout 4031704f9570b0ad8a6918a0dc1e8063220392a8
+RUN rm -r .git datasets # remove large folders
 
 # Fetch download_text_file extension
 FROM alpine as download_text_file_fetcher
@@ -87,6 +93,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-download-a-text-file.git download-text-file
 WORKDIR /usr/app/download-text-file
 RUN git fetch && git checkout 32b99089a6d9837565a183e70f13d6351db61782
+RUN rm -r .git # remove large folders
 
 # Fetch codewords (linear codes) extension
 FROM alpine as codewords_fetcher
@@ -95,6 +102,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-codewords.git codewords
 WORKDIR /usr/app/codewords
 RUN git fetch && git checkout 24b82c6d57027d33fffb8a58493174743d202d41
+RUN rm -r .git # remove large folders
 
 # Fetch permutations extension
 FROM alpine as permutations_fetcher
@@ -103,6 +111,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-permutations.git permutations
 WORKDIR /usr/app/permutations
 RUN git fetch && git checkout 9b6b7a44c6b7dcbf03b1a7ffd03ed383194da721
+RUN rm -r .git # remove large folders
 
 # Fetch quantities extension
 FROM alpine as quantities_fetcher
@@ -111,6 +120,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-quantities.git quantities
 WORKDIR /usr/app/quantities
 RUN git fetch && git checkout 05fa4bba4bbac078747c6dab2600496036a82857
+RUN rm -r .git # remove large folders
 
 # Fetch optimisation extension
 FROM alpine as optimisation_fetcher
@@ -119,6 +129,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-optimisation.git optimisation
 WORKDIR /usr/app/optimisation
 RUN git fetch && git checkout 06899711367414950c7118329cb7c7c1bbb0542e
+RUN rm -r .git # remove large folders
 
 # Fetch polynomials extension
 FROM alpine as polynomials_fetcher
@@ -127,6 +138,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-polynomials.git polynomials
 WORKDIR /usr/app/polynomials
 RUN git fetch && git checkout ab321aa13dc80609393553190233d1a771d04e7c
+RUN rm -r .git # remove large folders
 
 # Fetch chemistry extension
 FROM alpine as chemistry_fetcher
@@ -135,6 +147,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-chemistry.git chemistry
 WORKDIR /usr/app/chemistry
 RUN git fetch && git checkout 6527a4690bd7ee5bca5e4f54facd8170eb018a2e
+RUN rm -r .git # remove large folders
 
 # Fetch linear-algebra extension
 FROM alpine as linear_algebra_fetcher
@@ -143,6 +156,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-linearalgebra.git linear_algebra
 WORKDIR /usr/app/linear_algebra
 RUN git fetch && git checkout 09672fccdf28ea30fc9b14ad5ab7b15515d97598
+RUN rm -r .git # remove large folders
 
 # Fetch sqlite extension
 FROM alpine as sqlite_fetcher
@@ -151,6 +165,7 @@ RUN apk add git
 RUN git clone https://github.com/jhoobergs/numbas-extension-sqlite.git sqlite
 WORKDIR /usr/app/sqlite
 # TODO, when sqlite is more stable, take specific commit RUN git fetch && git checkout 09672fccdf28ea30fc9b14ad5ab7b15515d97598
+RUN rm -r .git # remove large folders
 
 # Main image
 FROM python:3.6.10-alpine 
