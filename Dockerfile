@@ -81,9 +81,9 @@ RUN rm -r .git # remove large folders
 FROM alpine as random_person_fetcher
 WORKDIR /usr/app
 RUN apk add git
-RUN git clone https://github.com/numbas/numbas-extension-random-person.git random_person
+RUN git clone https://github.com/jhoobergs/numbas-extension-random-person.git random_person
 WORKDIR /usr/app/random_person
-RUN git fetch && git checkout 4031704f9570b0ad8a6918a0dc1e8063220392a8
+RUN git fetch && git checkout prefix_compression 
 RUN rm -r .git datasets # remove large folders
 
 # Fetch download_text_file extension
