@@ -7,6 +7,7 @@ extern crate rumbas_support_derive;
 #[doc(hidden)]
 pub use rumbas_support_derive::*;
 
+pub mod example;
 pub mod input;
 pub mod overwrite;
 pub mod preamble;

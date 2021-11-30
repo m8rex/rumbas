@@ -25,29 +25,22 @@ pub enum VariableRepresentation {
 }
 
 #[cfg(test)]
-trait Examples {
-    fn get_examples() -> Vec<Self>
-    where
-        Self: Sized;
-}
-
-#[cfg(test)]
 impl Examples for VariableRepresentationInput {
-    fn get_examples() -> Vec<Self> {
+    fn examples() -> Vec<Self> {
         vec![VariableRepresentationInput::ListOfStrings(vec![
-            Value::Normal("string 1".to_string()),
-            Value::Normal("string2".to_string()),
+            Value::<String>::examples()[0].clone(),
+            Value::<String>::examples()[1].clone(),
         ])]
     }
 }
 
 #[cfg(test)]
 mod example_test {
-    use super::Examples;
     use super::VariableRepresentationInput;
+    use rumbas_support::example::Examples;
     #[test]
     fn compile_examples() {
-        for example in VariableRepresentationInput::get_examples() {
+        for example in VariableRepresentationInput::examples() {
             let item = serde_yaml::to_string(&example);
             assert!(item.is_ok());
             let item = item.unwrap();
