@@ -94,6 +94,13 @@ jobs:
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install minifyers
+        run: |-
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+          sudo apt update && sudo apt install yarn
+          yarn global add uglify-js
+          yarn global add uglifycss
       - name: Install rumbas
         run: cargo install --path .
         working-directory: rumbas
