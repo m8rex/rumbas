@@ -160,7 +160,8 @@ impl NumbasCompiler {
     /// Creates the folders in the cache folder
     /// Creates the folders in the output folder
     fn create_folder_structure(&self) -> () {
-        std::fs::create_dir_all(self.numbas_exam_folder()).expect("Failed to create cache folders");
+        std::fs::create_dir_all(self.numbas_exam_path().parent().unwrap())
+            .expect("Failed to create cache folders for the .exam file");
         std::fs::create_dir_all(self.locale_output_folder())
             .expect("Failed to create output locale folder fath");
         let output_path = self.output_path();
