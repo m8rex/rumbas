@@ -1,0 +1,9 @@
+---
+source: rumbas/src/question/variable.rs
+expression: item
+
+---
+---
+- string 1
+- string2
+
