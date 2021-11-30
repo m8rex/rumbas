@@ -4,6 +4,6 @@ expression: item
 
 ---
 ---
-- string 1
-- string2
+- text
+- other text
 
