@@ -35,7 +35,8 @@ trait Examples {
 impl Examples for VariableRepresentationInput {
     fn get_examples() -> Vec<Self> {
         vec![VariableRepresentationInput::ListOfStrings(vec![
-            Value::Normal("test".to_string()),
+            Value::Normal("string 1".to_string()),
+            Value::Normal("string2".to_string()),
         ])]
     }
 }
@@ -50,6 +51,7 @@ mod example_test {
             let item = serde_yaml::to_string(&example);
             assert!(item.is_ok());
             let item = item.unwrap();
+            insta::assert_snapshot!(item);
             let parsed: Result<VariableRepresentationInput, _> = serde_yaml::from_str(&item[..]);
             assert!(parsed.is_ok());
             match (parsed.unwrap(), example) {
