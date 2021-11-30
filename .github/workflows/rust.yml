@@ -112,7 +112,7 @@ jobs:
           git clone https://github.com/numbas/numbas-extension-stats.git ~/NUMBAS/extensions/stats
           git clone https://github.com/numbas/numbas-extension-eukleides.git ~/NUMBAS/extensions/eukleides
           git clone https://github.com/numbas/numbas-extension-geogebra.git ~/NUMBAS/extensions/geogebra # TODO: build the right js files?
-          git clone https://github.com/jhoobergs/numbas-extension-random-person.git ~/NUMBAS/extensions/random_person 
+          git clone https://github.com/jhoobergs/numbas-extension-random-person.git ~/NUMBAS/extensions/random_person_git 
           git clone https://github.com/numbas/numbas-extension-download-a-text-file.git ~/NUMBAS/extensions/download-text-file 
           git clone https://github.com/numbas/numbas-extension-codewords.git ~/NUMBAS/extensions/codewords 
           git clone https://github.com/numbas/numbas-extension-permutations.git ~/NUMBAS/extensions/permutations 
@@ -124,7 +124,8 @@ jobs:
           cp -r extensions/written_number ~/NUMBAS/extensions/written-number
           cp -r extensions/graphs ~/NUMBAS/extensions/graphs
           cd ~/NUMBAS && pip install -r requirements.txt
-          cd ~/NUMBAS/extensions/random_person && git checkout prefix_compression
+          cd ~/NUMBAS/extensions/random_person_git && git checkout prefix_compression
+          mkdir ~/NUMBAS/extensions/random_person && cp ~/NUMBAS/extensions/random_person_git/random_person.js ~/NUMBAS/extensions/random_person
       - name: Run cli-tests
         run: |-
           export NUMBAS_FOLDER=~/NUMBAS
