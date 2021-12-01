@@ -1,4 +1,5 @@
 use crate::input::{InputFieldReceiver, InputVariantReceiver};
+use crate::syn::spanned::Spanned;
 use darling::ast;
 use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
@@ -205,33 +206,7 @@ fn handle_enum_check_variants(
                         vec![#ident::#variant_ident]
                     }
                 }
-                ast::Style::Tuple => {
-                    tuple_body(&variant.fields, quote!(#ident::#variant_ident))
-                    /*
-                    let field_types = variant
-                        .fields
-                        .fields
-                        .iter()
-                        .map(|f| {
-                            let ty = f.ty.clone();
-                            quote!(#ty)
-                        })
-                        .collect::<Vec<_>>();
-                    let field_indexes = variant
-                        .fields
-                        .fields
-                        .iter()
-                        .enumerate()
-                        .map(|(i, _)| {
-                            let i = syn::Index::from(i);
-                            quote!(#i)
-                        })
-                        .collect::<Vec<_>>(); */
-                    /*quote! {
-                        let tuple_data = <(#(#field_types),*)>::examples();
-                        tuple_data.into_iter().map(|t| #ident::#variant_ident(#(t.#field_indexes),*) ).collect()
-                    }*/
-                }
+                ast::Style::Tuple => tuple_body(&variant.fields, quote!(#ident::#variant_ident)),
                 ast::Style::Struct => struct_body(&variant.fields, quote!(#ident::#variant_ident)),
             }
         })
@@ -273,6 +248,66 @@ impl ToTokens for ExamplesReceiver {
         match data {
             ast::Data::Enum(v) => handle_enum(v, ident, generics, tokens),
             ast::Data::Struct(fields) => handle_struct(fields, ident, generics, tokens),
+        }
+    }
+}
+
+pub fn impl_for_tuple(tup: syn::TypeTuple) -> proc_macro2::TokenStream {
+    let field_types = tup.elems.iter().map(|e| quote!(#e)).collect::<Vec<_>>();
+    let field_name_examples = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(&format!("examples{}", i,)[..], t.span()))
+        .collect::<Vec<_>>();
+    let field_name_iterators = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(&format!("iterator{}", i,)[..], t.span()))
+        .collect::<Vec<_>>();
+    let field_name_options = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(&format!("option{}", i,)[..], t.span()))
+        .collect::<Vec<_>>();
+    quote! {
+            #[automatically_derived]
+            impl <#(#field_types: Examples),*> Examples for (#(#field_types),*) {
+                fn examples() -> Vec<Self> {
+                    #(
+                        let mut #field_name_examples = <#field_types>::examples();
+                    )*
+                    let mut max_examples = 0;
+                    #(
+                        max_examples = std::cmp::max(max_examples, #field_name_examples.len());
+                    )*
+                    #(
+                        while #field_name_examples.len() < max_examples {
+                            #field_name_examples.extend(<#field_types>::examples());
+                        }
+                        let mut #field_name_iterators = #field_name_examples.into_iter();
+                    )*
+
+                    let mut result = Vec::new();
+                    loop {
+                        #(
+                            let #field_name_options = #field_name_iterators.next();
+                            if #field_name_options.is_none() {
+                                break;
+                            }
+                        )*
+                        result.push(
+                            (
+                                #(
+                                   #field_name_options.unwrap()
+                                ),*
+                    )
+                        )
+                    }
+                    result
+            }
         }
     }
 }
