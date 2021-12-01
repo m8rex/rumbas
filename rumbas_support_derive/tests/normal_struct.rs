@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate rumbas_support_derive;
 
+use rumbas_support::example::Examples;
 use rumbas_support::input::Input;
 use rumbas_support::input::InputCheckResult;
 use rumbas_support::input::InputInverse;
@@ -12,7 +13,7 @@ use serde::Deserialize;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "TestInput")]
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Examples)]
 pub struct Test {
     field1: bool,
     field2: f64,
@@ -22,7 +23,7 @@ type TestInputs = Vec<Test>;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Examples)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -77,5 +78,12 @@ field1: true
         );
 
         assert!(ok.is_ok());
+    }
+    #[test]
+    fn examples() {
+        Test::examples();
+        TestInput::examples();
+        Test2::examples();
+        Test2Input::examples();
     }
 }
