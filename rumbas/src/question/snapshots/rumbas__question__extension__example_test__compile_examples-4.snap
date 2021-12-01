@@ -1,0 +1,22 @@
+---
+source: rumbas/src/question/extension.rs
+expression: "&example"
+
+---
+chemistry: ~
+download_text_file: ~
+eukleides: ~
+geogebra: ~
+graphs: ~
+jsx_graph: ~
+linear_algebra: ~
+linear_codes: ~
+optimisation: ~
+permutations: ~
+polynomials: ~
+quantities: ~
+random_person: ~
+stats: ~
+sqlite: ~
+written_number: ~
+
