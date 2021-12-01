@@ -91,6 +91,7 @@ mod value_test {
     }
 }
 
+rumbas_support_derive::impl_examples_for_tuple!((A,));
 rumbas_support_derive::impl_examples_for_tuple!((A, B));
 rumbas_support_derive::impl_examples_for_tuple!((A, B, C));
 rumbas_support_derive::impl_examples_for_tuple!((A, B, C, D));
@@ -106,6 +107,19 @@ rumbas_support_derive::impl_examples_for_tuple!((A, B, C, D, E, F, G, H, I, J, K
 #[cfg(test)]
 mod tuples_test {
     use super::*;
+    #[test]
+    fn tuple_test_one() {
+        let usize_examples = usize::examples();
+        assert_eq!(
+            <(usize,)>::examples(),
+            vec![
+                (usize_examples[0],),
+                (usize_examples[1],),
+                (usize_examples[2],),
+                (usize_examples[3],)
+            ]
+        )
+    }
     #[test]
     fn tuple_test_two() {
         let usize_examples = usize::examples();

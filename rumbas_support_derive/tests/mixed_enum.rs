@@ -20,6 +20,7 @@ pub enum Test {
     Unit,
     Tuple(TestOverwrite, bool, String),
     Struct { a: f64 },
+    TupleOne(f64),
 }
 
 type TestInputs = Vec<Test>;
