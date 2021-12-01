@@ -60,3 +60,15 @@ pub fn derive_examples(input: TokenStream) -> TokenStream {
 
     quote!(#examples).into()
 }
+
+#[proc_macro]
+pub fn impl_examples_for_tuple(input: TokenStream) -> TokenStream {
+    let ty: syn::Type = syn::parse(input).expect("Please pass a tuple type to impl_examples");
+    match ty {
+        syn::Type::Tuple(t) => {
+            let res = examples::impl_for_tuple(t);
+            quote!(#res).into()
+        }
+        _ => panic!("error in impl_examples_for_tuple: only tuples are supported"),
+    }
+}
