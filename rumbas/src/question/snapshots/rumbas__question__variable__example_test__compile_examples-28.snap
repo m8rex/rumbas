@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/variable.rs
+expression: "&example"
+
+---
+definition: "example plain string with placeholders {placeholder1} and {placeholder2}."
+description: "template:template_key"
+template_type: range
+group: "template:template_key"
+

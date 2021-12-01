@@ -44,7 +44,7 @@ macro_rules! file_type {
             }
             impl Examples for [<$type Input>] {
                 fn examples() -> Vec<Self> {
-                    vec!["example plain string".to_string().into()] // TODO file: string
+                    vec!["example plain string with placeholders {placeholder1} and {placeholder2}.".to_string().into()] // TODO file: string
                 }
             }
             impl Examples for $type {
