@@ -91,6 +91,54 @@ mod value_test {
     }
 }
 
+// TODO: macro
+impl<A: Examples, B: Examples, C: Examples> Examples for (A, B, C) {
+    fn examples() -> Vec<Self> {
+        let mut examples_a = A::examples();
+        let mut examples_b = B::examples();
+        let mut examples_c = C::examples();
+
+        let mut max_examples = 0;
+        max_examples = std::cmp::max(max_examples, examples_a.len());
+        max_examples = std::cmp::max(max_examples, examples_b.len());
+        max_examples = std::cmp::max(max_examples, examples_c.len());
+
+        // Make sure that all elements in the longer vector have corresponding items in the shorter
+        // one
+        while examples_a.len() < max_examples {
+            examples_a.extend(A::examples().into_iter());
+        }
+        while examples_b.len() < max_examples {
+            examples_b.extend(B::examples().into_iter());
+        }
+        while examples_c.len() < max_examples {
+            examples_c.extend(C::examples().into_iter());
+        }
+
+        let mut iterator_a = examples_a.into_iter();
+        let mut iterator_b = examples_b.into_iter();
+        let mut iterator_c = examples_c.into_iter();
+
+        let mut result = Vec::new();
+        loop {
+            let a_opt = iterator_a.next();
+            if a_opt.is_none() {
+                break;
+            }
+            let b_opt = iterator_b.next();
+            if b_opt.is_none() {
+                break;
+            }
+            let c_opt = iterator_c.next();
+            if c_opt.is_none() {
+                break;
+            }
+            result.push((a_opt.unwrap(), b_opt.unwrap(), c_opt.unwrap()))
+        }
+        result
+    }
+}
+
 impl<A: Examples, B: Examples> Examples for (A, B) {
     fn examples() -> Vec<Self> {
         let mut examples_a = A::examples();
