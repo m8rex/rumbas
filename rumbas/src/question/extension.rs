@@ -13,7 +13,7 @@ macro_rules! extensions {
     ) => {
             #[derive(Input, Overwrite, RumbasCheck)]
             #[input(name = "ExtensionsInput")]
-            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
             /// Specify which extensions should be enabled
             pub struct Extensions {
                 $(
@@ -105,5 +105,33 @@ extensions! {
 impl ToRumbas<Extensions> for Vec<String> {
     fn to_rumbas(&self) -> Extensions {
         Extensions::from(self)
+    }
+}
+
+#[cfg(test)]
+mod example_test {
+    use super::*;
+    use rumbas_support::example::Examples;
+    #[test]
+    fn compile_examples() {
+        for example in ExtensionsInput::examples().into_iter() {
+            println!("{:?}", example);
+            let item = serde_yaml::to_string(&example);
+            assert!(item.is_ok());
+            let item = item.unwrap();
+            insta::with_settings!({sort_maps => true}, {
+                insta::assert_yaml_snapshot!(&example);
+            });
+            let parsed: Result<ExtensionsInput, _> = serde_yaml::from_str(&item[..]);
+            if let Err(ref e) = parsed {
+                if "No field is set to a not-none value." == &e.to_string()[..] {
+                    continue;
+                }
+                println!("Input {:?}", item);
+                println!("Error: {:?}", e);
+            }
+            assert!(parsed.is_ok());
+            assert_eq!(example, parsed.unwrap())
+        }
     }
 }
