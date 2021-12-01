@@ -205,7 +205,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TranslationContentInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
 #[serde(untagged)]
 pub enum TranslationContent {
     Locales(HashMap<String, FileString>),
@@ -227,6 +227,69 @@ impl TranslationContent {
 pub struct Translation {
     content: TranslationContent,
     placeholders: HashMap<String, Translation>,
+}
+
+impl Examples for TranslationInput {
+    fn examples() -> Vec<Self> {
+        Translation::examples()
+            .into_iter()
+            .map(|t| Self::from_normal(t))
+            .collect()
+    }
+}
+
+impl Examples for Translation {
+    fn examples() -> Vec<Self> {
+        let contents = TranslationContent::examples();
+        let placeholder_keys = vec!["or".to_string(), "and".to_string()];
+        let placeholder_values = vec![
+            Translation {
+                content: TranslationContent::Locales(
+                    vec![
+                        (
+                            "nl".to_string(),
+                            FileStringInput::from("of".to_string()).to_normal(),
+                        ),
+                        (
+                            "en".to_string(),
+                            FileStringInput::from("or".to_string()).to_normal(),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                ),
+                placeholders: HashMap::new(),
+            },
+            Translation {
+                content: TranslationContent::Locales(
+                    vec![
+                        (
+                            "nl".to_string(),
+                            FileStringInput::from("en".to_string()).to_normal(),
+                        ),
+                        (
+                            "en".to_string(),
+                            FileStringInput::from("and".to_string()).to_normal(),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                ),
+                placeholders: HashMap::new(),
+            },
+        ];
+        let placeholders: HashMap<String, Translation> = placeholder_keys
+            .into_iter()
+            .zip(placeholder_values.into_iter())
+            .collect();
+        contents
+            .into_iter()
+            .map(|c| Translation {
+                content: c,
+                placeholders: placeholders.clone(),
+            })
+            .collect()
+    }
 }
 
 impl Translation {
@@ -276,7 +339,7 @@ macro_rules! translatable_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
-            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Examples)]
             #[serde(untagged)]
             pub enum [<$type Input>] {
                 //TODO: custom reader that checks for missing values etc?
@@ -322,7 +385,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Examples)]
             #[serde(untagged)]
             pub enum $type {
                 //TODO: custom reader that checks for missing values etc?

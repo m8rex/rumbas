@@ -187,6 +187,7 @@ impl<T> Value<T> {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
+#[serde(into = "String")]
 pub struct TemplateString {
     pub key: Option<String>,
     pub error_message: Option<String>,
@@ -261,5 +262,11 @@ impl std::convert::TryFrom<String> for TemplateString {
         } else {
             Err(format!("String does not start with {}", prefix))
         }
+    }
+}
+
+impl std::convert::From<TemplateString> for String {
+    fn from(ts: TemplateString) -> Self {
+        ts.yaml()
     }
 }

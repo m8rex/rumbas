@@ -13,25 +13,15 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "VariableRepresentationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, Examples)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
-    ListOfStrings(Vec<String>),
     ListOfNumbers(Vec<f64>),
+    ListOfStrings(Vec<String>),
     Number(f64),
     Other(VariableStringRepresentation),
     TranslatableString(TranslatableString),
     Long(Box<Variable>),
-}
-
-#[cfg(test)]
-impl Examples for VariableRepresentationInput {
-    fn examples() -> Vec<Self> {
-        vec![VariableRepresentationInput::ListOfStrings(vec![
-            Value::<String>::examples()[0].clone(),
-            Value::<String>::examples()[1].clone(),
-        ])]
-    }
 }
 
 #[cfg(test)]
@@ -40,7 +30,7 @@ mod example_test {
     use rumbas_support::example::Examples;
     #[test]
     fn compile_examples() {
-        for example in VariableRepresentationInput::examples() {
+        for example in VariableRepresentationInput::examples().into_iter() {
             let item = serde_yaml::to_string(&example);
             assert!(item.is_ok());
             let item = item.unwrap();
@@ -52,7 +42,25 @@ mod example_test {
                     VariableRepresentationInput::ListOfStrings(s),
                     VariableRepresentationInput::ListOfStrings(s2),
                 ) => assert_eq!(s, s2),
-                _ => unreachable!(),
+                (
+                    VariableRepresentationInput::ListOfNumbers(s),
+                    VariableRepresentationInput::ListOfNumbers(s2),
+                ) => assert_eq!(s, s2),
+                (
+                    VariableRepresentationInput::Number(s),
+                    VariableRepresentationInput::Number(s2),
+                ) => assert_eq!(s, s2),
+                (VariableRepresentationInput::Other(s), VariableRepresentationInput::Other(s2)) => {
+                    assert_eq!(s, s2)
+                }
+                (
+                    VariableRepresentationInput::TranslatableString(s),
+                    VariableRepresentationInput::TranslatableString(s2),
+                ) => assert_eq!(s, s2),
+                (VariableRepresentationInput::Long(s), VariableRepresentationInput::Long(s2)) => {
+                    assert_eq!(*s, *s2)
+                }
+                (a, b) => unreachable!(format!("{:?} and {:?}", a, b)),
             };
         }
     }
@@ -124,7 +132,7 @@ impl VariableRepresentation {
 
 #[derive(Input, Overwrite, RumbasCheck, JsonSchema)]
 #[input(name = "VariableStringRepresentationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Examples)]
 #[serde(from = "String")]
 pub enum VariableStringRepresentation {
     Anything(JMEString),
@@ -170,7 +178,7 @@ impl std::convert::From<String> for VariableStringRepresentationInput {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "RangeDataInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
 pub struct RangeData {
     pub from: f64,
     pub to: f64,
@@ -287,7 +295,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "VariableInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
 pub struct Variable {
     pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
     pub description: String,
@@ -332,7 +340,7 @@ impl Variable {
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Examples)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
     /// Not specified
