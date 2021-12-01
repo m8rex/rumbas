@@ -1,0 +1,9 @@
+---
+source: rumbas/src/question/constants.rs
+expression: "&example"
+
+---
+name: text
+value: x^5
+tex: text
+

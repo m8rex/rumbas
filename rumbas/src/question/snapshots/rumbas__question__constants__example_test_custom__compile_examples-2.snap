@@ -1,0 +1,9 @@
+---
+source: rumbas/src/question/constants.rs
+expression: "&example"
+
+---
+name: other text
+value: "template:template_key"
+tex: other text
+
