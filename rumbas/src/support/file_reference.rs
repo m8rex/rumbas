@@ -42,6 +42,20 @@ macro_rules! file_type {
                 content: Option<String>,
                 translated_content: HashMap<String, String>,
             }
+            impl Examples for [<$type Input>] {
+                fn examples() -> Vec<Self> {
+                    vec!["example plain string".to_string().into()] // TODO file: string
+                }
+            }
+            impl Examples for $type {
+                fn examples() -> Vec<Self> {
+                    <[<$type Input>]>::examples().into_iter().map(|a| $type {
+                        file_name: a.file_name,
+                        content: a.content,
+                        translated_content: a.translated_content
+                    }).collect()
+                }
+            }
             impl RumbasCheck for $type {
                 fn check(&self, locale: &str) -> RumbasCheckResult {
                     let content = self.get_content(locale);
