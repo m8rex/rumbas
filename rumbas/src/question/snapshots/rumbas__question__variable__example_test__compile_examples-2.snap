@@ -1,8 +1,7 @@
 ---
 source: rumbas/src/question/variable.rs
-expression: item
+expression: "&example"
 
----
 ---
 - text
 - other text
