@@ -8,6 +8,7 @@ use darling::FromDeriveInput;
 use proc_macro::TokenStream;
 use quote::quote;
 
+mod examples;
 mod input;
 mod overwrite;
 mod rumbas_check;
@@ -46,4 +47,16 @@ pub fn derive_rumbas_check(input: TokenStream) -> TokenStream {
     };
 
     quote!(#rumbas_check).into()
+}
+
+#[proc_macro_derive(Examples)]
+pub fn derive_examples(input: TokenStream) -> TokenStream {
+    let derive_input = parse_macro_input!(input as syn::DeriveInput);
+
+    let examples = match examples::ExamplesReceiver::from_derive_input(&derive_input) {
+        Ok(sm) => sm,
+        Err(e) => panic!("error in derive(Examples): {}", e),
+    };
+
+    quote!(#examples).into()
 }
