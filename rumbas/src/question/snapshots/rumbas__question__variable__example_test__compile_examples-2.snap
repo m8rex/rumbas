@@ -4,11 +4,8 @@ expression: item
 
 ---
 ---
-- -0.4
-- 0.4
-- -1.0
-- 1.0
-- 10.5
+- text
+- other text
 - "template:template_key"
 - ~
 
