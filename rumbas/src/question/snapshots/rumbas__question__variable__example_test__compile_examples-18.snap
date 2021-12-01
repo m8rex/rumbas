@@ -3,11 +3,5 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-- -0.4
-- 0.4
-- -1.0
-- 1.0
-- 10.5
-- "template:template_key"
-- ~
+"random(-10 .. 1#0.1)"
 

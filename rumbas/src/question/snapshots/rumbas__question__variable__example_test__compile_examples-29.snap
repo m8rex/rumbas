@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/variable.rs
+expression: "&example"
+
+---
+definition: "template:template_key"
+description: ~
+template_type: string
+group: ~
+

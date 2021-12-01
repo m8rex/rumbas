@@ -241,18 +241,20 @@ impl Examples for TranslationInput {
 impl Examples for Translation {
     fn examples() -> Vec<Self> {
         let contents = TranslationContent::examples();
-        let placeholder_keys = vec!["or".to_string(), "and".to_string()];
+        let placeholder_keys = vec!["placeholder1".to_string(), "placeholder2".to_string()];
         let placeholder_values = vec![
             Translation {
                 content: TranslationContent::Locales(
                     vec![
                         (
                             "nl".to_string(),
-                            FileStringInput::from("of".to_string()).to_normal(),
+                            FileStringInput::from("nl value of placeholder1".to_string())
+                                .to_normal(),
                         ),
                         (
                             "en".to_string(),
-                            FileStringInput::from("or".to_string()).to_normal(),
+                            FileStringInput::from("en value of placeholder1".to_string())
+                                .to_normal(),
                         ),
                     ]
                     .into_iter()
@@ -265,11 +267,13 @@ impl Examples for Translation {
                     vec![
                         (
                             "nl".to_string(),
-                            FileStringInput::from("en".to_string()).to_normal(),
+                            FileStringInput::from("nl version of placeholder2".to_string())
+                                .to_normal(),
                         ),
                         (
                             "en".to_string(),
-                            FileStringInput::from("and".to_string()).to_normal(),
+                            FileStringInput::from("en version of placeholder2".to_string())
+                                .to_normal(),
                         ),
                     ]
                     .into_iter()

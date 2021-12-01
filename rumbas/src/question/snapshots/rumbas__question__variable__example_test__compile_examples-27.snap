@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/variable.rs
+expression: "&example"
+
+---
+definition: ~
+description: other text
+template_type: random_range
+group: other text
+
