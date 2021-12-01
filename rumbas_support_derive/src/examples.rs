@@ -51,7 +51,7 @@ fn tuple_body(
         })
         .collect::<Vec<_>>();
     quote! {
-                    let tuple_data = <(#(#field_types),*)>::examples();
+                    let tuple_data = <(#(#field_types,)*)>::examples();
                     tuple_data.into_iter().map(|t| #type_name(#(t.#field_indexes),*) ).collect::<Vec<_>>()
     }
 }
@@ -274,7 +274,7 @@ pub fn impl_for_tuple(tup: syn::TypeTuple) -> proc_macro2::TokenStream {
         .collect::<Vec<_>>();
     quote! {
             #[automatically_derived]
-            impl <#(#field_types: Examples),*> Examples for (#(#field_types),*) {
+            impl <#(#field_types: Examples,)*> Examples for (#(#field_types,)*) {
                 fn examples() -> Vec<Self> {
                     #(
                         let mut #field_name_examples = <#field_types>::examples();
@@ -301,8 +301,8 @@ pub fn impl_for_tuple(tup: syn::TypeTuple) -> proc_macro2::TokenStream {
                         result.push(
                             (
                                 #(
-                                   #field_name_options.unwrap()
-                                ),*
+                                   #field_name_options.unwrap(),
+                                )*
                     )
                         )
                     }
