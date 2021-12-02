@@ -125,7 +125,7 @@ jobs:
           cp -r extensions/graphs ~/NUMBAS/extensions/graphs
           cd ~/NUMBAS && pip install -r requirements.txt
           cd ~/NUMBAS/extensions/random_person_git && git checkout prefix_compression
-          mkdir ~/NUMBAS/extensions/random_person && cp ~/NUMBAS/extensions/random_person_git/random_person.js ~/NUMBAS/extensions/random_person
+          mkdir ~/NUMBAS/extensions/random_person && cp ~/NUMBAS/extensions/random_person_git/lib/random_person.js ~/NUMBAS/extensions/random_person
       - name: Run cli-tests
         run: |-
           export NUMBAS_FOLDER=~/NUMBAS
