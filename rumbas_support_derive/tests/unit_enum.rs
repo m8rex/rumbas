@@ -10,10 +10,11 @@ use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
 use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "TestInput")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
 pub enum Test {
     First,
     Second,
@@ -23,7 +24,7 @@ type TestInputs = Vec<Test>;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -56,7 +57,5 @@ mod test {
     fn examples() {
         Test::examples();
         TestInput::examples();
-        Test2::examples();
-        Test2Input::examples();
     }
 }

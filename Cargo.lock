@@ -491,6 +491,7 @@ name = "rumbas_support_derive"
 version = "0.1.0"
 dependencies = [
  "darling",
+ "insta",
  "proc-macro2",
  "quote",
  "rumbas_support",

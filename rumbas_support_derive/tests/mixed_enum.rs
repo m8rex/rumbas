@@ -12,10 +12,11 @@ use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
 use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "TestInput")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
 pub enum Test {
     Unit,
     Tuple(TestOverwrite, bool, String),
@@ -27,7 +28,8 @@ type TestInputs = Vec<Test>;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[examples(test)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -35,7 +37,7 @@ pub struct Test2 {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TestOverwriteInput")]
-#[derive(Debug, Clone, Deserialize, Examples)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Examples)]
 ///  Hi there
 pub enum TestOverwrite {
     Unit,
