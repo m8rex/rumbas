@@ -203,9 +203,9 @@ mod test {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TranslationContentInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum TranslationContent {
     Locales(HashMap<String, FileString>),
@@ -229,68 +229,72 @@ pub struct Translation {
     placeholders: HashMap<String, Translation>,
 }
 
-impl Examples for TranslationInput {
+impl Examples for TranslationInputEnum {
     fn examples() -> Vec<Self> {
-        Translation::examples()
+        TranslationInput::examples()
             .into_iter()
-            .map(|t| Self::from_normal(t))
+            .map(|e| TranslationInputEnum(e))
             .collect()
     }
 }
 
-impl Examples for Translation {
+impl Examples for TranslationInput {
     fn examples() -> Vec<Self> {
-        let contents = TranslationContent::examples();
+        let contents = TranslationContentInput::examples();
         let placeholder_keys = vec!["placeholder1".to_string(), "placeholder2".to_string()];
         let placeholder_values = vec![
-            Translation {
-                content: TranslationContent::Locales(
+            ValueType::Normal(TranslationInput {
+                content: Value::Normal(TranslationContentInput::Locales(
                     vec![
                         (
                             "nl".to_string(),
-                            FileStringInput::from("nl value of placeholder1".to_string())
-                                .to_normal(),
+                            ValueType::Normal(FileStringInput::from(
+                                "nl value of placeholder1".to_string(),
+                            )),
                         ),
                         (
                             "en".to_string(),
-                            FileStringInput::from("en value of placeholder1".to_string())
-                                .to_normal(),
+                            ValueType::Normal(FileStringInput::from(
+                                "en value of placeholder1".to_string(),
+                            )),
                         ),
                     ]
                     .into_iter()
                     .collect(),
-                ),
-                placeholders: HashMap::new(),
-            },
-            Translation {
-                content: TranslationContent::Locales(
+                )),
+                placeholders: Value::Normal(HashMap::new()),
+            }),
+            ValueType::Normal(TranslationInput {
+                content: Value::Normal(TranslationContentInput::Locales(
                     vec![
                         (
                             "nl".to_string(),
-                            FileStringInput::from("nl version of placeholder2".to_string())
-                                .to_normal(),
+                            ValueType::Normal(FileStringInput::from(
+                                "nl version of placeholder2".to_string(),
+                            )),
                         ),
                         (
                             "en".to_string(),
-                            FileStringInput::from("en version of placeholder2".to_string())
-                                .to_normal(),
+                            ValueType::Normal(FileStringInput::from(
+                                "en version of placeholder2".to_string(),
+                            )),
                         ),
                     ]
                     .into_iter()
                     .collect(),
-                ),
-                placeholders: HashMap::new(),
-            },
+                )),
+                placeholders: Value::Normal(HashMap::new()),
+            }),
         ];
-        let placeholders: HashMap<String, Translation> = placeholder_keys
+        let placeholders: HashMap<_, _> = placeholder_keys
             .into_iter()
             .zip(placeholder_values.into_iter())
             .collect();
         contents
             .into_iter()
-            .map(|c| Translation {
-                content: c,
-                placeholders: placeholders.clone(),
+            .map(|c| TranslationInput {
+                content: Value::Normal(c),
+                placeholders: Value::Normal(placeholders.clone()),
             })
             .collect()
     }
@@ -343,12 +347,12 @@ macro_rules! translatable_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
-            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Examples)]
+            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
             #[serde(untagged)]
             pub enum [<$type Input>] {
                 //TODO: custom reader that checks for missing values etc?
                 /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-                Translated(TranslationInput),
+                Translated(TranslationInputEnum),
                 /// A file reference or string
                 NotTranslated(FileStringInput),
             }
@@ -389,7 +393,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Examples)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize)]
             #[serde(untagged)]
             pub enum $type {
                 //TODO: custom reader that checks for missing values etc?
@@ -409,7 +413,7 @@ macro_rules! translatable_type {
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
                     match normal {
-                        $type::Translated(t) => [<$type Input>]::Translated(TranslationInput::from_normal(t)),
+                        $type::Translated(t) => [<$type Input>]::Translated(TranslationInputEnum::from_normal(t)),
                         $type::NotTranslated(f) => [<$type Input>]::NotTranslated(FileStringInput::from_normal(f)),
                     }
                 }
@@ -429,6 +433,7 @@ macro_rules! translatable_type {
 
             impl InputInverse for $type {
                 type Input = [<$type Input>];
+                type EnumInput = [<$type Input>];
             }
 
             impl Overwrite<[<$type Input>]> for [<$type Input>] {
@@ -445,6 +450,14 @@ macro_rules! translatable_type {
                         $type::NotTranslated(s) => s.get_content(locale),
                         $type::Translated(translation) => translation.to_string(locale),
                     }
+                }
+            }
+
+            impl Examples for [<$type Input>] {
+                fn examples() ->  Vec<Self> {
+                    let translations = TranslationInputEnum::examples();
+                    let filestrings = FileStringInput::examples();
+                    translations.into_iter().map(|t| Self::Translated(t)).chain(filestrings.into_iter().map(|f| Self::NotTranslated(f))).collect()
                 }
             }
         }

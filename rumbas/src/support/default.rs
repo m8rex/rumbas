@@ -1,22 +1,31 @@
 use crate::exam::diagnostic::DiagnosticExamInput;
 use crate::exam::feedback::FeedbackInput;
 use crate::exam::navigation::{
-    DiagnosticNavigationInput, MenuNavigationInput, NormalNavigationInput,
-    SequentialNavigationInput,
+    DiagnosticNavigationInput, MenuNavigationInput, MenuNavigationInputEnum, NormalNavigationInput,
+    SequentialNavigationInput, SequentialNavigationInputEnum,
 };
 use crate::exam::normal::NormalExamInput;
 use crate::exam::numbas_settings::NumbasSettingsInput;
 use crate::exam::timing::TimingInput;
 use crate::exam::ExamInput;
 use crate::question::part::extension::QuestionPartExtensionInput;
+use crate::question::part::extension::QuestionPartExtensionInputEnum;
 use crate::question::part::gapfill::QuestionPartGapFillInput;
+use crate::question::part::gapfill::QuestionPartGapFillInputEnum;
 use crate::question::part::information::QuestionPartInformationInput;
+use crate::question::part::information::QuestionPartInformationInputEnum;
 use crate::question::part::jme::QuestionPartJMEInput;
+use crate::question::part::jme::QuestionPartJMEInputEnum;
 use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInput;
+use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInputEnum;
 use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOneInput;
+use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOneInputEnum;
 use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItemsInput;
+use crate::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItemsInputEnum;
 use crate::question::part::number_entry::QuestionPartNumberEntryInput;
+use crate::question::part::number_entry::QuestionPartNumberEntryInputEnum;
 use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
+use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
 use rumbas_support::preamble::*;
@@ -35,12 +44,16 @@ pub fn combine_with_default_files(path: &Path, exam: &mut ExamInput) {
         handle!(
             default_files,
             e,
-            |n: &SequentialNavigationInput, e: &mut NormalExamInput| e
-                .navigation
-                .overwrite(&Value::Normal(NormalNavigationInput::Sequential(n.clone()))),
-            |n: &MenuNavigationInput, e: &mut NormalExamInput| e
-                .navigation
-                .overwrite(&Value::Normal(NormalNavigationInput::Menu(n.clone()))),
+            |n: &SequentialNavigationInput, e: &mut NormalExamInput| e.navigation.overwrite(
+                &Value::Normal(NormalNavigationInput::Sequential(
+                    SequentialNavigationInputEnum(n.clone())
+                ))
+            ),
+            |n: &MenuNavigationInput, e: &mut NormalExamInput| e.navigation.overwrite(
+                &Value::Normal(NormalNavigationInput::Menu(MenuNavigationInputEnum(
+                    n.clone()
+                )))
+            ),
             |_n: &DiagnosticNavigationInput, _e: &mut NormalExamInput| ()
         );
     } else if let ExamInput::Diagnostic(ref mut e) = exam {
@@ -186,7 +199,7 @@ macro_rules! create_default_file_type_enums {
                     $(
                     DefaultFileType::$file_type => {
                         let n: $data_type = serde_yaml::from_str(&yaml)?;
-                        Ok(DefaultData::$file_type(n))
+                        Ok(DefaultData::$file_type( n ))
                     }
                     )*
                 }
@@ -199,7 +212,7 @@ macro_rules! create_default_file_type_enums {
 macro_rules! handle {
     ($default_files:expr, $exam: expr, $handle_seq: expr, $handle_menu: expr, $handle_diag: expr) => {
 {
-    let exam = $exam;
+    let exam = &mut $exam.0;
     // TODO: diagnostic
     log::info!("Found {} default files.", $default_files.len());
     for default_file in $default_files.iter() {
@@ -219,15 +232,15 @@ macro_rules! handle {
                 DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
                 DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
                 DefaultData::Question(q) => {
-                    if let Some(ValueType::Normal(ref mut groups)) = exam.question_groups.0 {
+                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
                         groups.iter_mut().for_each(|qg_value| {
-                            if let Some(ValueType::Normal(ref mut qg)) = &mut qg_value.0 {
+                            if let ValueType::Normal(ref mut qg) = qg_value {
                                 if let Some(ValueType::Normal(ref mut questions)) =
                                     &mut qg.questions.0
                                 {
                                     questions.iter_mut().for_each(|question_value| {
-                                        if let Some(ValueType::Normal(ref mut question)) =
-                                            question_value.0
+                                        if let ValueType::Normal(ref mut question) =
+                                            question_value
                                         {
                                             question
                                                 .question_data
@@ -239,23 +252,23 @@ macro_rules! handle {
                         });
                     }
                 }
-                DefaultData::QuestionPartJME(p) => handle_question_parts!(exam, p, JME),
-                DefaultData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap exam, p, JME),
-                DefaultData::QuestionPartGapFill(p) => handle_question_parts!(exam, p, GapFill),
-                DefaultData::QuestionPartChooseOne(p) => handle_question_parts!(exam, p, ChooseOne),
-                DefaultData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap exam, p, ChooseOne),
-                DefaultData::QuestionPartChooseMultiple(p) => handle_question_parts!(exam, p, ChooseMultiple),
-                DefaultData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap exam, p, ChooseMultiple),
-                DefaultData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(exam, p, MatchAnswersWithItems),
-                DefaultData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap exam, p, MatchAnswersWithItems),
-                DefaultData::QuestionPartNumberEntry(p) => handle_question_parts!(exam, p, NumberEntry),
-                DefaultData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap exam, p, NumberEntry),
-                DefaultData::QuestionPartPatternMatch(p) => handle_question_parts!(exam, p, PatternMatch),
-                DefaultData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap exam, p, PatternMatch),
-                DefaultData::QuestionPartInformation(p) => handle_question_parts!(exam, p, Information),
-                DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, p, Information),
-                DefaultData::QuestionPartExtension(p) => handle_question_parts!(exam, p, Extension),
-                DefaultData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap exam, p, Extension),
+                DefaultData::QuestionPartJME(p) => handle_question_parts!(exam, QuestionPartJMEInputEnum(p.clone()), JME),
+                DefaultData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap exam, QuestionPartJMEInputEnum(p.clone()), JME),
+                DefaultData::QuestionPartGapFill(p) => handle_question_parts!(exam, QuestionPartGapFillInputEnum(p.clone()), GapFill),
+                DefaultData::QuestionPartChooseOne(p) => handle_question_parts!(exam, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
+                DefaultData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap exam, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
+                DefaultData::QuestionPartChooseMultiple(p) => handle_question_parts!(exam, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
+                DefaultData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap exam, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
+                DefaultData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(exam, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
+                DefaultData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap exam, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
+                DefaultData::QuestionPartNumberEntry(p) => handle_question_parts!(exam, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
+                DefaultData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap exam, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
+                DefaultData::QuestionPartPatternMatch(p) => handle_question_parts!(exam, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
+                DefaultData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap exam, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
+                DefaultData::QuestionPartInformation(p) => handle_question_parts!(exam, QuestionPartInformationInputEnum(p.clone()), Information),
+                DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, QuestionPartInformationInputEnum(p.clone()), Information),
+                DefaultData::QuestionPartExtension(p) => handle_question_parts!(exam, QuestionPartExtensionInputEnum(p.clone()), Extension),
+                DefaultData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap exam, QuestionPartExtensionInputEnum(p.clone()), Extension),
 
             }
 
@@ -269,18 +282,17 @@ macro_rules! handle_question_parts {
     ($exam: expr, $p: expr, $type: ident) => {
         if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
             groups.iter_mut().for_each(|qg_value| {
-                if let Value(Some(ValueType::Normal(ref mut qg))) = qg_value {
+                if let ValueType::Normal(ref mut qg) = qg_value {
                     if let Value(Some(ValueType::Normal(ref mut questions))) = &mut qg.questions {
                         questions.iter_mut().for_each(|question_value| {
-                            if let Value(Some(ValueType::Normal(ref mut question))) = question_value
-                            {
+                            if let ValueType::Normal(ref mut question) = question_value {
                                 if let Value(Some(ValueType::Normal(ref mut parts))) =
                                     question.question_data.parts
                                 {
                                     parts.iter_mut().for_each(|part_value| {
-                                        if let Value(Some(ValueType::Normal(
-                                            QuestionPartInput::Builtin(ref mut part),
-                                        ))) = part_value
+                                        if let ValueType::Normal(QuestionPartInput::Builtin(
+                                            ref mut part,
+                                        )) = part_value
                                         {
                                             if let QuestionPartBuiltinInput::$type(_) = &part {
                                                 part.overwrite(&QuestionPartBuiltinInput::$type(
@@ -291,21 +303,19 @@ macro_rules! handle_question_parts {
                                                 &mut part.get_steps()
                                             {
                                                 steps.iter_mut().for_each(|part| {
-                                                    if let Value(Some(ValueType::Normal(
+                                                    if let ValueType::Normal(
                                                         QuestionPartInput::Builtin(
                                                             QuestionPartBuiltinInput::$type(_),
                                                         ),
-                                                    ))) = &part
+                                                    ) = &part
                                                     {
-                                                        part.overwrite(&Value(Some(
-                                                            ValueType::Normal(
-                                                                QuestionPartInput::Builtin(
-                                                                    QuestionPartBuiltinInput::$type(
-                                                                        $p.clone(),
-                                                                    ),
+                                                        part.overwrite(&ValueType::Normal(
+                                                            QuestionPartInput::Builtin(
+                                                                QuestionPartBuiltinInput::$type(
+                                                                    $p.clone(),
                                                                 ),
                                                             ),
-                                                        )))
+                                                        ))
                                                     }
                                                 })
                                             }
@@ -322,40 +332,35 @@ macro_rules! handle_question_parts {
     (gap $exam: expr, $p: expr, $type: ident) => {
         if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
             groups.iter_mut().for_each(|qg_value| {
-                if let Value(Some(ValueType::Normal(ref mut qg))) = qg_value {
+                if let ValueType::Normal(ref mut qg) = qg_value {
                     if let Value(Some(ValueType::Normal(ref mut questions))) = &mut qg.questions {
                         questions.iter_mut().for_each(|question_value| {
-                            if let Value(Some(ValueType::Normal(ref mut question))) = question_value
-                            {
+                            if let ValueType::Normal(ref mut question) = question_value {
                                 if let Value(Some(ValueType::Normal(ref mut parts))) =
                                     question.question_data.parts
                                 {
                                     parts.iter_mut().for_each(|part_value| {
-                                        if let Value(Some(ValueType::Normal(
-                                            QuestionPartInput::Builtin(
-                                                QuestionPartBuiltinInput::GapFill(ref mut gap_fill),
-                                            ),
-                                        ))) = part_value
+                                        if let ValueType::Normal(QuestionPartInput::Builtin(
+                                            QuestionPartBuiltinInput::GapFill(ref mut gap_fill),
+                                        )) = part_value
                                         {
                                             if let Value(Some(ValueType::Normal(ref mut gaps))) =
-                                                gap_fill.gaps
+                                                gap_fill.0.gaps
                                             {
                                                 gaps.iter_mut().for_each(|gap| {
-                                                    if let Value(Some(ValueType::Normal(
+                                                    if let ValueType::Normal(
                                                         QuestionPartInput::Builtin(
                                                             QuestionPartBuiltinInput::$type(_),
                                                         ),
-                                                    ))) = &gap
+                                                    ) = &gap
                                                     {
-                                                        gap.overwrite(&Value(Some(
-                                                            ValueType::Normal(
-                                                                QuestionPartInput::Builtin(
-                                                                    QuestionPartBuiltinInput::$type(
-                                                                        $p.clone(),
-                                                                    ),
+                                                        gap.overwrite(&ValueType::Normal(
+                                                            QuestionPartInput::Builtin(
+                                                                QuestionPartBuiltinInput::$type(
+                                                                    $p.clone(),
                                                                 ),
                                                             ),
-                                                        )))
+                                                        ))
                                                     }
                                                 })
                                             }

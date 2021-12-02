@@ -117,6 +117,7 @@ pub struct QuestionPathInput {
 
 impl InputInverse for QuestionPath {
     type Input = QuestionPathInput;
+    type EnumInput = QuestionPathInput;
 }
 
 impl Input for QuestionPathInput {

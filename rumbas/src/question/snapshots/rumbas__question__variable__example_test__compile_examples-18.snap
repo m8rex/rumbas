@@ -3,5 +3,8 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-"random(-10 .. 1#0.1)"
+definition: "example plain string with placeholders {placeholder1} and {placeholder2}."
+description: text
+template_type: anything
+group: text
 

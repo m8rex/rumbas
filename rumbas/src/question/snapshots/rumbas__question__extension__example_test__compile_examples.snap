@@ -3,20 +3,20 @@ source: rumbas/src/question/extension.rs
 expression: "&example"
 
 ---
-chemistry: true
-download_text_file: true
-eukleides: true
-geogebra: true
-graphs: true
-jsx_graph: true
-linear_algebra: true
-linear_codes: true
-optimisation: true
-permutations: true
-polynomials: true
-quantities: true
-random_person: true
-stats: true
-sqlite: true
-written_number: true
+chemistry: false
+download_text_file: false
+eukleides: false
+geogebra: false
+graphs: false
+jsx_graph: false
+linear_algebra: false
+linear_codes: false
+optimisation: false
+permutations: false
+polynomials: false
+quantities: false
+random_person: false
+stats: false
+sqlite: false
+written_number: false
 

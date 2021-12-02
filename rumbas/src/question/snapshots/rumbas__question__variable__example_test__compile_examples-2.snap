@@ -4,7 +4,5 @@ expression: "&example"
 
 ---
 - text
-- other text
 - "template:template_key"
-- ~
 
