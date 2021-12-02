@@ -47,11 +47,20 @@ impl<T: Examples> Examples for ValueType<T> {
 #[cfg(test)]
 mod valuetype_test {
     use super::*;
+
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Bool(bool);
+    impl Examples for Bool {
+        fn examples() -> Vec<Self> {
+            vec![Bool(true), Bool(false)]
+        }
+    }
+
     #[test]
     fn valuetype_test() {
-        let examples = bool::examples();
+        let examples = Bool::examples();
         assert_eq!(
-            ValueType::<bool>::examples(),
+            ValueType::<Bool>::examples(),
             vec![
                 ValueType::Normal(examples[0]),
                 ValueType::Normal(examples[1]),
@@ -73,12 +82,20 @@ impl<T: Examples> Examples for Value<T> {
 
 #[cfg(test)]
 mod value_test {
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Usize(usize);
+    impl Examples for Usize {
+        fn examples() -> Vec<Self> {
+            vec![Usize(0), Usize(1), Usize(5), Usize(10)]
+        }
+    }
+
     use super::*;
     #[test]
     fn value_test() {
-        let valuetype_examples = ValueType::<usize>::examples();
+        let valuetype_examples = ValueType::<Usize>::examples();
         assert_eq!(
-            Value::<usize>::examples(),
+            Value::<Usize>::examples(),
             vec![
                 Value(Some(valuetype_examples[0].clone())),
                 Value(Some(valuetype_examples[1].clone())),
@@ -107,11 +124,30 @@ rumbas_support_derive::impl_examples_for_tuple!((A, B, C, D, E, F, G, H, I, J, K
 #[cfg(test)]
 mod tuples_test {
     use super::*;
+
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Usize(usize);
+    impl Examples for Usize {
+        fn examples() -> Vec<Self> {
+            vec![Usize(0), Usize(1), Usize(5), Usize(10)]
+        }
+    }
+    #[derive(Clone, PartialEq, Debug)]
+    struct Text(String);
+    impl Examples for Text {
+        fn examples() -> Vec<Self> {
+            vec![
+                Text("some text".to_string()),
+                Text("other text".to_string()),
+            ]
+        }
+    }
+
     #[test]
     fn tuple_test_one() {
-        let usize_examples = usize::examples();
+        let usize_examples = Usize::examples();
         assert_eq!(
-            <(usize,)>::examples(),
+            <(Usize,)>::examples(),
             vec![
                 (usize_examples[0],),
                 (usize_examples[1],),
@@ -122,10 +158,10 @@ mod tuples_test {
     }
     #[test]
     fn tuple_test_two() {
-        let usize_examples = usize::examples();
-        let string_examples = String::examples();
+        let usize_examples = Usize::examples();
+        let string_examples = Text::examples();
         assert_eq!(
-            <(usize, String)>::examples(),
+            <(Usize, Text)>::examples(),
             vec![
                 (usize_examples[0], string_examples[0].clone()),
                 (usize_examples[1], string_examples[1].clone()),
@@ -136,10 +172,10 @@ mod tuples_test {
     }
     #[test]
     fn tuple_test_three() {
-        let usize_examples = usize::examples();
-        let string_examples = String::examples();
+        let usize_examples = Usize::examples();
+        let string_examples = Text::examples();
         assert_eq!(
-            <(usize, String, String)>::examples(),
+            <(Usize, Text, Text)>::examples(),
             vec![
                 (
                     usize_examples[0],
@@ -207,11 +243,18 @@ impl<A: Examples, const N: usize> Examples for [A; N] {
 #[cfg(test)]
 mod array_test {
     use super::*;
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Isize(isize);
+    impl Examples for Isize {
+        fn examples() -> Vec<Self> {
+            vec![Isize(-1), Isize(1), Isize(-10), Isize(10)]
+        }
+    }
     #[test]
     fn array_test_one() {
-        let isize_examples = isize::examples();
+        let isize_examples = Isize::examples();
         assert_eq!(
-            <[isize; 1]>::examples(),
+            <[Isize; 1]>::examples(),
             vec![
                 [isize_examples[0]],
                 [isize_examples[1]],
@@ -222,9 +265,9 @@ mod array_test {
     }
     #[test]
     fn array_test_two() {
-        let isize_examples = isize::examples();
+        let isize_examples = Isize::examples();
         assert_eq!(
-            <[isize; 2]>::examples(),
+            <[Isize; 2]>::examples(),
             vec![
                 [isize_examples[0], isize_examples[1]],
                 [isize_examples[2], isize_examples[3]],
@@ -233,9 +276,9 @@ mod array_test {
     }
     #[test]
     fn array_test_three() {
-        let isize_examples = isize::examples();
+        let isize_examples = Isize::examples();
         assert_eq!(
-            <[isize; 3]>::examples(),
+            <[Isize; 3]>::examples(),
             vec![
                 [isize_examples[0], isize_examples[1], isize_examples[2]],
                 [isize_examples[3], isize_examples[0], isize_examples[1]],
@@ -244,9 +287,9 @@ mod array_test {
     }
     #[test]
     fn array_test_four() {
-        let isize_examples = isize::examples();
+        let isize_examples = Isize::examples();
         assert_eq!(
-            <[isize; 4]>::examples(),
+            <[Isize; 4]>::examples(),
             vec![[
                 isize_examples[0],
                 isize_examples[1],
@@ -257,9 +300,9 @@ mod array_test {
     }
     #[test]
     fn array_test_five() {
-        let isize_examples = isize::examples();
+        let isize_examples = Isize::examples();
         assert_eq!(
-            <[isize; 5]>::examples(),
+            <[Isize; 5]>::examples(),
             vec![[
                 isize_examples[0],
                 isize_examples[1],
@@ -325,13 +368,37 @@ impl<A: Examples + std::hash::Hash + std::cmp::Eq + Clone, B: Examples> Examples
 #[cfg(test)]
 mod hashmap_test {
     use super::*;
+    #[derive(Clone, Copy, PartialEq, Debug, Hash, Eq)]
+    struct Usize(usize);
+    impl Examples for Usize {
+        fn examples() -> Vec<Self> {
+            vec![Usize(0), Usize(1), Usize(5), Usize(10)]
+        }
+    }
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Usize2(usize);
+    impl Examples for Usize2 {
+        fn examples() -> Vec<Self> {
+            vec![Usize2(0), Usize2(1), Usize2(5), Usize2(10), Usize2(15)]
+        }
+    }
+    #[derive(Clone, PartialEq, Debug, Hash, Eq)]
+    struct Text(String);
+    impl Examples for Text {
+        fn examples() -> Vec<Self> {
+            vec![
+                Text("some text".to_string()),
+                Text("other text".to_string()),
+            ]
+        }
+    }
     #[test]
     fn hashmap_test_exact_multiple_of_values() {
-        let string_examples = String::examples();
-        let usize_examples = usize::examples();
+        let string_examples = Text::examples();
+        let usize_examples = Usize::examples();
         assert_eq!(usize_examples.len() % string_examples.len(), 0);
         assert_eq!(
-            <std::collections::HashMap<String, usize>>::examples(),
+            <std::collections::HashMap<Text, Usize>>::examples(),
             vec![
                 vec![
                     (string_examples[0].clone(), usize_examples[0]),
@@ -350,11 +417,11 @@ mod hashmap_test {
     }
     #[test]
     fn hashmap_test_less_values() {
-        let usize_examples = usize::examples();
-        let string_examples = String::examples();
+        let usize_examples = Usize::examples();
+        let string_examples = Text::examples();
         assert!(usize_examples.len() > string_examples.len());
         assert_eq!(
-            <std::collections::HashMap<usize, String>>::examples(),
+            <std::collections::HashMap<Usize, Text>>::examples(),
             vec![vec![
                 (usize_examples[0], string_examples[0].clone()),
                 (usize_examples[1], string_examples[1].clone()),
@@ -367,26 +434,26 @@ mod hashmap_test {
     }
     #[test]
     fn hashmap_test_non_exact_multiple_of_values() {
-        let string_examples = String::examples();
-        let f32_examples = f32::examples();
-        assert!(f32_examples.len() % string_examples.len() != 0);
-        assert!(f32_examples.len() > string_examples.len());
+        let string_examples = Text::examples();
+        let usize_examples = Usize2::examples();
+        assert!(usize_examples.len() % string_examples.len() != 0);
+        assert!(usize_examples.len() > string_examples.len());
         assert_eq!(
-            <std::collections::HashMap<String, f32>>::examples(),
+            <std::collections::HashMap<Text, Usize2>>::examples(),
             vec![
                 vec![
-                    (string_examples[0].clone(), f32_examples[0]),
-                    (string_examples[1].clone(), f32_examples[1])
+                    (string_examples[0].clone(), usize_examples[0]),
+                    (string_examples[1].clone(), usize_examples[1])
                 ]
                 .into_iter()
                 .collect(),
                 vec![
-                    (string_examples[0].clone(), f32_examples[2]),
-                    (string_examples[1].clone(), f32_examples[3])
+                    (string_examples[0].clone(), usize_examples[2]),
+                    (string_examples[1].clone(), usize_examples[3])
                 ]
                 .into_iter()
                 .collect(),
-                vec![(string_examples[0].clone(), f32_examples[4]),]
+                vec![(string_examples[0].clone(), usize_examples[4]),]
                     .into_iter()
                     .collect()
             ]
@@ -403,11 +470,18 @@ impl<T: Examples> Examples for Box<T> {
 #[cfg(test)]
 mod box_test {
     use super::*;
+    #[derive(Clone, Copy, PartialEq, Debug)]
+    struct Bool(bool);
+    impl Examples for Bool {
+        fn examples() -> Vec<Self> {
+            vec![Bool(true), Bool(false)]
+        }
+    }
     #[test]
     fn box_test() {
-        let examples = bool::examples();
+        let examples = Bool::examples();
         assert_eq!(
-            Box::<bool>::examples(),
+            Box::<Bool>::examples(),
             vec![Box::new(examples[0]), Box::new(examples[1]),]
         )
     }
