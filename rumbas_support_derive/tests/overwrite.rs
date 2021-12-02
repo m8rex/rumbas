@@ -209,31 +209,31 @@ fn check_enums() {
     unit1.overwrite(&unit2);
     assert_no_missing!(unit1);
 
-    let t = TempInput {
+    let t = TempInputEnum(TempInput {
         name: Value::Normal("val".to_string()),
         test: Value::None(),
-    };
+    });
 
-    let tt = TempInput {
+    let tt = TempInputEnum(TempInput {
         name: Value::Normal("val5".to_string()),
         test: Value::Normal("name".to_string()),
-    };
+    });
 
-    let t2 = Temp2Input {
+    let t2 = Temp2InputEnum(Temp2Input {
         other: Value::Normal("val".to_string()),
         t: Value::Normal(TempInput {
             name: Value::Normal("val".to_string()),
             test: Value::None(),
         }),
-    };
+    });
 
-    let tt2 = Temp2Input {
+    let tt2 = Temp2InputEnum(Temp2Input {
         other: Value::None(),
         t: Value::Normal(TempInput {
             name: Value::None(),
             test: Value::Normal("name".to_string()),
         }),
-    };
+    });
 
     let mut tuple1 = TempEnumInput::Tuple(t.clone(), t2);
     let tuple2 = TempEnumInput::Tuple(tt.clone(), tt2);
@@ -241,11 +241,11 @@ fn check_enums() {
     assert_no_missing!(tuple1);
 
     let mut struct1 = TempEnumInput::Struct {
-        a: Value::Normal(t),
+        a: Value::Normal(t.0.clone()),
         b: Value::None(),
     };
     let struct2 = TempEnumInput::Struct {
-        a: Value::Normal(tt),
+        a: Value::Normal(tt.0.clone()),
         b: Value::Normal(true),
     };
     struct1.overwrite(&struct2);

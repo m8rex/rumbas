@@ -13,16 +13,16 @@ use rumbas_support::value::ValueType;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test(bool, f64);
 
 type TestInputs = Vec<Test>;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test2(TestInputs, f64);
 
 #[derive(Input, Overwrite, RumbasCheck)]
@@ -38,7 +38,7 @@ mod test {
         let _test2 = Test2(vec![Test(true, 64.8)], 65.0);
 
         let _test2 = Test2Input(
-            ValueType::Normal(vec![Value::Normal(TestInput(
+            ValueType::Normal(vec![ValueType::Normal(TestInput(
                 ValueType::Normal(true),
                 ValueType::Normal(64.8),
             ))]),
@@ -47,9 +47,7 @@ mod test {
     }
     #[test]
     fn examples() {
-        Test::examples();
         TestInput::examples();
-        Test2::examples();
         Test2Input::examples();
     }
 }

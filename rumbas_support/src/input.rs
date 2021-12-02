@@ -1,4 +1,5 @@
 use crate::value::Value;
+use crate::value::ValueType;
 use std::collections::HashMap;
 
 pub trait Input: Clone {
@@ -26,10 +27,12 @@ pub trait Input: Clone {
 
 pub trait InputInverse {
     type Input;
+    type EnumInput;
 }
 
 impl<O: InputInverse> InputInverse for Vec<O> {
-    type Input = Vec<Value<<O as InputInverse>::Input>>;
+    type Input = Vec<ValueType<<O as InputInverse>::Input>>;
+    type EnumInput = Self::Input;
 }
 impl<O: Input> Input for Vec<O> {
     type Normal = Vec<<O as Input>::Normal>;
@@ -59,7 +62,8 @@ impl<O: Input> Input for Vec<O> {
 }
 
 impl<O: InputInverse> InputInverse for HashMap<String, O> {
-    type Input = HashMap<String, Value<<O as InputInverse>::Input>>;
+    type Input = HashMap<String, ValueType<<O as InputInverse>::Input>>;
+    type EnumInput = Self::Input;
 }
 impl<O: Input> Input for HashMap<String, O> {
     type Normal = HashMap<String, <O as Input>::Normal>;
@@ -96,6 +100,7 @@ impl<O: Input> Input for HashMap<String, O> {
 
 impl<O: InputInverse> InputInverse for Box<O> {
     type Input = Box<<O as InputInverse>::Input>;
+    type EnumInput = Self::Input;
 }
 impl<O: Input> Input for Box<O> {
     type Normal = Box<<O as Input>::Normal>;
@@ -122,6 +127,7 @@ impl<A: InputInverse, B: InputInverse> InputInverse for (A, B) {
         Value<<A as InputInverse>::Input>,
         Value<<B as InputInverse>::Input>,
     );
+    type EnumInput = Self::Input; // TODO?
 }
 impl<A: Input, B: Input> Input for (A, B) {
     type Normal = (<A as Input>::Normal, <B as Input>::Normal);
@@ -160,6 +166,7 @@ macro_rules! impl_input {
         $(
         impl InputInverse for $t {
             type Input = Self;
+            type EnumInput = Self;
         }
         impl Input for $t {
             type Normal = Self;
