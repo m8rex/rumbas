@@ -41,6 +41,5 @@ field1:
       a: ~
   - TupleOne: 1.2
   - "template:template_key"
-  - ~
 field2: 1.2
 

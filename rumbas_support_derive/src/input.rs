@@ -36,6 +36,9 @@ pub struct InputReceiver {
 
     #[darling(rename = "name")]
     input_name: String,
+
+    #[darling(default)]
+    test: bool,
 }
 
 fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
@@ -50,8 +53,8 @@ pub fn get_input_types(fields: &[InputFieldReceiver]) -> Vec<proc_macro2::TokenS
         .collect::<Vec<_>>()
 }
 
-// First result is for the main type (Input or shadow), the second for the Input when there is a
-// shadow
+// First result is for the main type (Input or enum), the second for the Input when there is a
+// enum version
 fn handle_attributes(
     attrs: &[syn::Attribute],
 ) -> (proc_macro2::TokenStream, proc_macro2::TokenStream) {
@@ -125,6 +128,14 @@ fn input_handle_unit_struct(
                 }
             }
     });
+    // Also implement InputInverse
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp InputInverse for #ident #ty #wher {
+            type Input = #input_ident #ty;
+            type EnumInput = Self::Input;
+        }
+    });
 }
 
 fn input_handle_tuple_struct(
@@ -174,6 +185,14 @@ fn input_handle_tuple_struct(
                 }
             }
     });
+    // Also implement InputInverse
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp InputInverse for #ident #ty #wher {
+            type Input = #input_ident #ty;
+            type EnumInput = Self::Input;
+        }
+    });
 }
 
 fn input_handle_struct_struct(
@@ -208,16 +227,17 @@ fn input_handle_struct_struct(
         .map(|a| quote!(#(#a)*))
         .collect::<Vec<_>>();
 
-    let input_ident_dummy = syn::Ident::new(
-        &format!("{}Dummy", input_ident.to_string())[..],
+    let enum_input_ident = syn::Ident::new(
+        &format!("{}Enum", input_ident.to_string())[..],
         input_ident.span(),
     );
-    let input_attributes_dummy = &input_attributes.0;
-    let input_attributes_input = &input_attributes.1;
+
+    let input_attributes_input = &input_attributes.0;
+    let input_attributes_enum = &input_attributes.1;
 
     tokens.extend(quote! {
-        #input_attributes_dummy
-        pub struct #input_ident_dummy #ty #wher {
+        #input_attributes_input
+        pub struct #input_ident #ty #wher {
             #(
                 #field_attributes
                 pub #field_names: Value<<#input_type_tys as InputInverse>::Input>
@@ -225,16 +245,11 @@ fn input_handle_struct_struct(
         }
     });
 
-    let try_from_value = input_ident_dummy.to_string();
+    let try_from_value = input_ident.to_string();
     tokens.extend(quote! {
-        #input_attributes_input
+        #input_attributes_enum
         #[serde(try_from = #try_from_value)]
-        pub struct #input_ident #ty #wher {
-            #(
-                #field_attributes
-                pub #field_names: Value<<#input_type_tys as InputInverse>::Input>
-            ),*
-        }
+        pub struct #enum_input_ident #ty #wher (#input_ident);
     });
     tokens.extend(quote! {
         #[automatically_derived]
@@ -264,12 +279,31 @@ fn input_handle_struct_struct(
             }
         }
     });
+
     tokens.extend(quote! {
         #[automatically_derived]
-        impl std::convert::TryFrom<#input_ident_dummy #ty> for #input_ident #ty #wher {
+        impl #imp Input for #enum_input_ident #ty #wher {
+            type Normal = #ident #ty;
+            fn to_normal(&self) -> <Self as Input>::Normal {
+                self.0.to_normal()
+            }
+            fn from_normal(normal: <Self as Input>::Normal) -> Self {
+                Self(<#input_ident>::from_normal(normal))
+            }
+            fn find_missing(&self) -> InputCheckResult {
+                self.0.find_missing()
+            }
+            fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
+                self.0.insert_template_value(key, val)
+            }
+        }
+    });
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl std::convert::TryFrom<#input_ident #ty> for #enum_input_ident #ty #wher {
             type Error = &'static str;
 
-            fn try_from(value: #input_ident_dummy) -> Result<Self, Self::Error> {
+            fn try_from(value: #input_ident) -> Result<Self, Self::Error> {
                 let mut ok = false;
                 #(
                     if value.#field_names.is_some() {
@@ -277,17 +311,21 @@ fn input_handle_struct_struct(
                     }
                 )*
                 if ok {
-                    Ok(Self {
-                        #(
-                            #field_names: value.#field_names
-                        ),*
-                    })
+                    Ok(Self(value))
                 } else {
                     Err("No field is set to a not-none value.")
                 }
             }
         }
-    })
+    });
+    // Also implement InputInverse
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp InputInverse for #ident #ty #wher {
+            type Input = #input_ident #ty;
+            type EnumInput = #enum_input_ident #ty;
+        }
+    });
 }
 
 fn input_handle_struct(
@@ -337,7 +375,7 @@ fn input_handle_enum_input_variants(v: &[InputVariantReceiver]) -> Vec<proc_macr
                     }
                 }
                 ast::Style::Tuple => {
-                    let items = quote!(#(<#input_type_tys as InputInverse>::Input),*);
+                    let items = quote!(#(<#input_type_tys as InputInverse>::EnumInput),*);
 
                     quote! {
                         #(#variant_attributes)*
@@ -612,6 +650,14 @@ fn input_handle_enum(
             }
         }
     });
+    // Also implement InputInverse
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl #imp InputInverse for #ident #ty #wher {
+            type Input = #input_ident #ty;
+            type EnumInput = Self::Input;
+        }
+    });
 }
 
 impl ToTokens for InputReceiver {
@@ -622,9 +668,8 @@ impl ToTokens for InputReceiver {
             ref data,
             ref attrs,
             ref input_name,
+            test: _,
         } = *self;
-
-        let (imp, ty, wher) = generics.split_for_impl();
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
         let input_attributes = handle_attributes(&attrs);
@@ -647,12 +692,5 @@ impl ToTokens for InputReceiver {
                 tokens,
             ),
         }
-        // Also implement InputInverse
-        tokens.extend(quote! {
-            #[automatically_derived]
-            impl #imp InputInverse for #ident #ty #wher {
-                type Input = #input_ident #ty;
-            }
-        });
     }
 }
