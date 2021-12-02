@@ -1,0 +1,8 @@
+---
+source: rumbas_support_derive/tests/mixed_enum.rs
+expression: "&example"
+
+---
+field1: "template:template_key"
+field2: "template:template_key"
+

@@ -20,14 +20,14 @@ macro_rules! impl_examples {
     };
 }
 
-impl_examples!(u8, u16, u32, u64, u128, usize: vec![0, 1, 2, 10]);
-impl_examples!(i8, i16, i32, i64, i128, isize: vec![-1, 0, 1, 10]);
+impl_examples!(u8, u16, u32, u64, u128, usize: vec![2]);
+impl_examples!(i8, i16, i32, i64, i128, isize: vec![-1]);
 
-impl_examples!(f32, f64: vec![-0.4, 0.4, -1.0, 1.0, 10.5]);
+impl_examples!(f32, f64: vec![1.2]);
 
-impl_examples!(String: vec!["text".to_string(), "other text".to_string()]);
+impl_examples!(String: vec!["text".to_string()]);
 
-impl_examples!(bool: vec![true, false]);
+impl_examples!(bool: vec![false]);
 
 impl<T: Examples> Examples for ValueType<T> {
     fn examples() -> Vec<Self> {

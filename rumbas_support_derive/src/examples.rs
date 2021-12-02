@@ -5,6 +5,7 @@ use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
 
 #[derive(FromDeriveInput)]
+#[darling(attributes(examples))]
 pub struct ExamplesReceiver {
     ident: syn::Ident,
 
@@ -13,6 +14,9 @@ pub struct ExamplesReceiver {
     generics: syn::Generics,
 
     data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
+
+    #[darling(default)]
+    test: bool,
 }
 
 fn handle_unit_struct(
@@ -243,11 +247,49 @@ impl ToTokens for ExamplesReceiver {
             ref ident,
             ref generics,
             ref data,
+            test,
         } = *self;
 
         match data {
             ast::Data::Enum(v) => handle_enum(v, ident, generics, tokens),
             ast::Data::Struct(fields) => handle_struct(fields, ident, generics, tokens),
+        }
+
+        if test {
+            let mod_ident = syn::Ident::new(
+                &format!("examples_{}", ident.to_string().to_lowercase())[..],
+                ident.span(),
+            );
+
+            tokens.extend(quote! {
+                #[cfg(test)]
+                mod #mod_ident {
+                    use super::*;
+                    use rumbas_support::example::Examples;
+                    #[test]
+                    fn compile_examples() {
+                        for example in <#ident>::examples().into_iter() {
+                            let item = serde_yaml::to_string(&example);
+                            assert!(item.is_ok());
+                            let item = item.unwrap();
+                            let parsed: Result<#ident, _> = serde_yaml::from_str(&item[..]);
+                            if let Err(ref e) = parsed {
+                                if "No field is set to a not-none value." == &e.to_string()[..] {
+                                    continue;
+                                }
+                                println!("Input: {:?}", item);
+                                println!("Error: {:?}", e);
+                            }
+                            // Only write snapshot if there are not-none values
+                            insta::with_settings!({sort_maps => true}, {
+                                insta::assert_yaml_snapshot!(&example);
+                            });
+                            assert!(parsed.is_ok());
+                            assert_eq!(example, parsed.unwrap())
+                        }
+                    }
+                }
+            });
         }
     }
 }

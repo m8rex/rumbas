@@ -10,10 +10,11 @@ use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
 use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "TestInput")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
 pub struct Test {
     field1: bool,
     field2: f64,
@@ -23,7 +24,7 @@ type TestInputs = Vec<Test>;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Deserialize, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,

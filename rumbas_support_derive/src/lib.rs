@@ -49,7 +49,7 @@ pub fn derive_rumbas_check(input: TokenStream) -> TokenStream {
     quote!(#rumbas_check).into()
 }
 
-#[proc_macro_derive(Examples)]
+#[proc_macro_derive(Examples, attributes(examples))]
 pub fn derive_examples(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as syn::DeriveInput);
 
