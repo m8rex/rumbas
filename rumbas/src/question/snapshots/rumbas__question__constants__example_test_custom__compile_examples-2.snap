@@ -3,7 +3,7 @@ source: rumbas/src/question/constants.rs
 expression: "&example"
 
 ---
-name: other text
+name: "template:template_key"
 value: "template:template_key"
-tex: other text
+tex: "template:template_key"
 

@@ -3,5 +3,5 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-text
+"-10 .. 1#0.1"
 

@@ -310,6 +310,7 @@ macro_rules! file_type {
             }
             impl InputInverse for $type {
                 type Input = [<$type Input>];
+                type EnumInput = [<$type Input>];
             }
         }
     }

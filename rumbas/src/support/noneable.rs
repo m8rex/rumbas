@@ -11,6 +11,7 @@ pub enum Noneable<T> {
 
 impl<T: InputInverse> InputInverse for Noneable<T> {
     type Input = Noneable<<T as InputInverse>::Input>;
+    type EnumInput = Self::Input;
 }
 
 impl<T: Input> Input for Noneable<T> {

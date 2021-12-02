@@ -44,13 +44,13 @@ impl ToRumbas<ResourcePath> for numbas::question::resource::Resource {
     }
 }
 
-impl std::convert::TryFrom<String> for ResourcePathInputDummy {
+impl std::convert::TryFrom<String> for ResourcePathInput {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
         let path = std::path::Path::new(crate::RESOURCES_FOLDER).join(&s);
         if path.exists() {
-            Ok(ResourcePathInputDummy {
+            Ok(ResourcePathInput {
                 resource_name: Value::Normal(s),
                 resource_path: Value::Normal(path),
             })
@@ -60,8 +60,8 @@ impl std::convert::TryFrom<String> for ResourcePathInputDummy {
     }
 }
 
-impl std::convert::From<ResourcePathInputDummy> for String {
-    fn from(q: ResourcePathInputDummy) -> Self {
+impl std::convert::From<ResourcePathInput> for String {
+    fn from(q: ResourcePathInput) -> Self {
         q.resource_name.unwrap()
     }
 }
@@ -70,8 +70,7 @@ impl std::convert::TryFrom<String> for ResourcePath {
     type Error = String;
 
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let data: ResourcePathInputDummy = s.try_into()?;
-        let data: ResourcePathInput = data.try_into()?;
+        let data: ResourcePathInput = s.try_into()?;
         Ok(data.to_normal())
     }
 }
@@ -118,10 +117,10 @@ mod test {
 test
 "
         );
-        let rid = ResourcePathInputDummy {
+        let rid = ResourcePathInputEnum(ResourcePathInput {
             resource_name: Value::Normal("test".to_string()),
             resource_path: Value::Normal(Path::new("tmp").to_path_buf()),
-        };
+        });
         assert_eq!(r.to_yaml().unwrap(), serde_yaml::to_string(&rid).unwrap());
     }
 }
