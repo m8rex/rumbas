@@ -11,9 +11,9 @@ use std::convert::TryFrom;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableRepresentationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, Examples)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
     ListOfNumbers(Vec<f64>),
@@ -23,7 +23,7 @@ pub enum VariableRepresentation {
     TranslatableString(TranslatableString),
     Long(Box<Variable>),
 }
-
+// TODO remove or from attribute
 #[cfg(test)]
 mod example_test {
     use super::VariableRepresentationInput;
@@ -148,9 +148,9 @@ impl VariableRepresentation {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, JsonSchema)]
+#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
 #[input(name = "VariableStringRepresentationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Examples)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 #[serde(into = "String")]
 pub enum VariableStringRepresentation {
@@ -222,7 +222,16 @@ pub struct RangeData {
     pub step: f64,
 }
 
-impl Examples for RangeData {
+impl Examples for RangeDataInputEnum {
+    fn examples() -> Vec<Self> {
+        RangeDataInput::examples()
+            .into_iter()
+            .map(|e| RangeDataInputEnum(e))
+            .collect()
+    }
+}
+
+impl Examples for RangeDataInput {
     fn examples() -> Vec<Self> {
         vec![
             RangeData {
@@ -246,15 +255,9 @@ impl Examples for RangeData {
                 step: 0.1,
             },
         ]
-    }
-}
-
-impl Examples for RangeDataInput {
-    fn examples() -> Vec<Self> {
-        RangeData::examples()
-            .into_iter()
-            .map(|e| Self::from_normal(e))
-            .collect()
+        .into_iter()
+        .map(|e| Self::from_normal(e))
+        .collect()
     }
 }
 
@@ -366,9 +369,9 @@ mod test {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Variable {
     pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
     pub description: String,
@@ -410,10 +413,10 @@ impl Variable {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Examples)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
     /// Not specified

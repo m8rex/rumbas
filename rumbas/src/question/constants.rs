@@ -48,9 +48,9 @@ macro_rules! builtin_constants {
 }
 
 builtin_constants! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "BuiltinConstantsInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq,)]
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
@@ -62,6 +62,7 @@ builtin_constants! {
     }
 }
 
+// TODO: remove or attribute
 #[cfg(test)]
 mod example_test_builtin {
     use super::BuiltinConstantsInput;
@@ -90,9 +91,9 @@ mod example_test_builtin {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomConstantInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A custom constant
 pub struct CustomConstant {
     /// The name of the constant
@@ -123,6 +124,7 @@ impl ToRumbas<CustomConstant> for numbas::question::constants::QuestionConstant 
     }
 }
 
+// TODO remove or from attribute
 #[cfg(test)]
 mod example_test_custom {
     use super::CustomConstantInput;

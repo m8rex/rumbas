@@ -38,12 +38,14 @@ fn handle_unit_struct(
     });
 }
 
-fn tuple_body(
+fn handle_tuple_struct(
     fields: &ast::Fields<InputFieldReceiver>,
-    type_name: proc_macro2::TokenStream,
-    type_start: proc_macro2::TokenStream,
-    type_end: proc_macro2::TokenStream,
-) -> proc_macro2::TokenStream {
+    input_ident: &syn::Ident,
+    generics: &syn::Generics,
+    tokens: &mut proc_macro2::TokenStream,
+) {
+    let (imp, ty, wher) = generics.split_for_impl();
+
     let field_indexes = fields
         .iter()
         .enumerate()
@@ -59,26 +61,13 @@ fn tuple_body(
             quote!(#ty)
         })
         .collect::<Vec<_>>();
-    quote! {
-                    let tuple_data = <(#(#type_start<#field_types as InputInverse>::Input#type_end,)*)>::examples();
-                    tuple_data.into_iter().map(|t| #type_name(#(t.#field_indexes),*) ).collect::<Vec<_>>()
-    }
-}
-
-fn handle_tuple_struct(
-    fields: &ast::Fields<InputFieldReceiver>,
-    input_ident: &syn::Ident,
-    generics: &syn::Generics,
-    tokens: &mut proc_macro2::TokenStream,
-) {
-    let (imp, ty, wher) = generics.split_for_impl();
-    let body = tuple_body(fields, quote!(Self), quote!(ValueType<), quote!(>));
 
     tokens.extend(quote! {
             #[automatically_derived]
             impl #imp Examples for #input_ident #ty #wher {
                 fn examples() -> Vec<Self> {
-                    #body
+                    let tuple_data = <(#(ValueType<<#field_types as InputInverse>::Input>,)*)>::examples();
+                    tuple_data.into_iter().map(|t| Self(#(t.#field_indexes),*) ).collect::<Vec<_>>()
                 }
             }
     });
@@ -226,12 +215,27 @@ fn handle_enum_check_variants(
                         vec![#input_ident::#variant_ident]
                     }
                 }
-                ast::Style::Tuple => tuple_body(
-                    &variant.fields,
-                    quote!(#input_ident::#variant_ident),
-                    quote!(),
-                    quote!(),
-                ),
+                ast::Style::Tuple => {
+                    let field_indexes = variant.fields.fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _f)| {
+                            let i = syn::Index::from(i);
+                            quote!(#i)
+                        })
+                        .collect::<Vec<_>>();
+                    let field_types = variant.fields.fields
+                        .iter()
+                        .map(|f| {
+                            let ty = f.ty.clone();
+                            quote!(#ty)
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        let tuple_data = <(#(<#field_types as InputInverse>::EnumInput,)*)>::examples();
+                        tuple_data.into_iter().map(|t| #input_ident::#variant_ident(#(t.#field_indexes),*) ).collect::<Vec<_>>()
+                    }
+                },
                 ast::Style::Struct => {
                     struct_body(&variant.fields, quote!(#input_ident::#variant_ident))
                 }

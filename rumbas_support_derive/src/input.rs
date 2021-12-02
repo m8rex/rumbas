@@ -249,7 +249,7 @@ fn input_handle_struct_struct(
     tokens.extend(quote! {
         #input_attributes_enum
         #[serde(try_from = #try_from_value)]
-        pub struct #enum_input_ident #ty #wher (#input_ident);
+        pub struct #enum_input_ident #ty (pub #input_ident) #wher;
     });
     tokens.extend(quote! {
         #[automatically_derived]

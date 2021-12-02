@@ -54,10 +54,10 @@ impl ToRumbas<QuestionPart> for numbas::question::part::QuestionPart {
 }
 
 impl QuestionPartInput {
-    pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
+    pub fn get_steps(&mut self) -> &mut Value<Vec<ValueType<QuestionPartInput>>> {
         match self {
             QuestionPartInput::Builtin(b) => b.get_steps(),
-            QuestionPartInput::Custom(b) => b.get_steps(),
+            QuestionPartInput::Custom(b) => b.0.get_steps(),
         }
     }
 }
@@ -166,18 +166,18 @@ impl ToRumbas<QuestionPartBuiltin> for numbas::question::part::QuestionPartBuilt
 }
 
 impl QuestionPartBuiltinInput {
-    pub fn get_steps(&mut self) -> &mut Value<Vec<Value<QuestionPartInput>>> {
+    pub fn get_steps(&mut self) -> &mut Value<Vec<ValueType<QuestionPartInput>>> {
         match self {
-            QuestionPartBuiltinInput::JME(d) => d.get_steps(),
-            QuestionPartBuiltinInput::GapFill(d) => d.get_steps(),
-            QuestionPartBuiltinInput::ChooseOne(d) => d.get_steps(),
-            QuestionPartBuiltinInput::ChooseMultiple(d) => d.get_steps(),
-            QuestionPartBuiltinInput::MatchAnswersWithItems(d) => d.get_steps(),
-            QuestionPartBuiltinInput::NumberEntry(d) => d.get_steps(),
-            QuestionPartBuiltinInput::PatternMatch(d) => d.get_steps(),
-            QuestionPartBuiltinInput::Information(d) => d.get_steps(),
-            QuestionPartBuiltinInput::Extension(d) => d.get_steps(),
-            QuestionPartBuiltinInput::Matrix(d) => d.get_steps(),
+            QuestionPartBuiltinInput::JME(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::GapFill(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::ChooseOne(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::ChooseMultiple(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::MatchAnswersWithItems(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::NumberEntry(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::PatternMatch(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::Information(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::Extension(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::Matrix(d) => d.0.get_steps(),
         }
     }
 }
@@ -321,7 +321,7 @@ macro_rules! question_part_type {
         }
         paste::paste! {
             impl [<$struct Input>] {
-                pub fn get_steps(&mut self) -> &mut Value<Vec<Value<<crate::question::part::question_part::QuestionPart as InputInverse>::Input>>> {
+                pub fn get_steps(&mut self) -> &mut Value<Vec<ValueType<<crate::question::part::question_part::QuestionPart as InputInverse>::Input>>> {
                     &mut self.steps
                 }
             }

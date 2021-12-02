@@ -3,8 +3,8 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-definition: ~
-description: "template:template_key"
-template_type: list_of_strings
-group: "template:template_key"
+definition: "example plain string with placeholders {placeholder1} and {placeholder2}."
+description: text
+template_type: range
+group: text
 

@@ -3,20 +3,20 @@ source: rumbas/src/question/extension.rs
 expression: "&example"
 
 ---
-chemistry: "template:template_key"
-download_text_file: "template:template_key"
-eukleides: "template:template_key"
-geogebra: "template:template_key"
-graphs: "template:template_key"
-jsx_graph: "template:template_key"
-linear_algebra: "template:template_key"
-linear_codes: "template:template_key"
-optimisation: "template:template_key"
-permutations: "template:template_key"
-polynomials: "template:template_key"
-quantities: "template:template_key"
-random_person: "template:template_key"
-stats: "template:template_key"
-sqlite: "template:template_key"
-written_number: "template:template_key"
+chemistry: ~
+download_text_file: ~
+eukleides: ~
+geogebra: ~
+graphs: ~
+jsx_graph: ~
+linear_algebra: ~
+linear_codes: ~
+optimisation: ~
+permutations: ~
+polynomials: ~
+quantities: ~
+random_person: ~
+stats: ~
+sqlite: ~
+written_number: ~
 

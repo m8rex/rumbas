@@ -11,9 +11,9 @@ macro_rules! extensions {
             $name: ident: $path: literal
         ),+
     ) => {
-            #[derive(Input, Overwrite, RumbasCheck)]
+            #[derive(Input, Overwrite, RumbasCheck, Examples)]
             #[input(name = "ExtensionsInput")]
-            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq, Examples)]
+            #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
             /// Specify which extensions should be enabled
             pub struct Extensions {
                 $(
@@ -108,6 +108,7 @@ impl ToRumbas<Extensions> for Vec<String> {
     }
 }
 
+// TODO: remove or with attribute
 #[cfg(test)]
 mod example_test {
     use super::*;

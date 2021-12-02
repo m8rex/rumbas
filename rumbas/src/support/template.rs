@@ -44,6 +44,7 @@ impl Input for MyYamlValue {
 
 impl InputInverse for MyYamlValue {
     type Input = MyYamlValue;
+    type EnumInput = Self::Input;
 }
 
 impl JsonSchema for MyYamlValue {

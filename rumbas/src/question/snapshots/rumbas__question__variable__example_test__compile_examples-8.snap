@@ -3,5 +3,5 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-x^5
+"10 .. 1#5"
 

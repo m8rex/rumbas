@@ -3,8 +3,8 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-definition: "template:template_key"
-description: text
-template_type: number
-group: text
+definition: ~
+description: ~
+template_type: "template:template_key"
+group: ~
 

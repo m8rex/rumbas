@@ -16,7 +16,7 @@ use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
 use crate::exam::question_group::QuestionPath;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
-use crate::support::template::{TemplateFile, TemplateFileInput};
+use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
@@ -86,7 +86,7 @@ impl ExamInput {
                     relative_template_path: crate::QUESTION_PREVIEW_TEMPLATE_NAME.to_string(),
                     data,
                 };
-                Ok(Template(TemplateFileInput::from_normal(t)))
+                Ok(Template(TemplateFileInputEnum::from_normal(t)))
             } else {
                 panic!(
                     "{} should start with {}/ or {}/",

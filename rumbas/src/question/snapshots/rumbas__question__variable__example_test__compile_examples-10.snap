@@ -3,5 +3,5 @@ source: rumbas/src/question/variable.rs
 expression: "&example"
 
 ---
-other text
+"random(0 .. 1#0.1)"
 
