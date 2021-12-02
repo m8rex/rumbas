@@ -11,12 +11,13 @@ use rumbas_support::overwrite::Overwrite;
 use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
+use rumbas_support::value::ValueType;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub enum Test {
     Unit,
     Tuple(TestOverwrite, bool, String),
@@ -26,18 +27,18 @@ pub enum Test {
 
 type TestInputs = Vec<Test>;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
-#[examples(test)]
+#[input(test)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TestOverwriteInput")]
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 ///  Hi there
 pub enum TestOverwrite {
     Unit,
@@ -53,7 +54,7 @@ fn create_test2() {
     };
 
     let _test2 = Test2Input {
-        field1: Value::Normal(vec![Value::Normal(TestInput::Struct {
+        field1: Value::Normal(vec![ValueType::Normal(TestInput::Struct {
             a: Value::Normal(5.8),
         })]),
         field2: Value::Normal(65.0),
@@ -94,10 +95,8 @@ fn find_missing() {
 
 #[test]
 fn examples() {
-    Test::examples();
     TestInput::examples();
-    Test2::examples();
     Test2Input::examples();
-    TestOverwrite::examples();
+    Test2InputEnum::examples();
     TestOverwriteInput::examples();
 }

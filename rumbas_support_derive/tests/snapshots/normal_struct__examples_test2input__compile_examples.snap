@@ -1,0 +1,15 @@
+---
+source: rumbas_support_derive/tests/normal_struct.rs
+expression: "&example"
+
+---
+field1:
+  - field1: false
+    field2: 1.2
+  - field1: "template:template_key"
+    field2: "template:template_key"
+  - field1: ~
+    field2: ~
+  - "template:template_key"
+field2: 1.2
+

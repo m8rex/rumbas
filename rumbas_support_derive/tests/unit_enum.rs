@@ -9,12 +9,13 @@ use rumbas_support::overwrite::Overwrite;
 use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
+use rumbas_support::value::ValueType;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub enum Test {
     First,
     Second,
@@ -49,13 +50,12 @@ mod test {
         };
 
         let _test2 = Test2Input {
-            field1: Value::Normal(vec![Value::Normal(TestInput::First)]),
+            field1: Value::Normal(vec![ValueType::Normal(TestInput::First)]),
             field2: Value::Normal(65.0),
         };
     }
     #[test]
     fn examples() {
-        Test::examples();
         TestInput::examples();
     }
 }

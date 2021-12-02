@@ -9,12 +9,13 @@ use rumbas_support::overwrite::Overwrite;
 use rumbas_support::rumbas_check::RumbasCheck;
 use rumbas_support::rumbas_check::RumbasCheckResult;
 use rumbas_support::value::Value;
+use rumbas_support::value::ValueType;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test {
     field1: bool,
     field2: f64,
@@ -22,9 +23,10 @@ pub struct Test {
 
 type TestInputs = Vec<Test>;
 
-#[derive(Input, RumbasCheck)]
+#[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Examples)]
+#[input(test)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -52,7 +54,7 @@ mod test {
         };
 
         let _test2 = Test2Input {
-            field1: Value::Normal(vec![Value::Normal(TestInput {
+            field1: Value::Normal(vec![ValueType::Normal(TestInput {
                 field1: Value::Normal(true),
                 field2: Value::Normal(64.8),
             })]),
@@ -61,8 +63,18 @@ mod test {
     }
 
     #[test]
-    fn parse_yaml_test_no_fields() {
+    fn parse_yaml_test_no_fields_ok_for_normal() {
         let fail: Result<Test2Input, _> = serde_yaml::from_str(
+            r"---
+other_field1: true
+",
+        );
+        assert!(fail.is_ok());
+    }
+
+    #[test]
+    fn parse_yaml_test_no_fields() {
+        let fail: Result<Test2InputEnum, _> = serde_yaml::from_str(
             r"---
 other_field1: true
 ",
@@ -72,7 +84,7 @@ other_field1: true
 
     #[test]
     fn parse_yaml_test() {
-        let ok: Result<Test2Input, _> = serde_yaml::from_str(
+        let ok: Result<Test2InputEnum, _> = serde_yaml::from_str(
             r"---
 field1: true
 ",
@@ -82,9 +94,9 @@ field1: true
     }
     #[test]
     fn examples() {
-        Test::examples();
         TestInput::examples();
-        Test2::examples();
+        TestInputEnum::examples();
         Test2Input::examples();
+        Test2InputEnum::examples();
     }
 }

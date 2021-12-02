@@ -14,6 +14,7 @@ pub enum ValueType<T> {
 
 impl<T: Input> InputInverse for ValueType<T> {
     type Input = Self;
+    type EnumInput = Self::Input;
 }
 
 impl<T: Input> Input for ValueType<T>
@@ -104,6 +105,7 @@ pub struct Value<T>(pub Option<ValueType<T>>);
 
 impl<T: Input> InputInverse for Value<T> {
     type Input = Self;
+    type EnumInput = Self::Input;
 }
 impl<T: Input> Input for Value<T>
 where
@@ -195,6 +197,7 @@ pub struct TemplateString {
 
 impl InputInverse for TemplateString {
     type Input = Self;
+    type EnumInput = Self::Input;
 }
 impl Input for TemplateString {
     type Normal = TemplateString;

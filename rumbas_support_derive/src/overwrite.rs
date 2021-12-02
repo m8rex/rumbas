@@ -17,6 +17,9 @@ pub struct OverwriteReceiver {
 
     #[darling(rename = "name")]
     input_name: String,
+
+    #[darling(default)]
+    test: bool,
 }
 impl ToTokens for OverwriteReceiver {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
@@ -25,6 +28,7 @@ impl ToTokens for OverwriteReceiver {
             ref generics,
             ref data,
             ref input_name,
+            test: _,
         } = *self;
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
@@ -92,11 +96,34 @@ fn overwrite_handle_struct_struct(
         .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
         .collect::<Vec<_>>();
 
+    let enum_input_ident = syn::Ident::new(
+        &format!("{}Enum", input_ident.to_string())[..],
+        input_ident.span(),
+    );
+
     tokens.extend(quote! {
         #[automatically_derived]
         impl #imp Overwrite<#input_ident #ty> for #input_ident #ty #wher {
             fn overwrite(&mut self, other: &Self){
                 #(self.#field_names.overwrite(&other.#field_names);)*
+            }
+        }
+        #[automatically_derived]
+        impl #imp Overwrite<#enum_input_ident #ty> for #input_ident #ty #wher {
+            fn overwrite(&mut self, other: &#enum_input_ident){
+               self.overwrite(&other.0)
+            }
+        }
+        #[automatically_derived]
+        impl #imp Overwrite<#input_ident #ty> for #enum_input_ident #ty #wher {
+            fn overwrite(&mut self, other: &#input_ident){
+                self.0.overwrite(other)
+            }
+        }
+        #[automatically_derived]
+        impl #imp Overwrite<#enum_input_ident #ty> for #enum_input_ident #ty #wher {
+            fn overwrite(&mut self, other: &Self){
+                self.0.overwrite(&other.0)
             }
         }
     });

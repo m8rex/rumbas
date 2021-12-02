@@ -5,7 +5,7 @@ use darling::FromDeriveInput;
 use quote::{quote, ToTokens};
 
 #[derive(FromDeriveInput)]
-#[darling(attributes(examples))]
+#[darling(attributes(input))]
 pub struct ExamplesReceiver {
     ident: syn::Ident,
 
@@ -17,17 +17,20 @@ pub struct ExamplesReceiver {
 
     #[darling(default)]
     test: bool,
+
+    #[darling(rename = "name")]
+    input_name: String,
 }
 
 fn handle_unit_struct(
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
     tokens.extend(quote! {
             #[automatically_derived]
-            impl #imp Examples for #ident #ty #wher {
+            impl #imp Examples for #input_ident #ty #wher {
                 fn examples() -> Vec<Self> {
                     vec![Self]
                 }
@@ -38,6 +41,8 @@ fn handle_unit_struct(
 fn tuple_body(
     fields: &ast::Fields<InputFieldReceiver>,
     type_name: proc_macro2::TokenStream,
+    type_start: proc_macro2::TokenStream,
+    type_end: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     let field_indexes = fields
         .iter()
@@ -55,23 +60,23 @@ fn tuple_body(
         })
         .collect::<Vec<_>>();
     quote! {
-                    let tuple_data = <(#(#field_types,)*)>::examples();
+                    let tuple_data = <(#(#type_start<#field_types as InputInverse>::Input#type_end,)*)>::examples();
                     tuple_data.into_iter().map(|t| #type_name(#(t.#field_indexes),*) ).collect::<Vec<_>>()
     }
 }
 
 fn handle_tuple_struct(
     fields: &ast::Fields<InputFieldReceiver>,
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
-    let body = tuple_body(fields, quote!(Self));
+    let body = tuple_body(fields, quote!(Self), quote!(ValueType<), quote!(>));
 
     tokens.extend(quote! {
             #[automatically_derived]
-            impl #imp Examples for #ident #ty #wher {
+            impl #imp Examples for #input_ident #ty #wher {
                 fn examples() -> Vec<Self> {
                     #body
                 }
@@ -132,7 +137,7 @@ fn struct_body(
         .collect::<Vec<_>>();
     quote! {
         #(
-            let mut #field_name_examples = <#field_types>::examples();
+            let mut #field_name_examples = <Value<<#field_types as InputInverse>::Input>>::examples();
         )*
         let mut max_examples = 0;
         #(
@@ -140,7 +145,7 @@ fn struct_body(
         )*
         #(
             while #field_name_examples.len() < max_examples {
-                #field_name_examples.extend(<#field_types>::examples());
+                #field_name_examples.extend(<Value<<#field_types as InputInverse>::Input>>::examples());
             }
             let mut #field_name_iterators = #field_name_examples.into_iter();
         )*
@@ -167,18 +172,29 @@ fn struct_body(
 
 fn handle_struct_struct(
     fields: &ast::Fields<InputFieldReceiver>,
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
     let body = struct_body(fields, quote!(Self));
 
+    let enum_input_ident = syn::Ident::new(
+        &format!("{}Enum", input_ident.to_string())[..],
+        input_ident.span(),
+    );
+
     tokens.extend(quote! {
         #[automatically_derived]
-        impl #imp Examples for #ident #ty #wher {
+        impl #imp Examples for #input_ident #ty #wher {
             fn examples() -> Vec<Self> {
                 #body
+            }
+        }
+        #[automatically_derived]
+        impl #imp Examples for #enum_input_ident #ty #wher {
+            fn examples() -> Vec<Self> {
+                <#input_ident>::examples().into_iter().filter_map(|e| std::convert::TryInto::try_into(e).ok()).collect()
             }
         }
     });
@@ -186,20 +202,20 @@ fn handle_struct_struct(
 
 fn handle_struct(
     fields: &ast::Fields<InputFieldReceiver>,
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     match fields.style {
-        ast::Style::Struct => handle_struct_struct(fields, ident, generics, tokens),
-        ast::Style::Tuple => handle_tuple_struct(fields, ident, generics, tokens),
-        ast::Style::Unit => handle_unit_struct(ident, generics, tokens),
+        ast::Style::Struct => handle_struct_struct(fields, input_ident, generics, tokens),
+        ast::Style::Tuple => handle_tuple_struct(fields, input_ident, generics, tokens),
+        ast::Style::Unit => handle_unit_struct(input_ident, generics, tokens),
     }
 }
 
 fn handle_enum_check_variants(
     v: &[InputVariantReceiver],
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
         .map(|variant| {
@@ -207,11 +223,18 @@ fn handle_enum_check_variants(
             match variant.fields.style {
                 ast::Style::Unit => {
                     quote! {
-                        vec![#ident::#variant_ident]
+                        vec![#input_ident::#variant_ident]
                     }
                 }
-                ast::Style::Tuple => tuple_body(&variant.fields, quote!(#ident::#variant_ident)),
-                ast::Style::Struct => struct_body(&variant.fields, quote!(#ident::#variant_ident)),
+                ast::Style::Tuple => tuple_body(
+                    &variant.fields,
+                    quote!(#input_ident::#variant_ident),
+                    quote!(),
+                    quote!(),
+                ),
+                ast::Style::Struct => {
+                    struct_body(&variant.fields, quote!(#input_ident::#variant_ident))
+                }
             }
         })
         .collect::<Vec<_>>()
@@ -219,17 +242,17 @@ fn handle_enum_check_variants(
 
 fn handle_enum(
     v: &[InputVariantReceiver],
-    ident: &syn::Ident,
+    input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     let (imp, ty, wher) = generics.split_for_impl();
 
-    let check_variants = handle_enum_check_variants(v, ident);
+    let check_variants = handle_enum_check_variants(v, input_ident);
 
     tokens.extend(quote! {
         #[automatically_derived]
-        impl #imp Examples for #ident #ty #wher {
+        impl #imp Examples for #input_ident #ty #wher {
             fn examples() -> Vec<Self> {
                 let mut all : Vec<Self> = Vec::new();
                 #(
@@ -248,16 +271,19 @@ impl ToTokens for ExamplesReceiver {
             ref generics,
             ref data,
             test,
+            ref input_name,
         } = *self;
 
+        let input_ident = syn::Ident::new(&input_name, ident.span());
+
         match data {
-            ast::Data::Enum(v) => handle_enum(v, ident, generics, tokens),
-            ast::Data::Struct(fields) => handle_struct(fields, ident, generics, tokens),
+            ast::Data::Enum(v) => handle_enum(v, &input_ident, generics, tokens),
+            ast::Data::Struct(fields) => handle_struct(fields, &input_ident, generics, tokens),
         }
 
         if test {
             let mod_ident = syn::Ident::new(
-                &format!("examples_{}", ident.to_string().to_lowercase())[..],
+                &format!("examples_{}", input_ident.to_string().to_lowercase())[..],
                 ident.span(),
             );
 
@@ -268,11 +294,11 @@ impl ToTokens for ExamplesReceiver {
                     use rumbas_support::example::Examples;
                     #[test]
                     fn compile_examples() {
-                        for example in <#ident>::examples().into_iter() {
+                        for example in <#input_ident>::examples().into_iter() {
                             let item = serde_yaml::to_string(&example);
                             assert!(item.is_ok());
                             let item = item.unwrap();
-                            let parsed: Result<#ident, _> = serde_yaml::from_str(&item[..]);
+                            let parsed: Result<#input_ident, _> = serde_yaml::from_str(&item[..]);
                             if let Err(ref e) = parsed {
                                 if "No field is set to a not-none value." == &e.to_string()[..] {
                                     continue;
@@ -280,12 +306,11 @@ impl ToTokens for ExamplesReceiver {
                                 println!("Input: {:?}", item);
                                 println!("Error: {:?}", e);
                             }
-                            // Only write snapshot if there are not-none values
+                            assert!(parsed.is_ok());
+                            assert_eq!(example, parsed.unwrap());
                             insta::with_settings!({sort_maps => true}, {
                                 insta::assert_yaml_snapshot!(&example);
                             });
-                            assert!(parsed.is_ok());
-                            assert_eq!(example, parsed.unwrap())
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 ---
-source: rumbas_support_derive/tests/mixed_enum.rs
+source: rumbas_support_derive/tests/normal_struct.rs
 expression: "&example"
 
 ---
