@@ -10,7 +10,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartGapFillInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     /// The Gap fill question part type

@@ -21,6 +21,12 @@ pub struct ResourcePath {
     pub resource_path: PathBuf,
 }
 
+impl Examples for ResourcePathInput {
+    fn examples() -> Vec<Self> {
+        vec![] // TODO: create file somewhere?
+    }
+}
+
 impl ToNumbas<numbas::question::resource::Resource> for ResourcePath {
     fn to_numbas(&self, _locale: &str) -> numbas::question::resource::Resource {
         numbas::question::resource::Resource([

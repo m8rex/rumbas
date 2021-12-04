@@ -6,7 +6,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimingInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Timing {
@@ -39,7 +39,7 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimeoutActionInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
@@ -75,7 +75,7 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimeoutActionWarnInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct TimeoutActionWarn {

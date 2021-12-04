@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartTypeDefinitionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartTypeDefinition {
@@ -152,7 +152,7 @@ create_input_option_value!(
     Vec<numbas::support::answer_style::AnswerStyle>
 );
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartInputWidgetInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "type")]
@@ -207,7 +207,7 @@ impl ToRumbas<CustomPartInputWidget> for numbas::question::custom_part_type::Cus
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartStringInputOptionsInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartStringInputOptions {
@@ -252,7 +252,7 @@ impl ToRumbas<CustomPartStringInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartNumberInputOptionsInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartNumberInputOptions {
@@ -299,7 +299,7 @@ impl ToRumbas<CustomPartNumberInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartRadioGroupInputOptionsInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CustomPartRadioGroupInputOptions {
@@ -343,7 +343,7 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, JsonSchema)]
+#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
 #[input(name = "CustomPartTypeDefinitionPathInput")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(try_from = "String")]

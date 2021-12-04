@@ -7,7 +7,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Feedback {
@@ -64,7 +64,7 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ReviewInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Review {
@@ -112,7 +112,7 @@ impl ToRumbas<Review> for numbas::exam::feedback::Review {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackMessageInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FeedbackMessage {
