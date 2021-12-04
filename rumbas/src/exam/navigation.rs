@@ -7,7 +7,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalNavigationInput")]
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Debug)]
 #[serde(rename_all = "snake_case")]
@@ -77,7 +77,7 @@ impl NormalNavigation {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "SequentialNavigationInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct SequentialNavigation {
@@ -109,7 +109,7 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MenuNavigationInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MenuNavigation {
@@ -124,7 +124,7 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticNavigationInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct DiagnosticNavigation {
@@ -175,7 +175,7 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ShowResultsPageInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -206,7 +206,7 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LeaveActionInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(rename_all = "snake_case")]
@@ -255,14 +255,14 @@ impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LeaveActionMessageInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct LeaveActionMessage {
     pub message: TranslatableString,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NavigationSharedDataInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct NavigationSharedData {

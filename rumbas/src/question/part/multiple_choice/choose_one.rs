@@ -16,7 +16,7 @@ use std::convert::Into;
 
 //TODO: defaults
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartChooseOneInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartChooseOne {
@@ -115,7 +115,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixRowPrimitive(pub Vec<numbas::support::primitive::Primitive>);
@@ -129,7 +129,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixRowInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixRow(pub Vec<TranslatableString>);
@@ -149,7 +149,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixPrimitive(pub Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
@@ -165,7 +165,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ChooseOneDisplayInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "display")]

@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartMatrixInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartMatrix {
@@ -79,7 +79,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionsInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionPartMatrixDimensions {
@@ -93,7 +93,7 @@ impl QuestionPartMatrixDimensions {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub enum QuestionPartMatrixDimension {
@@ -147,7 +147,7 @@ impl QuestionPartMatrixDimension {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixRangedDimensionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionPartMatrixRangedDimension {

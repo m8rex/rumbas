@@ -9,6 +9,16 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
+impl<T: Examples> Examples for Noneable<T> {
+    fn examples() -> Vec<Self> {
+        T::examples()
+            .into_iter()
+            .map(|e| Self::NotNone(e))
+            .chain(vec![Noneable::None].into_iter())
+            .collect()
+    }
+}
+
 impl<T: InputInverse> InputInverse for Noneable<T> {
     type Input = Noneable<<T as InputInverse>::Input>;
     type EnumInput = Self::Input;

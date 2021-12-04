@@ -9,7 +9,7 @@ use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct QuestionGroup {
@@ -42,7 +42,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "picking_strategy")]
@@ -94,7 +94,7 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyRandomSubsetInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct PickingStrategyRandomSubset {
@@ -118,6 +118,18 @@ pub struct QuestionPathInput {
 impl InputInverse for QuestionPath {
     type Input = QuestionPathInput;
     type EnumInput = QuestionPathInput;
+}
+
+impl Examples for QuestionPathInput {
+    fn examples() -> Vec<Self> {
+        QuestionInput::examples()
+            .into_iter()
+            .map(|e| QuestionPathInput {
+                question_name: "".to_string(),
+                question_data: e,
+            })
+            .collect()
+    }
 }
 
 impl Input for QuestionPathInput {

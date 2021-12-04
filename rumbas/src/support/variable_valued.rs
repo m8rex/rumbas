@@ -14,6 +14,16 @@ pub enum VariableValued<T> {
     Value(T),
 }
 
+impl<T: Examples> Examples for VariableValued<T> {
+    fn examples() -> Vec<Self> {
+        T::examples()
+            .into_iter()
+            .map(|e| Self::Value(e))
+            .chain(JMEString::examples().into_iter().map(|j| Self::Variable(j)))
+            .collect()
+    }
+}
+
 impl<T: RumbasCheck> RumbasCheck for VariableValued<T> {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         match self {

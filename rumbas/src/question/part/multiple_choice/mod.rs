@@ -14,7 +14,7 @@ pub mod choose_multiple;
 pub mod choose_one;
 pub mod match_answers;
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
@@ -23,7 +23,7 @@ pub enum MultipleChoiceAnswerData {
     NumbasLike(Box<MultipleChoiceAnswerDataNumbasLike>),
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
@@ -32,7 +32,7 @@ pub struct MultipleChoiceAnswerDataNumbasLike {
     pub feedback: Noneable<Vec<TranslatableString>>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixRowPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixRowPrimitive(pub Vec<Primitive>);
@@ -46,7 +46,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixRowInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixRow(pub Vec<TranslatableString>);
@@ -66,7 +66,7 @@ impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for M
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatrixPrimitiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatrixPrimitive(pub Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
@@ -138,7 +138,7 @@ impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
 
 impl_to_numbas!(Primitive);
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswer {

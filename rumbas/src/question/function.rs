@@ -7,7 +7,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Function {
@@ -39,7 +39,7 @@ impl ToRumbas<Function> for numbas::question::function::Function {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "language")]
@@ -82,14 +82,14 @@ impl ToRumbas<FunctionDefinition> for numbas::question::function::FunctionDefini
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionJMEInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FunctionDefinitionJME {
     pub definition: JMETranslatableString,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionJavascriptInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FunctionDefinitionJavascript {
