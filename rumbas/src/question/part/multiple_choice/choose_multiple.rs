@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use std::convert::Into;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartChooseMultipleInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartChooseMultiple {

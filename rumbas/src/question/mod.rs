@@ -36,7 +36,7 @@ use variable::VariableRepresentation;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Question {
@@ -184,7 +184,7 @@ impl QuestionInput {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionFileTypeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]

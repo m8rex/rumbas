@@ -15,6 +15,12 @@ pub struct TemplateFile {
     pub data: HashMap<String, MyYamlValue>,
 }
 
+impl Examples for TemplateFileInputEnum {
+    fn examples() -> Vec<Self> {
+        vec![] // TODO
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyYamlValue(pub serde_yaml::Value);
 

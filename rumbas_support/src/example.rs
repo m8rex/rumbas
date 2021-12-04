@@ -487,9 +487,4 @@ mod box_test {
     }
 }
 
-impl Examples for numbas::jme::JMEString {
-    fn examples() -> Vec<Self> {
-        // TODO
-        vec!["x^5".to_string().try_into().unwrap()]
-    }
-}
+impl_examples!(numbas::jme::JMEString: vec!["x^5".to_string().try_into().unwrap()]);

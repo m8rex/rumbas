@@ -17,7 +17,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticExamInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 /// A Diagnostic Exam
@@ -132,7 +132,7 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 /// Information needed for a diagnostic test
@@ -174,7 +174,7 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticScriptInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -216,7 +216,7 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LearningObjectiveInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A Learning Objective
@@ -252,7 +252,7 @@ impl ToRumbas<LearningObjective>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LearningTopicInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A learning Topic

@@ -6,7 +6,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // TODO: maybe translatable? So different text's can be set for different languages?
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PreambleInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Preamble {

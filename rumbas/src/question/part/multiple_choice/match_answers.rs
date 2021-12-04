@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use std::convert::Into;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartMatchAnswersWithItemsInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartMatchAnswersWithItems {
@@ -196,7 +196,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswerWithItemsDisplayInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(tag = "display")]
@@ -240,7 +240,7 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswerDataInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(tag = "type")]
@@ -251,7 +251,7 @@ pub enum MultipleChoiceMatchAnswerData {
     NumbasLike(Box<MultipleChoiceMatchAnswerDataNumbasLike>),
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
@@ -260,7 +260,7 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
     pub marks: VariableValued<Vec<Vec<Primitive>>>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswersInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswers {
@@ -270,7 +270,7 @@ pub struct MultipleChoiceMatchAnswers {
     pub items: Vec<MatchAnswersItem>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersItemInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatchAnswersItem {
@@ -279,7 +279,7 @@ pub struct MatchAnswersItem {
     pub answer_marks: Vec<MatchAnswersItemMarks>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersItemMarksInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatchAnswersItemMarks {

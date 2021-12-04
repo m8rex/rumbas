@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalExamInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 /// An Exam

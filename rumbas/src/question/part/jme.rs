@@ -16,7 +16,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartJMEInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartJME {
@@ -118,7 +118,7 @@ macro_rules! create_answer_simplification {
             $(#[$inner:meta])*
             $name: ident: $numbas_name: ident: $default: ident: $partofall: expr
         ),*) => {
-        #[derive(Input, Overwrite, RumbasCheck)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
         #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
         pub struct $struct {
@@ -227,7 +227,7 @@ macro_rules! create_answer_display_type {
             $(#[$inner:meta])*
             $name: ident: $numbas_name: ident: $default: ident
         ),*) => {
-        #[derive(Input, Overwrite, RumbasCheck)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
         #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
         pub struct $struct {
@@ -295,7 +295,7 @@ create_answer_display_type! {
     matrices_without_parentheses: MatricesWithoutParentheses: jme_display_bare_matrices
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeDataFloatInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CheckingTypeDataFloat {
@@ -318,7 +318,7 @@ impl
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeDataNaturalInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct CheckingTypeDataNatural {
@@ -333,7 +333,7 @@ impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for Check
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -397,7 +397,7 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMERestrictionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMERestriction {
@@ -457,7 +457,7 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEStringRestrictionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEStringRestriction {
@@ -487,7 +487,7 @@ impl ToRumbas<JMEStringRestriction> for numbas::question::part::jme::JMEStringRe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEPatternRestrictionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEPatternRestriction {
@@ -519,7 +519,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEValueGeneratorInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMEValueGenerator {

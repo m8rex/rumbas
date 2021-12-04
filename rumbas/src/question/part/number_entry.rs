@@ -12,7 +12,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartNumberEntryInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartNumberEntry {
@@ -93,7 +93,7 @@ impl ToRumbas<QuestionPartNumberEntry>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
@@ -103,7 +103,7 @@ pub enum NumberEntryAnswer {
 }
 
 // TODO, better (add toRumbas etc)
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerRangeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct NumberEntryAnswerRange {
@@ -153,7 +153,7 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "AnswerStyleInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub enum AnswerStyle {
