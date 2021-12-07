@@ -68,6 +68,12 @@ impl Default for JMEString {
     }
 }
 
+impl JMEString {
+    pub fn is_empty(&self) -> bool {
+        self.s.is_empty()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
@@ -114,6 +120,12 @@ impl Default for EmbracedJMEString {
             s: String::new(),
             asts: None,
         }
+    }
+}
+
+impl EmbracedJMEString {
+    pub fn is_empty(&self) -> bool {
+        self.s.is_empty()
     }
 }
 
@@ -164,6 +176,12 @@ impl Default for ContentAreaString {
             s: String::new(),
             asts: None,
         }
+    }
+}
+
+impl ContentAreaString {
+    pub fn is_empty(&self) -> bool {
+        self.s.is_empty()
     }
 }
 
