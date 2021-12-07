@@ -119,6 +119,13 @@ impl<T: std::clone::Clone> Noneable<T> {
             Noneable::NotNone(nn) => nn.clone(),
         }
     }
+    #[inline]
+    pub fn unwrap_or_else<F: FnOnce() -> T>(self, f: F) -> T {
+        match self {
+            Noneable::NotNone(x) => x,
+            Noneable::None => f(),
+        }
+    }
 }
 
 impl<T> Noneable<T> {

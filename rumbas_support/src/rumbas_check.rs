@@ -82,7 +82,6 @@ impl_rumbas_check!(numbas::support::answer_style::AnswerStyle);
 impl_rumbas_check!(numbas::question::part::match_answers::MultipleChoiceMatrix);
 impl_rumbas_check!(numbas::support::primitive::Primitive);
 impl_rumbas_check!(numbas::question::function::FunctionType);
-impl_rumbas_check!(numbas::question::custom_part_type::CustomPartTypeSetting);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct RumbasCheckResult {

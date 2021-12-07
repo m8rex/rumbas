@@ -111,7 +111,6 @@ pub enum CustomPartAvailability {
 
 // TODO: other
 // https://docs.numbas.org.uk/en/latest/custom-part-types/reference.html?highlight=Custom#setting-types
-
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "input_type")]
 pub enum CustomPartTypeSetting {
@@ -133,73 +132,73 @@ pub enum CustomPartTypeSetting {
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingSharedData {
     /// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting, but doesn’t need to be very descriptive - the label can do that.
-    name: String,
+    pub name: String,
     /// The label shown next to the setting in the question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.
-    label: String,
+    pub label: String,
     /// The address of documentation explaining this setting in further depth.
-    help_url: Option<String>,
+    pub help_url: Option<String>,
     /// Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.
-    hint: String,
+    pub hint: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingString {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     #[serde(rename = "subvars")]
     /// If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.
-    evaluate_enclosed_expressions: bool,
+    pub evaluate_enclosed_expressions: bool,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: String,
+    pub default_value: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingMathematicalExpression {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     #[serde(rename = "subvars")]
     ///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.
-    evaluate_enclosed_expressions: bool,
+    pub evaluate_enclosed_expressions: bool,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: EmbracedJMEString,
+    pub default_value: EmbracedJMEString,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingCode {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: JMEString,
-    evaluate: bool,
+    pub default_value: JMEString,
+    pub evaluate: bool,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingCheckBox {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: bool,
+    pub default_value: bool,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingDropDown {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: Primitive,
-    choices: Vec<CustomPartTypeSettingDropDownChoice>,
+    pub default_value: Primitive,
+    pub choices: Vec<CustomPartTypeSettingDropDownChoice>,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingDropDownChoice {
-    value: Primitive,
-    label: Primitive,
+    pub value: Primitive,
+    pub label: Primitive,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingPercentage {
     #[serde(flatten)]
-    shared_data: CustomPartTypeSettingSharedData,
+    pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    default_value: Primitive,
+    pub default_value: Primitive,
 }
