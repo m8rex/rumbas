@@ -65,9 +65,10 @@ pub enum MatchAnswersWithChoicesLayoutType {
 }
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+/// Define which choices are available to be picked. If Custom expression is selected, give either a list of lists of boolean values, or a matrix with as many rows as the part has choices and as many columns as the part has answers. Any non-zero value in the matrix indicates that the corresponding choice-answer pair should be available to the student.
 pub struct MatchAnswersWithChoicesLayout {
-    r#type: MatchAnswersWithChoicesLayoutType,
-    expression: String,
+    pub r#type: MatchAnswersWithChoicesLayoutType,
+    pub expression: String, // TODO: expression only needed for custom type?
 }
 
 /* TODO: remove */

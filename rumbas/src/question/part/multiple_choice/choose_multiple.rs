@@ -31,13 +31,11 @@ question_part_type! {
         should_select_at_most: Noneable<usize>,
         columns: usize,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type: numbas::question::part::match_answers::MultipleChoiceWarningType
+        wrong_nb_answers_warning_type: crate::question::part::multiple_choice::match_answers::MultipleChoiceWarningType
         //min_marks & max_marks?
         //TODO other?
     }
 }
-impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
-impl_to_rumbas!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 
 impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultiple>
     for QuestionPartChooseMultiple

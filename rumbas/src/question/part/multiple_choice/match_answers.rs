@@ -9,8 +9,6 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
-use numbas::question::part::match_answers::MatchAnswersWithChoicesLayout;
-use numbas::question::part::match_answers::MultipleChoiceWarningType;
 use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
@@ -131,7 +129,7 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                         .map(|v| v.0).to_rumbas()
                 ,
                 display: self.display_type.to_rumbas(),
-                layout: self.layout.clone(),
+                layout: self.layout.to_rumbas(),
                 wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
             }
         }
@@ -285,4 +283,107 @@ pub struct MatchAnswersItem {
 pub struct MatchAnswersItemMarks {
     pub marks: Primitive,
     pub answer: TranslatableString,
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "MultipleChoiceWarningTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum MultipleChoiceWarningType {
+    None,
+    Prevent,
+}
+
+impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceWarningType>
+    for MultipleChoiceWarningType
+{
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::part::match_answers::MultipleChoiceWarningType {
+        match self {
+            Self::None => numbas::question::part::match_answers::MultipleChoiceWarningType::None,
+            Self::Prevent => {
+                numbas::question::part::match_answers::MultipleChoiceWarningType::Prevent
+            }
+        }
+    }
+}
+
+impl ToRumbas<MultipleChoiceWarningType>
+    for numbas::question::part::match_answers::MultipleChoiceWarningType
+{
+    fn to_rumbas(&self) -> MultipleChoiceWarningType {
+        match self {
+            Self::None => MultipleChoiceWarningType::None,
+            Self::Prevent => MultipleChoiceWarningType::Prevent,
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "MatchAnswersWithChoicesLayoutTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum MatchAnswersWithChoicesLayoutType {
+    All,
+    LowerTriangle,
+}
+
+impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType>
+    for MatchAnswersWithChoicesLayoutType
+{
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType {
+        match self {
+            Self::All => numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::All,
+            Self::LowerTriangle => {
+                numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::LowerTriangle
+            }
+        }
+    }
+}
+
+impl ToRumbas<MatchAnswersWithChoicesLayoutType>
+    for numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType
+{
+    fn to_rumbas(&self) -> MatchAnswersWithChoicesLayoutType {
+        match self {
+            Self::All => MatchAnswersWithChoicesLayoutType::All,
+            Self::LowerTriangle => MatchAnswersWithChoicesLayoutType::LowerTriangle,
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "MatchAnswersWithChoicesLayoutInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+pub struct MatchAnswersWithChoicesLayout {
+    r#type: MatchAnswersWithChoicesLayoutType,
+}
+
+impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesLayout>
+    for MatchAnswersWithChoicesLayout
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
+        numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
+            r#type: self.r#type.to_numbas(locale),
+            expression: String::new(),
+        }
+    }
+}
+
+impl ToRumbas<MatchAnswersWithChoicesLayout>
+    for numbas::question::part::match_answers::MatchAnswersWithChoicesLayout
+{
+    fn to_rumbas(&self) -> MatchAnswersWithChoicesLayout {
+        MatchAnswersWithChoicesLayout {
+            r#type: self.r#type.to_rumbas(),
+        }
+    }
 }
