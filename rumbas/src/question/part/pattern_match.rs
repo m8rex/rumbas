@@ -21,7 +21,7 @@ question_part_type! {
         partial_credit: f64,
         pattern: TranslatableString, //TODO: type
         display_answer: TranslatableString,
-        match_mode: numbas::question::part::pattern_match::PatternMatchMode
+        match_mode: PatternMatchMode
     }
 }
 
@@ -44,7 +44,6 @@ impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
         }
     }
 }
-impl_to_numbas!(numbas::question::part::pattern_match::PatternMatchMode);
 
 impl ToRumbas<QuestionPartPatternMatch>
     for numbas::question::part::pattern_match::QuestionPartPatternMatch
@@ -66,8 +65,35 @@ impl ToRumbas<QuestionPartPatternMatch>
                         .map(|d| d.to_string())
                         .unwrap_or_else(|| self.answer.to_string())
                         .to_rumbas(),
-                match_mode: self.match_mode
+                match_mode: self.match_mode.to_rumbas()
             }
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "PatternMatchModeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum PatternMatchMode {
+    Regex,
+    Exact,
+}
+
+impl ToNumbas<numbas::question::part::pattern_match::PatternMatchMode> for PatternMatchMode {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::pattern_match::PatternMatchMode {
+        match self {
+            Self::Exact => numbas::question::part::pattern_match::PatternMatchMode::Exact,
+            Self::Regex => numbas::question::part::pattern_match::PatternMatchMode::Regex,
+        }
+    }
+}
+
+impl ToRumbas<PatternMatchMode> for numbas::question::part::pattern_match::PatternMatchMode {
+    fn to_rumbas(&self) -> PatternMatchMode {
+        match self {
+            Self::Exact => PatternMatchMode::Exact,
+            Self::Regex => PatternMatchMode::Regex,
         }
     }
 }
