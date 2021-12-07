@@ -94,7 +94,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_examples",
-                    f.ident.as_ref().map(|v| v.to_string()).unwrap(),
+                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -106,7 +106,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_iterator",
-                    f.ident.as_ref().map(|v| v.to_string()).unwrap(),
+                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -118,7 +118,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_option",
-                    f.ident.as_ref().map(|v| v.to_string()).unwrap(),
+                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -380,5 +380,14 @@ pub fn impl_for_tuple(tup: syn::TypeTuple) -> proc_macro2::TokenStream {
                     result
             }
         }
+    }
+}
+
+fn clean_ident_name(ident: &syn::Ident) -> String {
+    let mut s = ident.to_string();
+    if s.starts_with("r#") {
+        s.split_off(2)
+    } else {
+        s
     }
 }
