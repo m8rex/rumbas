@@ -1,5 +1,6 @@
+use crate::jme::JMEString;
 use crate::question::part::QuestionPartSharedData;
-use crate::support::primitive::{Primitive, SafeNatural, VariableValued};
+use crate::support::primitive::{SafeNatural, VariableValued};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -10,7 +11,7 @@ pub struct QuestionPartMatrix {
     #[serde(flatten)]
     pub part_data: QuestionPartSharedData,
     #[serde(rename = "correctAnswer")]
-    pub correct_answer: Primitive,
+    pub correct_answer: JMEString,
     #[serde(rename = "correctAnswerFractions")]
     pub correct_answer_fractions: bool,
     #[serde(rename = "numRows")]

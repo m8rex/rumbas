@@ -2,7 +2,6 @@ use crate::jme::EmbracedJMEString;
 use crate::jme::JMENotesString;
 use crate::jme::JMEString;
 use crate::support::answer_style::AnswerStyle;
-use crate::support::primitive::Primitive;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
@@ -185,14 +184,14 @@ pub struct CustomPartTypeSettingDropDown {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    pub default_value: Primitive,
+    pub default_value: String,
     pub choices: Vec<CustomPartTypeSettingDropDownChoice>,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingDropDownChoice {
-    pub value: Primitive,
-    pub label: Primitive,
+    pub value: String,
+    pub label: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -200,5 +199,5 @@ pub struct CustomPartTypeSettingPercentage {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
     /// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
-    pub default_value: Primitive,
+    pub default_value: String,
 }
