@@ -1,5 +1,5 @@
+use crate::jme::EmbracedJMEString;
 use crate::question::part::QuestionPartSharedData;
-use crate::support::primitive::Primitive;
 use crate::support::primitive::SafeFloat;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -13,10 +13,14 @@ pub struct QuestionPartPatternMatch {
     #[serde(rename = "caseSensitive")]
     pub case_sensitive: Option<bool>,
     #[serde(rename = "partialCredit")]
+    /// Partial credit for answer not matching case
     pub partial_credit: Option<SafeFloat>,
-    pub answer: Primitive,
+    /// The text or pattern the student must match.
+    /// When Match test is Regular expression, this is a regular expression defining the strings to be accepted as correct. If there are several valid answers, separate them with a | character. If you’re using the full regular expression functionality, note that ^ and $ are automatically added to the start and end of the answer pattern to ensure that the student’s whole answer matches the pattern.
+    pub answer: EmbracedJMEString,
     #[serde(rename = "displayAnswer")]
-    pub display_answer: Option<Primitive>,
+    // Only a value when Regex pattern mode
+    pub display_answer: Option<EmbracedJMEString>,
     #[serde(rename = "matchMode")]
     pub match_mode: PatternMatchMode,
 }
@@ -24,7 +28,7 @@ pub struct QuestionPartPatternMatch {
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
 pub enum PatternMatchMode {
     #[serde(rename = "regex")]
-    Regex,
+    Regex, // TODO: only here we need the display_answer
     #[serde(rename = "exact")]
-    Exact, //TODO: check all options
+    Exact,
 }

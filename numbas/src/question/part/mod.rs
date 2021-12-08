@@ -1,6 +1,6 @@
 use crate::jme::ContentAreaString;
 use crate::jme::JMENotesString;
-use crate::support::primitive::Primitive;
+use crate::support::primitive::Number;
 use crate::support::serde_functions::from_str_optional;
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -106,7 +106,7 @@ pub struct QuestionPartSharedData {
     /// A content area used to prompt the student for an answer.
     pub prompt: Option<ContentAreaString>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
     /// The number of marks to award for answering the part correctly.
-    pub marks: Option<Primitive>,
+    pub marks: Option<Number>,
     /// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
     pub steps: Option<Vec<QuestionPart>>,
     #[serde(
@@ -165,7 +165,7 @@ pub struct QuestionPartCustom {
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
-    Code(Primitive),
+    Code(String),
 }
 
 impl std::convert::From<CustomPartInputTypeValue> for String {

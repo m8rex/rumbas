@@ -2,6 +2,7 @@ use crate::jme::JMEString;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
+use std::convert::TryInto;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
 //TODO: advicethreshold?
@@ -95,9 +96,18 @@ impl<T> VariableValued<T> {
     }
 }
 
+impl std::convert::From<VariableValued<f64>> for Primitive {
+    fn from(v: VariableValued<f64>) -> Self {
+        match v {
+            VariableValued::Value(f) => Primitive::Float(f),
+            VariableValued::Variable(jme_s) => Primitive::String(jme_s.to_string()),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
-pub enum Primitive {
+enum Primitive {
     String(String),
     Natural(usize),
     Float(f64),
@@ -105,7 +115,7 @@ pub enum Primitive {
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
-pub enum BooledPrimitive {
+enum BooledPrimitive {
     String(String),
     Natural(usize),
     Float(f64),
@@ -136,6 +146,58 @@ impl std::fmt::Display for Primitive {
             Primitive::String(s) => write!(f, "{}", s),
             Primitive::Natural(n) => write!(f, "{}", n),
             Primitive::Float(fl) => write!(f, "{}", fl),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(try_from = "Primitive")]
+#[serde(untagged)]
+pub enum Number {
+    Integer(isize),
+    Float(f64),
+}
+
+impl std::convert::From<usize> for Number {
+    fn from(u: usize) -> Self {
+        Self::Integer(u as isize)
+    }
+}
+
+impl std::convert::From<isize> for Number {
+    fn from(i: isize) -> Self {
+        Self::Integer(i)
+    }
+}
+
+impl std::convert::From<f64> for Number {
+    fn from(f: f64) -> Self {
+        Self::Float(f)
+    }
+}
+
+impl std::convert::TryFrom<String> for Number {
+    type Error = &'static str;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let float: Result<f64, _> = value.parse();
+        if let Ok(f) = float {
+            return Ok(Number::Float(f));
+        }
+        let integer: Result<isize, _> = value.parse();
+        if let Ok(i) = integer {
+            return Ok(Number::Integer(i));
+        }
+        Err("String value can't be parsed as a Number")
+    }
+}
+
+impl std::convert::TryFrom<Primitive> for Number {
+    type Error = &'static str;
+    fn try_from(value: Primitive) -> Result<Self, Self::Error> {
+        match value {
+            Primitive::Natural(n) => Ok(n.into()),
+            Primitive::Float(f) => Ok(f.into()),
+            Primitive::String(s) => s.try_into(),
         }
     }
 }

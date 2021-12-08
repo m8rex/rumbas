@@ -28,7 +28,7 @@ pub struct NumbasDefaults {
     pub number_entry_correct_answer_style: crate::support::answer_style::AnswerStyle,
     pub length_restriction_length: usize,
     pub number_entry_fractions_must_be_reduced: bool,
-    pub number_entry_partial_credit_if_fraction_not_reduced: crate::support::primitive::Primitive,
+    pub number_entry_partial_credit_if_fraction_not_reduced: crate::support::primitive::Number,
     pub number_entry_hint_fraction: bool,
 
     pub choose_one_has_to_select_option: bool,
@@ -120,8 +120,9 @@ pub const DEFAULTS: NumbasDefaults = NumbasDefaults {
     pattern_match_partial_credit: crate::support::primitive::SafeFloat(0.0),
 
     number_entry_fractions_must_be_reduced: false,
-    number_entry_partial_credit_if_fraction_not_reduced:
-        crate::support::primitive::Primitive::Natural(0),
+    number_entry_partial_credit_if_fraction_not_reduced: crate::support::primitive::Number::Integer(
+        0,
+    ),
     number_entry_hint_fraction: true,
 
     jme_single_letter_variables: false,
