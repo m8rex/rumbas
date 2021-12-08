@@ -1,4 +1,5 @@
 use crate::value::{Value, ValueType};
+use std::convert::Into;
 use std::convert::TryInto;
 
 pub trait Examples {
@@ -488,3 +489,4 @@ mod box_test {
 }
 
 impl_examples!(numbas::jme::JMEString: vec!["x^5".to_string().try_into().unwrap()]);
+impl_examples!(numbas::support::primitive::Number: vec![1usize.into(), 1.5.into()]);

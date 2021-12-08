@@ -13,7 +13,7 @@ pub trait ToRumbas<RumbasType>: Clone {
 }
 
 impl_to_rumbas!(String, bool, f64, usize, [f64; 2]);
-impl_to_rumbas!(numbas::support::primitive::Primitive);
+impl_to_rumbas!(numbas::support::primitive::Number);
 impl_to_rumbas!(numbas::jme::JMEString);
 impl_to_rumbas!(numbas::jme::EmbracedJMEString);
 impl_to_rumbas!(numbas::jme::ContentAreaString);
@@ -31,6 +31,12 @@ impl<K: Clone + std::hash::Hash + std::cmp::Eq, S, O: ToRumbas<S>>
         self.iter()
             .map(|(k, v)| (k.to_owned(), v.to_rumbas()))
             .collect()
+    }
+}
+
+impl<K, L: ToRumbas<K>, S, O: ToRumbas<S>> ToRumbas<(K, S)> for (L, O) {
+    fn to_rumbas(&self) -> (K, S) {
+        (self.0.to_rumbas(), self.1.to_rumbas())
     }
 }
 
@@ -78,11 +84,11 @@ impl ToRumbas<ContentAreaTranslatableString> for ContentAreaString {
 
 pub fn extract_part_common_marks(
     pd: &numbas::question::part::QuestionPartSharedData,
-) -> numbas::support::primitive::Primitive {
+) -> numbas::support::primitive::Number {
     pd.marks
         .clone()
-        .unwrap_or(numbas::support::primitive::Primitive::Natural(
-            DEFAULTS.part_common_marks,
+        .unwrap_or(numbas::support::primitive::Number::Integer(
+            DEFAULTS.part_common_marks as isize,
         ))
 }
 

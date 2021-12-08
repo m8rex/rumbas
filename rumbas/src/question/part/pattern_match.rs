@@ -2,12 +2,10 @@ use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::QuestionPart;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::support::to_numbas::ToNumbas;
-use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::TranslatableString;
+use crate::support::translatable::EmbracedJMETranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -19,8 +17,8 @@ question_part_type! {
     pub struct QuestionPartPatternMatch {
         case_sensitive: bool,
         partial_credit: f64,
-        pattern: TranslatableString, //TODO: type
-        display_answer: TranslatableString,
+        pattern: EmbracedJMETranslatableString,
+        display_answer: EmbracedJMETranslatableString,
         match_mode: PatternMatchMode
     }
 }
@@ -36,10 +34,8 @@ impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
             part_data: self.to_numbas(locale),
             case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
             partial_credit: Some(self.partial_credit.to_numbas(locale)),
-            answer: numbas::support::primitive::Primitive::String(self.pattern.to_numbas(locale)),
-            display_answer: Some(numbas::support::primitive::Primitive::String(
-                self.display_answer.to_numbas(locale),
-            )),
+            answer: self.pattern.to_numbas(locale),
+            display_answer: Some(self.display_answer.to_numbas(locale)),
             match_mode: self.match_mode.to_numbas(locale),
         }
     }
@@ -58,12 +54,12 @@ impl ToRumbas<QuestionPartPatternMatch>
                     self.partial_credit
                         .unwrap_or(DEFAULTS.pattern_match_partial_credit)
                         .0.to_rumbas(),
-                pattern: self.answer.to_string().to_rumbas(),
+                pattern: self.answer.to_rumbas(),
                 display_answer:
                     self.display_answer
                         .clone()
-                        .map(|d| d.to_string())
-                        .unwrap_or_else(|| self.answer.to_string())
+                        .map(|d| d)
+                        .unwrap_or_else(|| self.answer.clone())
                         .to_rumbas(),
                 match_mode: self.match_mode.to_rumbas()
             }

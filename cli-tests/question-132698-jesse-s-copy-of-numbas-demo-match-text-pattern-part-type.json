@@ -1,0 +1,142 @@
+{
+  "name": "Jesse's copy of Numbas demo: match text pattern part type",
+  "extensions": [],
+  "custom_part_types": [],
+  "resources": [],
+  "navigation": {
+    "allowregen": true,
+    "showfrontpage": false,
+    "preventleave": false
+  },
+  "question_groups": [
+    {
+      "pickingStrategy": "all-ordered",
+      "questions": [
+        {
+          "name": "Jesse's copy of Numbas demo: match text pattern part type",
+          "tags": [],
+          "metadata": {
+            "description": "<p>A demo of the match text pattern part and its options.</p>",
+            "licence": "Creative Commons Attribution 4.0 International"
+          },
+          "statement": "<p>The <em>match text pattern</em> part type asks the student to enter a short string of text. It is marked correct if it matches the given pattern, or if it exactly matches the expected string.</p>\n<p><em><a href=\"https://numbas.mathcentre.ac.uk/question/66183/numbas-demo-match-text-pattern/\" target=\"_blank\" rel=\"noopener noreferrer\">See this question on the public editor</a>.</em></p>",
+          "advice": "",
+          "rulesets": {},
+          "extensions": [],
+          "variables": {
+            "titlecase_pattern": {
+              "name": "titlecase_pattern",
+              "group": "Ungrouped variables",
+              "definition": "safe(\"(\\\\p{Lu}|\\\\p{N})(\\\\p{L}|\\\\p{P}|\\\\p{N})*(\\\\s+(\\\\p{Lu}|\\\\p{N})(\\\\p{L}|\\\\p{P}|\\\\p{N})*)*\")",
+              "description": "<p>The regular expression for the title case part. The <code>\\p</code> escape characters select <a href=\"https://unicode.org/reports/tr18/#General_Category_Property\">unicode character properties</a>.</p>",
+              "templateType": "anything"
+            }
+          },
+          "variablesTest": { "condition": "", "maxRuns": 100 },
+          "ungrouped_variables": ["titlecase_pattern"],
+          "variable_groups": [],
+          "functions": {},
+          "preamble": { "js": "", "css": "" },
+          "parts": [
+            {
+              "type": "patternmatch",
+              "useCustomName": true,
+              "customName": "Exact match",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p><em>In this part, the student's string must exactly match the expected string.</em></p>\n<p>Write <strong>e-assessment</strong>.</p>",
+              "answer": "e-assessment",
+              "displayAnswer": "e-assessment",
+              "matchMode": "exact"
+            },
+            {
+              "type": "patternmatch",
+              "useCustomName": true,
+              "customName": "Require letter case to match",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p><em>You can require that the case of the characters in the student's answer matches the expected answer.</em></p>\n<p>Write \"Numbas\".</p>\n<p><em>Try <code>Numbas</code> and <code>NUMBAS</code>.</em></p>",
+              "answer": "Numbas",
+              "displayAnswer": "Numbas",
+              "caseSensitive": true,
+              "partialCredit": "50",
+              "matchMode": "exact"
+            },
+            {
+              "type": "patternmatch",
+              "useCustomName": true,
+              "customName": "Match a regular expression pattern",
+              "marks": 1,
+              "scripts": {},
+              "customMarkingAlgorithm": "",
+              "extendBaseMarkingAlgorithm": true,
+              "unitTests": [],
+              "showCorrectAnswer": true,
+              "showFeedbackIcon": true,
+              "variableReplacements": [],
+              "variableReplacementStrategy": "originalfirst",
+              "nextParts": [],
+              "suggestGoingBack": false,
+              "adaptiveMarkingPenalty": 0,
+              "exploreObjective": null,
+              "prompt": "<p><em>You can accept any string which matches a given regular expression pattern.</em></p>\n<p>Write a headline in title case.</p>\n<p><em>Try <code>Numbas Marks Answer Correctly</code>, <code>Student informed of mistake</code> and <code>Family von Trapp Outraged.</code></em></p>",
+              "answer": "{titlecase_pattern}",
+              "displayAnswer": "Example Answer Displayed Next To Student's Answer",
+              "caseSensitive": true,
+              "partialCredit": 0,
+              "matchMode": "regex"
+            }
+          ],
+          "partsMode": "all",
+          "maxMarks": 0,
+          "objectives": [],
+          "penalties": [],
+          "objectiveVisibility": "always",
+          "penaltyVisibility": "always",
+          "contributors": [
+            {
+              "name": "Christian Lawson-Perfect",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+            },
+            {
+              "name": "Jesse Hoobergs",
+              "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/12130/"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Christian Lawson-Perfect",
+      "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/7/"
+    },
+    {
+      "name": "Jesse Hoobergs",
+      "profile_url": "https://numbas.mathcentre.ac.uk/accounts/profile/12130/"
+    }
+  ]
+}

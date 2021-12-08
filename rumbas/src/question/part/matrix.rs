@@ -6,7 +6,6 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::variable_valued::VariableValued;
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -17,7 +16,7 @@ question_part_type! {
     #[input(name = "QuestionPartMatrixInput")]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
     pub struct QuestionPartMatrix {
-        correct_answer: Primitive,
+        correct_answer: numbas::jme::JMEString,
         dimensions: QuestionPartMatrixDimensions,
 
         /// If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.

@@ -79,8 +79,7 @@ impl_rumbas_check!(numbas::question::part::match_answers::MatchAnswersWithChoice
 impl_rumbas_check!(numbas::question::part::match_answers::MultipleChoiceWarningType);
 impl_rumbas_check!(numbas::question::part::pattern_match::PatternMatchMode);
 impl_rumbas_check!(numbas::support::answer_style::AnswerStyle);
-impl_rumbas_check!(numbas::question::part::match_answers::MultipleChoiceMatrix);
-impl_rumbas_check!(numbas::support::primitive::Primitive);
+impl_rumbas_check!(numbas::support::primitive::Number);
 impl_rumbas_check!(numbas::question::function::FunctionType);
 
 #[derive(Debug, Clone, PartialEq)]

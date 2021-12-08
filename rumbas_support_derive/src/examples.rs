@@ -128,12 +128,12 @@ fn struct_body(
         #(
             let mut #field_name_examples = <Value<<#field_types as InputInverse>::Input>>::examples();
         )*
-        let mut max_examples = 0;
+        let mut max_examples_number = 0;
         #(
-            max_examples = std::cmp::max(max_examples, #field_name_examples.len());
+            max_examples_number = std::cmp::max(max_examples_number, #field_name_examples.len());
         )*
         #(
-            while #field_name_examples.len() < max_examples {
+            while #field_name_examples.len() < max_examples_number {
                 #field_name_examples.extend(<Value<<#field_types as InputInverse>::Input>>::examples());
             }
             let mut #field_name_iterators = #field_name_examples.into_iter();
@@ -350,12 +350,12 @@ pub fn impl_for_tuple(tup: syn::TypeTuple) -> proc_macro2::TokenStream {
                     #(
                         let mut #field_name_examples = <#field_types>::examples();
                     )*
-                    let mut max_examples = 0;
+                    let mut max_examples_number = 0;
                     #(
-                        max_examples = std::cmp::max(max_examples, #field_name_examples.len());
+                        max_examples_number = std::cmp::max(max_examples_number, #field_name_examples.len());
                     )*
                     #(
-                        while #field_name_examples.len() < max_examples {
+                        while #field_name_examples.len() < max_examples_number {
                             #field_name_examples.extend(<#field_types>::examples());
                         }
                         let mut #field_name_iterators = #field_name_examples.into_iter();

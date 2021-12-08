@@ -1,12 +1,11 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionPart;
-use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::support::primitive::Primitive;
+use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -23,7 +22,7 @@ question_part_type! {
 
         display_correct_in_style: AnswerStyle,
         fractions_must_be_reduced: bool,
-        partial_credit_if_fraction_not_reduced: Primitive,
+        partial_credit_if_fraction_not_reduced: numbas::support::primitive::Number,
 
         hint_fraction: bool
 
@@ -48,7 +47,8 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
             fractions_must_be_reduced: Some(self.fractions_must_be_reduced.to_numbas(locale)),
             partial_credit_if_fraction_not_reduced: Some(
                 self.partial_credit_if_fraction_not_reduced
-                    .to_numbas(locale),
+                    .to_numbas(locale)
+                    .into(),
             ),
             precision: None,           //TODO
             show_precision_hint: None, //TODO
@@ -98,7 +98,7 @@ impl ToRumbas<QuestionPartNumberEntry>
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
-    Normal(FileString), //TODO: filestrings?
+    Normal(JMEString),
     Range(NumberEntryAnswerRange),
 }
 
@@ -107,8 +107,8 @@ pub enum NumberEntryAnswer {
 #[input(name = "NumberEntryAnswerRangeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct NumberEntryAnswerRange {
-    pub from: FileString,
-    pub to: FileString,
+    pub from: JMEString,
+    pub to: JMEString,
 }
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
@@ -119,17 +119,13 @@ impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for N
         match self {
             NumberEntryAnswer::Normal(f) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::Answer {
-                    answer: numbas::support::primitive::Primitive::String(f.to_numbas(locale)),
+                    answer: f.to_numbas(locale),
                 }
             }
             NumberEntryAnswer::Range(range) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
-                    min_value: numbas::support::primitive::Primitive::String(
-                        range.from.to_numbas(locale),
-                    ),
-                    max_value: numbas::support::primitive::Primitive::String(
-                        range.to.to_numbas(locale),
-                    ),
+                    min_value: range.from.to_numbas(locale),
+                    max_value: range.to.to_numbas(locale),
                 }
             }
         }
@@ -143,11 +139,11 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
                 min_value,
                 max_value,
             } => NumberEntryAnswer::Range(NumberEntryAnswerRange {
-                from: min_value.to_string().to_rumbas(),
-                to: max_value.to_string().to_rumbas(),
+                from: min_value.to_rumbas(),
+                to: max_value.to_rumbas(),
             }),
             numbas::question::part::number_entry::NumberEntryAnswerType::Answer { answer } => {
-                NumberEntryAnswer::Normal(answer.to_string().to_rumbas())
+                NumberEntryAnswer::Normal(answer.to_rumbas())
             }
         }
     }
