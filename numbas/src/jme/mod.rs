@@ -164,6 +164,12 @@ impl EmbracedJMEString {
     pub fn is_empty(&self) -> bool {
         self.s.is_empty()
     }
+    pub fn new() -> Self {
+        Self {
+            s: String::new(),
+            asts: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]

@@ -12,7 +12,6 @@ use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -277,7 +276,7 @@ macro_rules! question_part_type {
     {
         $(#[$outer])*
         pub struct $struct {
-            pub marks: Primitive, // TODO: strict?
+            pub marks: numbas::support::primitive::Number,
             pub prompt: ContentAreaTranslatableString,
             pub use_custom_name: bool,
             pub custom_name: String, //TODO Translatable?

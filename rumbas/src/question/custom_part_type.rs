@@ -453,7 +453,8 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingPercentag
             shared_data: self.shared_data.to_numbas(locale),
             default_value: self
                 .default_value
-                .map(|n| n.into())
+                .clone()
+                .map(|n| n.to_string())
                 .unwrap_or_else(|| String::new().into()),
         }
     }
@@ -465,10 +466,14 @@ impl ToRumbas<CustomPartTypeSettingPercentage>
     fn to_rumbas(&self) -> CustomPartTypeSettingPercentage {
         CustomPartTypeSettingPercentage {
             shared_data: self.shared_data.to_rumbas(),
-            default_value: match self.default_value {
-                numbas::support::primitive::Primitive::Float(f) => Noneable::NotNone(f),
-                numbas::support::primitive::Primitive::Natural(f) => Noneable::NotNone(f as f64),
-                numbas::support::primitive::Primitive::String(s) => Noneable::None,
+            default_value: if self.default_value.is_empty() {
+                Noneable::None
+            } else {
+                Noneable::NotNone(
+                    self.default_value
+                        .parse()
+                        .expect("Floating point percentage in custom part type"),
+                )
             },
         }
     }

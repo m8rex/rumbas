@@ -10,7 +10,6 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -426,7 +425,7 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMELengthRestrictionInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct JMELengthRestriction {

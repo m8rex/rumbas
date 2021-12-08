@@ -1,3 +1,4 @@
+use crate::question::part::multiple_choice::MultipleChoiceMarkingMethod;
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionPart;
@@ -6,14 +7,15 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
-use crate::support::translatable::TranslatableString;
+use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::variable_valued::VariableValued;
 use numbas::defaults::DEFAULTS;
-use numbas::support::primitive::Primitive;
+use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
+use std::convert::TryInto;
 
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
@@ -28,14 +30,15 @@ question_part_type! {
         show_cell_answer_state: bool,
         should_select_at_least: usize,
         should_select_at_most: Noneable<usize>,
-        /// !FLATTENED
-        #[serde(flatten)]
         display: MatchAnswerWithItemsDisplay,
         layout: MatchAnswersWithChoicesLayout,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
-        wrong_nb_answers_warning_type: MultipleChoiceWarningType
-        //min_marks & max_marks?
-        //TODO wrong_nb_choices_warning:
+        wrong_nb_answers_warning_type: MultipleChoiceWarningType,
+        /// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
+        minimal_achieveable_marks: Noneable<usize>,
+        /// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
+        maximal_achieveable_marks: Noneable<usize>
+
         //TODO other?
     }
 }
@@ -75,7 +78,10 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
                                         i.answer_marks
                                             .iter()
                                             .find(|am| &am.answer == a)
-                                            .map_or_else(|| 0usize.into(), |v| v.marks.clone())
+                                            .map_or_else(
+                                                || "0".to_string().try_into().unwrap(),
+                                                |v| v.marks.clone(),
+                                            )
                                     })
                                     .collect::<Vec<_>>()
                             })
@@ -94,13 +100,13 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
             part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
-            min_marks: Some(0.into()),
-            max_marks: Some(0.into()),
+            min_marks: self.minimal_achieveable_marks.to_numbas(locale),
+            max_marks: self.maximal_achieveable_marks.to_numbas(locale),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             shuffle_choices: self.shuffle_items.to_numbas(locale),
             answers,
             choices,
-            wrong_nb_choices_warning: self.wrong_nb_answers_warning_type.to_numbas(locale),
+            wrong_nb_answers_warning: self.wrong_nb_answers_warning_type.to_numbas(locale),
             layout: self.layout.to_numbas(locale),
             show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
             marking_matrix,
@@ -130,7 +136,9 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                 ,
                 display: self.display_type.to_rumbas(),
                 layout: self.layout.to_rumbas(),
-                wrong_nb_answers_warning_type: self.wrong_nb_choices_warning.to_rumbas()
+                wrong_nb_answers_warning_type: self.wrong_nb_answers_warning.to_rumbas(),
+                minimal_achieveable_marks: self.min_marks.map(|v| v.0).to_rumbas(),
+                maximal_achieveable_marks: self.max_marks.map(|v| v.0).to_rumbas()
             }
         }
     }
@@ -196,13 +204,13 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswerWithItemsDisplayInput")]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
-#[serde(tag = "display")]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(tag = "type")]
 pub enum MatchAnswerWithItemsDisplay {
     #[serde(rename = "radio")]
     Radio,
     #[serde(rename = "check")]
-    Check,
+    Check(MatchAnswersWithChoicesDisplayCheck),
 }
 
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType>
@@ -210,11 +218,13 @@ impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisp
 {
     fn to_numbas(
         &self,
-        _locale: &str,
+        locale: &str,
     ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType {
         match self {
-            MatchAnswerWithItemsDisplay::Check => {
-                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check
+            MatchAnswerWithItemsDisplay::Check(c) => {
+                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check(
+                    c.to_numbas(locale),
+                )
             }
             MatchAnswerWithItemsDisplay::Radio => {
                 numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio
@@ -228,8 +238,8 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
 {
     fn to_rumbas(&self) -> MatchAnswerWithItemsDisplay {
         match self {
-            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check => {
-                MatchAnswerWithItemsDisplay::Check
+            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check(c) => {
+                MatchAnswerWithItemsDisplay::Check(c.to_rumbas())
             }
             numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio => {
                 MatchAnswerWithItemsDisplay::Radio
@@ -239,8 +249,38 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "MatchAnswersWithChoicesDisplayCheckInput")]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+pub struct MatchAnswersWithChoicesDisplayCheck {
+    marking_method: MultipleChoiceMarkingMethod,
+}
+
+impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck>
+    for MatchAnswersWithChoicesDisplayCheck
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
+        numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
+            marking_method: self.marking_method.to_numbas(locale),
+        }
+    }
+}
+
+impl ToRumbas<MatchAnswersWithChoicesDisplayCheck>
+    for numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck
+{
+    fn to_rumbas(&self) -> MatchAnswersWithChoicesDisplayCheck {
+        MatchAnswersWithChoicesDisplayCheck {
+            marking_method: self.marking_method.to_rumbas(),
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswerDataInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone)]
 #[serde(tag = "type")]
 pub enum MultipleChoiceMatchAnswerData {
     #[serde(rename = "item_based")]
@@ -253,9 +293,9 @@ pub enum MultipleChoiceMatchAnswerData {
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
-    pub answers: VariableValued<Vec<TranslatableString>>,
-    pub choices: VariableValued<Vec<TranslatableString>>,
-    pub marks: VariableValued<Vec<Vec<Primitive>>>,
+    pub answers: VariableValued<Vec<EmbracedJMETranslatableString>>,
+    pub choices: VariableValued<Vec<EmbracedJMETranslatableString>>,
+    pub marks: VariableValued<Vec<Vec<JMEString>>>,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
@@ -263,7 +303,7 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceMatchAnswers {
     /// Values of the answers
-    pub answers: Vec<TranslatableString>,
+    pub answers: Vec<EmbracedJMETranslatableString>,
     /// Items for which the answer can be selected
     pub items: Vec<MatchAnswersItem>,
 }
@@ -272,7 +312,7 @@ pub struct MultipleChoiceMatchAnswers {
 #[input(name = "MatchAnswersItemInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatchAnswersItem {
-    pub statement: TranslatableString,
+    pub statement: EmbracedJMETranslatableString,
     /// Map points to strings of answers ! use anchors in yaml
     pub answer_marks: Vec<MatchAnswersItemMarks>,
 }
@@ -281,8 +321,8 @@ pub struct MatchAnswersItem {
 #[input(name = "MatchAnswersItemMarksInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MatchAnswersItemMarks {
-    pub marks: Primitive,
-    pub answer: TranslatableString,
+    pub marks: JMEString,
+    pub answer: EmbracedJMETranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]

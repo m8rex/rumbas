@@ -84,4 +84,4 @@ impl_overwrite!(numbas::question::part::pattern_match::PatternMatchMode);
 impl_overwrite!(numbas::support::answer_style::AnswerStyle);
 impl_overwrite!(numbas::question::function::FunctionType);
 impl_overwrite!(numbas::question::custom_part_type::CustomPartTypeSetting);
-impl_overwrite!(numbas::support::primitive::Primitive);
+impl_overwrite!(numbas::support::primitive::Number);

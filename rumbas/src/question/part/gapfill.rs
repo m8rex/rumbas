@@ -4,7 +4,6 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use numbas::defaults::DEFAULTS;
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

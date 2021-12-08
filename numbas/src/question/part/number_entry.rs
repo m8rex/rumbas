@@ -1,6 +1,7 @@
+use crate::jme::JMEString;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::answer_style::AnswerStyle;
-use crate::support::primitive::{Number, SafeNatural, VariableValued};
+use crate::support::primitive::{Number, SafeNatural};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -48,12 +49,12 @@ pub enum CheckingType {
 pub enum NumberEntryAnswerType {
     MinMax {
         #[serde(rename = "minValue")]
-        min_value: VariableValued<Number>,
+        min_value: JMEString,
         #[serde(rename = "maxValue")]
-        max_value: VariableValued<Number>,
+        max_value: JMEString,
     },
     Answer {
-        answer: VariableValued<Number>,
+        answer: JMEString,
     },
 }
 

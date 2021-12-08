@@ -209,7 +209,7 @@ impl_input!(numbas::question::part::pattern_match::PatternMatchMode);
 impl_input!(numbas::support::answer_style::AnswerStyle);
 impl_input!(numbas::question::function::FunctionType);
 impl_input!(numbas::question::custom_part_type::CustomPartTypeSetting);
-impl_input!(numbas::support::primitive::Primitive);
+impl_input!(numbas::support::primitive::Number);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct InputCheckResult {
