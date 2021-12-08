@@ -1,10 +1,9 @@
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
-use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
-use crate::support::translatable::TranslatableString;
+use crate::support::translatable::EmbracedJMETranslatableString;
+use crate::support::translatable::JMETranslatableString;
 use crate::support::variable_valued::VariableValued;
-use numbas::support::primitive::Primitive;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -27,67 +26,17 @@ pub enum MultipleChoiceAnswerData {
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
-    pub answers: VariableValued<Vec<TranslatableString>>,
-    pub marks: VariableValued<Vec<Primitive>>,
-    pub feedback: Noneable<Vec<TranslatableString>>,
-}
-
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
-#[input(name = "MatrixRowPrimitiveInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRowPrimitive(pub Vec<Primitive>);
-
-impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRowPrimitive {
-    fn to_numbas(
-        &self,
-        _locale: &str,
-    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
-        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(self.0.clone())
-    }
-}
-
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
-#[input(name = "MatrixRowInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixRow(pub Vec<TranslatableString>);
-
-impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixRow {
-    fn to_numbas(
-        &self,
-        locale: &str,
-    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
-        numbas::question::part::match_answers::MultipleChoiceMatrix::Row(
-            self.0
-                .to_numbas(locale)
-                .into_iter()
-                .map(|a| a.into())
-                .collect(),
-        )
-    }
-}
-
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
-#[input(name = "MatrixPrimitiveInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
-pub struct MatrixPrimitive(pub Vec<VariableValued<Vec<numbas::support::primitive::Primitive>>>);
-
-impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceMatrix> for MatrixPrimitive {
-    fn to_numbas(
-        &self,
-        locale: &str,
-    ) -> numbas::question::part::match_answers::MultipleChoiceMatrix {
-        numbas::question::part::match_answers::MultipleChoiceMatrix::Matrix(
-            self.0.to_numbas(locale),
-        )
-    }
+    pub answers: VariableValued<Vec<EmbracedJMETranslatableString>>,
+    pub marks: VariableValued<Vec<JMETranslatableString>>,
+    pub feedback: Noneable<Vec<EmbracedJMETranslatableString>>,
 }
 
 fn extract_multiple_choice_answer_data(
-    answers: &numbas::support::primitive::VariableValued<Vec<String>>,
+    answers: &numbas::support::primitive::VariableValued<Vec<numbas::jme::EmbracedJMEString>>,
     marking_matrix: &Option<
-        numbas::support::primitive::VariableValued<Vec<numbas::support::primitive::Primitive>>,
+        numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
     >,
-    distractors: &Option<Vec<String>>,
+    distractors: &Option<Vec<numbas::jme::EmbracedJMEString>>,
 ) -> MultipleChoiceAnswerData {
     if let (
         numbas::support::primitive::VariableValued::Value(answer_options),
@@ -95,16 +44,16 @@ fn extract_multiple_choice_answer_data(
     ) = (answers.clone(), marking_matrix.clone())
     {
         let answers_data: Vec<_> = match distractors.clone() {
-            None => answer_options
-                .into_iter()
-                .zip(marking_matrix.into_iter())
-                .map(|(a, b)| (a, b, "".to_string()))
-                .collect(),
             Some(d) => answer_options
                 .into_iter()
                 .zip(marking_matrix.into_iter())
                 .zip(d.into_iter())
                 .map(|((a, b), c)| (a, b, c))
+                .collect(),
+            None => answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .map(|(a, b)| (a, b, numbas::jme::EmbracedJMEString::new()))
                 .collect(),
         };
         MultipleChoiceAnswerData::ItemBased(
@@ -112,7 +61,7 @@ fn extract_multiple_choice_answer_data(
                 .into_iter()
                 .map(|(statement, marks, feedback)| MultipleChoiceAnswer {
                     statement: statement.into(),
-                    marks,
+                    marks: marks.into(),
                     feedback: feedback.into(),
                 })
                 .collect(),
@@ -134,15 +83,48 @@ fn extract_multiple_choice_answer_data(
     }
 }
 
-impl_to_numbas!(numbas::question::part::match_answers::MultipleChoiceMatrix);
-
-impl_to_numbas!(Primitive);
-
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct MultipleChoiceAnswer {
-    pub statement: TranslatableString,
-    pub feedback: TranslatableString,
-    pub marks: Primitive, // TODO: variable valued?
+    pub statement: EmbracedJMETranslatableString,
+    pub feedback: EmbracedJMETranslatableString,
+    pub marks: JMETranslatableString,
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "MultipleChoiceMarkingMethodInput")]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Copy, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum MultipleChoiceMarkingMethod {
+    SumTickedCells,
+    ScorePerMatchedCell,
+    AllOrNothing,
+}
+
+impl ToRumbas<MultipleChoiceMarkingMethod>
+    for numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod
+{
+    fn to_rumbas(&self) -> MultipleChoiceMarkingMethod {
+        match self {
+            numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::SumTickedCells => MultipleChoiceMarkingMethod::SumTickedCells,
+            numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::ScorePerMatchedCell => MultipleChoiceMarkingMethod::ScorePerMatchedCell,
+            numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::AllOrNothing => MultipleChoiceMarkingMethod::AllOrNothing,
+        }
+    }
+}
+
+impl ToNumbas<numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod>
+    for MultipleChoiceMarkingMethod
+{
+    fn to_numbas(
+        &self,
+        _locale: &str,
+    ) -> numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod {
+        match self {
+            MultipleChoiceMarkingMethod::SumTickedCells => numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::SumTickedCells,
+            MultipleChoiceMarkingMethod::ScorePerMatchedCell => numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::ScorePerMatchedCell,
+            MultipleChoiceMarkingMethod::AllOrNothing => numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::AllOrNothing,
+        }
+    }
 }

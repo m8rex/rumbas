@@ -24,6 +24,7 @@ impl_to_numbas!(String, bool, f64, usize);
 impl_to_numbas!(numbas::jme::JMEString);
 impl_to_numbas!(numbas::jme::EmbracedJMEString);
 impl_to_numbas!(numbas::jme::ContentAreaString);
+impl_to_numbas!(numbas::support::primitive::Number);
 
 impl<S, O: ToNumbas<S>> ToNumbas<Vec<S>> for Vec<O> {
     fn to_numbas(&self, locale: &str) -> Vec<S> {

@@ -33,13 +33,13 @@ pub enum FunctionType {
     #[serde(rename = "decimal")]
     Decimal,
     #[serde(rename = "dict")]
-    Dict,
+    Dictionary,
     #[serde(rename = "expression")]
     Expression,
     #[serde(rename = "html")]
     HTML,
     #[serde(rename = "integer")]
-    Natural,
+    Integer,
     #[serde(rename = "keypair")]
     KeyPair,
     #[serde(rename = "list")]

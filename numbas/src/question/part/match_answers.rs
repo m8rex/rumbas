@@ -63,7 +63,7 @@ pub enum MatchAnswersWithChoicesDisplayType {
 pub struct MatchAnswersWithChoicesDisplayTypeCheck {
     #[serde(rename = "markingMethod")]
     #[serde(default)]
-    marking_method: MultipleChoiceMarkingMethod,
+    pub marking_method: MultipleChoiceMarkingMethod,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]

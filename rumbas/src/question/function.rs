@@ -1,8 +1,6 @@
-use crate::support::to_numbas::impl_to_numbas;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::{JMETranslatableString, TranslatableString};
-use numbas::question::function::FunctionType as NumbasFunctionType;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -12,12 +10,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct Function {
     // TODO: don't directly use numbas type
-    pub parameters: Vec<(String, NumbasFunctionType)>,
-    pub output_type: NumbasFunctionType,
+    pub parameters: Vec<(String, FunctionType)>,
+    pub output_type: FunctionType,
     #[serde(flatten)]
     pub definition: FunctionDefinition,
 }
-impl_to_numbas!(NumbasFunctionType);
 
 impl ToNumbas<numbas::question::function::Function> for Function {
     fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {
@@ -33,8 +30,8 @@ impl ToRumbas<Function> for numbas::question::function::Function {
     fn to_rumbas(&self) -> Function {
         Function {
             definition: self.definition.to_rumbas(),
-            output_type: self.output_type,
-            parameters: self.parameters.clone().into_iter().collect(),
+            output_type: self.output_type.to_rumbas(),
+            parameters: self.parameters.to_rumbas(),
         }
     }
 }
@@ -94,4 +91,78 @@ pub struct FunctionDefinitionJME {
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct FunctionDefinitionJavascript {
     pub definition: TranslatableString,
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "FunctionTypeInput")]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum FunctionType {
+    Boolean,
+    Decimal,
+    Dictionary,
+    Expression,
+    HTML,
+    Integer,
+    KeyPair,
+    List,
+    Matrix,
+    Nothing,
+    Number,
+    Range,
+    Rational,
+    Set,
+    r#String,
+    Vector,
+    ExtensionGeogebraApplet,
+}
+
+impl ToNumbas<numbas::question::function::FunctionType> for FunctionType {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::function::FunctionType {
+        match self {
+            Self::Boolean => numbas::question::function::FunctionType::Boolean,
+            Self::Decimal => numbas::question::function::FunctionType::Decimal,
+            Self::Dictionary => numbas::question::function::FunctionType::Dictionary,
+            Self::Expression => numbas::question::function::FunctionType::Expression,
+            Self::HTML => numbas::question::function::FunctionType::HTML,
+            Self::Integer => numbas::question::function::FunctionType::Integer,
+            Self::KeyPair => numbas::question::function::FunctionType::KeyPair,
+            Self::List => numbas::question::function::FunctionType::List,
+            Self::Matrix => numbas::question::function::FunctionType::Matrix,
+            Self::Nothing => numbas::question::function::FunctionType::Nothing,
+            Self::Number => numbas::question::function::FunctionType::Number,
+            Self::Range => numbas::question::function::FunctionType::Range,
+            Self::Rational => numbas::question::function::FunctionType::Rational,
+            Self::Set => numbas::question::function::FunctionType::Set,
+            Self::r#String => numbas::question::function::FunctionType::r#String,
+            Self::Vector => numbas::question::function::FunctionType::Vector,
+            Self::ExtensionGeogebraApplet => {
+                numbas::question::function::FunctionType::ExtensionGeogebraApplet
+            }
+        }
+    }
+}
+
+impl ToRumbas<FunctionType> for numbas::question::function::FunctionType {
+    fn to_rumbas(&self) -> FunctionType {
+        match self {
+            Self::Boolean => FunctionType::Boolean,
+            Self::Decimal => FunctionType::Decimal,
+            Self::Dictionary => FunctionType::Dictionary,
+            Self::Expression => FunctionType::Expression,
+            Self::HTML => FunctionType::HTML,
+            Self::Integer => FunctionType::Integer,
+            Self::KeyPair => FunctionType::KeyPair,
+            Self::List => FunctionType::List,
+            Self::Matrix => FunctionType::Matrix,
+            Self::Nothing => FunctionType::Nothing,
+            Self::Number => FunctionType::Number,
+            Self::Range => FunctionType::Range,
+            Self::Rational => FunctionType::Rational,
+            Self::Set => FunctionType::Set,
+            Self::r#String => FunctionType::r#String,
+            Self::Vector => FunctionType::Vector,
+            Self::ExtensionGeogebraApplet => FunctionType::ExtensionGeogebraApplet,
+        }
+    }
 }
