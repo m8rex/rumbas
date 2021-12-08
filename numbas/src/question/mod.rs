@@ -25,6 +25,7 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use variable::Variable;
 use variable::VariableGroup;
@@ -72,7 +73,7 @@ struct QuestionInput<'a> {
 #[derive(Debug, Deserialize)]
 struct QuestionInputQuestionGroups<'a> {
     #[serde(borrow)]
-    questions: [HashMap<&'a str, serde_json::Value>; 1],
+    questions: [BTreeMap<&'a str, serde_json::Value>; 1],
 }
 impl Question {
     pub fn from_question_exam_str(s: &str) -> serde_json::Result<Question> {

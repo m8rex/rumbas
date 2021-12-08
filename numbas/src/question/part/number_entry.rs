@@ -1,6 +1,6 @@
 use crate::question::part::QuestionPartSharedData;
 use crate::support::answer_style::AnswerStyle;
-use crate::support::primitive::{Primitive, SafeNatural};
+use crate::support::primitive::{Number, SafeNatural, VariableValued};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -26,7 +26,7 @@ pub struct QuestionPartNumberEntry {
     #[serde(rename = "mustBeReduced")]
     pub fractions_must_be_reduced: Option<bool>,
     #[serde(rename = "mustBeReducedPC")]
-    pub partial_credit_if_fraction_not_reduced: Option<Primitive>,
+    pub partial_credit_if_fraction_not_reduced: Option<Number>,
     #[serde(flatten)]
     pub precision: Option<QuestionPrecision>,
     #[serde(rename = "showPrecisionHint")]
@@ -48,12 +48,12 @@ pub enum CheckingType {
 pub enum NumberEntryAnswerType {
     MinMax {
         #[serde(rename = "minValue")]
-        min_value: Primitive,
+        min_value: VariableValued<Number>,
         #[serde(rename = "maxValue")]
-        max_value: Primitive,
+        max_value: VariableValued<Number>,
     },
     Answer {
-        answer: Primitive,
+        answer: VariableValued<Number>,
     },
 }
 

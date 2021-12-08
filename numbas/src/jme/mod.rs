@@ -1,5 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::convert::Into;
+use std::convert::TryInto;
 
 pub mod ast;
 pub mod builtin_functions;
@@ -19,14 +21,41 @@ macro_rules! impl_string_json_schema {
     };
 }
 
+#[derive(Deserialize)]
+#[serde(untagged)]
+/// Helper type to parse numbers as strings
+enum StringOrNumber {
+    String(String),
+    Number(i64),
+    Float(f64),
+}
+
+impl std::convert::From<StringOrNumber> for String {
+    fn from(son: StringOrNumber) -> Self {
+        match son {
+            StringOrNumber::String(s) => s,
+            StringOrNumber::Number(i) => i.to_string(),
+            StringOrNumber::Float(f) => f.to_string(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(try_from = "String")]
+#[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
     s: String,
     ast: Option<ast::Expr>,
 }
 impl_string_json_schema!(JMEString, "JMEString");
+
+impl std::convert::TryFrom<StringOrNumber> for JMEString {
+    type Error = parser::ConsumeError;
+    fn try_from(son: StringOrNumber) -> Result<Self, Self::Error> {
+        let s: String = son.into();
+        s.try_into()
+    }
+}
 
 impl std::convert::TryFrom<String> for JMEString {
     type Error = parser::ConsumeError;
@@ -75,13 +104,21 @@ impl JMEString {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(try_from = "String")]
+#[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct EmbracedJMEString {
     s: String,
     asts: Option<Vec<ast::Expr>>,
 }
 impl_string_json_schema!(EmbracedJMEString, "EmbracedJMEString"); // maybe add pattern?
+
+impl std::convert::TryFrom<StringOrNumber> for EmbracedJMEString {
+    type Error = parser::ConsumeError;
+    fn try_from(son: StringOrNumber) -> Result<Self, Self::Error> {
+        let s: String = son.into();
+        s.try_into()
+    }
+}
 
 impl std::convert::TryFrom<String> for EmbracedJMEString {
     type Error = parser::ConsumeError;
@@ -276,5 +313,11 @@ mod test {
         assert!(res.is_ok());
         assert!(res.as_ref().unwrap().notes.is_some());
         assert_eq!(res.unwrap().notes.unwrap().len(), 8);
+    }
+
+    #[test]
+    fn embraced_without_braces() {
+        let res = EmbracedJMEString::try_from("Answer 1".to_string());
+        assert!(res.is_ok());
     }
 }
