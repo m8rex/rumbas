@@ -1,0 +1,7 @@
+---
+source: rumbas/src/exam/numbas_settings.rs
+expression: "&example"
+
+---
+theme: "template:template_key"
+

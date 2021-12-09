@@ -5,8 +5,9 @@ use std::collections::HashMap;
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TemplateFileInput")]
+#[input(test, no_examples)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
@@ -15,9 +16,26 @@ pub struct TemplateFile {
     pub data: HashMap<String, MyYamlValue>,
 }
 
+impl Examples for TemplateFileInput {
+    fn examples() -> Vec<Self> {
+        vec![Self {
+            relative_template_path: Value::Normal("templatefile".to_string()),
+            data: vec![(
+                "key".to_string(),
+                ValueType::Normal(MyYamlValue(serde_yaml::Value::String("value".to_string()))),
+            )]
+            .into_iter()
+            .collect(),
+        }]
+    }
+}
+
 impl Examples for TemplateFileInputEnum {
     fn examples() -> Vec<Self> {
-        vec![] // TODO
+        TemplateFileInput::examples()
+            .into_iter()
+            .map(|e| Self(e))
+            .collect()
     }
 }
 

@@ -13,6 +13,7 @@ use std::path::PathBuf;
 // TODO: fix ovewrite?
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "ResourcePathInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]

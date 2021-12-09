@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimingInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Timing {
     pub duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time

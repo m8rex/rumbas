@@ -1,0 +1,14 @@
+---
+source: rumbas/src/exam/timing.rs
+expression: "&example"
+
+---
+duration_in_seconds: 2
+allow_pause: "template:template_key"
+on_timeout:
+  action: warn
+  message: "example plain string with placeholders {placeholder1} and {placeholder2}."
+timed_warning:
+  action: warn
+  message: "example plain string with placeholders {placeholder1} and {placeholder2}."
+

@@ -289,6 +289,7 @@ macro_rules! question_part_type {
             pub adaptive_marking_penalty: usize,
             pub custom_marking_algorithm_notes: JMENotes,
             pub extend_base_marking_algorithm: bool,
+            #[input(skip)]
             pub steps: Vec<QuestionPart>
             $(,
             $(

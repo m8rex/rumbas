@@ -5,6 +5,7 @@ use serde::Serialize;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LocaleInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Locale {
     pub name: String, //TODO: document names best used for shareability?

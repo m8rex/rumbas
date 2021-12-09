@@ -187,6 +187,12 @@ impl<T> Value<T> {
     }
 }
 
+impl<T> Default for Value<T> {
+    fn default() -> Self {
+        Value(None)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]

@@ -13,6 +13,7 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableRepresentationInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {

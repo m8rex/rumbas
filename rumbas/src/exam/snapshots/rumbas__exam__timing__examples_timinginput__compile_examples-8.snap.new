@@ -1,0 +1,10 @@
+---
+source: rumbas/src/exam/timing.rs
+expression: "&example"
+
+---
+duration_in_seconds: ~
+allow_pause: "template:template_key"
+on_timeout: ~
+timed_warning: ~
+

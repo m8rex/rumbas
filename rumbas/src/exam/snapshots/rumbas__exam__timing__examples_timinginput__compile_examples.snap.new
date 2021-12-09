@@ -1,0 +1,12 @@
+---
+source: rumbas/src/exam/timing.rs
+expression: "&example"
+
+---
+duration_in_seconds: 2
+allow_pause: false
+on_timeout:
+  action: none
+timed_warning:
+  action: none
+

@@ -1,0 +1,32 @@
+---
+source: rumbas/src/exam/navigation.rs
+expression: "&example"
+
+---
+allow_printing: ~
+browsing_enabled: ~
+can_move_to_previous: ~
+can_regenerate: ~
+confirm_when_leaving: ~
+mode: sequential
+on_leave:
+  action: prevent_if_not_attempted
+  message:
+    content: "example plain string with placeholders {placeholder1} and {placeholder2}."
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+show_names_of_question_groups: ~
+show_results_page: on_completion
+show_steps: ~
+show_title_page: ~
+start_password: ~
+

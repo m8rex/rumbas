@@ -26,6 +26,7 @@ pub fn import(matches: &clap::ArgMatches) {
         match question_res {
             Ok(question) => {
                 let rumbas_question: QuestionPath = question.to_rumbas();
+                // TODO this will be done automatically on deserialization now?
                 for cpt in rumbas_question.question_data.custom_part_types.iter() {
                     create_custom_part_type(cpt.to_owned());
                 }
@@ -42,6 +43,7 @@ pub fn import(matches: &clap::ArgMatches) {
             Ok(exam) => {
                 //println!("{:?}", exam);
                 let (name, rumbas_exam, qs, cpts) = convert_numbas_exam(exam);
+                // TODO this will be done automatically on deserialization now?
                 for qp in qs.into_iter() {
                     create_question(qp)
                 }

@@ -38,6 +38,7 @@ use variable_test::VariablesTest;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Question {
     /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.

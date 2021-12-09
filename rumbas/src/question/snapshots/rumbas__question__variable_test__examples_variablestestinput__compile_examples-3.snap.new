@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/variable_test.rs
+expression: "&example"
+
+---
+condition: ~
+max_runs: ~
+

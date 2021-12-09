@@ -1,0 +1,8 @@
+---
+source: rumbas/src/exam/locale.rs
+expression: "&example"
+
+---
+name: "template:template_key"
+numbas_locale: sq-AL
+
