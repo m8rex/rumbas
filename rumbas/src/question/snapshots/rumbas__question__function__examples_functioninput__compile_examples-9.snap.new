@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/function.rs
+expression: "&example"
+
+---
+definition: "example plain string with placeholders {placeholder1} and {placeholder2}."
+language: js
+output_type: matrix
+parameters: ~
+

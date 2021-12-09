@@ -743,6 +743,7 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
 
 #[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
 #[input(name = "CustomPartTypeDefinitionPathInput")]
+#[input(test)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
@@ -803,8 +804,19 @@ impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPathInput {
 }
 
 impl std::convert::From<CustomPartTypeDefinitionPathInput> for String {
-    fn from(q: CustomPartTypeDefinitionPathInput) -> Self {
-        q.custom_part_type_name.unwrap()
+    fn from(cpt: CustomPartTypeDefinitionPathInput) -> Self {
+        let c_name = cpt.custom_part_type_name.clone().unwrap();
+        let c_yaml = cpt
+            .custom_part_type_data
+            .clone()
+            .unwrap()
+            .to_yaml()
+            .unwrap();
+        let file = format!("{}/{}.yaml", crate::CUSTOM_PART_TYPES_FOLDER, c_name);
+        log::info!("Writing to {}", file);
+        println!("Writing to {}", file);
+        std::fs::write(file, c_yaml).unwrap(); //fix handle result
+        c_name
     }
 }
 

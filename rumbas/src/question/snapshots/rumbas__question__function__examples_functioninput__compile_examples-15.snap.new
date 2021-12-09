@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/function.rs
+expression: "&example"
+
+---
+definition: "template:template_key"
+language: jme
+output_type: string
+parameters: ~
+

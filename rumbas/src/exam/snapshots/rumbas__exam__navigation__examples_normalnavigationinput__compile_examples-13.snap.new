@@ -1,0 +1,18 @@
+---
+source: rumbas/src/exam/navigation.rs
+expression: "&example"
+
+---
+allow_printing: false
+browsing_enabled: false
+can_move_to_previous: false
+can_regenerate: false
+confirm_when_leaving: false
+mode: sequential
+on_leave: ~
+show_names_of_question_groups: false
+show_results_page: on_completion
+show_steps: false
+show_title_page: false
+start_password: "example plain string with placeholders {placeholder1} and {placeholder2}."
+

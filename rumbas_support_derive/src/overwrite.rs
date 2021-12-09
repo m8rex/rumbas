@@ -20,6 +20,8 @@ pub struct OverwriteReceiver {
 
     #[darling(default)]
     test: bool,
+    #[darling(default)]
+    no_examples: bool,
 }
 impl ToTokens for OverwriteReceiver {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
@@ -29,6 +31,7 @@ impl ToTokens for OverwriteReceiver {
             ref data,
             ref input_name,
             test: _,
+            no_examples: _,
         } = *self;
 
         let input_ident = syn::Ident::new(&input_name, ident.span());

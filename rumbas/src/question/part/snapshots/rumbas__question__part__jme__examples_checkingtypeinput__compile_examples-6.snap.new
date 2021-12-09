@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+type: decimal_places
+amount: "template:template_key"
+

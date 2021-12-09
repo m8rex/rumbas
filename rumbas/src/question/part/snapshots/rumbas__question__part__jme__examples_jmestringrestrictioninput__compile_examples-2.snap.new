@@ -1,0 +1,23 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+message:
+  content:
+    text: "template:template_key"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+partial_credit: "template:template_key"
+show_strings: "template:template_key"
+strings: "template:template_key"
+

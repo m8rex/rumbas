@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/preamble.rs
+expression: "&example"
+
+---
+js: "example plain string with placeholders {placeholder1} and {placeholder2}."
+css: "example plain string with placeholders {placeholder1} and {placeholder2}."
+

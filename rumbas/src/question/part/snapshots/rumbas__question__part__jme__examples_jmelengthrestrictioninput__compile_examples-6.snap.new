@@ -1,0 +1,9 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+length: ~
+message: ~
+partial_credit: ~
+

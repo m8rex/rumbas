@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/preamble.rs
+expression: "&example"
+
+---
+js: "template:template_key"
+css: "template:template_key"
+

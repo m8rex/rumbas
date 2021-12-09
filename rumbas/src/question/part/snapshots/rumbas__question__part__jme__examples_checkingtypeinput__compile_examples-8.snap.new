@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+type: significant_figures
+amount: "template:template_key"
+

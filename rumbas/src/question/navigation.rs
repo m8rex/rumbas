@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionNavigationInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionNavigation {
     /// Whether the student can regenerate the question

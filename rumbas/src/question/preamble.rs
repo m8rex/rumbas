@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 // TODO: maybe translatable? So different text's can be set for different languages?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PreambleInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Preamble {
     /// The JavaScript to add to the outputfiles

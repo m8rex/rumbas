@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartInformationInput")]
+    #[input(test)]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartInformation {}
 }

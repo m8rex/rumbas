@@ -4,7 +4,6 @@ use crate::question::part::question_part::VariableReplacementStrategy;
 use crate::question::QuestionPart;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
-use crate::support::to_numbas::*;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
@@ -42,11 +41,6 @@ question_part_type! {
         //TODO other?
     }
 }
-
-impl_to_numbas!(
-    numbas::question::part::match_answers::MatchAnswersWithChoicesLayout,
-    numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
-);
 
 impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices>
     for QuestionPartMatchAnswersWithItems
