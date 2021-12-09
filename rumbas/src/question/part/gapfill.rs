@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartGapFillInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     /// The Gap fill question part type
     pub struct QuestionPartGapFill {
         /// Whether the answers should be sorted

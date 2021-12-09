@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticExamInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// A Diagnostic Exam
 pub struct DiagnosticExam {
     /// All locales for which the exam should be generated
@@ -134,7 +134,7 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// Information needed for a diagnostic test
 pub struct Diagnostic {
     /// The script to use

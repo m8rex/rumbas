@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartPatternMatchInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartPatternMatch {
         case_sensitive: bool,
         partial_credit: f64,
@@ -69,7 +69,7 @@ impl ToRumbas<QuestionPartPatternMatch>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PatternMatchModeInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum PatternMatchMode {
     Regex,

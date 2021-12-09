@@ -15,7 +15,7 @@ use std::hash::{Hash, Hasher};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartTypeDefinitionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CustomPartTypeDefinition {
     pub type_name: TranslatableString,
     pub description: TranslatableString,
@@ -552,7 +552,7 @@ create_input_option_value!(
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartInputWidgetInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "type")]
 pub enum CustomPartInputWidget {
     //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
@@ -607,7 +607,7 @@ impl ToRumbas<CustomPartInputWidget> for numbas::question::custom_part_type::Cus
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartStringInputOptionsInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all..., use macro?
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -652,7 +652,7 @@ impl ToRumbas<CustomPartStringInputOptions>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartNumberInputOptionsInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CustomPartNumberInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     pub hint: CustomPartInputOptionValueTranslatableString,
@@ -699,7 +699,7 @@ impl ToRumbas<CustomPartNumberInputOptions>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartRadioGroupInputOptionsInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CustomPartRadioGroupInputOptions {
     /// A string displayed next to the input field, giving any necessary information about how to enter their answer.
     pub hint: CustomPartInputOptionValueTranslatableString,
@@ -852,3 +852,17 @@ impl PartialEq for CustomPartTypeDefinitionPath {
     }
 }
 impl Eq for CustomPartTypeDefinitionPath {}
+
+impl PartialEq for CustomPartTypeDefinitionPathInput {
+    fn eq(&self, other: &Self) -> bool {
+        self.custom_part_type_name == other.custom_part_type_name
+    }
+}
+impl Eq for CustomPartTypeDefinitionPathInput {}
+
+impl PartialEq for CustomPartTypeDefinitionPathInputEnum {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+impl Eq for CustomPartTypeDefinitionPathInputEnum {}

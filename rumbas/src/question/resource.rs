@@ -100,6 +100,20 @@ impl PartialEq for ResourcePath {
 }
 impl Eq for ResourcePath {}
 
+impl PartialEq for ResourcePathInput {
+    fn eq(&self, other: &Self) -> bool {
+        self.resource_name == other.resource_name
+    }
+}
+impl Eq for ResourcePathInput {}
+
+impl PartialEq for ResourcePathInputEnum {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+impl Eq for ResourcePathInputEnum {}
+
 impl ResourcePath {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)

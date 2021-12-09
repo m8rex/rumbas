@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionGroup {
     /// The name
     pub name: TranslatableString,
@@ -44,7 +44,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
@@ -96,18 +96,18 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyRandomSubsetInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct PickingStrategyRandomSubset {
     pub pick_questions: usize,
 }
 
 // TODO: remove this JsonSchema
-#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, PartialEq)]
 pub struct QuestionPath {
     pub question_name: String,
     pub question_data: Question,
 }
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct QuestionPathInput {

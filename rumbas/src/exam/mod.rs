@@ -30,7 +30,8 @@ use std::path::Path;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ExamInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[input(test)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum Exam {
