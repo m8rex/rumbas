@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Feedback {
     pub percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown

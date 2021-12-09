@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+partial_credit: 1.2
+message: "example plain string with placeholders {placeholder1} and {placeholder2}."
+pattern: text
+name_to_compare: text
+

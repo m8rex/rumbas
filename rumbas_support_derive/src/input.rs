@@ -39,6 +39,8 @@ pub struct InputReceiver {
 
     #[darling(default)]
     test: bool,
+    #[darling(default)]
+    no_examples: bool,
 }
 
 fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
@@ -223,8 +225,42 @@ fn input_handle_struct_struct(
 
     let field_attributes = fields
         .iter()
-        .map(|f| f.attrs.iter().map(|a| quote!(#a)).collect::<Vec<_>>())
+        .map(|f| {
+            f.attrs
+                .iter()
+                .filter(|a| !a.path.is_ident("input"))
+                .map(|a| quote!(#a))
+                .collect::<Vec<_>>()
+        })
         .map(|a| quote!(#(#a)*))
+        .collect::<Vec<_>>();
+
+    let field_is_flattened = fields
+        .iter()
+        .map(|f| {
+            f.attrs
+                .iter()
+                .find(|attr| {
+                    if attr.path.is_ident("serde") {
+                        match attr.parse_meta() {
+                            Ok(syn::Meta::List(meta)) => meta
+                                .nested
+                                .iter()
+                                .find(|m| match m {
+                                    syn::NestedMeta::Meta(syn::Meta::Path(m)) => {
+                                        m.is_ident("flatten")
+                                    }
+                                    _ => false,
+                                })
+                                .is_some(),
+                            _ => false,
+                        }
+                    } else {
+                        false
+                    }
+                })
+                .is_some()
+        })
         .collect::<Vec<_>>();
 
     let enum_input_ident = syn::Ident::new(
@@ -235,12 +271,24 @@ fn input_handle_struct_struct(
     let input_attributes_input = &input_attributes.0;
     let input_attributes_enum = &input_attributes.1;
 
+    let field_types = input_type_tys
+        .iter()
+        .zip(field_is_flattened.iter())
+        .map(|(t, flattened)| {
+            if *flattened {
+                quote!(<#t as InputInverse>::Input)
+            } else {
+                quote!(Value<<#t as InputInverse>::Input>)
+            }
+        })
+        .collect::<Vec<_>>();
+
     tokens.extend(quote! {
         #input_attributes_input
         pub struct #input_ident #ty #wher {
             #(
                 #field_attributes
-                pub #field_names: Value<<#input_type_tys as InputInverse>::Input>
+                pub #field_names: #field_types
             ),*
         }
     });
@@ -251,6 +299,18 @@ fn input_handle_struct_struct(
         #[serde(try_from = #try_from_value)]
         pub struct #enum_input_ident #ty (pub #input_ident) #wher;
     });
+    let from_normal_lines = field_names
+        .iter()
+        .zip(field_is_flattened.iter())
+        .map(|(f, flattened)| {
+            if *flattened {
+                quote!(Input::from_normal(normal.#f))
+            } else {
+                quote!(Value::Normal(Input::from_normal(normal.#f)))
+            }
+        })
+        .collect::<Vec<_>>();
+
     tokens.extend(quote! {
         #[automatically_derived]
         impl #imp Input for #input_ident #ty #wher {
@@ -262,7 +322,7 @@ fn input_handle_struct_struct(
             }
             fn from_normal(normal: <Self as Input>::Normal) -> Self {
                 Self {
-                    #(#field_names: Value::Normal(Input::from_normal(normal.#field_names))),*
+                    #(#field_names: #from_normal_lines),*
                 }
             }
             fn find_missing(&self) -> InputCheckResult {
@@ -298,6 +358,11 @@ fn input_handle_struct_struct(
             }
         }
     });
+    let valued_field_names = field_names
+        .iter()
+        .zip(field_is_flattened.iter())
+        .filter_map(|(f, flattened)| if *flattened { None } else { Some(f) })
+        .collect::<Vec<_>>();
     tokens.extend(quote! {
         #[automatically_derived]
         impl std::convert::TryFrom<#input_ident #ty> for #enum_input_ident #ty #wher {
@@ -306,7 +371,7 @@ fn input_handle_struct_struct(
             fn try_from(value: #input_ident) -> Result<Self, Self::Error> {
                 let mut ok = false;
                 #(
-                    if value.#field_names.is_some() {
+                    if value.#valued_field_names.is_some() {
                         ok = true;
                     }
                 )*
@@ -669,6 +734,7 @@ impl ToTokens for InputReceiver {
             ref attrs,
             ref input_name,
             test: _,
+            no_examples: _,
         } = *self;
 
         let input_ident = syn::Ident::new(&input_name, ident.span());

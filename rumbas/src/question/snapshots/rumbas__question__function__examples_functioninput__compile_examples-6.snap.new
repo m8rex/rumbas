@@ -1,0 +1,23 @@
+---
+source: rumbas/src/question/function.rs
+expression: "&example"
+
+---
+definition:
+  content:
+    text: "example plain string with placeholders {placeholder1} and {placeholder2}."
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+language: js
+output_type: integer
+parameters: ~
+

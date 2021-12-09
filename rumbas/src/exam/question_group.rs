@@ -205,6 +205,12 @@ impl std::convert::TryFrom<String> for QuestionPathInput {
 
 impl std::convert::From<QuestionPathInput> for String {
     fn from(q: QuestionPathInput) -> Self {
+        let q_yaml = crate::question::QuestionFileTypeInput::Normal(Box::new(q.question_data))
+            .to_yaml()
+            .unwrap();
+        let file = format!("{}/{}.yaml", crate::QUESTIONS_FOLDER, q.question_name);
+        log::info!("Writing to {}", file);
+        std::fs::write(file, q_yaml).unwrap(); //fix handle result (try_from)
         q.question_name
     }
 }

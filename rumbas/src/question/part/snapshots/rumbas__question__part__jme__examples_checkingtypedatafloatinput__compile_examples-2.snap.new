@@ -1,0 +1,7 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+max_difference: "template:template_key"
+

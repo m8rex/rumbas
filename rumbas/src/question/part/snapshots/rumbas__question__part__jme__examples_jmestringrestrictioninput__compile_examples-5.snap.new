@@ -1,0 +1,10 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+message: "template:template_key"
+partial_credit: "template:template_key"
+show_strings: "template:template_key"
+strings: "template:template_key"
+

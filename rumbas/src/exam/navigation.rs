@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalNavigationInput")]
+#[input(test)]
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "mode")]

@@ -11,12 +11,14 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartGapFillInput")]
+    #[input(test)]
     #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     /// The Gap fill question part type
     pub struct QuestionPartGapFill {
         /// Whether the answers should be sorted
         sort_answers: bool,
         /// The gaps
+        #[input(skip)]
         gaps: Vec<QuestionPart>
     }
 }

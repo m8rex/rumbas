@@ -1,0 +1,18 @@
+---
+source: rumbas/src/exam/navigation.rs
+expression: "&example"
+
+---
+allow_printing: ~
+browsing_enabled: ~
+can_move_to_previous: ~
+can_regenerate: ~
+confirm_when_leaving: ~
+mode: sequential
+on_leave: "template:template_key"
+show_names_of_question_groups: ~
+show_results_page: ~
+show_steps: ~
+show_title_page: ~
+start_password: ~
+

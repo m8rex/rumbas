@@ -1,0 +1,9 @@
+---
+source: rumbas/src/question/navigation.rs
+expression: "&example"
+
+---
+can_regenerate: false
+show_title_page: false
+confirm_when_leaving: false
+

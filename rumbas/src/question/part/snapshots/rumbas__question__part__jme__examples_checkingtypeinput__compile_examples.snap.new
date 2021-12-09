@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/part/jme.rs
+expression: "&example"
+
+---
+type: relative_difference
+max_difference: 1.2
+

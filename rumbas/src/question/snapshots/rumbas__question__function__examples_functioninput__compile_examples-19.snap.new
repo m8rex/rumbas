@@ -1,0 +1,49 @@
+---
+source: rumbas/src/question/function.rs
+expression: "&example"
+
+---
+definition: "example plain string with placeholders {placeholder1} and {placeholder2}."
+language: js
+output_type: ~
+parameters:
+  - - text
+    - boolean
+  - - "template:template_key"
+    - decimal
+  - - ~
+    - dictionary
+  - - text
+    - expression
+  - - "template:template_key"
+    - h_t_m_l
+  - - ~
+    - integer
+  - - text
+    - key_pair
+  - - "template:template_key"
+    - list
+  - - ~
+    - matrix
+  - - text
+    - nothing
+  - - "template:template_key"
+    - number
+  - - ~
+    - range
+  - - text
+    - rational
+  - - "template:template_key"
+    - set
+  - - ~
+    - string
+  - - text
+    - vector
+  - - "template:template_key"
+    - extension_geogebra_applet
+  - - ~
+    - "template:template_key"
+  - - text
+    - ~
+  - "template:template_key"
+

@@ -1,0 +1,8 @@
+---
+source: rumbas/src/exam/locale.rs
+expression: "&example"
+
+---
+name: text
+numbas_locale: "template:template_key"
+

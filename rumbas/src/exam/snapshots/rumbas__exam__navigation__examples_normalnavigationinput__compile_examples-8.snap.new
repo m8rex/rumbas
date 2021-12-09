@@ -1,0 +1,33 @@
+---
+source: rumbas/src/exam/navigation.rs
+expression: "&example"
+
+---
+allow_printing: "template:template_key"
+browsing_enabled: "template:template_key"
+can_move_to_previous: "template:template_key"
+can_regenerate: "template:template_key"
+confirm_when_leaving: "template:template_key"
+mode: sequential
+on_leave:
+  action: prevent_if_not_attempted
+  message:
+    content:
+      text: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+show_names_of_question_groups: "template:template_key"
+show_results_page: ~
+show_steps: "template:template_key"
+show_title_page: "template:template_key"
+start_password: "template:template_key"
+

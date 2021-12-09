@@ -1,7 +1,8 @@
-use crate::input::{InputFieldReceiver, InputVariantReceiver};
 use crate::syn::spanned::Spanned;
 use darling::ast;
 use darling::FromDeriveInput;
+use darling::FromField;
+use darling::FromVariant;
 use quote::{quote, ToTokens};
 
 #[derive(FromDeriveInput)]
@@ -13,13 +14,40 @@ pub struct ExamplesReceiver {
     /// to work with types that declare generics.
     generics: syn::Generics,
 
-    data: ast::Data<InputVariantReceiver, InputFieldReceiver>,
+    data: ast::Data<ExamplesVariantReceiver, ExamplesFieldReceiver>,
 
     #[darling(default)]
     test: bool,
 
+    #[darling(default)]
+    no_examples: bool,
+
     #[darling(rename = "name")]
     input_name: String,
+}
+
+#[derive(Debug, FromField)]
+#[darling(attributes(input))]
+#[darling(forward_attrs)]
+pub struct ExamplesFieldReceiver {
+    /// Get the ident of the field. For fields in tuple or newtype structs or
+    /// enum bodies, this can be `None`.
+    pub ident: Option<syn::Ident>,
+
+    pub ty: syn::Type,
+    pub attrs: Vec<syn::Attribute>,
+
+    #[darling(default)]
+    pub skip: bool,
+}
+
+#[derive(Debug, FromVariant)]
+#[darling(attributes(input))]
+#[darling(forward_attrs)]
+pub struct ExamplesVariantReceiver {
+    pub ident: syn::Ident,
+    pub fields: ast::Fields<ExamplesFieldReceiver>,
+    pub attrs: Vec<syn::Attribute>,
 }
 
 fn handle_unit_struct(
@@ -39,7 +67,7 @@ fn handle_unit_struct(
 }
 
 fn handle_tuple_struct(
-    fields: &ast::Fields<InputFieldReceiver>,
+    fields: &ast::Fields<ExamplesFieldReceiver>,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
@@ -74,9 +102,10 @@ fn handle_tuple_struct(
 }
 
 fn struct_body(
-    fields: &ast::Fields<InputFieldReceiver>,
+    fields: &ast::Fields<ExamplesFieldReceiver>,
     type_name: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
+    let field_dos = fields.iter().map(|f| !f.skip).collect::<Vec<_>>();
     let field_names = fields
         .iter()
         .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
@@ -124,17 +153,72 @@ fn struct_body(
             )
         })
         .collect::<Vec<_>>();
+    // TODO extract
+    let field_is_flattened = fields
+        .iter()
+        .map(|f| {
+            f.attrs
+                .iter()
+                .find(|attr| {
+                    if attr.path.is_ident("serde") {
+                        match attr.parse_meta() {
+                            Ok(syn::Meta::List(meta)) => meta
+                                .nested
+                                .iter()
+                                .find(|m| match m {
+                                    syn::NestedMeta::Meta(syn::Meta::Path(m)) => {
+                                        m.is_ident("flatten")
+                                    }
+                                    _ => false,
+                                })
+                                .is_some(),
+                            _ => false,
+                        }
+                    } else {
+                        false
+                    }
+                })
+                .is_some()
+        })
+        .collect::<Vec<_>>();
+    let field_types = field_types
+        .iter()
+        .zip(field_is_flattened.iter())
+        .map(|(t, flattened)| {
+            if *flattened {
+                quote!(<#t as InputInverse>::Input)
+            } else {
+                quote!(Value<<#t as InputInverse>::Input>)
+            }
+        })
+        .collect::<Vec<_>>();
+    let field_name_options_values = field_dos
+        .iter()
+        .zip(field_name_iterators.iter())
+        .map(|(r#do, i)| {
+            if *r#do {
+                quote!(#i.next())
+            } else {
+                quote!(Some(Default::default()))
+            }
+        })
+        .collect::<Vec<_>>();
     quote! {
         #(
-            let mut #field_name_examples = <Value<<#field_types as InputInverse>::Input>>::examples();
+            let mut #field_name_examples =
+                if #field_dos {
+                    <#field_types>::examples()
+                 } else { vec![] };
         )*
         let mut max_examples_number = 0;
         #(
             max_examples_number = std::cmp::max(max_examples_number, #field_name_examples.len());
         )*
         #(
-            while #field_name_examples.len() < max_examples_number {
-                #field_name_examples.extend(<Value<<#field_types as InputInverse>::Input>>::examples());
+            if #field_dos {
+                while #field_name_examples.len() < max_examples_number {
+                    #field_name_examples.extend(<#field_types>::examples());
+                }
             }
             let mut #field_name_iterators = #field_name_examples.into_iter();
         )*
@@ -142,7 +226,7 @@ fn struct_body(
         let mut result = Vec::new();
         loop {
             #(
-                let #field_name_options = #field_name_iterators.next();
+                let #field_name_options = #field_name_options_values;
                 if #field_name_options.is_none() {
                     break;
                 }
@@ -160,7 +244,7 @@ fn struct_body(
 }
 
 fn handle_struct_struct(
-    fields: &ast::Fields<InputFieldReceiver>,
+    fields: &ast::Fields<ExamplesFieldReceiver>,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
@@ -190,7 +274,7 @@ fn handle_struct_struct(
 }
 
 fn handle_struct(
-    fields: &ast::Fields<InputFieldReceiver>,
+    fields: &ast::Fields<ExamplesFieldReceiver>,
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
@@ -203,7 +287,7 @@ fn handle_struct(
 }
 
 fn handle_enum_check_variants(
-    v: &[InputVariantReceiver],
+    v: &[ExamplesVariantReceiver],
     input_ident: &syn::Ident,
 ) -> Vec<proc_macro2::TokenStream> {
     v.iter()
@@ -245,7 +329,7 @@ fn handle_enum_check_variants(
 }
 
 fn handle_enum(
-    v: &[InputVariantReceiver],
+    v: &[ExamplesVariantReceiver],
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     tokens: &mut proc_macro2::TokenStream,
@@ -275,14 +359,16 @@ impl ToTokens for ExamplesReceiver {
             ref generics,
             ref data,
             test,
+            no_examples,
             ref input_name,
         } = *self;
 
         let input_ident = syn::Ident::new(&input_name, ident.span());
-
-        match data {
-            ast::Data::Enum(v) => handle_enum(v, &input_ident, generics, tokens),
-            ast::Data::Struct(fields) => handle_struct(fields, &input_ident, generics, tokens),
+        if !no_examples {
+            match data {
+                ast::Data::Enum(v) => handle_enum(v, &input_ident, generics, tokens),
+                ast::Data::Struct(fields) => handle_struct(fields, &input_ident, generics, tokens),
+            }
         }
 
         if test {
@@ -296,10 +382,17 @@ impl ToTokens for ExamplesReceiver {
                 mod #mod_ident {
                     use super::*;
                     use rumbas_support::example::Examples;
+                    use std::error::Error;
                     #[test]
                     fn compile_examples() {
                         for example in <#input_ident>::examples().into_iter() {
                             let item = serde_yaml::to_string(&example);
+                            if let Err(ref e) = item {
+                                println!("Examples {:?}", example);
+                                println!("Error: {:#?}", e);
+                                println!("Caused by: {:?}", e.source());
+
+                            }
                             assert!(item.is_ok());
                             let item = item.unwrap();
                             let parsed: Result<#input_ident, _> = serde_yaml::from_str(&item[..]);

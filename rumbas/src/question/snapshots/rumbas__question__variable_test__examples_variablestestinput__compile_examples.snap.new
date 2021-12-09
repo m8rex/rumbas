@@ -1,0 +1,8 @@
+---
+source: rumbas/src/question/variable_test.rs
+expression: "&example"
+
+---
+condition: x^5
+max_runs: 2
+
