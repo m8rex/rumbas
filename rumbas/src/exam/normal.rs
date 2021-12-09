@@ -19,7 +19,7 @@ use std::collections::HashMap;
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalExamInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 /// An Exam
 pub struct NormalExam {
     /// All locales for which the exam should be generated

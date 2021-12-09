@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartNumberEntryInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartNumberEntry {
         answer: NumberEntryAnswer,
         display_correct_as_fraction: bool,
@@ -95,7 +95,7 @@ impl ToRumbas<QuestionPartNumberEntry>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
     Normal(JMEString),
@@ -105,7 +105,7 @@ pub enum NumberEntryAnswer {
 // TODO, better (add toRumbas etc)
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerRangeInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct NumberEntryAnswerRange {
     pub from: JMEString,
     pub to: JMEString,

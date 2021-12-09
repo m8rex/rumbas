@@ -15,7 +15,7 @@ pub mod match_answers;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceAnswerData {
     ItemBased(Vec<MultipleChoiceAnswer>),
@@ -24,7 +24,7 @@ pub enum MultipleChoiceAnswerData {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
     pub answers: VariableValued<Vec<EmbracedJMETranslatableString>>,
     pub marks: VariableValued<Vec<JMETranslatableString>>,
@@ -85,7 +85,7 @@ fn extract_multiple_choice_answer_data(
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswer {
     pub statement: EmbracedJMETranslatableString,
     pub feedback: EmbracedJMETranslatableString,

@@ -21,6 +21,27 @@ impl Examples for TemplateFileInputEnum {
     }
 }
 
+impl PartialEq for TemplateFile {
+    fn eq(&self, other: &Self) -> bool {
+        self.relative_template_path == other.relative_template_path
+    }
+}
+impl Eq for TemplateFile {}
+
+impl PartialEq for TemplateFileInput {
+    fn eq(&self, other: &Self) -> bool {
+        self.relative_template_path == other.relative_template_path
+    }
+}
+impl Eq for TemplateFileInput {}
+
+impl PartialEq for TemplateFileInputEnum {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+impl Eq for TemplateFileInputEnum {}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyYamlValue(pub serde_yaml::Value);
 
