@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartJMEInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartJME {
         answer: EmbracedJMETranslatableString, //TODO: should this be translatable?
         answer_simplification: JMEAnswerSimplification,
@@ -119,7 +119,7 @@ macro_rules! create_answer_simplification {
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
-        #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+        #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
         pub struct $struct {
             $(
                 $(#[$inner])*
@@ -228,7 +228,7 @@ macro_rules! create_answer_display_type {
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
-        #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+        #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
         pub struct $struct {
             $(
                 $(#[$inner])*
@@ -296,7 +296,7 @@ create_answer_display_type! {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeDataFloatInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CheckingTypeDataFloat {
     pub max_difference: f64,
 }
@@ -319,7 +319,7 @@ impl
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeDataNaturalInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CheckingTypeDataNatural {
     pub amount: usize,
 }
@@ -334,7 +334,7 @@ impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for Check
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum CheckingType {
@@ -398,7 +398,7 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMERestrictionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMERestriction {
     // name: TranslatableString,
     pub partial_credit: f64, //TODO, is number, so maybe usize?
@@ -427,7 +427,7 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMELengthRestrictionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
@@ -458,7 +458,7 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEStringRestrictionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMEStringRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
@@ -488,7 +488,7 @@ impl ToRumbas<JMEStringRestriction> for numbas::question::part::jme::JMEStringRe
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEPatternRestrictionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMEPatternRestriction {
     pub partial_credit: f64, //TODO, is number, so maybe usize?
     pub message: TranslatableString,
@@ -520,7 +520,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEValueGeneratorInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMEValueGenerator {
     pub name: FileString,
     pub value: JMEFileString,

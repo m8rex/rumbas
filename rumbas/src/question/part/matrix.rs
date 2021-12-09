@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartMatrixInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatrix {
         correct_answer: numbas::jme::JMEString,
         dimensions: QuestionPartMatrixDimensions,
@@ -80,7 +80,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionsInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionPartMatrixDimensions {
     pub rows: QuestionPartMatrixDimension,
     pub columns: QuestionPartMatrixDimension,
@@ -94,7 +94,7 @@ impl QuestionPartMatrixDimensions {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub enum QuestionPartMatrixDimension {
     Fixed(VariableValued<usize>),
     Resizable(Box<QuestionPartMatrixRangedDimension>),
@@ -148,7 +148,7 @@ impl QuestionPartMatrixDimension {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixRangedDimensionInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
     pub default: VariableValued<usize>,

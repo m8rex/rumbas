@@ -5,7 +5,7 @@ use serde::Serialize;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LocaleInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Locale {
     pub name: String, //TODO: document names best used for shareability?
     /// The locale to use in the Numbas interface
