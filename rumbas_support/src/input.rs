@@ -2,8 +2,18 @@ use crate::value::Value;
 use crate::value::ValueType;
 use std::collections::HashMap;
 
+pub struct FileToLoad {
+    file_path: String,
+}
+
+pub struct LoadedFile {
+    file_path: String,
+    content: String,
+}
+
 pub trait Input: Clone {
     type Normal;
+
     /// This method assumes that it is called by a function that is initially called from `to_normal_safe`
     fn to_normal(&self) -> Self::Normal;
 
@@ -23,6 +33,10 @@ pub trait Input: Clone {
     fn from_normal(normal: Self::Normal) -> Self;
 
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
+
+    fn files_to_load(&self) -> Vec<FileToLoad>;
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>);
 }
 
 pub trait InputInverse {
@@ -55,8 +69,18 @@ impl<O: Input> Input for Vec<O> {
     }
 
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        for (_i, item) in self.iter_mut().enumerate() {
+        for item in self.iter_mut() {
             item.insert_template_value(key, val);
+        }
+    }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        self.iter().flat_map(|f| f.files_to_load()).collect()
+    }
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+        for item in self.iter_mut() {
+            item.insert_loaded_files(files);
         }
     }
 }
@@ -92,8 +116,18 @@ impl<O: Input> Input for HashMap<String, O> {
     }
 
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        for (_i, (_key, item)) in self.iter_mut().enumerate() {
+        for (_key, item) in self.iter_mut() {
             item.insert_template_value(key, val);
+        }
+    }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        self.iter().flat_map(|(_k, f)| f.files_to_load()).collect()
+    }
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+        for (_key, item) in self.iter_mut() {
+            item.insert_loaded_files(files);
         }
     }
 }
@@ -119,6 +153,14 @@ impl<O: Input> Input for Box<O> {
 
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         (**self).insert_template_value(key, val)
+    }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        (**self).files_to_load()
+    }
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+        (**self).insert_loaded_files(files)
     }
 }
 
@@ -159,6 +201,19 @@ impl<A: Input, B: Input> Input for (A, B) {
         self.0.insert_template_value(key, val);
         self.1.insert_template_value(key, val);
     }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        self.0
+            .files_to_load()
+            .into_iter()
+            .chain(self.1.files_to_load().into_iter())
+            .collect()
+    }
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+        self.0.insert_loaded_files(files);
+        self.1.insert_loaded_files(files);
+    }
 }
 
 macro_rules! impl_input {
@@ -186,6 +241,10 @@ macro_rules! impl_input {
             fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {
 
             }
+
+            fn files_to_load(&self) -> Vec<FileToLoad> { Vec::new() }
+
+            fn insert_loaded_files(&mut self, _files: &HashMap<FileToLoad, LoadedFile>) {}
         }
         )*
     };

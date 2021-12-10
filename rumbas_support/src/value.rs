@@ -44,6 +44,22 @@ where
             v.insert_template_value(key, val);
         }
     }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        match &self {
+            ValueType::Normal(val) => val.files_to_load(),
+            ValueType::Template(ts) => ts.files_to_load(),
+            ValueType::Invalid(_) => vec![],
+        }
+    }
+
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        match self {
+            ValueType::Normal(ref mut val) => val.insert_loaded_files(files),
+            ValueType::Template(ref mut ts) => ts.insert_loaded_files(files),
+            ValueType::Invalid(v) => (),
+        }
+    }
 }
 
 impl<T: std::clone::Clone> ValueType<T> {
@@ -127,6 +143,17 @@ where
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         if let Some(ref mut v) = self.0 {
             v.insert_template_value(key, val);
+        }
+    }
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        match &self.0 {
+            Some(v) => v.files_to_load(),
+            None => vec![],
+        }
+    }
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        if let Some(ref mut v) = self.0 {
+            v.insert_loaded_files(files);
         }
     }
 }
@@ -221,6 +248,12 @@ impl Input for TemplateString {
         }
     }
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        Vec::new()
+    }
+
+    fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {}
 }
 
 impl JsonSchema for TemplateString {

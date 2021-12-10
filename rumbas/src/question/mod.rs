@@ -59,6 +59,7 @@ pub struct Question {
     pub diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
     pub resources: Vec<ResourcePath>,
     /// The custom part types used in this exam
+    #[input(skip)]
     pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options
 }
 

@@ -1,14 +1,7 @@
 #[macro_use]
 extern crate rumbas_support_derive;
 
-use rumbas_support::example::Examples;
-use rumbas_support::input::Input;
-use rumbas_support::input::InputCheckResult;
-use rumbas_support::input::InputInverse;
-use rumbas_support::overwrite::Overwrite;
-use rumbas_support::rumbas_check::RumbasCheck;
-use rumbas_support::rumbas_check::RumbasCheckResult;
-use rumbas_support::value::ValueType;
+use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
 

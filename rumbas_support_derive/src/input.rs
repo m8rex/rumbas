@@ -128,6 +128,11 @@ fn input_handle_unit_struct(
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 }
+                fn files_to_load(&self) -> Vec<FileToLoad> {
+                    Vec::new()
+                }
+                fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                }
             }
     });
     // Also implement InputInverse
@@ -184,6 +189,17 @@ fn input_handle_tuple_struct(
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                     #(self.#field_indexes.insert_template_value(key, val);)*
+                }
+                fn files_to_load(&self) -> Vec<FileToLoad> {
+                    let mut result = Vec::new();
+                    #(
+                        let previous_result = self.#field_indexes.files_to_load();
+                        result.extend(previous_result);
+                    )*
+                    result
+                }
+                fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                    #(self.#field_indexes.insert_loaded_files(files);)*
                 }
             }
     });
@@ -337,6 +353,18 @@ fn input_handle_struct_struct(
             fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 #(self.#field_names.insert_template_value(key, val);)*
             }
+            fn files_to_load(&self) -> Vec<FileToLoad> {
+                let mut result = Vec::new();
+                #(
+                    let previous_result = self.#field_names.files_to_load();
+                    result.extend(previous_result);
+                )*
+                result
+            }
+
+            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                #(self.#field_names.insert_loaded_files(files);)*
+            }
         }
     });
 
@@ -355,6 +383,13 @@ fn input_handle_struct_struct(
             }
             fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 self.0.insert_template_value(key, val)
+            }
+            fn files_to_load(&self) -> Vec<FileToLoad> {
+                self.0.files_to_load()
+            }
+
+            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                self.0.insert_loaded_files(files);
             }
         }
     });
@@ -661,6 +696,128 @@ fn input_handle_enum_insert_template_value_variants(
         .collect::<Vec<_>>()
 }
 
+// Create tokens for each enum variant for the find_missing method
+fn input_handle_enum_files_to_load_variants(
+    v: &[InputVariantReceiver],
+    input_ident: &syn::Ident,
+) -> Vec<proc_macro2::TokenStream> {
+    v.iter()
+        .map(|variant| {
+            let variant_ident = &variant.ident;
+            match variant.fields.style {
+                ast::Style::Unit => {
+                    quote! {
+                        #input_ident::#variant_ident => Vec::new()
+                    }
+                }
+                ast::Style::Tuple => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    let numbers = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            let i = syn::Index::from(i);
+                            quote!(#i)
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident(#(#items),*) => {
+                            let mut result = Vec::new();
+                            #(
+                                let previous_result = #items.files_to_load();
+                                result.extend(previous_result);
+                            )*
+                            result
+                        }
+                    }
+                }
+                ast::Style::Struct => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident { #(#items),* } => {
+                            let mut result = Vec::new();
+                            #(
+                                let previous_result = #items.files_to_load();
+                                result.extend(previous_result);
+                            )*
+                            result
+                        }
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>()
+}
+
+// Create tokens for each enum variant for the insert_template_value_variants method
+fn input_handle_enum_insert_loaded_files_variants(
+    v: &[InputVariantReceiver],
+    input_ident: &syn::Ident,
+) -> Vec<proc_macro2::TokenStream> {
+    v.iter()
+        .map(|variant| {
+            let variant_ident = &variant.ident;
+            match variant.fields.style {
+                ast::Style::Unit => {
+                    quote! {
+                        #input_ident::#variant_ident => ()
+                    }
+                }
+                ast::Style::Tuple => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident(#(#items),*) => {
+                            #(#items.insert_loaded_files(files);)*
+                        }
+                    }
+                }
+                ast::Style::Struct => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident { #(#items),* } => {
+                            #(#items.insert_loaded_files(files));*
+                        }
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>()
+}
+
 // Handle derivation for enums
 fn input_handle_enum(
     v: &[InputVariantReceiver],
@@ -679,6 +836,11 @@ fn input_handle_enum(
     let from_normal_variants = input_handle_enum_from_normal_variants(v, ident, input_ident);
 
     let find_missing_variants = input_handle_enum_find_missing_variants(v, input_ident);
+
+    let files_to_load_variants = input_handle_enum_files_to_load_variants(v, input_ident);
+
+    let insert_loaded_files_variants =
+        input_handle_enum_insert_loaded_files_variants(v, input_ident);
 
     let insert_template_value_variants =
         input_handle_enum_insert_template_value_variants(v, input_ident);
@@ -711,6 +873,17 @@ fn input_handle_enum(
             fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 match self {
                     #(#insert_template_value_variants),*
+                }
+            }
+            fn files_to_load(&self) -> Vec<FileToLoad> {
+                match self {
+                    #(#files_to_load_variants),*
+                }
+            }
+
+            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                match self {
+                    #(#insert_loaded_files_variants),*
                 }
             }
         }

@@ -3,11 +3,7 @@ extern crate rumbas_support_derive;
 
 include! {"macros.rs.include"}
 
-use rumbas_support::input::Input;
-use rumbas_support::input::InputCheckResult;
-use rumbas_support::input::InputInverse;
-use rumbas_support::overwrite::Overwrite;
-use rumbas_support::value::Value;
+use rumbas_support::preamble::*;
 use serde::Deserialize;
 
 #[derive(Input, Overwrite)]
