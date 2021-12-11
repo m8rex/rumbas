@@ -1,3 +1,4 @@
+use crate::support::file_manager::{FileToRead, TextFileToRead};
 use crate::support::input_string::InputString;
 use crate::support::to_numbas::ToNumbas;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
@@ -153,6 +154,13 @@ macro_rules! file_type {
                             }
                         } else {
                             let relative_file_name = s.split(&prefix).collect::<Vec<&str>>()[1];
+                                Self {
+                                    file_name: Some(relative_file_name.to_string()),
+                                    content: None,
+                                    translated_content: HashMap::new(),
+                                    error_message: None
+                                }
+                            /* TODO move to where file will be read
                             let file_path = Path::new(crate::QUESTIONS_FOLDER).join(relative_file_name);
                             let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
                             if let Some(file_dir) = file_path.parent() {
@@ -224,6 +232,7 @@ macro_rules! file_type {
                                     error_message: Some(relative_file_name.to_string()),
                                 }
                             }
+                            */
                         }
                     } else {
                         Self::s(&s)
@@ -280,6 +289,11 @@ macro_rules! file_type {
                         error_message: None,
                     }
                 }
+                pub fn file_to_read(&self) -> Option<FileToRead> {
+                    self.file_name.map(|file_name| {
+                        FileToRead::Text(TextFileToRead::with_file_name(file_path))
+                    })
+                }
             }
             impl Input for [<$type Input>] {
                 type Normal = $type;
@@ -307,6 +321,32 @@ macro_rules! file_type {
                 }
 
                 fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+
+                fn files_to_load(&self) -> Vec<FileToLoad> {
+                    let file = self.file_to_read();
+                    if let Some(f) = file {
+                        vec![f.into()]
+                    }
+                    else { vec![] }
+                }
+
+                fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+                    let file = self.file_to_read();
+                    if let Some(f) = file {
+                        let file : FileToLoad = f.into();
+                        let file = files.get(&file);
+                        match file {
+                            Some(LoadedFile::Normal(n)) => {
+                                self.content = Some(n.content.clone());
+                            }
+                            Some(LoadedFile::Localized(l)) => {
+                                self.content = l.content.clone();
+                                self.translated_content = l.localized_content.clone();
+                            }
+                            None => self.error_message = Some(format!("Missing content"))
+                        }
+                    }
+                }
             }
             impl InputInverse for $type {
                 type Input = [<$type Input>];

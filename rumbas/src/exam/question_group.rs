@@ -1,5 +1,6 @@
 use crate::question::Question;
 use crate::question::QuestionInput;
+use crate::support::file_manager::*;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -108,11 +109,12 @@ pub struct QuestionPath {
     pub question_data: Question,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(try_from = "String")]
+#[serde(from = "String")]
 #[serde(into = "String")]
 pub struct QuestionPathInput {
     pub question_name: String,
-    pub question_data: QuestionInput,
+    pub question_data: Option<QuestionInput>,
+    pub error_message: Option<String>,
 }
 
 impl InputInverse for QuestionPath {
@@ -126,9 +128,15 @@ impl Examples for QuestionPathInput {
             .into_iter()
             .map(|e| QuestionPathInput {
                 question_name: "".to_string(),
-                question_data: e,
+                question_data: None,
+                error_message: None,
             })
             .collect()
+    }
+}
+impl QuestionPathInput {
+    pub fn file_to_read(&self) -> FileToRead {
+        FileToRead::Question(QuestionFileToRead::with_file_name(self.question_name))
     }
 }
 
@@ -137,20 +145,60 @@ impl Input for QuestionPathInput {
     fn to_normal(&self) -> Self::Normal {
         Self::Normal {
             question_name: self.question_name.to_owned(),
-            question_data: self.question_data.to_normal(),
+            question_data: self.question_data.unwrap().to_normal(),
         }
     }
     fn from_normal(normal: Self::Normal) -> Self {
         Self {
             question_name: normal.question_name,
-            question_data: Input::from_normal(normal.question_data),
+            question_data: Some(Input::from_normal(normal.question_data)),
+            error_message: None,
         }
     }
     fn find_missing(&self) -> InputCheckResult {
-        self.question_data.find_missing()
+        if let Some(q) = self.question_data {
+            q.find_missing()
+        } else {
+            InputCheckResult::from_missing(Some(self.question_name.clone()))
+        }
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-        self.question_data.insert_template_value(key, val);
+        if let Some(ref mut q) = self.question_data {
+            q.insert_template_value(key, val);
+        }
+    }
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        if let Some(q) = self.question_data {
+            q.files_to_load()
+        } else {
+            let file = self.file_to_read();
+            vec![file.into()]
+        }
+    }
+
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        if let Some(q) = self.question_data {
+            q.insert_loaded_files(files);
+        } else {
+            let file = self.file_to_read();
+            if let Some(f) = file {
+                let file: FileToLoad = f.into();
+                let file = files.get(&file);
+                match file {
+                    Some(LoadedFile::Normal(n)) => {
+                        let question_data_res = QuestionInput::from_str(&n.content[..]);
+                        match question_data_res {
+                            Ok(q) => self.question_data = Some(q.clone()),
+                            Err(e) => self.error_message = Some(e.clone()),
+                        }
+                    }
+                    Some(LoadedFile::Localized(l)) => {
+                        unreachable!()
+                    }
+                    None => self.error_message = Some(format!("Missing content")),
+                }
+            }
+        }
     }
 }
 
@@ -191,26 +239,26 @@ impl JsonSchema for QuestionPathInput {
     }
 }
 
-impl std::convert::TryFrom<String> for QuestionPathInput {
-    type Error = YamlError;
-
+impl std::convert::From<String> for QuestionPathInput {
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let question_data = QuestionInput::from_name(&s).map_err(|e| e)?;
+        //let question_data = QuestionInput::from_name(&s).map_err(|e| e)?;
         Ok(QuestionPathInput {
             question_name: s,
-            question_data,
+            question_data: None,
+            error_message: None,
         })
     }
 }
 
 impl std::convert::From<QuestionPathInput> for String {
     fn from(q: QuestionPathInput) -> Self {
-        let q_yaml = crate::question::QuestionFileTypeInput::Normal(Box::new(q.question_data))
+        /*let q_yaml = crate::question::QuestionFileTypeInput::Normal(Box::new(q.question_data))
             .to_yaml()
             .unwrap();
         let file = format!("{}/{}.yaml", crate::QUESTIONS_FOLDER, q.question_name);
         log::info!("Writing to {}", file);
         std::fs::write(file, q_yaml).unwrap(); //fix handle result (try_from)
+        */
         q.question_name
     }
 }
