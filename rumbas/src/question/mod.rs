@@ -150,15 +150,7 @@ impl ToRumbas<Question> for numbas::question::Question {
 }
 
 impl QuestionInput {
-    pub fn from_name(name: &str) -> YamlResult<QuestionInput> {
-        use QuestionFileTypeInput::*;
-        let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
-        let yaml = fs::read_to_string(&file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
+    pub fn from_str(yaml: &str, file: &PathBuf) -> YamlResult<QuestionInput> {
         let input: std::result::Result<QuestionFileTypeInput, serde_yaml::Error> =
             serde_yaml::from_str(&yaml);
         input
@@ -182,7 +174,18 @@ impl QuestionInput {
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
-            .map_err(|e| YamlError::from(e, file.to_path_buf()))
+            .map_err(|e| YamlError::from(e, file))
+    }
+    pub fn from_name(name: &str) -> YamlResult<QuestionInput> {
+        use QuestionFileTypeInput::*;
+        let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
+        let yaml = fs::read_to_string(&file).expect(
+            &format!(
+                "Failed to read {}",
+                file.to_str().map_or("invalid filename", |s| s)
+            )[..],
+        );
+        Self::from_str(yaml, file.to_path_buf())
     }
 }
 

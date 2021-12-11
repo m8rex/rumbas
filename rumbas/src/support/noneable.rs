@@ -43,6 +43,17 @@ impl<T: Input> Input for Noneable<T> {
             item.insert_template_value(&key, &val);
         }
     }
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        match self {
+            Noneable::NotNone(val) => val.files_to_load(),
+            _ => Vec::new(),
+        }
+    }
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        if let Noneable::NotNone(ref mut item) = self {
+            item.insert_loaded_files(files);
+        }
+    }
 }
 
 impl<T: Overwrite<T>> Overwrite<Noneable<T>> for Noneable<T> {

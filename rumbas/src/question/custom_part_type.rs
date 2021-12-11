@@ -741,15 +741,13 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
-#[input(name = "CustomPartTypeDefinitionPathInput")]
-#[input(test)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(try_from = "String")]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(from = "String")]
 #[serde(into = "String")]
 pub struct CustomPartTypeDefinitionPath {
     pub custom_part_type_name: String,
-    pub custom_part_type_data: CustomPartTypeDefinition,
+    pub custom_part_type_data: Option<CustomPartTypeDefinition>,
+    pub error_message: Option<String>,
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinitionPath {
@@ -777,6 +775,7 @@ impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::question::custom_part_ty
                 input_widget: self.input_widget.to_rumbas(),
             },
             custom_part_type_name: self.short_name.clone(),
+            error_message: None,
         }
     }
 }
@@ -791,11 +790,9 @@ impl JsonSchema for CustomPartTypeDefinitionPathInput {
     }
 }
 
-impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPathInput {
-    type Error = YamlError;
-
+impl std::convert::From<String> for CustomPartTypeDefinitionPathInput {
     fn try_from(s: String) -> Result<Self, Self::Error> {
-        let custom_part_type_data = CustomPartTypeDefinitionInput::from_name(&s).map_err(|e| e)?;
+        //let custom_part_type_data = CustomPartTypeDefinitionInput::from_name(&s).map_err(|e| e)?;
         Ok(CustomPartTypeDefinitionPathInput {
             custom_part_type_name: Value::Normal(s),
             custom_part_type_data: Value::Normal(custom_part_type_data),

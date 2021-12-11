@@ -1,14 +1,28 @@
 use crate::value::Value;
 use crate::value::ValueType;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
+#[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct FileToLoad {
-    file_path: String,
+    pub file_path: PathBuf,
+    pub locale_dependant: bool,
 }
 
-pub struct LoadedFile {
-    file_path: String,
-    content: String,
+pub enum LoadedFile {
+    Normal(LoadedNormalFile),
+    Localized(LoadedLocalizedFile),
+}
+
+pub struct LoadedNormalFile {
+    pub file_path: PathBuf,
+    pub content: String,
+}
+
+pub struct LoadedLocalizedFile {
+    pub file_path: PathBuf,
+    pub content: Option<String>,
+    pub localized_content: HashMap<String, String>,
 }
 
 pub trait Input: Clone {

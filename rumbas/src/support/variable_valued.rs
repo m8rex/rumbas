@@ -53,6 +53,18 @@ impl<T: Input> Input for VariableValued<T> {
             VariableValued::Value(ref mut v) => v.insert_template_value(key, val),
         };
     }
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        match self {
+            VariableValued::Variable(s) => s.files_to_load(),
+            VariableValued::Value(v) => v.files_to_load(),
+        }
+    }
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        match *self {
+            VariableValued::Variable(ref mut s) => s.insert_loaded_files(files),
+            VariableValued::Value(ref mut v) => v.insert_loaded_files(files),
+        };
+    }
 }
 
 impl<T: InputInverse> InputInverse for VariableValued<T> {

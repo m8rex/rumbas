@@ -407,8 +407,8 @@ macro_rules! translatable_type {
                 type Normal = $type;
                 fn to_normal(&self) -> <Self as Input>::Normal {
                     match self {
-                        [<$type Input>]::Translated(t) => $type::Translated(t.to_normal()),
-                        [<$type Input>]::NotTranslated(f) => $type::NotTranslated(f.to_normal()),
+                        Self::Translated(t) => $type::Translated(t.to_normal()),
+                        Self::NotTranslated(f) => $type::NotTranslated(f.to_normal()),
                     }
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
@@ -425,8 +425,22 @@ macro_rules! translatable_type {
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
                     match self {
-                        [<$type Input>]::Translated(m) => m.insert_template_value(key, val),
-                        [<$type Input>]::NotTranslated(f) => f.insert_template_value(key, val),
+                        Self::Translated(m) => m.insert_template_value(key, val),
+                        Self::NotTranslated(f) => f.insert_template_value(key, val),
+                    }
+                }
+
+                fn files_to_load(&self) -> Vec<FileToLoad> {
+                    match self {
+                        Self::Translated(s) => s.files_to_load(),
+                        Self::NotTranslated(s) => s.files_to_load()
+                    }
+                }
+
+                fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+                    match self {
+                        Self::Translated(m) => m.insert_loaded_files(files),
+                        Self::NotTranslated(f) => f.insert_loaded_files(files),
                     }
                 }
             }
