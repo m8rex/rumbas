@@ -291,7 +291,7 @@ macro_rules! file_type {
                 }
                 pub fn file_to_read(&self) -> Option<FileToRead> {
                     self.file_name.map(|file_name| {
-                        FileToRead::Text(TextFileToRead::with_file_name(file_path))
+                        FileToRead::Text(TextFileToRead::with_file_name(file_name))
                     })
                 }
             }
