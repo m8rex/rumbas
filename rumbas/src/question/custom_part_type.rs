@@ -741,6 +741,34 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
     }
 }
 
+impl ToRumbas<CustomPartTypeDefinition> for numbas::question::custom_part_type::CustomPartType {
+    fn to_rumbas(&self) -> CustomPartTypeDefinitionPath {
+        CustomPartTypeDefinition {
+            type_name: self.name.to_rumbas(),
+            description: self.description.to_rumbas(),
+            settings: self.settings.to_rumbas(),
+            help_url: self.help_url.to_rumbas(),
+            // public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,
+            can_be_gap: self.can_be_gap,
+            can_be_step: self.can_be_step,
+            marking_notes: JMENotes(self.marking_notes.clone().to_rumbas()),
+            published: self.published,
+            extensions: Extensions::from(&self.extensions),
+            input_widget: self.input_widget.to_rumbas(),
+        }
+    }
+}
+
+crate::support::file_manager::create_from_string_type!(
+    CustomPartTypeDefinitionPath,
+    CustomPartTypeDefinitionPathInput,
+    CustomPartTypeDefinition,
+    CustomPartTypeDefinitionInput,
+    CustomPartTypeFileToRead,
+    numbas::question::custom_part_type::CustomPartType,
+    "CustomPartTypeDefinitionPath"
+);
+/*
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 #[serde(into = "String")]
@@ -875,3 +903,4 @@ impl PartialEq for CustomPartTypeDefinitionPathInputEnum {
     }
 }
 impl Eq for CustomPartTypeDefinitionPathInputEnum {}
+*/
