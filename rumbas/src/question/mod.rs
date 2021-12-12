@@ -32,6 +32,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use std::path::PathBuf;
 use variable::VariableRepresentation;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
@@ -114,10 +115,7 @@ impl ToNumbas<numbas::question::Question> for Question {
             custom_part_types: self
                 .custom_part_types
                 .iter()
-                .map(|c| {
-                    c.custom_part_type_data
-                        .to_numbas_with_name(locale, c.custom_part_type_name.to_owned())
-                })
+                .map(|c| c.data.to_numbas_with_name(locale, c.file_name.to_owned()))
                 .collect(),
         }
     }
@@ -150,7 +148,8 @@ impl ToRumbas<Question> for numbas::question::Question {
 }
 
 impl QuestionInput {
-    pub fn from_str(yaml: &str, file: &PathBuf) -> YamlResult<QuestionInput> {
+    pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<QuestionInput> {
+        use QuestionFileTypeInput::*;
         let input: std::result::Result<QuestionFileTypeInput, serde_yaml::Error> =
             serde_yaml::from_str(&yaml);
         input
@@ -177,7 +176,6 @@ impl QuestionInput {
             .map_err(|e| YamlError::from(e, file))
     }
     pub fn from_name(name: &str) -> YamlResult<QuestionInput> {
-        use QuestionFileTypeInput::*;
         let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
         let yaml = fs::read_to_string(&file).expect(
             &format!(
@@ -185,7 +183,7 @@ impl QuestionInput {
                 file.to_str().map_or("invalid filename", |s| s)
             )[..],
         );
-        Self::from_str(yaml, file.to_path_buf())
+        Self::from_str(&yaml[..], file.to_path_buf())
     }
 }
 

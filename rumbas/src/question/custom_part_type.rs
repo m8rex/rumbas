@@ -1,5 +1,6 @@
 use crate::question::extension::Extensions;
 use crate::question::part::question_part::JMENotes;
+use crate::support::file_manager::*;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -8,10 +9,12 @@ use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::{YamlError, YamlResult};
 use rumbas_support::preamble::*;
+use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
+use std::convert::{Into, TryInto};
 use std::hash::{Hash, Hasher};
+use std::path::PathBuf;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartTypeDefinitionInput")]
@@ -60,6 +63,9 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPart
 }
 
 impl CustomPartTypeDefinitionInput {
+    pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<Self> {
+        serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file))
+    }
     pub fn from_name(name: &str) -> YamlResult<Self> {
         let file =
             std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(format!("{}.yaml", name));
@@ -742,7 +748,7 @@ impl ToRumbas<CustomPartRadioGroupInputOptions>
 }
 
 impl ToRumbas<CustomPartTypeDefinition> for numbas::question::custom_part_type::CustomPartType {
-    fn to_rumbas(&self) -> CustomPartTypeDefinitionPath {
+    fn to_rumbas(&self) -> CustomPartTypeDefinition {
         CustomPartTypeDefinition {
             type_name: self.name.to_rumbas(),
             description: self.description.to_rumbas(),

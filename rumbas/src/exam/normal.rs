@@ -63,7 +63,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
                 qg.clone()
                     .questions
                     .into_iter()
-                    .flat_map(|q| q.question_data.resources)
+                    .flat_map(|q| q.data.resources)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -73,12 +73,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
         let extensions: Vec<String> = self
             .question_groups
             .iter()
-            .flat_map(|qg| {
-                qg.clone()
-                    .questions
-                    .into_iter()
-                    .map(|q| q.question_data.extensions)
-            })
+            .flat_map(|qg| qg.clone().questions.into_iter().map(|q| q.data.extensions))
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
 
@@ -90,7 +85,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
                 qg.clone()
                     .questions
                     .into_iter()
-                    .flat_map(|q| q.question_data.custom_part_types)
+                    .flat_map(|q| q.data.custom_part_types)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()

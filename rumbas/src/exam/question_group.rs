@@ -9,6 +9,7 @@ use rumbas_support::preamble::*;
 use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::convert::Into;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
