@@ -197,10 +197,10 @@ macro_rules! create_from_string_type {
         }
         impl $ti {
             pub fn file_to_read(&self) -> Option<FileToRead> {
-                if let Some(q) = self.data {
+                if let Some(_) = &self.data {
                     None
                 } else {
-                    Some(<$read_type>::with_file_name(self.file_name).into())
+                    Some(<$read_type>::with_file_name(self.file_name.clone()).into())
                 }
             }
         }
@@ -210,7 +210,7 @@ macro_rules! create_from_string_type {
             fn to_normal(&self) -> Self::Normal {
                 Self::Normal {
                     file_name: self.file_name.to_owned(),
-                    data: self.data.unwrap().to_normal(),
+                    data: self.data.as_ref().map(|d| d.to_normal()).unwrap(),
                 }
             }
             fn from_normal(normal: Self::Normal) -> Self {
@@ -221,7 +221,7 @@ macro_rules! create_from_string_type {
                 }
             }
             fn find_missing(&self) -> InputCheckResult {
-                if let Some(q) = self.data {
+                if let Some(ref q) = self.data {
                     q.find_missing()
                 } else {
                     InputCheckResult::from_missing(Some(self.file_name.clone()))
@@ -235,7 +235,7 @@ macro_rules! create_from_string_type {
             fn files_to_load(&self) -> Vec<FileToLoad> {
                 if let Some(file) = self.file_to_read() {
                     vec![file.into()]
-                } else if let Some(q) = self.data {
+                } else if let Some(ref q) = self.data {
                     q.files_to_load()
                 } else {
                     unreachable!();
@@ -246,7 +246,7 @@ macro_rules! create_from_string_type {
                 &mut self,
                 files: &std::collections::HashMap<FileToLoad, LoadedFile>,
             ) {
-                if let Some(q) = self.data {
+                if let Some(ref mut q) = self.data {
                     q.insert_loaded_files(files);
                 } else {
                     let file = self.file_to_read();
