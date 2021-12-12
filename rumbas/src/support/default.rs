@@ -243,7 +243,7 @@ macro_rules! handle {
                                             question_value
                                         {
                                             question
-                                                .question_data
+                                                .data
                                                 .overwrite(&q);
                                         }
                                     })
@@ -287,7 +287,7 @@ macro_rules! handle_question_parts {
                         questions.iter_mut().for_each(|question_value| {
                             if let ValueType::Normal(ref mut question) = question_value {
                                 if let Value(Some(ValueType::Normal(ref mut parts))) =
-                                    question.question_data.parts
+                                    question.data.parts
                                 {
                                     parts.iter_mut().for_each(|part_value| {
                                         if let ValueType::Normal(QuestionPartInput::Builtin(
@@ -337,7 +337,7 @@ macro_rules! handle_question_parts {
                         questions.iter_mut().for_each(|question_value| {
                             if let ValueType::Normal(ref mut question) = question_value {
                                 if let Value(Some(ValueType::Normal(ref mut parts))) =
-                                    question.question_data.parts
+                                    question.data.parts
                                 {
                                     parts.iter_mut().for_each(|part_value| {
                                         if let ValueType::Normal(QuestionPartInput::Builtin(

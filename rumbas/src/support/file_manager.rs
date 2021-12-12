@@ -43,6 +43,12 @@ impl TextFileToRead {
     }
 }
 
+impl std::convert::From<TextFileToRead> for FileToRead {
+    fn from(s: TextFileToRead) -> Self {
+        FileToRead::Text(s)
+    }
+}
+
 impl std::convert::From<TextFileToRead> for rumbas_support::input::FileToLoad {
     fn from(s: TextFileToRead) -> Self {
         Self {
@@ -55,6 +61,19 @@ impl std::convert::From<TextFileToRead> for rumbas_support::input::FileToLoad {
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct CustomPartTypeFileToRead {
     file_path: PathBuf,
+}
+
+impl CustomPartTypeFileToRead {
+    pub fn with_file_name(file_name: String) -> Self {
+        let file_path = std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(file_name);
+        Self { file_path }
+    }
+}
+
+impl std::convert::From<CustomPartTypeFileToRead> for FileToRead {
+    fn from(s: CustomPartTypeFileToRead) -> Self {
+        FileToRead::CustomPartType(s)
+    }
 }
 
 impl std::convert::From<CustomPartTypeFileToRead> for rumbas_support::input::FileToLoad {
@@ -78,6 +97,12 @@ impl QuestionFileToRead {
     }
 }
 
+impl std::convert::From<QuestionFileToRead> for FileToRead {
+    fn from(s: QuestionFileToRead) -> Self {
+        FileToRead::Question(s)
+    }
+}
+
 impl std::convert::From<QuestionFileToRead> for rumbas_support::input::FileToLoad {
     fn from(s: QuestionFileToRead) -> Self {
         Self {
@@ -90,6 +115,12 @@ impl std::convert::From<QuestionFileToRead> for rumbas_support::input::FileToLoa
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct ExamFileToRead {
     file_path: PathBuf,
+}
+
+impl std::convert::From<ExamFileToRead> for FileToRead {
+    fn from(s: ExamFileToRead) -> Self {
+        FileToRead::Exam(s)
+    }
 }
 
 impl std::convert::From<ExamFileToRead> for rumbas_support::input::FileToLoad {
@@ -164,9 +195,13 @@ macro_rules! create_from_string_type {
                 }]
             }
         }
-        impl $datai {
-            pub fn file_to_read(&self) -> FileToRead {
-                <$read_type>::with_file_name(self.file_name).into()
+        impl $ti {
+            pub fn file_to_read(&self) -> Option<FileToRead> {
+                if let Some(q) = self.data {
+                    None
+                } else {
+                    Some(<$read_type>::with_file_name(self.file_name).into())
+                }
             }
         }
 
@@ -198,11 +233,12 @@ macro_rules! create_from_string_type {
                 }
             }
             fn files_to_load(&self) -> Vec<FileToLoad> {
-                if let Some(q) = self.data {
+                if let Some(file) = self.file_to_read() {
+                    vec![file.into()]
+                } else if let Some(q) = self.data {
                     q.files_to_load()
                 } else {
-                    let file = self.file_to_read();
-                    vec![file.into()]
+                    unreachable!();
                 }
             }
 
@@ -215,14 +251,17 @@ macro_rules! create_from_string_type {
                 } else {
                     let file = self.file_to_read();
                     if let Some(f) = file {
-                        let file: FileToLoad = f.into();
-                        let file = files.get(&file);
+                        let file_to_load: FileToLoad = f.into();
+                        let file = files.get(&file_to_load);
                         match file {
                             Some(LoadedFile::Normal(n)) => {
-                                let data_res = <$datai>::from_str(&n.content[..]);
+                                let data_res = <$datai>::from_str(
+                                    &n.content[..],
+                                    file_to_load.file_path.clone(),
+                                );
                                 match data_res {
                                     Ok(q) => self.data = Some(q.clone()),
-                                    Err(e) => self.error_message = Some(e.clone()),
+                                    Err(e) => self.error_message = Some(e.to_string()),
                                 }
                             }
                             Some(LoadedFile::Localized(l)) => {
