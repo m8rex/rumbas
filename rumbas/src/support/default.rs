@@ -38,10 +38,10 @@ use std::path::{Path, PathBuf};
 //
 
 /// Combine an exam with all data from the default files
-pub fn combine_with_default_files(path: &Path, exam: &mut ExamInput) {
-    let default_files = default_files(path);
+pub fn combine_exam_with_default_files(path: &Path, exam: &mut ExamInput) {
+    let default_files = <DefaultFile<DefaultExamFileType>>::files(path);
     if let ExamInput::Normal(ref mut e) = exam {
-        handle!(
+        handle_exam!(
             default_files,
             e,
             |n: &SequentialNavigationInput, e: &mut NormalExamInput| e.navigation.overwrite(
@@ -57,7 +57,7 @@ pub fn combine_with_default_files(path: &Path, exam: &mut ExamInput) {
             |_n: &DiagnosticNavigationInput, _e: &mut NormalExamInput| ()
         );
     } else if let ExamInput::Diagnostic(ref mut e) = exam {
-        handle!(
+        handle_exam!(
             default_files,
             e,
             |_n: &SequentialNavigationInput, _e: &mut DiagnosticExamInput| (),
@@ -69,14 +69,10 @@ pub fn combine_with_default_files(path: &Path, exam: &mut ExamInput) {
     }
 }
 
-/// Returns a vector with all DefaultFiles that are found for the given path
-fn default_files(path: &Path) -> Vec<DefaultFile> {
-    let paths = default_file_paths(path);
-    let usefull_paths = paths
-        .into_iter()
-        .map(|p| DefaultFile::from(&p))
-        .filter(|p| p.is_some());
-    usefull_paths.map(|p| p.unwrap()).collect()
+/// Combine a question with all data from the default files
+pub fn combine_question_with_default_files(path: &Path, question: &mut QuestionInput) {
+    let default_files = <DefaultFile<DefaultQuestionFileType>>::files(path);
+    handle_question!(default_files, question);
 }
 
 /// Returns a vector of paths to default files for the given path
@@ -102,14 +98,20 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     result.into_iter().collect::<Vec<PathBuf>>()
 }
 
-// Create the needed enum by specifying which files contain which data
+// Create the needed enum for exams by specifying which files contain which data
 create_default_file_type_enums!(
+    DefaultExamFileType: DefaultExamData,
     SequentialNavigation with type SequentialNavigationInput: in "navigation";
     MenuNavigation with type MenuNavigationInput: in "navigation.menu";
     DiagnosticNavigation with type DiagnosticNavigationInput: in "navigation.diagnostic";
     Timing with type TimingInput: in "timing";
     Feedback with type FeedbackInput: in "feedback";
-    NumbasSettings with type NumbasSettingsInput: in "numbas_settings";
+    NumbasSettings with type NumbasSettingsInput: in "numbas_settings"
+);
+
+// Create the needed enum for questions by specifying which files contain which data
+create_default_file_type_enums!(
+    DefaultQuestionFileType: DefaultQuestionData,
     Question with type QuestionInput: in "question";
     QuestionPartJME with type QuestionPartJMEInput: in "questionpart.jme";
     QuestionPartGapFill with type QuestionPartGapFillInput: in "questionpart.gapfill";
@@ -130,17 +132,23 @@ create_default_file_type_enums!(
     QuestionPartGapFillGapExtension with type QuestionPartExtensionInput: in "questionpart.gapfill.gap.extension"
 );
 
+trait DefaultFileTypeMethods: Sized {
+    type Data;
+    fn from(path: &Path) -> Option<Self>;
+    fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data>;
+}
+
 #[derive(Debug)]
 /// Struct used to overwrite values with defaults
-struct DefaultFile {
-    r#type: DefaultFileType,
+struct DefaultFile<T> {
+    r#type: T,
     path: PathBuf,
 }
 
-impl DefaultFile {
+impl<T: DefaultFileTypeMethods> DefaultFile<T> {
     /// Create a DefaultFile from the file_name of the given path, returns None if invalid path
-    fn from(path: &Path) -> Option<DefaultFile> {
-        let default_type: Option<DefaultFileType> = DefaultFileType::from(path);
+    fn from(path: &Path) -> Option<Self> {
+        let default_type: Option<T> = T::from(path);
         if let Some(t) = default_type {
             return Some(DefaultFile {
                 r#type: t,
@@ -151,40 +159,53 @@ impl DefaultFile {
     }
 
     /// Read the given path as the data needed for this DefaultFile
-    fn read_as_data(&self) -> serde_yaml::Result<DefaultData> {
+    fn read_as_data(&self) -> serde_yaml::Result<T::Data> {
         self.r#type.read_as_data(&self.path)
     }
 
+    /// Returns a vector with all DefaultExamFiles that are found for the given path
+    fn files(path: &Path) -> Vec<Self> {
+        let paths = default_file_paths(path);
+        let usefull_paths = paths
+            .into_iter()
+            .map(|p| Self::from(&p))
+            .filter(|p| p.is_some());
+        usefull_paths.map(|p| p.unwrap()).collect()
+    }
+}
+
+impl<T> DefaultFile<T> {
     /// Get the path of this DefaultFile
     fn get_path(&self) -> PathBuf {
         self.path.clone()
     }
 }
 
-/// Create the DefaultFileType and DefaultData enums and their methods to read data
+/// Create the DefaultFileType and DefaultQuestionData enums and their methods to read data
 macro_rules! create_default_file_type_enums {
-    ( $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
+    ($type_name: ident: $data_name: ident, $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
         #[derive(Debug)]
-        pub enum DefaultFileType {
+        pub enum $type_name {
             $(
                 $file_type
             ),*
         }
 
-        pub enum DefaultData {
+        pub enum $data_name {
             $(
                 $file_type($data_type)
             ),*
         }
 
-        impl DefaultFileType {
+        impl DefaultFileTypeMethods for $type_name {
+            type Data = $data_name;
             /// Creates a DefaultFileType based on the filename, returns None if unknown
-            fn from(path: &Path) -> Option<DefaultFileType> {
+            fn from(path: &Path) -> Option<Self> {
                 let file_name = path.file_stem();
                 match file_name {
                     Some(f) => match f.to_str() {
                         $(
-                            Some($file_name) => Some(DefaultFileType::$file_type),
+                            Some($file_name) => Some(Self::$file_type),
                         )*
                         _ => None
                     }
@@ -193,82 +214,81 @@ macro_rules! create_default_file_type_enums {
             }
 
             /// Read the given path as the data needed for this DefaultFileType
-            fn read_as_data(&self, path: &Path) -> serde_yaml::Result<DefaultData> {
+            fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data> {
                 let yaml = fs::read_to_string(path).unwrap();
                 match self {
                     $(
-                    DefaultFileType::$file_type => {
+                    Self::$file_type => {
                         let n: $data_type = serde_yaml::from_str(&yaml)?;
-                        Ok(DefaultData::$file_type( n ))
+                        Ok($data_name::$file_type( n ))
                     }
                     )*
                 }
             }
         }
-    }
+    };
 }
 
 /// Apply all defaults files to the given exam
-macro_rules! handle {
+macro_rules! handle_exam {
     ($default_files:expr, $exam: expr, $handle_seq: expr, $handle_menu: expr, $handle_diag: expr) => {
+        {
+            let exam = &mut $exam.0;
+            // TODO: diagnostic
+            log::info!("Found {} default exam files.", $default_files.len());
+            for default_file in $default_files.iter() {
+                    log::info!("Reading {}", default_file.get_path().display());
+                    let default_data = default_file.read_as_data().unwrap(); //TODO Move this so file reader reads them
+                    match default_data {
+                        DefaultExamData::SequentialNavigation(n) => {
+                            $handle_seq(&n, exam)
+                        }
+                        DefaultExamData::MenuNavigation(n) => {
+                            $handle_menu(&n, exam)
+                        }
+                        DefaultExamData::DiagnosticNavigation(n) => {
+                            $handle_diag(&n, exam)
+                        }
+                        DefaultExamData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
+                        DefaultExamData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
+                        DefaultExamData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
+                    }
+            }
+        }
+    }
+}
+
+/// Apply all defaults files to the given question
+macro_rules! handle_question {
+    ($default_files:expr, $question: expr) => {
 {
-    let exam = &mut $exam.0;
-    // TODO: diagnostic
-    log::info!("Found {} default files.", $default_files.len());
+    let question = $question;
+    log::info!("Found {} default question files.", $default_files.len());
     for default_file in $default_files.iter() {
             log::info!("Reading {}", default_file.get_path().display());
             let default_data = default_file.read_as_data().unwrap(); //TODO
             match default_data {
-                DefaultData::SequentialNavigation(n) => {
-                    $handle_seq(&n, exam)
+                DefaultQuestionData::Question(q) => {
+                    question
+                        .overwrite(&q);
                 }
-                DefaultData::MenuNavigation(n) => {
-                    $handle_menu(&n, exam)
-                }
-                DefaultData::DiagnosticNavigation(n) => {
-                    $handle_diag(&n, exam)
-                }
-                DefaultData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
-                DefaultData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
-                DefaultData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
-                DefaultData::Question(q) => {
-                    if let Value(Some(ValueType::Normal(ref mut groups))) = exam.question_groups {
-                        groups.iter_mut().for_each(|qg_value| {
-                            if let ValueType::Normal(ref mut qg) = qg_value {
-                                if let Some(ValueType::Normal(ref mut questions)) =
-                                    &mut qg.questions.0
-                                {
-                                    questions.iter_mut().for_each(|question_value| {
-                                        if let ValueType::Normal(ref mut question) =
-                                            question_value
-                                        {
-                                            question
-                                                .data
-                                                .overwrite(&q);
-                                        }
-                                    })
-                                }
-                            }
-                        });
-                    }
-                }
-                DefaultData::QuestionPartJME(p) => handle_question_parts!(exam, QuestionPartJMEInputEnum(p.clone()), JME),
-                DefaultData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap exam, QuestionPartJMEInputEnum(p.clone()), JME),
-                DefaultData::QuestionPartGapFill(p) => handle_question_parts!(exam, QuestionPartGapFillInputEnum(p.clone()), GapFill),
-                DefaultData::QuestionPartChooseOne(p) => handle_question_parts!(exam, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
-                DefaultData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap exam, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
-                DefaultData::QuestionPartChooseMultiple(p) => handle_question_parts!(exam, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
-                DefaultData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap exam, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
-                DefaultData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(exam, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
-                DefaultData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap exam, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
-                DefaultData::QuestionPartNumberEntry(p) => handle_question_parts!(exam, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
-                DefaultData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap exam, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
-                DefaultData::QuestionPartPatternMatch(p) => handle_question_parts!(exam, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
-                DefaultData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap exam, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
-                DefaultData::QuestionPartInformation(p) => handle_question_parts!(exam, QuestionPartInformationInputEnum(p.clone()), Information),
-                DefaultData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap exam, QuestionPartInformationInputEnum(p.clone()), Information),
-                DefaultData::QuestionPartExtension(p) => handle_question_parts!(exam, QuestionPartExtensionInputEnum(p.clone()), Extension),
-                DefaultData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap exam, QuestionPartExtensionInputEnum(p.clone()), Extension),
+                DefaultQuestionData::QuestionPartJME(p) => handle_question_parts!(question, QuestionPartJMEInputEnum(p.clone()), JME),
+                DefaultQuestionData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap question, QuestionPartJMEInputEnum(p.clone()), JME),
+                DefaultQuestionData::QuestionPartGapFill(p) => handle_question_parts!(question, QuestionPartGapFillInputEnum(p.clone()), GapFill),
+                DefaultQuestionData::QuestionPartChooseOne(p) => handle_question_parts!(question, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
+                DefaultQuestionData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap question, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
+                DefaultQuestionData::QuestionPartChooseMultiple(p) => handle_question_parts!(question, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
+                DefaultQuestionData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap question, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
+                DefaultQuestionData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(question, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
+                DefaultQuestionData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap question, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
+                DefaultQuestionData::QuestionPartNumberEntry(p) => handle_question_parts!(question, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
+                DefaultQuestionData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap question, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
+                DefaultQuestionData::QuestionPartPatternMatch(p) => handle_question_parts!(question, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
+                DefaultQuestionData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap question, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
+                DefaultQuestionData::QuestionPartInformation(p) => handle_question_parts!(question, QuestionPartInformationInputEnum(p.clone()), Information),
+                DefaultQuestionData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap question, QuestionPartInformationInputEnum(p.clone()), Information),
+                DefaultQuestionData::QuestionPartExtension(p) => handle_question_parts!(question, QuestionPartExtensionInputEnum(p.clone()), Extension),
+                DefaultQuestionData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap question, QuestionPartExtensionInputEnum(p.clone()), Extension),
 
             }
 
@@ -279,94 +299,45 @@ macro_rules! handle {
 
 /// Apply all defaults files to the question parts (or gaps) of the given exam
 macro_rules! handle_question_parts {
-    ($exam: expr, $p: expr, $type: ident) => {
-        if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
-            groups.iter_mut().for_each(|qg_value| {
-                if let ValueType::Normal(ref mut qg) = qg_value {
-                    if let Value(Some(ValueType::Normal(ref mut questions))) = &mut qg.questions {
-                        questions.iter_mut().for_each(|question_value| {
-                            if let ValueType::Normal(ref mut question) = question_value {
-                                if let Value(Some(ValueType::Normal(ref mut parts))) =
-                                    question.data.parts
-                                {
-                                    parts.iter_mut().for_each(|part_value| {
-                                        if let ValueType::Normal(QuestionPartInput::Builtin(
-                                            ref mut part,
-                                        )) = part_value
-                                        {
-                                            if let QuestionPartBuiltinInput::$type(_) = &part {
-                                                part.overwrite(&QuestionPartBuiltinInput::$type(
-                                                    $p.clone(),
-                                                ))
-                                            }
-                                            if let Value(Some(ValueType::Normal(ref mut steps))) =
-                                                &mut part.get_steps()
-                                            {
-                                                steps.iter_mut().for_each(|part| {
-                                                    if let ValueType::Normal(
-                                                        QuestionPartInput::Builtin(
-                                                            QuestionPartBuiltinInput::$type(_),
-                                                        ),
-                                                    ) = &part
-                                                    {
-                                                        part.overwrite(&ValueType::Normal(
-                                                            QuestionPartInput::Builtin(
-                                                                QuestionPartBuiltinInput::$type(
-                                                                    $p.clone(),
-                                                                ),
-                                                            ),
-                                                        ))
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    });
-                                }
+    ($question: expr, $p: expr, $type: ident) => {
+        if let Value(Some(ValueType::Normal(ref mut parts))) = $question.parts {
+            parts.iter_mut().for_each(|part_value| {
+                if let ValueType::Normal(QuestionPartInput::Builtin(ref mut part)) = part_value {
+                    if let QuestionPartBuiltinInput::$type(_) = &part {
+                        part.overwrite(&QuestionPartBuiltinInput::$type($p.clone()))
+                    }
+                    if let Value(Some(ValueType::Normal(ref mut steps))) = &mut part.get_steps() {
+                        steps.iter_mut().for_each(|part| {
+                            if let ValueType::Normal(QuestionPartInput::Builtin(
+                                QuestionPartBuiltinInput::$type(_),
+                            )) = &part
+                            {
+                                part.overwrite(&ValueType::Normal(QuestionPartInput::Builtin(
+                                    QuestionPartBuiltinInput::$type($p.clone()),
+                                )))
                             }
                         })
                     }
                 }
-            })
+            });
         }
     };
-    (gap $exam: expr, $p: expr, $type: ident) => {
-        if let Value(Some(ValueType::Normal(ref mut groups))) = $exam.question_groups {
-            groups.iter_mut().for_each(|qg_value| {
-                if let ValueType::Normal(ref mut qg) = qg_value {
-                    if let Value(Some(ValueType::Normal(ref mut questions))) = &mut qg.questions {
-                        questions.iter_mut().for_each(|question_value| {
-                            if let ValueType::Normal(ref mut question) = question_value {
-                                if let Value(Some(ValueType::Normal(ref mut parts))) =
-                                    question.data.parts
-                                {
-                                    parts.iter_mut().for_each(|part_value| {
-                                        if let ValueType::Normal(QuestionPartInput::Builtin(
-                                            QuestionPartBuiltinInput::GapFill(ref mut gap_fill),
-                                        )) = part_value
-                                        {
-                                            if let Value(Some(ValueType::Normal(ref mut gaps))) =
-                                                gap_fill.0.gaps
-                                            {
-                                                gaps.iter_mut().for_each(|gap| {
-                                                    if let ValueType::Normal(
-                                                        QuestionPartInput::Builtin(
-                                                            QuestionPartBuiltinInput::$type(_),
-                                                        ),
-                                                    ) = &gap
-                                                    {
-                                                        gap.overwrite(&ValueType::Normal(
-                                                            QuestionPartInput::Builtin(
-                                                                QuestionPartBuiltinInput::$type(
-                                                                    $p.clone(),
-                                                                ),
-                                                            ),
-                                                        ))
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    })
-                                }
+    (gap $question: expr, $p: expr, $type: ident) => {
+        if let Value(Some(ValueType::Normal(ref mut parts))) = $question.parts {
+            parts.iter_mut().for_each(|part_value| {
+                if let ValueType::Normal(QuestionPartInput::Builtin(
+                    QuestionPartBuiltinInput::GapFill(ref mut gap_fill),
+                )) = part_value
+                {
+                    if let Value(Some(ValueType::Normal(ref mut gaps))) = gap_fill.0.gaps {
+                        gaps.iter_mut().for_each(|gap| {
+                            if let ValueType::Normal(QuestionPartInput::Builtin(
+                                QuestionPartBuiltinInput::$type(_),
+                            )) = &gap
+                            {
+                                gap.overwrite(&ValueType::Normal(QuestionPartInput::Builtin(
+                                    QuestionPartBuiltinInput::$type($p.clone()),
+                                )))
                             }
                         })
                     }
@@ -377,5 +348,6 @@ macro_rules! handle_question_parts {
 }
 
 use create_default_file_type_enums;
-use handle;
+use handle_exam;
+use handle_question;
 use handle_question_parts;
