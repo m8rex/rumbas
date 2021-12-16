@@ -73,6 +73,13 @@ impl std::convert::From<ResourcePathInput> for String {
     }
 }
 
+impl std::convert::From<ResourcePathInputEnum> for String {
+    fn from(q: ResourcePathInputEnum) -> Self {
+        let q: ResourcePathInput = q.into();
+        q.into()
+    }
+}
+
 impl std::convert::TryFrom<String> for ResourcePath {
     type Error = String;
 

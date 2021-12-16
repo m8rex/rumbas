@@ -1,12 +1,12 @@
 use crate::question::Question;
 use crate::question::QuestionInput;
+use crate::support::default::combine_question_with_default_files;
 use crate::support::file_manager::*;
+use crate::support::sanitize::sanitize;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::yaml::YamlError;
 use rumbas_support::preamble::*;
-use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
@@ -110,5 +110,6 @@ crate::support::file_manager::create_from_string_type!(
     QuestionInput,
     QuestionFileToRead,
     numbas::question::Question,
-    "QuestionPath"
+    "QuestionPath",
+    combine_question_with_default_files
 );

@@ -5,14 +5,14 @@ set -e
 import_and_compile(){
   FILE=$1
   EXAM_NAME=$2
-  rumbas import $FILE".exam"
+  rumbas import "numbas_exams/"$FILE".exam"
   rumbas -v compile "exams/$EXAM_NAME.yaml"
 }
 
 import_and_compile_q(){
   FILE=$1
   QUESTION_NAME=$2
-  rumbas import -q $FILE".exam"
+  rumbas import "numbas_questions/"$FILE".exam"
   rumbas -v compile "questions/$QUESTION_NAME.yaml"
 }
 

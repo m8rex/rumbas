@@ -8,7 +8,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::convert::TryInto;
-use std::path::Path;
 
 /// The prefix used to specify a file reference
 const FILE_PREFIX: &str = "file";
@@ -160,79 +159,6 @@ macro_rules! file_type {
                                     translated_content: HashMap::new(),
                                     error_message: None
                                 }
-                            /* TODO move to where file will be read
-                            let file_path = Path::new(crate::QUESTIONS_FOLDER).join(relative_file_name);
-                            let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
-                            if let Some(file_dir) = file_path.parent() {
-                                //Look for translation dirs
-                                let mut translated_content = HashMap::new();
-                                for entry in file_dir.read_dir().expect("read_dir call failed").flatten()
-                                // We only care about the ones that are 'Ok'
-                                {
-                                    if let Ok(entry_name) = entry.file_name().into_string() {
-                                        if entry_name.starts_with("locale-") { // TODO: locale prefix?
-                                            let locale = entry_name
-                                                .splitn(2, "locale-")
-                                                .collect::<Vec<_>>()
-                                                .get(1)
-                                                .unwrap()
-                                                .to_string();
-                                            let locale_file_path = file_dir.join(entry_name).join(file_name);
-                                            if locale_file_path.exists() {
-                                                if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                                                    if let Ok(s) = s.clone().try_into() {
-                                                        translated_content.insert(
-                                                            locale,
-                                                            s,
-                                                        );
-                                                    }
-                                                    else {
-                                                        log::warn!("Failed converting content in {}", locale_file_path.display());
-                                                    }
-                                                }
-                                                else {
-                                                    log::warn!("Failed reading {}", locale_file_path.display());
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                let content = std::fs::read_to_string(&file_path)
-                                    .ok();
-                                if content.is_none() && translated_content.is_empty() {
-                                    Self {
-                                        file_name: Some(relative_file_name.to_string()),
-                                        content: None,
-                                        translated_content: HashMap::new(),
-                                        error_message: Some(relative_file_name.to_string()),
-                                    }
-                                } else {
-                                    if let Some(_) = content {
-                                            Self {
-                                                file_name: Some(relative_file_name.to_string()),
-                                                content,
-                                                translated_content,
-                                                error_message: None,
-                                            }
-                                    } else {
-                                        Self {
-                                            file_name: Some(relative_file_name.to_string()),
-                                            content: None,
-                                            translated_content,
-                                            error_message: None,
-                                        }
-                                    }
-                                }
-                            } else {
-                                Self {
-                                    file_name: Some(relative_file_name.to_string()),
-                                    content: None,
-                                    translated_content: HashMap::new(),
-                                    error_message: Some(relative_file_name.to_string()),
-                                }
-                            }
-                            */
                         }
                     } else {
                         Self::s(&s)

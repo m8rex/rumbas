@@ -57,7 +57,7 @@ where
         match self {
             ValueType::Normal(ref mut val) => val.insert_loaded_files(files),
             ValueType::Template(ref mut ts) => ts.insert_loaded_files(files),
-            ValueType::Invalid(v) => (),
+            ValueType::Invalid(_v) => (),
         }
     }
 }

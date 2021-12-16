@@ -2,6 +2,7 @@ use crate::question::extension::Extensions;
 use crate::question::part::question_part::JMENotes;
 use crate::support::file_manager::*;
 use crate::support::noneable::Noneable;
+use crate::support::sanitize::sanitize;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::EmbracedJMETranslatableString;
@@ -9,11 +10,9 @@ use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::{YamlError, YamlResult};
 use rumbas_support::preamble::*;
-use sanitize_filename::sanitize;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::{Into, TryInto};
-use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
@@ -772,141 +771,6 @@ crate::support::file_manager::create_from_string_type!(
     CustomPartTypeDefinitionInput,
     CustomPartTypeFileToRead,
     numbas::question::custom_part_type::CustomPartType,
-    "CustomPartTypeDefinitionPath"
+    "CustomPartTypeDefinitionPath",
+    |_, _| ()
 );
-/*
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(from = "String")]
-#[serde(into = "String")]
-pub struct CustomPartTypeDefinitionPath {
-    pub custom_part_type_name: String,
-    pub custom_part_type_data: Option<CustomPartTypeDefinition>,
-    pub error_message: Option<String>,
-}
-
-impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPartTypeDefinitionPath {
-    fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartType {
-        self.custom_part_type_data
-            .clone()
-            .to_numbas_with_name(locale, self.custom_part_type_name.clone())
-    }
-}
-
-impl ToRumbas<CustomPartTypeDefinitionPath> for numbas::question::custom_part_type::CustomPartType {
-    fn to_rumbas(&self) -> CustomPartTypeDefinitionPath {
-        CustomPartTypeDefinitionPath {
-            custom_part_type_data: CustomPartTypeDefinition {
-                type_name: self.name.to_rumbas(),
-                description: self.description.to_rumbas(),
-                settings: self.settings.to_rumbas(),
-                help_url: self.help_url.to_rumbas(),
-                // public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,
-                can_be_gap: self.can_be_gap,
-                can_be_step: self.can_be_step,
-                marking_notes: JMENotes(self.marking_notes.clone().to_rumbas()),
-                published: self.published,
-                extensions: Extensions::from(&self.extensions),
-                input_widget: self.input_widget.to_rumbas(),
-            },
-            custom_part_type_name: self.short_name.clone(),
-            error_message: None,
-        }
-    }
-}
-
-impl JsonSchema for CustomPartTypeDefinitionPathInput {
-    fn schema_name() -> String {
-        "CustomPartTypeDefinitionPath".to_owned()
-    }
-
-    fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-        gen.subschema_for::<String>()
-    }
-}
-
-impl std::convert::From<String> for CustomPartTypeDefinitionPathInput {
-    fn try_from(s: String) -> Result<Self, Self::Error> {
-        //let custom_part_type_data = CustomPartTypeDefinitionInput::from_name(&s).map_err(|e| e)?;
-        Ok(CustomPartTypeDefinitionPathInput {
-            custom_part_type_name: Value::Normal(s),
-            custom_part_type_data: Value::Normal(custom_part_type_data),
-        })
-    }
-}
-
-impl std::convert::From<CustomPartTypeDefinitionPathInput> for String {
-    fn from(cpt: CustomPartTypeDefinitionPathInput) -> Self {
-        let c_name = cpt.custom_part_type_name.clone().unwrap();
-        let c_yaml = cpt
-            .custom_part_type_data
-            .clone()
-            .unwrap()
-            .to_yaml()
-            .unwrap();
-        let file = format!("{}/{}.yaml", crate::CUSTOM_PART_TYPES_FOLDER, c_name);
-        log::info!("Writing to {}", file);
-        println!("Writing to {}", file);
-        std::fs::write(file, c_yaml).unwrap(); //fix handle result
-        c_name
-    }
-}
-
-pub enum CustomPartTypeDefinitionError {
-    Yaml(YamlError),
-    Empty(&'static str),
-}
-
-impl std::fmt::Display for CustomPartTypeDefinitionError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Yaml(y) => write!(f, "{}", y),
-            Self::Empty(e) => write!(f, "{}", e),
-        }
-    }
-}
-
-// Remove these impl's etc, should not ser / deser
-impl std::convert::TryFrom<String> for CustomPartTypeDefinitionPath {
-    type Error = CustomPartTypeDefinitionError;
-
-    fn try_from(s: String) -> Result<Self, Self::Error> {
-        let data: CustomPartTypeDefinitionPathInput = s.try_into().map_err(Self::Error::Yaml)?;
-        /*let data: CustomPartTypeDefinitionPathInput =
-        data.try_into().map_err(Self::Error::Empty)?; */
-        Ok(data.to_normal())
-    }
-}
-
-// Remove these impl's etc, should not ser / deser
-impl std::convert::From<CustomPartTypeDefinitionPath> for String {
-    fn from(q: CustomPartTypeDefinitionPath) -> Self {
-        q.custom_part_type_name
-    }
-}
-
-impl Hash for CustomPartTypeDefinitionPath {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.custom_part_type_name.hash(state);
-    }
-}
-impl PartialEq for CustomPartTypeDefinitionPath {
-    fn eq(&self, other: &Self) -> bool {
-        self.custom_part_type_name == other.custom_part_type_name
-    }
-}
-impl Eq for CustomPartTypeDefinitionPath {}
-
-impl PartialEq for CustomPartTypeDefinitionPathInput {
-    fn eq(&self, other: &Self) -> bool {
-        self.custom_part_type_name == other.custom_part_type_name
-    }
-}
-impl Eq for CustomPartTypeDefinitionPathInput {}
-
-impl PartialEq for CustomPartTypeDefinitionPathInputEnum {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
-impl Eq for CustomPartTypeDefinitionPathInputEnum {}
-*/
