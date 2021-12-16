@@ -9,16 +9,19 @@ pub struct FileToLoad {
     pub locale_dependant: bool,
 }
 
+#[derive(Debug, Clone)]
 pub enum LoadedFile {
     Normal(LoadedNormalFile),
     Localized(LoadedLocalizedFile),
 }
 
+#[derive(Debug, Clone)]
 pub struct LoadedNormalFile {
     pub file_path: PathBuf,
     pub content: String,
 }
 
+#[derive(Debug, Clone)]
 pub struct LoadedLocalizedFile {
     pub file_path: PathBuf,
     pub content: Option<String>,

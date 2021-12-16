@@ -1,10 +1,13 @@
-use rumbas::support::default::combine_with_default_files;
+use rumbas::support::default::combine_exam_with_default_files;
+use rumbas::support::default::combine_question_with_default_files;
 
 use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
+
+use rumbas::support::file_manager::CACHE;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
@@ -24,7 +27,12 @@ pub fn compile(matches: &clap::ArgMatches) {
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
-            combine_with_default_files(path, &mut exam_input);
+            combine_exam_with_default_files(path, &mut exam_input);
+
+            let files_to_load = exam_input.files_to_load();
+            let loaded_files = CACHE.read(files_to_load);
+            exam_input.insert_loaded_files(&loaded_files);
+
             let exam_result = exam_input.to_normal_safe();
             match exam_result {
                 Ok(exam) => {

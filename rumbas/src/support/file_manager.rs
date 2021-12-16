@@ -1,15 +1,128 @@
 use crate::exam::ExamInput;
 use crate::question::custom_part_type::CustomPartTypeDefinitionInput;
 use crate::question::QuestionInput;
-use std::path::PathBuf;
+use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
+use std::convert::TryInto;
+use std::path::{Path, PathBuf};
 use std::{
     collections::HashMap,
     sync::{Mutex, RwLock},
 };
 
+lazy_static! {
+    pub static ref CACHE: FileManager = FileManager::new();
+}
+
 #[derive(Debug)]
 pub struct FileManager {
-    cache: RwLock<HashMap<FileToRead, Mutex<ReadFile>>>,
+    cache: RwLock<HashMap<FileToLoad, Mutex<LoadedFile>>>,
+}
+
+impl FileManager {
+    pub fn new() -> Self {
+        Self {
+            cache: RwLock::new(HashMap::new()),
+        }
+    }
+}
+
+impl FileManager {
+    pub fn read(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
+        let mut result = HashMap::new();
+        for file in files.into_iter() {
+            let map = self.cache.read().expect("Can read cache map");
+            if let Some(val) = map.get(&file) {
+                result.insert(
+                    file.clone(),
+                    val.lock().expect("unlock loaded file mutex").clone(),
+                );
+            } else {
+                std::mem::drop(map); // remove the read lock
+
+                let res = match file.locale_dependant {
+                    true => Self::read_localized_file(&file.file_path)
+                        .map(rumbas_support::input::LoadedFile::Localized),
+                    false => Self::read_file(&file.file_path)
+                        .map(rumbas_support::input::LoadedFile::Normal),
+                };
+                match res {
+                    Ok(r) => {
+                        let mut map = self.cache.write().expect("Can write cache map");
+                        map.insert(file.clone(), Mutex::new(r.clone()));
+                        result.insert(file.clone(), r.clone());
+                    }
+                    Err(()) => log::error!("Couldn't resolve {}", file.file_path.display()),
+                };
+            }
+        }
+        result
+    }
+
+    fn read_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
+        match std::fs::read_to_string(&file_path) {
+            Ok(content) => Ok(LoadedNormalFile {
+                content,
+                file_path: file_path.clone(),
+            }),
+            Err(e) => {
+                log::error!("Failed read content of {}", file_path.display());
+                Err(())
+            }
+        }
+    }
+
+    fn read_localized_file(file_path: &PathBuf) -> Result<LoadedLocalizedFile, ()> {
+        let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
+        let file_dir = file_path.parent().ok_or(())?;
+        //Look for translation dirs
+        let mut translated_content = HashMap::new();
+        for entry in file_dir.read_dir().expect("read_dir call failed").flatten()
+        // We only care about the ones that are 'Ok'
+        {
+            if let Ok(entry_name) = entry.file_name().into_string() {
+                if entry_name.starts_with("locale-") {
+                    // TODO: locale prefix?
+                    let locale = entry_name
+                        .splitn(2, "locale-")
+                        .collect::<Vec<_>>()
+                        .get(1)
+                        .unwrap()
+                        .to_string();
+                    let locale_file_path = file_dir.join(entry_name).join(file_name);
+                    if locale_file_path.exists() {
+                        if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
+                            if let Ok(s) = s.clone().try_into() {
+                                translated_content.insert(locale, s);
+                            } else {
+                                log::warn!(
+                                    "Failed converting content in {}",
+                                    locale_file_path.display()
+                                );
+                            }
+                        } else {
+                            log::warn!("Failed reading {}", locale_file_path.display());
+                        }
+                    }
+                }
+            }
+        }
+
+        let content = match std::fs::read_to_string(&file_path) {
+            Ok(s) => Some(s),
+            Err(e) => {
+                log::debug!(
+                    "Failed reading content for localized file {}",
+                    file_path.display()
+                );
+                None
+            }
+        };
+        Ok(LoadedLocalizedFile {
+            file_path: file_path.clone(),
+            content,
+            localized_content: translated_content,
+        })
+    }
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
@@ -260,11 +373,19 @@ macro_rules! create_from_string_type {
                                     file_to_load.file_path.clone(),
                                 );
                                 match data_res {
-                                    Ok(q) => self.data = Some(q.clone()),
+                                    Ok(q) => {
+                                        let mut input = q.clone();
+                                        let files_to_load = input.files_to_load();
+                                        let loaded_files =
+                                            crate::support::file_manager::CACHE.read(files_to_load);
+                                        input.insert_loaded_files(&loaded_files);
+
+                                        self.data = Some(input)
+                                    }
                                     Err(e) => self.error_message = Some(e.to_string()),
                                 }
                             }
-                            Some(LoadedFile::Localized(l)) => {
+                            Some(LoadedFile::Localized(_l)) => {
                                 unreachable!()
                             }
                             None => {

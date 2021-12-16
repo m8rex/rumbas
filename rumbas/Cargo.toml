@@ -23,6 +23,8 @@ regex = "1"
 clap = {version = "2.33", features = ["yaml"]}
 sanitize-filename = "0.3.0"
 
+lazy_static = "1.4.0"
+
 log = "0.4"
 fern = { version = "0.5", features = ["colored"] }
 chrono = "0.4"
