@@ -2,6 +2,8 @@
 extern crate enum_display_derive;
 #[macro_use]
 extern crate rumbas_support;
+#[macro_use]
+extern crate lazy_static;
 
 pub mod exam;
 pub mod question;

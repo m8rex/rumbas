@@ -464,6 +464,7 @@ dependencies = [
  "enum-display-derive",
  "fern",
  "insta",
+ "lazy_static",
  "log",
  "numbas",
  "paste",
