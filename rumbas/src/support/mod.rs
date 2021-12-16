@@ -9,6 +9,7 @@ pub mod file_manager;
 pub mod file_reference;
 pub mod input_string;
 pub mod noneable;
+pub mod sanitize;
 pub mod template;
 pub mod translatable;
 pub mod variable_valued;

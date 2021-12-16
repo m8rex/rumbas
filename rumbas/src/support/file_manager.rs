@@ -3,7 +3,7 @@ use crate::question::custom_part_type::CustomPartTypeDefinitionInput;
 use crate::question::QuestionInput;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use std::convert::TryInto;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::{
     collections::HashMap,
     sync::{Mutex, RwLock},
@@ -31,7 +31,9 @@ impl FileManager {
         let mut result = HashMap::new();
         for file in files.into_iter() {
             let map = self.cache.read().expect("Can read cache map");
+            log::debug!("Checking if {} is in the cache.", file.file_path.display());
             if let Some(val) = map.get(&file) {
+                log::debug!("Found {} in the cache.", file.file_path.display());
                 result.insert(
                     file.clone(),
                     val.lock().expect("unlock loaded file mutex").clone(),
@@ -59,6 +61,7 @@ impl FileManager {
     }
 
     fn read_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
+        log::debug!("Reading file {}.", file_path.display());
         match std::fs::read_to_string(&file_path) {
             Ok(content) => Ok(LoadedNormalFile {
                 content,
@@ -72,6 +75,7 @@ impl FileManager {
     }
 
     fn read_localized_file(file_path: &PathBuf) -> Result<LoadedLocalizedFile, ()> {
+        log::debug!("Reading localized file {}.", file_path.display());
         let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
         let file_dir = file_path.parent().ok_or(())?;
         //Look for translation dirs
@@ -178,7 +182,9 @@ pub struct CustomPartTypeFileToRead {
 
 impl CustomPartTypeFileToRead {
     pub fn with_file_name(file_name: String) -> Self {
-        let file_path = std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(file_name);
+        let file_path = std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER)
+            .join(file_name)
+            .with_extension("yaml");
         Self { file_path }
     }
 }
@@ -205,7 +211,9 @@ pub struct QuestionFileToRead {
 
 impl QuestionFileToRead {
     pub fn with_file_name(file_name: String) -> Self {
-        let file_path = std::path::Path::new(crate::QUESTIONS_FOLDER).join(file_name);
+        let file_path = std::path::Path::new(crate::QUESTIONS_FOLDER)
+            .join(file_name)
+            .with_extension("yaml");
         Self { file_path }
     }
 }
@@ -278,9 +286,10 @@ pub struct ReadExamFile {
 }
 
 macro_rules! create_from_string_type {
-    ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal) => {
+    ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal, $combine: expr) => {
         // TODO: remove this JsonSchema
         #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+        #[serde(into = "String")]
         pub struct $t {
             pub file_name: String,
             pub data: $data,
@@ -375,6 +384,7 @@ macro_rules! create_from_string_type {
                                 match data_res {
                                     Ok(q) => {
                                         let mut input = q.clone();
+                                        $combine(&file_to_load.file_path, &mut input);
                                         let files_to_load = input.files_to_load();
                                         let loaded_files =
                                             crate::support::file_manager::CACHE.read(files_to_load);
@@ -437,7 +447,6 @@ macro_rules! create_from_string_type {
 
         impl std::convert::From<String> for $ti {
             fn from(s: String) -> Self {
-                //let question_data = QuestionInput::from_name(&s).map_err(|e| e)?;
                 Self {
                     file_name: s,
                     data: None,
@@ -446,8 +455,8 @@ macro_rules! create_from_string_type {
             }
         }
 
-        impl std::convert::From<$ti> for String {
-            fn from(q: $ti) -> Self {
+        impl std::convert::From<$t> for String {
+            fn from(q: $t) -> Self {
                 /*let q_yaml = crate::question::QuestionFileTypeInput::Normal(Box::new(q.question_data))
                     .to_yaml()
                     .unwrap();
@@ -455,6 +464,12 @@ macro_rules! create_from_string_type {
                 log::info!("Writing to {}", file);
                 std::fs::write(file, q_yaml).unwrap(); //fix handle result (try_from)
                 */
+                q.file_name
+            }
+        }
+
+        impl std::convert::From<$ti> for String {
+            fn from(q: $ti) -> Self {
                 q.file_name
             }
         }

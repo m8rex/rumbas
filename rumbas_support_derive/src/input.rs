@@ -93,12 +93,32 @@ fn handle_attributes(
 
     let other_attrs = attrs
         .iter()
-        .filter(|a| !a.path.is_ident("derive") && !a.path.is_ident("serde"))
+        .filter(|a| !a.path.is_ident("derive") && !is_serde_from(a))
         .map(|a| quote! {#a})
         .collect::<Vec<_>>();
     tokens_second.extend(quote!(#(#other_attrs)*));
 
     (tokens_main, tokens_second)
+}
+
+fn is_serde_from(a: &syn::Attribute) -> bool {
+    if a.path.is_ident("serde") {
+        match a.parse_meta() {
+            Ok(syn::Meta::List(l)) => l
+                .nested
+                .into_iter()
+                .find(|a| match a {
+                    syn::NestedMeta::Meta(syn::Meta::NameValue(meta)) => {
+                        meta.path.is_ident("try_from") || meta.path.is_ident("from")
+                    }
+                    _ => false,
+                })
+                .is_some(),
+            _ => false,
+        }
+    } else {
+        false
+    }
 }
 
 fn input_handle_unit_struct(
@@ -310,9 +330,12 @@ fn input_handle_struct_struct(
     });
 
     let try_from_value = input_ident.to_string();
+
+    let try_from = quote! {#[serde(try_from = #try_from_value)]};
+
     tokens.extend(quote! {
         #input_attributes_enum
-        #[serde(try_from = #try_from_value)]
+        #try_from
         pub struct #enum_input_ident #ty (pub #input_ident) #wher;
     });
     let from_normal_lines = field_names
@@ -415,6 +438,14 @@ fn input_handle_struct_struct(
                 } else {
                     Err("No field is set to a not-none value.")
                 }
+            }
+        }
+    });
+    tokens.extend(quote! {
+        #[automatically_derived]
+        impl std::convert::From<#enum_input_ident #ty> for #input_ident #ty #wher {
+            fn from(value: #enum_input_ident) -> Self {
+                value.0
             }
         }
     });

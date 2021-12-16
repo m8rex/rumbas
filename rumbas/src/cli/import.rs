@@ -26,8 +26,7 @@ pub fn import(matches: &clap::ArgMatches) {
         match question_res {
             Ok(question) => {
                 let rumbas_question: QuestionPath = question.to_rumbas();
-                // TODO this will be done automatically on deserialization now?
-                for cpt in rumbas_question.question_data.custom_part_types.iter() {
+                for cpt in rumbas_question.data.custom_part_types.iter() {
                     create_custom_part_type(cpt.to_owned());
                 }
                 create_question(rumbas_question);
@@ -64,8 +63,8 @@ pub fn import(matches: &clap::ArgMatches) {
 }
 
 fn create_question(qp: QuestionPath) {
-    let q_name = qp.question_name.clone();
-    let q_yaml = QuestionFileType::Normal(Box::new(qp.question_data))
+    let q_name = qp.file_name.clone();
+    let q_yaml = QuestionFileType::Normal(Box::new(qp.data))
         .to_yaml()
         .unwrap();
     let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
@@ -74,8 +73,8 @@ fn create_question(qp: QuestionPath) {
 }
 
 fn create_custom_part_type(cpt: CustomPartTypeDefinitionPath) {
-    let c_name = cpt.custom_part_type_name.clone();
-    let c_yaml = cpt.custom_part_type_data.to_yaml().unwrap();
+    let c_name = cpt.file_name.clone();
+    let c_yaml = cpt.data.to_yaml().unwrap();
     let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
     log::info!("Writing to {}", file);
     std::fs::write(file, c_yaml).unwrap(); //fix handle result
