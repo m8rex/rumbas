@@ -12,7 +12,7 @@ import_and_compile(){
 import_and_compile_q(){
   FILE=$1
   QUESTION_NAME=$2
-  rumbas import "numbas_questions/"$FILE".exam"
+  rumbas import -q "numbas_questions/"$FILE".exam"
   rumbas -v compile "questions/$QUESTION_NAME.yaml"
 }
 
