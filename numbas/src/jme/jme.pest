@@ -74,11 +74,12 @@ diff_annotation = { "diff:" }
 degrees_annotation = { "degrees:" }
 builtin_annotation = { verb_annotation | op_annotation | vector_annotation | unit_annotation | dot_annotation | matrix_annotation | diff_annotation | degrees_annotation }
 other_annotation = { ASCII_ALPHA+ ~ ":" }
-annotation = { (builtin_annotation | other_annotation) }
+annotation = { builtin_annotation | other_annotation }
 ident_char_all = _{ ident_char | "'" }
 ident_char = _{ CASED_LETTER | ASCII_DIGIT | "_"  }
 ident_name = @{ !reserved ~ CASED_LETTER ~ ident_char* ~ "'"* }
-ident = { (annotation)* ~ ident_name }
+annotated_ident = { (annotation)* ~ ident_name }
+ident = _{ annotated_ident | (brace_open ~ ident ~ brace_close) }
 
 
 collection = _{ dictionary | list }
