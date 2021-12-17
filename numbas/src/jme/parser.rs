@@ -300,7 +300,7 @@ fn consume_expression_internal<'i>(
                     Rule::expression => {
                         consume_expression_internal(pair.into_inner().peekable(), climber)?
                     }
-                    Rule::ident => ParserNode {
+                    Rule::annotated_ident => ParserNode {
                         expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
                         span: pair.clone().as_span(),
                     },

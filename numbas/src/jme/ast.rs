@@ -282,47 +282,49 @@ mod test {
 
     #[test]
     fn ast() {
-        let input = "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false";
-
-        let pairs = parse_as_jme(input).unwrap();
-        let ast = consume_one_expression(pairs).unwrap();
-
-        assert_eq!(
-            ast,
-            Logic(
-                And,
+        let expected = Logic(
+            And,
+            Box::new(Logic(
+                Or,
                 Box::new(Logic(
-                    Or,
-                    Box::new(Logic(
-                        And,
-                        Box::new(Relation(
-                            GreaterThan,
-                            Box::new(Arithmetic(
-                                Multiply,
-                                Box::new(Ident(Ident {
-                                    name: "a".to_string(),
-                                    annotations: vec![]
-                                })),
-                                Box::new(Int(7))
-                            )),
-                            Box::new(Int(5))
-                        )),
-                        Box::new(Bool(true))
-                    )),
+                    And,
                     Box::new(Relation(
-                        LessThan,
+                        GreaterThan,
                         Box::new(Arithmetic(
-                            Add,
-                            Box::new(Arithmetic(Power, Box::new(Int(9)), Box::new(Int(10)))),
-                            Box::new(Arithmetic(Multiply, Box::new(Int(8)), Box::new(Int(5))))
+                            Multiply,
+                            Box::new(Ident(Ident {
+                                name: "a".to_string(),
+                                annotations: vec![],
+                            })),
+                            Box::new(Int(7)),
                         )),
-                        Box::new(Arithmetic(Divide, Box::new(Int(6)), Box::new(Int(10))))
-                    ))
+                        Box::new(Int(5)),
+                    )),
+                    Box::new(Bool(true)),
                 )),
-                Box::new(Bool(false))
-            )
+                Box::new(Relation(
+                    LessThan,
+                    Box::new(Arithmetic(
+                        Add,
+                        Box::new(Arithmetic(Power, Box::new(Int(9)), Box::new(Int(10)))),
+                        Box::new(Arithmetic(Multiply, Box::new(Int(8)), Box::new(Int(5)))),
+                    )),
+                    Box::new(Arithmetic(Divide, Box::new(Int(6)), Box::new(Int(10)))),
+                )),
+            )),
+            Box::new(Bool(false)),
         );
-        assert_eq!(ast.validate(), vec![]);
+
+        for input in vec![
+            "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false",
+            "{a} * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false",
+        ] {
+            let pairs = parse_as_jme(input).unwrap();
+            let ast = consume_one_expression(pairs).unwrap();
+
+            assert_eq!(ast, expected);
+            assert_eq!(ast.validate(), vec![]);
+        }
     }
 
     #[test]
