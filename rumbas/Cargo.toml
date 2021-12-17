@@ -36,7 +36,10 @@ schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged
 
 paste = "1.0"
 
+rayon = "1.5.1"
+
 rumbas_support = { path="../rumbas_support" }
+
 
 [dev-dependencies]
 insta = "1.8.0"
