@@ -303,12 +303,13 @@ impl InputCheckResult {
             invalid_yaml_values: vec![],
         }
     }
-    pub fn from_invalid(v: &serde_yaml::Value) -> InputCheckResult {
+    pub fn from_invalid(v: &serde_yaml::Value, e: Option<serde_yaml::Error>) -> InputCheckResult {
         InputCheckResult {
             missing_values: vec![],
             invalid_yaml_values: vec![InputCheckInvalidYamlData {
                 path: InputCheckPath::without_last(),
                 data: v.clone(),
+                error: e.map(|e| e.to_string()),
             }],
         }
     }
@@ -393,6 +394,7 @@ impl std::fmt::Display for InputCheckMissingData {
 pub struct InputCheckInvalidYamlData {
     path: InputCheckPath,
     data: serde_yaml::Value,
+    error: Option<String>,
 }
 
 impl std::fmt::Display for InputCheckInvalidYamlData {
@@ -400,12 +402,16 @@ impl std::fmt::Display for InputCheckInvalidYamlData {
         let p = self.path.to_string();
         write!(
             f,
-            "{}",
+            "{}{}",
             if let Ok(s) = serde_yaml::to_string(&self.data) {
                 format!("{}\n With yaml:\n{}", p, s)
             } else {
                 p
-            }
+            },
+            self.error
+                .as_ref()
+                .map(|s| format!("With error: {}", s))
+                .unwrap_or("".to_string())
         )
     }
 }
