@@ -111,5 +111,6 @@ crate::support::file_manager::create_from_string_type!(
     QuestionFileToRead,
     numbas::question::Question,
     "QuestionPath",
-    combine_question_with_default_files
+    combine_question_with_default_files,
+    name
 );

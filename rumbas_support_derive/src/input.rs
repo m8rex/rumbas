@@ -416,28 +416,33 @@ fn input_handle_struct_struct(
             }
         }
     });
-    let valued_field_names = field_names
-        .iter()
-        .zip(field_is_flattened.iter())
-        .filter_map(|(f, flattened)| if *flattened { None } else { Some(f) })
-        .collect::<Vec<_>>();
+
+    let try_from_code = if field_is_flattened.iter().find(|a| **a).is_some() {
+        quote! {Ok(Self(value))}
+    } else {
+        quote! {
+            let mut ok = false;
+            #(
+                if value.#field_names.is_some() {
+                    ok = true;
+                }
+            )*
+            if ok {
+                Ok(Self(value))
+            } else {
+                Err("No field is set to a not-none value.")
+            }
+
+        }
+    };
+
     tokens.extend(quote! {
         #[automatically_derived]
         impl std::convert::TryFrom<#input_ident #ty> for #enum_input_ident #ty #wher {
             type Error = &'static str;
 
             fn try_from(value: #input_ident) -> Result<Self, Self::Error> {
-                let mut ok = false;
-                #(
-                    if value.#valued_field_names.is_some() {
-                        ok = true;
-                    }
-                )*
-                if ok {
-                    Ok(Self(value))
-                } else {
-                    Err("No field is set to a not-none value.")
-                }
+                #try_from_code
             }
         }
     });

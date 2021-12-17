@@ -4,7 +4,27 @@ use serde::{Deserialize, Serialize};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
+/*
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+enum HelperValueType<T> {
+    Template(TemplateString),
+    Normal(T),
+    Invalid(serde_yaml::Value),
+}
+
+impl<T> std::convert::From<HelperValueType<T>> for ValueType<T> {
+    fn from(v: HelperValueType<T>) -> Self {
+        match v {
+            HelperValueType::Normal(n) => Self::Normal(n),
+            HelperValueType::Template(t) => Self::
+        }
+
+        }
+}*/
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+//#[serde(from="HelperValueType")]
 #[serde(untagged)]
 pub enum ValueType<T> {
     Template(TemplateString),
@@ -32,7 +52,10 @@ where
         match &self {
             ValueType::Normal(val) => val.find_missing(),
             ValueType::Template(ts) => InputCheckResult::from_missing(Some(ts.yaml())),
-            ValueType::Invalid(v) => InputCheckResult::from_invalid(v),
+            ValueType::Invalid(v) => {
+                let parsing: Result<T, _> = serde_yaml::from_value(v.clone());
+                InputCheckResult::from_invalid(v, parsing.err())
+            }
         }
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {

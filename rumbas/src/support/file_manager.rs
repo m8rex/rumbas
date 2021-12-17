@@ -286,7 +286,7 @@ pub struct ReadExamFile {
 }
 
 macro_rules! create_from_string_type {
-    ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal, $combine: expr) => {
+    ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal, $combine: expr, $filename_field: ident) => {
         // TODO: remove this JsonSchema
         #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
         #[serde(into = "String")]
@@ -429,7 +429,7 @@ macro_rules! create_from_string_type {
         impl ToRumbas<$t> for $n_type {
             fn to_rumbas(&self) -> $t {
                 $t {
-                    file_name: sanitize(&self.name),
+                    file_name: sanitize(&self.$filename_field),
                     data: self.to_rumbas(),
                 }
             }
