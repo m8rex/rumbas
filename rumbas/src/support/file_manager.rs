@@ -1,6 +1,7 @@
 use crate::exam::ExamInput;
 use crate::question::custom_part_type::CustomPartTypeDefinitionInput;
 use crate::question::QuestionInput;
+use rayon::prelude::*;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use std::convert::TryInto;
 use std::path::PathBuf;
@@ -28,35 +29,40 @@ impl FileManager {
 
 impl FileManager {
     pub fn read(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
-        let mut result = HashMap::new();
-        for file in files.into_iter() {
-            let map = self.cache.read().expect("Can read cache map");
-            log::debug!("Checking if {} is in the cache.", file.file_path.display());
-            if let Some(val) = map.get(&file) {
-                log::debug!("Found {} in the cache.", file.file_path.display());
-                result.insert(
-                    file.clone(),
-                    val.lock().expect("unlock loaded file mutex").clone(),
-                );
-            } else {
-                std::mem::drop(map); // remove the read lock
+        let result: HashMap<_, _> = files
+            .into_par_iter()
+            .filter_map(|file| {
+                let map = self.cache.read().expect("Can read cache map");
+                log::debug!("Checking if {} is in the cache.", file.file_path.display());
+                if let Some(val) = map.get(&file) {
+                    log::debug!("Found {} in the cache.", file.file_path.display());
+                    Some((
+                        file.clone(),
+                        val.lock().expect("unlock loaded file mutex").clone(),
+                    ))
+                } else {
+                    std::mem::drop(map); // remove the read lock
 
-                let res = match file.locale_dependant {
-                    true => Self::read_localized_file(&file.file_path)
-                        .map(rumbas_support::input::LoadedFile::Localized),
-                    false => Self::read_file(&file.file_path)
-                        .map(rumbas_support::input::LoadedFile::Normal),
-                };
-                match res {
-                    Ok(r) => {
-                        let mut map = self.cache.write().expect("Can write cache map");
-                        map.insert(file.clone(), Mutex::new(r.clone()));
-                        result.insert(file.clone(), r.clone());
+                    let res = match file.locale_dependant {
+                        true => Self::read_localized_file(&file.file_path)
+                            .map(rumbas_support::input::LoadedFile::Localized),
+                        false => Self::read_file(&file.file_path)
+                            .map(rumbas_support::input::LoadedFile::Normal),
+                    };
+                    match res {
+                        Ok(r) => {
+                            let mut map = self.cache.write().expect("Can write cache map");
+                            map.insert(file.clone(), Mutex::new(r.clone()));
+                            Some((file.clone(), r.clone()))
+                        }
+                        Err(()) => {
+                            log::error!("Couldn't resolve {}", file.file_path.display());
+                            None
+                        }
                     }
-                    Err(()) => log::error!("Couldn't resolve {}", file.file_path.display()),
-                };
-            }
-        }
+                }
+            })
+            .collect();
         result
     }
 
@@ -68,7 +74,11 @@ impl FileManager {
                 file_path: file_path.clone(),
             }),
             Err(e) => {
-                log::error!("Failed read content of {}", file_path.display());
+                log::error!(
+                    "Failed read content of {} with error {}",
+                    file_path.display(),
+                    e
+                );
                 Err(())
             }
         }
@@ -115,8 +125,9 @@ impl FileManager {
             Ok(s) => Some(s),
             Err(e) => {
                 log::debug!(
-                    "Failed reading content for localized file {}",
-                    file_path.display()
+                    "Failed reading content for localized file {} with error {}",
+                    file_path.display(),
+                    e
                 );
                 None
             }

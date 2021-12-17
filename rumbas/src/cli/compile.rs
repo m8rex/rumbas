@@ -1,5 +1,4 @@
 use rumbas::support::default::combine_exam_with_default_files;
-use rumbas::support::default::combine_question_with_default_files;
 
 use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
