@@ -28,6 +28,7 @@ use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
 use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
+use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
 use std::fs;
@@ -215,15 +216,18 @@ macro_rules! create_default_file_type_enums {
 
             /// Read the given path as the data needed for this DefaultFileType
             fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data> {
-                let yaml = fs::read_to_string(path).unwrap();
-                match self {
-                    $(
-                    Self::$file_type => {
-                        let n: $data_type = serde_yaml::from_str(&yaml)?;
-                        Ok($data_name::$file_type( n ))
+                let file = FileToLoad { file_path: path.to_path_buf(), locale_dependant: false };
+                let loaded_file = crate::support::file_manager::CACHE.read_file(file);
+                if let Some(LoadedFile::Normal(l)) = loaded_file {
+                    match self {
+                        $(
+                        Self::$file_type => {
+                            let n: $data_type = serde_yaml::from_str(&l.content)?;
+                            Ok($data_name::$file_type( n ))
+                        }
+                        )*
                     }
-                    )*
-                }
+                } else { unreachable!() }
             }
         }
     };
@@ -237,7 +241,6 @@ macro_rules! handle_exam {
             // TODO: diagnostic
             log::info!("Found {} default exam files.", $default_files.len());
             for default_file in $default_files.iter() {
-                    log::info!("Reading {}", default_file.get_path().display());
                     let default_data = default_file.read_as_data().unwrap(); //TODO Move this so file reader reads them
                     match default_data {
                         DefaultExamData::SequentialNavigation(n) => {

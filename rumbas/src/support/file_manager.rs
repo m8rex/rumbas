@@ -28,45 +28,44 @@ impl FileManager {
 }
 
 impl FileManager {
+    pub fn read_file(&self, file: FileToLoad) -> Option<LoadedFile> {
+        let map = self.cache.read().expect("Can read cache map");
+        log::debug!("Checking if {} is in the cache.", file.file_path.display());
+        if let Some(val) = map.get(&file) {
+            log::debug!("Found {} in the cache.", file.file_path.display());
+            Some(val.lock().expect("unlock loaded file mutex").clone())
+        } else {
+            std::mem::drop(map); // remove the read lock
+
+            let res = match file.locale_dependant {
+                true => Self::read_localized_file(&file.file_path)
+                    .map(rumbas_support::input::LoadedFile::Localized),
+                false => Self::read_normal_file(&file.file_path)
+                    .map(rumbas_support::input::LoadedFile::Normal),
+            };
+            match res {
+                Ok(r) => {
+                    let mut map = self.cache.write().expect("Can write cache map");
+                    map.insert(file.clone(), Mutex::new(r.clone()));
+                    Some(r.clone())
+                }
+                Err(()) => {
+                    log::error!("Couldn't resolve {}", file.file_path.display());
+                    None
+                }
+            }
+        }
+    }
+
     pub fn read(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
         let result: HashMap<_, _> = files
             .into_par_iter()
-            .filter_map(|file| {
-                let map = self.cache.read().expect("Can read cache map");
-                log::debug!("Checking if {} is in the cache.", file.file_path.display());
-                if let Some(val) = map.get(&file) {
-                    log::debug!("Found {} in the cache.", file.file_path.display());
-                    Some((
-                        file.clone(),
-                        val.lock().expect("unlock loaded file mutex").clone(),
-                    ))
-                } else {
-                    std::mem::drop(map); // remove the read lock
-
-                    let res = match file.locale_dependant {
-                        true => Self::read_localized_file(&file.file_path)
-                            .map(rumbas_support::input::LoadedFile::Localized),
-                        false => Self::read_file(&file.file_path)
-                            .map(rumbas_support::input::LoadedFile::Normal),
-                    };
-                    match res {
-                        Ok(r) => {
-                            let mut map = self.cache.write().expect("Can write cache map");
-                            map.insert(file.clone(), Mutex::new(r.clone()));
-                            Some((file.clone(), r.clone()))
-                        }
-                        Err(()) => {
-                            log::error!("Couldn't resolve {}", file.file_path.display());
-                            None
-                        }
-                    }
-                }
-            })
+            .filter_map(|file| self.read_file(file.clone()).map(|l| (file, l.clone())))
             .collect();
         result
     }
 
-    fn read_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
+    fn read_normal_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
         log::debug!("Reading file {}.", file_path.display());
         match std::fs::read_to_string(&file_path) {
             Ok(content) => Ok(LoadedNormalFile {
