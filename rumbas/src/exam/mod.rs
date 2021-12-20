@@ -65,10 +65,11 @@ impl Exam {
 impl ExamInput {
     pub fn from_file(file: &Path) -> Result<ExamInput, ParseError> {
         use ExamFileTypeInput::*;
-        let input: std::result::Result<ExamFileTypeInput, serde_yaml::Error> =
+        let input: std::result::Result<ExamFileTypeInput, _> =
             if file.starts_with(crate::EXAMS_FOLDER) {
                 let yaml = fs::read_to_string(file).map_err(ParseError::IOError)?;
                 serde_yaml::from_str(&yaml)
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
             } else if file.starts_with(crate::QUESTIONS_FOLDER) {
                 let mut data = HashMap::new();
                 data.insert(
@@ -88,12 +89,9 @@ impl ExamInput {
                 };
                 Ok(Template(TemplateFileInputEnum::from_normal(t)))
             } else {
-                panic!(
-                    "{} should start with {}/ or {}/",
-                    file.display(),
-                    crate::EXAMS_FOLDER,
-                    crate::QUESTIONS_FOLDER
-                );
+                Err(ParseError::InvalidPath(InvalidExamPathError(
+                    file.to_path_buf(),
+                )))
             };
         input
             .map(|e| match e {
@@ -118,7 +116,6 @@ impl ExamInput {
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
-            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
     }
 }
 
@@ -126,6 +123,22 @@ impl ExamInput {
 pub enum ParseError {
     YamlError(YamlError),
     IOError(std::io::Error),
+    InvalidPath(InvalidExamPathError),
+}
+
+#[derive(Debug)]
+pub struct InvalidExamPathError(std::path::PathBuf);
+
+impl Display for InvalidExamPathError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Invalid compilation path: {} should start with {}/ or {}/",
+            self.0.display(),
+            crate::EXAMS_FOLDER,
+            crate::QUESTIONS_FOLDER
+        )
+    }
 }
 
 #[derive(Input, Overwrite, RumbasCheck)]
