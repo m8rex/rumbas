@@ -123,10 +123,9 @@ impl<O: Input> Input for HashMap<String, O> {
 
     fn find_missing(&self) -> InputCheckResult {
         let mut result = InputCheckResult::empty();
-        // Key is not displayable, so show an index, just to differentiate
-        for (i, (_key, item)) in self.iter().enumerate() {
+        for (key, item) in self.iter() {
             let mut previous_result = item.find_missing();
-            previous_result.extend_path(i.to_string());
+            previous_result.extend_path(key.to_owned());
             result.union(&previous_result)
         }
         result

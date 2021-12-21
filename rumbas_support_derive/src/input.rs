@@ -635,22 +635,11 @@ fn input_handle_enum_find_missing_variants(
                             )
                         })
                         .collect::<Vec<_>>();
-                    let numbers = variant
-                        .fields
-                        .fields
-                        .iter()
-                        .enumerate()
-                        .map(|(i, _)| {
-                            let i = syn::Index::from(i);
-                            quote!(#i)
-                        })
-                        .collect::<Vec<_>>();
                     quote! {
                         #input_ident::#variant_ident(#(#items),*) => {
                             let mut result = InputCheckResult::empty();
                             #(
                                 let mut previous_result = #items.find_missing();
-                                previous_result.extend_path(stringify!(#numbers).to_string());
                                 result.union(&previous_result);
                             )*
                             result
