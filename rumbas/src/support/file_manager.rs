@@ -395,7 +395,9 @@ macro_rules! create_from_string_type {
             }
             fn find_missing(&self) -> InputCheckResult {
                 if let Some(ref q) = self.data {
-                    q.find_missing()
+                    let mut previous_result = q.find_missing();
+                    previous_result.extend_path(self.file_name.clone());
+                    previous_result
                 } else {
                     InputCheckResult::from_missing(Some(self.file_name.clone()))
                 }
@@ -508,13 +510,6 @@ macro_rules! create_from_string_type {
 
         impl std::convert::From<$t> for String {
             fn from(q: $t) -> Self {
-                /*let q_yaml = crate::question::QuestionFileTypeInput::Normal(Box::new(q.question_data))
-                    .to_yaml()
-                    .unwrap();
-                let file = format!("{}/{}.yaml", crate::QUESTIONS_FOLDER, q.question_name);
-                log::info!("Writing to {}", file);
-                std::fs::write(file, q_yaml).unwrap(); //fix handle result (try_from)
-                */
                 q.file_name
             }
         }
