@@ -43,6 +43,9 @@ subcommands:
   - init:
       about: |-
         Initialize a rumbas project in this folder
+  - update_repo:
+      about: |-
+        Update the repository to the next rumbas version
   - schema:
       about: |-
         Creates files with the json schemas (beta).

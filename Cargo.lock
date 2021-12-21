@@ -570,6 +570,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "yaml-rust 0.4.5",
 ]
 
 [[package]]

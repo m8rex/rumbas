@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `answer_display` field to `jme` part type.
-- Sqlite extension
+- `sqlite` extension
 - `--no-minification` flag for `compile` command to suppress the `js` and `css` minification of Numbas. Before this addition, minification was not performed, now it is enabled by default.
 
 ### Changed
@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dockerfile: updated numbas version (so minify_css is supported)
 - Syntax for `TranslatableString` is changed.
   - Instead of a map that contains `content`, some locale fields and some placeholders that are surrounded with brackets (`{<placeholder>}`)
-  - It now is a map with fields `content` en `placeholders`
+  - It now is a map with fields `content` and `placeholders`
     - `content` is either a map (with locales mapping to strings) or just a string (not locale dependant)
     - `placeholders` is a map that maps placeholders (strings) to`TranslatableString`s
 - Improved Input support

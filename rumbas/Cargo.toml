@@ -18,6 +18,7 @@ path = "src/lib.rs"
 serde = {version="1.0.110", features=["derive"]}                                
 serde_json = "1.0.53"
 serde_yaml = "0.8.13"
+yaml-rust = "0.4"
 numbas = {path="../numbas"}
 regex = "1"
 clap = {version = "2.33", features = ["yaml"]}

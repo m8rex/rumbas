@@ -8,6 +8,7 @@ extern crate lazy_static;
 pub mod exam;
 pub mod question;
 pub mod support;
+pub mod updates;
 
 pub const QUESTIONS_FOLDER: &str = "questions";
 pub const EXAMS_FOLDER: &str = "exams";
@@ -20,3 +21,7 @@ pub const CUSTOM_PART_TYPES_FOLDER: &str = "custom_part_types";
 
 pub const QUESTION_PREVIEW_TEMPLATE_NAME: &str = "question_preview";
 pub const NUMBAS_FOLDER_ENV: &str = "NUMBAS_FOLDER";
+
+pub const LOCALE_FOLDER_PREFIX: &str = "locale-";
+
+pub const RC_FILE_NAME: &str = ".rumbasrc.yaml";

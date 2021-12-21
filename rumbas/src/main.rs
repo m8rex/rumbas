@@ -35,6 +35,8 @@ fn main() {
         cli::compile(matches)
     } else if let Some(matches) = matches.subcommand_matches("init") {
         cli::init(matches)
+    } else if let Some(matches) = matches.subcommand_matches("update_repo") {
+        cli::update_repo(matches)
     } else if let Some(matches) = matches.subcommand_matches("schema") {
         cli::schema(matches)
     }
