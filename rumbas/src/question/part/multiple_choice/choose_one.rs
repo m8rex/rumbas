@@ -24,8 +24,6 @@ question_part_type! {
         answer_data: MultipleChoiceAnswerData,
         shuffle_answers: bool,
         show_cell_answer_state: bool,
-        /// !FLATTENED: all its attributes should be added to [QuestionPartChooseOne]
-        #[serde(flatten)]
         display: ChooseOneDisplay
         //TODO wrong_nb_choices_warning:
     }
@@ -103,7 +101,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ChooseOneDisplayInput")]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
-#[serde(tag = "display")]
+#[serde(tag = "type")]
 pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
     DropDown,

@@ -4,27 +4,7 @@ use serde::{Deserialize, Serialize};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-/*
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(untagged)]
-enum HelperValueType<T> {
-    Template(TemplateString),
-    Normal(T),
-    Invalid(serde_yaml::Value),
-}
-
-impl<T> std::convert::From<HelperValueType<T>> for ValueType<T> {
-    fn from(v: HelperValueType<T>) -> Self {
-        match v {
-            HelperValueType::Normal(n) => Self::Normal(n),
-            HelperValueType::Template(t) => Self::
-        }
-
-        }
-}*/
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-//#[serde(from="HelperValueType")]
 #[serde(untagged)]
 pub enum ValueType<T> {
     Template(TemplateString),
@@ -61,7 +41,11 @@ where
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         if let ValueType::Template(ts) = &self {
             if ts.key == Some(key.to_string()) {
-                *self = ValueType::Normal(serde_yaml::from_value(val.clone()).unwrap());
+                if let Ok(v) = serde_yaml::from_value(val.clone()) {
+                    *self = ValueType::Normal(v);
+                } else {
+                    *self = ValueType::Invalid(val.clone());
+                }
             }
         } else if let ValueType::Normal(ref mut v) = self {
             v.insert_template_value(key, val);
