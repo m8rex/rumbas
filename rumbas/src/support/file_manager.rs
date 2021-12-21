@@ -93,10 +93,9 @@ impl FileManager {
         // We only care about the ones that are 'Ok'
         {
             if let Ok(entry_name) = entry.file_name().into_string() {
-                if entry_name.starts_with("locale-") {
-                    // TODO: locale prefix?
+                if entry_name.starts_with(crate::LOCALE_FOLDER_PREFIX) {
                     let locale = entry_name
-                        .splitn(2, "locale-")
+                        .splitn(2, crate::LOCALE_FOLDER_PREFIX)
                         .collect::<Vec<_>>()
                         .get(1)
                         .unwrap()
@@ -136,6 +135,48 @@ impl FileManager {
             content,
             localized_content: translated_content,
         })
+    }
+}
+
+impl FileManager {
+    fn find_all_yaml_files(path: PathBuf) -> Vec<FileToLoad> {
+        let mut files = Vec::new();
+        for entry in path.read_dir().expect("read_dir call failed") {
+            if let Ok(entry) = entry {
+                // TODO: handle symlinks...
+                if let Ok(file_type) = entry.file_type() {
+                    if file_type.is_dir() {
+                        if let Ok(file_name) = entry.file_name().into_string() {
+                            if file_name.starts_with(crate::LOCALE_FOLDER_PREFIX) {
+                                continue;
+                            }
+                        }
+                        files.extend(Self::find_all_yaml_files(entry.path()))
+                    } else {
+                        let path = entry.path();
+                        if let Some(ext) = path.extension() {
+                            if let Some("yaml") = ext.to_str() {
+                                files.push(FileToLoad {
+                                    file_path: path,
+                                    locale_dependant: false,
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        files
+    }
+    pub fn read_all_questions(&self) -> Vec<LoadedFile> {
+        let path = std::path::Path::new(crate::QUESTIONS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
+        let files = Self::find_all_yaml_files(path.to_path_buf());
+        self.read(files).into_iter().map(|(_, l)| l).collect()
+    }
+    pub fn read_all_exams(&self) -> Vec<LoadedFile> {
+        let path = std::path::Path::new(crate::EXAMS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
+        let files = Self::find_all_yaml_files(path.to_path_buf());
+        self.read(files).into_iter().map(|(_, l)| l).collect()
     }
 }
 
