@@ -1,6 +1,34 @@
 use crate::support::file_manager::CACHE;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
+macro_rules! update_hash {
+    ($question: expr => $($vec: expr, $method: ident):*) => {
+        if let Some(question) = $question.as_hash() {
+            Yaml::Hash(question
+                .to_owned()
+                .into_iter()
+                .map(|(k, v)| {
+                        $(
+                            if $vec
+                                .into_iter()
+                                .map(|a| Yaml::String(a.to_string()))
+                                .collect::<Vec<_>>()
+                                .contains(&k)
+                            {
+                                (k, $method(v))
+                            } else
+                        )*
+                        {
+                            (k, v)
+                        }
+                })
+                .collect())
+        } else {
+            $question
+        }
+    };
+}
+
 /// Update from version 0.4.0 to 0.5.0
 pub fn update() -> String {
     // TODO: extract code to read questions and exams
@@ -42,26 +70,11 @@ pub fn update() -> String {
     for question_idx in 0..questions.len() {
         let question = &questions[question_idx];
         log::info!("Updating {}", question.0.file_path.display());
-        let new_question = question
-            .1
-            .as_hash()
-            .unwrap()
-            .to_owned()
-            .into_iter()
-            .map(|(k, v)| {
-                if vec!["advice", "statement"]
-                    .into_iter()
-                    .map(|a| Yaml::String(a.to_string()))
-                    .collect::<Vec<_>>()
-                    .contains(&k)
-                {
-                    (k, update_translatable_string(v))
-                } else {
-                    (k, v)
-                }
-            })
-            .collect();
-        questions[question_idx].1 = Yaml::Hash(new_question);
+        let new_question = update_hash!(question.1.clone() =>
+            vec!["advice", "statement"], update_translatable_string:
+            vec!["diagnostic_topic_names"], update_translatable_string_vector
+        );
+        questions[question_idx].1 = new_question;
     }
 
     for (file, question) in questions.into_iter() {
@@ -128,6 +141,13 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
             );
             new_yaml
         }
+        _ => yaml,
+    }
+}
+
+fn update_translatable_string_vector(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(v.into_iter().map(update_translatable_string).collect()),
         _ => yaml,
     }
 }
