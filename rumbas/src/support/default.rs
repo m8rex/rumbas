@@ -31,7 +31,6 @@ use crate::question::QuestionInput;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
-use std::fs;
 use std::path::{Path, PathBuf};
 
 //TODO Tests
