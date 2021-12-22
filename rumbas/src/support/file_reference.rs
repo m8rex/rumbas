@@ -12,6 +12,30 @@ use std::convert::TryInto;
 /// The prefix used to specify a file reference
 const FILE_PREFIX: &str = "file";
 
+#[derive(Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AnyString {
+    Str(String),
+    Isize(isize),
+    Float(f64),
+}
+
+impl std::convert::From<AnyString> for String {
+    fn from(a: AnyString) -> Self {
+        match a {
+            AnyString::Str(s) => s,
+            AnyString::Isize(v) => v.to_string(),
+            AnyString::Float(v) => v.to_string(),
+        }
+    }
+}
+
+impl std::convert::From<&'static str> for AnyString {
+    fn from(s: &'static str) -> Self {
+        Self::Str(s.to_string())
+    }
+}
+
 macro_rules! file_type {
     (
         $(#[$outer:meta])*
@@ -21,7 +45,7 @@ macro_rules! file_type {
     ) => {
         paste::paste! {
             #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-            #[serde(from = "String")]
+            #[serde(from = "AnyString")]
             #[serde(into = "String")]
             $(
                 #[$outer]
@@ -44,7 +68,7 @@ macro_rules! file_type {
             }
             impl Examples for [<$type Input>] {
                 fn examples() -> Vec<Self> {
-                    vec!["example plain string with placeholders {placeholder1} and {placeholder2}.".to_string().into()] // TODO file: string
+                    vec![AnyString::from("example plain string with placeholders {placeholder1} and {placeholder2}.").into()] // TODO file: string
                 }
             }
             impl Examples for $type {
@@ -139,8 +163,9 @@ macro_rules! file_type {
                 }
             }
 
-            impl std::convert::From<String> for [<$type Input>] {
-                fn from(s: String) -> Self {
+            impl std::convert::From<AnyString> for [<$type Input>] {
+                fn from(a: AnyString) -> Self {
+                    let s : String = a.into();
                     let mut prefix = FILE_PREFIX.to_owned();
                     prefix.push(':');
                     if s.starts_with(&prefix) {
