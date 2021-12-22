@@ -1,3 +1,4 @@
+use crate::support::file_reference::AnyString;
 use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::to_numbas::ToNumbas;
@@ -248,15 +249,15 @@ impl Examples for TranslationInput {
                     vec![
                         (
                             "nl".to_string(),
-                            ValueType::Normal(FileStringInput::from(
-                                "nl value of placeholder1".to_string(),
-                            )),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
+                                "nl value of placeholder1",
+                            ))),
                         ),
                         (
                             "en".to_string(),
-                            ValueType::Normal(FileStringInput::from(
-                                "en value of placeholder1".to_string(),
-                            )),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
+                                "en value of placeholder1",
+                            ))),
                         ),
                     ]
                     .into_iter()
@@ -269,15 +270,15 @@ impl Examples for TranslationInput {
                     vec![
                         (
                             "nl".to_string(),
-                            ValueType::Normal(FileStringInput::from(
-                                "nl version of placeholder2".to_string(),
-                            )),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
+                                "nl version of placeholder2",
+                            ))),
                         ),
                         (
                             "en".to_string(),
-                            ValueType::Normal(FileStringInput::from(
-                                "en version of placeholder2".to_string(),
-                            )),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
+                                "en version of placeholder2",
+                            ))),
                         ),
                     ]
                     .into_iter()
