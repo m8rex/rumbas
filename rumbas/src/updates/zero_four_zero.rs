@@ -40,6 +40,7 @@ pub fn update() -> String {
     let question_files: Vec<_> = CACHE
         .read_all_questions()
         .into_iter()
+        .chain(CACHE.read_all_question_templates().into_iter())
         .filter_map(|lf| match lf {
             rumbas_support::input::LoadedFile::Normal(n) => Some(n),
             _ => None,
@@ -48,6 +49,7 @@ pub fn update() -> String {
     let exam_files: Vec<_> = CACHE
         .read_all_exams()
         .into_iter()
+        .chain(CACHE.read_all_exam_templates().into_iter())
         .filter_map(|lf| match lf {
             rumbas_support::input::LoadedFile::Normal(n) => Some(n),
             _ => None,
@@ -141,19 +143,6 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
             let (content, locales): (Vec<_>, Vec<_>) = other
                 .into_iter()
                 .partition(|(s, _)| s == &"content".to_string());
-            let content = if locales.len() > 0 {
-                (
-                    Yaml::String("content".to_string()),
-                    Yaml::Hash(
-                        locales
-                            .into_iter()
-                            .map(|(s, v)| (Yaml::String(s.to_string()), v.clone()))
-                            .collect(),
-                    ),
-                )
-            } else {
-                (Yaml::String("content".to_string()), content[0].1.clone())
-            };
             let placeholders = placeholders
                 .into_iter()
                 .map(|(p, v)| {
@@ -164,17 +153,42 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
                 })
                 .collect();
 
-            let new_yaml = Yaml::Hash(
-                vec![
-                    content,
-                    (
-                        Yaml::String("placeholders".to_string()),
-                        Yaml::Hash(placeholders),
+            let new_yaml = if locales.len() > 0 {
+                Yaml::Hash(
+                    vec![
+                        (
+                            Yaml::String("content".to_string()),
+                            Yaml::Hash(
+                                locales
+                                    .into_iter()
+                                    .map(|(s, v)| (Yaml::String(s.to_string()), v.clone()))
+                                    .collect(),
+                            ),
+                        ),
+                        (
+                            Yaml::String("placeholders".to_string()),
+                            Yaml::Hash(placeholders),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                )
+            } else {
+                match content[0].1.clone() {
+                    Yaml::Hash(_) => update_translatable_string(content[0].1.clone()),
+                    _ => Yaml::Hash(
+                        vec![
+                            (Yaml::String("content".to_string()), content[0].1.clone()),
+                            (
+                                Yaml::String("placeholders".to_string()),
+                                Yaml::Hash(placeholders),
+                            ),
+                        ]
+                        .into_iter()
+                        .collect(),
                     ),
-                ]
-                .into_iter()
-                .collect(),
-            );
+                }
+            };
             new_yaml
         }
         _ => yaml,
