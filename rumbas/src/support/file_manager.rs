@@ -17,12 +17,14 @@ lazy_static! {
 #[derive(Debug)]
 pub struct FileManager {
     cache: RwLock<HashMap<FileToLoad, Mutex<LoadedFile>>>,
+    dir_cache: RwLock<HashMap<PathBuf, Mutex<RumbasRepoFolderEntries>>>,
 }
 
 impl FileManager {
     pub fn new() -> Self {
         Self {
             cache: RwLock::new(HashMap::new()),
+            dir_cache: RwLock::new(HashMap::new()),
         }
     }
 }
@@ -139,43 +141,88 @@ impl FileManager {
 }
 
 impl FileManager {
-    fn find_all_yaml_files(path: PathBuf) -> Vec<FileToLoad> {
+    pub fn read_folder(&self, path: &PathBuf) -> Vec<RumbasRepoEntry> {
+        // TODO: handle symlinks...
+        let map = self.dir_cache.read().expect("Can read dir cache map");
+        log::debug!("Checking if {} is in the dir_cache.", path.display());
+        if let Some(val) = map.get(path) {
+            log::debug!("Found {} in the dir_cache.", path.display());
+            val.lock()
+                .expect("unlock loaded file mutex")
+                .entries
+                .clone()
+        } else {
+            std::mem::drop(map); // remove the read lock
+            let mut entries = Vec::new();
+            if path.is_dir() {
+                for entry in path.read_dir().expect("read_dir call failed").flatten()
+                // We only care about the ones that are 'Ok'
+                {
+                    entries.push(RumbasRepoEntry::from(&entry.path()));
+                }
+                let mut map = self.dir_cache.write().expect("Can write dir_cache map");
+                map.insert(
+                    path.clone(),
+                    Mutex::new(RumbasRepoFolderEntries {
+                        r#type: RumbasRepoFolderType::from(&path),
+                        entries: entries.clone(),
+                    }),
+                );
+                entries
+            } else {
+                log::error!(
+                    "Called read_folder with a path to a file. Please submit a Github issue."
+                );
+                unreachable!();
+            }
+        }
+    }
+}
+
+impl FileManager {
+    fn find_all_yaml_files(path: PathBuf, wanted_file_type: RumbasRepoFileType) -> Vec<FileToLoad> {
         let mut files = Vec::new();
-        for entry in path.read_dir().expect("read_dir call failed") {
-            if let Ok(entry) = entry {
-                // TODO: handle symlinks...
-                if let Ok(file_type) = entry.file_type() {
-                    if file_type.is_dir() {
-                        if let Ok(file_name) = entry.file_name().into_string() {
-                            if file_name.starts_with(crate::LOCALE_FOLDER_PREFIX) {
-                                continue;
-                            }
-                        }
-                        files.extend(Self::find_all_yaml_files(entry.path()))
-                    } else {
-                        let path = entry.path();
-                        if let Some(ext) = path.extension() {
-                            if let Some("yaml") = ext.to_str() {
-                                files.push(FileToLoad {
-                                    file_path: path,
-                                    locale_dependant: false,
-                                })
-                            }
-                        }
+        for entry in CACHE.read_folder(&path) {
+            match entry {
+                RumbasRepoEntry::File(file) => {
+                    if file.r#type == wanted_file_type {
+                        files.push(FileToLoad {
+                            file_path: file.path.clone(),
+                            locale_dependant: false,
+                        })
                     }
                 }
+                RumbasRepoEntry::Folder(folder) => match folder.r#type {
+                    RumbasRepoFolderType::Folder => files.extend(Self::find_all_yaml_files(
+                        folder.path,
+                        wanted_file_type.clone(),
+                    )),
+                    _ => (),
+                },
             }
         }
         files
     }
     pub fn read_all_questions(&self) -> Vec<LoadedFile> {
         let path = std::path::Path::new(crate::QUESTIONS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files = Self::find_all_yaml_files(path.to_path_buf());
+        let files = Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionFile);
+        self.read(files).into_iter().map(|(_, l)| l).collect()
+    }
+    pub fn read_all_question_templates(&self) -> Vec<LoadedFile> {
+        let path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
+        let files =
+            Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionTemplateFile);
         self.read(files).into_iter().map(|(_, l)| l).collect()
     }
     pub fn read_all_exams(&self) -> Vec<LoadedFile> {
         let path = std::path::Path::new(crate::EXAMS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files = Self::find_all_yaml_files(path.to_path_buf());
+        let files = Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamFile);
+        self.read(files).into_iter().map(|(_, l)| l).collect()
+    }
+    pub fn read_all_exam_templates(&self) -> Vec<LoadedFile> {
+        let path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
+        let files =
+            Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamTemplateFile);
         self.read(files).into_iter().map(|(_, l)| l).collect()
     }
 }
@@ -334,6 +381,141 @@ pub struct ReadQuestionFile {
 pub struct ReadExamFile {
     file_path: String,
     exam: ExamInput,
+}
+
+#[derive(Debug, Clone)]
+pub enum RumbasRepoEntry {
+    File(RumbasRepoFileData),
+    Folder(RumbasRepoFolderData),
+}
+impl RumbasRepoEntry {
+    pub fn from(p: &PathBuf) -> Self {
+        if p.is_dir() {
+            Self::Folder(RumbasRepoFolderData::from(p))
+        } else {
+            // if p.is_file() { TODO: symlink?
+            Self::File(RumbasRepoFileData::from(p))
+        }
+    }
+}
+#[derive(Debug, Clone)]
+pub struct RumbasRepoFileData {
+    r#type: RumbasRepoFileType,
+    path: PathBuf,
+}
+
+impl RumbasRepoFileData {
+    pub fn from(p: &PathBuf) -> Self {
+        Self {
+            r#type: RumbasRepoFileType::from(p),
+            path: p.to_owned(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RumbasRepoFileType {
+    QuestionFile,
+    QuestionTemplateFile,
+    ExamFile,
+    ExamTemplateFile,
+    CustomPartTypeFile,
+    DefaultFile,
+    LocaleFile,
+    File,
+}
+impl RumbasRepoFileType {
+    pub fn from(p: &PathBuf) -> Self {
+        let components: Vec<_> = p.iter().collect();
+        if components.len() > 1
+            && components
+                .get(components.len() - 1)
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .starts_with(crate::LOCALE_FOLDER_PREFIX)
+        {
+            Self::LocaleFile
+        } else if let Some(ext) = p.extension() {
+            if ext == "yaml" {
+                if p.starts_with(crate::DEFAULTS_FOLDER) {
+                    Self::DefaultFile
+                } else if p.starts_with(crate::QUESTIONS_FOLDER) {
+                    Self::QuestionFile
+                } else if p.starts_with(crate::QUESTION_TEMPLATES_FOLDER) {
+                    Self::QuestionTemplateFile
+                } else if p.starts_with(crate::EXAMS_FOLDER) {
+                    Self::ExamFile
+                } else if p.starts_with(crate::EXAM_TEMPLATES_FOLDER) {
+                    Self::ExamTemplateFile
+                } else if p.starts_with(crate::CUSTOM_PART_TYPES_FOLDER) {
+                    Self::CustomPartTypeFile
+                } else {
+                    Self::File
+                }
+            } else {
+                Self::File
+            }
+        } else {
+            Self::File
+        }
+    }
+}
+#[derive(Debug, Clone)]
+pub struct RumbasRepoFolderData {
+    r#type: RumbasRepoFolderType,
+    path: PathBuf,
+}
+
+impl RumbasRepoFolderData {
+    pub fn from(p: &PathBuf) -> Self {
+        Self {
+            r#type: RumbasRepoFolderType::from(p),
+            path: p.to_owned(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct RumbasRepoFolderEntries {
+    r#type: RumbasRepoFolderType,
+    entries: Vec<RumbasRepoEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RumbasRepoFolderType {
+    DefaultFolder,
+    LocalizedFolder { locale: String },
+    Folder,
+}
+
+impl RumbasRepoFolderType {
+    pub fn from(p: &PathBuf) -> Self {
+        if let Some(stem) = p.file_stem() {
+            if stem == crate::DEFAULTS_FOLDER {
+                Self::DefaultFolder
+            } else if stem
+                .to_str()
+                .unwrap()
+                .starts_with(crate::LOCALE_FOLDER_PREFIX)
+            {
+                let locale = stem
+                    .to_str()
+                    .unwrap()
+                    .splitn(2, crate::LOCALE_FOLDER_PREFIX)
+                    .collect::<Vec<_>>()
+                    .get(1)
+                    .unwrap()
+                    .to_string();
+                Self::LocalizedFolder { locale }
+            } else {
+                Self::Folder
+            }
+        } else {
+            log::error!("Unkown file_stem for {}", p.display());
+            unreachable!();
+        }
+    }
 }
 
 macro_rules! create_from_string_type {
