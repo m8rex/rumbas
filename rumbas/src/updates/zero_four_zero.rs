@@ -2,7 +2,7 @@ use crate::support::file_manager::CACHE;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 macro_rules! update_hash {
-    ($question: expr => $($vec: expr, $method: ident $([$extra_check: expr])? $(rename [$rename: expr])?):*) => {
+    ($question: expr => $($vec: expr, $method: expr => $([$extra_check: expr])? $(rename [$rename: expr])?):*) => {
         if let Some(question) = $question.as_hash() {
             Yaml::Hash(question
                 .to_owned()
@@ -76,10 +76,11 @@ pub fn update() -> String {
         let question = &questions[question_idx];
         log::info!("Updating {}", question.0.file_path.display());
         let new_question = update_hash!(question.1.clone() =>
-            vec!["advice", "statement"], update_translatable_string:
-            vec!["diagnostic_topic_names"], update_translatable_string_vector:
-            vec!["functions"], update_functions:
-            vec!["parts"], update_parts
+            vec!["advice", "statement"], update_translatable_string => :
+            vec!["diagnostic_topic_names"], update_translatable_string_vector => :
+            vec!["functions"], update_functions => :
+            vec!["variables"], update_translatable_string_vector => :
+            vec!["parts"], update_parts =>
         );
         questions[question_idx].1 = new_question;
     }
@@ -97,8 +98,18 @@ pub fn update() -> String {
         let exam = &exams[exam_idx];
         log::info!("Updating {}", exam.0.file_path.display());
         let new_exam = update_hash!(exam.1.clone() =>
-            vec!["name"], update_translatable_string
+            vec!["name"], update_translatable_string => :
+            vec!["timing"], update_timing => :
+            vec!["feedback"], update_feedback => :
+            vec!["question_groups"], update_question_groups =>
         );
+        let new_exam = if new_exam["type"] == Yaml::String("diagnostic".to_string()) {
+            update_hash!(new_exam =>
+                vec!["diagnostic"], update_diagnostic =>
+            )
+        } else {
+            new_exam
+        };
         exams[exam_idx].1 = new_exam;
     }
 
@@ -201,7 +212,7 @@ fn update_functions(yaml: Yaml) -> Yaml {
             v.into_iter()
                 .map(|f| {
                     update_hash!(f.clone() =>
-                        vec!["definition"], update_translatable_string
+                        vec!["definition"], update_translatable_string =>
                     )
                 })
                 .collect(),
@@ -215,15 +226,18 @@ fn update_parts(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
-                        vec!["prompt"], update_translatable_string:
-                        vec!["custom_marking_algorithm"], update_jme_notes rename [|_name: &Yaml| Yaml::String("custom_marking_algorithm_notes".to_string())]: // TODO: parse the string
-                        vec!["gaps"], update_parts:
-                        vec!["pattern", "display_answer"], update_translatable_string [|hash: &Yaml| hash["type"] == Yaml::String("pattern_match".to_string())]:
-                        vec!["answer"], update_translatable_string [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
-                        vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
-                        vec!["answers", "answer_data"], update_choose_answer_data [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
-                    )
+                    remove_fields(update_hash!(f.clone() =>
+                        vec!["prompt"], update_translatable_string =>:
+                        vec!["custom_marking_algorithm"], update_jme_notes => rename [|_name: &Yaml| Yaml::String("custom_marking_algorithm_notes".to_string())]: // TODO: parse the string
+                        vec!["gaps"], update_parts =>:
+                        vec!["steps"], update_parts => :
+                        vec!["pattern", "display_answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("pattern_match".to_string())]:
+                        vec!["answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
+                        vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
+                        vec!["answers", "answer_data"], update_choose_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]:
+                        vec!["display"], |yaml: Yaml| update_choose_one_display(f["columns"].clone(), yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string())]:
+                        vec!["answers", "answer_data"], update_match_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
+                    ), vec!["columns"])
                 })
                 .collect(),
         ),
@@ -237,7 +251,7 @@ fn update_jme_notes(yaml: Yaml) -> Yaml {
             v.into_iter()
                 .map(|f| {
                     update_hash!(f.clone() =>
-                        vec!["expression"], update_translatable_string
+                        vec!["expression"], update_translatable_string =>
                     )
                 })
                 .collect(),
@@ -248,8 +262,8 @@ fn update_jme_notes(yaml: Yaml) -> Yaml {
 
 fn update_jme_restriction(yaml: Yaml) -> Yaml {
     update_hash!(yaml =>
-        vec!["message"], update_translatable_string:
-        vec!["strings"], update_translatable_string_vector
+        vec!["message"], update_translatable_string =>:
+        vec!["strings"], update_translatable_string_vector =>
     )
 }
 
@@ -260,15 +274,163 @@ fn update_choose_answer_data(yaml: Yaml) -> Yaml {
             v.into_iter()
                 .map(|f| {
                     update_hash!(f.clone() =>
-                        vec!["statement", "feedback", "marks"], update_translatable_string
+                        vec!["statement", "feedback", "marks"], update_translatable_string =>
                     )
                 })
                 .collect(),
         ),
         Yaml::Hash(h) => update_hash!(Yaml::Hash(h.clone()) =>
-            vec!["answers", "feedback", "marks"], update_translatable_string_vector
+            vec!["answers", "feedback", "marks"], update_translatable_string_vector =>
         ),
         _ => yaml,
+    }
+}
+
+fn update_choose_one_display(columns: Yaml, yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::String(v) => Yaml::Hash(
+            vec![
+                (Yaml::String("type".to_string()), Yaml::String(v)),
+                (Yaml::String("columns".to_string()), columns),
+            ]
+            .into_iter()
+            .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_match_answer_data(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Hash(h) => update_hash!(Yaml::Hash(h.clone()) =>
+            vec!["answers", "choices"], update_translatable_string_vector => [|hash: &Yaml| hash["type"] == Yaml::String("numbas_like".to_string())]:
+            vec!["answers"], update_translatable_string_vector => [|hash: &Yaml| hash["type"] == Yaml::String("item_based".to_string())]:
+            vec!["items"], update_match_items => [|hash: &Yaml| hash["type"] == Yaml::String("item_based".to_string())]
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_match_items(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(
+            v.into_iter()
+                .map(|f| {
+                    update_hash!(f.clone() =>
+                        vec!["statement"], update_translatable_string =>:
+                        vec!["answer_marks"], update_match_item_marks =>
+                    )
+                })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_match_item_marks(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(
+            v.into_iter()
+                .map(|f| {
+                    update_hash!(f.clone() =>
+                        vec!["answer"], update_translatable_string =>
+                    )
+                })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_timing(yaml: Yaml) -> Yaml {
+    update_hash!(yaml =>
+        vec!["on_timeout", "timeout_waring"], update_timeout_action =>
+    )
+}
+
+fn update_timeout_action(yaml: Yaml) -> Yaml {
+    update_hash!(yaml =>
+        vec!["message"], update_translatable_string => [|hash: &Yaml| hash["action"] == Yaml::String("warn".to_string())]
+    )
+}
+
+fn update_diagnostic(yaml: Yaml) -> Yaml {
+    update_hash!(yaml =>
+        vec!["script"], update_diagnostic_script =>:
+        vec!["objectives"], update_diagnostic_objectives =>:
+        vec!["topics"], update_diagnostic_topics =>
+    )
+}
+
+fn update_diagnostic_script(yaml: Yaml) -> Yaml {
+    yaml // TODO
+}
+
+fn update_diagnostic_objectives(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(
+            v.into_iter()
+                .map(|f| {
+                    update_hash!(f.clone() =>
+                        vec!["name", "description"], update_translatable_string =>
+                    )
+                })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_diagnostic_topics(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(
+            v.into_iter()
+                .map(|f| {
+                    update_hash!(f.clone() =>
+                        vec!["name", "description"], update_translatable_string =>:
+                        vec!["objectives", "depends_on"], update_translatable_string_vector =>
+                    )
+                })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_feedback(yaml: Yaml) -> Yaml {
+    update_hash!(yaml =>
+        vec!["advice", "intro"], update_translatable_string =>
+    )
+}
+
+fn update_question_groups(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Array(v) => Yaml::Array(
+            v.into_iter()
+                .map(|f| {
+                    update_hash!(f.clone() =>
+                        vec!["name"], update_translatable_string =>
+                    )
+                })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+fn remove_fields(yaml: Yaml, fields: Vec<&str>) -> Yaml {
+    let fields = fields
+        .into_iter()
+        .map(|a| Yaml::String(a.to_string()))
+        .collect::<Vec<_>>();
+    if let Some(hash) = yaml.as_hash() {
+        Yaml::Hash(
+            hash.to_owned()
+                .into_iter()
+                .filter(|(k, _)| !fields.contains(k))
+                .collect(),
+        )
+    } else {
+        yaml
     }
 }
 
