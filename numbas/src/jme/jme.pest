@@ -28,11 +28,13 @@ brace_open = _{ !"\\{" ~ "{" }
 brace_close = _{ !"\\}" ~ "}" }
 normal_char = _{ "\\{" | "\\}" | (!(brace_open | brace_close) ~ ANY) }
 
-expression =  { term ~ (infix_operator ~ term)* }
-term       =  { prefix_operator* ~ node ~ postfix_operator* }
-node       = _{ grouped_expression | terminal } 
+expression = { term ~ (infix_operator ~ term)* }
+term =  { prefix_operator* ~ node ~ postfix_operator* }
+node       = _{ grouped_expression | embraced_expression | terminal } 
 terminal = _{ function_application | ident | collection | literal }  
 grouped_expression = _{ "(" ~ expression ~ ")" }
+embraced_expression = _{ brace_open ~ expression ~ brace_close }
+
 
 reserved = @{ (boolean | constant_name | logic_binary_operator | not_operator | in_operator | except | isa| cast_operator ) ~ !ident_char_all }
 
@@ -79,7 +81,7 @@ ident_char_all = _{ ident_char | "'" }
 ident_char = _{ CASED_LETTER | ASCII_DIGIT | "_"  }
 ident_name = @{ !reserved ~ CASED_LETTER ~ ident_char* ~ "'"* }
 annotated_ident = { (annotation)* ~ ident_name }
-ident = _{ annotated_ident | (brace_open ~ ident ~ brace_close) }
+ident = _{ annotated_ident }
 
 
 collection = _{ dictionary | list }
