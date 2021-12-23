@@ -28,6 +28,7 @@ use crate::question::part::pattern_match::QuestionPartPatternMatchInput;
 use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
+use crate::support::file_manager::RumbasRepoEntry;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
@@ -82,16 +83,15 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
     let ancestors = path.ancestors();
     for a in ancestors {
         let defaults_path = a.with_file_name(crate::DEFAULTS_FOLDER);
-        if defaults_path.is_dir() {
-            for entry in defaults_path
-                .read_dir()
-                .expect("read_dir call failed")
-                .flatten()
-            // We only care about the ones that are 'Ok'
-            {
-                result.insert(entry.path()); //TODO: order files from the folder
-                                             //println!("{:?}", entry.path());
-            }
+        for entry in crate::support::file_manager::CACHE
+            .read_folder(&defaults_path)
+            .into_iter()
+            .filter_map(|e| match e {
+                RumbasRepoEntry::File(f) => Some(f.path()),
+                _ => None,
+            })
+        {
+            result.insert(entry); //TODO: order files from the folder
         }
     }
 

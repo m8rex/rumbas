@@ -170,12 +170,31 @@ impl FileManager {
                 );
                 entries
             } else {
-                log::error!(
-                    "Called read_folder with a path to a file. Please submit a Github issue."
-                );
-                unreachable!();
+                Vec::new()
             }
         }
+    }
+    fn read_all_folders(&self, path: &PathBuf) -> Vec<RumbasRepoFolderData> {
+        self.read_folder(&path.to_path_buf())
+            .into_iter()
+            .filter_map(|e| match e {
+                RumbasRepoEntry::Folder(f) => Some(
+                    self.read_all_folders(&f.path)
+                        .into_iter()
+                        .chain(vec![f].into_iter())
+                        .collect::<Vec<_>>(),
+                ),
+                _ => None,
+            })
+            .flat_map(|e| e)
+            .collect()
+    }
+    pub fn find_default_folders(&self) -> Vec<RumbasRepoFolderData> {
+        // TODO find repo base
+        self.read_all_folders(&std::path::Path::new(".").to_path_buf())
+            .into_iter()
+            .filter(|f| f.r#type == RumbasRepoFolderType::DefaultFolder)
+            .collect()
     }
 }
 
@@ -402,6 +421,12 @@ impl RumbasRepoEntry {
 pub struct RumbasRepoFileData {
     r#type: RumbasRepoFileType,
     path: PathBuf,
+}
+
+impl RumbasRepoFileData {
+    pub fn path(&self) -> PathBuf {
+        self.path.clone()
+    }
 }
 
 impl RumbasRepoFileData {
