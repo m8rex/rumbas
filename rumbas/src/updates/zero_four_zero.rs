@@ -1,3 +1,4 @@
+use crate::support::default::{DefaultExamFileType, DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
@@ -123,6 +124,26 @@ pub fn update() -> String {
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
+
+    let default_files = crate::support::file_manager::CACHE
+        .find_default_folders()
+        .into_iter()
+        .flat_map(|folder| crate::support::file_manager::CACHE.read_folder(&folder.path()))
+        .filter_map(|entry| match entry {
+            crate::support::file_manager::RumbasRepoEntry::Folder(_) => None,
+            crate::support::file_manager::RumbasRepoEntry::File(f) => Some(f),
+        })
+        .collect::<Vec<_>>();
+
+    let default_exam_files: Vec<_> = default_files
+        .iter()
+        .filter_map(|file| <DefaultFile<DefaultExamFileType>>::from_path(&file.path()))
+        .collect();
+
+    let default_question_files: Vec<_> = default_files
+        .iter()
+        .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
+        .collect();
 
     "0.5.0".to_string()
 }
