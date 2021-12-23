@@ -132,23 +132,23 @@ create_default_file_type_enums!(
     QuestionPartGapFillGapExtension with type QuestionPartExtensionInput: in "questionpart.gapfill.gap.extension"
 );
 
-trait DefaultFileTypeMethods: Sized {
+pub trait DefaultFileTypeMethods: Sized {
     type Data;
-    fn from(path: &Path) -> Option<Self>;
+    fn from_path(path: &Path) -> Option<Self>;
     fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data>;
 }
 
 #[derive(Debug)]
 /// Struct used to overwrite values with defaults
-struct DefaultFile<T> {
+pub struct DefaultFile<T> {
     r#type: T,
     path: PathBuf,
 }
 
 impl<T: DefaultFileTypeMethods> DefaultFile<T> {
     /// Create a DefaultFile from the file_name of the given path, returns None if invalid path
-    fn from(path: &Path) -> Option<Self> {
-        let default_type: Option<T> = T::from(path);
+    pub fn from_path(path: &Path) -> Option<Self> {
+        let default_type: Option<T> = T::from_path(path);
         if let Some(t) = default_type {
             return Some(DefaultFile {
                 r#type: t,
@@ -168,7 +168,7 @@ impl<T: DefaultFileTypeMethods> DefaultFile<T> {
         let paths = default_file_paths(path);
         let usefull_paths = paths
             .into_iter()
-            .map(|p| Self::from(&p))
+            .map(|p| Self::from_path(&p))
             .filter(|p| p.is_some());
         usefull_paths.map(|p| p.unwrap()).collect()
     }
@@ -200,7 +200,7 @@ macro_rules! create_default_file_type_enums {
         impl DefaultFileTypeMethods for $type_name {
             type Data = $data_name;
             /// Creates a DefaultFileType based on the filename, returns None if unknown
-            fn from(path: &Path) -> Option<Self> {
+            fn from_path(path: &Path) -> Option<Self> {
                 let file_name = path.file_stem();
                 match file_name {
                     Some(f) => match f.to_str() {

@@ -493,6 +493,12 @@ pub struct RumbasRepoFolderData {
 }
 
 impl RumbasRepoFolderData {
+    pub fn path(&self) -> PathBuf {
+        self.path.clone()
+    }
+}
+
+impl RumbasRepoFolderData {
     pub fn from(p: &PathBuf) -> Self {
         Self {
             r#type: RumbasRepoFolderType::from(p),
