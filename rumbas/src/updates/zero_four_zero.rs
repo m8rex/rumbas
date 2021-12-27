@@ -1,5 +1,6 @@
 use crate::support::default::{DefaultExamFileType, DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
+use rumbas_support::preamble::{FileToLoad, LoadedFile, LoadedNormalFile};
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 macro_rules! update_hash {
@@ -135,15 +136,66 @@ pub fn update() -> String {
         })
         .collect::<Vec<_>>();
 
-    let default_exam_files: Vec<_> = default_files
-        .iter()
-        .filter_map(|file| <DefaultFile<DefaultExamFileType>>::from_path(&file.path()))
-        .collect();
-
-    let default_question_files: Vec<_> = default_files
+    let mut default_questions: Vec<_> = default_files
         .iter()
         .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
+        .filter_map(|d| match d.get_type() {
+            DefaultQuestionFileType::Question => {
+                let lf_opt = CACHE.read_file(FileToLoad {
+                    file_path: d.get_path(),
+                    locale_dependant: false,
+                });
+                lf_opt
+                    .map(|lf| match lf {
+                        LoadedFile::Normal(n) => Some(n),
+                        _ => None,
+                    })
+                    .flatten()
+                    .map(|lf| {
+                        YamlLoader::load_from_str(&lf.content[..])
+                            .ok()
+                            .map(|a| (lf.clone(), a[0].clone()))
+                    })
+                    .flatten()
+            }
+            _ => None,
+        })
         .collect();
+
+    for default_question_idx in 0..default_questions.len() {
+        let default_question = &default_questions[default_question_idx];
+
+        log::info!("Updating {}", default_question.0.file_path.display());
+        let new_question = update_hash!(default_question.1.clone() =>
+            vec!["advice", "statement"], update_translatable_string => :
+            vec!["diagnostic_topic_names"], update_translatable_string_vector => :
+            vec!["functions"], update_functions => :
+            vec!["variables"], update_translatable_string_vector => :
+            vec!["parts"], update_parts =>
+        );
+        let new_question = if default_question.0.file_path.starts_with("./defaults") {
+            // TODO
+            log::info!(
+                "Updating main default file {}",
+                default_question.0.file_path.display()
+            );
+            update_hash!(new_question =>
+            vec!["extensions"], update_extensions =>
+            )
+        } else {
+            new_question
+        };
+        default_questions[default_question_idx].1 = new_question;
+    }
+
+    for (file, default_question) in default_questions.into_iter() {
+        let mut out_str = String::new();
+        {
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
+        }
+        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+    }
 
     "0.5.0".to_string()
 }
@@ -447,6 +499,18 @@ fn update_question_groups(yaml: Yaml) -> Yaml {
                         vec!["name"], update_translatable_string =>
                     )
                 })
+                .collect(),
+        ),
+        _ => yaml,
+    }
+}
+
+fn update_extensions(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Hash(h) => Yaml::Hash(
+            h.clone()
+                .into_iter()
+                .chain(vec![(Yaml::String("sqlite".to_string()), Yaml::Boolean(false))].into_iter())
                 .collect(),
         ),
         _ => yaml,

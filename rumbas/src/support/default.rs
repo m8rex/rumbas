@@ -138,14 +138,14 @@ pub trait DefaultFileTypeMethods: Sized {
     fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 /// Struct used to overwrite values with defaults
-pub struct DefaultFile<T> {
+pub struct DefaultFile<T: Clone> {
     r#type: T,
     path: PathBuf,
 }
 
-impl<T: DefaultFileTypeMethods> DefaultFile<T> {
+impl<T: DefaultFileTypeMethods + Clone> DefaultFile<T> {
     /// Create a DefaultFile from the file_name of the given path, returns None if invalid path
     pub fn from_path(path: &Path) -> Option<Self> {
         let default_type: Option<T> = T::from_path(path);
@@ -159,7 +159,7 @@ impl<T: DefaultFileTypeMethods> DefaultFile<T> {
     }
 
     /// Read the given path as the data needed for this DefaultFile
-    fn read_as_data(&self) -> serde_yaml::Result<T::Data> {
+    pub fn read_as_data(&self) -> serde_yaml::Result<T::Data> {
         self.r#type.read_as_data(&self.path)
     }
 
@@ -174,26 +174,38 @@ impl<T: DefaultFileTypeMethods> DefaultFile<T> {
     }
 }
 
-impl<T> DefaultFile<T> {
+impl<T: Clone> DefaultFile<T> {
     /// Get the path of this DefaultFile
-    fn get_path(&self) -> PathBuf {
+    pub fn get_path(&self) -> PathBuf {
         self.path.clone()
     }
+
+    /// Get the type of this DefaultFile
+    pub fn get_type(&self) -> T {
+        self.r#type.clone()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct DefaultFileData<T> {
+    data: T,
+    path: std::path::PathBuf,
 }
 
 /// Create the DefaultFileType and DefaultQuestionData enums and their methods to read data
 macro_rules! create_default_file_type_enums {
     ($type_name: ident: $data_name: ident, $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
-        #[derive(Debug)]
+        #[derive(Debug, Clone)]
         pub enum $type_name {
             $(
                 $file_type
             ),*
         }
 
+        #[derive(Debug, Clone)]
         pub enum $data_name {
             $(
-                $file_type($data_type)
+                $file_type(DefaultFileData<$data_type>)
             ),*
         }
 
@@ -222,7 +234,7 @@ macro_rules! create_default_file_type_enums {
                         $(
                         Self::$file_type => {
                             let n: $data_type = serde_yaml::from_str(&l.content)?;
-                            Ok($data_name::$file_type( n ))
+                            Ok($data_name::$file_type( DefaultFileData { data: n, path: path.to_path_buf() }))
                         }
                         )*
                     }
@@ -243,17 +255,17 @@ macro_rules! handle_exam {
                     let default_data = default_file.read_as_data().unwrap(); //TODO Move this so file reader reads them
                     match default_data {
                         DefaultExamData::SequentialNavigation(n) => {
-                            $handle_seq(&n, exam)
+                            $handle_seq(&n.data, exam)
                         }
                         DefaultExamData::MenuNavigation(n) => {
-                            $handle_menu(&n, exam)
+                            $handle_menu(&n.data, exam)
                         }
                         DefaultExamData::DiagnosticNavigation(n) => {
-                            $handle_diag(&n, exam)
+                            $handle_diag(&n.data, exam)
                         }
-                        DefaultExamData::Timing(t) => exam.timing.overwrite(&Value::Normal(t)),
-                        DefaultExamData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f)),
-                        DefaultExamData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f)),
+                        DefaultExamData::Timing(t) => exam.timing.overwrite(&Value::Normal(t.data)),
+                        DefaultExamData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f.data)),
+                        DefaultExamData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f.data)),
                     }
             }
         }
@@ -272,25 +284,25 @@ macro_rules! handle_question {
             match default_data {
                 DefaultQuestionData::Question(q) => {
                     question
-                        .overwrite(&q);
+                        .overwrite(&q.data);
                 }
-                DefaultQuestionData::QuestionPartJME(p) => handle_question_parts!(question, QuestionPartJMEInputEnum(p.clone()), JME),
-                DefaultQuestionData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap question, QuestionPartJMEInputEnum(p.clone()), JME),
-                DefaultQuestionData::QuestionPartGapFill(p) => handle_question_parts!(question, QuestionPartGapFillInputEnum(p.clone()), GapFill),
-                DefaultQuestionData::QuestionPartChooseOne(p) => handle_question_parts!(question, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
-                DefaultQuestionData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap question, QuestionPartChooseOneInputEnum(p.clone()), ChooseOne),
-                DefaultQuestionData::QuestionPartChooseMultiple(p) => handle_question_parts!(question, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
-                DefaultQuestionData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap question, QuestionPartChooseMultipleInputEnum(p.clone()), ChooseMultiple),
-                DefaultQuestionData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(question, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
-                DefaultQuestionData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap question, QuestionPartMatchAnswersWithItemsInputEnum(p.clone()), MatchAnswersWithItems),
-                DefaultQuestionData::QuestionPartNumberEntry(p) => handle_question_parts!(question, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
-                DefaultQuestionData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap question, QuestionPartNumberEntryInputEnum(p.clone()), NumberEntry),
-                DefaultQuestionData::QuestionPartPatternMatch(p) => handle_question_parts!(question, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
-                DefaultQuestionData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap question, QuestionPartPatternMatchInputEnum(p.clone()), PatternMatch),
-                DefaultQuestionData::QuestionPartInformation(p) => handle_question_parts!(question, QuestionPartInformationInputEnum(p.clone()), Information),
-                DefaultQuestionData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap question, QuestionPartInformationInputEnum(p.clone()), Information),
-                DefaultQuestionData::QuestionPartExtension(p) => handle_question_parts!(question, QuestionPartExtensionInputEnum(p.clone()), Extension),
-                DefaultQuestionData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap question, QuestionPartExtensionInputEnum(p.clone()), Extension),
+                DefaultQuestionData::QuestionPartJME(p) => handle_question_parts!(question, QuestionPartJMEInputEnum(p.data.clone()), JME),
+                DefaultQuestionData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap question, QuestionPartJMEInputEnum(p.data.clone()), JME),
+                DefaultQuestionData::QuestionPartGapFill(p) => handle_question_parts!(question, QuestionPartGapFillInputEnum(p.data.clone()), GapFill),
+                DefaultQuestionData::QuestionPartChooseOne(p) => handle_question_parts!(question, QuestionPartChooseOneInputEnum(p.data.clone()), ChooseOne),
+                DefaultQuestionData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap question, QuestionPartChooseOneInputEnum(p.data.clone()), ChooseOne),
+                DefaultQuestionData::QuestionPartChooseMultiple(p) => handle_question_parts!(question, QuestionPartChooseMultipleInputEnum(p.data.clone()), ChooseMultiple),
+                DefaultQuestionData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap question, QuestionPartChooseMultipleInputEnum(p.data.clone()), ChooseMultiple),
+                DefaultQuestionData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(question, QuestionPartMatchAnswersWithItemsInputEnum(p.data.clone()), MatchAnswersWithItems),
+                DefaultQuestionData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap question, QuestionPartMatchAnswersWithItemsInputEnum(p.data.clone()), MatchAnswersWithItems),
+                DefaultQuestionData::QuestionPartNumberEntry(p) => handle_question_parts!(question, QuestionPartNumberEntryInputEnum(p.data.clone()), NumberEntry),
+                DefaultQuestionData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap question, QuestionPartNumberEntryInputEnum(p.data.clone()), NumberEntry),
+                DefaultQuestionData::QuestionPartPatternMatch(p) => handle_question_parts!(question, QuestionPartPatternMatchInputEnum(p.data.clone()), PatternMatch),
+                DefaultQuestionData::QuestionPartGapFillGapPatternMatch(p) => handle_question_parts!(gap question, QuestionPartPatternMatchInputEnum(p.data.clone()), PatternMatch),
+                DefaultQuestionData::QuestionPartInformation(p) => handle_question_parts!(question, QuestionPartInformationInputEnum(p.data.clone()), Information),
+                DefaultQuestionData::QuestionPartGapFillGapInformation(p) => handle_question_parts!(gap question, QuestionPartInformationInputEnum(p.data.clone()), Information),
+                DefaultQuestionData::QuestionPartExtension(p) => handle_question_parts!(question, QuestionPartExtensionInputEnum(p.data.clone()), Extension),
+                DefaultQuestionData::QuestionPartGapFillGapExtension(p) => handle_question_parts!(gap question, QuestionPartExtensionInputEnum(p.data.clone()), Extension),
 
             }
 
