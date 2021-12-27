@@ -1,6 +1,9 @@
 use crate::support::default::{DefaultExamFileType, DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
+use crate::support::noneable::Noneable;
+use crate::support::to_rumbas::ToRumbas;
 use rumbas_support::preamble::{FileToLoad, LoadedFile, LoadedNormalFile};
+use std::convert::TryFrom;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 macro_rules! update_hash {
@@ -136,9 +139,12 @@ pub fn update() -> String {
         })
         .collect::<Vec<_>>();
 
-    let mut default_questions: Vec<_> = default_files
+    let default_question_files: Vec<_> = default_files
         .iter()
         .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
+        .collect();
+    let mut default_questions: Vec<_> = default_question_files
+        .iter()
         .filter_map(|d| match d.get_type() {
             DefaultQuestionFileType::Question => {
                 let lf_opt = CACHE.read_file(FileToLoad {
@@ -193,6 +199,74 @@ pub fn update() -> String {
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
             emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
+        }
+        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+    }
+
+    let mut default_question_parts: Vec<_> = default_question_files
+        .iter()
+        .filter_map(|d| match d.get_type() {
+            DefaultQuestionFileType::QuestionPartJME
+            | DefaultQuestionFileType::QuestionPartGapFill
+            | DefaultQuestionFileType::QuestionPartChooseOne
+            | DefaultQuestionFileType::QuestionPartChooseMultiple
+            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+            | DefaultQuestionFileType::QuestionPartNumberEntry
+            | DefaultQuestionFileType::QuestionPartPatternMatch
+            | DefaultQuestionFileType::QuestionPartInformation
+            | DefaultQuestionFileType::QuestionPartExtension
+            | DefaultQuestionFileType::QuestionPartGapFillGapJME
+            | DefaultQuestionFileType::QuestionPartGapFillGapChooseOne
+            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems
+            | DefaultQuestionFileType::QuestionPartGapFillGapNumberEntry
+            | DefaultQuestionFileType::QuestionPartGapFillGapPatternMatch
+            | DefaultQuestionFileType::QuestionPartGapFillGapInformation
+            | DefaultQuestionFileType::QuestionPartGapFillGapExtension => {
+                CACHE.read_file(FileToLoad {
+                    file_path: d.get_path(),
+                    locale_dependant: false,
+                })
+            }
+            DefaultQuestionFileType::Question => None,
+        })
+        .filter_map(|lf| {
+            match lf {
+                LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            }
+            .map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .ok()
+                    .map(|a| (lf.clone(), a[0].clone()))
+            })
+            .flatten()
+        })
+        .collect();
+
+    for default_question_part_idx in 0..default_question_parts.len() {
+        let default_question_part = &default_question_parts[default_question_part_idx];
+
+        log::info!("Updating {}", default_question_part.0.file_path.display());
+        let new_question_part = update_part(default_question_part.1.clone());
+        let new_question_part = if default_question_part.0.file_path.starts_with("./defaults") {
+            // TODO
+            log::info!(
+                "Updating main default file {}",
+                default_question_part.0.file_path.display()
+            );
+            add_default_answer_display(new_question_part)
+        } else {
+            new_question_part
+        };
+        default_question_parts[default_question_part_idx].1 = new_question_part;
+    }
+
+    for (file, default_question_part) in default_question_parts.into_iter() {
+        let mut out_str = String::new();
+        {
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
@@ -310,35 +384,60 @@ fn update_functions(yaml: Yaml) -> Yaml {
 
 fn update_parts(yaml: Yaml) -> Yaml {
     match yaml {
-        Yaml::Array(v) => Yaml::Array(
-            v.into_iter()
-                .map(|f| {
-                    remove_fields(update_hash!(f.clone() =>
-                        vec!["prompt"], update_translatable_string =>:
-                        vec!["custom_marking_algorithm"], update_jme_notes => rename [|_name: &Yaml| Yaml::String("custom_marking_algorithm_notes".to_string())]: // TODO: parse the string
-                        vec!["gaps"], update_parts =>:
-                        vec!["steps"], update_parts => :
-                        vec!["pattern", "display_answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("pattern_match".to_string())]:
-                        vec!["answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
-                        vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
-                        vec!["answers", "answer_data"], update_choose_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]:
-                        vec!["display"], |yaml: Yaml| update_choose_one_display(f["columns"].clone(), yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string())]:
-                        vec!["answers", "answer_data"], update_match_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
-                    ), vec!["columns"])
-                })
-                .collect(),
-        ),
+        Yaml::Array(v) => Yaml::Array(v.into_iter().map(update_part).collect()),
         _ => yaml,
     }
 }
 
-fn update_jme_notes(yaml: Yaml) -> Yaml {
+fn update_part(yaml: Yaml) -> Yaml {
+    remove_fields(
+        update_hash!(yaml =>
+            vec!["prompt"], update_translatable_string =>:
+            vec!["custom_marking_algorithm"], update_custom_marking_algorithm => rename [|_name: &Yaml| Yaml::String("custom_marking_algorithm_notes".to_string())]:
+            vec!["gaps"], update_parts =>:
+            vec!["steps"], update_parts => :
+            vec!["pattern", "display_answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("pattern_match".to_string())]:
+            vec!["answer"], update_translatable_string => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
+            vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
+            vec!["answers", "answer_data"], update_choose_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]:
+            vec!["display"], |internal_yaml: Yaml| update_choose_one_display(yaml["columns"].clone(), internal_yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string())]:
+            vec!["answers", "answer_data"], update_match_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
+        ),
+        vec!["columns"],
+    )
+}
+
+fn update_custom_marking_algorithm(yaml: Yaml) -> Yaml {
     match yaml {
-        Yaml::Array(v) => Yaml::Array(
-            v.into_iter()
+        Yaml::String(s) => Yaml::Array(
+            numbas::jme::JMENotesString::try_from(s)
+                .expect("valid jme notes string")
+                .to_rumbas()
+                .0
+                .into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
-                        vec!["expression"], update_translatable_string =>
+                    Yaml::Hash(
+                        vec![
+                            (
+                                Yaml::String("description".to_string()),
+                                Yaml::String(match f.description {
+                                    Noneable::None => "none".to_string(),
+                                    Noneable::NotNone(s) => s.clone(),
+                                }),
+                            ),
+                            (
+                                Yaml::String("expression".to_string()),
+                                Yaml::String(
+                                    f.expression.to_string("").expect("stringable expression"),
+                                ),
+                            ),
+                            (
+                                Yaml::String("name".to_string()),
+                                Yaml::String(f.name.clone()),
+                            ),
+                        ]
+                        .into_iter()
+                        .collect(),
                     )
                 })
                 .collect(),
@@ -516,6 +615,70 @@ fn update_extensions(yaml: Yaml) -> Yaml {
         _ => yaml,
     }
 }
+
+fn add_default_answer_display(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Hash(h) => Yaml::Hash({
+            let use_dot_as_multiplication_sign = h
+                .iter()
+                .find(|(k, _v)| k == &&Yaml::String("answer_simplification".to_string()))
+                .map(|(_k, v)| match v {
+                    Yaml::Hash(simp) => simp
+                        .iter()
+                        .find(|(k, _v)| k == &&Yaml::String("use_times_dot".to_string()))
+                        .map(|(_k, v)| v.clone()),
+                    _ => None,
+                })
+                .flatten()
+                .unwrap_or(Yaml::Boolean(false));
+
+            h.into_iter()
+                .chain(
+                    vec![(
+                        Yaml::String("answer_display".to_string()),
+                        Yaml::Hash(
+                            vec![
+                                (
+                                    Yaml::String("broken_as_fractions".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                                (
+                                    Yaml::String("mixed_fractions".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                                (
+                                    Yaml::String("flat_fractions".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                                (
+                                    Yaml::String("vector_as_row".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                                (
+                                    Yaml::String("always_show_multiplication_sign".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                                (
+                                    Yaml::String("use_dot_as_multiplication_sign".to_string()),
+                                    use_dot_as_multiplication_sign,
+                                ),
+                                (
+                                    Yaml::String("matrices_without_parentheses".to_string()),
+                                    Yaml::Boolean(false),
+                                ),
+                            ]
+                            .into_iter()
+                            .collect(),
+                        ),
+                    )]
+                    .into_iter(),
+                )
+                .collect()
+        }),
+        _ => yaml,
+    }
+}
+
 fn remove_fields(yaml: Yaml, fields: Vec<&str>) -> Yaml {
     let fields = fields
         .into_iter()
