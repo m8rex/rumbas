@@ -39,5 +39,7 @@ fn main() {
         cli::update_repo(matches)
     } else if let Some(matches) = matches.subcommand_matches("schema") {
         cli::schema(matches)
+    } else if let Some(matches) = matches.subcommand_matches("check") {
+        cli::check(matches)
     }
 }

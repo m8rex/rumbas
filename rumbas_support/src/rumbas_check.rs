@@ -139,6 +139,28 @@ impl RumbasCheckResult {
     }
 }
 
+impl RumbasCheckResult {
+    pub fn log(&self) {
+        let missing_translations = self.missing_translations();
+        let invalid_jme_fields = self.invalid_jme_fields();
+        if !missing_translations.is_empty() {
+            log::error!("Found {} missing translations:", missing_translations.len());
+            for (idx, error) in missing_translations.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
+        if !invalid_jme_fields.is_empty() {
+            log::error!(
+                "Found {} invalid jme expressions:",
+                invalid_jme_fields.len()
+            );
+            for (idx, error) in invalid_jme_fields.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RumbasCheckPath {
     parts: Vec<String>,

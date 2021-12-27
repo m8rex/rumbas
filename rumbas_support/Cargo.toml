@@ -11,6 +11,7 @@ serde_yaml = "0.8.13"
 numbas = { path = "../numbas" }
 rumbas_support_derive = { path = "../rumbas_support_derive" }
 schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged-enums-as-if-else" }
+log = "0.4.0"
 
 [features]
 default = [ "derive"]

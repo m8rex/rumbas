@@ -342,6 +342,26 @@ impl InputCheckResult {
     }
 }
 
+impl InputCheckResult {
+    pub fn log(&self) {
+        let missing_fields = self.missing_fields();
+        let invalid_yaml_fields = self.invalid_yaml_fields();
+        log::error!("Error when processing to yaml input.");
+        if !missing_fields.is_empty() {
+            log::error!("Found {} missing fields:", missing_fields.len());
+            for (idx, error) in missing_fields.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
+        if !invalid_yaml_fields.is_empty() {
+            log::error!("Found {} invalid fields:", invalid_yaml_fields.len());
+            for (idx, error) in invalid_yaml_fields.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct InputCheckPath {
     parts: Vec<String>,

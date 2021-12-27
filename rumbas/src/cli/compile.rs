@@ -1,12 +1,8 @@
-use rumbas::support::default::combine_exam_with_default_files;
-
 use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
-
-use rumbas::support::file_manager::CACHE;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
@@ -26,17 +22,14 @@ pub fn compile(matches: &clap::ArgMatches) {
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
-            combine_exam_with_default_files(path, &mut exam_input);
-
-            let files_to_load = exam_input.files_to_load();
-            let loaded_files = CACHE.read(files_to_load);
-            exam_input.insert_loaded_files(&loaded_files);
+            exam_input.combine_with_defaults(&path);
 
             let exam_result = exam_input.to_normal_safe();
             match exam_result {
                 Ok(exam) => {
                     if exam.locales().is_empty() {
                         log::error!("Locales not set!");
+                        std::process::exit(1)
                     } else {
                         let mut something_failed: bool = false;
                         for locale_item in exam.locales().iter() {
@@ -64,28 +57,8 @@ pub fn compile(matches: &clap::ArgMatches) {
                                 }
                                 Err(check_result) => {
                                     something_failed = true;
-                                    let missing_translations = check_result.missing_translations();
-                                    let invalid_jme_fields = check_result.invalid_jme_fields();
                                     log::error!("Error when processing locale {}.", locale);
-                                    if !missing_translations.is_empty() {
-                                        log::error!(
-                                            "Found {} missing translations:",
-                                            missing_translations.len()
-                                        );
-                                        for (idx, error) in missing_translations.iter().enumerate()
-                                        {
-                                            log::error!("{}\t{}", idx + 1, error.to_string());
-                                        }
-                                    }
-                                    if !invalid_jme_fields.is_empty() {
-                                        log::error!(
-                                            "Found {} invalid jme expressions:",
-                                            invalid_jme_fields.len()
-                                        );
-                                        for (idx, error) in invalid_jme_fields.iter().enumerate() {
-                                            log::error!("{}\t{}", idx + 1, error.to_string());
-                                        }
-                                    }
+                                    check_result.log();
                                 }
                             }
                         }
@@ -95,21 +68,7 @@ pub fn compile(matches: &clap::ArgMatches) {
                     }
                 }
                 Err(check_result) => {
-                    let missing_fields = check_result.missing_fields();
-                    let invalid_yaml_fields = check_result.invalid_yaml_fields();
-                    log::error!("Error when processing to yaml input.");
-                    if !missing_fields.is_empty() {
-                        log::error!("Found {} missing fields:", missing_fields.len());
-                        for (idx, error) in missing_fields.iter().enumerate() {
-                            log::error!("{}\t{}", idx + 1, error.to_string());
-                        }
-                    }
-                    if !invalid_yaml_fields.is_empty() {
-                        log::error!("Found {} invalid fields:", invalid_yaml_fields.len());
-                        for (idx, error) in invalid_yaml_fields.iter().enumerate() {
-                            log::error!("{}\t{}", idx + 1, error.to_string());
-                        }
-                    }
+                    check_result.log();
                     std::process::exit(1)
                 }
             }
