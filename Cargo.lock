@@ -577,6 +577,7 @@ dependencies = [
 name = "rumbas_support"
 version = "0.1.0"
 dependencies = [
+ "log",
  "numbas",
  "rumbas_support_derive",
  "schemars",

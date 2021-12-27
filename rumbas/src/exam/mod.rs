@@ -16,6 +16,8 @@ use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
 use crate::exam::question_group::QuestionPath;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::support::default::combine_exam_with_default_files;
+use crate::support::file_manager::CACHE;
 use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::translatable::TranslatableString;
@@ -116,6 +118,14 @@ impl ExamInput {
                 }
             })
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
+    }
+
+    pub fn combine_with_defaults(&mut self, path: &Path) {
+        combine_exam_with_default_files(path, self);
+
+        let files_to_load = self.files_to_load();
+        let loaded_files = CACHE.read(files_to_load);
+        self.insert_loaded_files(&loaded_files);
     }
 }
 

@@ -26,6 +26,13 @@ subcommands:
         - no-minification:
             long: no-minification
             help: Don't perform minification on the created js in the exam. Useful if you don't have uglifyjs or want to debug something.
+  - check:
+      about: Check a rumbas exam (or question)
+      args:
+        - EXAM_OR_QUESTION_PATH:
+            help: The path to the exam or question file to check
+            required: true
+            index: 1
   - import:
       about: |-
         Import a numbas .exam file
