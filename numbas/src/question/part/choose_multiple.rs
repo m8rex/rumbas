@@ -1,4 +1,4 @@
-use crate::jme::{EmbracedJMEString, JMEString};
+use crate::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use crate::question::part::match_answers::MultipleChoiceWarningType;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::SafeNatural;
@@ -39,7 +39,7 @@ pub struct QuestionPartChooseMultiple {
     pub show_cell_answer_state: bool,
 
     /// This is either a list of embraced jme strings or a jme expression
-    pub choices: VariableValued<Vec<EmbracedJMEString>>,
+    pub choices: VariableValued<Vec<ContentAreaString>>,
     #[serde(rename = "matrix")]
     /// This is either a list of jme strings or a jme expression
     pub marking_matrix: Option<VariableValued<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
