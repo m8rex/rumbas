@@ -543,8 +543,11 @@ impl RumbasRepoFolderType {
                 Self::Folder
             }
         } else {
-            log::error!("Unkown file_stem for {}", p.display());
-            unreachable!();
+            log::debug!(
+                "Unkown file_stem for {}, assuming it is just a folder",
+                p.display()
+            );
+            Self::Folder
         }
     }
 }
