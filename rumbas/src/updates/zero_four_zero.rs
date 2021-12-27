@@ -271,6 +271,8 @@ pub fn update() -> String {
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
 
+    log::error!("Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.");
+
     "0.5.0".to_string()
 }
 

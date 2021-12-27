@@ -1,6 +1,7 @@
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
+use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::variable_valued::VariableValued;
@@ -26,13 +27,13 @@ pub enum MultipleChoiceAnswerData {
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
-    pub answers: VariableValued<Vec<EmbracedJMETranslatableString>>,
+    pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub marks: VariableValued<Vec<JMETranslatableString>>,
     pub feedback: Noneable<Vec<EmbracedJMETranslatableString>>,
 }
 
 fn extract_multiple_choice_answer_data(
-    answers: &numbas::support::primitive::VariableValued<Vec<numbas::jme::EmbracedJMEString>>,
+    answers: &numbas::support::primitive::VariableValued<Vec<numbas::jme::ContentAreaString>>,
     marking_matrix: &Option<
         numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
     >,
@@ -87,7 +88,7 @@ fn extract_multiple_choice_answer_data(
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswer {
-    pub statement: EmbracedJMETranslatableString,
+    pub statement: ContentAreaTranslatableString,
     pub feedback: EmbracedJMETranslatableString,
     pub marks: JMETranslatableString,
 }

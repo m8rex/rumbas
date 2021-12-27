@@ -679,7 +679,9 @@ macro_rules! create_from_string_type {
 
         impl RumbasCheck for $t {
             fn check(&self, locale: &str) -> RumbasCheckResult {
-                self.data.check(locale)
+                let mut previous_result = self.data.check(locale);
+                previous_result.extend_path(self.file_name.clone());
+                previous_result
             }
         }
 
