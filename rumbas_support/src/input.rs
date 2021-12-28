@@ -1,7 +1,7 @@
 use crate::value::Value;
 use crate::value::ValueType;
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct FileToLoad {
@@ -343,10 +343,10 @@ impl InputCheckResult {
 }
 
 impl InputCheckResult {
-    pub fn log(&self) {
+    pub fn log(&self, path: &Path) {
         let missing_fields = self.missing_fields();
         let invalid_yaml_fields = self.invalid_yaml_fields();
-        log::error!("Error when processing the yaml input.");
+        log::error!("Error when processing {}.", path.display());
         if !missing_fields.is_empty() {
             log::error!("Found {} missing fields:", missing_fields.len());
             for (idx, error) in missing_fields.iter().enumerate() {
