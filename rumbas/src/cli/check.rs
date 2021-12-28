@@ -4,15 +4,8 @@ use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
 use std::path::{Path, PathBuf};
 
-pub fn check(matches: &clap::ArgMatches) {
-    let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
-    log::info!("Checking {:?}", path.display());
-    if path.is_absolute() {
-        log::error!("Absolute path's are not supported");
-        return;
-    }
-
-    let files = if path.is_file() {
+pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
+    if path.is_file() {
         vec![path.to_path_buf()]
     } else if path.is_dir() {
         if path.starts_with("questions") {
@@ -22,11 +15,21 @@ pub fn check(matches: &clap::ArgMatches) {
         }
         .into_iter()
         .map(|f| f.file_path)
-        .collect()
+        .collect::<Vec<_>>()
     } else {
         log::error!("Symbolic links are not (yet) supported");
         std::process::exit(1);
-    };
+    }
+}
+
+pub fn check(matches: &clap::ArgMatches) {
+    let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
+    log::info!("Checking {:?}", path.display());
+    if path.is_absolute() {
+        log::error!("Absolute path's are not supported");
+        return;
+    }
+    let files = find_all_files(&path);
     let check_results: Vec<(CheckResult, PathBuf)> = files
         .into_par_iter()
         .map(|file| (check_file(matches, &file), file))
@@ -37,7 +40,13 @@ pub fn check(matches: &clap::ArgMatches) {
         .fold(
             || 0,
             |nb, (result, _)| match result {
-                CheckResult::Passed => nb,
+                CheckResult::Partial(p) => {
+                    if p.failed.is_empty() {
+                        nb
+                    } else {
+                        nb + 1
+                    }
+                }
                 _ => nb + 1,
             },
         )
@@ -55,37 +64,62 @@ pub fn check(matches: &clap::ArgMatches) {
 }
 
 pub enum CheckResult {
-    Passed,
     FailedParsing(rumbas::exam::ParseError),
     LocalesNotSet,
     FailedInputCheck(rumbas_support::input::InputCheckResult),
-    FailedRumbasCheck(Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)>),
+    Partial(RumbasCheckData),
+}
+
+pub struct RumbasCheckData {
+    failed: Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)>,
+    passed: Vec<(
+        String,
+        numbas::exam::Exam,
+        rumbas::exam::locale::SupportedLocale,
+        String,
+    )>,
+}
+
+impl RumbasCheckData {
+    pub fn log(&self, path: &Path) {
+        for (locale, check_result) in self.failed.iter() {
+            log::error!(
+                "Error when processing locale {} for {}.",
+                locale,
+                path.display()
+            );
+
+            check_result.log();
+        }
+    }
+    pub fn passed(
+        &self,
+    ) -> Vec<(
+        String,
+        numbas::exam::Exam,
+        rumbas::exam::locale::SupportedLocale,
+        String,
+    )> {
+        self.passed.clone()
+    }
+    pub fn failed(&self) -> Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)> {
+        self.failed.clone()
+    }
 }
 
 impl CheckResult {
     pub fn log(&self, path: &Path) {
         match self {
-            Self::Passed => (),
             Self::FailedParsing(e) => log::error!("{}", e),
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
             Self::FailedInputCheck(e) => e.log(path),
-            Self::FailedRumbasCheck(es) => {
-                for (locale, check_result) in es.iter() {
-                    log::error!(
-                        "Error when processing locale {} for {}.",
-                        locale,
-                        path.display()
-                    );
-
-                    check_result.log();
-                }
-            }
+            Self::Partial(r) => r.log(path),
         }
     }
 }
 
 /// Return true if parsing is ok
-fn check_file(_matches: &clap::ArgMatches, path: &Path) -> CheckResult {
+pub fn check_file(_matches: &clap::ArgMatches, path: &Path) -> CheckResult {
     log::info!("Checking {:?}", path.display());
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
@@ -99,21 +133,28 @@ fn check_file(_matches: &clap::ArgMatches, path: &Path) -> CheckResult {
                         CheckResult::LocalesNotSet
                     } else {
                         let mut failed_locales = Vec::new();
+                        let mut passed_locales = Vec::new();
                         for locale_item in exam.locales().iter() {
                             let locale = locale_item.name.to_owned();
                             let numbas = exam.to_numbas_safe(&locale);
                             match numbas {
-                                Ok(_) => {}
+                                Ok(numbas_exam) => {
+                                    passed_locales.push((
+                                        locale,
+                                        numbas_exam,
+                                        locale_item.numbas_locale,
+                                        exam.numbas_settings().theme,
+                                    ));
+                                }
                                 Err(check_result) => {
                                     failed_locales.push((locale, check_result));
                                 }
                             }
                         }
-                        if failed_locales.is_empty() {
-                            CheckResult::Passed
-                        } else {
-                            CheckResult::FailedRumbasCheck(failed_locales)
-                        }
+                        CheckResult::Partial(RumbasCheckData {
+                            passed: passed_locales,
+                            failed: failed_locales,
+                        })
                     }
                 }
                 Err(check_result) => CheckResult::FailedInputCheck(check_result),
