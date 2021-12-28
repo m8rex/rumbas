@@ -103,6 +103,7 @@ pub enum FunctionType {
     Decimal,
     Dictionary,
     Expression,
+    #[serde(rename = "html")]
     HTML,
     Integer,
     KeyPair,
