@@ -68,7 +68,7 @@ pub fn compile(matches: &clap::ArgMatches) {
                     }
                 }
                 Err(check_result) => {
-                    check_result.log();
+                    check_result.log(&path);
                     std::process::exit(1)
                 }
             }

@@ -40,7 +40,8 @@ impl FileManager {
             std::mem::drop(map); // remove the read lock
 
             let res = match file.locale_dependant {
-                true => Self::read_localized_file(&file.file_path)
+                true => self
+                    .read_localized_file(&file.file_path)
                     .map(rumbas_support::input::LoadedFile::Localized),
                 false => Self::read_normal_file(&file.file_path)
                     .map(rumbas_support::input::LoadedFile::Normal),
@@ -68,7 +69,7 @@ impl FileManager {
     }
 
     fn read_normal_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
-        log::debug!("Reading file {}.", file_path.display());
+        log::debug!("Reading normal file {}.", file_path.display());
         match std::fs::read_to_string(&file_path) {
             Ok(content) => Ok(LoadedNormalFile {
                 content,
@@ -85,38 +86,39 @@ impl FileManager {
         }
     }
 
-    fn read_localized_file(file_path: &PathBuf) -> Result<LoadedLocalizedFile, ()> {
+    fn read_localized_file(&self, file_path: &PathBuf) -> Result<LoadedLocalizedFile, ()> {
         log::debug!("Reading localized file {}.", file_path.display());
         let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
         let file_dir = file_path.parent().ok_or(())?;
+        log::debug!("Looking for localized files in {}.", file_dir.display());
         //Look for translation dirs
         let mut translated_content = HashMap::new();
-        for entry in file_dir.read_dir().expect("read_dir call failed").flatten()
-        // We only care about the ones that are 'Ok'
-        {
-            if let Ok(entry_name) = entry.file_name().into_string() {
-                if entry_name.starts_with(crate::LOCALE_FOLDER_PREFIX) {
-                    let locale = entry_name
-                        .splitn(2, crate::LOCALE_FOLDER_PREFIX)
-                        .collect::<Vec<_>>()
-                        .get(1)
-                        .unwrap()
-                        .to_string();
-                    let locale_file_path = file_dir.join(entry_name).join(file_name);
-                    if locale_file_path.exists() {
-                        if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                            if let Ok(s) = s.clone().try_into() {
-                                translated_content.insert(locale, s);
-                            } else {
-                                log::warn!(
-                                    "Failed converting content in {}",
-                                    locale_file_path.display()
-                                );
-                            }
-                        } else {
-                            log::warn!("Failed reading {}", locale_file_path.display());
-                        }
+        for (path, locale) in self
+            .read_folder(&file_dir.to_path_buf())
+            .into_iter()
+            .filter_map(|e| match e {
+                RumbasRepoEntry::File(_f) => None,
+                RumbasRepoEntry::Folder(f) => match f.r#type {
+                    RumbasRepoFolderType::LocalizedFolder { locale } => {
+                        Some((f.path, locale.clone()))
                     }
+                    _ => None,
+                },
+            })
+        {
+            let locale_file_path = path.join(file_name);
+            if locale_file_path.exists() {
+                if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
+                    if let Ok(s) = s.clone().try_into() {
+                        translated_content.insert(locale, s);
+                    } else {
+                        log::warn!(
+                            "Failed converting content in {}",
+                            locale_file_path.display()
+                        );
+                    }
+                } else {
+                    log::warn!("Failed reading {}", locale_file_path.display());
                 }
             }
         }
