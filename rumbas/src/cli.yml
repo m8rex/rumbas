@@ -11,10 +11,16 @@ args:
       help: Enables quiet mode
 subcommands:
   - compile:
-      about: Compile a rumbas exam (or question)
+      about: |-
+        Compile a rumbas exam (or question)
+
+        You can pass a path to a folder to compile all files in the folder.
       args:
         - EXAM_OR_QUESTION_PATH:
-            help: The path to the exam or question file to use
+            help: |-
+              The path to the exam or question file to compile.
+
+              If a folder within the questions or exams folder is used, all questions/exams will be compiled.
             required: true
             index: 1
         - scorm:
@@ -27,12 +33,16 @@ subcommands:
             long: no-minification
             help: Don't perform minification on the created js in the exam. Useful if you don't have uglifyjs or want to debug something.
   - check:
-      about: |- 
+      about: |-
         Check a rumbas exam (or question).
+
         You can pass a path to a folder to check all files in the folder.
       args:
         - EXAM_OR_QUESTION_PATH:
-            help: The path to the exam or question file to check. If a folder within the questions or exams folder is used, all questions/exams will be checked.
+            help: |-
+              The path to the exam or question file to check.
+
+              If a folder within the questions or exams folder is used, all questions/exams will be checked.
             required: true
             index: 1
   - import:

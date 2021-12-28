@@ -1,5 +1,5 @@
-use rumbas::support::to_numbas::ToNumbas;
-use rumbas_support::preamble::Input;
+use crate::cli::check::CheckResult;
+use rayon::prelude::*;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
@@ -18,66 +18,118 @@ pub fn compile(matches: &clap::ArgMatches) {
         log::error!("Absolute path's are not supported");
         return;
     }
+    let files = crate::cli::check::find_all_files(&path);
+    let compile_results: Vec<(CompileResult, PathBuf)> = files
+        .into_par_iter()
+        .map(|file| (compile_file(matches, &file), file))
+        .collect();
 
-    let exam_input_result = rumbas::exam::ExamInput::from_file(path);
-    match exam_input_result {
-        Ok(mut exam_input) => {
-            exam_input.combine_with_defaults(&path);
-
-            let exam_result = exam_input.to_normal_safe();
-            match exam_result {
-                Ok(exam) => {
-                    if exam.locales().is_empty() {
-                        log::error!("Locales not set!");
-                        std::process::exit(1)
+    let nb_failures: usize = compile_results
+        .par_iter()
+        .fold(
+            || 0,
+            |nb, (result, _)| match result {
+                CompileResult::Partial(p) => {
+                    if p.failed.is_empty() && p.failed_check.is_empty() {
+                        nb
                     } else {
-                        let mut something_failed: bool = false;
-                        for locale_item in exam.locales().iter() {
-                            let locale = locale_item.name.to_owned();
-                            let numbas = exam.to_numbas_safe(&locale);
-                            match numbas {
-                                Ok(res) => {
-                                    //println!("{}", numbas_output_path.display());
-                                    let compiler = NumbasCompiler {
-                                        use_scorm: matches.is_present("scorm"),
-                                        as_zip: matches.is_present("zip"),
-                                        exam_path: path.to_path_buf(),
-                                        numbas_locale: locale_item
-                                            .numbas_locale
-                                            .to_str()
-                                            .to_string(),
-                                        locale,
-                                        theme: exam.numbas_settings().theme,
-                                        exam: res,
-                                        minify: !matches.is_present("no-minification"),
-                                    };
-                                    if !compiler.compile() {
-                                        something_failed = true;
-                                    }
-                                }
-                                Err(check_result) => {
-                                    something_failed = true;
-                                    log::error!("Error when processing locale {}.", locale);
-                                    check_result.log();
-                                }
-                            }
-                        }
-                        if something_failed {
-                            std::process::exit(1)
-                        }
+                        nb + 1
                     }
                 }
-                Err(check_result) => {
-                    check_result.log(&path);
-                    std::process::exit(1)
+                _ => nb + 1,
+            },
+        )
+        .sum();
+    if nb_failures > 0 {
+        for (check_result, path) in compile_results.iter() {
+            log::error!("Compilation for {} failed:", path.display());
+            check_result.log(path);
+        }
+        log::error!("{} files failed.", nb_failures);
+        std::process::exit(1);
+    } else {
+        log::info!("All compilations passed.")
+    }
+}
+
+pub enum CompileResult {
+    FailedParsing(rumbas::exam::ParseError),
+    LocalesNotSet,
+    FailedInputCheck(rumbas_support::input::InputCheckResult),
+    Partial(RumbasCompileData),
+}
+
+pub struct RumbasCompileData {
+    failed_check: Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)>,
+    failed: Vec<String>,
+    passed: Vec<String>,
+}
+
+impl RumbasCompileData {
+    pub fn log(&self, path: &Path) {
+        for (locale, check_result) in self.failed_check.iter() {
+            log::error!(
+                "Error when processing locale {} for {}.",
+                locale,
+                path.display()
+            );
+
+            check_result.log();
+        }
+        for locale in self.failed.iter() {
+            log::error!(
+                "Error when compiling locale {} for {} with numbas.",
+                locale,
+                path.display()
+            );
+        }
+    }
+}
+
+impl CompileResult {
+    pub fn log(&self, path: &Path) {
+        match self {
+            Self::FailedParsing(e) => log::error!("{}", e),
+            Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
+            Self::FailedInputCheck(e) => e.log(path),
+            Self::Partial(r) => r.log(path),
+        }
+    }
+}
+
+fn compile_file(matches: &clap::ArgMatches, path: &Path) -> CompileResult {
+    let check_result = crate::cli::check::check_file(matches, path);
+    match check_result {
+        CheckResult::FailedParsing(f) => CompileResult::FailedParsing(f),
+        CheckResult::FailedInputCheck(f) => CompileResult::FailedInputCheck(f),
+        CheckResult::LocalesNotSet => CompileResult::LocalesNotSet,
+        CheckResult::Partial(p) => {
+            let mut passed_compilations = Vec::new();
+            let mut failed_compilations = Vec::new();
+            for (locale, numbas_exam, numbas_locale, theme) in p.passed() {
+                let compiler = NumbasCompiler {
+                    use_scorm: matches.is_present("scorm"),
+                    as_zip: matches.is_present("zip"),
+                    exam_path: path.to_path_buf(),
+                    numbas_locale: numbas_locale.to_str().to_string(),
+                    locale: locale.clone(),
+                    theme,
+                    exam: numbas_exam,
+                    minify: !matches.is_present("no-minification"),
+                };
+                if compiler.compile() {
+                    passed_compilations.push(locale)
+                } else {
+                    failed_compilations.push(locale)
                 }
             }
+            CompileResult::Partial(RumbasCompileData {
+                passed: passed_compilations,
+                failed: failed_compilations,
+                failed_check: p.failed(),
+            })
         }
-        Err(e) => {
-            log::error!("{}", e);
-            std::process::exit(1)
-        }
-    };
+    }
 }
 
 pub struct NumbasCompiler {
