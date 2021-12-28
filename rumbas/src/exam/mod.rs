@@ -27,7 +27,6 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::Display;
-use std::fs;
 use std::path::Path;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
@@ -69,7 +68,18 @@ impl ExamInput {
         use ExamFileTypeInput::*;
         let input: std::result::Result<ExamFileTypeInput, _> =
             if file.starts_with(crate::EXAMS_FOLDER) {
-                let yaml = fs::read_to_string(file).map_err(ParseError::IOError)?;
+                let yaml = CACHE
+                    .read_file(FileToLoad {
+                        file_path: file.to_path_buf(),
+                        locale_dependant: false,
+                    })
+                    .map(|lf| match lf {
+                        LoadedFile::Normal(n) => Some(n.content.clone()),
+                        LoadedFile::Localized(_) => None,
+                    })
+                    .flatten()
+                    .ok_or(ParseError::FileReadError(FileReadError(file.to_path_buf())))?;
+
                 serde_yaml::from_str(&yaml)
                     .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
             } else if file.starts_with(crate::QUESTIONS_FOLDER) {
@@ -103,12 +113,20 @@ impl ExamInput {
                     let t = t_val.to_normal();
                     let template_file = Path::new(crate::EXAM_TEMPLATES_FOLDER)
                         .join(format!("{}.yaml", t.relative_template_path)); // TODO: check for missing fields.....
-                    let template_yaml = fs::read_to_string(&template_file).expect(
-                        &format!(
-                            "Failed to read {}",
-                            template_file.to_str().map_or("invalid filename", |s| s)
-                        )[..],
-                    );
+
+                    let template_yaml = CACHE
+                        .read_file(FileToLoad {
+                            file_path: template_file.to_path_buf(),
+                            locale_dependant: false,
+                        })
+                        .map(|lf| match lf {
+                            LoadedFile::Normal(n) => Some(n.content.clone()),
+                            LoadedFile::Localized(_) => None,
+                        })
+                        .flatten()
+                        .ok_or(ParseError::FileReadError(FileReadError(
+                            template_file.to_path_buf(),
+                        )))?;
 
                     let mut exam: ExamInput = serde_yaml::from_str(&template_yaml).unwrap();
                     t.data.iter().for_each(|(k, v)| {
@@ -132,7 +150,7 @@ impl ExamInput {
 #[derive(Debug, Display)]
 pub enum ParseError {
     YamlError(YamlError),
-    IOError(std::io::Error),
+    FileReadError(FileReadError),
     InvalidPath(InvalidExamPathError),
 }
 
@@ -148,6 +166,15 @@ impl Display for InvalidExamPathError {
             crate::EXAMS_FOLDER,
             crate::QUESTIONS_FOLDER
         )
+    }
+}
+
+#[derive(Debug)]
+pub struct FileReadError(std::path::PathBuf);
+
+impl Display for FileReadError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Failed reading file: {}", self.0.display(),)
     }
 }
 

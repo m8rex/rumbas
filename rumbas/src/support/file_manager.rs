@@ -222,10 +222,17 @@ impl FileManager {
         }
         files
     }
-    pub fn read_all_questions(&self) -> Vec<LoadedFile> {
-        let path = std::path::Path::new(crate::QUESTIONS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files = Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionFile);
+    pub fn find_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+        Self::find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
+    }
+    pub fn read_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
+        let files = self.find_all_questions_in_folder(folder_path);
         self.read(files).into_iter().map(|(_, l)| l).collect()
+    }
+    pub fn read_all_questions(&self) -> Vec<LoadedFile> {
+        self.read_all_questions_in_folder(
+            std::path::Path::new(crate::QUESTIONS_FOLDER).to_path_buf(),
+        ) // TODO, find root of rumbas repo by looking for rc file
     }
     pub fn read_all_question_templates(&self) -> Vec<LoadedFile> {
         let path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
@@ -233,10 +240,16 @@ impl FileManager {
             Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionTemplateFile);
         self.read(files).into_iter().map(|(_, l)| l).collect()
     }
-    pub fn read_all_exams(&self) -> Vec<LoadedFile> {
-        let path = std::path::Path::new(crate::EXAMS_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files = Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamFile);
+    pub fn find_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+        Self::find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
+    }
+    pub fn read_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
+        let files = self.find_all_exams_in_folder(folder_path);
         self.read(files).into_iter().map(|(_, l)| l).collect()
+    }
+    pub fn read_all_exams(&self) -> Vec<LoadedFile> {
+        self.read_all_exams_in_folder(std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf())
+        // TODO, find root of rumbas repo by looking for rc file
     }
     pub fn read_all_exam_templates(&self) -> Vec<LoadedFile> {
         let path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file

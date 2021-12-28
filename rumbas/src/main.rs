@@ -18,12 +18,13 @@ fn main() {
 
     let log_level = match (
         matches.is_present("quiet"),
+        matches.is_present("verbose"),
         matches.occurrences_of("verbose"),
     ) {
-        (true, _) => log::LevelFilter::Off,
-        //(false, 0) => log::LevelFilter::Error,
-        //(false, 1) => log::LevelFilter::Warn,
-        (false, 0) => log::LevelFilter::Info,
+        (true, _, _) => log::LevelFilter::Off,
+        (false, true, 0) => log::LevelFilter::Error,
+        (false, true, 1) => log::LevelFilter::Warn,
+        (false, true, 2) => log::LevelFilter::Info,
         _ => log::LevelFilter::Debug,
     };
 
