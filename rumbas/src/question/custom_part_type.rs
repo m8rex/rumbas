@@ -83,17 +83,6 @@ impl CustomPartTypeDefinitionInput {
     pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<Self> {
         serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file))
     }
-    pub fn from_name(name: &str) -> YamlResult<Self> {
-        let file =
-            std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER).join(format!("{}.yaml", name));
-        let yaml = std::fs::read_to_string(&file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
-        serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file.to_path_buf()))
-    }
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
     }

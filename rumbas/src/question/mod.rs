@@ -11,8 +11,10 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
+use crate::exam::{FileReadError, ParseError};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::part::question_part::QuestionPart;
+use crate::support::file_manager::CACHE;
 use crate::support::template::TemplateFile;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -30,7 +32,6 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 use variable::VariableRepresentation;
@@ -148,42 +149,38 @@ impl ToRumbas<Question> for numbas::question::Question {
 }
 
 impl QuestionInput {
-    pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<QuestionInput> {
+    pub fn from_str(yaml: &str, file: PathBuf) -> Result<QuestionInput, ParseError> {
         use QuestionFileTypeInput::*;
-        let input: std::result::Result<QuestionFileTypeInput, serde_yaml::Error> =
-            serde_yaml::from_str(&yaml);
-        input
-            .map(|e| match e {
-                Normal(e) => Ok(*e),
-                Template(t_res) => {
-                    let t = t_res.to_normal(); // TODO?
-                    let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)
-                        .join(format!("{}.yaml", t.relative_template_path));
-                    let template_yaml = fs::read_to_string(&template_file).expect(
-                        &format!(
-                            "Failed to read {}",
-                            template_file.to_str().map_or("invalid filename", |s| s)
-                        )[..],
-                    );
-                    let mut question: QuestionInput = serde_yaml::from_str(&template_yaml).unwrap();
-                    t.data.iter().for_each(|(k, v)| {
-                        question.insert_template_value(k, &v.0);
-                    });
-                    Ok(question)
-                }
-            })
-            .and_then(std::convert::identity) //flatten result is currently only possible in nightly
-            .map_err(|e| YamlError::from(e, file))
-    }
-    pub fn from_name(name: &str) -> YamlResult<QuestionInput> {
-        let file = Path::new(crate::QUESTIONS_FOLDER).join(format!("{}.yaml", name));
-        let yaml = fs::read_to_string(&file).expect(
-            &format!(
-                "Failed to read {}",
-                file.to_str().map_or("invalid filename", |s| s)
-            )[..],
-        );
-        Self::from_str(&yaml[..], file.to_path_buf())
+        let input: QuestionFileTypeInput = serde_yaml::from_str(&yaml)
+            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
+        match input {
+            Normal(e) => Ok(*e),
+            Template(t_res) => {
+                let t = t_res.to_normal(); // TODO?
+                let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)
+                    .join(format!("{}.yaml", t.relative_template_path));
+
+                let template_yaml = CACHE
+                    .read_file(FileToLoad {
+                        file_path: template_file.to_path_buf(),
+                        locale_dependant: false,
+                    })
+                    .map(|lf| match lf {
+                        LoadedFile::Normal(n) => Some(n.content.clone()),
+                        LoadedFile::Localized(_) => None,
+                    })
+                    .flatten()
+                    .ok_or(ParseError::FileReadError(FileReadError(
+                        template_file.to_path_buf(),
+                    )))?;
+                let mut question: QuestionInput = serde_yaml::from_str(&template_yaml)
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
+                t.data.iter().for_each(|(k, v)| {
+                    question.insert_template_value(k, &v.0);
+                });
+                Ok(question)
+            }
+        }
     }
 }
 

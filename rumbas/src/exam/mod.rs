@@ -128,7 +128,10 @@ impl ExamInput {
                             template_file.to_path_buf(),
                         )))?;
 
-                    let mut exam: ExamInput = serde_yaml::from_str(&template_yaml).unwrap();
+                    let mut exam: ExamInput =
+                        serde_yaml::from_str(&template_yaml).map_err(|e| {
+                            ParseError::YamlError(YamlError::from(e, file.to_path_buf()))
+                        })?;
                     t.data.iter().for_each(|(k, v)| {
                         exam.insert_template_value(k, &v.0);
                     });
@@ -170,7 +173,7 @@ impl Display for InvalidExamPathError {
 }
 
 #[derive(Debug)]
-pub struct FileReadError(std::path::PathBuf);
+pub struct FileReadError(pub std::path::PathBuf);
 
 impl Display for FileReadError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
