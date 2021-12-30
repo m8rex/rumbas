@@ -20,7 +20,7 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::TranslatableString;
-use crate::support::yaml::{YamlError, YamlResult};
+use crate::support::yaml::YamlError;
 use constants::BuiltinConstants;
 use constants::CustomConstant;
 use extension::Extensions;

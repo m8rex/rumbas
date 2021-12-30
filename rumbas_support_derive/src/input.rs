@@ -748,16 +748,6 @@ fn input_handle_enum_files_to_load_variants(
                             )
                         })
                         .collect::<Vec<_>>();
-                    let numbers = variant
-                        .fields
-                        .fields
-                        .iter()
-                        .enumerate()
-                        .map(|(i, _)| {
-                            let i = syn::Index::from(i);
-                            quote!(#i)
-                        })
-                        .collect::<Vec<_>>();
                     quote! {
                         #input_ident::#variant_ident(#(#items),*) => {
                             let mut result = Vec::new();
