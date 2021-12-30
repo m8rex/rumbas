@@ -83,6 +83,13 @@ impl RumbasCompileData {
                 path.display()
             );
         }
+        for locale in self.passed.iter() {
+            log::info!(
+                "Succesfully compiled locale {} for {} with numbas.",
+                locale,
+                path.display()
+            );
+        }
     }
 }
 

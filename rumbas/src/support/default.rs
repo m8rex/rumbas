@@ -29,7 +29,7 @@ use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
 use crate::support::file_manager::RumbasRepoEntry;
-use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
+use rumbas_support::input::{FileToLoad, LoadedFile};
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
