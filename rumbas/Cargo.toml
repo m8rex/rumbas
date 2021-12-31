@@ -41,6 +41,8 @@ rayon = "1.5.1"
 
 rumbas_support = { path="../rumbas_support" }
 
+notify = "4.0.17"
+
 
 [dev-dependencies]
 insta = "1.8.0"
