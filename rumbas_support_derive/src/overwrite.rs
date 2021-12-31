@@ -34,7 +34,7 @@ impl ToTokens for OverwriteReceiver {
             no_examples: _,
         } = *self;
 
-        let input_ident = syn::Ident::new(&input_name, ident.span());
+        let input_ident = syn::Ident::new(input_name, ident.span());
 
         match data {
             ast::Data::Enum(v) => overwrite_handle_enum(v, &input_ident, generics, tokens),

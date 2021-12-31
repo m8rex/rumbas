@@ -58,7 +58,6 @@ impl ToRumbas<QuestionPartPatternMatch>
                 display_answer:
                     self.display_answer
                         .clone()
-                        .map(|d| d)
                         .unwrap_or_else(|| self.answer.clone())
                         .to_rumbas(),
                 match_mode: self.match_mode.to_rumbas()

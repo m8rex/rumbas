@@ -16,7 +16,7 @@ pub enum AnswerSimplificationType {
 impl std::convert::TryFrom<&str> for AnswerSimplificationType {
     type Error = String;
     fn try_from(whole_item: &str) -> Result<Self, Self::Error> {
-        let rule: Result<AnswerSimplificationRule, _> = whole_item.clone().try_into();
+        let rule: Result<AnswerSimplificationRule, _> = whole_item.try_into();
         if let Ok(r) = rule {
             Ok(Self::Rule(r))
         } else {

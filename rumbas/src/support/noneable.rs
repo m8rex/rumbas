@@ -13,7 +13,7 @@ impl<T: Examples> Examples for Noneable<T> {
     fn examples() -> Vec<Self> {
         T::examples()
             .into_iter()
-            .map(|e| Self::NotNone(e))
+            .map(Self::NotNone)
             .chain(vec![Noneable::None].into_iter())
             .collect()
     }
@@ -40,7 +40,7 @@ impl<T: Input> Input for Noneable<T> {
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         if let Noneable::NotNone(item) = self {
-            item.insert_template_value(&key, &val);
+            item.insert_template_value(key, val);
         }
     }
     fn files_to_load(&self) -> Vec<FileToLoad> {
@@ -60,7 +60,7 @@ impl<T: Overwrite<T>> Overwrite<Noneable<T>> for Noneable<T> {
     fn overwrite(&mut self, other: &Noneable<T>) {
         if let Noneable::NotNone(ref mut val) = self {
             if let Noneable::NotNone(other_val) = &other {
-                val.overwrite(&other_val);
+                val.overwrite(other_val);
             }
         } else {
             // Do nothing, none is a valid value

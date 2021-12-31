@@ -34,7 +34,7 @@ impl Examples for TemplateFileInputEnum {
     fn examples() -> Vec<Self> {
         TemplateFileInput::examples()
             .into_iter()
-            .map(|e| Self(e))
+            .map(Self)
             .collect()
     }
 }

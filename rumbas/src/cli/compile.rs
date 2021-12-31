@@ -18,7 +18,7 @@ pub fn compile(matches: &clap::ArgMatches) {
         log::error!("Absolute path's are not supported");
         return;
     }
-    let files = crate::cli::check::find_all_files(&path);
+    let files = crate::cli::check::find_all_files(path);
     let compile_results: Vec<(CompileResult, PathBuf)> = files
         .into_par_iter()
         .map(|file| (compile_file(matches, &file), file))
@@ -158,8 +158,7 @@ impl NumbasCompiler {
     /// Returns the path where the numbas exam should be saved
     fn numbas_exam_path(&self) -> PathBuf {
         let numbas_exam_name = self.exam_path.with_extension("exam");
-        let numbas_exam_path = self.numbas_exam_folder().join(&numbas_exam_name);
-        numbas_exam_path
+        self.numbas_exam_folder().join(&numbas_exam_name)
     }
     /// Returns the locale folder within the output folder
     fn locale_output_folder(&self) -> PathBuf {
@@ -184,7 +183,7 @@ impl NumbasCompiler {
     /// Create the needed folder structure
     /// Creates the folders in the cache folder
     /// Creates the folders in the output folder
-    fn create_folder_structure(&self) -> () {
+    fn create_folder_structure(&self) {
         std::fs::create_dir_all(self.numbas_exam_path().parent().unwrap())
             .expect("Failed to create cache folders for the .exam file");
         std::fs::create_dir_all(self.locale_output_folder())
@@ -205,13 +204,7 @@ impl NumbasCompiler {
         let numbas_path = env::var(rumbas::NUMBAS_FOLDER_ENV)
             .expect(&format!("{} to be set", rumbas::NUMBAS_FOLDER_ENV)[..]);
 
-        let mut args: Vec<&str> = Vec::new();
-
-        args.push("-l");
-        args.push(&self.numbas_locale[..]);
-
-        args.push("-t");
-        args.push(&self.theme[..]);
+        let mut args: Vec<&str> = vec!["-l", &self.numbas_locale[..], "-t", &self.theme[..]];
 
         if self.use_scorm {
             args.push("-s");
@@ -237,7 +230,7 @@ impl NumbasCompiler {
         log::debug!("Compile numbas with args {:?}", args.join(", "));
 
         std::process::Command::new("python3")
-            .current_dir(numbas_path.clone())
+            .current_dir(numbas_path)
             .arg("bin/numbas.py")
             .args(&args)
             .output()

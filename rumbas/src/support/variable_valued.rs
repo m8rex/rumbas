@@ -18,8 +18,8 @@ impl<T: Examples> Examples for VariableValued<T> {
     fn examples() -> Vec<Self> {
         T::examples()
             .into_iter()
-            .map(|e| Self::Value(e))
-            .chain(JMEString::examples().into_iter().map(|j| Self::Variable(j)))
+            .map(Self::Value)
+            .chain(JMEString::examples().into_iter().map(Self::Variable))
             .collect()
     }
 }

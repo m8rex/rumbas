@@ -29,7 +29,7 @@ pub fn check(matches: &clap::ArgMatches) {
         log::error!("Absolute path's are not supported");
         return;
     }
-    let files = find_all_files(&path);
+    let files = find_all_files(path);
     let check_results: Vec<(CheckResult, PathBuf)> = files
         .into_par_iter()
         .map(|file| (check_file(matches, &file), file))
@@ -124,7 +124,7 @@ pub fn check_file(_matches: &clap::ArgMatches, path: &Path) -> CheckResult {
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
-            exam_input.combine_with_defaults(&path);
+            exam_input.combine_with_defaults(path);
 
             let exam_result = exam_input.to_normal_safe();
             match exam_result {

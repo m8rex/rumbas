@@ -151,10 +151,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
             self.choices.clone(),
             self.marking_matrix.clone(),
         ) {
-            let items_data: Vec<_> = choice_options
-                .into_iter()
-                .zip(marking_matrix.into_iter())
-                .collect();
+            let items_data = choice_options.into_iter().zip(marking_matrix.into_iter());
 
             MultipleChoiceMatchAnswerData::ItemBased({
                 let answers: Vec<_> = answer_options.iter().map(|a| a.clone().into()).collect();

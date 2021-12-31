@@ -3,7 +3,7 @@ use crate::question::custom_part_type::CustomPartTypeDefinitionInput;
 use crate::question::QuestionInput;
 use rayon::prelude::*;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
-use std::convert::TryInto;
+use std::path::Path;
 use std::path::PathBuf;
 use std::{
     collections::HashMap,
@@ -11,7 +11,7 @@ use std::{
 };
 
 lazy_static! {
-    pub static ref CACHE: FileManager = FileManager::new();
+    pub static ref CACHE: FileManager = FileManager::default();
 }
 
 #[derive(Debug)]
@@ -20,8 +20,8 @@ pub struct FileManager {
     dir_cache: RwLock<HashMap<PathBuf, Mutex<RumbasRepoFolderEntries>>>,
 }
 
-impl FileManager {
-    pub fn new() -> Self {
+impl Default for FileManager {
+    fn default() -> Self {
         Self {
             cache: RwLock::new(HashMap::new()),
             dir_cache: RwLock::new(HashMap::new()),
@@ -50,7 +50,7 @@ impl FileManager {
                 Ok(r) => {
                     let mut map = self.cache.write().expect("Can write cache map");
                     map.insert(file.clone(), Mutex::new(r.clone()));
-                    Some(r.clone())
+                    Some(r)
                 }
                 Err(()) => {
                     log::error!("Couldn't resolve {}", file.file_path.display());
@@ -63,17 +63,17 @@ impl FileManager {
     pub fn read(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
         let result: HashMap<_, _> = files
             .into_par_iter()
-            .filter_map(|file| self.read_file(file.clone()).map(|l| (file, l.clone())))
+            .filter_map(|file| self.read_file(file.clone()).map(|l| (file, l)))
             .collect();
         result
     }
 
-    fn read_normal_file(file_path: &PathBuf) -> Result<LoadedNormalFile, ()> {
+    fn read_normal_file(file_path: &Path) -> Result<LoadedNormalFile, ()> {
         log::debug!("Reading normal file {}.", file_path.display());
         match std::fs::read_to_string(&file_path) {
             Ok(content) => Ok(LoadedNormalFile {
                 content,
-                file_path: file_path.clone(),
+                file_path: file_path.to_path_buf(),
             }),
             Err(e) => {
                 log::error!(
@@ -86,7 +86,7 @@ impl FileManager {
         }
     }
 
-    fn read_localized_file(&self, file_path: &PathBuf) -> Result<LoadedLocalizedFile, ()> {
+    fn read_localized_file(&self, file_path: &Path) -> Result<LoadedLocalizedFile, ()> {
         log::debug!("Reading localized file {}.", file_path.display());
         let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
         let file_dir = file_path.parent().ok_or(())?;
@@ -99,9 +99,7 @@ impl FileManager {
             .filter_map(|e| match e {
                 RumbasRepoEntry::File(_f) => None,
                 RumbasRepoEntry::Folder(f) => match f.r#type {
-                    RumbasRepoFolderType::LocalizedFolder { locale } => {
-                        Some((f.path, locale.clone()))
-                    }
+                    RumbasRepoFolderType::LocalizedFolder { locale } => Some((f.path, locale)),
                     _ => None,
                 },
             })
@@ -109,14 +107,7 @@ impl FileManager {
             let locale_file_path = path.join(file_name);
             if locale_file_path.exists() {
                 if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
-                    if let Ok(s) = s.clone().try_into() {
-                        translated_content.insert(locale, s);
-                    } else {
-                        log::warn!(
-                            "Failed converting content in {}",
-                            locale_file_path.display()
-                        );
-                    }
+                    translated_content.insert(locale, s);
                 } else {
                     log::warn!("Failed reading {}", locale_file_path.display());
                 }
@@ -135,7 +126,7 @@ impl FileManager {
             }
         };
         Ok(LoadedLocalizedFile {
-            file_path: file_path.clone(),
+            file_path: file_path.to_path_buf(),
             content,
             localized_content: translated_content,
         })
@@ -143,7 +134,7 @@ impl FileManager {
 }
 
 impl FileManager {
-    pub fn read_folder(&self, path: &PathBuf) -> Vec<RumbasRepoEntry> {
+    pub fn read_folder(&self, path: &Path) -> Vec<RumbasRepoEntry> {
         // TODO: handle symlinks...
         let map = self.dir_cache.read().expect("Can read dir cache map");
         log::debug!("Checking if {} is in the dir_cache.", path.display());
@@ -164,9 +155,9 @@ impl FileManager {
                 }
                 let mut map = self.dir_cache.write().expect("Can write dir_cache map");
                 map.insert(
-                    path.clone(),
+                    path.to_path_buf(),
                     Mutex::new(RumbasRepoFolderEntries {
-                        r#type: RumbasRepoFolderType::from(&path),
+                        r#type: RumbasRepoFolderType::from(path),
                         entries: entries.clone(),
                     }),
                 );
@@ -176,7 +167,7 @@ impl FileManager {
             }
         }
     }
-    fn read_all_folders(&self, path: &PathBuf) -> Vec<RumbasRepoFolderData> {
+    fn read_all_folders(&self, path: &Path) -> Vec<RumbasRepoFolderData> {
         self.read_folder(&path.to_path_buf())
             .into_iter()
             .filter_map(|e| match e {
@@ -188,7 +179,7 @@ impl FileManager {
                 ),
                 _ => None,
             })
-            .flat_map(|e| e)
+            .flatten()
             .collect()
     }
     pub fn find_default_folders(&self) -> Vec<RumbasRepoFolderData> {
@@ -213,13 +204,14 @@ impl FileManager {
                         })
                     }
                 }
-                RumbasRepoEntry::Folder(folder) => match folder.r#type {
-                    RumbasRepoFolderType::Folder => files.extend(Self::find_all_yaml_files(
-                        folder.path,
-                        wanted_file_type.clone(),
-                    )),
-                    _ => (),
-                },
+                RumbasRepoEntry::Folder(folder) => {
+                    if folder.r#type == RumbasRepoFolderType::Folder {
+                        files.extend(Self::find_all_yaml_files(
+                            folder.path,
+                            wanted_file_type.clone(),
+                        ))
+                    }
+                }
             }
         }
         files
@@ -423,7 +415,7 @@ pub enum RumbasRepoEntry {
     Folder(RumbasRepoFolderData),
 }
 impl RumbasRepoEntry {
-    pub fn from(p: &PathBuf) -> Self {
+    pub fn from(p: &Path) -> Self {
         if p.is_dir() {
             Self::Folder(RumbasRepoFolderData::from(p))
         } else {
@@ -445,7 +437,7 @@ impl RumbasRepoFileData {
 }
 
 impl RumbasRepoFileData {
-    pub fn from(p: &PathBuf) -> Self {
+    pub fn from(p: &Path) -> Self {
         Self {
             r#type: RumbasRepoFileType::from(p),
             path: p.to_owned(),
@@ -465,11 +457,11 @@ pub enum RumbasRepoFileType {
     File,
 }
 impl RumbasRepoFileType {
-    pub fn from(p: &PathBuf) -> Self {
+    pub fn from(p: &Path) -> Self {
         let components: Vec<_> = p.iter().collect();
         if components.len() > 1
             && components
-                .get(components.len() - 1)
+                .last()
                 .unwrap()
                 .to_str()
                 .unwrap()
@@ -514,7 +506,7 @@ impl RumbasRepoFolderData {
 }
 
 impl RumbasRepoFolderData {
-    pub fn from(p: &PathBuf) -> Self {
+    pub fn from(p: &Path) -> Self {
         Self {
             r#type: RumbasRepoFolderType::from(p),
             path: p.to_owned(),
@@ -536,7 +528,7 @@ pub enum RumbasRepoFolderType {
 }
 
 impl RumbasRepoFolderType {
-    pub fn from(p: &PathBuf) -> Self {
+    pub fn from(p: &Path) -> Self {
         if let Some(stem) = p.file_stem() {
             if stem == crate::DEFAULTS_FOLDER {
                 Self::DefaultFolder

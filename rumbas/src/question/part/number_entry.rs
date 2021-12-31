@@ -47,8 +47,7 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
             fractions_must_be_reduced: Some(self.fractions_must_be_reduced.to_numbas(locale)),
             partial_credit_if_fraction_not_reduced: Some(
                 self.partial_credit_if_fraction_not_reduced
-                    .to_numbas(locale)
-                    .into(),
+                    .to_numbas(locale),
             ),
             precision: None,           //TODO
             show_precision_hint: None, //TODO

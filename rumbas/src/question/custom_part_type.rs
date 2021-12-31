@@ -47,7 +47,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartType> for CustomPart
             short_name: name,
             name: self.type_name.clone().to_string(locale).unwrap(),
             description: self.description.clone().to_string(locale).unwrap(),
-            settings: self.settings.to_numbas(&locale),
+            settings: self.settings.to_numbas(locale),
             help_url: self.help_url.clone().to_string(locale).unwrap(),
             public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,
             marking_script: self.marking_notes.to_numbas(locale),
@@ -81,7 +81,7 @@ impl ToRumbas<CustomPartTypeDefinition> for numbas::question::custom_part_type::
 
 impl CustomPartTypeDefinitionInput {
     pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<Self> {
-        serde_yaml::from_str(&yaml).map_err(|e| YamlError::from(e, file))
+        serde_yaml::from_str(yaml).map_err(|e| YamlError::from(e, file))
     }
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
@@ -113,28 +113,28 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSetting> for Cus
         match self {
             Self::CheckBox(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::CheckBox(
-                    c.to_numbas(&locale),
+                    c.to_numbas(locale),
                 )
             }
-            Self::Code(c) => numbas::question::custom_part_type::CustomPartTypeSetting::Code(
-                c.to_numbas(&locale),
-            ),
+            Self::Code(c) => {
+                numbas::question::custom_part_type::CustomPartTypeSetting::Code(c.to_numbas(locale))
+            }
             Self::MathematicalExpression(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::MathematicalExpression(
-                    c.to_numbas(&locale),
+                    c.to_numbas(locale),
                 )
             }
             Self::String(c) => numbas::question::custom_part_type::CustomPartTypeSetting::String(
-                c.to_numbas(&locale),
+                c.to_numbas(locale),
             ),
             Self::DropDown(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::DropDown(
-                    c.to_numbas(&locale),
+                    c.to_numbas(locale),
                 )
             }
             Self::Percentage(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::Percentage(
-                    c.to_numbas(&locale),
+                    c.to_numbas(locale),
                 )
             }
         }
@@ -388,8 +388,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingDropDown>
             default_value: self
                 .default_value
                 .to_numbas(locale)
-                .unwrap_or_else(String::new)
-                .into(),
+                .unwrap_or_else(String::new),
             choices: self.choices.to_numbas(locale),
         }
     }
@@ -427,8 +426,8 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingDropDownC
         locale: &str,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice {
         numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice {
-            value: self.value.to_numbas(locale).into(),
-            label: self.label.to_numbas(locale).into(),
+            value: self.value.to_numbas(locale),
+            label: self.label.to_numbas(locale),
         }
     }
 }
@@ -467,7 +466,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingPercentag
                 .default_value
                 .clone()
                 .map(|n| n.to_string())
-                .unwrap_or_else(|| String::new().into()),
+                .unwrap_or_else(String::new),
         }
     }
 }

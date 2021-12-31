@@ -74,11 +74,11 @@ impl ExamInput {
                         locale_dependant: false,
                     })
                     .map(|lf| match lf {
-                        LoadedFile::Normal(n) => Some(n.content.clone()),
+                        LoadedFile::Normal(n) => Some(n.content),
                         LoadedFile::Localized(_) => None,
                     })
                     .flatten()
-                    .ok_or(ParseError::FileReadError(FileReadError(file.to_path_buf())))?;
+                    .ok_or_else(|| ParseError::FileReadError(FileReadError(file.to_path_buf())))?;
 
                 serde_yaml::from_str(&yaml)
                     .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
@@ -116,17 +116,17 @@ impl ExamInput {
 
                     let template_yaml = CACHE
                         .read_file(FileToLoad {
-                            file_path: template_file.to_path_buf(),
+                            file_path: template_file.clone(),
                             locale_dependant: false,
                         })
                         .map(|lf| match lf {
-                            LoadedFile::Normal(n) => Some(n.content.clone()),
+                            LoadedFile::Normal(n) => Some(n.content),
                             LoadedFile::Localized(_) => None,
                         })
                         .flatten()
-                        .ok_or(ParseError::FileReadError(FileReadError(
-                            template_file.to_path_buf(),
-                        )))?;
+                        .ok_or_else(|| {
+                            ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
+                        })?;
 
                     let mut exam: ExamInput =
                         serde_yaml::from_str(&template_yaml).map_err(|e| {

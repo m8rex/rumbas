@@ -34,7 +34,7 @@ impl<T: Examples> Examples for ValueType<T> {
     fn examples() -> Vec<Self> {
         T::examples()
             .into_iter()
-            .map(|e| ValueType::Normal(e))
+            .map(ValueType::Normal)
             .chain(
                 vec![ValueType::Template(
                     "template:template_key".to_string().try_into().unwrap(),
@@ -232,7 +232,7 @@ impl<A: Examples, const N: usize> Examples for [A; N] {
                     break;
                 }
             }
-            if parts.len() == 0 {
+            if parts.is_empty() {
                 break;
             }
             result.push(convert_vec_to_array(parts))
@@ -352,9 +352,9 @@ impl<A: Examples + std::hash::Hash + std::cmp::Eq + Clone, B: Examples> Examples
             for _ in 0..nb_maps {
                 let mut map = std::collections::HashMap::new();
                 let examples_a = A::examples();
-                for i in 0..examples_a.len() {
+                for example_a in examples_a.into_iter() {
                     if let Some(value) = b.next() {
-                        map.insert(examples_a[i].clone(), value);
+                        map.insert(example_a, value);
                     } else {
                         break;
                     }
@@ -464,7 +464,7 @@ mod hashmap_test {
 
 impl<T: Examples> Examples for Box<T> {
     fn examples() -> Vec<Self> {
-        T::examples().into_iter().map(|e| Box::new(e)).collect()
+        T::examples().into_iter().map(Box::new).collect()
     }
 }
 

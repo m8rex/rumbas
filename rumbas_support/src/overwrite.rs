@@ -27,7 +27,7 @@ where
     fn overwrite(&mut self, other: &ValueType<T>) {
         if let ValueType::Normal(ref mut val) = self {
             if let ValueType::Normal(other_val) = &other {
-                val.overwrite(&other_val);
+                val.overwrite(other_val);
             }
         }
     }
@@ -40,7 +40,7 @@ where
     fn overwrite(&mut self, other: &Value<T>) {
         if let Some(ref mut val) = self.0 {
             if let Some(other_val) = &other.0 {
-                val.overwrite(&other_val);
+                val.overwrite(other_val);
             }
         } else if self.0.is_none() {
             *self = other.clone();

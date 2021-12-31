@@ -246,7 +246,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JME
     fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartMarkingNote {
         numbas::question::custom_part_type::CustomPartMarkingNote {
             name: self.name.to_numbas(locale),
-            definition: self.expression.to_numbas(&locale),
+            definition: self.expression.to_numbas(locale),
             description: self.description.unwrap_or("".to_string()),
         }
     }
@@ -355,7 +355,7 @@ impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartIn
                 numbas::question::part::CustomPartInputTypeValue::CheckBox(*v)
             }
             CustomPartInputTypeValue::Code(v) => {
-                numbas::question::part::CustomPartInputTypeValue::Code(v.clone().into())
+                numbas::question::part::CustomPartInputTypeValue::Code(v.clone())
             }
         }
     }
