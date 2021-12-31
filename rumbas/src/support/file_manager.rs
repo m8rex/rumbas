@@ -1,6 +1,3 @@
-use crate::exam::ExamInput;
-use crate::question::custom_part_type::CustomPartTypeDefinitionInput;
-use crate::question::QuestionInput;
 use rayon::prelude::*;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
 use std::path::Path;
@@ -375,38 +372,6 @@ impl std::convert::From<ExamFileToRead> for rumbas_support::input::FileToLoad {
             locale_dependant: false,
         }
     }
-}
-
-#[derive(Debug)]
-pub enum ReadFile {
-    Text(ReadTextFile),
-    CustomPartType(ReadCustomPartTypeFile),
-    Question(ReadQuestionFile),
-    Exam(ReadExamFile),
-}
-
-#[derive(Debug)]
-pub struct ReadTextFile {
-    file_path: String,
-    text: String,
-}
-
-#[derive(Debug)]
-pub struct ReadCustomPartTypeFile {
-    file_path: String,
-    custom_part_type: CustomPartTypeDefinitionInput,
-}
-
-#[derive(Debug)]
-pub struct ReadQuestionFile {
-    file_path: String,
-    question: QuestionInput,
-}
-
-#[derive(Debug)]
-pub struct ReadExamFile {
-    file_path: String,
-    exam: ExamInput,
 }
 
 #[derive(Debug, Clone)]

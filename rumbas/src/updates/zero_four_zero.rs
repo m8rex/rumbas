@@ -42,27 +42,25 @@ macro_rules! update_hash {
 /// Update from version 0.4.0 to 0.5.0
 pub fn update() -> String {
     // TODO: extract code to read questions and exams
-    let question_files: Vec<_> = CACHE
+    let question_files = CACHE
         .read_all_questions()
         .into_iter()
         .chain(CACHE.read_all_question_templates().into_iter())
         .filter_map(|lf| match lf {
             rumbas_support::input::LoadedFile::Normal(n) => Some(n),
             _ => None,
-        })
-        .collect();
-    let exam_files: Vec<_> = CACHE
+        });
+
+    let exam_files = CACHE
         .read_all_exams()
         .into_iter()
         .chain(CACHE.read_all_exam_templates().into_iter())
         .filter_map(|lf| match lf {
             rumbas_support::input::LoadedFile::Normal(n) => Some(n),
             _ => None,
-        })
-        .collect();
+        });
 
     let mut questions: Vec<_> = question_files
-        .into_iter()
         .filter_map(|lf| {
             YamlLoader::load_from_str(&lf.content[..])
                 .ok()
@@ -71,7 +69,6 @@ pub fn update() -> String {
         .collect();
 
     let mut exams: Vec<_> = exam_files
-        .into_iter()
         .filter_map(|lf| {
             YamlLoader::load_from_str(&lf.content[..])
                 .map(|a| (lf, a[0].clone()))
@@ -79,8 +76,7 @@ pub fn update() -> String {
         })
         .collect();
 
-    for question_idx in 0..questions.len() {
-        let question = &questions[question_idx];
+    for question in &mut questions {
         log::info!("Updating {}", question.0.file_path.display());
         let new_question = update_hash!(question.1.clone() =>
             vec!["advice", "statement"], update_translatable_string => :
@@ -89,7 +85,7 @@ pub fn update() -> String {
             vec!["variables"], update_translatable_string_vector => :
             vec!["parts"], update_parts =>
         );
-        questions[question_idx].1 = new_question;
+        question.1 = new_question;
     }
 
     for (file, question) in questions.into_iter() {
@@ -101,8 +97,7 @@ pub fn update() -> String {
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
 
-    for exam_idx in 0..exams.len() {
-        let exam = &exams[exam_idx];
+    for exam in &mut exams {
         log::info!("Updating {}", exam.0.file_path.display());
         let new_exam = update_hash!(exam.1.clone() =>
             vec!["name"], update_translatable_string => :
@@ -110,14 +105,13 @@ pub fn update() -> String {
             vec!["feedback"], update_feedback => :
             vec!["question_groups"], update_question_groups =>
         );
-        let new_exam = if new_exam["type"] == Yaml::String("diagnostic".to_string()) {
+        exam.1 = if new_exam["type"] == Yaml::String("diagnostic".to_string()) {
             update_hash!(new_exam =>
                 vec!["diagnostic"], update_diagnostic =>
             )
         } else {
             new_exam
         };
-        exams[exam_idx].1 = new_exam;
     }
 
     for (file, exam) in exams.into_iter() {
@@ -168,9 +162,7 @@ pub fn update() -> String {
         })
         .collect();
 
-    for default_question_idx in 0..default_questions.len() {
-        let default_question = &default_questions[default_question_idx];
-
+    for default_question in &mut default_questions {
         log::info!("Updating {}", default_question.0.file_path.display());
         let new_question = update_hash!(default_question.1.clone() =>
             vec!["advice", "statement"], update_translatable_string => :
@@ -179,7 +171,7 @@ pub fn update() -> String {
             vec!["variables"], update_translatable_string_vector => :
             vec!["parts"], update_parts =>
         );
-        let new_question = if default_question.0.file_path.starts_with("./defaults") {
+        default_question.1 = if default_question.0.file_path.starts_with("./defaults") {
             // TODO
             log::info!(
                 "Updating main default file {}",
@@ -191,7 +183,6 @@ pub fn update() -> String {
         } else {
             new_question
         };
-        default_questions[default_question_idx].1 = new_question;
     }
 
     for (file, default_question) in default_questions.into_iter() {
@@ -244,12 +235,10 @@ pub fn update() -> String {
         })
         .collect();
 
-    for default_question_part_idx in 0..default_question_parts.len() {
-        let default_question_part = &default_question_parts[default_question_part_idx];
-
+    for default_question_part in &mut default_question_parts {
         log::info!("Updating {}", default_question_part.0.file_path.display());
         let new_question_part = update_part(default_question_part.1.clone());
-        let new_question_part = if default_question_part.0.file_path.starts_with("./defaults") {
+        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
             // TODO
             log::info!(
                 "Updating main default file {}",
@@ -259,7 +248,6 @@ pub fn update() -> String {
         } else {
             new_question_part
         };
-        default_question_parts[default_question_part_idx].1 = new_question_part;
     }
 
     for (file, default_question_part) in default_question_parts.into_iter() {
@@ -279,16 +267,12 @@ pub fn update() -> String {
 fn update_translatable_string(yaml: Yaml) -> Yaml {
     match yaml {
         Yaml::Hash(h) => {
-            let values: Vec<_> = h
-                .into_iter()
-                .filter_map(|(k, v)| match k {
-                    Yaml::String(s) => Some((s.to_string(), v)),
-                    _ => None,
-                })
-                .collect();
-            let (placeholders, other): (Vec<_>, Vec<_>) = values
-                .into_iter()
-                .partition(|(s, _)| s.starts_with("{") && s.ends_with("}"));
+            let values = h.into_iter().filter_map(|(k, v)| match k {
+                Yaml::String(s) => Some((s, v)),
+                _ => None,
+            });
+            let (placeholders, other): (Vec<_>, Vec<_>) =
+                values.partition(|(s, _)| s.starts_with('{') && s.ends_with('}'));
             let (content, locales): (Vec<_>, Vec<_>) = other
                 .into_iter()
                 .partition(|(s, _)| s == &"content".to_string());
@@ -297,12 +281,12 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
                 .map(|(p, v)| {
                     (
                         Yaml::String(remove_first_and_last(&p[..]).to_string()),
-                        update_translatable_string_placeholder(v.clone()),
+                        update_translatable_string_placeholder(v),
                     )
                 })
                 .collect();
 
-            let new_yaml = if locales.len() > 0 {
+            if !locales.is_empty() {
                 Yaml::Hash(
                     vec![
                         (
@@ -310,7 +294,7 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
                             Yaml::Hash(
                                 locales
                                     .into_iter()
-                                    .map(|(s, v)| (Yaml::String(s.to_string()), v.clone()))
+                                    .map(|(s, v)| (Yaml::String(s), v))
                                     .collect(),
                             ),
                         ),
@@ -337,8 +321,7 @@ fn update_translatable_string(yaml: Yaml) -> Yaml {
                         .collect(),
                     ),
                 }
-            };
-            new_yaml
+            }
         }
         _ => yaml,
     }
@@ -374,7 +357,7 @@ fn update_functions(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["definition"], update_translatable_string =>
                     )
                 })
@@ -424,7 +407,7 @@ fn update_custom_marking_algorithm(yaml: Yaml) -> Yaml {
                                 Yaml::String("description".to_string()),
                                 Yaml::String(match f.description {
                                     Noneable::None => "none".to_string(),
-                                    Noneable::NotNone(s) => s.clone(),
+                                    Noneable::NotNone(s) => s,
                                 }),
                             ),
                             (
@@ -461,13 +444,13 @@ fn update_choose_answer_data(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["statement", "feedback", "marks"], update_translatable_string =>
                     )
                 })
                 .collect(),
         ),
-        Yaml::Hash(h) => update_hash!(Yaml::Hash(h.clone()) =>
+        Yaml::Hash(_) => update_hash!(yaml =>
             vec!["answers", "feedback", "marks"], update_translatable_string_vector =>
         ),
         _ => yaml,
@@ -490,7 +473,7 @@ fn update_choose_one_display(columns: Yaml, yaml: Yaml) -> Yaml {
 
 fn update_match_answer_data(yaml: Yaml) -> Yaml {
     match yaml {
-        Yaml::Hash(h) => update_hash!(Yaml::Hash(h.clone()) =>
+        Yaml::Hash(_) => update_hash!(yaml =>
             vec!["answers", "choices"], update_translatable_string_vector => [|hash: &Yaml| hash["type"] == Yaml::String("numbas_like".to_string())]:
             vec!["answers"], update_translatable_string_vector => [|hash: &Yaml| hash["type"] == Yaml::String("item_based".to_string())]:
             vec!["items"], update_match_items => [|hash: &Yaml| hash["type"] == Yaml::String("item_based".to_string())]
@@ -504,7 +487,7 @@ fn update_match_items(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["statement"], update_translatable_string =>:
                         vec!["answer_marks"], update_match_item_marks =>
                     )
@@ -520,7 +503,7 @@ fn update_match_item_marks(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["answer"], update_translatable_string =>
                     )
                 })
@@ -559,7 +542,7 @@ fn update_diagnostic_objectives(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["name", "description"], update_translatable_string =>
                     )
                 })
@@ -574,7 +557,7 @@ fn update_diagnostic_topics(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["name", "description"], update_translatable_string =>:
                         vec!["objectives", "depends_on"], update_translatable_string_vector =>
                     )
@@ -596,7 +579,7 @@ fn update_question_groups(yaml: Yaml) -> Yaml {
         Yaml::Array(v) => Yaml::Array(
             v.into_iter()
                 .map(|f| {
-                    update_hash!(f.clone() =>
+                    update_hash!(f =>
                         vec!["name"], update_translatable_string =>
                     )
                 })
@@ -609,8 +592,7 @@ fn update_question_groups(yaml: Yaml) -> Yaml {
 fn update_extensions(yaml: Yaml) -> Yaml {
     match yaml {
         Yaml::Hash(h) => Yaml::Hash(
-            h.clone()
-                .into_iter()
+            h.into_iter()
                 .chain(vec![(Yaml::String("sqlite".to_string()), Yaml::Boolean(false))].into_iter())
                 .collect(),
         ),
