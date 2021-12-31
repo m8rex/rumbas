@@ -65,6 +65,12 @@ impl<T: Input> Input for VariableValued<T> {
             VariableValued::Value(ref mut v) => v.insert_loaded_files(files),
         };
     }
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        match self {
+            VariableValued::Variable(s) => s.dependencies(),
+            VariableValued::Value(v) => v.dependencies(),
+        }
+    }
 }
 
 impl<T: InputInverse> InputInverse for VariableValued<T> {

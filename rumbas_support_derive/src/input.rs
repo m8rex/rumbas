@@ -149,6 +149,9 @@ fn input_handle_unit_struct(
                 }
                 fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 }
+                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                    std::collections::HashSet::new()
+                }
             }
     });
     // Also implement InputInverse
@@ -216,6 +219,14 @@ fn input_handle_tuple_struct(
                 }
                 fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                     #(self.#field_indexes.insert_loaded_files(files);)*
+                }
+                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                    let mut result = std::collections::HashSet::new();
+                    #(
+                        let previous_result = self.#field_indexes.dependencies();
+                        result.extend(previous_result);
+                    )*
+                    result
                 }
             }
     });
@@ -375,6 +386,14 @@ fn input_handle_struct_struct(
             fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 #(self.#field_names.insert_loaded_files(files);)*
             }
+            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                let mut result = std::collections::HashSet::new();
+                #(
+                    let previous_result = self.#field_names.dependencies();
+                    result.extend(previous_result);
+                )*
+                result
+            }
         }
     });
 
@@ -400,6 +419,9 @@ fn input_handle_struct_struct(
 
             fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 self.0.insert_loaded_files(files);
+            }
+            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                self.0.dependencies()
             }
         }
     });
@@ -820,6 +842,67 @@ fn input_handle_enum_insert_loaded_files_variants(
         .collect::<Vec<_>>()
 }
 
+// Create tokens for each enum variant for the find_missing method
+fn input_handle_enum_dependencies_variants(
+    v: &[InputVariantReceiver],
+    input_ident: &syn::Ident,
+) -> Vec<proc_macro2::TokenStream> {
+    v.iter()
+        .map(|variant| {
+            let variant_ident = &variant.ident;
+            match variant.fields.style {
+                ast::Style::Unit => {
+                    quote! {
+                        #input_ident::#variant_ident => std::collections::HashSet::new()
+                    }
+                }
+                ast::Style::Tuple => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _)| {
+                            syn::Ident::new(
+                                &format!("elem{}", i)[..],
+                                proc_macro2::Span::call_site(),
+                            )
+                        })
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident(#(#items),*) => {
+                            let mut result = std::collections::HashSet::new();
+                            #(
+                                let previous_result = #items.dependencies();
+                                result.extend(previous_result);
+                            )*
+                            result
+                        }
+                    }
+                }
+                ast::Style::Struct => {
+                    let items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.ident.as_ref().map(|a| quote!(#a)).unwrap())
+                        .collect::<Vec<_>>();
+                    quote! {
+                        #input_ident::#variant_ident { #(#items),* } => {
+                            let mut result = std::collections::HashSet::new();
+                            #(
+                                let previous_result = #items.dependencies();
+                                result.extend(previous_result);
+                            )*
+                            result
+                        }
+                    }
+                }
+            }
+        })
+        .collect::<Vec<_>>()
+}
+
 // Handle derivation for enums
 fn input_handle_enum(
     v: &[InputVariantReceiver],
@@ -846,6 +929,8 @@ fn input_handle_enum(
 
     let insert_template_value_variants =
         input_handle_enum_insert_template_value_variants(v, input_ident);
+
+    let dependencies_variants = input_handle_enum_dependencies_variants(v, input_ident);
 
     tokens.extend(quote! {
         #input_attributes
@@ -886,6 +971,12 @@ fn input_handle_enum(
             fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 match self {
                     #(#insert_loaded_files_variants),*
+                }
+            }
+
+            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                match self {
+                    #(#dependencies_variants),*
                 }
             }
         }

@@ -444,6 +444,13 @@ macro_rules! translatable_type {
                         Self::NotTranslated(f) => f.insert_loaded_files(files),
                     }
                 }
+
+                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                    match self {
+                        Self::Translated(s) => s.dependencies(),
+                        Self::NotTranslated(s) => s.dependencies()
+                    }
+                }
             }
 
             impl InputInverse for $type {

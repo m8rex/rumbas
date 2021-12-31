@@ -89,6 +89,9 @@ impl Input for MyYamlValue {
         vec![]
     }
     fn insert_loaded_files(&mut self, _files: &HashMap<FileToLoad, LoadedFile>) {}
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        std::collections::HashSet::new()
+    }
 }
 
 impl InputInverse for MyYamlValue {

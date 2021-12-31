@@ -1,6 +1,6 @@
 use crate::value::Value;
 use crate::value::ValueType;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
@@ -54,6 +54,9 @@ pub trait Input: Clone {
     fn files_to_load(&self) -> Vec<FileToLoad>;
 
     fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>);
+
+    // On which files is this input dependant?
+    fn dependencies(&self) -> HashSet<PathBuf>;
 }
 
 pub trait InputInverse {
@@ -99,6 +102,10 @@ impl<O: Input> Input for Vec<O> {
         for item in self.iter_mut() {
             item.insert_loaded_files(files);
         }
+    }
+
+    fn dependencies(&self) -> HashSet<PathBuf> {
+        HashSet::new()
     }
 }
 
@@ -146,6 +153,10 @@ impl<O: Input> Input for HashMap<String, O> {
             item.insert_loaded_files(files);
         }
     }
+
+    fn dependencies(&self) -> HashSet<PathBuf> {
+        HashSet::new()
+    }
 }
 
 impl<O: InputInverse> InputInverse for Box<O> {
@@ -177,6 +188,10 @@ impl<O: Input> Input for Box<O> {
 
     fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
         (**self).insert_loaded_files(files)
+    }
+
+    fn dependencies(&self) -> HashSet<PathBuf> {
+        HashSet::new()
     }
 }
 
@@ -230,6 +245,10 @@ impl<A: Input, B: Input> Input for (A, B) {
         self.0.insert_loaded_files(files);
         self.1.insert_loaded_files(files);
     }
+
+    fn dependencies(&self) -> HashSet<PathBuf> {
+        HashSet::new()
+    }
 }
 
 macro_rules! impl_input {
@@ -261,6 +280,10 @@ macro_rules! impl_input {
             fn files_to_load(&self) -> Vec<FileToLoad> { Vec::new() }
 
             fn insert_loaded_files(&mut self, _files: &HashMap<FileToLoad, LoadedFile>) {}
+
+            fn dependencies(&self) -> HashSet<PathBuf> {
+                HashSet::new()
+            }
         }
         )*
     };
