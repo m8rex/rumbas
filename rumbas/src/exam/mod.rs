@@ -145,7 +145,7 @@ impl ExamInput {
         combine_exam_with_default_files(path, self);
 
         let files_to_load = self.files_to_load();
-        let loaded_files = CACHE.read(files_to_load);
+        let loaded_files = CACHE.read_files(files_to_load);
         self.insert_loaded_files(&loaded_files);
     }
 }

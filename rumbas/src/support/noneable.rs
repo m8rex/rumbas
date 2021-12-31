@@ -54,6 +54,12 @@ impl<T: Input> Input for Noneable<T> {
             item.insert_loaded_files(files);
         }
     }
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        match self {
+            Noneable::NotNone(val) => val.dependencies(),
+            _ => std::collections::HashSet::new(),
+        }
+    }
 }
 
 impl<T: Overwrite<T>> Overwrite<Noneable<T>> for Noneable<T> {

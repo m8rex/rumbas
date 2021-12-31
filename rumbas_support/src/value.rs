@@ -67,6 +67,14 @@ where
             ValueType::Invalid(_v) => (),
         }
     }
+
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        match &self {
+            ValueType::Normal(val) => val.dependencies(),
+            ValueType::Template(ts) => ts.dependencies(),
+            ValueType::Invalid(_) => std::collections::HashSet::new(),
+        }
+    }
 }
 
 impl<T: std::clone::Clone> ValueType<T> {
@@ -161,6 +169,13 @@ where
     fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
         if let Some(ref mut v) = self.0 {
             v.insert_loaded_files(files);
+        }
+    }
+
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        match &self.0 {
+            Some(v) => v.dependencies(),
+            None => std::collections::HashSet::new(),
         }
     }
 }
@@ -261,6 +276,10 @@ impl Input for TemplateString {
     }
 
     fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {}
+
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        std::collections::HashSet::new()
+    }
 }
 
 impl JsonSchema for TemplateString {

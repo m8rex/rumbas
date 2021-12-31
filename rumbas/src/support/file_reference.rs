@@ -7,6 +7,7 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
+use std::convert::Into;
 use std::convert::TryInto;
 
 /// The prefix used to specify a file reference
@@ -242,7 +243,7 @@ macro_rules! file_type {
                 }
                 pub fn file_to_read(&self) -> Option<FileToRead> {
                     self.file_name.as_ref().map(|file_name| {
-                        FileToRead::Text(TextFileToRead::with_file_name(file_name.clone()))
+                        TextFileToRead::with_file_name(file_name.clone()).into()
                     })
                 }
             }
@@ -297,6 +298,13 @@ macro_rules! file_type {
                             None => self.error_message = Some(format!("Missing content"))
                         }
                     }
+                }
+
+                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                    self.file_to_read().map(|a| {
+                        let p : std::path::PathBuf = a.into();
+                        vec![p].into_iter().collect()
+                    }).unwrap_or_else(std::collections::HashSet::new)
                 }
             }
             impl InputInverse for $type {

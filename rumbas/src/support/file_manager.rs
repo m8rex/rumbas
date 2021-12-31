@@ -57,7 +57,7 @@ impl FileManager {
         }
     }
 
-    pub fn read(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
+    pub fn read_files(&self, files: Vec<FileToLoad>) -> HashMap<FileToLoad, LoadedFile> {
         let result: HashMap<_, _> = files
             .into_par_iter()
             .filter_map(|file| self.read_file(file.clone()).map(|l| (file, l)))
@@ -218,7 +218,7 @@ impl FileManager {
     }
     pub fn read_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
         let files = self.find_all_questions_in_folder(folder_path);
-        self.read(files).into_iter().map(|(_, l)| l).collect()
+        self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
     pub fn read_all_questions(&self) -> Vec<LoadedFile> {
         self.read_all_questions_in_folder(
@@ -229,14 +229,14 @@ impl FileManager {
         let path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
         let files =
             Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionTemplateFile);
-        self.read(files).into_iter().map(|(_, l)| l).collect()
+        self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
     pub fn find_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
         Self::find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
     pub fn read_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
         let files = self.find_all_exams_in_folder(folder_path);
-        self.read(files).into_iter().map(|(_, l)| l).collect()
+        self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
     pub fn read_all_exams(&self) -> Vec<LoadedFile> {
         self.read_all_exams_in_folder(std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf())
@@ -246,7 +246,7 @@ impl FileManager {
         let path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
         let files =
             Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamTemplateFile);
-        self.read(files).into_iter().map(|(_, l)| l).collect()
+        self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
 }
 
@@ -259,6 +259,17 @@ pub enum FileToRead {
 }
 
 impl std::convert::From<FileToRead> for rumbas_support::input::FileToLoad {
+    fn from(s: FileToRead) -> Self {
+        match s {
+            FileToRead::Text(t) => t.into(),
+            FileToRead::CustomPartType(t) => t.into(),
+            FileToRead::Question(t) => t.into(),
+            FileToRead::Exam(t) => t.into(),
+        }
+    }
+}
+
+impl std::convert::From<FileToRead> for PathBuf {
     fn from(s: FileToRead) -> Self {
         match s {
             FileToRead::Text(t) => t.into(),
@@ -296,6 +307,12 @@ impl std::convert::From<TextFileToRead> for rumbas_support::input::FileToLoad {
     }
 }
 
+impl std::convert::From<TextFileToRead> for PathBuf {
+    fn from(s: TextFileToRead) -> Self {
+        s.file_path
+    }
+}
+
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct CustomPartTypeFileToRead {
     file_path: PathBuf,
@@ -322,6 +339,12 @@ impl std::convert::From<CustomPartTypeFileToRead> for rumbas_support::input::Fil
             file_path: s.file_path,
             locale_dependant: false,
         }
+    }
+}
+
+impl std::convert::From<CustomPartTypeFileToRead> for PathBuf {
+    fn from(s: CustomPartTypeFileToRead) -> Self {
+        s.file_path
     }
 }
 
@@ -354,6 +377,12 @@ impl std::convert::From<QuestionFileToRead> for rumbas_support::input::FileToLoa
     }
 }
 
+impl std::convert::From<QuestionFileToRead> for PathBuf {
+    fn from(s: QuestionFileToRead) -> Self {
+        s.file_path
+    }
+}
+
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct ExamFileToRead {
     file_path: PathBuf,
@@ -371,6 +400,12 @@ impl std::convert::From<ExamFileToRead> for rumbas_support::input::FileToLoad {
             file_path: s.file_path,
             locale_dependant: false,
         }
+    }
+}
+
+impl std::convert::From<ExamFileToRead> for PathBuf {
+    fn from(s: ExamFileToRead) -> Self {
+        s.file_path
     }
 }
 
@@ -557,11 +592,15 @@ macro_rules! create_from_string_type {
             }
         }
         impl $ti {
+            fn dependency(&self) -> FileToRead {
+                <$read_type>::with_file_name(self.file_name.clone()).into()
+            }
+
             pub fn file_to_read(&self) -> Option<FileToRead> {
                 if let Some(_) = &self.data {
                     None
                 } else {
-                    Some(<$read_type>::with_file_name(self.file_name.clone()).into())
+                    Some(self.dependency().into())
                 }
             }
         }
@@ -599,12 +638,16 @@ macro_rules! create_from_string_type {
                 if let Some(file) = self.file_to_read() {
                     vec![file.into()]
                 } else if let Some(ref q) = self.data {
+                    // TODO: is this used like this?
                     q.files_to_load()
                 } else {
                     unreachable!();
                 }
             }
-
+            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                let path: std::path::PathBuf = self.dependency().into();
+                vec![path].into_iter().collect()
+            }
             fn insert_loaded_files(
                 &mut self,
                 files: &std::collections::HashMap<FileToLoad, LoadedFile>,
@@ -627,8 +670,8 @@ macro_rules! create_from_string_type {
                                         let mut input = q.clone();
                                         $combine(&file_to_load.file_path, &mut input);
                                         let files_to_load = input.files_to_load();
-                                        let loaded_files =
-                                            crate::support::file_manager::CACHE.read(files_to_load);
+                                        let loaded_files = crate::support::file_manager::CACHE
+                                            .read_files(files_to_load);
                                         input.insert_loaded_files(&loaded_files);
 
                                         self.data = Some(input)
