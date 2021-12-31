@@ -42,5 +42,7 @@ fn main() {
         cli::schema(matches)
     } else if let Some(matches) = matches.subcommand_matches("check") {
         cli::check(matches)
+    } else if let Some(matches) = matches.subcommand_matches("watch") {
+        cli::watch(matches)
     }
 }

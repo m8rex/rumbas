@@ -69,3 +69,12 @@ subcommands:
       about: |-
         Creates files with the json schemas (beta).
         See https://github.com/m8rex/rumbas-examples/tree/main/.vscode for usage instructions
+  - watch:
+      about: |-
+        Watch a path
+      args:
+        - PATH:
+            help: |-
+              The path to watch
+            required: true
+            index: 1
