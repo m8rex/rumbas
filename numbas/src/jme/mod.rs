@@ -64,7 +64,7 @@ impl std::convert::TryFrom<String> for JMEString {
         let ast = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_jme(&trimmed)
+            let pairs = parser::parse_as_jme(trimmed)
                 .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
             let ast = parser::consume_one_expression(pairs)?;
             Some(ast)
@@ -127,7 +127,7 @@ impl std::convert::TryFrom<String> for EmbracedJMEString {
         let asts = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_embraced_jme(&trimmed)
+            let pairs = parser::parse_as_embraced_jme(trimmed)
                 .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
             let asts = parser::consume_expressions(pairs)?;
             Some(asts)
@@ -189,7 +189,7 @@ impl std::convert::TryFrom<String> for ContentAreaString {
         let asts = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_content_area(&trimmed)
+            let pairs = parser::parse_as_content_area(trimmed)
                 .map_err(|e| parser::ConsumeError::HTMLParseError(vec![e]))?;
             let asts = parser::consume_content_area_expressions(pairs)?;
             Some(asts)
@@ -245,7 +245,7 @@ impl std::convert::TryFrom<String> for JMENotesString {
         let notes = if trimmed.is_empty() {
             None
         } else {
-            let pairs = parser::parse_as_jme_script(&trimmed)
+            let pairs = parser::parse_as_jme_script(trimmed)
                 .map_err(|e| parser::ConsumeError::JMEParseError(vec![e]))?;
             let notes = parser::consume_notes(pairs)?;
             Some(notes)

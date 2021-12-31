@@ -151,7 +151,7 @@ impl ToRumbas<Question> for numbas::question::Question {
 impl QuestionInput {
     pub fn from_str(yaml: &str, file: PathBuf) -> Result<QuestionInput, ParseError> {
         use QuestionFileTypeInput::*;
-        let input: QuestionFileTypeInput = serde_yaml::from_str(&yaml)
+        let input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
             .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
         match input {
             Normal(e) => Ok(*e),
@@ -162,17 +162,17 @@ impl QuestionInput {
 
                 let template_yaml = CACHE
                     .read_file(FileToLoad {
-                        file_path: template_file.to_path_buf(),
+                        file_path: template_file.clone(),
                         locale_dependant: false,
                     })
                     .map(|lf| match lf {
-                        LoadedFile::Normal(n) => Some(n.content.clone()),
+                        LoadedFile::Normal(n) => Some(n.content),
                         LoadedFile::Localized(_) => None,
                     })
                     .flatten()
-                    .ok_or(ParseError::FileReadError(FileReadError(
-                        template_file.to_path_buf(),
-                    )))?;
+                    .ok_or_else(|| {
+                        ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
+                    })?;
                 let mut question: QuestionInput = serde_yaml::from_str(&template_yaml)
                     .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
                 t.data.iter().for_each(|(k, v)| {

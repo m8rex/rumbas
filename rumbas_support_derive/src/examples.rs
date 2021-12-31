@@ -157,28 +157,19 @@ fn struct_body(
     let field_is_flattened = fields
         .iter()
         .map(|f| {
-            f.attrs
-                .iter()
-                .find(|attr| {
-                    if attr.path.is_ident("serde") {
-                        match attr.parse_meta() {
-                            Ok(syn::Meta::List(meta)) => meta
-                                .nested
-                                .iter()
-                                .find(|m| match m {
-                                    syn::NestedMeta::Meta(syn::Meta::Path(m)) => {
-                                        m.is_ident("flatten")
-                                    }
-                                    _ => false,
-                                })
-                                .is_some(),
+            f.attrs.iter().any(|attr| {
+                if attr.path.is_ident("serde") {
+                    match attr.parse_meta() {
+                        Ok(syn::Meta::List(meta)) => meta.nested.iter().any(|m| match m {
+                            syn::NestedMeta::Meta(syn::Meta::Path(m)) => m.is_ident("flatten"),
                             _ => false,
-                        }
-                    } else {
-                        false
+                        }),
+                        _ => false,
                     }
-                })
-                .is_some()
+                } else {
+                    false
+                }
+            })
         })
         .collect::<Vec<_>>();
     let field_types = field_types
@@ -363,7 +354,7 @@ impl ToTokens for ExamplesReceiver {
             ref input_name,
         } = *self;
 
-        let input_ident = syn::Ident::new(&input_name, ident.span());
+        let input_ident = syn::Ident::new(input_name, ident.span());
         if !no_examples {
             match data {
                 ast::Data::Enum(v) => handle_enum(v, &input_ident, generics, tokens),

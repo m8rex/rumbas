@@ -234,7 +234,7 @@ impl Examples for TranslationInputEnum {
     fn examples() -> Vec<Self> {
         TranslationInput::examples()
             .into_iter()
-            .map(|e| TranslationInputEnum(e))
+            .map(TranslationInputEnum)
             .collect()
     }
 }
@@ -335,7 +335,7 @@ impl Translation {
         }
         self.content
             .get(locale)
-            .map(|s| substitute(&s.get_content(locale), locale, &self))
+            .map(|s| substitute(&s.get_content(locale), locale, self))
             .flatten()
     }
 }
@@ -472,7 +472,7 @@ macro_rules! translatable_type {
                 fn examples() ->  Vec<Self> {
                     let translations = TranslationInputEnum::examples();
                     let filestrings = FileStringInput::examples();
-                    translations.into_iter().map(|t| Self::Translated(t)).chain(filestrings.into_iter().map(|f| Self::NotTranslated(f))).collect()
+                    translations.into_iter().map(Self::Translated).chain(filestrings.into_iter().map(Self::NotTranslated)).collect()
                 }
             }
         }

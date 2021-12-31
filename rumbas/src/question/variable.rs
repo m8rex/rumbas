@@ -138,7 +138,7 @@ impl VariableRepresentation {
                     Variable::ungrouped(VariableTemplateType::RandomRange, &r.as_random_range())
                 }
                 VariableStringRepresentation::r#String(s) => {
-                    Variable::ungrouped(VariableTemplateType::r#String, &s)
+                    Variable::ungrouped(VariableTemplateType::r#String, s)
                 }
             },
             VariableRepresentation::TranslatableString(l) => Variable::ungrouped(
@@ -227,7 +227,7 @@ impl Examples for RangeDataInputEnum {
     fn examples() -> Vec<Self> {
         RangeDataInput::examples()
             .into_iter()
-            .map(|e| RangeDataInputEnum(e))
+            .map(RangeDataInputEnum)
             .collect()
     }
 }
@@ -257,7 +257,7 @@ impl Examples for RangeDataInput {
             },
         ]
         .into_iter()
-        .map(|e| Self::from_normal(e))
+        .map(Self::from_normal)
         .collect()
     }
 }

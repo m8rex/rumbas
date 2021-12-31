@@ -430,7 +430,7 @@ impl std::fmt::Display for InputCheckInvalidYamlData {
             self.error
                 .as_ref()
                 .map(|s| format!("With error: {}", s))
-                .unwrap_or("".to_string())
+                .unwrap_or_else(String::new)
         )
     }
 }

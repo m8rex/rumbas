@@ -172,7 +172,7 @@ impl std::convert::From<CustomPartInputTypeValue> for String {
     fn from(v: CustomPartInputTypeValue) -> Self {
         match v {
             CustomPartInputTypeValue::CheckBox(v) => v.to_string(),
-            CustomPartInputTypeValue::Code(v) => v.to_string(),
+            CustomPartInputTypeValue::Code(v) => v,
         }
     }
 }

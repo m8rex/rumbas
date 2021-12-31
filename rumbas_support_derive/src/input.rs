@@ -104,16 +104,12 @@ fn handle_attributes(
 fn is_serde_from(a: &syn::Attribute) -> bool {
     if a.path.is_ident("serde") {
         match a.parse_meta() {
-            Ok(syn::Meta::List(l)) => l
-                .nested
-                .into_iter()
-                .find(|a| match a {
-                    syn::NestedMeta::Meta(syn::Meta::NameValue(meta)) => {
-                        meta.path.is_ident("try_from") || meta.path.is_ident("from")
-                    }
-                    _ => false,
-                })
-                .is_some(),
+            Ok(syn::Meta::List(l)) => l.nested.into_iter().any(|a| match a {
+                syn::NestedMeta::Meta(syn::Meta::NameValue(meta)) => {
+                    meta.path.is_ident("try_from") || meta.path.is_ident("from")
+                }
+                _ => false,
+            }),
             _ => false,
         }
     } else {
@@ -274,28 +270,19 @@ fn input_handle_struct_struct(
     let field_is_flattened = fields
         .iter()
         .map(|f| {
-            f.attrs
-                .iter()
-                .find(|attr| {
-                    if attr.path.is_ident("serde") {
-                        match attr.parse_meta() {
-                            Ok(syn::Meta::List(meta)) => meta
-                                .nested
-                                .iter()
-                                .find(|m| match m {
-                                    syn::NestedMeta::Meta(syn::Meta::Path(m)) => {
-                                        m.is_ident("flatten")
-                                    }
-                                    _ => false,
-                                })
-                                .is_some(),
+            f.attrs.iter().any(|attr| {
+                if attr.path.is_ident("serde") {
+                    match attr.parse_meta() {
+                        Ok(syn::Meta::List(meta)) => meta.nested.iter().any(|m| match m {
+                            syn::NestedMeta::Meta(syn::Meta::Path(m)) => m.is_ident("flatten"),
                             _ => false,
-                        }
-                    } else {
-                        false
+                        }),
+                        _ => false,
                     }
-                })
-                .is_some()
+                } else {
+                    false
+                }
+            })
         })
         .collect::<Vec<_>>();
 
@@ -417,7 +404,7 @@ fn input_handle_struct_struct(
         }
     });
 
-    let try_from_code = if field_is_flattened.iter().find(|a| **a).is_some() {
+    let try_from_code = if field_is_flattened.iter().any(|a| *a) {
         quote! {Ok(Self(value))}
     } else {
         quote! {
@@ -925,8 +912,8 @@ impl ToTokens for InputReceiver {
             no_examples: _,
         } = *self;
 
-        let input_ident = syn::Ident::new(&input_name, ident.span());
-        let input_attributes = handle_attributes(&attrs);
+        let input_ident = syn::Ident::new(input_name, ident.span());
+        let input_attributes = handle_attributes(attrs);
 
         match data {
             ast::Data::Enum(v) => input_handle_enum(

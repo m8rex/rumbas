@@ -22,7 +22,7 @@ impl ToNumbas<numbas::question::function::Function> for Function {
         numbas::question::function::Function {
             parameters: self.parameters.to_numbas(locale),
             output_type: self.output_type.to_numbas(locale),
-            definition: self.definition.to_numbas(&locale),
+            definition: self.definition.to_numbas(locale),
         }
     }
 }
