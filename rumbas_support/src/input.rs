@@ -105,7 +105,7 @@ impl<O: Input> Input for Vec<O> {
     }
 
     fn dependencies(&self) -> HashSet<PathBuf> {
-        HashSet::new()
+        self.iter().flat_map(|a| a.dependencies()).collect()
     }
 }
 
@@ -155,7 +155,7 @@ impl<O: Input> Input for HashMap<String, O> {
     }
 
     fn dependencies(&self) -> HashSet<PathBuf> {
-        HashSet::new()
+        self.iter().flat_map(|(_k, v)| v.dependencies()).collect()
     }
 }
 
@@ -191,7 +191,7 @@ impl<O: Input> Input for Box<O> {
     }
 
     fn dependencies(&self) -> HashSet<PathBuf> {
-        HashSet::new()
+        (**self).dependencies()
     }
 }
 
@@ -247,7 +247,12 @@ impl<A: Input, B: Input> Input for (A, B) {
     }
 
     fn dependencies(&self) -> HashSet<PathBuf> {
-        HashSet::new()
+        let mut result = HashSet::new();
+        let previous_result = self.0.dependencies();
+        result.extend(previous_result);
+        let previous_result = self.1.dependencies();
+        result.extend(previous_result);
+        result
     }
 }
 

@@ -105,7 +105,7 @@ impl CompileResult {
 }
 
 fn compile_file(matches: &clap::ArgMatches, path: &Path) -> CompileResult {
-    let check_result = crate::cli::check::check_file(matches, path);
+    let check_result = crate::cli::check::check_file(path);
     match check_result {
         CheckResult::FailedParsing(f) => CompileResult::FailedParsing(f),
         CheckResult::FailedInputCheck(f) => CompileResult::FailedInputCheck(f),

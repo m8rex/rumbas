@@ -646,7 +646,9 @@ macro_rules! create_from_string_type {
             }
             fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
                 let path: std::path::PathBuf = self.dependency().into();
-                vec![path].into_iter().collect()
+                let deps = vec![path].into_iter().collect();
+                println!("{:?}", deps);
+                deps
             }
             fn insert_loaded_files(
                 &mut self,
