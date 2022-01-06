@@ -1,4 +1,5 @@
 use rayon::prelude::*;
+use rumbas::support::dependency_manager::DEPENDENCIES;
 use rumbas::support::file_manager::CACHE;
 use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
@@ -23,16 +24,24 @@ pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
 }
 
 pub fn check(matches: &clap::ArgMatches) {
-    let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
+    match check_internal(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap()) {
+        Ok(_) => (),
+        Err(_) => std::process::exit(1),
+    }
+}
+
+//let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
+pub fn check_internal(exam_question_path: &str) -> Result<(), ()> {
+    let path = Path::new(exam_question_path);
     log::info!("Checking {:?}", path.display());
     if path.is_absolute() {
         log::error!("Absolute path's are not supported");
-        return;
+        return Err(());
     }
     let files = find_all_files(path);
     let check_results: Vec<(CheckResult, PathBuf)> = files
         .into_par_iter()
-        .map(|file| (check_file(matches, &file), file))
+        .map(|file| (check_file(&file), file))
         .collect();
 
     let nb_failures: usize = check_results
@@ -57,9 +66,10 @@ pub fn check(matches: &clap::ArgMatches) {
             check_result.log(path);
         }
         log::error!("{} files failed.", nb_failures);
-        std::process::exit(1);
+        Err(())
     } else {
-        log::info!("All checks passed.")
+        log::info!("All checks passed.");
+        Ok(())
     }
 }
 
@@ -119,12 +129,15 @@ impl CheckResult {
 }
 
 /// Return true if parsing is ok
-pub fn check_file(_matches: &clap::ArgMatches, path: &Path) -> CheckResult {
+pub fn check_file(path: &Path) -> CheckResult {
     log::info!("Checking {:?}", path.display());
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
             exam_input.combine_with_defaults(path);
+
+            DEPENDENCIES.add_dependencies(path.to_path_buf(), exam_input.dependencies());
+            log::debug!("DEPS {:?}", exam_input.dependencies());
 
             let exam_result = exam_input.to_normal_safe();
             match exam_result {
