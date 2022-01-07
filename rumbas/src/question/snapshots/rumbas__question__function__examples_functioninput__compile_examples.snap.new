@@ -29,7 +29,7 @@ parameters:
   - - text
     - expression
   - - "template:template_key"
-    - h_t_m_l
+    - html
   - - ~
     - integer
   - - text

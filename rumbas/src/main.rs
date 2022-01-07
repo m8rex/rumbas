@@ -22,10 +22,10 @@ fn main() {
         matches.occurrences_of("verbose"),
     ) {
         (true, _, _) => log::LevelFilter::Off,
-        (false, true, 0) => log::LevelFilter::Error,
-        (false, true, 1) => log::LevelFilter::Warn,
-        (false, true, 2) => log::LevelFilter::Info,
-        _ => log::LevelFilter::Debug,
+        (false, true, 1) => log::LevelFilter::Error,
+        (false, true, 2) => log::LevelFilter::Warn,
+        (false, true, 4) => log::LevelFilter::Debug,
+        _ => log::LevelFilter::Info,
     };
 
     cli::logger::setup(log_level).expect("Working logger");
