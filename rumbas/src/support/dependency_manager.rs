@@ -23,7 +23,8 @@ impl Default for DependencyManager {
 
 impl DependencyManager {
     pub fn add_dependencies(&self, path: PathBuf, dependencies: HashSet<PathBuf>) {
-        for dependency in dependencies.iter() {
+        for dependency in dependencies.iter().chain(vec![path.clone()].iter()) {
+            log::debug!("Reading depended on by map.");
             let map = self
                 .depended_on_by
                 .read()
@@ -39,6 +40,7 @@ impl DependencyManager {
                     .expect("unlock loaded depended_on_by mutex")
                     .insert(path.clone());
             } else {
+                std::mem::drop(map);
                 let mut map = self
                     .depended_on_by
                     .write()
@@ -53,24 +55,33 @@ impl DependencyManager {
     }
 
     pub fn get_dependants(&self, path: PathBuf) -> HashSet<PathBuf> {
-        let map = self
-            .depended_on_by
-            .read()
-            .expect("Can read depended_on_by map");
-        log::debug!(
-            "Checking if {} is in the depended on by map.",
-            path.display()
-        );
+        log::debug!("Reading depended on by map.");
+        let deps = {
+            let map = self
+                .depended_on_by
+                .read()
+                .expect("Can read depended_on_by map");
+            log::debug!(
+                "Checking if {} is in the depended on by map.",
+                path.display()
+            );
 
-        if let Some(val) = map.get(&path) {
-            log::debug!("Found {} in the depended_on_by_map.", path.display());
-            val.lock()
-                .expect("unlock loaded depended_on_by mutex")
-                .clone()
-        } else {
-            log::debug!("Didn't find {} in the depended_on_by_map.", path.display());
-            HashSet::new()
-        }
+            if let Some(val) = map.get(&path) {
+                log::debug!("Found {} in the depended_on_by_map.", path.display());
+                val.lock()
+                    .expect("unlock loaded depended_on_by mutex")
+                    .clone()
+            } else {
+                log::debug!("Didn't find {} in the depended_on_by_map.", path.display());
+                HashSet::new()
+            }
+        };
+        let mut recursive_deps: HashSet<_> = deps
+            .iter()
+            .flat_map(|d| self.get_dependants(d.to_owned()))
+            .collect();
+        recursive_deps.extend(deps);
+        recursive_deps
     }
 
     pub fn log_debug(&self) {
