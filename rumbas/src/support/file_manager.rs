@@ -104,6 +104,7 @@ impl FileManager {
             let locale_file_path = path.join(file_name);
             if locale_file_path.exists() {
                 if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
+                    log::debug!("Found localized file {}.", locale_file_path.display());
                     translated_content.insert(locale, s);
                 } else {
                     log::warn!("Failed reading {}", locale_file_path.display());
@@ -115,7 +116,7 @@ impl FileManager {
             Ok(s) => Some(s),
             Err(e) => {
                 log::debug!(
-                    "Failed reading content for localized file {} with error {}",
+                    "Failed reading content for default localized file {} with error {}",
                     file_path.display(),
                     e
                 );
@@ -247,6 +248,16 @@ impl FileManager {
         let files =
             Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamTemplateFile);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
+    }
+}
+
+impl FileManager {
+    pub fn delete_file(&self, file: FileToLoad) {
+        let mut map = self.cache.write().expect("Can write cache map");
+        if map.contains_key(&file) {
+            log::debug!("Deleting {} from the cache.", file.file_path.display());
+            map.remove(&file);
+        }
     }
 }
 
@@ -434,6 +445,27 @@ impl RumbasRepoFileData {
     pub fn path(&self) -> PathBuf {
         self.path.clone()
     }
+    pub fn dependency_path(&self) -> PathBuf {
+        match self.r#type.clone() {
+            RumbasRepoFileType::LocaleFile(_, p) => p,
+            _ => self.path(),
+        }
+    }
+}
+
+impl std::convert::From<RumbasRepoFileData> for FileToLoad {
+    fn from(r: RumbasRepoFileData) -> Self {
+        match r.r#type.clone() {
+            RumbasRepoFileType::LocaleFile(_, p) => FileToLoad {
+                file_path: p.clone(),
+                locale_dependant: true,
+            },
+            _ => FileToLoad {
+                file_path: r.path,
+                locale_dependant: false,
+            },
+        }
+    }
 }
 
 impl RumbasRepoFileData {
@@ -453,21 +485,24 @@ pub enum RumbasRepoFileType {
     ExamTemplateFile,
     CustomPartTypeFile,
     DefaultFile,
-    LocaleFile,
+    LocaleFile(String, PathBuf),
     File,
 }
 impl RumbasRepoFileType {
     pub fn from(p: &Path) -> Self {
-        let components: Vec<_> = p.iter().collect();
-        if components.len() > 1
-            && components
-                .last()
+        let folder_type = RumbasRepoFolderType::from(&p.parent().unwrap());
+
+        if let RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
+            let resource_path = p
+                .parent()
                 .unwrap()
-                .to_str()
+                .parent()
                 .unwrap()
-                .starts_with(crate::LOCALE_FOLDER_PREFIX)
-        {
-            Self::LocaleFile
+                .join(p.file_name().unwrap());
+
+            Self::LocaleFile(locale.to_string(), resource_path.to_path_buf())
+        } else if let RumbasRepoFolderType::DefaultFolder = folder_type {
+            Self::DefaultFile // TODO: fix DefaultFile
         } else if let Some(ext) = p.extension() {
             if ext == "yaml" {
                 if p.starts_with(crate::DEFAULTS_FOLDER) {
@@ -493,6 +528,63 @@ impl RumbasRepoFileType {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::RumbasRepoFileType;
+    use std::path::{Path, PathBuf};
+
+    #[test]
+    fn rumbas_repo_file_type() {
+        assert_eq!(
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(&Path::new("defaults/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::QuestionFile,
+            RumbasRepoFileType::from(&Path::new("questions/something/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(&Path::new("questions/defaults/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::LocaleFile(
+                "a".to_string(),
+                Path::new("questions/file.yaml").to_path_buf()
+            ),
+            RumbasRepoFileType::from(&Path::new("questions/locale-a/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::ExamFile,
+            RumbasRepoFileType::from(&Path::new("exams/something/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(&Path::new("exams/defaults/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::LocaleFile(
+                "e".to_string(),
+                Path::new("exams/file.yaml").to_path_buf()
+            ),
+            RumbasRepoFileType::from(&Path::new("exams/locale-e/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::QuestionTemplateFile,
+            RumbasRepoFileType::from(&Path::new("question_templates/something/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::ExamTemplateFile,
+            RumbasRepoFileType::from(&Path::new("exam_templates/something/file.yaml"))
+        );
+        assert_eq!(
+            RumbasRepoFileType::CustomPartTypeFile,
+            RumbasRepoFileType::from(&Path::new("custom_part_types/something/file.yaml"))
+        );
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct RumbasRepoFolderData {
     r#type: RumbasRepoFolderType,
@@ -646,8 +738,17 @@ macro_rules! create_from_string_type {
             }
             fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
                 let path: std::path::PathBuf = self.dependency().into();
-                let deps = vec![path].into_iter().collect();
-                println!("{:?}", deps);
+                let deps: std::collections::HashSet<_> = vec![path].into_iter().collect();
+
+                let deps = if let Some(ref data) = self.data {
+                    data.dependencies()
+                        .into_iter()
+                        .chain(deps.into_iter())
+                        .collect()
+                } else {
+                    deps
+                };
+
                 deps
             }
             fn insert_loaded_files(

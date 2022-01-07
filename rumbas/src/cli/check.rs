@@ -135,9 +135,9 @@ pub fn check_file(path: &Path) -> CheckResult {
     match exam_input_result {
         Ok(mut exam_input) => {
             exam_input.combine_with_defaults(path);
+            exam_input.load_files();
 
             DEPENDENCIES.add_dependencies(path.to_path_buf(), exam_input.dependencies());
-            log::debug!("DEPS {:?}", exam_input.dependencies());
 
             let exam_result = exam_input.to_normal_safe();
             match exam_result {

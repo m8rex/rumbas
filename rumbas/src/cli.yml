@@ -5,10 +5,18 @@ args:
   - verbose:
       short: v
       multiple: true
-      help: Sets the level of verbosity
+      help: |-
+        Sets the level of verbosity
+        -v    sets the level to ERROR
+        -vv   sets the level to WARN
+        -vvv   sets the level to INFO
+        -vvvv   sets the level to DEBUG
+
+        The default is -vvv
+
   - quiet:
       short: q
-      help: Enables quiet mode
+      help: Enables quiet mode. Nothing is logged. This has precedence over the verbose option.
 subcommands:
   - compile:
       about: |-

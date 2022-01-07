@@ -1,9 +1,12 @@
-use rumbas::support::dependency_manager::DEPENDENCIES;
-use std::path::Path;
-
 use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
+use rumbas::support::dependency_manager::DEPENDENCIES;
+use rumbas::support::file_manager::RumbasRepoFileData;
+use rumbas::support::file_manager::CACHE;
+use rumbas_support::input::FileToLoad;
+use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
+
 pub fn watch(matches: &clap::ArgMatches) {
     let path = Path::new(".");
     if path.is_absolute() {
@@ -42,7 +45,13 @@ pub fn watch(matches: &clap::ArgMatches) {
 }
 
 fn recompile_dependant(path: &Path) {
+    // TODO: remove from file cache
     let relative_path = path.strip_prefix(std::env::current_dir().unwrap()).unwrap();
+    let file_data = RumbasRepoFileData::from(&relative_path);
+    let relative_path = file_data.dependency_path();
+
+    let file_to_remove: FileToLoad = file_data.into();
+    CACHE.delete_file(file_to_remove);
 
     DEPENDENCIES.log_debug();
 
