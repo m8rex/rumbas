@@ -8,13 +8,18 @@ use std::sync::mpsc::channel;
 use std::time::Duration;
 
 pub fn watch(matches: &clap::ArgMatches) {
+    watch_internal(matches.value_of("PATH").unwrap(), Box::new(WatchChecker))
+}
+
+fn watch_internal(watch_path: &str, handler: Box<dyn WatchHandler>) {
     let path = Path::new(".");
     if path.is_absolute() {
+        // TODO
         log::error!("Absolute path's are not supported");
         return;
     }
 
-    crate::cli::check::check_internal(matches.value_of("PATH").unwrap());
+    handler.handle_setup(&watch_path);
 
     log::info!("Watching {:?}", path.display());
 
@@ -32,10 +37,10 @@ pub fn watch(matches: &clap::ArgMatches) {
     loop {
         match rx.recv() {
             Ok(event) => match event {
-                DebouncedEvent::Create(p) => recompile_dependant(&p), // Shouldn'tdo anything?
-                DebouncedEvent::Write(p) => recompile_dependant(&p),
-                DebouncedEvent::Chmod(p) => recompile_dependant(&p),
-                DebouncedEvent::Remove(p) => recompile_dependant(&p),
+                DebouncedEvent::Create(p) => handler.recompile_dependant(&p), // Shouldn'tdo anything?
+                DebouncedEvent::Write(p) => handler.recompile_dependant(&p),
+                DebouncedEvent::Chmod(p) => handler.recompile_dependant(&p),
+                DebouncedEvent::Remove(p) => handler.recompile_dependant(&p),
                 DebouncedEvent::Rename(previous, new) => (), // TODO do the rename in the dependencies?
                 _ => (),
             },
@@ -44,19 +49,34 @@ pub fn watch(matches: &clap::ArgMatches) {
     }
 }
 
-fn recompile_dependant(path: &Path) {
-    // TODO: remove from file cache
-    let relative_path = path.strip_prefix(std::env::current_dir().unwrap()).unwrap();
-    let file_data = RumbasRepoFileData::from(&relative_path);
-    let relative_path = file_data.dependency_path();
+trait WatchHandler {
+    fn handle_setup(&self, path: &str);
+    fn handle_file(&self, path: &Path);
+    fn recompile_dependant(&self, path: &Path) {
+        // TODO: remove from file cache
+        let relative_path = path.strip_prefix(std::env::current_dir().unwrap()).unwrap();
+        let file_data = RumbasRepoFileData::from(&relative_path);
+        let relative_path = file_data.dependency_path();
 
-    let file_to_remove: FileToLoad = file_data.into();
-    CACHE.delete_file(file_to_remove);
+        let file_to_remove: FileToLoad = file_data.into();
+        CACHE.delete_file(file_to_remove);
 
-    DEPENDENCIES.log_debug();
+        DEPENDENCIES.log_debug();
 
-    let dependants = DEPENDENCIES.get_dependants(relative_path.to_path_buf());
-    for dependant in dependants.iter() {
-        crate::cli::check::check_file(dependant);
+        let dependants = DEPENDENCIES.get_dependants(relative_path.to_path_buf());
+        for dependant in dependants.iter() {
+            self.handle_file(dependant);
+        }
+    }
+}
+
+pub struct WatchChecker;
+impl WatchHandler for WatchChecker {
+    fn handle_setup(&self, path: &str) {
+        // TODO
+        crate::cli::check::check_internal(path);
+    }
+    fn handle_file(&self, path: &Path) {
+        crate::cli::check::check_file(path);
     }
 }
