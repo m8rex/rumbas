@@ -86,3 +86,6 @@ subcommands:
               The path to watch
             required: true
             index: 1
+        - only_check:
+            short: o
+            help: Only check exams and questions that change due to file changes, but don't compile them with numbas.

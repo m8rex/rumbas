@@ -12,16 +12,42 @@ const CACHE_FOLDER: &str = ".rumbas";
 const OUTPUT_FOLDER: &str = "_output";
 
 pub fn compile(matches: &clap::ArgMatches) {
-    let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
+    match compile_internal(matches.to_owned().into(), matches.to_owned().into()) {
+        Ok(_) => (),
+        Err(_) => std::process::exit(1),
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct CompilationContext {
+    pub compile_path: String,
+}
+
+impl From<clap::ArgMatches> for CompilationContext {
+    fn from(matches: clap::ArgMatches) -> Self {
+        Self {
+            compile_path: matches
+                .value_of("EXAM_OR_QUESTION_PATH")
+                .unwrap()
+                .to_string(),
+        }
+    }
+}
+
+pub fn compile_internal(
+    context: CompilationContext,
+    file_context: FileCompilationContext,
+) -> Result<(), ()> {
+    let path = Path::new(&context.compile_path);
     log::info!("Compiling {:?}", path.display());
     if path.is_absolute() {
         log::error!("Absolute path's are not supported");
-        return;
+        return Err(());
     }
     let files = crate::cli::check::find_all_files(path);
     let compile_results: Vec<(CompileResult, PathBuf)> = files
         .into_par_iter()
-        .map(|file| (compile_file(matches, &file), file))
+        .map(|file| (compile_file(&file_context, &file), file))
         .collect();
 
     let nb_failures: usize = compile_results
@@ -46,9 +72,10 @@ pub fn compile(matches: &clap::ArgMatches) {
             check_result.log(path);
         }
         log::error!("{} files failed.", nb_failures);
-        std::process::exit(1);
+        Err(())
     } else {
-        log::info!("All compilations passed.")
+        log::info!("All compilations passed.");
+        Ok(())
     }
 }
 
@@ -104,7 +131,24 @@ impl CompileResult {
     }
 }
 
-fn compile_file(matches: &clap::ArgMatches, path: &Path) -> CompileResult {
+#[derive(Debug, Clone)]
+pub struct FileCompilationContext {
+    pub use_scorm: bool,
+    pub as_zip: bool,
+    pub minify: bool,
+}
+
+impl From<clap::ArgMatches> for FileCompilationContext {
+    fn from(matches: clap::ArgMatches) -> Self {
+        Self {
+            use_scorm: matches.is_present("scorm"),
+            as_zip: matches.is_present("zip"),
+            minify: !matches.is_present("no-minification"),
+        }
+    }
+}
+
+pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileResult {
     let check_result = crate::cli::check::check_file(path);
     match check_result {
         CheckResult::FailedParsing(f) => CompileResult::FailedParsing(f),
@@ -115,14 +159,14 @@ fn compile_file(matches: &clap::ArgMatches, path: &Path) -> CompileResult {
             let mut failed_compilations = Vec::new();
             for (locale, numbas_exam, numbas_locale, theme) in p.passed() {
                 let compiler = NumbasCompiler {
-                    use_scorm: matches.is_present("scorm"),
-                    as_zip: matches.is_present("zip"),
+                    use_scorm: context.use_scorm,
+                    as_zip: context.as_zip,
                     exam_path: path.to_path_buf(),
                     numbas_locale: numbas_locale.to_str().to_string(),
                     locale: locale.clone(),
                     theme,
                     exam: numbas_exam,
-                    minify: !matches.is_present("no-minification"),
+                    minify: context.minify,
                 };
                 if compiler.compile() {
                     passed_compilations.push(locale)
