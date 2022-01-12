@@ -50,7 +50,7 @@ fn watch_internal(context: WatchContext) {
 
     // Create a watcher object, delivering debounced events.
     // The notification back-end is selected based on the platform.
-    let mut watcher = watcher(tx, Duration::from_secs(5)).unwrap();
+    let mut watcher = watcher(tx, Duration::from_secs(2)).unwrap();
 
     // Add a path to be watched. All files and directories at that path and
     // below will be monitored for changes.
