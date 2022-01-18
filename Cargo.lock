@@ -625,6 +625,7 @@ dependencies = [
  "pest_derive",
  "schemars",
  "serde",
+ "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_json",
  "serde_plain",
  "serde_with",
@@ -784,7 +785,7 @@ dependencies = [
  "sanitize-filename",
  "schemars",
  "serde",
- "serde-diff",
+ "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_json",
  "serde_yaml",
  "yaml-rust",
@@ -799,7 +800,7 @@ dependencies = [
  "rumbas_support_derive",
  "schemars",
  "serde",
- "serde-diff",
+ "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_yaml",
 ]
 
@@ -813,7 +814,7 @@ dependencies = [
  "quote",
  "rumbas_support",
  "serde",
- "serde-diff",
+ "serde-diff 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_yaml",
  "syn",
 ]
@@ -893,7 +894,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b956d904dea556a339d23adeaaf0e672275a030ba78ce0db644781c2756c5ea"
 dependencies = [
  "serde",
- "serde-diff-derive",
+ "serde-diff-derive 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_derive",
+]
+
+[[package]]
+name = "serde-diff"
+version = "0.4.1"
+source = "git+https://github.com/jhoobergs/serde-diff#9eeff6caf69b99f0ccf0220411d90b32d8e1d4d6"
+dependencies = [
+ "serde",
+ "serde-diff-derive 0.4.0 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_derive",
 ]
 
@@ -902,6 +913,17 @@ name = "serde-diff-derive"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "692563b61324ae1568e2884c7a6385ab4b95f13063fd31a6b702d5cbc5c456df"
+dependencies = [
+ "darling 0.10.2",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "serde-diff-derive"
+version = "0.4.0"
+source = "git+https://github.com/jhoobergs/serde-diff#9eeff6caf69b99f0ccf0220411d90b32d8e1d4d6"
 dependencies = [
  "darling 0.10.2",
  "proc-macro2",

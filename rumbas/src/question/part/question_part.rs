@@ -184,7 +184,7 @@ impl QuestionPartBuiltinInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENotesInput")]
-#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct JMENotes(pub Vec<JMENote>);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {

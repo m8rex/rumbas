@@ -8,11 +8,101 @@ use serde::{de::DeserializeOwned, Deserialize};
 use serde_diff::{Apply, Diff, SerdeDiff};
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),
     Value(T),
+}
+
+impl<T: SerdeDiff + Serialize + DeserializeOwned> serde_diff::SerdeDiff for VariableValued<T> {
+    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
+        &self,
+        ctx: &mut serde_diff::DiffContext<'a, S>,
+        other: &Self,
+    ) -> Result<bool, S::Error> {
+        let mut __changed__ = false;
+        match (self, other) {
+            (VariableValued::Variable(l0), VariableValued::Variable(r0)) => {
+                ctx.push_variant("Variable");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |= <JMEString as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (VariableValued::Value(l0), VariableValued::Value(r0)) => {
+                ctx.push_variant("Value");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (_, VariableValued::Variable(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+            (_, VariableValued::Value(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+        }
+        Ok(__changed__)
+    }
+    fn apply<'de, A>(
+        &mut self,
+        seq: &mut A,
+        ctx: &mut serde_diff::ApplyContext,
+    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
+    where
+        A: serde_diff::_serde::de::SeqAccess<'de>,
+    {
+        let mut __changed__ = false;
+        match (self, ctx.next_path_element(seq)?) {
+            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
+                ctx.read_value(seq, this)?;
+                __changed__ = true;
+            }
+            (
+                &mut VariableValued::Variable(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "Variable" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |=
+                                <JMEString as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            (
+                &mut VariableValued::Value(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "Value" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            _ => ctx.skip_value(seq)?,
+        }
+        Ok(__changed__)
+    }
 }
 
 impl<T: Examples> Examples for VariableValued<T> {

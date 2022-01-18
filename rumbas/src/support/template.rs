@@ -14,6 +14,7 @@ pub struct TemplateFile {
     #[serde(rename = "template")]
     pub relative_template_path: String,
     #[serde(flatten)]
+    #[serde_diff(skip)]
     pub data: HashMap<String, MyYamlValue>,
 }
 
@@ -61,7 +62,7 @@ impl PartialEq for TemplateFileInputEnum {
 }
 impl Eq for TemplateFileInputEnum {}
 
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyYamlValue(pub serde_yaml::Value);
 
 impl Overwrite<MyYamlValue> for MyYamlValue {
