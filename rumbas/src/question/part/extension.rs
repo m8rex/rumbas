@@ -7,12 +7,12 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartExtensionInput")]
-    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartExtension {}
 }
 

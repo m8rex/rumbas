@@ -2,11 +2,11 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LocaleInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Locale {
     pub name: String, //TODO: document names best used for shareability?
     /// The locale to use in the Numbas interface
@@ -18,7 +18,7 @@ macro_rules! create_support_locale {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = "SupportedLocaleInput")]
         /// Locales supported by Numbas
-        #[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, Copy, PartialEq)]
+        #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, Copy, PartialEq)]
         pub enum SupportedLocale {
             $(
                 #[serde(rename = $key)]

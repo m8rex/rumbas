@@ -1,8 +1,8 @@
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
-use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Noneable<T> {
@@ -10,83 +10,40 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
-impl<T: SerdeDiff + serde::Serialize + serde::de::DeserializeOwned> serde_diff::SerdeDiff
-    for Noneable<T>
-{
-    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
-        &self,
-        ctx: &mut serde_diff::DiffContext<'a, S>,
-        other: &Self,
-    ) -> Result<bool, S::Error> {
-        let mut __changed__ = false;
-        match (self, other) {
-            (Noneable::None, Noneable::None) => {
-                ctx.push_variant("None");
-                ctx.pop_path_element()?;
-            }
-            (Noneable::NotNone(l0), Noneable::NotNone(r0)) => {
-                ctx.push_variant("NotNone");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (_, Noneable::None) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
-            (_, Noneable::NotNone(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
+#[derive(Debug, PartialEq)]
+pub enum NoneableDesc<T: Comparable + PartialEq + std::fmt::Debug> {
+    None,
+    NotNone(<T as comparable::Comparable>::Desc),
+}
+#[derive(Debug, PartialEq)]
+pub enum NoneableChange<T: Comparable + PartialEq + std::fmt::Debug> {
+    BothNotNone(<T as comparable::Comparable>::Change),
+    Different(
+        <Noneable<T> as comparable::Comparable>::Desc,
+        <Noneable<T> as comparable::Comparable>::Desc,
+    ),
+}
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Noneable<T> {
+    type Desc = NoneableDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        match self {
+            Noneable::None => NoneableDesc::None,
+            Noneable::NotNone(var0) => NoneableDesc::NotNone(var0.describe()),
         }
-        Ok(__changed__)
     }
-    fn apply<'de, A>(
-        &mut self,
-        seq: &mut A,
-        ctx: &mut serde_diff::ApplyContext,
-    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
-    where
-        A: serde_diff::_serde::de::SeqAccess<'de>,
-    {
-        let mut __changed__ = false;
-        match (self, ctx.next_path_element(seq)?) {
-            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
-                ctx.read_value(seq, this)?;
-                __changed__ = true;
+    type Change = NoneableChange<T>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        match (self, other) {
+            (Noneable::None, Noneable::None) => comparable::Changed::Unchanged,
+            (Noneable::NotNone(self_var0), Noneable::NotNone(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| NoneableChange::BothNotNone(changes_var0))
             }
-            (&mut Noneable::None, Some(serde_diff::DiffPathElementValue::EnumVariant(variant)))
-                if variant == "None" =>
-            {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            (
-                &mut Noneable::NotNone(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "NotNone" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            _ => ctx.skip_value(seq)?,
+            (_, _) => comparable::Changed::Changed(NoneableChange::Different(
+                self.describe(),
+                other.describe(),
+            )),
         }
-        Ok(__changed__)
     }
 }
 

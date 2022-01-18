@@ -3,7 +3,7 @@ use crate::support::to_rumbas::*;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 macro_rules! extensions {
     (
@@ -14,7 +14,7 @@ macro_rules! extensions {
     ) => {
             #[derive(Input, Overwrite, RumbasCheck, Examples)]
             #[input(name = "ExtensionsInput")]
-            #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+            #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
             /// Specify which extensions should be enabled
             pub struct Extensions {
                 $(

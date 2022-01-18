@@ -8,7 +8,7 @@ use crate::support::variable_valued::VariableValued;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 use std::convert::Into;
 
 pub mod choose_multiple;
@@ -17,7 +17,7 @@ pub mod match_answers;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum MultipleChoiceAnswerData {
     ItemBased(Vec<MultipleChoiceAnswer>),
@@ -26,7 +26,7 @@ pub enum MultipleChoiceAnswerData {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub marks: VariableValued<Vec<JMETranslatableString>>,
@@ -87,7 +87,7 @@ fn extract_multiple_choice_answer_data(
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswer {
     pub statement: ContentAreaTranslatableString,
     pub feedback: EmbracedJMETranslatableString,
@@ -96,7 +96,7 @@ pub struct MultipleChoiceAnswer {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMarkingMethodInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Copy, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum MultipleChoiceMarkingMethod {
     SumTickedCells,
