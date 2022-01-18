@@ -1,5 +1,6 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::SerdeDiff;
 use std::convert::Into;
 use std::convert::TryInto;
 
@@ -40,11 +41,12 @@ impl std::convert::From<StringOrNumber> for String {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, SerdeDiff)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
     s: String,
+    #[serde_diff(skip)]
     ast: Option<ast::Expr>,
 }
 impl_string_json_schema!(JMEString, "JMEString");
@@ -103,11 +105,12 @@ impl JMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, SerdeDiff)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct EmbracedJMEString {
     s: String,
+    #[serde_diff(skip)]
     asts: Option<Vec<ast::Expr>>,
 }
 impl_string_json_schema!(EmbracedJMEString, "EmbracedJMEString"); // maybe add pattern?
@@ -172,12 +175,13 @@ impl EmbracedJMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, SerdeDiff)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct ContentAreaString {
     s: String,
+    #[serde_diff(skip)]
     asts: Option<Vec<ast::Expr>>,
 }
 impl_string_json_schema!(ContentAreaString, "ContentAreaString");
@@ -228,12 +232,13 @@ impl ContentAreaString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, SerdeDiff)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct JMENotesString {
     pub s: String,
+    #[serde_diff(skip)]
     pub notes: Option<Vec<ast::Note>>,
 }
 impl_string_json_schema!(JMENotesString, "JMENotesString");
