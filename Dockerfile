@@ -166,6 +166,15 @@ WORKDIR /usr/app/sqlite
 # TODO, when sqlite is more stable, take specific commit RUN git fetch && git checkout 09672fccdf28ea30fc9b14ad5ab7b15515d97598
 RUN rm -r .git # remove large folders
 
+# Fetch text extension
+FROM alpine as text_fetcher
+WORKDIR /usr/app
+RUN apk add git
+RUN git clone https://github.com/jhoobergs/numbas-extension-text.git text
+WORKDIR /usr/app/text
+# TODO, when text is more stable, take specific commit RUN git fetch && git checkout 09672fccdf28ea30fc9b14ad5ab7b15515d97598
+RUN rm -r .git # remove large folders
+
 # Main image
 FROM python:3.6.10-alpine 
 WORKDIR /usr/app/Numbas
@@ -190,6 +199,7 @@ COPY --from=polynomials_fetcher /usr/app/polynomials /usr/app/Numbas/extensions/
 COPY --from=chemistry_fetcher /usr/app/chemistry /usr/app/Numbas/extensions/chemistry
 COPY --from=linear_algebra_fetcher /usr/app/linear_algebra /usr/app/Numbas/extensions/linear-algebra
 COPY --from=sqlite_fetcher /usr/app/sqlite /usr/app/Numbas/extensions/sqlite
+COPY --from=text_fetcher /usr/app/text /usr/app/Numbas/extensions/text
 # From git? Repo not found
 COPY extensions/written_number /usr/app/Numbas/extensions/written-number
 COPY extensions/graphs /usr/app/Numbas/extensions/graphs
