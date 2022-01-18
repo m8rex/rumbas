@@ -9,13 +9,13 @@ use crate::support::variable_valued::VariableValued;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartMatrixInput")]
-    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatrix {
         correct_answer: numbas::jme::JMEString,
         dimensions: QuestionPartMatrixDimensions,
@@ -81,7 +81,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionsInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionPartMatrixDimensions {
     pub rows: QuestionPartMatrixDimension,
     pub columns: QuestionPartMatrixDimension,
@@ -95,7 +95,7 @@ impl QuestionPartMatrixDimensions {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub enum QuestionPartMatrixDimension {
     Fixed(VariableValued<usize>),
     Resizable(Box<QuestionPartMatrixRangedDimension>),
@@ -149,7 +149,7 @@ impl QuestionPartMatrixDimension {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixRangedDimensionInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
     pub default: VariableValued<usize>,

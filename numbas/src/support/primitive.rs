@@ -2,13 +2,13 @@ use crate::jme::JMEString;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_diff::SerdeDiff;
+use comparable::Comparable;
 use std::convert::TryInto;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
 //TODO: advicethreshold?
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
@@ -30,7 +30,7 @@ impl std::convert::From<usize> for SafeNatural {
     }
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy)]
 #[serde(try_from = "Primitive")]
 /// A decimal number (float) that can be parsed from primitive
 pub struct SafeFloat(pub f64);
@@ -52,7 +52,7 @@ impl std::convert::From<f64> for SafeFloat {
     }
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "BooledPrimitive")]
 /// A boolean that can be parsed from (booled) primitive
 pub struct SafeBool(pub bool);
@@ -106,7 +106,7 @@ impl std::convert::From<VariableValued<f64>> for Primitive {
     }
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 enum Primitive {
     String(String),
@@ -114,7 +114,7 @@ enum Primitive {
     Float(f64),
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 enum BooledPrimitive {
     String(String),
@@ -151,7 +151,7 @@ impl std::fmt::Display for Primitive {
     }
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(try_from = "Primitive")]
 #[serde(untagged)]
 pub enum Number {

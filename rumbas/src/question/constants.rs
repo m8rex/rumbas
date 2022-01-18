@@ -5,7 +5,7 @@ use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 /// Macro used to make sure that the ToNumbas & ToRumbas implementation remain up to data
 macro_rules! builtin_constants {
@@ -51,7 +51,7 @@ macro_rules! builtin_constants {
 builtin_constants! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "BuiltinConstantsInput")]
-    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq,)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq,)]
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
@@ -65,7 +65,7 @@ builtin_constants! {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomConstantInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 /// A custom constant
 pub struct CustomConstant {
     /// The name of the constant

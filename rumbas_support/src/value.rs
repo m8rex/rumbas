@@ -1,7 +1,7 @@
 use crate::input::*;
+use comparable::Comparable;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
@@ -13,139 +13,58 @@ pub enum ValueType<T> {
     Invalid(serde_yaml::Value),
 }
 
-impl<T: SerdeDiff + Serialize> serde_diff::SerdeDiff for ValueType<T>
-where
-    T: serde::de::DeserializeOwned,
-{
-    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
-        &self,
-        ctx: &mut serde_diff::DiffContext<'a, S>,
-        other: &Self,
-    ) -> Result<bool, S::Error> {
-        let mut __changed__ = false;
-        match (self, other) {
-            (ValueType::Template(l0), ValueType::Template(r0)) => {
-                ctx.push_variant("Template");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |=
-                            <TemplateString as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (ValueType::Normal(l0), ValueType::Normal(r0)) => {
-                ctx.push_variant("Normal");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (ValueType::Invalid(l0), ValueType::Invalid(r0)) => {
-                ctx.push_variant("Invalid");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |= l0 != r0;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (_, ValueType::Template(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
-            (_, ValueType::Normal(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
-            (_, ValueType::Invalid(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
+#[derive(PartialEq, Debug)]
+pub enum ValueTypeDesc<T: Comparable + PartialEq + std::fmt::Debug> {
+    Template(<TemplateString as Comparable>::Desc),
+    Normal(<T as Comparable>::Desc),
+    Invalid,
+}
+
+#[derive(PartialEq, Debug)]
+pub enum ValueTypeChange<T: Comparable + PartialEq + std::fmt::Debug> {
+    BothTemplate(<TemplateString as comparable::Comparable>::Change),
+    BothNormal(<T as comparable::Comparable>::Change),
+    BothInvalid,
+    Different(
+        <ValueType<T> as comparable::Comparable>::Desc,
+        <ValueType<T> as comparable::Comparable>::Desc,
+    ),
+}
+
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for ValueType<T> {
+    type Desc = ValueTypeDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        match self {
+            ValueType::Template(var0) => ValueTypeDesc::Template(var0.describe()),
+            ValueType::Normal(var0) => ValueTypeDesc::Normal(var0.describe()),
+            ValueType::Invalid(_var0) => ValueTypeDesc::Invalid,
         }
-        Ok(__changed__)
     }
-    fn apply<'de, A>(
-        &mut self,
-        seq: &mut A,
-        ctx: &mut serde_diff::ApplyContext,
-    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
-    where
-        A: serde_diff::_serde::de::SeqAccess<'de>,
-    {
-        let mut __changed__ = false;
-        match (self, ctx.next_path_element(seq)?) {
-            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
-                ctx.read_value(seq, this)?;
-                __changed__ = true;
+    type Change = ValueTypeChange<T>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        match (self, other) {
+            (ValueType::Template(self_var0), ValueType::Template(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| ValueTypeChange::BothTemplate(changes_var0))
             }
-            (
-                &mut ValueType::Template(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "Template" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |=
-                                <TemplateString as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
+            (ValueType::Normal(self_var0), ValueType::Normal(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| ValueTypeChange::BothNormal(changes_var0))
+            }
+            (ValueType::Invalid(self_var0), ValueType::Invalid(other_var0)) => {
+                if self_var0 == other_var0 {
+                    comparable::Changed::Unchanged
+                } else {
+                    comparable::Changed::Changed(ValueTypeChange::BothInvalid)
                 }
             }
-            (
-                &mut ValueType::Normal(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "Normal" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            (
-                &mut ValueType::Invalid(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "Invalid" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |= false // NOT WORKING
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            _ => ctx.skip_value(seq)?,
+            (_, _) => comparable::Changed::Changed(ValueTypeChange::Different(
+                self.describe(),
+                other.describe(),
+            )),
         }
-        Ok(__changed__)
     }
 }
-/*
-impl <T: SerdeDiff> SerdeDiff for ValueType<T> {
-    fn diff<'a, S: serde::ser::SerializeSeq>(&self, ctx: &mut serde_diff::DiffContext<'a, S>, other: &Self) -> Result<bool, S::Error> {
-        let mut __changed__ = false;
-        match (self, other) {
-            #(#diff_match_arms)*
-        }
-        Ok(__changed__)
-    }
-    #apply_fn
-}*/
 
 impl<T: Input> InputInverse for ValueType<T> {
     type Input = Self;
@@ -244,9 +163,9 @@ impl<T: std::clone::Clone> ValueType<T> {
 
 mod value_type_schema {
     use super::{TemplateString, ValueType};
+    use comparable::Comparable;
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
-    use serde_diff::SerdeDiff;
 
     #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
     #[serde(untagged)]
@@ -270,51 +189,22 @@ mod value_type_schema {
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
 
-impl<T: SerdeDiff + Serialize> serde_diff::SerdeDiff for Value<T>
-where
-    T: serde::de::DeserializeOwned,
-{
-    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
-        &self,
-        ctx: &mut serde_diff::DiffContext<'a, S>,
-        other: &Self,
-    ) -> Result<bool, S::Error> {
-        let mut __changed__ = false;
-        match (self, other) {
-            (Value(l0), Value(r0)) => {
-                ctx.push_field_index(0u16);
-                __changed__ |=
-                    <Option<ValueType<T>> as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                ctx.pop_path_element()?;
-            }
-        }
-        Ok(__changed__)
+#[derive(Debug, PartialEq)]
+pub struct ValueDesc<T: Comparable + PartialEq + std::fmt::Debug>(
+    pub <Option<ValueType<T>> as comparable::Comparable>::Desc,
+);
+#[derive(Debug, PartialEq)]
+pub struct ValueChange<T: Comparable + PartialEq + std::fmt::Debug>(
+    pub <Option<ValueType<T>> as comparable::Comparable>::Change,
+);
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Value<T> {
+    type Desc = ValueDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        ValueDesc(self.0.describe())
     }
-    fn apply<'de, A>(
-        &mut self,
-        seq: &mut A,
-        ctx: &mut serde_diff::ApplyContext,
-    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
-    where
-        A: serde_diff::_serde::de::SeqAccess<'de>,
-    {
-        let mut __changed__ = false;
-        match (self) {
-            (&mut Value(ref mut l0)) => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |= <Option<ValueType<T>> as serde_diff::SerdeDiff>::apply(
-                                l0, seq, ctx,
-                            )?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            _ => ctx.skip_value(seq)?,
-        }
-        Ok(__changed__)
+    type Change = ValueChange<T>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        self.0.comparison(&other.0).map(ValueChange)
     }
 }
 
@@ -426,7 +316,7 @@ impl<T> Default for Value<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct TemplateString {
