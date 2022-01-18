@@ -10,7 +10,7 @@ use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalNavigationInput")]
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, SerdeDiff, JsonSchema, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "mode")]
 pub enum NormalNavigation {

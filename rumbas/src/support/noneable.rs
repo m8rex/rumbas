@@ -10,6 +10,86 @@ pub enum Noneable<T> {
     NotNone(T),
 }
 
+impl<T: SerdeDiff + serde::Serialize + serde::de::DeserializeOwned> serde_diff::SerdeDiff
+    for Noneable<T>
+{
+    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
+        &self,
+        ctx: &mut serde_diff::DiffContext<'a, S>,
+        other: &Self,
+    ) -> Result<bool, S::Error> {
+        let mut __changed__ = false;
+        match (self, other) {
+            (Noneable::None, Noneable::None) => {
+                ctx.push_variant("None");
+                ctx.pop_path_element()?;
+            }
+            (Noneable::NotNone(l0), Noneable::NotNone(r0)) => {
+                ctx.push_variant("NotNone");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (_, Noneable::None) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+            (_, Noneable::NotNone(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+        }
+        Ok(__changed__)
+    }
+    fn apply<'de, A>(
+        &mut self,
+        seq: &mut A,
+        ctx: &mut serde_diff::ApplyContext,
+    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
+    where
+        A: serde_diff::_serde::de::SeqAccess<'de>,
+    {
+        let mut __changed__ = false;
+        match (self, ctx.next_path_element(seq)?) {
+            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
+                ctx.read_value(seq, this)?;
+                __changed__ = true;
+            }
+            (&mut Noneable::None, Some(serde_diff::DiffPathElementValue::EnumVariant(variant)))
+                if variant == "None" =>
+            {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            (
+                &mut Noneable::NotNone(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "NotNone" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            _ => ctx.skip_value(seq)?,
+        }
+        Ok(__changed__)
+    }
+}
+
 impl<T: Examples> Examples for Noneable<T> {
     fn examples() -> Vec<Self> {
         T::examples()
