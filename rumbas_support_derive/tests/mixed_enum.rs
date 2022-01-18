@@ -6,15 +6,16 @@ include! {"macros.rs.include"}
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::SerdeDiff;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub enum Test {
     Unit,
     Tuple(TestOverwrite, bool, String),
     Struct { a: f64 },
-    TupleOne(f64),
+    TupleOne(TestOverwrite),
 }
 
 type TestInputs = Vec<Test>;
@@ -22,7 +23,7 @@ type TestInputs = Vec<Test>;
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
 #[input(test)]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -30,7 +31,7 @@ pub struct Test2 {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TestOverwriteInput")]
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, SerdeDiff, PartialEq)]
 ///  Hi there
 pub enum TestOverwrite {
     Unit,
@@ -79,9 +80,17 @@ fn find_missing() {
                 field2: Value::Normal(5.8)
             },
             true,
-            "s".to_owned()
+            "test".to_string()
         ),
         vec!["0.field1"]
+    );
+
+    assert_missing_fields!(
+        TestInput::TupleOne(TestOverwriteInput::Struct {
+            field1: Value::None(),
+            field2: Value::Normal(5.8)
+        },),
+        vec!["field1"]
     );
 }
 

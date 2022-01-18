@@ -9,11 +9,12 @@ use crate::support::translatable::TranslatableString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::convert::Into;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionGroup {
     /// The name
     pub name: TranslatableString,
@@ -46,7 +47,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
@@ -98,7 +99,7 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyRandomSubsetInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct PickingStrategyRandomSubset {
     pub pick_questions: usize,
 }

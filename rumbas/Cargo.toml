@@ -18,6 +18,8 @@ path = "src/lib.rs"
 serde = {version="1.0.110", features=["derive"]}                                
 serde_json = "1.0.53"
 serde_yaml = "0.8.13"
+serde-diff = "0.4.1"
+
 yaml-rust = "0.4"
 numbas = {path="../numbas"}
 regex = "1"

@@ -6,11 +6,11 @@ use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackInput")]
-#[input(test)]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Feedback {
     pub percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
     pub show_name_of_student: bool,
@@ -67,7 +67,7 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ReviewInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Review {
     /// Whether to show score in result overview page
     pub show_score: bool,
@@ -115,7 +115,7 @@ impl ToRumbas<Review> for numbas::exam::feedback::Review {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackMessageInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct FeedbackMessage {
     pub message: String,   //TODO: inputstring or filestring?
     pub threshold: String, //TODO type

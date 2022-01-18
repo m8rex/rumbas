@@ -14,12 +14,13 @@ use crate::support::translatable::TranslatableString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::collections::HashMap;
 
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalExamInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 /// An Exam
 pub struct NormalExam {
     /// All locales for which the exam should be generated

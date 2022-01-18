@@ -1,6 +1,7 @@
 use crate::input::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
@@ -11,6 +12,140 @@ pub enum ValueType<T> {
     Normal(T),
     Invalid(serde_yaml::Value),
 }
+
+impl<T: SerdeDiff + Serialize> serde_diff::SerdeDiff for ValueType<T>
+where
+    T: serde::de::DeserializeOwned,
+{
+    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
+        &self,
+        ctx: &mut serde_diff::DiffContext<'a, S>,
+        other: &Self,
+    ) -> Result<bool, S::Error> {
+        let mut __changed__ = false;
+        match (self, other) {
+            (ValueType::Template(l0), ValueType::Template(r0)) => {
+                ctx.push_variant("Template");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |=
+                            <TemplateString as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (ValueType::Normal(l0), ValueType::Normal(r0)) => {
+                ctx.push_variant("Normal");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (ValueType::Invalid(l0), ValueType::Invalid(r0)) => {
+                ctx.push_variant("Invalid");
+                {
+                    {
+                        ctx.push_field_index(0u16);
+                        __changed__ |= l0 != r0;
+                        ctx.pop_path_element()?;
+                    }
+                }
+                ctx.pop_path_element()?;
+            }
+            (_, ValueType::Template(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+            (_, ValueType::Normal(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+            (_, ValueType::Invalid(r0)) => {
+                ctx.push_full_variant();
+                ctx.save_value(other)?;
+                ctx.pop_path_element()?;
+            }
+        }
+        Ok(__changed__)
+    }
+    fn apply<'de, A>(
+        &mut self,
+        seq: &mut A,
+        ctx: &mut serde_diff::ApplyContext,
+    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
+    where
+        A: serde_diff::_serde::de::SeqAccess<'de>,
+    {
+        let mut __changed__ = false;
+        match (self, ctx.next_path_element(seq)?) {
+            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
+                ctx.read_value(seq, this)?;
+                __changed__ = true;
+            }
+            (
+                &mut ValueType::Template(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "Template" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |=
+                                <TemplateString as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            (
+                &mut ValueType::Normal(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "Normal" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            (
+                &mut ValueType::Invalid(ref mut l0),
+                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
+            ) if variant == "Invalid" => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |= false // NOT WORKING
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            _ => ctx.skip_value(seq)?,
+        }
+        Ok(__changed__)
+    }
+}
+/*
+impl <T: SerdeDiff> SerdeDiff for ValueType<T> {
+    fn diff<'a, S: serde::ser::SerializeSeq>(&self, ctx: &mut serde_diff::DiffContext<'a, S>, other: &Self) -> Result<bool, S::Error> {
+        let mut __changed__ = false;
+        match (self, other) {
+            #(#diff_match_arms)*
+        }
+        Ok(__changed__)
+    }
+    #apply_fn
+}*/
 
 impl<T: Input> InputInverse for ValueType<T> {
     type Input = Self;
@@ -111,6 +246,7 @@ mod value_type_schema {
     use super::{TemplateString, ValueType};
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
+    use serde_diff::SerdeDiff;
 
     #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
     #[serde(untagged)]
@@ -133,6 +269,54 @@ mod value_type_schema {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
+
+impl<T: SerdeDiff + Serialize> serde_diff::SerdeDiff for Value<T>
+where
+    T: serde::de::DeserializeOwned,
+{
+    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
+        &self,
+        ctx: &mut serde_diff::DiffContext<'a, S>,
+        other: &Self,
+    ) -> Result<bool, S::Error> {
+        let mut __changed__ = false;
+        match (self, other) {
+            (Value(l0), Value(r0)) => {
+                ctx.push_field_index(0u16);
+                __changed__ |=
+                    <Option<ValueType<T>> as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
+                ctx.pop_path_element()?;
+            }
+        }
+        Ok(__changed__)
+    }
+    fn apply<'de, A>(
+        &mut self,
+        seq: &mut A,
+        ctx: &mut serde_diff::ApplyContext,
+    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
+    where
+        A: serde_diff::_serde::de::SeqAccess<'de>,
+    {
+        let mut __changed__ = false;
+        match (self) {
+            (&mut Value(ref mut l0)) => {
+                while let Some(element) = ctx.next_path_element(seq)? {
+                    match element {
+                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
+                            __changed__ |= <Option<ValueType<T>> as serde_diff::SerdeDiff>::apply(
+                                l0, seq, ctx,
+                            )?
+                        }
+                        _ => ctx.skip_value(seq)?,
+                    }
+                }
+            }
+            _ => ctx.skip_value(seq)?,
+        }
+        Ok(__changed__)
+    }
+}
 
 impl<T: Input> InputInverse for Value<T> {
     type Input = Self;
@@ -242,7 +426,7 @@ impl<T> Default for Value<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct TemplateString {

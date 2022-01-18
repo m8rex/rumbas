@@ -6,10 +6,10 @@ use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NormalNavigationInput")]
-#[input(test)]
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "mode")]
@@ -80,7 +80,7 @@ impl NormalNavigation {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "SequentialNavigationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct SequentialNavigation {
     /// (flattened field) The data shared between all types of navigation
     #[serde(flatten)]
@@ -112,7 +112,7 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MenuNavigationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MenuNavigation {
     /// (flattened field) The data shared between all types of navigation
     #[serde(flatten)]
@@ -127,7 +127,7 @@ impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticNavigationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct DiagnosticNavigation {
     /// (flattened field) The data shared between all types of navigation
     #[serde(flatten)]
@@ -178,7 +178,7 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ShowResultsPageInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowResultsPage {
     OnCompletion,
@@ -209,7 +209,7 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LeaveActionInput")]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum LeaveAction {
@@ -258,14 +258,14 @@ impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LeaveActionMessageInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct LeaveActionMessage {
     pub message: TranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NavigationSharedDataInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct NavigationSharedData {
     /// Password to begin the exam
     pub start_password: FileString, //TODO: Noneable, but "" is none in this case?
