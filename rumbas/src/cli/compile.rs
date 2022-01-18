@@ -6,10 +6,10 @@ use std::path::PathBuf;
 
 /// The name of the local folder used as cache
 /// It caches the .exam files that are given to Numbas.
-const CACHE_FOLDER: &str = ".rumbas";
+pub const CACHE_FOLDER: &str = ".rumbas";
 
 /// The name of the local folder used for the output.
-const OUTPUT_FOLDER: &str = "_output";
+pub const OUTPUT_FOLDER: &str = "_output";
 
 pub fn compile(matches: &clap::ArgMatches) {
     match compile_internal(matches.to_owned().into(), matches.to_owned().into()) {
