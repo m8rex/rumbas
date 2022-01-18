@@ -59,10 +59,10 @@ fn watch_internal(context: WatchContext) {
     loop {
         match rx.recv() {
             Ok(event) => match event {
-                DebouncedEvent::Create(p) => handler.recompile_dependant(&p), // Shouldn'tdo anything?
-                DebouncedEvent::Write(p) => handler.recompile_dependant(&p),
-                DebouncedEvent::Chmod(p) => handler.recompile_dependant(&p),
-                DebouncedEvent::Remove(p) => handler.recompile_dependant(&p),
+                DebouncedEvent::Create(p) => handle_if_needed(&p, &handler), // Shouldn'tdo anything?
+                DebouncedEvent::Write(p) => handle_if_needed(&p, &handler),
+                DebouncedEvent::Chmod(p) => handle_if_needed(&p, &handler),
+                DebouncedEvent::Remove(p) => handle_if_needed(&p, &handler),
                 DebouncedEvent::Rename(previous, new) => (), // TODO do the rename in the dependencies?
                 _ => (),
             },
@@ -71,12 +71,28 @@ fn watch_internal(context: WatchContext) {
     }
 }
 
+fn to_relative_path(path: &Path) -> std::path::PathBuf {
+    path.strip_prefix(std::env::current_dir().unwrap())
+        .unwrap()
+        .to_owned()
+}
+
+fn handle_if_needed(path: &Path, handler: &Box<dyn WatchHandler>) {
+    let relative_path = to_relative_path(path);
+    if relative_path.starts_with(crate::cli::compile::CACHE_FOLDER) {
+        return ();
+    } else if relative_path.starts_with(crate::cli::compile::OUTPUT_FOLDER) {
+        return ();
+    } else {
+        handler.recompile_dependant(path)
+    }
+}
+
 trait WatchHandler {
     fn handle_setup(&self, path: &str);
     fn handle_file(&self, path: &Path);
     fn recompile_dependant(&self, path: &Path) {
-        // TODO: remove from file cache
-        let relative_path = path.strip_prefix(std::env::current_dir().unwrap()).unwrap();
+        let relative_path = to_relative_path(path);
         let file_data = RumbasRepoFileData::from(&relative_path);
         let relative_path = file_data.dependency_path();
 
