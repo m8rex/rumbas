@@ -121,6 +121,8 @@ jobs:
           git clone https://github.com/numbas/numbas-extension-polynomials.git ~/NUMBAS/extensions/polynomials 
           git clone https://github.com/numbas/numbas-extension-chemistry.git ~/NUMBAS/extensions/chemistry 
           git clone https://github.com/numbas/numbas-extension-linearalgebra.git ~/NUMBAS/extensions/linear-algebra 
+          git clone https://github.com/jhoobergs/numbas-extension-sqlite.git ~/NUMBAS/extensions/sqlite 
+          git clone https://github.com/jhoobergs/numbas-extension-text.git ~/NUMBAS/extensions/text 
           cp -r extensions/written_number ~/NUMBAS/extensions/written-number
           cp -r extensions/graphs ~/NUMBAS/extensions/graphs
           cd ~/NUMBAS && pip install -r requirements.txt

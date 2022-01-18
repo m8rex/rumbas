@@ -100,6 +100,7 @@ extensions! {
         random_person: "random_person",
         stats: "stats",
         sqlite: "sqlite",
+        text: "text",
         written_number: "written-number"
 }
 
