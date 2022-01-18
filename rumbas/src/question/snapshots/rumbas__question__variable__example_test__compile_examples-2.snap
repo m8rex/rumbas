@@ -1,8 +1,0 @@
----
-source: rumbas/src/question/variable.rs
-expression: "&example"
-
----
-- text
-- "template:template_key"
-

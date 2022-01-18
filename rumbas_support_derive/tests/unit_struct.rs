@@ -4,10 +4,11 @@ extern crate rumbas_support_derive;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::SerdeDiff;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct Test;
 
 type TestInputs = Vec<Test>;

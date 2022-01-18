@@ -1,8 +1,0 @@
----
-source: rumbas/src/exam/locale.rs
-expression: "&example"
-
----
-name: ~
-numbas_locale: sv-SE
-

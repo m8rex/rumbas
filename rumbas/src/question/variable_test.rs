@@ -4,11 +4,11 @@ use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariablesTestInput")]
-#[input(test)]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct VariablesTest {
     pub condition: JMEString,
     pub max_runs: usize,

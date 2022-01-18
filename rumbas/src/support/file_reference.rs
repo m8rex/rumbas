@@ -6,6 +6,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::collections::HashMap;
 use std::convert::Into;
 use std::convert::TryInto;
@@ -13,7 +14,7 @@ use std::convert::TryInto;
 /// The prefix used to specify a file reference
 const FILE_PREFIX: &str = "file";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, SerdeDiff)]
 #[serde(untagged)]
 pub enum AnyString {
     Str(String),
@@ -45,7 +46,7 @@ macro_rules! file_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
-            #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq)]
             #[serde(from = "AnyString")]
             #[serde(into = "String")]
             $(
@@ -57,7 +58,7 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, SerdeDiff)]
             #[serde(into = "String")]
             $(
                 #[$outer]

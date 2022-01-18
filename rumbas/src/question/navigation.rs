@@ -4,11 +4,11 @@ use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionNavigationInput")]
-#[input(test)]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionNavigation {
     /// Whether the student can regenerate the question
     /// Old name was `allow_regenerate`

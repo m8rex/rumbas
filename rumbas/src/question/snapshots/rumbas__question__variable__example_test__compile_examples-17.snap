@@ -1,7 +1,0 @@
----
-source: rumbas/src/question/variable.rs
-expression: "&example"
-
----
-"example plain string with placeholders {placeholder1} and {placeholder2}."
-

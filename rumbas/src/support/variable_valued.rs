@@ -5,9 +5,10 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq, JsonSchema)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),

@@ -4,10 +4,11 @@ extern crate rumbas_support_derive;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::SerdeDiff;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub enum Test {
     First,
     Second,
@@ -17,7 +18,7 @@ type TestInputs = Vec<Test>;
 
 #[derive(Input, RumbasCheck)]
 #[input(name = "Test2Input")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,

@@ -1,9 +1,0 @@
----
-source: rumbas/src/question/constants.rs
-expression: "&example"
-
----
-name: "template:template_key"
-value: "template:template_key"
-tex: "template:template_key"
-

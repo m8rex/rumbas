@@ -4,10 +4,11 @@ extern crate rumbas_support_derive;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::SerdeDiff;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct Test {
     field1: bool,
     field2: f64,
@@ -18,7 +19,7 @@ type TestInputs = Vec<Test>;
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
 #[input(test)]
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,

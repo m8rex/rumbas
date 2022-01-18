@@ -1,7 +1,0 @@
----
-source: rumbas/src/question/variable.rs
-expression: "&example"
-
----
-"random(0 .. 1#0.1)"
-
