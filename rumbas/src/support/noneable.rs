@@ -2,6 +2,7 @@ use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Noneable<T> {

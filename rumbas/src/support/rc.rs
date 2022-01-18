@@ -1,7 +1,8 @@
 use crate::RC_FILE_NAME;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, SerdeDiff)]
 /// "Run commands" that specify how this rumbas repo should be executed
 pub struct RC {
     version: String, // TODO ? x.x.x ?

@@ -1,7 +1,0 @@
----
-source: rumbas/src/question/variable.rs
-expression: "&example"
-
----
-"10 .. 1#5"
-

@@ -644,14 +644,39 @@ fn input_handle_enum_find_missing_variants(
                             )
                         })
                         .collect::<Vec<_>>();
-                    quote! {
-                        #input_ident::#variant_ident(#(#items),*) => {
+                    let field_indexes = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _f)| {
+                            let i = syn::Index::from(i);
+                            quote!(#i)
+                        })
+                        .collect::<Vec<_>>();
+                    let results = if field_indexes.len() > 1 {
+                        quote! {
                             let mut result = InputCheckResult::empty();
                             #(
-                                let mut previous_result = #items.find_missing();
+                            let mut previous_result = #items.find_missing();
+                            previous_result.extend_path(stringify!(#field_indexes).to_string());
+                            result.union(&previous_result);
+                            )*
+                            result
+                        }
+                    } else {
+                        quote! {
+                            let mut result = InputCheckResult::empty();
+                            #(
+                                let previous_result = #items.find_missing();
                                 result.union(&previous_result);
                             )*
                             result
+                        }
+                    };
+                    quote! {
+                        #input_ident::#variant_ident(#(#items),*) => {
+                            #results
                         }
                     }
                 }

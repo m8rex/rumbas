@@ -25,13 +25,14 @@ use crate::support::yaml::YamlError;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::path::Path;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ExamInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum Exam {
@@ -184,7 +185,7 @@ impl Display for FileReadError {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "ExamFileTypeInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum ExamFileType {

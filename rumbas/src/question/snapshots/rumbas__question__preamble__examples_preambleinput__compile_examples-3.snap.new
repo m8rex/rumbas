@@ -1,8 +1,0 @@
----
-source: rumbas/src/question/preamble.rs
-expression: "&example"
-
----
-js: ~
-css: ~
-

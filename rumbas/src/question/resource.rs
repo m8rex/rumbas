@@ -3,6 +3,7 @@ use crate::support::to_rumbas::ToRumbas;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
@@ -13,8 +14,7 @@ use std::path::PathBuf;
 // TODO: fix ovewrite?
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "ResourcePathInput")]
-#[input(test)]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct ResourcePath {

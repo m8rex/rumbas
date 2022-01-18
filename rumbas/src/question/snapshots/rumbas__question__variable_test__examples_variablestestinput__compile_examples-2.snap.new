@@ -1,8 +1,0 @@
----
-source: rumbas/src/question/variable_test.rs
-expression: "&example"
-
----
-condition: "template:template_key"
-max_runs: "template:template_key"
-

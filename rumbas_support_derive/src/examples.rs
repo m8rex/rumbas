@@ -379,9 +379,9 @@ impl ToTokens for ExamplesReceiver {
                         for example in <#input_ident>::examples().into_iter() {
                             let item = serde_yaml::to_string(&example);
                             if let Err(ref e) = item {
-                                println!("Examples {:?}", example);
+                                println!("Examples {:#?}", example);
                                 println!("Error: {:#?}", e);
-                                println!("Caused by: {:?}", e.source());
+                                println!("Caused by: {:#?}", e.source());
 
                             }
                             assert!(item.is_ok());
@@ -391,11 +391,16 @@ impl ToTokens for ExamplesReceiver {
                                 if "No field is set to a not-none value." == &e.to_string()[..] {
                                     continue;
                                 }
-                                println!("Input: {:?}", item);
-                                println!("Error: {:?}", e);
+                                println!("Input: {:#?}", item);
+                                println!("Error: {:#?}", e);
                             }
                             assert!(parsed.is_ok());
-                            assert_eq!(example, parsed.unwrap());
+                            let parsed = parsed.unwrap();
+                            let diff = serde_diff::Diff::serializable(&example, &parsed);
+                            println!("Diff: \n {:#?}", serde_yaml::to_string(&diff));
+                            assert!(!diff.has_changes());
+                            // Should not fail anymore
+                            assert_eq!(example, parsed);
                             insta::with_settings!({sort_maps => true}, {
                                 insta::assert_yaml_snapshot!(&example);
                             });

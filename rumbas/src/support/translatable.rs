@@ -7,6 +7,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::collections::HashMap;
 use std::convert::TryInto;
 
@@ -206,7 +207,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TranslationContentInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum TranslationContent {
     Locales(HashMap<String, FileString>),
@@ -224,7 +225,7 @@ impl TranslationContent {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TranslationInput")]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Translation {
     content: TranslationContent,
     placeholders: HashMap<String, Translation>,
@@ -348,7 +349,7 @@ macro_rules! translatable_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
-            #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
             #[serde(untagged)]
             pub enum [<$type Input>] {
                 //TODO: custom reader that checks for missing values etc?
@@ -394,7 +395,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, SerdeDiff)]
             #[serde(untagged)]
             pub enum $type {
                 //TODO: custom reader that checks for missing values etc?

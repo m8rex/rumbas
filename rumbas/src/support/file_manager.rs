@@ -654,13 +654,13 @@ impl RumbasRepoFolderType {
 macro_rules! create_from_string_type {
     ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal, $combine: expr, $filename_field: ident) => {
         // TODO: remove this JsonSchema
-        #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+        #[derive(Debug, Clone, Serialize, Deserialize, SerdeDiff, JsonSchema)]
         #[serde(into = "String")]
         pub struct $t {
             pub file_name: String,
             pub data: $data,
         }
-        #[derive(Serialize, Deserialize, Debug, Clone)]
+        #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone)]
         #[serde(from = "String")]
         #[serde(into = "String")]
         pub struct $ti {

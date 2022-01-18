@@ -13,12 +13,13 @@ use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 use std::convert::Into;
 
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartChooseMultipleInput")]
-    #[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartChooseMultiple {
         /// Old name was `answers`
         #[serde(alias = "answers")]

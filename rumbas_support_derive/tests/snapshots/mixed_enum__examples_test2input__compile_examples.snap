@@ -39,7 +39,23 @@ field1:
       a: "template:template_key"
   - Struct:
       a: ~
-  - TupleOne: 1.2
+  - TupleOne: Unit
+  - TupleOne:
+      Tuple:
+        - false
+        - 1.2
+  - TupleOne:
+      Struct:
+        field1: false
+        field2: 1.2
+  - TupleOne:
+      Struct:
+        field1: "template:template_key"
+        field2: "template:template_key"
+  - TupleOne:
+      Struct:
+        field1: ~
+        field2: ~
   - "template:template_key"
 field2: 1.2
 

@@ -4,12 +4,12 @@ use crate::support::to_rumbas::ToRumbas;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use serde_diff::{Apply, Diff, SerdeDiff};
 
 // TODO: maybe translatable? So different text's can be set for different languages?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PreambleInput")]
-#[input(test)]
-#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Preamble {
     /// The JavaScript to add to the outputfiles
     pub js: FileString,
