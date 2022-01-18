@@ -7,14 +7,14 @@ use regex::Regex;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 use std::convert::TryFrom;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableRepresentationInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
     ListOfNumbers(Vec<f64>),
@@ -150,7 +150,7 @@ impl VariableRepresentation {
 
 #[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
 #[input(name = "VariableStringRepresentationInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
 #[serde(from = "String")]
 #[serde(into = "String")]
 pub enum VariableStringRepresentation {
@@ -215,7 +215,7 @@ impl std::convert::From<VariableStringRepresentationInput> for String {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "RangeDataInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct RangeData {
     pub from: f64,
     pub to: f64,
@@ -371,7 +371,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Variable {
     pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
     pub description: String,
@@ -416,7 +416,7 @@ impl Variable {
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
     /// Not specified

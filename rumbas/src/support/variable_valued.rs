@@ -1,11 +1,11 @@
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use comparable::Comparable;
 use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
 
 //TODO use derive for Input & overwrite
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
@@ -15,93 +15,45 @@ pub enum VariableValued<T> {
     Value(T),
 }
 
-impl<T: SerdeDiff + Serialize + DeserializeOwned> serde_diff::SerdeDiff for VariableValued<T> {
-    fn diff<'a, S: serde_diff::_serde::ser::SerializeSeq>(
-        &self,
-        ctx: &mut serde_diff::DiffContext<'a, S>,
-        other: &Self,
-    ) -> Result<bool, S::Error> {
-        let mut __changed__ = false;
-        match (self, other) {
-            (VariableValued::Variable(l0), VariableValued::Variable(r0)) => {
-                ctx.push_variant("Variable");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |= <JMEString as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (VariableValued::Value(l0), VariableValued::Value(r0)) => {
-                ctx.push_variant("Value");
-                {
-                    {
-                        ctx.push_field_index(0u16);
-                        __changed__ |= <T as serde_diff::SerdeDiff>::diff(&l0, ctx, &r0)?;
-                        ctx.pop_path_element()?;
-                    }
-                }
-                ctx.pop_path_element()?;
-            }
-            (_, VariableValued::Variable(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
-            (_, VariableValued::Value(r0)) => {
-                ctx.push_full_variant();
-                ctx.save_value(other)?;
-                ctx.pop_path_element()?;
-            }
+#[derive(PartialEq, Debug)]
+pub enum VariableValuedDesc<T: Comparable + PartialEq + std::fmt::Debug> {
+    Variable(<JMEString as comparable::Comparable>::Desc),
+    Value(<T as comparable::Comparable>::Desc),
+}
+
+#[derive(PartialEq, Debug)]
+pub enum VariableValuedChange<T: Comparable + PartialEq + std::fmt::Debug> {
+    BothVariable(<JMEString as comparable::Comparable>::Change),
+    BothValue(<T as comparable::Comparable>::Change),
+    Different(
+        <VariableValued<T> as comparable::Comparable>::Desc,
+        <VariableValued<T> as comparable::Comparable>::Desc,
+    ),
+}
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for VariableValued<T> {
+    type Desc = VariableValuedDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        match self {
+            VariableValued::Variable(var0) => VariableValuedDesc::Variable(var0.describe()),
+            VariableValued::Value(var0) => VariableValuedDesc::Value(var0.describe()),
         }
-        Ok(__changed__)
     }
-    fn apply<'de, A>(
-        &mut self,
-        seq: &mut A,
-        ctx: &mut serde_diff::ApplyContext,
-    ) -> Result<bool, <A as serde_diff::_serde::de::SeqAccess<'de>>::Error>
-    where
-        A: serde_diff::_serde::de::SeqAccess<'de>,
-    {
-        let mut __changed__ = false;
-        match (self, ctx.next_path_element(seq)?) {
-            (this, Some(serde_diff::DiffPathElementValue::FullEnumVariant)) => {
-                ctx.read_value(seq, this)?;
-                __changed__ = true;
+    type Change = VariableValuedChange<T>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        match (self, other) {
+            (VariableValued::Variable(self_var0), VariableValued::Variable(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| VariableValuedChange::BothVariable(changes_var0))
             }
-            (
-                &mut VariableValued::Variable(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "Variable" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |=
-                                <JMEString as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
+            (VariableValued::Value(self_var0), VariableValued::Value(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| VariableValuedChange::BothValue(changes_var0))
             }
-            (
-                &mut VariableValued::Value(ref mut l0),
-                Some(serde_diff::DiffPathElementValue::EnumVariant(variant)),
-            ) if variant == "Value" => {
-                while let Some(element) = ctx.next_path_element(seq)? {
-                    match element {
-                        serde_diff::DiffPathElementValue::FieldIndex(0u16) => {
-                            __changed__ |= <T as serde_diff::SerdeDiff>::apply(l0, seq, ctx)?
-                        }
-                        _ => ctx.skip_value(seq)?,
-                    }
-                }
-            }
-            _ => ctx.skip_value(seq)?,
+            (_, _) => comparable::Changed::Changed(VariableValuedChange::Different(
+                self.describe(),
+                other.describe(),
+            )),
         }
-        Ok(__changed__)
     }
 }
 

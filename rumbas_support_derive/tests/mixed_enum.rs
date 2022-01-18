@@ -3,14 +3,14 @@ extern crate rumbas_support_derive;
 
 include! {"macros.rs.include"}
 
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_diff::SerdeDiff;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
 pub enum Test {
     Unit,
     Tuple(TestOverwrite, bool, String),
@@ -23,7 +23,7 @@ type TestInputs = Vec<Test>;
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "Test2Input")]
 #[input(test)]
-#[derive(Clone, Debug, Deserialize, Serialize, SerdeDiff, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
 pub struct Test2 {
     field1: TestInputs,
     field2: f64,
@@ -31,7 +31,7 @@ pub struct Test2 {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TestOverwriteInput")]
-#[derive(Debug, Clone, Deserialize, Serialize, SerdeDiff, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, Comparable, PartialEq)]
 ///  Hi there
 pub enum TestOverwrite {
     Unit,

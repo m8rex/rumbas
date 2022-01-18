@@ -5,3 +5,8 @@ members = [
   "rumbas_support",
   "rumbas_support_derive",
 ]
+
+[patch.crates-io]
+comparable = { git = "https://github.com/jhoobergs/comparable.git" }
+
+

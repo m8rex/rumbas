@@ -31,7 +31,7 @@ use resource::ResourcePath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 use std::collections::HashMap;
 use std::path::Path;
 use std::path::PathBuf;
@@ -42,7 +42,7 @@ use variable_test::VariablesTest;
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionInput")]
 #[input(test)]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Question {
     /// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
     pub statement: ContentAreaTranslatableString,
@@ -187,7 +187,7 @@ impl QuestionInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionFileTypeInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum QuestionFileType {

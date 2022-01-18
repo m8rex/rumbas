@@ -12,6 +12,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ansi_term"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d52a9bb7ec0cf484c551830a7ce27bd20d67eac647e1befb56b0be4ee39a55d2"
+dependencies = [
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -103,7 +112,7 @@ dependencies = [
  "indexmap",
  "lazy_static",
  "os_str_bytes",
- "strsim 0.10.0",
+ "strsim",
  "termcolor",
  "textwrap",
  "yaml-rust",
@@ -121,6 +130,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "comparable"
+version = "0.5.1"
+source = "git+https://github.com/jhoobergs/comparable.git#94460a7115511d32195ce0eac7a08b2929abc4da"
+dependencies = [
+ "comparable_derive",
+ "comparable_helper",
+ "pretty_assertions",
+ "serde",
+]
+
+[[package]]
+name = "comparable_derive"
+version = "0.5.1"
+source = "git+https://github.com/jhoobergs/comparable.git#94460a7115511d32195ce0eac7a08b2929abc4da"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "comparable_helper"
+version = "0.5.1"
+source = "git+https://github.com/jhoobergs/comparable.git#94460a7115511d32195ce0eac7a08b2929abc4da"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "console"
 version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -132,6 +174,12 @@ dependencies = [
  "terminal_size",
  "winapi 0.3.9",
 ]
+
+[[package]]
+name = "convert_case"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6245d59a3e82a7fc217c5828a6692dbc6dfb63a0c8c90495621f7b9d79704a0e"
 
 [[package]]
 name = "crossbeam-channel"
@@ -178,13 +226,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "darling"
-version = "0.10.2"
+name = "ctor"
+version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d706e75d87e35569db781a9b5e2416cff1236a47ed380831f959382ccd5f858"
+checksum = "ccc0a48a9b826acdf4028595adc9db92caea352f7af011a3034acd172a52a0aa"
 dependencies = [
- "darling_core 0.10.2",
- "darling_macro 0.10.2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -193,22 +241,8 @@ version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "757c0ded2af11d8e739c4daea1ac623dd1624b06c844cf3f5a39f1bdbd99bb12"
 dependencies = [
- "darling_core 0.13.0",
- "darling_macro 0.13.0",
-]
-
-[[package]]
-name = "darling_core"
-version = "0.10.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f0c960ae2da4de88a91b2d920c2a7233b400bc33cb28453a2987822d8392519b"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2",
- "quote",
- "strsim 0.9.3",
- "syn",
+ "darling_core",
+ "darling_macro",
 ]
 
 [[package]]
@@ -221,18 +255,7 @@ dependencies = [
  "ident_case",
  "proc-macro2",
  "quote",
- "strsim 0.10.0",
- "syn",
-]
-
-[[package]]
-name = "darling_macro"
-version = "0.10.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9b5a2f4ac4969822c62224815d069952656cadc7084fdca9751e6d959189b72"
-dependencies = [
- "darling_core 0.10.2",
- "quote",
+ "strsim",
  "syn",
 ]
 
@@ -242,10 +265,16 @@ version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ade7bff147130fe5e6d39f089c6bd49ec0250f35d70b2eebf72afdfc919f15cc"
 dependencies = [
- "darling_core 0.13.0",
+ "darling_core",
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "diff"
+version = "0.1.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e25ea47919b1560c4e3b7fe0aaab9becf5b84a10325ddf7db0f0ba5e1026499"
 
 [[package]]
 name = "digest"
@@ -620,12 +649,12 @@ dependencies = [
 name = "numbas"
 version = "0.1.0"
 dependencies = [
+ "comparable",
  "log",
  "pest",
  "pest_derive",
  "schemars",
  "serde",
- "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_json",
  "serde_plain",
  "serde_with",
@@ -645,6 +674,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e22443d1643a904602595ba1cd8f7d896afe56d26712531c5ff73a15b2fbf64"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "output_vt100"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53cdc5b785b7a58c5aad8216b3dfa114df64b0b06ae6e1501cef91df2fbdf8f9"
+dependencies = [
+ "winapi 0.3.9",
 ]
 
 [[package]]
@@ -694,6 +732,18 @@ dependencies = [
  "maplit",
  "pest",
  "sha-1",
+]
+
+[[package]]
+name = "pretty_assertions"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec0cfe1b2403f172ba0f234e500906ee0a3e493fb81092dac23ebefe129301cc"
+dependencies = [
+ "ansi_term",
+ "ctor",
+ "diff",
+ "output_vt100",
 ]
 
 [[package]]
@@ -771,6 +821,7 @@ version = "0.5.0-rc"
 dependencies = [
  "chrono",
  "clap",
+ "comparable",
  "enum-display-derive",
  "fern",
  "insta",
@@ -785,7 +836,6 @@ dependencies = [
  "sanitize-filename",
  "schemars",
  "serde",
- "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_json",
  "serde_yaml",
  "yaml-rust",
@@ -795,12 +845,12 @@ dependencies = [
 name = "rumbas_support"
 version = "0.1.0"
 dependencies = [
+ "comparable",
  "log",
  "numbas",
  "rumbas_support_derive",
  "schemars",
  "serde",
- "serde-diff 0.4.1 (git+https://github.com/jhoobergs/serde-diff)",
  "serde_yaml",
 ]
 
@@ -808,13 +858,13 @@ dependencies = [
 name = "rumbas_support_derive"
 version = "0.1.0"
 dependencies = [
- "darling 0.13.0",
+ "comparable",
+ "darling",
  "insta",
  "proc-macro2",
  "quote",
  "rumbas_support",
  "serde",
- "serde-diff 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_yaml",
  "syn",
 ]
@@ -888,50 +938,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde-diff"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b956d904dea556a339d23adeaaf0e672275a030ba78ce0db644781c2756c5ea"
-dependencies = [
- "serde",
- "serde-diff-derive 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_derive",
-]
-
-[[package]]
-name = "serde-diff"
-version = "0.4.1"
-source = "git+https://github.com/jhoobergs/serde-diff#9eeff6caf69b99f0ccf0220411d90b32d8e1d4d6"
-dependencies = [
- "serde",
- "serde-diff-derive 0.4.0 (git+https://github.com/jhoobergs/serde-diff)",
- "serde_derive",
-]
-
-[[package]]
-name = "serde-diff-derive"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "692563b61324ae1568e2884c7a6385ab4b95f13063fd31a6b702d5cbc5c456df"
-dependencies = [
- "darling 0.10.2",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "serde-diff-derive"
-version = "0.4.0"
-source = "git+https://github.com/jhoobergs/serde-diff#9eeff6caf69b99f0ccf0220411d90b32d8e1d4d6"
-dependencies = [
- "darling 0.10.2",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "serde_derive"
 version = "1.0.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -990,7 +996,7 @@ version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "12e47be9471c72889ebafb5e14d5ff930d89ae7a67bbdb5f8abb564f845a927e"
 dependencies = [
- "darling 0.13.0",
+ "darling",
  "proc-macro2",
  "quote",
  "syn",
@@ -1044,12 +1050,6 @@ name = "slab"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9def91fd1e018fe007022791f865d0ccc9b3a0d5001e01aabb8b40e46000afb5"
-
-[[package]]
-name = "strsim"
-version = "0.9.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6446ced80d6c486436db5c078dde11a9f73d42b57fb273121e160b84f63d894c"
 
 [[package]]
 name = "strsim"

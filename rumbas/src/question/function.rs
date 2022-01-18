@@ -4,11 +4,11 @@ use crate::support::translatable::{JMETranslatableString, TranslatableString};
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Function {
     // TODO: don't directly use numbas type
     pub parameters: Vec<(String, FunctionType)>,
@@ -39,7 +39,7 @@ impl ToRumbas<Function> for numbas::question::function::Function {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "language")]
 pub enum FunctionDefinition {
     #[serde(rename = "jme")]
@@ -82,21 +82,21 @@ impl ToRumbas<FunctionDefinition> for numbas::question::function::FunctionDefini
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionJMEInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct FunctionDefinitionJME {
     pub definition: JMETranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionDefinitionJavascriptInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct FunctionDefinitionJavascript {
     pub definition: TranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FunctionTypeInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum FunctionType {
     Boolean,

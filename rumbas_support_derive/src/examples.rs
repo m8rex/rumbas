@@ -396,9 +396,7 @@ impl ToTokens for ExamplesReceiver {
                             }
                             assert!(parsed.is_ok());
                             let parsed = parsed.unwrap();
-                            let diff = serde_diff::Diff::serializable(&example, &parsed);
-                            println!("Diff: \n {:#?}", serde_yaml::to_string(&diff));
-                            assert!(!diff.has_changes());
+                            comparable::assert_changes!(&example, &parsed, comparable::Changed::Unchanged);
                             // Should not fail anymore
                             assert_eq!(example, parsed);
                             insta::with_settings!({sort_maps => true}, {

@@ -10,14 +10,14 @@ use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
+use comparable::Comparable;
 use std::convert::Into;
 
 //TODO: defaults
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartChooseOneInput")]
-    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartChooseOne {
         /// Old name was `answers`
         #[serde(alias = "answers")]
@@ -100,7 +100,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ChooseOneDisplayInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "type")]
 pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]

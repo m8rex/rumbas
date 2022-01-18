@@ -1,7 +1,7 @@
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
 use std::collections::HashMap;
 
 pub const TEMPLATE_PREFIX: &str = "template";
@@ -9,12 +9,12 @@ pub const TEMPLATE_PREFIX: &str = "template";
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TemplateFileInput")]
 #[input(no_examples)]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
     pub relative_template_path: String,
     #[serde(flatten)]
-    #[serde_diff(skip)]
+    #[comparable_ignore]
     pub data: HashMap<String, MyYamlValue>,
 }
 

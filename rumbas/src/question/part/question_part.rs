@@ -12,15 +12,15 @@ use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_diff::{Apply, Diff, SerdeDiff};
 use std::convert::TryInto;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum QuestionPart {
     Builtin(QuestionPartBuiltin),
@@ -64,7 +64,7 @@ impl QuestionPartInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartBuiltinInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "type")]
 pub enum QuestionPartBuiltin {
     #[serde(rename = "jme")]
@@ -184,7 +184,7 @@ impl QuestionPartBuiltinInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENotesInput")]
-#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, SerdeDiff, PartialEq)]
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq)]
 pub struct JMENotes(pub Vec<JMENote>);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
@@ -236,7 +236,7 @@ impl Default for JMENotes {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENoteInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMENote {
     pub name: String,
     pub description: Noneable<String>,
@@ -333,16 +333,17 @@ macro_rules! question_part_type {
 question_part_type! {
     #[derive(Input, Overwrite, RumbasCheck, Examples)]
     #[input(name = "QuestionPartCustomInput")]
-    #[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartCustom {
-        r#type: String,
+        #[serde(rename="type")]
+        type_name: String, // Renamed because of bug in Comparable
         settings: std::collections::HashMap<String, CustomPartInputTypeValue>
     }
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartInputTypeValueInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
@@ -379,7 +380,7 @@ impl ToNumbas<numbas::question::part::QuestionPartCustom> for QuestionPartCustom
     fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartCustom {
         numbas::question::part::QuestionPartCustom {
             part_data: self.to_numbas(locale),
-            r#type: self.r#type.to_numbas(locale),
+            r#type: self.type_name.to_numbas(locale),
             settings: self.settings.to_numbas(locale),
         }
     }
@@ -409,7 +410,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
             ),
             steps: extract_part_common_steps(&self.part_data),
 
-            r#type: self.r#type.clone(),
+            type_name: self.r#type.clone(),
             settings: self.settings.to_rumbas(),
         }
     }
@@ -417,7 +418,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableReplacementStrategyInput")]
-#[derive(Serialize, Deserialize, SerdeDiff, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
     OriginalFirst,
