@@ -2,12 +2,12 @@ use crate::support::file_reference::AnyString;
 use crate::support::file_reference::FileString;
 use crate::support::file_reference::FileStringInput;
 use crate::support::to_numbas::ToNumbas;
+use comparable::Comparable;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMENotesString, JMEString};
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 use std::collections::HashMap;
 use std::convert::TryInto;
 

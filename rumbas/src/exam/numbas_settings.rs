@@ -1,7 +1,7 @@
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumbasSettingsInput")]
