@@ -1,0 +1,50 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+
+---
+statement:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+advice:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+parts: ~
+builtin_constants: "template:template_key"
+custom_constants: ~
+variables:
+  nonjmetext§: "random(0 .. 1#0.1)"
+variables_test: "template:template_key"
+functions:
+  nonjmetext§:
+    definition: "file:path/to/file"
+    language: javascript
+    output_type: matrix
+    parameters: ~
+preamble: "template:template_key"
+navigation: "template:template_key"
+extensions: "template:template_key"
+diagnostic_topic_names: ~
+resources: ~
+custom_part_types: ~
+

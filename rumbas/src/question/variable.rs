@@ -1,4 +1,5 @@
 use crate::support::file_reference::FileString;
+use crate::support::file_reference::FILE_PREFIX;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -152,7 +153,7 @@ impl VariableRepresentation {
 #[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
 #[input(name = "VariableStringRepresentationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
-#[serde(from = "String")]
+#[serde(try_from = "String")]
 #[serde(into = "String")]
 pub enum VariableStringRepresentation {
     Anything(JMEString),
@@ -175,24 +176,29 @@ impl JsonSchema for VariableStringRepresentationInput {
     }
 }
 
-impl std::convert::From<String> for VariableStringRepresentation {
-    fn from(s: String) -> Self {
-        if let Some(r) = RangeData::try_from_range(&s) {
-            VariableStringRepresentation::Range(r)
-        } else if let Some(r) = RangeData::try_from_random_range(&s) {
-            VariableStringRepresentation::RandomRange(r)
-        } else if let Ok(r) = JMEString::try_from(s.clone()) {
-            VariableStringRepresentation::Anything(r)
+impl std::convert::TryFrom<String> for VariableStringRepresentation {
+    type Error = &'static str;
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        if s.starts_with(&format!("{}:", FILE_PREFIX)[..]) {
+            Err("can't start with file:")
         } else {
-            VariableStringRepresentation::String(s)
+            Ok(if let Some(r) = RangeData::try_from_range(&s) {
+                VariableStringRepresentation::Range(r)
+            } else if let Some(r) = RangeData::try_from_random_range(&s) {
+                VariableStringRepresentation::RandomRange(r)
+            } else if let Ok(r) = JMEString::try_from(s.clone()) {
+                VariableStringRepresentation::Anything(r)
+            } else {
+                VariableStringRepresentation::String(s)
+            })
         }
     }
 }
 
-impl std::convert::From<String> for VariableStringRepresentationInput {
-    fn from(s: String) -> Self {
-        let v = VariableStringRepresentation::from(s);
-        Self::from_normal(v)
+impl std::convert::TryFrom<String> for VariableStringRepresentationInput {
+    type Error = &'static str;
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        VariableStringRepresentation::try_from(s).map(Self::from_normal)
     }
 }
 

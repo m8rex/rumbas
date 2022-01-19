@@ -1,0 +1,69 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+
+---
+statement: ~
+advice: ~
+parts: ~
+builtin_constants:
+  e: ~
+  pi: ~
+  i: ~
+custom_constants: ~
+variables:
+  nonjmetext§:
+    definition: "template:template_key"
+    description: "template:template_key"
+    template_type: list_of_numbers
+    group: "template:template_key"
+variables_test:
+  condition: ~
+  max_runs: ~
+functions:
+  nonjmetext§:
+    definition:
+      content: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    language: javascript
+    output_type: "template:template_key"
+    parameters: ~
+preamble:
+  js: ~
+  css: ~
+navigation:
+  can_regenerate: ~
+  show_title_page: ~
+  confirm_when_leaving: ~
+extensions:
+  chemistry: ~
+  download_text_file: ~
+  eukleides: ~
+  geogebra: ~
+  graphs: ~
+  jsx_graph: ~
+  linear_algebra: ~
+  linear_codes: ~
+  optimisation: ~
+  permutations: ~
+  polynomials: ~
+  quantities: ~
+  random_person: ~
+  stats: ~
+  sqlite: ~
+  text: ~
+  written_number: ~
+diagnostic_topic_names: ~
+resources: ~
+custom_part_types: ~
+

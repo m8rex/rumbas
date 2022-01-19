@@ -1,18 +1,18 @@
 use crate::support::file_manager::{FileToRead, TextFileToRead};
 use crate::support::input_string::InputString;
 use crate::support::to_numbas::ToNumbas;
+use comparable::Comparable;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 use std::collections::HashMap;
 use std::convert::Into;
 use std::convert::TryInto;
 
 /// The prefix used to specify a file reference
-const FILE_PREFIX: &str = "file";
+pub const FILE_PREFIX: &str = "file";
 
 #[derive(Serialize, Deserialize, Comparable)]
 #[serde(untagged)]
@@ -70,7 +70,7 @@ macro_rules! file_type {
             }
             impl Examples for [<$type Input>] {
                 fn examples() -> Vec<Self> {
-                    vec![AnyString::from("example plain string with placeholders {placeholder1} and {placeholder2}.").into()] // TODO file: string
+                    vec![Self { file_name: Some("path/to/file".to_string()), content: None, translated_content: Default::default(), error_message: None }] // TODO file: string
                 }
             }
             impl Examples for $type {
@@ -197,10 +197,13 @@ macro_rules! file_type {
             // file references
             impl std::convert::From<[<$type Input>]> for String {
                 fn from(fs: [<$type Input>]) -> Self {
-                    if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
-                        panic!("Deserializing FileRef only supported when plain String")
+                    if let Some(file_name) = fs.file_name {
+                        format!("{}:{}", FILE_PREFIX, file_name)
+                    } else if let Some(content) = fs.content {
+                        content.into()
+                    } else {
+                        panic!("Deserializing FileRef only supported when plain String or filename")
                     }
-                    fs.content.unwrap().into()
                 }
             }
 
@@ -208,10 +211,13 @@ macro_rules! file_type {
             // file references
             impl std::convert::From<[<$type>]> for String {
                 fn from(fs: [<$type>]) -> Self {
-                    if fs.file_name.is_some() || !fs.translated_content.is_empty() || fs.content.is_none() {
-                        panic!("Deserializing FileRef only supported when plain String")
+                    if let Some(file_name) = fs.file_name {
+                        format!("{}:{}", FILE_PREFIX, file_name)
+                    } else if let Some(content) = fs.content {
+                        content.into()
+                    } else {
+                        panic!("Deserializing FileRef only supported when plain String or filename")
                     }
-                    fs.content.unwrap().into()
                 }
             }
 

@@ -1,0 +1,26 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+
+---
+statement: "template:template_key"
+advice: "template:template_key"
+parts: "template:template_key"
+builtin_constants: ~
+custom_constants: "template:template_key"
+variables:
+  nonjmetext§: "0 .. 1#0.1"
+variables_test: ~
+functions:
+  nonjmetext§:
+    definition: "template:template_key"
+    language: jme
+    output_type: html
+    parameters: "template:template_key"
+preamble: ~
+navigation: ~
+extensions: ~
+diagnostic_topic_names: "template:template_key"
+resources: "template:template_key"
+custom_part_types: ~
+
