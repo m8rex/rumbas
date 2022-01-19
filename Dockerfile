@@ -3,6 +3,8 @@ FROM rust:1.55.0-slim as builder
 WORKDIR /usr/app
 RUN rustup target add x86_64-unknown-linux-musl
 
+# Copy workspace
+COPY Cargo.toml Cargo.toml
 RUN mkdir numbas
 COPY numbas/Cargo* numbas/
 COPY numbas/src numbas/src
@@ -208,7 +210,7 @@ RUN mkdir -p extensions/eukleides
 COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numbas/extensions/eukleides
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
-COPY --from=builder /usr/app/rumbas/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas
+COPY --from=builder /usr/app/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas
 WORKDIR /usr/app
 COPY entrypoint.sh .
 WORKDIR /rumbas
