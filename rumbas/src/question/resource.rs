@@ -1,9 +1,9 @@
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;

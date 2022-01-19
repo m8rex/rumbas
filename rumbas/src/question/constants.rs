@@ -1,11 +1,11 @@
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use comparable::Comparable;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 /// Macro used to make sure that the ToNumbas & ToRumbas implementation remain up to data
 macro_rules! builtin_constants {

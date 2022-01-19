@@ -1,6 +1,6 @@
 use crate::RC_FILE_NAME;
-use serde::{Deserialize, Serialize};
 use comparable::Comparable;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Comparable)]
 /// "Run commands" that specify how this rumbas repo should be executed
