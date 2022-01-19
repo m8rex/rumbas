@@ -5,10 +5,10 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::variable_valued::VariableValued;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 use std::convert::Into;
 
 pub mod choose_multiple;

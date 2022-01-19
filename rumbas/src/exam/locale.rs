@@ -1,8 +1,8 @@
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LocaleInput")]

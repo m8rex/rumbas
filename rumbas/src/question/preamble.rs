@@ -1,10 +1,10 @@
 use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 // TODO: maybe translatable? So different text's can be set for different languages?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]

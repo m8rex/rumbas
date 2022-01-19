@@ -1,7 +1,7 @@
+use comparable::Comparable;
 use regex::Regex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 /// The datatype for the input strings
 ///

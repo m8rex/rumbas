@@ -2,11 +2,11 @@ use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use comparable::Comparable;
 use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackInput")]
