@@ -1,8 +1,0 @@
----
-source: rumbas/src/question/part/jme.rs
-expression: "&example"
-
----
-partial_credit: "template:template_key"
-message: "template:template_key"
-

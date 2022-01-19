@@ -1,8 +1,0 @@
----
-source: rumbas/src/support/template.rs
-expression: "&example"
-
----
-key: value
-template: templatefile
-
