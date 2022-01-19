@@ -2,12 +2,12 @@ use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use comparable::Comparable;
 use numbas::jme::JMEString;
 use regex::Regex;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 use std::convert::TryFrom;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
@@ -17,7 +17,8 @@ pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum VariableRepresentation {
-    ListOfNumbers(Vec<f64>),
+    //ListOfNumbers(Vec<f64>), not used for now, impossible to find difference with ListOfStrings
+    //because of templating and invalid: TODO
     ListOfStrings(Vec<String>),
     Number(f64),
     Other(VariableStringRepresentation),
@@ -25,7 +26,7 @@ pub enum VariableRepresentation {
     Long(Box<Variable>),
 }
 // TODO remove or from attribute
-#[cfg(test)]
+/*#[cfg(test)]
 mod example_test {
     use super::VariableRepresentationInput;
     use super::VariableStringRepresentationInput;
@@ -82,7 +83,7 @@ mod example_test {
             };
         }
     }
-}
+}*/
 
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
     fn to_numbas_with_name(
@@ -118,10 +119,10 @@ impl VariableRepresentation {
                 VariableTemplateType::ListOfStrings,
                 &serde_json::to_string(&l).unwrap(),
             ),
-            VariableRepresentation::ListOfNumbers(l) => Variable::ungrouped(
+            /*VariableRepresentation::ListOfNumbers(l) => Variable::ungrouped(
                 VariableTemplateType::ListOfNumbers,
                 &serde_json::to_string(&l).unwrap(),
-            ),
+            ),*/
             VariableRepresentation::Long(v) => *(v.clone()),
             VariableRepresentation::Number(n) => {
                 Variable::ungrouped(VariableTemplateType::Number, &n.to_string())
@@ -263,13 +264,15 @@ impl Examples for RangeDataInput {
 
 impl RangeData {
     pub fn try_from_range(s: &str) -> Option<RangeData> {
-        let re = Regex::new(r"^(\d+(?:\.\d*)?)\s*\.\.\s*(\d+(?:\.\d*)?)(\#(\d+(?:\.\d*)?))?$")
-            .expect("It to be a valid regex");
+        let re = Regex::new(
+            r"^((-)?\d+(?:\.\d*)?)\s*\.\.\s*((-)?\d+(?:\.\d*)?)(\#((-)?\d+(?:\.\d*)?))?$",
+        )
+        .expect("It to be a valid regex");
         if let Some(c) = re.captures(s) {
             return Some(RangeData {
                 from: c.get(1).unwrap().as_str().parse().unwrap(),
-                to: c.get(2).unwrap().as_str().parse().unwrap(),
-                step: c.get(4).map(|m| m.as_str()).unwrap_or("1").parse().unwrap(),
+                to: c.get(3).unwrap().as_str().parse().unwrap(),
+                step: c.get(6).map(|m| m.as_str()).unwrap_or("1").parse().unwrap(),
             });
         }
         None
@@ -296,6 +299,21 @@ mod test {
         ($expr: expr) => {
             RangeDataInput::from_normal($expr)
         };
+    }
+
+    #[test]
+    fn range_back_and_forth() {
+        for input in RangeDataInput::examples().into_iter() {
+            let data = input.to_normal();
+            let range = data.as_range();
+            assert_eq!(Some(data.clone()), RangeData::try_from_range(&range));
+
+            let random_range = data.as_random_range();
+            assert_eq!(
+                Some(data.clone()),
+                RangeData::try_from_random_range(&random_range)
+            );
+        }
     }
 
     #[test]
