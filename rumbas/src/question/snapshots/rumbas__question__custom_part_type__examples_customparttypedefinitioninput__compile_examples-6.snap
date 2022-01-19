@@ -1,0 +1,41 @@
+---
+source: rumbas/src/question/custom_part_type.rs
+expression: "&example"
+
+---
+type_name: ~
+description: ~
+settings: ~
+can_be_gap: ~
+can_be_step: ~
+marking_notes: ~
+help_url: ~
+published: ~
+extensions:
+  chemistry: false
+  download_text_file: false
+  eukleides: false
+  geogebra: false
+  graphs: false
+  jsx_graph: false
+  linear_algebra: false
+  linear_codes: false
+  optimisation: false
+  permutations: false
+  polynomials: false
+  quantities: false
+  random_person: false
+  stats: false
+  sqlite: false
+  text: false
+  written_number: false
+input_widget:
+  type: string
+  hint:
+    value: ~
+    static: ~
+  correct_answer: ~
+  allow_empty:
+    value: false
+    static: false
+
