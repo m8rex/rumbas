@@ -8,31 +8,31 @@ field1:
   - Tuple:
       - Unit
       - false
-      - text
+      - nonjmetext§
   - Tuple:
       - Tuple:
           - false
           - 1.2
       - false
-      - text
+      - nonjmetext§
   - Tuple:
       - Struct:
           field1: false
           field2: 1.2
       - false
-      - text
+      - nonjmetext§
   - Tuple:
       - Struct:
           field1: "template:template_key"
           field2: "template:template_key"
       - false
-      - text
+      - nonjmetext§
   - Tuple:
       - Struct:
           field1: ~
           field2: ~
       - false
-      - text
+      - nonjmetext§
   - Struct:
       a: 1.2
   - Struct:
