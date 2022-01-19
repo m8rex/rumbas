@@ -1,9 +1,0 @@
----
-source: rumbas/src/question/part/jme.rs
-expression: "&example"
-
----
-length: 2
-message: "example plain string with placeholders {placeholder1} and {placeholder2}."
-partial_credit: 1.2
-

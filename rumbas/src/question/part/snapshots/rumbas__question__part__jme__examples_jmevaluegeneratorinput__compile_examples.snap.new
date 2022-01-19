@@ -1,8 +1,0 @@
----
-source: rumbas/src/question/part/jme.rs
-expression: "&example"
-
----
-name: "example plain string with placeholders {placeholder1} and {placeholder2}."
-value: "example plain string with placeholders {placeholder1} and {placeholder2}."
-
