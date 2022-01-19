@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate rumbas_support_derive;
 
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
@@ -30,13 +30,7 @@ mod test {
     fn create_test2() {
         let _test2 = Test2(vec![Test(true, 64.8)], 65.0);
 
-        let _test2 = Test2Input(
-            ValueType::Normal(vec![ValueType::Normal(TestInput(
-                ValueType::Normal(true),
-                ValueType::Normal(64.8),
-            ))]),
-            ValueType::Normal(65.0),
-        );
+        let _test2 = Test2Input(vec![ValueType::Normal(TestInput(true, 4.8))], 65.0);
     }
     #[test]
     fn examples() {
