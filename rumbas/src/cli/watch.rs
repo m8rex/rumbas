@@ -35,10 +35,10 @@ fn watch_internal(context: WatchContext) {
         return;
     }
 
-    let handler: Box<dyn WatchHandler> = if context.only_check {
-        Box::new(WatchChecker)
+    let handler: &dyn WatchHandler = if context.only_check {
+        &WatchChecker
     } else {
-        Box::new(WatchCompiler)
+        &WatchCompiler
     };
 
     handler.handle_setup(&context.watch_path);
@@ -59,10 +59,10 @@ fn watch_internal(context: WatchContext) {
     loop {
         match rx.recv() {
             Ok(event) => match event {
-                DebouncedEvent::Create(p) => handle_if_needed(&p, &handler), // Shouldn'tdo anything?
-                DebouncedEvent::Write(p) => handle_if_needed(&p, &handler),
-                DebouncedEvent::Chmod(p) => handle_if_needed(&p, &handler),
-                DebouncedEvent::Remove(p) => handle_if_needed(&p, &handler),
+                DebouncedEvent::Create(p) => handle_if_needed(&p, handler), // Shouldn'tdo anything?
+                DebouncedEvent::Write(p) => handle_if_needed(&p, handler),
+                DebouncedEvent::Chmod(p) => handle_if_needed(&p, handler),
+                DebouncedEvent::Remove(p) => handle_if_needed(&p, handler),
                 DebouncedEvent::Rename(previous, new) => (), // TODO do the rename in the dependencies?
                 _ => (),
             },
@@ -77,12 +77,12 @@ fn to_relative_path(path: &Path) -> std::path::PathBuf {
         .to_owned()
 }
 
-fn handle_if_needed(path: &Path, handler: &Box<dyn WatchHandler>) {
+fn handle_if_needed(path: &Path, handler: &dyn WatchHandler) {
     let relative_path = to_relative_path(path);
-    if relative_path.starts_with(crate::cli::compile::CACHE_FOLDER) {
-        return ();
-    } else if relative_path.starts_with(crate::cli::compile::OUTPUT_FOLDER) {
-        return ();
+    if relative_path.starts_with(crate::cli::compile::CACHE_FOLDER)
+        || relative_path.starts_with(crate::cli::compile::OUTPUT_FOLDER)
+    {
+        return;
     } else {
         handler.recompile_dependant(path)
     }
@@ -101,7 +101,7 @@ trait WatchHandler {
 
         DEPENDENCIES.log_debug();
 
-        let dependants = DEPENDENCIES.get_dependants(relative_path.to_path_buf());
+        let dependants = DEPENDENCIES.get_dependants(relative_path);
         for dependant in dependants.iter() {
             self.handle_file(dependant);
         }

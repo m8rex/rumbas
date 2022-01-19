@@ -36,8 +36,8 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Non
         match (self, other) {
             (Noneable::None, Noneable::None) => comparable::Changed::Unchanged,
             (Noneable::NotNone(self_var0), Noneable::NotNone(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| NoneableChange::BothNotNone(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(NoneableChange::BothNotNone)
             }
             (_, _) => comparable::Changed::Changed(NoneableChange::Different(
                 self.describe(),
