@@ -22,16 +22,17 @@ use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::path::Path;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ExamInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]

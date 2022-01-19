@@ -1,0 +1,52 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: diagnostic
+locales: ~
+name: ~
+navigation:
+  allow_printing: ~
+  can_regenerate: ~
+  confirm_when_leaving: ~
+  on_leave:
+    action: warn_if_not_attempted
+    message: "template:template_key"
+  show_names_of_question_groups: ~
+  show_steps: ~
+  show_title_page: ~
+  start_password: ~
+timing:
+  duration_in_seconds: none
+  allow_pause: ~
+  on_timeout:
+    action: warn
+    message: "template:template_key"
+  timed_warning:
+    action: warn
+    message: "template:template_key"
+feedback:
+  percentage_needed_to_pass: none
+  show_name_of_student: ~
+  show_current_marks: ~
+  show_maximum_marks: ~
+  show_answer_state: ~
+  allow_reveal_answer: ~
+  review:
+    show_score: false
+    show_feedback: false
+    show_expected_answer: false
+    show_advice: false
+  advice: ~
+  intro: ~
+  feedback_messages: ~
+question_groups: ~
+numbas_settings:
+  theme: nonjmetext§
+diagnostic:
+  script:
+    custom: "file:path/to/file"
+  objectives: ~
+  topics: ~
+

@@ -1,0 +1,59 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: normal
+locales: ~
+name: ~
+navigation: ~
+timing:
+  duration_in_seconds: ~
+  allow_pause: "template:template_key"
+  on_timeout: ~
+  timed_warning: ~
+feedback:
+  percentage_needed_to_pass: none
+  show_name_of_student: "template:template_key"
+  show_current_marks: "template:template_key"
+  show_maximum_marks: "template:template_key"
+  show_answer_state: "template:template_key"
+  allow_reveal_answer: "template:template_key"
+  review:
+    show_score: "template:template_key"
+    show_feedback: "template:template_key"
+    show_expected_answer: "template:template_key"
+    show_advice: "template:template_key"
+  advice:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: "template:template_key"
+question_groups: ~
+numbas_settings:
+  theme: ~
+
