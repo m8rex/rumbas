@@ -1,0 +1,172 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: normal
+locales:
+  - name: nonjmetext§
+    numbas_locale: ar-SA
+  - name: "template:template_key"
+    numbas_locale: de-DE
+  - name: ~
+    numbas_locale: en-GB
+  - name: nonjmetext§
+    numbas_locale: es-ES
+  - name: "template:template_key"
+    numbas_locale: fr-FR
+  - name: ~
+    numbas_locale: he-IL
+  - name: nonjmetext§
+    numbas_locale: it-IT
+  - name: "template:template_key"
+    numbas_locale: ja-JP
+  - name: ~
+    numbas_locale: ko-KR
+  - name: nonjmetext§
+    numbas_locale: nb-NO
+  - name: "template:template_key"
+    numbas_locale: nl-NL
+  - name: ~
+    numbas_locale: pl-PL
+  - name: nonjmetext§
+    numbas_locale: pt-BR
+  - name: "template:template_key"
+    numbas_locale: sq-AL
+  - name: ~
+    numbas_locale: sv-SE
+  - name: nonjmetext§
+    numbas_locale: tr-TR
+  - name: "template:template_key"
+    numbas_locale: vi-VN
+  - name: ~
+    numbas_locale: zg-CN
+  - name: nonjmetext§
+    numbas_locale: "template:template_key"
+  - name: "template:template_key"
+    numbas_locale: ~
+  - "template:template_key"
+name: "file:path/to/file"
+navigation:
+  allow_printing: false
+  browsing_enabled: false
+  can_move_to_previous: false
+  can_regenerate: false
+  confirm_when_leaving: false
+  mode: sequential
+  on_leave:
+    action: prevent_if_not_attempted
+    message: "file:path/to/file"
+  show_names_of_question_groups: false
+  show_results_page: never
+  show_steps: false
+  show_title_page: false
+  start_password: "file:path/to/file"
+timing: ~
+feedback:
+  percentage_needed_to_pass: none
+  show_name_of_student: "template:template_key"
+  show_current_marks: "template:template_key"
+  show_maximum_marks: "template:template_key"
+  show_answer_state: "template:template_key"
+  allow_reveal_answer: "template:template_key"
+  review:
+    show_score: "template:template_key"
+    show_feedback: "template:template_key"
+    show_expected_answer: "template:template_key"
+    show_advice: "template:template_key"
+  advice:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: "template:template_key"
+question_groups:
+  - name:
+      content:
+        nonjmetext§: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    picking_strategy: all_ordered
+    questions:
+      - path
+      - "template:template_key"
+  - name:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    picking_strategy: all_shuffled
+    questions: "template:template_key"
+  - name:
+      content: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    pick_questions: 2
+    picking_strategy: random_subset
+    questions: ~
+  - name: "file:path/to/file"
+    pick_questions: "template:template_key"
+    picking_strategy: random_subset
+    questions:
+      - path
+      - "template:template_key"
+  - name: "template:template_key"
+    picking_strategy: all_ordered
+    questions: "template:template_key"
+  - name: ~
+    picking_strategy: all_shuffled
+    questions: ~
+  - "template:template_key"
+numbas_settings: ~
+

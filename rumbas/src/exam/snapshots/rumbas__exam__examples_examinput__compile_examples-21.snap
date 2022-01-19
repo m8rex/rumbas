@@ -1,0 +1,140 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: diagnostic
+locales: ~
+name:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+navigation:
+  allow_printing: ~
+  can_regenerate: ~
+  confirm_when_leaving: ~
+  on_leave:
+    action: warn_if_not_attempted
+    message:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  show_names_of_question_groups: ~
+  show_steps: ~
+  show_title_page: ~
+  start_password: ~
+timing:
+  duration_in_seconds: "template:template_key"
+  allow_pause: ~
+  on_timeout:
+    action: warn
+    message:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  timed_warning:
+    action: warn
+    message:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+feedback:
+  percentage_needed_to_pass: "template:template_key"
+  show_name_of_student: ~
+  show_current_marks: ~
+  show_maximum_marks: ~
+  show_answer_state: ~
+  allow_reveal_answer: ~
+  review:
+    show_score: ~
+    show_feedback: ~
+    show_expected_answer: ~
+    show_advice: ~
+  advice:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: ~
+question_groups: ~
+numbas_settings:
+  theme: ~
+diagnostic:
+  script:
+    custom:
+      content:
+        nonjmetext§: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  objectives: ~
+  topics: ~
+

@@ -1,0 +1,51 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: diagnostic
+locales: ~
+name:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+navigation: ~
+timing:
+  duration_in_seconds: 2
+  allow_pause: "template:template_key"
+  on_timeout:
+    action: warn
+    message: "file:path/to/file"
+  timed_warning:
+    action: warn
+    message: "file:path/to/file"
+feedback: "template:template_key"
+question_groups: ~
+numbas_settings: ~
+diagnostic:
+  script:
+    custom:
+      content: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  objectives: "template:template_key"
+  topics: "template:template_key"
+

@@ -1,0 +1,66 @@
+---
+source: rumbas/src/exam/mod.rs
+expression: "&example"
+
+---
+type: normal
+locales: "template:template_key"
+name: "template:template_key"
+navigation: "template:template_key"
+timing:
+  duration_in_seconds: "template:template_key"
+  allow_pause: false
+  on_timeout: "template:template_key"
+  timed_warning: "template:template_key"
+feedback:
+  percentage_needed_to_pass: 1.2
+  show_name_of_student: false
+  show_current_marks: false
+  show_maximum_marks: false
+  show_answer_state: false
+  allow_reveal_answer: false
+  review:
+    show_score: false
+    show_feedback: false
+    show_expected_answer: false
+    show_advice: false
+  advice:
+    content:
+      nonjmetext§: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content:
+      nonjmetext§: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages:
+    - message: nonjmetext§
+      threshold: nonjmetext§
+    - message: "template:template_key"
+      threshold: "template:template_key"
+    - message: ~
+      threshold: ~
+    - "template:template_key"
+question_groups: "template:template_key"
+numbas_settings:
+  theme: "template:template_key"
+
