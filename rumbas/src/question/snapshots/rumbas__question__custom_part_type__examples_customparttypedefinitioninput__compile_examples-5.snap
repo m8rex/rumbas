@@ -1,0 +1,22 @@
+---
+source: rumbas/src/question/custom_part_type.rs
+expression: "&example"
+
+---
+type_name: "template:template_key"
+description: "template:template_key"
+settings: "template:template_key"
+can_be_gap: "template:template_key"
+can_be_step: "template:template_key"
+marking_notes: "template:template_key"
+help_url: "template:template_key"
+published: "template:template_key"
+extensions: ~
+input_widget:
+  type: string
+  hint:
+    value: "template:template_key"
+    static: "template:template_key"
+  correct_answer: "template:template_key"
+  allow_empty: ~
+

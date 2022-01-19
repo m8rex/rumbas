@@ -1,0 +1,35 @@
+---
+source: rumbas/src/question/custom_part_type.rs
+expression: "&example"
+
+---
+type_name: ~
+description: ~
+settings: ~
+can_be_gap: ~
+can_be_step: ~
+marking_notes: ~
+help_url: ~
+published: ~
+extensions: "template:template_key"
+input_widget:
+  type: radiogroup
+  hint: ~
+  correct_answer:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  choices:
+    value: ~
+    static: ~
+

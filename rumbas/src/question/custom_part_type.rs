@@ -18,6 +18,7 @@ use std::path::PathBuf;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartTypeDefinitionInput")]
+#[input(test)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CustomPartTypeDefinition {
     pub type_name: TranslatableString,
