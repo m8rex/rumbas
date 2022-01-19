@@ -26,7 +26,7 @@ impl_examples!(i8, i16, i32, i64, i128, isize: vec![-1]);
 
 impl_examples!(f32, f64: vec![1.2]);
 
-impl_examples!(String: vec!["text".to_string()]);
+impl_examples!(String: vec!["nonjmetext§".to_string(),]);
 
 impl_examples!(bool: vec![false]);
 

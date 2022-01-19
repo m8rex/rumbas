@@ -1,0 +1,52 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+
+---
+statement:
+  content:
+    nonjmetext§: "template:template_key"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+advice:
+  content:
+    nonjmetext§: "template:template_key"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+parts: "template:template_key"
+builtin_constants: ~
+custom_constants: "template:template_key"
+variables:
+  nonjmetext§:
+    definition: "file:path/to/file"
+    description: nonjmetext§
+    template_type: long_string
+    group: nonjmetext§
+variables_test: ~
+functions:
+  nonjmetext§: "template:template_key"
+preamble: ~
+navigation: ~
+extensions: ~
+diagnostic_topic_names: "template:template_key"
+resources: "template:template_key"
+custom_part_types: ~
+

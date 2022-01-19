@@ -1,0 +1,66 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+
+---
+statement: ~
+advice: ~
+parts: ~
+builtin_constants:
+  e: "template:template_key"
+  pi: "template:template_key"
+  i: "template:template_key"
+custom_constants: ~
+variables:
+  nonjmetext§: "random(-10 .. 1#0.1)"
+variables_test:
+  condition: "template:template_key"
+  max_runs: "template:template_key"
+functions:
+  nonjmetext§:
+    definition:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    language: jme
+    output_type: range
+    parameters: ~
+preamble:
+  js: "template:template_key"
+  css: "template:template_key"
+navigation:
+  can_regenerate: "template:template_key"
+  show_title_page: "template:template_key"
+  confirm_when_leaving: "template:template_key"
+extensions:
+  chemistry: "template:template_key"
+  download_text_file: "template:template_key"
+  eukleides: "template:template_key"
+  geogebra: "template:template_key"
+  graphs: "template:template_key"
+  jsx_graph: "template:template_key"
+  linear_algebra: "template:template_key"
+  linear_codes: "template:template_key"
+  optimisation: "template:template_key"
+  permutations: "template:template_key"
+  polynomials: "template:template_key"
+  quantities: "template:template_key"
+  random_person: "template:template_key"
+  stats: "template:template_key"
+  sqlite: "template:template_key"
+  text: "template:template_key"
+  written_number: "template:template_key"
+diagnostic_topic_names: ~
+resources: ~
+custom_part_types: ~
+
