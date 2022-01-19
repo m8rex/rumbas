@@ -173,3 +173,162 @@ impl<T> VariableValued<T> {
         }
     }
 }
+
+//TODO use derive for Input & overwrite
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[serde(untagged)]
+pub enum ReverseVariableValued<T> {
+    Value(T), // Different ordering
+    Variable(JMEString),
+}
+
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable
+    for ReverseVariableValued<T>
+{
+    type Desc = VariableValuedDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        match self {
+            ReverseVariableValued::Variable(var0) => VariableValuedDesc::Variable(var0.describe()),
+            ReverseVariableValued::Value(var0) => VariableValuedDesc::Value(var0.describe()),
+        }
+    }
+    type Change = VariableValuedChange<T>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        match (self, other) {
+            (
+                ReverseVariableValued::Variable(self_var0),
+                ReverseVariableValued::Variable(other_var0),
+            ) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| VariableValuedChange::BothVariable(changes_var0))
+            }
+            (ReverseVariableValued::Value(self_var0), ReverseVariableValued::Value(other_var0)) => {
+                let changes_var0 = self_var0.comparison(&other_var0);
+                changes_var0.map(|changes_var0| VariableValuedChange::BothValue(changes_var0))
+            }
+            (_, _) => comparable::Changed::Changed(VariableValuedChange::Different(
+                self.describe(),
+                other.describe(),
+            )),
+        }
+    }
+}
+
+impl<T: Examples> Examples for ReverseVariableValued<T> {
+    fn examples() -> Vec<Self> {
+        T::examples()
+            .into_iter()
+            .map(Self::Value)
+            .chain(JMEString::examples().into_iter().map(Self::Variable))
+            .collect()
+    }
+}
+
+impl<T: RumbasCheck> RumbasCheck for ReverseVariableValued<T> {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        match self {
+            Self::Variable(s) => s.check(locale),
+            Self::Value(v) => v.check(locale),
+        }
+    }
+}
+
+impl<T: Input> Input for ReverseVariableValued<T> {
+    type Normal = ReverseVariableValued<<T as Input>::Normal>;
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        self.clone().map(|a| a.to_normal())
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        normal.map(<T as Input>::from_normal)
+    }
+    fn find_missing(&self) -> InputCheckResult {
+        match self {
+            Self::Variable(s) => s.find_missing(),
+            Self::Value(v) => v.find_missing(),
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        match *self {
+            Self::Variable(ref mut s) => s.insert_template_value(key, val),
+            Self::Value(ref mut v) => v.insert_template_value(key, val),
+        };
+    }
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        match self {
+            Self::Variable(s) => s.files_to_load(),
+            Self::Value(v) => v.files_to_load(),
+        }
+    }
+    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+        match *self {
+            Self::Variable(ref mut s) => s.insert_loaded_files(files),
+            Self::Value(ref mut v) => v.insert_loaded_files(files),
+        };
+    }
+    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+        match self {
+            Self::Variable(s) => s.dependencies(),
+            Self::Value(v) => v.dependencies(),
+        }
+    }
+}
+
+impl<T: InputInverse> InputInverse for ReverseVariableValued<T> {
+    type Input = ReverseVariableValued<<T as InputInverse>::Input>;
+    type EnumInput = Self::Input;
+}
+
+impl<T: Overwrite<T> + DeserializeOwned> Overwrite<ReverseVariableValued<T>>
+    for ReverseVariableValued<T>
+{
+    fn overwrite(&mut self, other: &ReverseVariableValued<T>) {
+        match (self, other) {
+            (
+                &mut ReverseVariableValued::Variable(ref mut val),
+                &ReverseVariableValued::Variable(ref valo),
+            ) => val.overwrite(valo),
+            (
+                &mut ReverseVariableValued::Value(ref mut val),
+                &ReverseVariableValued::Value(ref valo),
+            ) => val.overwrite(valo),
+            _ => (),
+        };
+    }
+}
+
+impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::support::primitive::VariableValued<V>>
+    for ReverseVariableValued<T>
+{
+    fn to_numbas(&self, locale: &str) -> numbas::support::primitive::VariableValued<V> {
+        match self {
+            Self::Variable(v) => numbas::support::primitive::VariableValued::Variable(v.clone()),
+            Self::Value(v) => {
+                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale))
+            }
+        }
+    }
+}
+
+impl<O, T: ToRumbas<O>> ToRumbas<ReverseVariableValued<O>>
+    for numbas::support::primitive::VariableValued<T>
+{
+    fn to_rumbas(&self) -> ReverseVariableValued<O> {
+        match self {
+            numbas::support::primitive::VariableValued::Variable(v) => {
+                ReverseVariableValued::Variable(v.clone())
+            }
+            numbas::support::primitive::VariableValued::Value(v) => {
+                ReverseVariableValued::Value(v.to_rumbas())
+            }
+        }
+    }
+}
+
+impl<T> ReverseVariableValued<T> {
+    pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> ReverseVariableValued<U> {
+        match self {
+            ReverseVariableValued::Variable(x) => ReverseVariableValued::Variable(x),
+            ReverseVariableValued::Value(x) => ReverseVariableValued::Value(f(x)),
+        }
+    }
+}
