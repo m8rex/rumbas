@@ -185,7 +185,7 @@ fn input_handle_tuple_struct(
 
     tokens.extend(quote! {
         #input_attributes
-        pub struct #input_ident #ty(#(ValueType<<#input_type_tys as InputInverse>::Input>),*) #wher;
+        pub struct #input_ident #ty(#(<#input_type_tys as InputInverse>::Input),*) #wher;
     });
     tokens.extend(quote! {
             #[automatically_derived]
@@ -195,7 +195,7 @@ fn input_handle_tuple_struct(
                     #ident(#(self.#field_indexes.to_normal()),*)
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
-                    Self(#(ValueType::Normal(Input::from_normal(normal.#field_indexes))),*)
+                    Self(#(Input::from_normal(normal.#field_indexes)),*)
                 }
                 fn find_missing(&self) -> InputCheckResult {
                     let mut result = InputCheckResult::empty();

@@ -94,7 +94,7 @@ fn handle_tuple_struct(
             #[automatically_derived]
             impl #imp Examples for #input_ident #ty #wher {
                 fn examples() -> Vec<Self> {
-                    let tuple_data = <(#(ValueType<<#field_types as InputInverse>::Input>,)*)>::examples();
+                    let tuple_data = <(#(<#field_types as InputInverse>::Input,)*)>::examples();
                     tuple_data.into_iter().map(|t| Self(#(t.#field_indexes),*) ).collect::<Vec<_>>()
                 }
             }
