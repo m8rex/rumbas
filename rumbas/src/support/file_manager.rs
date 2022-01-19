@@ -457,7 +457,7 @@ impl std::convert::From<RumbasRepoFileData> for FileToLoad {
     fn from(r: RumbasRepoFileData) -> Self {
         match r.r#type.clone() {
             RumbasRepoFileType::LocaleFile(_, p) => FileToLoad {
-                file_path: p.clone(),
+                file_path: p,
                 locale_dependant: true,
             },
             _ => FileToLoad {
@@ -490,7 +490,7 @@ pub enum RumbasRepoFileType {
 }
 impl RumbasRepoFileType {
     pub fn from(p: &Path) -> Self {
-        let folder_type = RumbasRepoFolderType::from(&p.parent().unwrap());
+        let folder_type = RumbasRepoFolderType::from(p.parent().unwrap());
 
         if let RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
             let resource_path = p
@@ -500,7 +500,7 @@ impl RumbasRepoFileType {
                 .unwrap()
                 .join(p.file_name().unwrap());
 
-            Self::LocaleFile(locale.to_string(), resource_path.to_path_buf())
+            Self::LocaleFile(locale, resource_path)
         } else if let RumbasRepoFolderType::DefaultFolder = folder_type {
             Self::DefaultFile // TODO: fix DefaultFile
         } else if let Some(ext) = p.extension() {

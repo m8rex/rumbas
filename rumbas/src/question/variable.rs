@@ -9,7 +9,6 @@ use regex::Regex;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::convert::TryFrom;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
@@ -26,65 +25,6 @@ pub enum VariableRepresentation {
     TranslatableString(TranslatableString),
     Long(Box<Variable>),
 }
-// TODO remove or from attribute
-/*#[cfg(test)]
-mod example_test {
-    use super::VariableRepresentationInput;
-    use super::VariableStringRepresentationInput;
-    use rumbas_support::example::Examples;
-    fn compile_examples() {
-        for example in VariableRepresentationInput::examples().into_iter() {
-            println!("{:?}", example);
-            let item = serde_yaml::to_string(&example);
-            assert!(item.is_ok());
-            let item = item.unwrap();
-            insta::with_settings!({sort_maps => true}, {
-                insta::assert_yaml_snapshot!(&example);
-            });
-            let parsed: Result<VariableRepresentationInput, _> = serde_yaml::from_str(&item[..]);
-            if let Err(ref e) = parsed {
-                println!("Input {:?}", item);
-                println!("Error: {:?}", e);
-            }
-            assert!(parsed.is_ok());
-            match (parsed.unwrap(), example) {
-                (
-                    VariableRepresentationInput::ListOfStrings(s),
-                    VariableRepresentationInput::ListOfStrings(s2),
-                ) => assert_eq!(s, s2),
-                (
-                    VariableRepresentationInput::ListOfNumbers(s),
-                    VariableRepresentationInput::ListOfNumbers(s2),
-                ) => assert_eq!(s, s2),
-                (
-                    VariableRepresentationInput::Number(s),
-                    VariableRepresentationInput::Number(s2),
-                ) => assert_eq!(s, s2),
-                (VariableRepresentationInput::Other(s), VariableRepresentationInput::Other(s2)) => {
-                    //assert_eq!(s, s2) // TODO fix this bug (string 'text' is valid jme)
-                }
-                (
-                    VariableRepresentationInput::TranslatableString(s),
-                    VariableRepresentationInput::TranslatableString(s2),
-                ) => assert_eq!(s, s2),
-                (VariableRepresentationInput::Long(s), VariableRepresentationInput::Long(s2)) => {
-                    assert_eq!(*s, *s2)
-                }
-                (
-                    VariableRepresentationInput::ListOfNumbers(_s),
-                    VariableRepresentationInput::ListOfStrings(_s2),
-                ) => (), // TODO: fix this 'bug' vec's don't care that they have wrong elements
-                (
-                    VariableRepresentationInput::Other(VariableStringRepresentationInput::String(
-                        _s,
-                    )),
-                    VariableRepresentationInput::TranslatableString(_s2),
-                ) => (), // TODO: fix this 'bug' a non translatable 'translatable string is ofcourse also a string
-                (a, b) => unreachable!(format!("{:?} and {:?}", a, b)),
-            };
-        }
-    }
-}*/
 
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
     fn to_numbas_with_name(

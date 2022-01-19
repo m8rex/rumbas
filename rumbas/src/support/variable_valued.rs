@@ -42,12 +42,12 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Var
     fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
         match (self, other) {
             (VariableValued::Variable(self_var0), VariableValued::Variable(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| VariableValuedChange::BothVariable(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(VariableValuedChange::BothVariable)
             }
             (VariableValued::Value(self_var0), VariableValued::Value(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| VariableValuedChange::BothValue(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(VariableValuedChange::BothValue)
             }
             (_, _) => comparable::Changed::Changed(VariableValuedChange::Different(
                 self.describe(),
@@ -199,12 +199,12 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable
                 ReverseVariableValued::Variable(self_var0),
                 ReverseVariableValued::Variable(other_var0),
             ) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| VariableValuedChange::BothVariable(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(VariableValuedChange::BothVariable)
             }
             (ReverseVariableValued::Value(self_var0), ReverseVariableValued::Value(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| VariableValuedChange::BothValue(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(VariableValuedChange::BothValue)
             }
             (_, _) => comparable::Changed::Changed(VariableValuedChange::Different(
                 self.describe(),
