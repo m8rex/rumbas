@@ -5,11 +5,12 @@ use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
+use crate::support::variable_valued::ReverseVariableValued;
 use crate::support::variable_valued::VariableValued;
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use comparable::Comparable;
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
@@ -97,28 +98,28 @@ impl QuestionPartMatrixDimensions {
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub enum QuestionPartMatrixDimension {
-    Fixed(VariableValued<usize>),
+    Fixed(ReverseVariableValued<usize>),
     Resizable(Box<QuestionPartMatrixRangedDimension>),
 }
 
 impl QuestionPartMatrixDimension {
-    pub fn default(&self) -> VariableValued<usize> {
+    pub fn default(&self) -> ReverseVariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => r.default.clone(),
         }
     }
-    pub fn min(&self) -> VariableValued<usize> {
+    pub fn min(&self) -> ReverseVariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => r.min.clone(),
         }
     }
-    pub fn max(&self) -> VariableValued<usize> {
+    pub fn max(&self) -> ReverseVariableValued<usize> {
         match self {
             QuestionPartMatrixDimension::Fixed(f) => f.clone(),
             QuestionPartMatrixDimension::Resizable(r) => match &r.max {
-                Noneable::None => VariableValued::Value(0),
+                Noneable::None => ReverseVariableValued::Value(0),
                 Noneable::NotNone(f) => f.clone(),
             },
         }
@@ -127,9 +128,9 @@ impl QuestionPartMatrixDimension {
         self.default() != self.min() || self.default() != self.max()
     }
     pub fn from_range(
-        min: VariableValued<usize>,
-        default: VariableValued<usize>,
-        max: VariableValued<usize>,
+        min: ReverseVariableValued<usize>,
+        default: ReverseVariableValued<usize>,
+        max: ReverseVariableValued<usize>,
     ) -> Self {
         if min == default && default == max {
             Self::Fixed(min)
@@ -137,7 +138,7 @@ impl QuestionPartMatrixDimension {
             Self::Resizable(Box::new(QuestionPartMatrixRangedDimension {
                 default,
                 min,
-                max: if max == VariableValued::Value(0) {
+                max: if max == ReverseVariableValued::Value(0) {
                     Noneable::None
                 } else {
                     Noneable::NotNone(max)
@@ -152,9 +153,9 @@ impl QuestionPartMatrixDimension {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
-    pub default: VariableValued<usize>,
+    pub default: ReverseVariableValued<usize>,
     /// The minimal size
-    pub min: VariableValued<usize>,
+    pub min: ReverseVariableValued<usize>,
     /// The maximal size, if this is none, there is no limit
-    pub max: Noneable<VariableValued<usize>>,
+    pub max: Noneable<ReverseVariableValued<usize>>,
 }
