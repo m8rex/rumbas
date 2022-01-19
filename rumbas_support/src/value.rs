@@ -44,12 +44,12 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Val
     fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
         match (self, other) {
             (ValueType::Template(self_var0), ValueType::Template(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| ValueTypeChange::BothTemplate(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(ValueTypeChange::BothTemplate)
             }
             (ValueType::Normal(self_var0), ValueType::Normal(other_var0)) => {
-                let changes_var0 = self_var0.comparison(&other_var0);
-                changes_var0.map(|changes_var0| ValueTypeChange::BothNormal(changes_var0))
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(ValueTypeChange::BothNormal)
             }
             (ValueType::Invalid(self_var0), ValueType::Invalid(other_var0)) => {
                 if self_var0 == other_var0 {
@@ -163,7 +163,6 @@ impl<T: std::clone::Clone> ValueType<T> {
 
 mod value_type_schema {
     use super::{TemplateString, ValueType};
-    use comparable::Comparable;
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
 
