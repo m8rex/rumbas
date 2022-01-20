@@ -593,7 +593,13 @@ fn update_extensions(yaml: Yaml) -> Yaml {
     match yaml {
         Yaml::Hash(h) => Yaml::Hash(
             h.into_iter()
-                .chain(vec![(Yaml::String("sqlite".to_string()), Yaml::Boolean(false))].into_iter())
+                .chain(
+                    vec![
+                        (Yaml::String("sqlite".to_string()), Yaml::Boolean(false)),
+                        (Yaml::String("text".to_string()), Yaml::Boolean(false)),
+                    ]
+                    .into_iter(),
+                )
                 .collect(),
         ),
         _ => yaml,
