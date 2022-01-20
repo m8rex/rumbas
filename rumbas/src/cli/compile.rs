@@ -50,28 +50,25 @@ pub fn compile_internal(
         .map(|file| (compile_file(&file_context, &file), file))
         .collect();
 
-    let nb_failures: usize = compile_results
+    let failures: Vec<_> = compile_results
         .par_iter()
-        .fold(
-            || 0,
-            |nb, (result, _)| match result {
-                CompileResult::Partial(p) => {
-                    if p.failed.is_empty() && p.failed_check.is_empty() {
-                        nb
-                    } else {
-                        nb + 1
-                    }
+        .filter(|(result, _)| match result {
+            CompileResult::Partial(p) => {
+                if p.failed.is_empty() && p.failed_check.is_empty() {
+                    false
+                } else {
+                    true
                 }
-                _ => nb + 1,
-            },
-        )
-        .sum();
-    if nb_failures > 0 {
-        for (check_result, path) in compile_results.iter() {
+            }
+            _ => false,
+        })
+        .collect();
+    if failures.len() > 0 {
+        for (check_result, path) in failures.iter() {
             log::error!("Compilation for {} failed:", path.display());
             check_result.log(path);
         }
-        log::error!("{} files failed.", nb_failures);
+        log::error!("{} files failed.", failures.len());
         Err(())
     } else {
         log::info!("All compilations passed.");

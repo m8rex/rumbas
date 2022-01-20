@@ -44,28 +44,25 @@ pub fn check_internal(exam_question_path: &str) -> Result<(), ()> {
         .map(|file| (check_file(&file), file))
         .collect();
 
-    let nb_failures: usize = check_results
+    let failures: Vec<_> = check_results
         .par_iter()
-        .fold(
-            || 0,
-            |nb, (result, _)| match result {
-                CheckResult::Partial(p) => {
-                    if p.failed.is_empty() {
-                        nb
-                    } else {
-                        nb + 1
-                    }
+        .filter(|(result, _)| match result {
+            CheckResult::Partial(p) => {
+                if p.failed.is_empty() {
+                    false
+                } else {
+                    true
                 }
-                _ => nb + 1,
-            },
-        )
-        .sum();
-    if nb_failures > 0 {
-        for (check_result, path) in check_results.iter() {
+            }
+            _ => false,
+        })
+        .collect();
+    if failures.len() > 0 {
+        for (check_result, path) in failures.iter() {
             log::error!("Check for {} failed:", path.display());
             check_result.log(path);
         }
-        log::error!("{} files failed.", nb_failures);
+        log::error!("{} files failed.", failures.len());
         Err(())
     } else {
         log::info!("All checks passed.");
