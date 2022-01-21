@@ -23,4 +23,4 @@ schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged
 #rumbas_support = { path="../rumbas_support" }
 
 [dev-dependencies]
-simple_logger = "1.15.0"
+simple_logger = "2.1.0"
