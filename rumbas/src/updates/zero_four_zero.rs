@@ -244,7 +244,158 @@ pub fn update() -> String {
                 "Updating main default file {}",
                 default_question_part.0.file_path.display()
             );
+            //add_default_answer_display(new_question_part)
+            new_question_part
+            // TODO?
+        } else {
+            new_question_part
+        };
+    }
+
+    for (file, default_question_part) in default_question_parts.into_iter() {
+        let mut out_str = String::new();
+        {
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+        }
+        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+    }
+
+    let mut default_question_parts: Vec<_> = default_question_files
+        .iter()
+        .filter_map(|d| match d.get_type() {
+            DefaultQuestionFileType::QuestionPartJME
+            | DefaultQuestionFileType::QuestionPartGapFillGapJME => CACHE.read_file(FileToLoad {
+                file_path: d.get_path(),
+                locale_dependant: false,
+            }),
+            _ => None,
+        })
+        .filter_map(|lf| {
+            match lf {
+                LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            }
+            .map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .ok()
+                    .map(|a| (lf.clone(), a[0].clone()))
+            })
+            .flatten()
+        })
+        .collect();
+
+    for default_question_part in &mut default_question_parts {
+        log::info!("Updating {}", default_question_part.0.file_path.display());
+        let new_question_part = update_part(default_question_part.1.clone());
+        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
+            // TODO
+            log::info!(
+                "Updating main default file {}",
+                default_question_part.0.file_path.display()
+            );
             add_default_answer_display(new_question_part)
+        } else {
+            new_question_part
+        };
+    }
+
+    for (file, default_question_part) in default_question_parts.into_iter() {
+        let mut out_str = String::new();
+        {
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+        }
+        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+    }
+
+    let mut default_question_parts: Vec<_> = default_question_files
+        .iter()
+        .filter_map(|d| match d.get_type() {
+            DefaultQuestionFileType::QuestionPartChooseMultiple
+            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems => CACHE
+                .read_file(FileToLoad {
+                    file_path: d.get_path(),
+                    locale_dependant: false,
+                }),
+            _ => None,
+        })
+        .filter_map(|lf| {
+            match lf {
+                LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            }
+            .map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .ok()
+                    .map(|a| (lf.clone(), a[0].clone()))
+            })
+            .flatten()
+        })
+        .collect();
+
+    for default_question_part in &mut default_question_parts {
+        log::info!("Updating {}", default_question_part.0.file_path.display());
+        let new_question_part = update_part(default_question_part.1.clone());
+        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
+            // TODO
+            log::info!(
+                "Updating main default file {}",
+                default_question_part.0.file_path.display()
+            );
+            add_default_achievables(new_question_part)
+        } else {
+            new_question_part
+        };
+    }
+
+    for (file, default_question_part) in default_question_parts.into_iter() {
+        let mut out_str = String::new();
+        {
+            let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+        }
+        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+    }
+
+    let mut default_question_parts: Vec<_> = default_question_files
+        .iter()
+        .filter_map(|d| match d.get_type() {
+            DefaultQuestionFileType::QuestionPartChooseMultiple
+            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple => {
+                CACHE.read_file(FileToLoad {
+                    file_path: d.get_path(),
+                    locale_dependant: false,
+                })
+            }
+            _ => None,
+        })
+        .filter_map(|lf| {
+            match lf {
+                LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            }
+            .map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .ok()
+                    .map(|a| (lf.clone(), a[0].clone()))
+            })
+            .flatten()
+        })
+        .collect();
+
+    for default_question_part in &mut default_question_parts {
+        log::info!("Updating {}", default_question_part.0.file_path.display());
+        let new_question_part = update_part(default_question_part.1.clone());
+        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
+            // TODO
+            log::info!(
+                "Updating main default file {}",
+                default_question_part.0.file_path.display()
+            );
+            add_default_marking_method(new_question_part)
         } else {
             new_question_part
         };
@@ -386,9 +537,10 @@ fn update_part(yaml: Yaml) -> Yaml {
             vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
             vec!["answers", "answer_data"], update_choose_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]:
             vec!["display"], |internal_yaml: Yaml| update_choose_one_display(yaml["columns"].clone(), internal_yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string())]:
+            vec!["display"], |internal_yaml: Yaml| update_match_answers_display(internal_yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())]:
             vec!["answers", "answer_data"], update_match_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
         ),
-        vec!["columns"],
+        vec!["columns", "has_to_select_option"],
     )
 }
 
@@ -467,6 +619,22 @@ fn update_choose_one_display(columns: Yaml, yaml: Yaml) -> Yaml {
             .into_iter()
             .collect(),
         ),
+        _ => yaml,
+    }
+}
+
+fn update_match_answers_display(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::String(v) => Yaml::Hash({
+            let mut fields = vec![(Yaml::String("type".to_string()), Yaml::String(v.clone()))];
+            if v == "check".to_string() {
+                fields.push((
+                    Yaml::String("marking_method".to_string()),
+                    Yaml::String("sum_ticked_cells".to_string()),
+                ));
+            }
+            fields.into_iter().collect()
+        }),
         _ => yaml,
     }
 }
@@ -660,6 +828,46 @@ fn add_default_answer_display(yaml: Yaml) -> Yaml {
                             .into_iter()
                             .collect(),
                         ),
+                    )]
+                    .into_iter(),
+                )
+                .collect()
+        }),
+        _ => yaml,
+    }
+}
+
+fn add_default_achievables(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Hash(h) => Yaml::Hash({
+            h.into_iter()
+                .chain(
+                    vec![
+                        (
+                            Yaml::String("minimal_achievable_marks".to_string()),
+                            Yaml::String("none".to_string()),
+                        ),
+                        (
+                            Yaml::String("maximal_achievable_marks".to_string()),
+                            Yaml::String("none".to_string()),
+                        ),
+                    ]
+                    .into_iter(),
+                )
+                .collect()
+        }),
+        _ => yaml,
+    }
+}
+
+fn add_default_marking_method(yaml: Yaml) -> Yaml {
+    match yaml {
+        Yaml::Hash(h) => Yaml::Hash({
+            h.into_iter()
+                .chain(
+                    vec![(
+                        Yaml::String("marking_method".to_string()),
+                        Yaml::String("sum_ticked_cells".to_string()),
                     )]
                     .into_iter(),
                 )
