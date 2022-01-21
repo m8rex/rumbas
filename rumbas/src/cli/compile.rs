@@ -60,7 +60,7 @@ pub fn compile_internal(
                     true
                 }
             }
-            _ => false,
+            _ => true,
         })
         .collect();
     if failures.len() > 0 {
