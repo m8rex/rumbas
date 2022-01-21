@@ -35,10 +35,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enums that have multiple variants with a type that is an Input struct, work
     - Previously the first variant was always used
     - Now parsing an Input struct fails when all fields are None
+- removed `has_to_select_option` from `choose_one`.
 - `display` in `choose_one` parts is now an object:
   - `type` is either `dropdown` or `radio`
   - if it is `radio` is also has a `columns` field
   - previously this was flattened and the `columns` field was set at the higher level
+- `display` in `match_answers` parts is now an object:
+  - `type` is either `check` or `radio`
+  - if it is `check` is also has a `marking_method` field
+  - previously this was flattened and the `columns` field was set at the higher level
+- Added `minimal_achievable_marks`, `maximal_achievable_marks` and `marking_method` to `choose_multiple` and `match_answers` part types.
 
 ## [0.4.0] - 2021-08-04
 

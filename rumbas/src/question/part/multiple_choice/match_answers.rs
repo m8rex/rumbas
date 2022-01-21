@@ -35,9 +35,9 @@ question_part_type! {
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
         wrong_nb_answers_warning_type: MultipleChoiceWarningType,
         /// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
-        minimal_achieveable_marks: Noneable<usize>,
+        minimal_achievable_marks: Noneable<usize>,
         /// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
-        maximal_achieveable_marks: Noneable<usize>
+        maximal_achievable_marks: Noneable<usize>
 
         //TODO other?
     }
@@ -95,8 +95,8 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
             part_data: self.to_numbas(locale),
             min_answers: Some(self.should_select_at_least.to_numbas(locale)),
             max_answers: self.should_select_at_most.to_numbas(locale),
-            min_marks: self.minimal_achieveable_marks.to_numbas(locale),
-            max_marks: self.maximal_achieveable_marks.to_numbas(locale),
+            min_marks: self.minimal_achievable_marks.to_numbas(locale),
+            max_marks: self.maximal_achievable_marks.to_numbas(locale),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             shuffle_choices: self.shuffle_items.to_numbas(locale),
             answers,
@@ -132,8 +132,8 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                 display: self.display_type.to_rumbas(),
                 layout: self.layout.to_rumbas(),
                 wrong_nb_answers_warning_type: self.wrong_nb_answers_warning.to_rumbas(),
-                minimal_achieveable_marks: self.min_marks.map(|v| v.0).to_rumbas(),
-                maximal_achieveable_marks: self.max_marks.map(|v| v.0).to_rumbas()
+                minimal_achievable_marks: self.min_marks.map(|v| v.0).to_rumbas(),
+                maximal_achievable_marks: self.max_marks.map(|v| v.0).to_rumbas()
             }
         }
     }
