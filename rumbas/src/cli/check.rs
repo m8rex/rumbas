@@ -54,7 +54,7 @@ pub fn check_internal(exam_question_path: &str) -> Result<(), ()> {
                     true
                 }
             }
-            _ => false,
+            _ => true,
         })
         .collect();
     if failures.len() > 0 {
