@@ -1,5 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
+assertion_line: 42
 expression: "&example"
 
 ---
@@ -3392,8 +3393,8 @@ parts:
     layout:
       type: all
     wrong_nb_answers_warning_type: none
-    minimal_achieveable_marks: 2
-    maximal_achieveable_marks: 2
+    minimal_achievable_marks: 2
+    maximal_achievable_marks: 2
   - type: match_answers
     marks: 1.5
     prompt:
@@ -3437,8 +3438,8 @@ parts:
     layout:
       type: lower_triangle
     wrong_nb_answers_warning_type: prevent
-    minimal_achieveable_marks: none
-    maximal_achieveable_marks: none
+    minimal_achievable_marks: none
+    maximal_achievable_marks: none
   - type: match_answers
     marks: "template:template_key"
     prompt:
@@ -3565,8 +3566,8 @@ parts:
     layout:
       type: "template:template_key"
     wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achieveable_marks: "template:template_key"
-    maximal_achieveable_marks: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
   - type: match_answers
     marks: ~
     prompt: "file:path/to/file"
@@ -3655,8 +3656,8 @@ parts:
     layout:
       type: ~
     wrong_nb_answers_warning_type: ~
-    minimal_achieveable_marks: ~
-    maximal_achieveable_marks: ~
+    minimal_achievable_marks: ~
+    maximal_achievable_marks: ~
   - type: match_answers
     marks: 1
     prompt: "template:template_key"
@@ -3687,8 +3688,8 @@ parts:
       marking_method: "template:template_key"
     layout: "template:template_key"
     wrong_nb_answers_warning_type: none
-    minimal_achieveable_marks: 2
-    maximal_achieveable_marks: 2
+    minimal_achievable_marks: 2
+    maximal_achievable_marks: 2
   - type: match_answers
     marks: 1.5
     prompt: ~
@@ -3717,8 +3718,8 @@ parts:
     display: "template:template_key"
     layout: ~
     wrong_nb_answers_warning_type: prevent
-    minimal_achieveable_marks: none
-    maximal_achieveable_marks: none
+    minimal_achievable_marks: none
+    maximal_achievable_marks: none
   - type: match_answers
     marks: "template:template_key"
     prompt:
@@ -3814,8 +3815,8 @@ parts:
     layout:
       type: all
     wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achieveable_marks: "template:template_key"
-    maximal_achieveable_marks: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
   - type: match_answers
     marks: ~
     prompt:
@@ -3855,8 +3856,8 @@ parts:
     layout:
       type: lower_triangle
     wrong_nb_answers_warning_type: ~
-    minimal_achieveable_marks: ~
-    maximal_achieveable_marks: ~
+    minimal_achievable_marks: ~
+    maximal_achievable_marks: ~
   - type: number_entry
     marks: 1
     prompt:
