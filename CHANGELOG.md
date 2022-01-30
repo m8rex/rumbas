@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-01-30
+
 ### Added
 
 - `answer_display` field to `jme` part type.
 - `sqlite` extension
+- `text` extension
 - `--no-minification` flag for `compile` command to suppress the `js` and `css` minification of Numbas. Before this addition, minification was not performed, now it is enabled by default.
 
 ### Changed
@@ -44,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `type` is either `check` or `radio`
   - if it is `check` is also has a `marking_method` field
   - previously this was flattened and the `columns` field was set at the higher level
-- Added `minimal_achievable_marks`, `maximal_achievable_marks` and `marking_method` to `choose_multiple` and `match_answers` part types.
+- Added `minimal_achievable_marks` and `maximal_achievable_marks` to `match_answers` part types.
+- Added `minimal_achievable_marks`, `maximal_achievable_marks` and `marking_method` to `choose_multiple` part types.
 
 ## [0.4.0] - 2021-08-04
 
