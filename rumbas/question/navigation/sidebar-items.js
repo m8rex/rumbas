@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionNavigation",""],["QuestionNavigationInput",""]]});
+initSidebarItems({"enum":[["QuestionNavigationChange",""],["QuestionNavigationInputChange",""]],"struct":[["QuestionNavigation",""],["QuestionNavigationDesc",""],["QuestionNavigationInput",""],["QuestionNavigationInputDesc",""],["QuestionNavigationInputEnum",""],["QuestionNavigationInputEnumChange",""],["QuestionNavigationInputEnumDesc",""]]});

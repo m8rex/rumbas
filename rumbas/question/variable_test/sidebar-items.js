@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["VariablesTest",""],["VariablesTestInput",""]]});
+initSidebarItems({"enum":[["VariablesTestChange",""],["VariablesTestInputChange",""]],"struct":[["VariablesTest",""],["VariablesTestDesc",""],["VariablesTestInput",""],["VariablesTestInputDesc",""],["VariablesTestInputEnum",""],["VariablesTestInputEnumChange",""],["VariablesTestInputEnumDesc",""]]});

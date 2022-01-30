@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["input",""],["overwrite",""],["preamble",""],["rumbas_check",""],["value",""]]});
+initSidebarItems({"mod":[["example",""],["input",""],["overwrite",""],["preamble",""],["rumbas_check",""],["value",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ResourcePath",""],["ResourcePathInput",""]]});
+initSidebarItems({"enum":[["ResourcePathChange",""],["ResourcePathInputChange",""]],"struct":[["ResourcePath",""],["ResourcePathDesc",""],["ResourcePathInput",""],["ResourcePathInputDesc",""],["ResourcePathInputEnum",""],["ResourcePathInputEnumChange",""],["ResourcePathInputEnumDesc",""]]});

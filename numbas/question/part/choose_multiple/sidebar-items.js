@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionPartChooseMultiple",""]]});
+initSidebarItems({"enum":[["MultipleChoiceMarkingMethod",""]],"struct":[["QuestionPartChooseMultiple",""]]});

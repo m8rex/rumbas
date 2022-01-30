@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Extensions","Specify which extensions should be enabled"],["ExtensionsInput","Specify which extensions should be enabled"]]});
+initSidebarItems({"enum":[["ExtensionsChange",""],["ExtensionsInputChange",""]],"struct":[["Extensions","Specify which extensions should be enabled"],["ExtensionsDesc",""],["ExtensionsInput","Specify which extensions should be enabled"],["ExtensionsInputDesc",""],["ExtensionsInputEnum","Specify which extensions should be enabled"],["ExtensionsInputEnumChange",""],["ExtensionsInputEnumDesc",""]]});

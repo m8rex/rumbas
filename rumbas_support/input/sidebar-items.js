@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["InputCheckInvalidYamlData",""],["InputCheckMissingData",""],["InputCheckPath",""],["InputCheckResult",""]],"trait":[["Input",""],["InputInverse",""]]});
+initSidebarItems({"enum":[["LoadedFile",""]],"struct":[["FileToLoad",""],["InputCheckInvalidYamlData",""],["InputCheckMissingData",""],["InputCheckPath",""],["InputCheckResult",""],["LoadedLocalizedFile",""],["LoadedNormalFile",""]],"trait":[["Input",""],["InputInverse",""]]});

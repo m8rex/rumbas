@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionPartChooseMultiple",""],["QuestionPartChooseMultipleInput",""]]});
+initSidebarItems({"enum":[["QuestionPartChooseMultipleChange",""],["QuestionPartChooseMultipleInputChange",""]],"struct":[["QuestionPartChooseMultiple",""],["QuestionPartChooseMultipleDesc",""],["QuestionPartChooseMultipleInput",""],["QuestionPartChooseMultipleInputDesc",""],["QuestionPartChooseMultipleInputEnum",""],["QuestionPartChooseMultipleInputEnumChange",""],["QuestionPartChooseMultipleInputEnumDesc",""]]});
