@@ -44,7 +44,7 @@ pub struct QuestionPartChooseMultiple {
     /// This is either a list of jme strings or a jme expression
     pub marking_matrix: Option<VariableValued<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     /// This is optional if marking_matrix is a JMEString
-    pub distractors: Option<Vec<EmbracedJMEString>>,
+    pub distractors: Option<Vec<ContentAreaString>>,
     /// This determines how the student’s score is determined, based on their selections and the marking matrix.
     #[serde(rename = "markingMethod")]
     #[serde(default)]
