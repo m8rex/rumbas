@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate rumbas_support_derive;
 
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
@@ -31,6 +31,32 @@ pub struct Test2 {
 pub struct TestOverwrite {
     field1: bool,
     field2: f64,
+}
+
+#[derive(Input, RumbasCheck, Examples)]
+#[input(name = "TestFromAndIntoInput")]
+#[input(from = "String")]
+#[input(into = "String")]
+#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
+pub struct TestFromAndInto {
+    // TODO: add real test
+    field1: String,
+    field2: String,
+}
+
+impl std::convert::From<String> for TestFromAndIntoInput {
+    fn from(s: String) -> TestFromAndIntoInput {
+        Self {
+            field1: Value::Normal(s.clone()),
+            field2: Value::Normal(s.clone()),
+        }
+    }
+}
+
+impl std::convert::From<TestFromAndIntoInput> for String {
+    fn from(s: TestFromAndIntoInput) -> String {
+        s.field1.clone().unwrap()
+    }
 }
 
 #[cfg(test)]

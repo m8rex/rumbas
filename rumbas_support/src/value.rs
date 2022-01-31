@@ -161,6 +161,17 @@ impl<T: std::clone::Clone> ValueType<T> {
     }
 }
 
+impl<T: std::clone::Clone> ValueType<T> {
+    #[inline]
+    pub fn real_map<U, F: FnOnce(T) -> U>(self, f: F) -> ValueType<U> {
+        match self {
+            ValueType::Normal(val) => ValueType::Normal(f(val)),
+            ValueType::Template(ts) => ValueType::Template(ts),
+            ValueType::Invalid(v) => ValueType::Invalid(v),
+        }
+    }
+}
+
 mod value_type_schema {
     use super::{TemplateString, ValueType};
     use schemars::JsonSchema;
@@ -277,6 +288,16 @@ impl<T> Value<T> {
 
 impl<T: std::clone::Clone> Value<T> {
     #[inline]
+    pub fn unwrap_or(&self, default: T) -> T {
+        self.clone()
+            .0
+            .unwrap_or(ValueType::Normal(default))
+            .unwrap()
+    }
+}
+
+impl<T: std::clone::Clone> Value<T> {
+    #[inline]
     pub fn unwrap(&self) -> T {
         self.clone().0.unwrap().unwrap()
     }
@@ -286,6 +307,13 @@ impl<T: std::clone::Clone> Value<T> {
     #[inline]
     pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Option<U> {
         self.0.unwrap().map(f)
+    }
+}
+
+impl<T: std::clone::Clone> Value<T> {
+    #[inline]
+    pub fn real_map<U, F: FnOnce(T) -> U>(self, f: F) -> Value<U> {
+        Value(self.0.map(|v| v.real_map(f)))
     }
 }
 

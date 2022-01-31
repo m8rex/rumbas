@@ -41,6 +41,12 @@ pub struct InputReceiver {
     test: bool,
     #[darling(default)]
     no_examples: bool,
+
+    #[darling(default)]
+    from: Option<String>,
+
+    #[darling(default)]
+    into: Option<String>,
 }
 
 fn get_input_type(t: &syn::Type) -> proc_macro2::TokenStream {
@@ -246,6 +252,8 @@ fn input_handle_struct_struct(
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     input_attributes: &(proc_macro2::TokenStream, proc_macro2::TokenStream),
+    from: &Option<String>,
+    into: &Option<String>,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     // Beginning of fixing generics
@@ -317,8 +325,13 @@ fn input_handle_struct_struct(
         })
         .collect::<Vec<_>>();
 
+    let from = from.as_ref().map(|p| quote! {#[serde(from = #p)]});
+    let into = into.as_ref().map(|p| quote! {#[serde(into = #p)]});
+
     tokens.extend(quote! {
         #input_attributes_input
+        #from
+        #into
         pub struct #input_ident #ty #wher {
             #(
                 #field_attributes
@@ -479,6 +492,8 @@ fn input_handle_struct(
     input_ident: &syn::Ident,
     generics: &syn::Generics,
     input_attributes: &(proc_macro2::TokenStream, proc_macro2::TokenStream),
+    from: &Option<String>,
+    into: &Option<String>,
     tokens: &mut proc_macro2::TokenStream,
 ) {
     match fields.style {
@@ -488,6 +503,8 @@ fn input_handle_struct(
             input_ident,
             generics,
             input_attributes,
+            from,
+            into,
             tokens,
         ),
         ast::Style::Tuple => input_handle_tuple_struct(
@@ -1024,6 +1041,8 @@ impl ToTokens for InputReceiver {
             ref data,
             ref attrs,
             ref input_name,
+            ref from,
+            ref into,
             test: _,
             no_examples: _,
         } = *self;
@@ -1046,6 +1065,8 @@ impl ToTokens for InputReceiver {
                 &input_ident,
                 generics,
                 &input_attributes,
+                from,
+                into,
                 tokens,
             ),
         }
