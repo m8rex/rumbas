@@ -24,6 +24,12 @@ pub struct ExamplesReceiver {
 
     #[darling(rename = "name")]
     input_name: String,
+
+    #[darling(default)]
+    from: Option<String>,
+
+    #[darling(default)]
+    into: Option<String>,
 }
 
 #[derive(Debug, FromField)]
@@ -352,6 +358,8 @@ impl ToTokens for ExamplesReceiver {
             test,
             no_examples,
             ref input_name,
+            from: _,
+            into: _,
         } = *self;
 
         let input_ident = syn::Ident::new(input_name, ident.span());

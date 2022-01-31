@@ -9,6 +9,7 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::HashMap;
+use std::convert::From;
 use std::convert::TryInto;
 
 translatable_type! {
@@ -214,6 +215,12 @@ pub enum TranslationContent {
     Content(FileString),
 }
 
+impl From<FileStringInput> for TranslationContentInput {
+    fn from(f: FileStringInput) -> Self {
+        Self::Content(f)
+    }
+}
+
 impl TranslationContent {
     pub fn get(&self, locale: &str) -> Option<&FileString> {
         match self {
@@ -223,12 +230,89 @@ impl TranslationContent {
     }
 }
 
+mod helpers {
+    use super::{TranslationContent, TranslationContentInput};
+    use crate::support::file_reference::FileString;
+    use rumbas_support::preamble::*;
+    use serde::{Deserialize, Serialize};
+    use std::collections::HashMap;
+    use std::convert::From;
+
+    #[derive(Input)]
+    #[input(name = "TranslationInput")]
+    #[derive(Clone, Serialize, Deserialize)]
+    #[serde(untagged)] // TODO: custom visitor?
+    pub enum Translation {
+        Normal(TranslationStruct),
+        Short(FileString),
+    }
+
+    #[derive(Input)]
+    #[input(name = "TranslationStructInput")]
+    #[derive(Clone, Serialize, Deserialize)]
+    pub struct TranslationStruct {
+        content: TranslationContent,
+        placeholders: HashMap<String, Translation>,
+    }
+
+    impl From<TranslationStructInput> for super::TranslationInput {
+        fn from(t: TranslationStructInput) -> Self {
+            Self {
+                content: t.content,
+                placeholders: t.placeholders.real_map(|p| {
+                    p.into_iter()
+                        .map(|(k, v)| (k, v.real_map(|v| v.into())))
+                        .collect()
+                }),
+            }
+        }
+    }
+
+    impl From<TranslationInput> for super::TranslationInput {
+        fn from(t: TranslationInput) -> Self {
+            match t {
+                TranslationInput::Normal(c) => c.0.into(),
+                TranslationInput::Short(c) => c.into(),
+            }
+        }
+    }
+
+    impl From<super::TranslationInput> for TranslationInput {
+        fn from(s: super::TranslationInput) -> Self {
+            if s.placeholders.clone().map(|p| p.len()).unwrap_or(0) == 0 {
+                if let Some(ValueType::Normal(TranslationContentInput::Content(f))) = s.content.0 {
+                    return Self::Short(f);
+                }
+            }
+            Self::Normal(TranslationStructInputEnum(TranslationStructInput {
+                content: s.content,
+                placeholders: s.placeholders.real_map(|p| {
+                    p.into_iter()
+                        .map(|(k, v)| (k, v.real_map(|v| v.into())))
+                        .collect()
+                }),
+            }))
+        }
+    }
+}
+
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TranslationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[input(from = "helpers::TranslationInput")]
+#[input(into = "helpers::TranslationInput")]
 pub struct Translation {
     content: TranslationContent,
     placeholders: HashMap<String, Translation>,
+}
+
+impl From<FileStringInput> for TranslationInput {
+    fn from(f: FileStringInput) -> Self {
+        Self {
+            content: Value::Normal(f.into()),
+            placeholders: Value::Normal(HashMap::new()),
+        }
+    }
 }
 
 impl Examples for TranslationInputEnum {
