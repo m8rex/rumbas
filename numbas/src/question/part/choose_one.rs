@@ -32,7 +32,7 @@ pub struct QuestionPartChooseOne {
     /// This is either a list of jme strings or a jme expression
     pub marking_matrix: Option<VariableValued<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
     /// This is optional if marking_matrix is a JMEString
-    pub distractors: Option<Vec<EmbracedJMEString>>,
+    pub distractors: Option<Vec<ContentAreaString>>,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]

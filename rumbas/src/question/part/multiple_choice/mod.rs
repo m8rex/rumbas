@@ -30,7 +30,7 @@ pub enum MultipleChoiceAnswerData {
 pub struct MultipleChoiceAnswerDataNumbasLike {
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub marks: VariableValued<Vec<JMETranslatableString>>,
-    pub feedback: Noneable<Vec<EmbracedJMETranslatableString>>,
+    pub feedback: Noneable<Vec<ContentAreaTranslatableString>>,
 }
 
 fn extract_multiple_choice_answer_data(
@@ -38,7 +38,7 @@ fn extract_multiple_choice_answer_data(
     marking_matrix: &Option<
         numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
     >,
-    distractors: &Option<Vec<numbas::jme::EmbracedJMEString>>,
+    distractors: &Option<Vec<numbas::jme::ContentAreaString>>,
 ) -> MultipleChoiceAnswerData {
     if let (
         numbas::support::primitive::VariableValued::Value(answer_options),
@@ -55,7 +55,7 @@ fn extract_multiple_choice_answer_data(
             None => answer_options
                 .into_iter()
                 .zip(marking_matrix.into_iter())
-                .map(|(a, b)| (a, b, numbas::jme::EmbracedJMEString::new()))
+                .map(|(a, b)| (a, b, numbas::jme::ContentAreaString::default()))
                 .collect(),
         };
         MultipleChoiceAnswerData::ItemBased(
@@ -90,7 +90,7 @@ fn extract_multiple_choice_answer_data(
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceAnswer {
     pub statement: ContentAreaTranslatableString,
-    pub feedback: EmbracedJMETranslatableString,
+    pub feedback: ContentAreaTranslatableString,
     pub marks: JMETranslatableString,
 }
 
