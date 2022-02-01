@@ -206,7 +206,7 @@ COPY --from=text_fetcher /usr/app/text /usr/app/Numbas/extensions/text
 COPY extensions/written_number /usr/app/Numbas/extensions/written-number
 COPY extensions/graphs /usr/app/Numbas/extensions/graphs
 RUN mkdir -p extensions/eukleides
- # For now just use the js file in dist instead of using make
+# For now just use the js file in dist instead of using make
 COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numbas/extensions/eukleides
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
