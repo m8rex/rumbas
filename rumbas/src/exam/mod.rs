@@ -229,13 +229,7 @@ pub fn convert_numbas_exam(
         }
     };
     (
-        {
-            if let TranslatableString::NotTranslated(n) = name {
-                n.get_content("").unwrap()
-            } else {
-                panic!("Should not happen");
-            }
-        },
+        name.to_string("").expect("no locale needed"),
         exam,
         qgs,
         cpts,
