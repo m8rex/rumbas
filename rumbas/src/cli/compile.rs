@@ -1,5 +1,6 @@
 use crate::cli::check::CheckResult;
 use rayon::prelude::*;
+use std::collections::HashSet;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
@@ -20,16 +21,16 @@ pub fn compile(matches: &clap::ArgMatches) {
 
 #[derive(Debug, Clone)]
 pub struct CompilationContext {
-    pub compile_path: String,
+    pub compile_paths: Vec<String>,
 }
 
 impl From<clap::ArgMatches> for CompilationContext {
     fn from(matches: clap::ArgMatches) -> Self {
         Self {
-            compile_path: matches
-                .value_of("EXAM_OR_QUESTION_PATH")
-                .unwrap()
-                .to_string(),
+            compile_paths: matches
+                .values_of("EXAM_OR_QUESTION_PATH")
+                .map(|vals| vals.map(|v| v.to_string()).collect::<Vec<_>>())
+                .unwrap_or_default(),
         }
     }
 }
@@ -38,13 +39,16 @@ pub fn compile_internal(
     context: CompilationContext,
     file_context: FileCompilationContext,
 ) -> Result<(), ()> {
-    let path = Path::new(&context.compile_path);
-    log::info!("Compiling {:?}", path.display());
-    if path.is_absolute() {
-        log::error!("Absolute path's are not supported");
-        return Err(());
+    let mut files: HashSet<PathBuf> = HashSet::new();
+    for exam_question_path in context.compile_paths.iter() {
+        let path = Path::new(&exam_question_path);
+        log::info!("Compiling {:?}", path.display());
+        if path.is_absolute() {
+            log::error!("Absolute path's are not supported");
+            return Err(());
+        }
+        files.extend(crate::cli::check::find_all_files(path).into_iter());
     }
-    let files = crate::cli::check::find_all_files(path);
     let compile_results: Vec<(CompileResult, PathBuf)> = files
         .into_par_iter()
         .map(|file| (compile_file(&file_context, &file), file))
