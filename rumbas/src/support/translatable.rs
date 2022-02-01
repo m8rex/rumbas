@@ -77,14 +77,13 @@ translatable_type! {
 
 #[cfg(test)]
 mod test {
-    use super::TranslatableString::*;
     use super::*;
     use crate::support::file_reference::FileString;
 
     #[test]
     fn no_translation() {
         let val = "some string".to_string();
-        let t = NotTranslated(FileString::s(&val));
+        let t: Translation = FileString::s(&val).into();
         assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
     }
 
@@ -95,10 +94,10 @@ mod test {
         let mut m = HashMap::new();
         m.insert("nl".to_string(), FileString::s(&val_nl));
         m.insert("en".to_string(), FileString::s(&val_en));
-        let t = Translated(Translation {
+        let t = Translation {
             content: TranslationContent::Locales(m),
             placeholders: HashMap::new(),
-        });
+        };
         assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
         assert_eq!(t.to_string(&"en".to_string()), Some(val_en));
     }
@@ -127,10 +126,10 @@ mod test {
                 placeholders: HashMap::new(),
             },
         );
-        let t = Translated(Translation {
+        let t = Translation {
             content: TranslationContent::Locales(m),
             placeholders,
-        });
+        };
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!("een string met functie {} en {}", val2, val1))
@@ -185,10 +184,10 @@ mod test {
                 placeholders: placeholders2,
             },
         );
-        let t = Translated(Translation {
+        let t = Translation {
             content: TranslationContent::Locales(m),
             placeholders,
-        });
+        };
         assert_eq!(
             t.to_string(&"nl".to_string()),
             Some(format!(
@@ -217,6 +216,12 @@ pub enum TranslationContent {
 
 impl From<FileStringInput> for TranslationContentInput {
     fn from(f: FileStringInput) -> Self {
+        Self::Content(f)
+    }
+}
+
+impl From<FileString> for TranslationContent {
+    fn from(f: FileString) -> Self {
         Self::Content(f)
     }
 }
@@ -279,7 +284,7 @@ mod helpers {
 
     impl From<super::TranslationInput> for TranslationInput {
         fn from(s: super::TranslationInput) -> Self {
-            if s.placeholders.clone().map(|p| p.len()).unwrap_or(0) == 0 {
+            if s.placeholders.clone().map(|p| p.len()) == Some(0) {
                 if let Some(ValueType::Normal(TranslationContentInput::Content(f))) = s.content.0 {
                     return Self::Short(f);
                 }
@@ -311,6 +316,21 @@ impl From<FileStringInput> for TranslationInput {
         Self {
             content: Value::Normal(f.into()),
             placeholders: Value::Normal(HashMap::new()),
+        }
+    }
+}
+
+impl From<FileStringInput> for TranslationInputEnum {
+    fn from(f: FileStringInput) -> Self {
+        Self(f.into())
+    }
+}
+
+impl From<FileString> for Translation {
+    fn from(f: FileString) -> Self {
+        Self {
+            content: f.into(),
+            placeholders: HashMap::new(),
         }
     }
 }
@@ -377,11 +397,19 @@ impl Examples for TranslationInput {
             .zip(placeholder_values.into_iter())
             .collect();
         contents
+            .clone()
             .into_iter()
             .map(|c| TranslationInput {
                 content: Value::Normal(c),
                 placeholders: Value::Normal(placeholders.clone()),
             })
+            .chain(contents.into_iter().filter_map(|c| match c {
+                TranslationContentInput::Content(_) => Some(TranslationInput {
+                    content: Value::Normal(c.clone()),
+                    placeholders: Value::Normal(Default::default()),
+                }),
+                _ => None,
+            }))
             .collect()
     }
 }
@@ -433,27 +461,21 @@ macro_rules! translatable_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
+
             #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
-            #[serde(untagged)]
-            pub enum [<$type Input>] {
-                //TODO: custom reader that checks for missing values etc?
-                /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-                Translated(TranslationInputEnum),
-                /// A file reference or string
-                NotTranslated(FileStringInput),
-            }
+            pub struct [<$type Input>](TranslationInputEnum);
 
             impl std::convert::From<$subtype> for [<$type Input>] {
                 fn from(sub: $subtype) -> Self {
                     let s: String = sub.into();
-                    [<$type Input>]::NotTranslated(FileStringInput::s(&s))
+                    [<$type Input>](FileStringInput::s(&s).into())
                 }
             }
 
             impl std::convert::From<$subtype> for $type {
                 fn from(sub: $subtype) -> Self {
                     let s: String = sub.into();
-                    $type::NotTranslated(FileString::s(&s))
+                    $type(FileString::s(&s).into())
                 }
             }
 
@@ -480,61 +502,34 @@ macro_rules! translatable_type {
             }
 
             #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable)]
-            #[serde(untagged)]
-            pub enum $type {
-                //TODO: custom reader that checks for missing values etc?
-                /// Maps locales on formattable strings and parts like "{func}" (between {}) to values
-                Translated(Translation),
-                /// A file reference or string
-                NotTranslated(FileString),
-            }
+            pub struct $type(Translation);
 
             impl Input for [<$type Input>] {
                 type Normal = $type;
                 fn to_normal(&self) -> <Self as Input>::Normal {
-                    match self {
-                        Self::Translated(t) => $type::Translated(t.to_normal()),
-                        Self::NotTranslated(f) => $type::NotTranslated(f.to_normal()),
-                    }
+                    $type(self.0.to_normal())
                 }
                 fn from_normal(normal: <Self as Input>::Normal) -> Self {
-                    match normal {
-                        $type::Translated(t) => [<$type Input>]::Translated(TranslationInputEnum::from_normal(t)),
-                        $type::NotTranslated(f) => [<$type Input>]::NotTranslated(FileStringInput::from_normal(f)),
-                    }
+                       [<$type Input>](TranslationInputEnum::from_normal(normal.0))
+
                 }
                 fn find_missing(&self) -> InputCheckResult {
-                    match self {
-                        Self::Translated(s) => s.find_missing(),
-                        Self::NotTranslated(s) => s.find_missing()
-                    }
+                    self.0.find_missing()
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
-                    match self {
-                        Self::Translated(m) => m.insert_template_value(key, val),
-                        Self::NotTranslated(f) => f.insert_template_value(key, val),
-                    }
+                    self.0.insert_template_value(key, val)
                 }
 
                 fn files_to_load(&self) -> Vec<FileToLoad> {
-                    match self {
-                        Self::Translated(s) => s.files_to_load(),
-                        Self::NotTranslated(s) => s.files_to_load()
-                    }
+                    self.0.files_to_load()
                 }
 
                 fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
-                    match self {
-                        Self::Translated(m) => m.insert_loaded_files(files),
-                        Self::NotTranslated(f) => f.insert_loaded_files(files),
-                    }
+                    self.0.insert_loaded_files(files)
                 }
 
                 fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
-                    match self {
-                        Self::Translated(s) => s.dependencies(),
-                        Self::NotTranslated(s) => s.dependencies()
-                    }
+                    self.0.dependencies()
                 }
             }
 
@@ -552,19 +547,14 @@ macro_rules! translatable_type {
 
             impl $type {
                 pub fn to_string(&self, locale: &str) -> Option<String> {
-                    match self {
-                        //TODO: just use unwrap on values?
-                        $type::NotTranslated(s) => s.get_content(locale),
-                        $type::Translated(translation) => translation.to_string(locale),
-                    }
+                    self.0.to_string(locale)
                 }
             }
 
             impl Examples for [<$type Input>] {
                 fn examples() ->  Vec<Self> {
                     let translations = TranslationInputEnum::examples();
-                    let filestrings = FileStringInput::examples();
-                    translations.into_iter().map(Self::Translated).chain(filestrings.into_iter().map(Self::NotTranslated)).collect()
+                    translations.into_iter().map(Self).collect()
                 }
             }
         }
