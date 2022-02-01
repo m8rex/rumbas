@@ -250,7 +250,7 @@ macro_rules! handle_exam {
         {
             let exam = &mut $exam.0;
             // TODO: diagnostic
-            log::info!("Found {} default exam files.", $default_files.len());
+            log::debug!("Found {} default exam files.", $default_files.len());
             for default_file in $default_files.iter() {
                     let default_data = default_file.read_as_data().unwrap(); //TODO Move this so file reader reads them
                     match default_data {
@@ -277,9 +277,9 @@ macro_rules! handle_question {
     ($default_files:expr, $question: expr) => {
 {
     let question = $question;
-    log::info!("Found {} default question files.", $default_files.len());
+    log::debug!("Found {} default question files.", $default_files.len());
     for default_file in $default_files.iter() {
-            log::info!("Reading {}", default_file.get_path().display());
+            log::debug!("Reading {}", default_file.get_path().display());
             let default_data = default_file.read_as_data().unwrap(); //TODO
             match default_data {
                 DefaultQuestionData::Question(q) => {
