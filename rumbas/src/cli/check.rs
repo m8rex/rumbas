@@ -3,6 +3,7 @@ use rumbas::support::dependency_manager::DEPENDENCIES;
 use rumbas::support::file_manager::CACHE;
 use rumbas::support::to_numbas::ToNumbas;
 use rumbas_support::preamble::Input;
+use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
@@ -24,21 +25,28 @@ pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
 }
 
 pub fn check(matches: &clap::ArgMatches) {
-    match check_internal(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap()) {
+    match check_internal(
+        matches
+            .values_of("EXAM_OR_QUESTION_PATH")
+            .map(|vals| vals.collect::<Vec<_>>())
+            .unwrap_or_default(),
+    ) {
         Ok(_) => (),
         Err(_) => std::process::exit(1),
     }
 }
 
-//let path = Path::new(matches.value_of("EXAM_OR_QUESTION_PATH").unwrap());
-pub fn check_internal(exam_question_path: &str) -> Result<(), ()> {
-    let path = Path::new(exam_question_path);
-    log::info!("Checking {:?}", path.display());
-    if path.is_absolute() {
-        log::error!("Absolute path's are not supported");
-        return Err(());
+pub fn check_internal(exam_question_paths: Vec<&str>) -> Result<(), ()> {
+    let mut files: HashSet<PathBuf> = HashSet::new();
+    for exam_question_path in exam_question_paths.iter() {
+        let path = Path::new(exam_question_path);
+        log::info!("Checking {:?}", path.display());
+        if path.is_absolute() {
+            log::error!("Absolute path's are not supported");
+            return Err(());
+        }
+        files.extend(find_all_files(path).into_iter());
     }
-    let files = find_all_files(path);
     let check_results: Vec<(CheckResult, PathBuf)> = files
         .into_par_iter()
         .map(|file| (check_file(&file), file))

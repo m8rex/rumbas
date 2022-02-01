@@ -112,7 +112,7 @@ pub struct WatchChecker;
 impl WatchHandler for WatchChecker {
     fn handle_setup(&self, path: &str) {
         // TODO
-        crate::cli::check::check_internal(path);
+        crate::cli::check::check_internal(vec![path]);
     }
     fn handle_file(&self, path: &Path) {
         crate::cli::check::check_file(path);
@@ -134,7 +134,7 @@ impl WatchHandler for WatchCompiler {
         // TODO
         crate::cli::compile::compile_internal(
             CompilationContext {
-                compile_path: path.to_string(),
+                compile_paths: vec![path.to_string()],
             },
             Self::file_context(),
         );

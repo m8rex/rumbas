@@ -28,8 +28,12 @@ subcommands:
             help: |-
               The path to the exam or question file to compile.
 
-              If a folder within the questions or exams folder is used, all questions/exams will be compiled.
+              If a folder within the questions or exams folder is used, all questions/exams in that folder will be compiled.
+
+              It is possible to specify multiple paths to folder/files.
             required: true
+            multiple: true
+            min_values: 1
             index: 1
         - scorm:
             short: s
@@ -51,7 +55,11 @@ subcommands:
               The path to the exam or question file to check.
 
               If a folder within the questions or exams folder is used, all questions/exams will be checked.
+
+              It is possible to specify multiple paths to folder/files.
             required: true
+            multiple: true
+            min_values: 1
             index: 1
   - import:
       about: |-
