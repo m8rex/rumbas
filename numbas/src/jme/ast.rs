@@ -53,7 +53,7 @@ impl std::convert::From<String> for LogicalOperator {
     fn from(s: String) -> Self {
         match &s[..] {
             "and" | "&&" | "&" => LogicalOperator::And,
-            "or" => LogicalOperator::Or,
+            "or" | "||" => LogicalOperator::Or,
             "xor" => LogicalOperator::Xor,
             "implies" => LogicalOperator::Implies,
             _ => unreachable!(),
