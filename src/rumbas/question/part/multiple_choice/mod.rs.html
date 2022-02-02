@@ -167,7 +167,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceAnswerDataNumbasLike</span> {
     <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMETranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">feedback</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMETranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">feedback</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">fn</span> <span class="ident">extract_multiple_choice_answer_data</span>(
@@ -175,7 +175,7 @@
     <span class="ident">marking_matrix</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>
         <span class="ident">numbas::support::primitive::VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::jme::JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="op">&gt;</span>,
-    <span class="ident">distractors</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::jme::EmbracedJMEString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">distractors</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::jme::ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) -&gt; <span class="ident">MultipleChoiceAnswerData</span> {
     <span class="kw">if</span> <span class="kw">let</span> (
         <span class="ident">numbas::support::primitive::VariableValued::Value</span>(<span class="ident">answer_options</span>),
@@ -192,7 +192,7 @@
             <span class="prelude-val">None</span> =&gt; <span class="ident">answer_options</span>
                 .<span class="ident">into_iter</span>()
                 .<span class="ident">zip</span>(<span class="ident">marking_matrix</span>.<span class="ident">into_iter</span>())
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> (<span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">numbas::jme::EmbracedJMEString::new</span>()))
+                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> (<span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">numbas::jme::ContentAreaString::default</span>()))
                 .<span class="ident">collect</span>(),
         };
         <span class="ident">MultipleChoiceAnswerData::ItemBased</span>(
@@ -227,7 +227,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceAnswer</span> {
     <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">ContentAreaTranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">feedback</span>: <span class="ident">EmbracedJMETranslatableString</span>,
+    <span class="kw">pub</span> <span class="ident">feedback</span>: <span class="ident">ContentAreaTranslatableString</span>,
     <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">JMETranslatableString</span>,
 }
 
@@ -268,5 +268,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a00e130da 2022-01-29)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
 </body></html>

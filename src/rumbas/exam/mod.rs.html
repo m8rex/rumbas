@@ -240,12 +240,6 @@
 <span id="235">235</span>
 <span id="236">236</span>
 <span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains all the exam types</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">diagnostic</span>;
@@ -477,18 +471,12 @@
         }
     };
     (
-        {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">TranslatableString::NotTranslated</span>(<span class="ident">n</span>) <span class="op">=</span> <span class="ident">name</span> {
-                <span class="ident">n</span>.<span class="ident">get_content</span>(<span class="string">&quot;&quot;</span>).<span class="ident">unwrap</span>()
-            } <span class="kw">else</span> {
-                <span class="macro">panic!</span>(<span class="string">&quot;Should not happen&quot;</span>);
-            }
-        },
+        <span class="ident">name</span>.<span class="ident">to_string</span>(<span class="string">&quot;&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;no locale needed&quot;</span>),
         <span class="ident">exam</span>,
         <span class="ident">qgs</span>,
         <span class="ident">cpts</span>,
     )
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a00e130da 2022-01-29)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
 </body></html>

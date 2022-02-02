@@ -483,6 +483,14 @@
 <span id="478">478</span>
 <span id="479">479</span>
 <span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syn::spanned::Spanned</span>;
 <span class="kw">use</span> <span class="ident">darling::ast</span>;
 <span class="kw">use</span> <span class="ident">darling::FromDeriveInput</span>;
@@ -509,6 +517,12 @@
 
     <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;name&quot;</span>)]</span>
     <span class="ident">input_name</span>: <span class="ident">String</span>,
+
+    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
+    <span class="ident">from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+
+    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
+    <span class="ident">into</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">FromField</span>)]</span>
@@ -837,6 +851,8 @@
             <span class="ident">test</span>,
             <span class="ident">no_examples</span>,
             <span class="kw-2">ref</span> <span class="ident">input_name</span>,
+            <span class="ident">from</span>: <span class="kw">_</span>,
+            <span class="ident">into</span>: <span class="kw">_</span>,
         } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
 
         <span class="kw">let</span> <span class="ident">input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="ident">input_name</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
@@ -964,5 +980,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a00e130da 2022-01-29)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
 </body></html>

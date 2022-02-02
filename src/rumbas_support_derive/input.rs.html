@@ -1056,6 +1056,27 @@
 <span id="1051">1051</span>
 <span id="1052">1052</span>
 <span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">darling::ast</span>;
 <span class="kw">use</span> <span class="ident">darling</span>::{<span class="ident">FromDeriveInput</span>, <span class="ident">FromField</span>, <span class="ident">FromVariant</span>};
 <span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">ToTokens</span>};
@@ -1099,6 +1120,12 @@
     <span class="ident">test</span>: <span class="ident">bool</span>,
     <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
     <span class="ident">no_examples</span>: <span class="ident">bool</span>,
+
+    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
+    <span class="ident">from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+
+    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
+    <span class="ident">into</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">fn</span> <span class="ident">get_input_type</span>(<span class="ident">t</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Type</span>) -&gt; <span class="ident">proc_macro2::TokenStream</span> {
@@ -1304,6 +1331,8 @@
     <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
     <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
     <span class="ident">input_attributes</span>: <span class="kw-2">&amp;</span>(<span class="ident">proc_macro2::TokenStream</span>, <span class="ident">proc_macro2::TokenStream</span>),
+    <span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
 ) {
     <span class="comment">// Beginning of fixing generics</span>
@@ -1375,8 +1404,13 @@
         })
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
+    <span class="kw">let</span> <span class="ident">from</span> <span class="op">=</span> <span class="ident">from</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="macro">quote!</span> {<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> #<span class="ident">p</span>)]</span>});
+    <span class="kw">let</span> <span class="ident">into</span> <span class="op">=</span> <span class="ident">into</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="macro">quote!</span> {<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> #<span class="ident">p</span>)]</span>});
+
     <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
         #<span class="ident">input_attributes_input</span>
+        #<span class="ident">from</span>
+        #<span class="ident">into</span>
         <span class="kw">pub</span> <span class="kw">struct</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
             #(
                 #<span class="ident">field_attributes</span>
@@ -1537,6 +1571,8 @@
     <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
     <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
     <span class="ident">input_attributes</span>: <span class="kw-2">&amp;</span>(<span class="ident">proc_macro2::TokenStream</span>, <span class="ident">proc_macro2::TokenStream</span>),
+    <span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
 ) {
     <span class="kw">match</span> <span class="ident">fields</span>.<span class="ident">style</span> {
@@ -1546,6 +1582,8 @@
             <span class="ident">input_ident</span>,
             <span class="ident">generics</span>,
             <span class="ident">input_attributes</span>,
+            <span class="ident">from</span>,
+            <span class="ident">into</span>,
             <span class="ident">tokens</span>,
         ),
         <span class="ident">ast::Style::Tuple</span> =&gt; <span class="ident">input_handle_tuple_struct</span>(
@@ -2082,6 +2120,8 @@
             <span class="kw-2">ref</span> <span class="ident">data</span>,
             <span class="kw-2">ref</span> <span class="ident">attrs</span>,
             <span class="kw-2">ref</span> <span class="ident">input_name</span>,
+            <span class="kw-2">ref</span> <span class="ident">from</span>,
+            <span class="kw-2">ref</span> <span class="ident">into</span>,
             <span class="ident">test</span>: <span class="kw">_</span>,
             <span class="ident">no_examples</span>: <span class="kw">_</span>,
         } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
@@ -2104,11 +2144,13 @@
                 <span class="kw-2">&amp;</span><span class="ident">input_ident</span>,
                 <span class="ident">generics</span>,
                 <span class="kw-2">&amp;</span><span class="ident">input_attributes</span>,
+                <span class="ident">from</span>,
+                <span class="ident">into</span>,
                 <span class="ident">tokens</span>,
             ),
         }
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a00e130da 2022-01-29)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
 </body></html>
