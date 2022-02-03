@@ -39,7 +39,7 @@ RUN apk add git
 RUN git clone https://github.com/numbas/Numbas.git Numbas
 
 WORKDIR /usr/app/Numbas
-RUN git fetch && git checkout 7fb4fd4a24410316c36c3f140227fe240c5207a3
+RUN git fetch && git checkout 5337cc4b218497c419b007b70aecca104646c81e
 RUN rm -r docs .git tests # remove large folders
 
 # Fetch jsx graph extension
