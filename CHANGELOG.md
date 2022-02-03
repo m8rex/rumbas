@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2022-02-03
+
+### Changed
+
+- numbas version
+- Statements and answers in match answer parts are content area's instead of EmbracedJMEStrings.
+
 ## [0.5.1] - 2022-02-01
 
 ### Added
+
 - Support for `||` as `or` in jme
 - A Translation text without translation can now be written as plain text instead of needing a map with `content` and `placeholders` keys.
 
 ### Changed
+
 - Feedback in multiple choices are content area's instead of EmbracedJMEStrings.
 - `check` and `compile` command do now accept multiple paths, which will all be checked / compiled.
 - Some debug prints are changed from INFO level to DEBUG level (default file logs).
