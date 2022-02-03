@@ -1,4 +1,4 @@
-use crate::jme::{EmbracedJMEString, JMEString};
+use crate::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use crate::question::part::choose_multiple::MultipleChoiceMarkingMethod;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::SafeNatural;
@@ -44,8 +44,8 @@ pub struct QuestionPartMatchAnswersWithChoices {
     /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
     pub show_cell_answer_state: bool,
 
-    pub choices: VariableValued<Vec<EmbracedJMEString>>,
-    pub answers: VariableValued<Vec<EmbracedJMEString>>,
+    pub choices: VariableValued<Vec<ContentAreaString>>,
+    pub answers: VariableValued<Vec<ContentAreaString>>,
     #[serde(rename = "matrix")]
     pub marking_matrix: Option<VariableValued<Vec<Vec<JMEString>>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }

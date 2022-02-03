@@ -285,8 +285,8 @@ pub enum MultipleChoiceMatchAnswerData {
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
-    pub answers: VariableValued<Vec<EmbracedJMETranslatableString>>,
-    pub choices: VariableValued<Vec<EmbracedJMETranslatableString>>,
+    pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
+    pub choices: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub marks: VariableValued<Vec<Vec<JMEString>>>,
 }
 
@@ -295,7 +295,7 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MultipleChoiceMatchAnswers {
     /// Values of the answers
-    pub answers: Vec<EmbracedJMETranslatableString>,
+    pub answers: Vec<ContentAreaTranslatableString>,
     /// Items for which the answer can be selected
     pub items: Vec<MatchAnswersItem>,
 }
@@ -304,7 +304,7 @@ pub struct MultipleChoiceMatchAnswers {
 #[input(name = "MatchAnswersItemInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MatchAnswersItem {
-    pub statement: EmbracedJMETranslatableString,
+    pub statement: ContentAreaTranslatableString,
     /// Map points to strings of answers ! use anchors in yaml
     pub answer_marks: Vec<MatchAnswersItemMarks>,
 }
@@ -314,7 +314,7 @@ pub struct MatchAnswersItem {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct MatchAnswersItemMarks {
     pub marks: JMEString,
-    pub answer: EmbracedJMETranslatableString,
+    pub answer: ContentAreaTranslatableString,
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
