@@ -712,8 +712,8 @@
 <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MultipleChoiceMatchAnswerDataNumbasLikeInput&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceMatchAnswerDataNumbasLike</span> {
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMETranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMETranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
@@ -722,7 +722,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceMatchAnswers</span> {
     <span class="doccomment">/// Values of the answers</span>
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMETranslatableString</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Items for which the answer can be selected</span>
     <span class="kw">pub</span> <span class="ident">items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MatchAnswersItem</span><span class="op">&gt;</span>,
 }
@@ -731,7 +731,7 @@
 <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersItemInput&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersItem</span> {
-    <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">EmbracedJMETranslatableString</span>,
+    <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">ContentAreaTranslatableString</span>,
     <span class="doccomment">/// Map points to strings of answers ! use anchors in yaml</span>
     <span class="kw">pub</span> <span class="ident">answer_marks</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MatchAnswersItemMarks</span><span class="op">&gt;</span>,
 }
@@ -741,7 +741,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersItemMarks</span> {
     <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">JMEString</span>,
-    <span class="kw">pub</span> <span class="ident">answer</span>: <span class="ident">EmbracedJMETranslatableString</span>,
+    <span class="kw">pub</span> <span class="ident">answer</span>: <span class="ident">ContentAreaTranslatableString</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
@@ -848,5 +848,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (27f5d830e 2022-02-02)" ></div>
 </body></html>

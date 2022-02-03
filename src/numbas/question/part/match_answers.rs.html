@@ -95,7 +95,7 @@
 <span id="90">90</span>
 <span id="91">91</span>
 <span id="92">92</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme</span>::{<span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::choose_multiple::MultipleChoiceMarkingMethod</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>;
@@ -141,8 +141,8 @@
     <span class="doccomment">/// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</span>
     <span class="kw">pub</span> <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
 
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMEString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmbracedJMEString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[choice][answer]</span>
 }
@@ -188,5 +188,5 @@
     <span class="kw">pub</span> <span class="ident">expression</span>: <span class="ident">String</span>, <span class="comment">// TODO: expression only needed for custom type?</span>
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (2681f253b 2022-02-01)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (27f5d830e 2022-02-02)" ></div>
 </body></html>
