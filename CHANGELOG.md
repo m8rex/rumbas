@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.3] - 2022-02-04
+
+### Fixed
+- Using `µ` for `\var` works again
+
 ## [0.5.2] - 2022-02-03
 
 ### Changed
