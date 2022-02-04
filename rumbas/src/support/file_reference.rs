@@ -17,7 +17,7 @@ pub const FILE_PREFIX: &str = "file";
 #[derive(Serialize, Deserialize, Comparable)]
 #[serde(untagged)]
 pub enum AnyString {
-    Str(String),
+    Str(InputString),
     Isize(isize),
     Float(f64),
 }
@@ -25,7 +25,7 @@ pub enum AnyString {
 impl std::convert::From<AnyString> for String {
     fn from(a: AnyString) -> Self {
         match a {
-            AnyString::Str(s) => s,
+            AnyString::Str(s) => s.into(),
             AnyString::Isize(v) => v.to_string(),
             AnyString::Float(v) => v.to_string(),
         }
@@ -34,7 +34,7 @@ impl std::convert::From<AnyString> for String {
 
 impl std::convert::From<&'static str> for AnyString {
     fn from(s: &'static str) -> Self {
-        Self::Str(s.to_string())
+        Self::Str(s.to_string().into())
     }
 }
 
