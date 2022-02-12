@@ -44,5 +44,7 @@ fn main() {
         cli::check(matches)
     } else if let Some(matches) = matches.subcommand_matches("watch") {
         cli::watch(matches)
+    } else if let Some(matches) = matches.subcommand_matches("fmt") {
+        cli::fmt(matches)
     }
 }

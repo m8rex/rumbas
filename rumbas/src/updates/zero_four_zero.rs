@@ -92,6 +92,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&question).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -118,6 +119,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&exam).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -189,6 +191,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -256,6 +259,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -304,6 +308,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -355,6 +360,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
@@ -405,6 +411,7 @@ pub fn update() -> String {
         let mut out_str = String::new();
         {
             let mut emitter = YamlEmitter::new(&mut out_str);
+            emitter.multiline_strings(true);
             emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
         }
         std::fs::write(file.file_path, out_str).expect("Failed writing file");

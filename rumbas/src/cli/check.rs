@@ -12,6 +12,10 @@ pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
     } else if path.is_dir() {
         if path.starts_with("questions") {
             CACHE.find_all_questions_in_folder(path.to_path_buf())
+        } else if path.starts_with("question_templates") {
+            CACHE.find_all_question_templates_in_folder(path.to_path_buf())
+        } else if path.starts_with("exam_templates") {
+            CACHE.find_all_exam_templates_in_folder(path.to_path_buf())
         } else {
             CACHE.find_all_exams_in_folder(path.to_path_buf())
         }
