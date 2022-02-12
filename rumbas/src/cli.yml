@@ -61,6 +61,23 @@ subcommands:
             multiple: true
             min_values: 1
             index: 1
+  - fmt:
+      about: |-
+        Format a rumbas exam (or question).
+
+        You can pass a path to a folder to format all files in the folder.
+      args:
+        - EXAM_OR_QUESTION_PATH:
+            help: |-
+              The path to the exam or question file to format.
+
+              If a folder within the questions or exams folder is used, all questions/exams will be formatted.
+
+              It is possible to specify multiple paths to folder/files.
+            required: true
+            multiple: true
+            min_values: 1
+            index: 1
   - import:
       about: |-
         Import a numbas .exam file

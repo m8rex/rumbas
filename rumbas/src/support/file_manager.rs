@@ -190,9 +190,13 @@ impl FileManager {
 }
 
 impl FileManager {
-    fn find_all_yaml_files(path: PathBuf, wanted_file_type: RumbasRepoFileType) -> Vec<FileToLoad> {
+    fn find_all_yaml_files(
+        &self,
+        path: PathBuf,
+        wanted_file_type: RumbasRepoFileType,
+    ) -> Vec<FileToLoad> {
         let mut files = Vec::new();
-        for entry in CACHE.read_folder(&path) {
+        for entry in self.read_folder(&path) {
             match entry {
                 RumbasRepoEntry::File(file) => {
                     if file.r#type == wanted_file_type {
@@ -204,10 +208,8 @@ impl FileManager {
                 }
                 RumbasRepoEntry::Folder(folder) => {
                     if folder.r#type == RumbasRepoFolderType::Folder {
-                        files.extend(Self::find_all_yaml_files(
-                            folder.path,
-                            wanted_file_type.clone(),
-                        ))
+                        files
+                            .extend(self.find_all_yaml_files(folder.path, wanted_file_type.clone()))
                     }
                 }
             }
@@ -215,7 +217,7 @@ impl FileManager {
         files
     }
     pub fn find_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
-        Self::find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
+        self.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
     }
     pub fn read_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
         let files = self.find_all_questions_in_folder(folder_path);
@@ -226,14 +228,16 @@ impl FileManager {
             std::path::Path::new(crate::QUESTIONS_FOLDER).to_path_buf(),
         ) // TODO, find root of rumbas repo by looking for rc file
     }
+    pub fn find_all_question_templates_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+        self.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
+    }
     pub fn read_all_question_templates(&self) -> Vec<LoadedFile> {
-        let path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files =
-            Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::QuestionTemplateFile);
+        let folder_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER).to_path_buf(); // TODO, find root of rumbas repo by looking for rc file
+        let files = self.find_all_question_templates_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
     pub fn find_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
-        Self::find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
+        self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
     pub fn read_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
         let files = self.find_all_exams_in_folder(folder_path);
@@ -243,10 +247,12 @@ impl FileManager {
         self.read_all_exams_in_folder(std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf())
         // TODO, find root of rumbas repo by looking for rc file
     }
+    pub fn find_all_exam_templates_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+        self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
+    }
     pub fn read_all_exam_templates(&self) -> Vec<LoadedFile> {
-        let path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER); // TODO, find root of rumbas repo by looking for rc file
-        let files =
-            Self::find_all_yaml_files(path.to_path_buf(), RumbasRepoFileType::ExamTemplateFile);
+        let folder_path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER).to_path_buf(); // TODO, find root of rumbas repo by looking for rc file
+        let files = self.find_all_exam_templates_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
 }

@@ -1,5 +1,6 @@
 mod check;
 mod compile;
+mod fmt;
 mod import;
 mod init;
 pub mod logger;
@@ -9,6 +10,7 @@ mod watch;
 
 pub use check::check;
 pub use compile::compile;
+pub use fmt::fmt;
 pub use import::import;
 pub use init::init;
 pub use schema::schema;
