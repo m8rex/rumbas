@@ -70,5 +70,7 @@ fn main() {
         cli::watch(matches)
     } else if let Some(matches) = matches.subcommand_matches("fmt") {
         cli::fmt(matches)
+    } else if let Some(matches) = matches.subcommand_matches("editor_output") {
+        cli::create_editor_output(matches)
     }
 }
