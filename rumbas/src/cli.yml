@@ -114,3 +114,105 @@ subcommands:
         - only_check:
             short: o
             help: Only check exams and questions that change due to file changes, but don't compile them with numbas.
+  - editor_output:
+      about: |-
+        Generates a folder structure that can be hosted and used as an 'editor' in the numbas lti provider
+
+        Only exams are compiled.
+      args:
+        - OUTPUT_PATH:
+            help: |-
+              The path to the folder where the output should be generated.
+            required: true
+            index: 1
+            multiple: true
+            min_values: 1
+            index: 1
+        - scorm:
+            short: s
+            help: Include the files necessary to make a SCORM package
+        - zip:
+            short: z
+            help: Create a zip file instead of a directory
+        - no-minification:
+            long: no-minification
+            help: Don't perform minification on the created js in the exam. Useful if you don't have uglifyjs or want to debug something.
+  - check:
+      about: |-
+        Check a rumbas exam (or question).
+
+        You can pass a path to a folder to check all files in the folder.
+      args:
+        - EXAM_OR_QUESTION_PATH:
+            help: |-
+              The path to the exam or question file to check.
+
+              If a folder within the questions or exams folder is used, all questions/exams will be checked.
+
+              It is possible to specify multiple paths to folder/files.
+            required: true
+            multiple: true
+            min_values: 1
+            index: 1
+  - fmt:
+      about: |-
+        Format a rumbas exam (or question).
+
+        You can pass a path to a folder to format all files in the folder.
+      args:
+        - EXAM_OR_QUESTION_PATH:
+            help: |-
+              The path to the exam or question file to format.
+
+              If a folder within the questions or exams folder is used, all questions/exams will be formatted.
+
+              It is possible to specify multiple paths to folder/files.
+            required: true
+            multiple: true
+            min_values: 1
+            index: 1
+  - import:
+      about: |-
+        Import a numbas .exam file
+            
+        Resources have to be manually placed in the resources folder
+      args:
+        - EXAM_PATH:
+            help: The path to the numbas .exam file
+            required: true
+            index: 1
+        - question:
+            short: q
+            multiple: true
+            help: Tells rumbas that this is the exam file of a numbas question instead of of a numbas exam.
+  - init:
+      about: |-
+        Initialize a rumbas project in this folder
+  - update_repo:
+      about: |-
+        Update the repository to the next rumbas version
+  - schema:
+      about: |-
+        Creates files with the json schemas (beta).
+        See https://github.com/m8rex/rumbas-examples/tree/main/.vscode for usage instructions
+  - watch:
+      about: |-
+        Watch a path
+      args:
+        - PATH:
+            help: |-
+              The path to watch
+            required: true
+            index: 1
+        - only_check:
+            short: o
+            help: Only check exams and questions that change due to file changes, but don't compile them with numbas.
+  - editor_output:
+      about: |-
+        Generates a folder structure that can be hosted and used as an 'editor' in the numbas lti provider
+
+        Only exams are compiled.
+      args:
+        - OUTPUT_PATH:
+            help: |-
+              The path to the folder where the output should be generated.

@@ -13,9 +13,9 @@ pub const CACHE_FOLDER: &str = ".rumbas";
 pub const OUTPUT_FOLDER: &str = "_output";
 
 pub fn compile(matches: &clap::ArgMatches) {
-    match compile_internal(matches.to_owned().into(), matches.to_owned().into()) {
-        Ok(_) => (),
-        Err(_) => std::process::exit(1),
+    match compile_internal(matches.to_owned().into(), matches.to_owned().into()).has_failures {
+        false => (),
+        true => std::process::exit(1),
     }
 }
 
@@ -35,17 +35,25 @@ impl From<clap::ArgMatches> for CompilationContext {
     }
 }
 
+pub struct InternalCompilationResult {
+    pub has_failures: bool,
+    pub created_output_paths: Vec<PathBuf>,
+}
+
 pub fn compile_internal(
     context: CompilationContext,
     file_context: FileCompilationContext,
-) -> Result<(), ()> {
+) -> InternalCompilationResult {
     let mut files: HashSet<PathBuf> = HashSet::new();
     for exam_question_path in context.compile_paths.iter() {
         let path = Path::new(&exam_question_path);
         log::info!("Compiling {:?}", path.display());
         if path.is_absolute() {
             log::error!("Absolute path's are not supported");
-            return Err(());
+            return InternalCompilationResult {
+                has_failures: true,
+                created_output_paths: vec![],
+            };
         }
         files.extend(crate::cli::check::find_all_files(path).into_iter());
     }
@@ -57,26 +65,32 @@ pub fn compile_internal(
     let failures: Vec<_> = compile_results
         .par_iter()
         .filter(|(result, _)| match result {
-            CompileResult::Partial(p) => {
-                if p.failed.is_empty() && p.failed_check.is_empty() {
-                    false
-                } else {
-                    true
-                }
-            }
+            CompileResult::Partial(p) => p.has_failure(),
             _ => true,
         })
         .collect();
-    if failures.len() > 0 {
+    let has_failures = if failures.len() > 0 {
         for (check_result, path) in failures.iter() {
             log::error!("Compilation for {} failed:", path.display());
             check_result.log(path);
         }
         log::error!("{} files failed.", failures.len());
-        Err(())
+        true
     } else {
         log::info!("All compilations passed.");
-        Ok(())
+        false
+    };
+    let created_output_paths = compile_results
+        .par_iter()
+        .into_par_iter()
+        .flat_map(|(result, _)| match result {
+            CompileResult::Partial(p) => p.created_output_paths(),
+            _ => vec![],
+        })
+        .collect();
+    InternalCompilationResult {
+        has_failures,
+        created_output_paths,
     }
 }
 
@@ -89,11 +103,17 @@ pub enum CompileResult {
 
 pub struct RumbasCompileData {
     failed_check: Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)>,
-    failed: Vec<String>,
-    passed: Vec<String>,
+    failed: Vec<String>,            // locale
+    passed: Vec<(String, PathBuf)>, // locale, path of generated exam
 }
 
 impl RumbasCompileData {
+    pub fn has_failure(&self) -> bool {
+        !(self.failed.is_empty() && self.failed_check.is_empty())
+    }
+    pub fn created_output_paths(&self) -> Vec<PathBuf> {
+        self.passed.iter().map(|(_, p)| p.clone()).collect()
+    }
     pub fn log(&self, path: &Path) {
         for (locale, check_result) in self.failed_check.iter() {
             log::error!(
@@ -111,11 +131,12 @@ impl RumbasCompileData {
                 path.display()
             );
         }
-        for locale in self.passed.iter() {
+        for (locale, output_path) in self.passed.iter() {
             log::info!(
-                "Succesfully compiled locale {} for {} with numbas.",
+                "Succesfully compiled locale {} for {} with numbas. The output can be found at {}.",
                 locale,
-                path.display()
+                path.display(),
+                output_path.display()
             );
         }
     }
@@ -170,7 +191,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
                     minify: context.minify,
                 };
                 if compiler.compile() {
-                    passed_compilations.push(locale)
+                    passed_compilations.push((locale, compiler.output_path()))
                 } else {
                     failed_compilations.push(locale)
                 }
@@ -210,7 +231,7 @@ impl NumbasCompiler {
         Path::new(OUTPUT_FOLDER).join(&self.locale)
     }
     /// Creates the output path for the generated html
-    fn output_path(&self) -> PathBuf {
+    pub fn output_path(&self) -> PathBuf {
         let output_file = self.exam_path.with_extension(self.output_extension());
         self.locale_output_folder()
             .canonicalize()
