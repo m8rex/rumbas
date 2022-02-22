@@ -1,4 +1,6 @@
-use super::compile::{compile_internal, CompilationContext, FileCompilationContext};
+use super::compile::{
+    compile_internal, CompilationContext, FileCompilationContext, InternalCompilationResult,
+};
 use crate::cli::check::CheckResult;
 use rayon::prelude::*;
 use std::collections::HashSet;
@@ -24,6 +26,24 @@ impl From<clap::ArgMatches> for EditorOutputContext {
             output_path: matches.value_of("OUTPUT_PATH").unwrap().to_string(),
         }
     }
+}
+
+fn find_complete_outputs(
+    scorm_compilation_result: InternalCompilationResult,
+    folder_compilation_result: InternalCompilationResult,
+) -> Vec<PathBuf> {
+    let s = scorm_compilation_result
+        .created_output_paths
+        .into_iter()
+        .collect::<HashSet<_>>();
+    folder_compilation_result
+        .created_output_paths
+        .into_iter()
+        .filter(|p| {
+            let scorm = p.with_extension("zip");
+            s.contains(&scorm)
+        })
+        .collect()
 }
 
 pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(), ()> {
@@ -54,5 +74,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
 
     println!("{:?}", scorm_compilation_result.created_output_paths);
     println!("{:?}", folder_compilation_result.created_output_paths);
+    let matching = find_complete_outputs(scorm_compilation_result, folder_compilation_result);
+    println!("{:?}", matching);
     Ok(())
 }
