@@ -1,6 +1,7 @@
 use crate::RC_FILE_NAME;
 use serde::{Deserialize, Serialize};
 use semver::{Version};
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 /// "Run commands" that specify how this rumbas repo should be executed
@@ -37,10 +38,34 @@ impl RC {
 /// Returns None if the file does not exist
 /// Returns Some(val) where val is the parsing result if the file does exist
 pub fn read() -> Result<RC, serde_yaml::Error> {
-    let f = std::fs::read_to_string(RC_FILE_NAME);
-    if let Ok(f) = f {
-        serde_yaml::from_str(&f)
+    let root_opt = find_root();
+    if let Some(root) = root_opt {
+        let f = std::fs::read_to_string(root.join(RC_FILE_NAME));
+        if let Ok(f) = f {
+            serde_yaml::from_str(&f)
+        } else {
+            Ok(Default::default())
+        }
     } else {
         Ok(Default::default())
     }
+}
+
+/// Reads the [RC_FILE_NAME] file
+/// Returns None if the file does not exist
+/// Returns Some(val) where val is the parsing result if the file does exist
+pub fn find_root() -> Option<PathBuf> {
+    let start = Path::new(".").canonicalize().unwrap();
+
+    let mut current = Some(start.as_path());
+
+    while let Some(f) = current {
+        let possible_file = f.join(RC_FILE_NAME);
+        if possible_file.exists() {
+            return Some(f.to_owned());
+        }
+
+        current = f.parent();
+    }
+    None
 }

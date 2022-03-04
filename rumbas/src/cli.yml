@@ -90,7 +90,6 @@ subcommands:
             index: 1
         - question:
             short: q
-            multiple: true
             help: Tells rumbas that this is the exam file of a numbas question instead of of a numbas exam.
   - init:
       about: |-
@@ -125,9 +124,11 @@ subcommands:
               The path to the folder where the output should be generated.
             required: true
             index: 1
-            multiple: true
-            min_values: 1
-            index: 1
+        - URL_PREFIX:
+            help: |-
+              The url prefix for all editor api calls
+            required: true
+            index: 2
         - scorm:
             short: s
             help: Include the files necessary to make a SCORM package
@@ -207,12 +208,3 @@ subcommands:
         - only_check:
             short: o
             help: Only check exams and questions that change due to file changes, but don't compile them with numbas.
-  - editor_output:
-      about: |-
-        Generates a folder structure that can be hosted and used as an 'editor' in the numbas lti provider
-
-        Only exams are compiled.
-      args:
-        - OUTPUT_PATH:
-            help: |-
-              The path to the folder where the output should be generated.
