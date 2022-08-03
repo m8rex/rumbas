@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["ToNumbas",""]],"type":[["NumbasResult",""]]});
+window.SIDEBAR_ITEMS = {"trait":[["ToNumbas",""]],"type":[["NumbasResult",""]]};

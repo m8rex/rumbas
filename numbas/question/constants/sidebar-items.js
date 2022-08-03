@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BuiltinConstants",""],["QuestionConstant",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["BuiltinConstants",""],["QuestionConstant",""]]};

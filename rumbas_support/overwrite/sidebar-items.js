@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["Overwrite",""]]});
+window.SIDEBAR_ITEMS = {"trait":[["Overwrite",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["BuiltinFunctions",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["BuiltinFunctions",""]]};

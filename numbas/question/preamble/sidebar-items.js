@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Preamble",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Preamble",""]]};

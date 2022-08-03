@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["LeaveAction",""],["NavigationMode",""],["ShowResultsPage",""]],"struct":[["Navigation",""],["NavigationModeDiagnostic",""],["NavigationModeSequential",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["LeaveAction",""],["NavigationMode",""],["ShowResultsPage",""]],"struct":[["Navigation",""],["NavigationModeDiagnostic",""],["NavigationModeSequential",""]]};

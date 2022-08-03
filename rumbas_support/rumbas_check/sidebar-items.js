@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["RumbasCheckInvalidJMEStringData",""],["RumbasCheckMissingData",""],["RumbasCheckPath",""],["RumbasCheckResult",""]],"trait":[["RumbasCheck",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["RumbasCheckInvalidJMEStringData",""],["RumbasCheckMissingData",""],["RumbasCheckPath",""],["RumbasCheckResult",""]],"trait":[["RumbasCheck",""]]};

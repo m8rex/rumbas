@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Noneable",""],["NoneableChange",""],["NoneableDesc",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["Noneable",""],["NoneableChange",""],["NoneableDesc",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ChooseOneDisplayType",""]],"struct":[["QuestionPartChooseOne",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ChooseOneDisplayType",""]],"struct":[["QuestionPartChooseOne",""]]};

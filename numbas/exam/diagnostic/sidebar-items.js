@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["DiagnosticScript",""]],"struct":[["Diagnostic",""],["DiagnosticKnowledgeGraph",""],["DiagnosticKnowledgeGraphLearningObjective",""],["DiagnosticKnowledgeGraphTopic",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["DiagnosticScript",""]],"struct":[["Diagnostic",""],["DiagnosticKnowledgeGraph",""],["DiagnosticKnowledgeGraphLearningObjective",""],["DiagnosticKnowledgeGraphTopic",""]]};

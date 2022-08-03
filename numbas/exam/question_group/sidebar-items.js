@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["QuestionGroupPickingStrategy",""]],"struct":[["QuestionGroup",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["QuestionGroupPickingStrategy",""]],"struct":[["QuestionGroup",""]]};

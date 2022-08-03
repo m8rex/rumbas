@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["MultipleChoiceMarkingMethod",""]],"struct":[["QuestionPartChooseMultiple",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["MultipleChoiceMarkingMethod",""]],"struct":[["QuestionPartChooseMultiple",""]]};

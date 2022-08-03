@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["answer_simplification_deserialize_string",""],["answer_simplification_serialize_string",""],["from_str_optional",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["answer_simplification_deserialize_string",""],["answer_simplification_serialize_string",""],["from_str_optional",""]]};

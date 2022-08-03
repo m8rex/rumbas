@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["InputString","The datatype for the input strings"],["InputStringChange",""],["InputStringDesc",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["InputString","The datatype for the input strings"],["InputStringChange",""],["InputStringDesc",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["TimeoutAction",""]],"struct":[["Timing",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["TimeoutAction",""]],"struct":[["Timing",""]]};

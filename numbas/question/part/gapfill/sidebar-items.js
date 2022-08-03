@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionPartGapFill",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["QuestionPartGapFill",""]]};

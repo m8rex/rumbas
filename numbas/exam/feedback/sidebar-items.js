@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Feedback",""],["FeedbackMessage",""],["Review",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Feedback",""],["FeedbackMessage",""],["Review",""]]};

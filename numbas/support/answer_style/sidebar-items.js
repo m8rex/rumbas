@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["AnswerStyle",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["AnswerStyle",""]]};

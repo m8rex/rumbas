@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["TEMPLATE_PREFIX",""]],"enum":[["TemplateStringChange",""],["ValueType",""],["ValueTypeChange",""],["ValueTypeDesc",""]],"struct":[["TemplateString",""],["TemplateStringDesc",""],["Value",""],["ValueChange",""],["ValueDesc",""]]});
+window.SIDEBAR_ITEMS = {"constant":[["TEMPLATE_PREFIX",""]],"enum":[["TemplateStringChange",""],["ValueType",""],["ValueTypeChange",""],["ValueTypeDesc",""]],"struct":[["TemplateString",""],["TemplateStringDesc",""],["Value",""],["ValueChange",""],["ValueDesc",""]]};

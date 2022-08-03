@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["example",""],["input",""],["overwrite",""],["preamble",""],["rumbas_check",""],["value",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["example",""],["input",""],["overwrite",""],["preamble",""],["rumbas_check",""],["value",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionPartInformation",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["QuestionPartInformation",""]]};

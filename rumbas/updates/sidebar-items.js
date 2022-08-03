@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["update",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["update",""]]};

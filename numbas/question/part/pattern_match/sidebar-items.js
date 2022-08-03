@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["PatternMatchMode",""]],"struct":[["QuestionPartPatternMatch",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["PatternMatchMode",""]],"struct":[["QuestionPartPatternMatch",""]]};

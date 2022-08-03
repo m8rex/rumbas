@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["sanitize",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["sanitize",""]]};

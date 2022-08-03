@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["VariableTemplateType",""]],"struct":[["Variable",""],["VariableGroup",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["VariableTemplateType",""]],"struct":[["Variable",""],["VariableGroup",""]]};

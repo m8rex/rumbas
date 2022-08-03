@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["DEFAULTS",""]],"struct":[["NumbasDefaults",""]]});
+window.SIDEBAR_ITEMS = {"constant":[["DEFAULTS",""]],"struct":[["NumbasDefaults",""]]};

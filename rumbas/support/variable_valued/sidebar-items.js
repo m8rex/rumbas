@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ReverseVariableValued",""],["VariableValued",""],["VariableValuedChange",""],["VariableValuedDesc",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ReverseVariableValued",""],["VariableValued",""],["VariableValuedChange",""],["VariableValuedDesc",""]]};

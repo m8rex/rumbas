@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["YamlError",""]],"type":[["YamlResult",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["YamlError",""]],"type":[["YamlResult",""]]};

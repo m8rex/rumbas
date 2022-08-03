@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["QuestionPartExtension",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["QuestionPartExtension",""]]};
