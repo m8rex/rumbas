@@ -40,28 +40,39 @@ pub struct Question {
     /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
     /// The advice area is normally used to present a worked solution to the question.
     pub advice: ContentAreaString,
+    #[serde(default)]
     pub parts: Vec<QuestionPart>,
     #[serde(default)]
     pub builtin_constants: BuiltinConstants,
     #[serde(default)]
     pub constants: Vec<QuestionConstant>,
+    #[serde(default)]
     pub variables: HashMap<String, Variable>,
-    #[serde(rename = "variablesTest")]
+    #[serde(rename = "variablesTest", default)]
     pub variables_test: QuestionVariablesTest,
+    #[serde(default)]
     pub functions: HashMap<String, Function>,
+    #[serde(default)]
     pub ungrouped_variables: Vec<String>,
+    #[serde(default)]
     pub variable_groups: Vec<VariableGroup>,
+    #[serde(default)]
     pub rulesets: HashMap<String, Vec<AnswerSimplificationType>>,
+    #[serde(default)]
     pub preamble: Preamble,
     //contributors TODO
     pub navigation: QuestionNavigation,
     //custom part types TODO
+    #[serde(default)]
     pub extensions: Vec<String>, // todo: enum
     //metadata TODO
+    #[serde(default)]
     pub resources: Vec<Resource>,
     //TODO type: question?
     /// Tags starting with 'skill: ' are used in diagnostic mode to specify a topic
+    #[serde(default)]
     pub tags: Vec<String>,
+    #[serde(default)]
     pub custom_part_types: Vec<CustomPartType>,
 }
 
@@ -112,4 +123,10 @@ pub struct QuestionVariablesTest {
     pub condition: JMEString,
     #[serde(rename = "maxRuns")]
     pub max_runs: SafeNatural,
+}
+
+impl std::default::Default for QuestionVariablesTest {
+    fn default() -> Self {
+        Self { condition: JMEString::default(), max_runs: 10.into() }
+    }
 }

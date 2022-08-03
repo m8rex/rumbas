@@ -1,8 +1,8 @@
 use crate::jme::JMEString;
+use comparable::Comparable;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 use std::convert::TryInto;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
@@ -200,5 +200,11 @@ impl std::convert::TryFrom<Primitive> for Number {
             Primitive::Float(f) => Ok(f.into()),
             Primitive::String(s) => s.try_into(),
         }
+    }
+}
+
+impl std::default::Default for Number {
+    fn default() -> Self {
+        Number::Integer(0)
     }
 }

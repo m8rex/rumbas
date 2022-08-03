@@ -8,9 +8,12 @@ use serde_with::skip_serializing_none;
 pub struct Variable {
     pub name: String,
     pub definition: String, // TODO: jme?
+    #[serde(default)]
     pub description: String,
     #[serde(rename = "templateType")]
+    #[serde(default)]
     pub template_type: VariableTemplateType,
+    #[serde(default)]
     pub group: String,
     /// If this is ticked, then when an exam uses this question the author can override the value
     /// of this variable with their own choice.
@@ -36,6 +39,12 @@ pub enum VariableTemplateType {
     Range,
     #[serde(rename = "string")]
     r#String,
+}
+
+impl std::default::Default for VariableTemplateType {
+    fn default() -> Self {
+        Self::Anything
+    }
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]

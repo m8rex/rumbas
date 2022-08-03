@@ -104,48 +104,55 @@ pub enum QuestionPartBuiltin {
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionPartSharedData {
     /// A content area used to prompt the student for an answer.
-    pub prompt: Option<ContentAreaString>, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
+    #[serde(default)]
+    pub prompt: ContentAreaString, //TODO option? Maybe not in this type, but in other. Some types require this, other's not?
     /// The number of marks to award for answering the part correctly.
-    pub marks: Option<Number>,
+    pub marks: Number,
     /// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
     pub steps: Option<Vec<QuestionPart>>,
-    #[serde(
-        rename = "stepsPenalty",
-        default,
-        deserialize_with = "from_str_optional"
-    )]
+    #[serde(rename = "stepsPenalty", default)]
     /// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3×46=2 marks after revealing steps.
-    pub steps_penalty: Option<usize>,
+    pub steps_penalty: Number,
     #[serde(rename = "showCorrectAnswer")]
+    #[serde(default = "crate::util::bool_true")]
     /// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.
     pub show_correct_answer: bool,
     #[serde(rename = "showFeedbackIcon")]
+    #[serde(default = "crate::util::bool_true")]
     /// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.
-    pub show_feedback_icon: Option<bool>,
+    pub show_feedback_icon: bool,
     // TODO: "Score_counts_toward_objective"
     #[serde(rename = "customMarkingAlgorithm")]
-    pub custom_marking_algorithm: Option<JMENotesString>,
+    #[serde(default)]
+    pub custom_marking_algorithm: JMENotesString,
     #[serde(rename = "extendBaseMarkingAlgorithm")]
+    #[serde(default = "crate::util::bool_true")]
     /// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.
-    pub extend_base_marking_algorithm: Option<bool>,
+    pub extend_base_marking_algorithm: bool,
 
     // TODO below not listed in
     // https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#generic-part-properties
     #[serde(rename = "useCustomName")]
-    pub use_custom_name: Option<bool>,
+    #[serde(default)]
+    pub use_custom_name: bool,
     #[serde(rename = "customName")]
-    pub custom_name: Option<String>,
+    #[serde(default)]
+    pub custom_name: String,
     #[serde(rename = "enableMinimumMarks")]
-    pub enable_minimum_marks: Option<bool>,
+    #[serde(default = "crate::util::bool_true")]
+    pub enable_minimum_marks: bool,
     #[serde(rename = "minimumMarks")]
-    pub minimum_marks: Option<usize>,
+    #[serde(default)]
+    pub minimum_marks: usize,
 
     #[serde(rename = "variableReplacementStrategy")]
+    #[serde(default)]
     /// The circumstances under which the variable replacements are used, and adaptive marking is applied.
     pub variable_replacement_strategy: VariableReplacementStrategy,
     #[serde(rename = "adaptiveMarkingPenalty")]
+    #[serde(default)]
     /// If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for using adaptive marking is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without the penalty is instead worth 3×46=2 marks when adaptive marking is used.
-    pub adaptive_marking_penalty: Option<usize>,
+    pub adaptive_marking_penalty: usize,
     //scripts TODO
     //https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#scripts
     //[serde(rename= "variableReplacements")]
@@ -185,4 +192,10 @@ pub enum VariableReplacementStrategy {
     //#[serde(rename = "always")] // TODO: check name etc
     // /// The student’s answer is only marked once, with the defined variable replacements applied.
     //Always,
+}
+
+impl std::default::Default for VariableReplacementStrategy {
+    fn default() -> Self {
+        Self::OriginalFirst
+    }
 }

@@ -6,6 +6,7 @@ use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use numbas::defaults::DEFAULTS;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use numbas::support::primitive::Number;
 use std::convert::TryInto;
 
 pub trait ToRumbas<RumbasType>: Clone {
@@ -85,54 +86,43 @@ impl ToRumbas<ContentAreaTranslatableString> for ContentAreaString {
 pub fn extract_part_common_marks(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> numbas::support::primitive::Number {
-    pd.marks
-        .clone()
-        .unwrap_or(numbas::support::primitive::Number::Integer(
-            DEFAULTS.part_common_marks as isize,
-        ))
+    pd.marks.clone()
 }
 
 pub fn extract_part_common_prompt(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> ContentAreaTranslatableString {
-    pd.prompt
-        .clone()
-        .unwrap_or_else(|| "".to_string().try_into().unwrap())
-        .to_rumbas()
+    pd.prompt.clone().to_rumbas()
 }
 
 pub fn extract_part_common_use_custom_name(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.use_custom_name
-        .unwrap_or(DEFAULTS.part_common_use_custom_name)
 }
 
 pub fn extract_part_common_custom_name(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> String {
-    pd.custom_name.clone().unwrap_or_default()
+    pd.custom_name.clone()
 }
 
 pub fn extract_part_common_steps_penalty(
     pd: &numbas::question::part::QuestionPartSharedData,
-) -> usize {
-    pd.steps_penalty
-        .unwrap_or(DEFAULTS.part_common_steps_penalty)
+) -> Number {
+    pd.steps_penalty.clone()
 }
 
 pub fn extract_part_common_enable_minimum_marks(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.enable_minimum_marks
-        .unwrap_or(DEFAULTS.part_common_enable_minimum_marks)
 }
 
 pub fn extract_part_common_minimum_marks(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> usize {
     pd.minimum_marks
-        .unwrap_or(DEFAULTS.part_common_minimum_marks)
 }
 
 pub fn extract_part_common_show_correct_answer(
@@ -145,21 +135,18 @@ pub fn extract_part_common_show_feedback_icon(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.show_feedback_icon
-        .unwrap_or(DEFAULTS.part_common_show_feedback_icon)
 }
 
 pub fn extract_part_common_adaptive_marking_penalty(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> usize {
     pd.adaptive_marking_penalty
-        .unwrap_or(DEFAULTS.part_common_adaptive_marking_penalty)
 }
 
 pub fn extract_part_common_extend_base_marking_algorithm(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.extend_base_marking_algorithm
-        .unwrap_or(DEFAULTS.part_common_extend_base_marking_algorithm)
 }
 
 pub fn extract_part_common_steps(
@@ -183,7 +170,6 @@ macro_rules! create_question_part {
             let custom_marking_algorithm_notes: JMENotes = part_data
                 .custom_marking_algorithm
                 .clone()
-                .unwrap_or_default()
                 .to_rumbas();
             $type {
                 // Default section

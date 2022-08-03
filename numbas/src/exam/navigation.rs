@@ -8,16 +8,16 @@ use serde_with::skip_serializing_none;
 pub struct Navigation {
     #[serde(rename = "startpassword")]
     pub start_password: Option<String>, //TODO: if empty string -> also None
-    #[serde(rename = "allowregen")]
+    #[serde(rename = "allowregen", default)]
     pub allow_regenerate: bool,
     #[serde(flatten)]
     pub navigation_mode: NavigationMode,
-    #[serde(rename = "allowsteps")]
-    pub allow_steps: Option<bool>,
-    #[serde(rename = "showfrontpage")]
+    #[serde(rename = "allowsteps", default="crate::util::bool_true")]
+    pub allow_steps: bool,
+    #[serde(rename = "showfrontpage", default="crate::util::bool_true")]
     pub show_frontpage: bool,
-    #[serde(rename = "preventleave")]
-    pub confirm_when_leaving: Option<bool>,
+    #[serde(rename = "preventleave", default="crate::util::bool_true")]
+    pub confirm_when_leaving: bool,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -34,11 +34,11 @@ pub enum NavigationMode {
 pub struct NavigationModeSequential {
     #[serde(rename = "onleave")]
     pub on_leave: LeaveAction,
-    #[serde(rename = "showresultspage")]
+    #[serde(rename = "showresultspage", default)]
     pub show_results_page: ShowResultsPage,
-    #[serde(rename = "reverse")]
+    #[serde(rename = "reverse", default="crate::util::bool_true")]
     pub can_move_to_previous: bool,
-    #[serde(rename = "browse")]
+    #[serde(rename = "browse", default="crate::util::bool_true")]
     pub browsing_enabled: bool,
 }
 
@@ -65,4 +65,10 @@ pub enum ShowResultsPage {
     OnCompletion,
     #[serde(rename = "never")]
     Never,
+}
+
+impl std::default::Default for ShowResultsPage {
+    fn default() -> Self {
+        Self::OnCompletion
+    }
 }

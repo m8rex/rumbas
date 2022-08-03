@@ -13,10 +13,12 @@ pub struct QuestionPartNumberEntry {
     #[serde(flatten)]
     pub part_data: QuestionPartSharedData,
     #[serde(rename = "correctAnswerFraction")]
+    #[serde(default = "bool::default")]
     pub correct_answer_fraction: bool,
     #[serde(rename = "correctAnswerStyle")]
     pub correct_answer_style: Option<AnswerStyle>,
     #[serde(rename = "allowFractions")]
+    #[serde(default = "bool::default")]
     pub allow_fractions: bool,
     #[serde(rename = "notationStyles")]
     pub notation_styles: Option<Vec<AnswerStyle>>,
@@ -48,9 +50,9 @@ pub enum CheckingType {
 #[serde(untagged)]
 pub enum NumberEntryAnswerType {
     MinMax {
-        #[serde(rename = "minValue")]
+        #[serde(rename = "minValue", alias="minvalue")]
         min_value: JMEString,
-        #[serde(rename = "maxValue")]
+        #[serde(rename = "maxValue", alias="maxvalue")]
         max_value: JMEString,
     },
     Answer {

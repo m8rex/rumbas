@@ -33,7 +33,7 @@ where
 
 pub fn answer_simplification_deserialize_string<'de, D>(
     deserializer: D,
-) -> Result<Option<Vec<AnswerSimplificationType>>, D::Error>
+) -> Result<Vec<AnswerSimplificationType>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
@@ -53,31 +53,27 @@ where
                     }
                 }
             }
-            Ok(Some(r))
+            Ok(r)
         }
         Ok(v) => Err(serde::de::Error::custom(format!(
             "string expected but found something else: {}",
             v
         ))),
-        Err(_) => Ok(None),
+        Err(_) => Err(serde::de::Error::custom("Invalid string expected for answer simplifcations".to_string())),
     }
 }
 
 pub fn answer_simplification_serialize_string<S>(
-    values_o: &Option<Vec<AnswerSimplificationType>>,
+    values: &Vec<AnswerSimplificationType>,
     s: S,
 ) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {
-    if let Some(values) = values_o {
-        let mut parts: Vec<String> = Vec::new();
-        for value in values {
-            let new_item = value.to_string();
-            parts.push(new_item);
-        }
-        s.serialize_str(&parts.join(",")[..])
-    } else {
-        s.serialize_str("")
+    let mut parts: Vec<String> = Vec::new();
+    for value in values {
+        let new_item = value.to_string();
+        parts.push(new_item);
     }
+    s.serialize_str(&parts.join(",")[..])
 }
