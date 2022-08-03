@@ -13,6 +13,7 @@ pub struct QuestionPartMatrix {
     #[serde(rename = "correctAnswer")]
     pub correct_answer: JMEString,
     #[serde(rename = "correctAnswerFractions")]
+    #[serde(default = "bool::default")]
     pub correct_answer_fractions: bool,
     #[serde(rename = "numRows")]
     pub num_rows: VariableValued<SafeNatural>,
@@ -33,6 +34,7 @@ pub struct QuestionPartMatrix {
     #[serde(rename = "markPerCell")]
     pub mark_per_cell: bool,
     #[serde(rename = "allowFractions")]
+    #[serde(default = "bool::default")]
     pub allow_fractions: bool,
     //#[serde(flatten)]  // todo
     //precision: QuestionPrecision,

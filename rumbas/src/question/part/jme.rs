@@ -46,18 +46,16 @@ impl ToNumbas<numbas::question::part::jme::QuestionPartJME> for QuestionPartJME 
         numbas::question::part::jme::QuestionPartJME {
             part_data: self.to_numbas(locale),
             answer: self.answer.to_numbas(locale),
-            answer_simplification: Some(self.answer_simplification.to_numbas(locale)),
+            answer_simplification: self.answer_simplification.to_numbas(locale),
             show_preview: self.show_preview.to_numbas(locale),
             checking_type: self.answer_check.to_numbas(locale),
-            failure_rate: Some(self.failure_rate.to_numbas(locale)),
+            failure_rate: self.failure_rate.to_numbas(locale),
             vset_range: self.vset_range.to_numbas(locale),
             vset_range_points: self.vset_range_points.to_numbas(locale),
             check_variable_names: self.check_variable_names.to_numbas(locale),
-            single_letter_variables: Some(self.single_letter_variables.to_numbas(locale)),
-            allow_unknown_functions: Some(self.allow_unknown_functions.to_numbas(locale)),
-            implicit_function_composition: Some(
-                self.implicit_function_composition.to_numbas(locale),
-            ),
+            single_letter_variables: self.single_letter_variables.to_numbas(locale),
+            allow_unknown_functions: self.allow_unknown_functions.to_numbas(locale),
+            implicit_function_composition: self.implicit_function_composition.to_numbas(locale),
             max_length: self.max_length.to_numbas(locale),
             min_length: self.min_length.to_numbas(locale),
 
@@ -78,19 +76,19 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
                 answer_display: self.answer_simplification.to_rumbas(),
                 show_preview: self.show_preview.to_rumbas(),
                 answer_check: self.checking_type.to_rumbas(),
-                failure_rate: self.failure_rate.unwrap_or(DEFAULTS.jme_failure_rate).to_rumbas(),
+                failure_rate: self.failure_rate.to_rumbas(),
                 vset_range: [self.vset_range[0].0, self.vset_range[1].0].to_rumbas(),
                 vset_range_points: self.vset_range_points.0.to_rumbas(),
                 check_variable_names: self.check_variable_names.to_rumbas(),
                 single_letter_variables:
                     self.single_letter_variables
-                        .unwrap_or(DEFAULTS.jme_single_letter_variables).to_rumbas(),
+                        .to_rumbas(),
                 allow_unknown_functions:
                     self.allow_unknown_functions
-                        .unwrap_or(DEFAULTS.jme_allow_unknown_functions).to_rumbas(),
+                        .to_rumbas(),
                 implicit_function_composition:
                     self.implicit_function_composition
-                        .unwrap_or(DEFAULTS.jme_implicit_function_composition).to_rumbas(),
+                        .to_rumbas(),
                 max_length:
                     self.max_length.to_rumbas(),
                 min_length:
@@ -116,7 +114,7 @@ macro_rules! create_answer_simplification {
     ($struct: ident: $input: literal: $variant: ident: $variant_struct: ident,
         $(
             $(#[$inner:meta])*
-            $name: ident: $numbas_name: ident: $default: ident: $partofall: expr
+            $name: ident: $numbas_name: ident: $partofall: expr
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
@@ -127,6 +125,14 @@ macro_rules! create_answer_simplification {
                 pub $name: bool
             ),*
         }
+
+        impl std::default::Default for $struct {
+            fn default() -> Self {
+                // load empty json object
+                serde_json::from_str("{}").unwrap()
+            }
+        }
+
         impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
             for $struct
         {
@@ -147,16 +153,11 @@ macro_rules! create_answer_simplification {
         }
 
         impl ToRumbas<$struct>
-            for Option<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
+            for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
         {
             fn to_rumbas(&self) -> $struct {
-                let mut result = $struct {
-                    $(
-                        $name: DEFAULTS.$default
-                    ),*
-                }; // Numbas default
-                if let Some(v) = self {
-                    for a in v.iter() {
+                let mut result = $struct::default();
+                    for a in self.iter() {
                         match a {
                             numbas::question::answer_simplification::AnswerSimplificationType::$variant(r) =>
                                 match r {
@@ -172,7 +173,6 @@ macro_rules! create_answer_simplification {
                             _ => ()
                         }
                     }
-                }
 
                 result
             }
@@ -183,49 +183,49 @@ macro_rules! create_answer_simplification {
 // See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
 create_answer_simplification! {
     JMEAnswerSimplification: "JMEAnswerSimplificationInput": Rule: AnswerSimplificationRule,
-    simplify_basic: Basic: jme_simplification_simplify_basic: true,
+    simplify_basic: Basic: true,
     #[serde(alias = "simplify_unit_factor")]
-    cancel_unit_factors: CancelUnitFactors: jme_simplification_simplify_unit_factor: true,
+    cancel_unit_factors: CancelUnitFactors: true,
     #[serde(alias = "simplify_unit_power")]
-    cancel_unit_powers: CancelUnitPowers: jme_simplification_simplify_unit_power: true,
+    cancel_unit_powers: CancelUnitPowers: true,
     #[serde(alias = "simplify_unit_denominator")]
-    cancel_unit_denominators: CancelUnitDenominators: jme_simplification_simplify_unit_denominator: true,
+    cancel_unit_denominators: CancelUnitDenominators: true,
     #[serde(alias = "simplify_zero_factor")]
-    cancel_zero_factors: CancelZeroFactors: jme_simplification_simplify_zero_factor: true,
+    cancel_zero_factors: CancelZeroFactors: true,
     #[serde(alias = "simplify_zero_term")]
-    omit_zero_terms: OmitZeroTerms: jme_simplification_simplify_zero_term: true,
+    omit_zero_terms: OmitZeroTerms: true,
     #[serde(alias = "simplify_zero_power")]
-    cancel_zero_powers: CancelZeroPowers: jme_simplification_simplify_zero_power: true,
+    cancel_zero_powers: CancelZeroPowers: true,
     #[serde(alias = "simplify_zero_base")]
-    cancel_powers_with_base_zero: CancelPowersWithBaseZero: jme_simplification_simplify_zero_base: true,
-    collect_numbers: CollectNumbers: jme_simplification_collect_numbers: true,
-    constants_first: ConstantsFirst: jme_simplification_constants_first: true,
+    cancel_powers_with_base_zero: CancelPowersWithBaseZero: true,
+    collect_numbers: CollectNumbers: true,
+    constants_first: ConstantsFirst: true,
     #[serde(alias = "simplify_sqrt_products")]
-    collect_sqrt_products: CollectSqrtProducts: jme_simplification_simplify_sqrt_products: true,
+    collect_sqrt_products: CollectSqrtProducts: true,
     #[serde(alias = "simplify_sqrt_division")]
-    collect_sqrt_divisions: CollectSqrtDivisions: jme_simplification_simplify_sqrt_division: true,
+    collect_sqrt_divisions: CollectSqrtDivisions: true,
     #[serde(alias = "simplify_sqrt_square")]
-    cancel_sqrt_square: CancelSqrtSquares: jme_simplification_simplify_sqrt_square: true,
+    cancel_sqrt_square: CancelSqrtSquares: true,
     #[serde(alias = "simplify_other_numbers")]
-    evaluate_powers_of_numbers: EvaluatePowersOfNumbers: jme_simplification_simplify_other_numbers: true,
+    evaluate_powers_of_numbers: EvaluatePowersOfNumbers: true,
     #[serde(alias = "simplify_no_leading_minus")]
-    rewrite_to_no_leading_minus: NoLeadingMinus: jme_simplification_simplify_no_leading_minus: true,
-    simplify_fractions: Fractions: jme_simplification_simplify_fractions: true,
-    simplify_trigonometric: Trigonometric: jme_simplification_simplify_trigonometric: true,
+    rewrite_to_no_leading_minus: NoLeadingMinus: true,
+    simplify_fractions: Fractions: true,
+    simplify_trigonometric: Trigonometric: true,
     #[serde(alias = "cancel_terms")]
-    collect_terms: CollectTerms: jme_simplification_cancel_terms: true,
+    collect_terms: CollectTerms: true,
     #[serde(alias = "cancel_factors")]
-    collect_powers_of_common_factors: CollectPowersOfCommonFactors: jme_simplification_cancel_factors: true,
-    collect_like_fractions: CollectLikeFractions: jme_simplification_collect_like_fractions: true,
-    order_canonical: CanonicalOrder: jme_simplification_order_canonical: false,
-    expand_brackets: ExpandBrackets: jme_simplification_expand_brackets: false
+    collect_powers_of_common_factors: CollectPowersOfCommonFactors: true,
+    collect_like_fractions: CollectLikeFractions: true,
+    order_canonical: CanonicalOrder: false,
+    expand_brackets: ExpandBrackets: false
 }
 
 macro_rules! create_answer_display_type {
     ($struct: ident: $input: literal: $variant: ident: $variant_struct: ident,
         $(
             $(#[$inner:meta])*
-            $name: ident: $numbas_name: ident: $default: ident
+            $name: ident: $numbas_name: ident
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
@@ -256,16 +256,15 @@ macro_rules! create_answer_display_type {
         }
 
         impl ToRumbas<$struct>
-            for Option<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
+            for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
         {
             fn to_rumbas(&self) -> $struct {
                 let mut result = $struct {
                     $(
-                        $name: DEFAULTS.$default
+                        $name: false
                     ),*
-                }; // Numbas default
-                if let Some(v) = self {
-                    for a in v.iter() {
+                };
+                    for a in self.iter() {
                         match a {
                             numbas::question::answer_simplification::AnswerSimplificationType::$variant(r) =>
                                 match r {
@@ -276,7 +275,6 @@ macro_rules! create_answer_display_type {
                             _ => ()
                         }
                     }
-                }
 
                 result
             }
@@ -286,13 +284,13 @@ macro_rules! create_answer_display_type {
 
 create_answer_display_type! {
     JMEAnswerDisplay: "JMEAnswerDisplayInput": DisplayOption: AnswerSimplificationDisplayOption,
-    broken_as_fractions: Fractions: jme_display_fraction_numbers,
-    mixed_fractions: MixedFractions: jme_display_mixed_fractions,
-    flat_fractions: FlatFractions: jme_display_flat_fractions,
-    vector_as_row: RowVector: jme_display_row_vector,
-    always_show_multiplication_sign: AlwaysShowMultiplicationSign : jme_display_always_times,
-    use_dot_as_multiplication_sign: DotAsMultiplicationSign: jme_display_use_times_dot, // Use \cdot instead of \times
-    matrices_without_parentheses: MatricesWithoutParentheses: jme_display_bare_matrices
+    broken_as_fractions: Fractions,
+    mixed_fractions: MixedFractions,
+    flat_fractions: FlatFractions,
+    vector_as_row: RowVector,
+    always_show_multiplication_sign: AlwaysShowMultiplicationSign,
+    use_dot_as_multiplication_sign: DotAsMultiplicationSign, // Use \cdot instead of \times
+    matrices_without_parentheses: MatricesWithoutParentheses
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]

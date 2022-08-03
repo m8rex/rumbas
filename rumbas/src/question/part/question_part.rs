@@ -282,7 +282,7 @@ macro_rules! question_part_type {
             pub prompt: ContentAreaTranslatableString,
             pub use_custom_name: bool,
             pub custom_name: String, //TODO Translatable?
-            pub steps_penalty: usize,
+            pub steps_penalty: numbas::support::primitive::Number,
             pub enable_minimum_marks: bool,
             pub minimum_marks: usize, //TODO: separate?
             pub show_correct_answer: bool,
@@ -303,19 +303,19 @@ macro_rules! question_part_type {
         impl ToNumbas<numbas::question::part::QuestionPartSharedData> for $struct {
             fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartSharedData {
                 numbas::question::part::QuestionPartSharedData {
-                    marks: Some(self.marks.to_numbas(locale)),
-                    prompt: Some(self.prompt.to_numbas(locale)),
-                    use_custom_name: Some(self.use_custom_name.to_numbas(locale)),
-                    custom_name: Some(self.custom_name.to_numbas(locale)),
-                    steps_penalty: Some(self.steps_penalty.to_numbas(locale)),
-                    enable_minimum_marks:Some(self.enable_minimum_marks.to_numbas(locale)),
-                    minimum_marks: Some(self.minimum_marks.to_numbas(locale)),
+                    marks: self.marks.to_numbas(locale),
+                    prompt: self.prompt.to_numbas(locale),
+                    use_custom_name: self.use_custom_name.to_numbas(locale),
+                    custom_name: self.custom_name.to_numbas(locale),
+                    steps_penalty: self.steps_penalty.to_numbas(locale),
+                    enable_minimum_marks: self.enable_minimum_marks.to_numbas(locale),
+                    minimum_marks: self.minimum_marks.to_numbas(locale),
                     show_correct_answer: self.show_correct_answer.to_numbas(locale),
-                    show_feedback_icon: Some(self.show_feedback_icon.to_numbas(locale)),
+                    show_feedback_icon: self.show_feedback_icon.to_numbas(locale),
                     variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(&locale),
-                    adaptive_marking_penalty:Some(self.adaptive_marking_penalty.to_numbas(locale)),
-                    custom_marking_algorithm: Some(self.custom_marking_algorithm_notes.to_numbas(&locale)),
-                    extend_base_marking_algorithm: Some(self.extend_base_marking_algorithm.to_numbas(locale)),
+                    adaptive_marking_penalty: self.adaptive_marking_penalty.to_numbas(locale),
+                    custom_marking_algorithm: self.custom_marking_algorithm_notes.to_numbas(&locale),
+                    extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale),
                     steps: Some(self.steps.to_numbas(&locale)),
                 }
 
@@ -389,9 +389,6 @@ impl ToNumbas<numbas::question::part::QuestionPartCustom> for QuestionPartCustom
 
 impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom {
     fn to_rumbas(&self) -> QuestionPartCustom {
-        let custom_marking_algorithm_notes: Option<_> =
-            self.part_data.custom_marking_algorithm.to_rumbas();
-
         QuestionPartCustom {
             // Default section
             marks: extract_part_common_marks(&self.part_data),
@@ -405,7 +402,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
             show_feedback_icon: extract_part_common_show_feedback_icon(&self.part_data),
             variable_replacement_strategy: self.part_data.variable_replacement_strategy.to_rumbas(),
             adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(&self.part_data),
-            custom_marking_algorithm_notes: custom_marking_algorithm_notes.unwrap_or_default(),
+            custom_marking_algorithm_notes: self.part_data.custom_marking_algorithm.to_rumbas(),
             extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
                 &self.part_data,
             ),

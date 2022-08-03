@@ -1,6 +1,6 @@
 use crate::jme::EmbracedJMEString;
 use crate::jme::JMEString;
-use crate::question::answer_simplification::AnswerSimplificationType;
+use crate::question::answer_simplification::{AnswerSimplificationType, AnswerSimplificationRule};
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::{SafeFloat, SafeNatural};
 use crate::support::serde_functions::{
@@ -11,6 +11,34 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 
+fn default_answer_simplification() -> Vec<AnswerSimplificationType> {
+    let v: Vec<AnswerSimplificationRule> = vec![
+        AnswerSimplificationRule::Basic(true),
+        AnswerSimplificationRule::CancelUnitFactors(true),
+        AnswerSimplificationRule::CancelUnitPowers(true),
+        AnswerSimplificationRule::CancelUnitDenominators(true),
+        AnswerSimplificationRule::CancelZeroFactors(true),
+        AnswerSimplificationRule::OmitZeroTerms(true),
+        AnswerSimplificationRule::CancelZeroFactors(true),
+        AnswerSimplificationRule::OmitZeroTerms(true),
+        AnswerSimplificationRule::CancelZeroPowers(true),
+        AnswerSimplificationRule::NoLeadingMinus(true),
+        AnswerSimplificationRule::CollectNumbers(true),
+        AnswerSimplificationRule::Fractions(true),
+        AnswerSimplificationRule::CancelPowersWithBaseZero(true),
+        AnswerSimplificationRule::ConstantsFirst(true),
+        AnswerSimplificationRule::CollectSqrtProducts(true),
+        AnswerSimplificationRule::CollectSqrtDivisions(true),
+        AnswerSimplificationRule::CancelSqrtSquares(true),
+        AnswerSimplificationRule::Trigonometric(true),
+        AnswerSimplificationRule::EvaluatePowersOfNumbers(true),
+        AnswerSimplificationRule::CollectTerms(true),
+        AnswerSimplificationRule::CollectPowersOfCommonFactors(true),
+        AnswerSimplificationRule::CollectLikeFractions(true)       
+    ];
+    v.into_iter().map(AnswerSimplificationType::Rule).collect::<Vec<_>>()
+}
+
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionPartJME {
@@ -19,21 +47,23 @@ pub struct QuestionPartJME {
     pub answer: EmbracedJMEString,
     #[serde(
         rename = "answerSimplification",
-        default,
+        default = "default_answer_simplification",
         deserialize_with = "answer_simplification_deserialize_string",
         serialize_with = "answer_simplification_serialize_string"
     )]
-    pub answer_simplification: Option<Vec<AnswerSimplificationType>>, //comma separated list
+    pub answer_simplification: Vec<AnswerSimplificationType>, //comma separated list
     #[serde(rename = "showPreview")]
     #[serde(alias = "showpreview")]
+    #[serde(default = "crate::util::bool_true")]
     pub show_preview: bool,
     #[serde(rename = "checkingType")]
     #[serde(alias = "checkingtype")]
-    #[serde(flatten)]
+    #[serde(flatten, default)]
     pub checking_type: JMECheckingType,
     /// If the comparison fails this many times or more, the student’s answer is marked as wrong.
     #[serde(rename = "failureRate")]
-    pub failure_rate: Option<f64>,
+    #[serde(default = "crate::util::float_one")]
+    pub failure_rate: f64,
     #[serde(rename = "vsetRange")]
     #[serde(alias = "vsetrange")]
     pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
@@ -42,13 +72,17 @@ pub struct QuestionPartJME {
     pub vset_range_points: SafeNatural,
     #[serde(rename = "checkVariableNames")]
     #[serde(alias = "checkvariablenames")]
+    #[serde(default)]
     pub check_variable_names: bool,
     #[serde(rename = "singleLetterVariables")]
-    pub single_letter_variables: Option<bool>,
+    #[serde(default)]
+    pub single_letter_variables: bool,
     #[serde(rename = "allowUnknownFunctions")]
-    pub allow_unknown_functions: Option<bool>,
+    #[serde(default = "crate::util::bool_true")]
+    pub allow_unknown_functions: bool,
     #[serde(rename = "implicitFunctionComposition")]
-    pub implicit_function_composition: Option<bool>,
+    #[serde(default)]
+    pub implicit_function_composition: bool,
     #[serde(rename = "maxlength")]
     pub max_length: Option<JMELengthRestriction>, // TODO: all restrictions to one flattended struct?
     #[serde(rename = "minlength")]
@@ -82,6 +116,14 @@ pub enum JMECheckingType {
     DecimalPlaces(JMECheckingTypeData<usize>),
     #[serde(rename = "sigfig")]
     SignificantFigures(JMECheckingTypeData<usize>),
+}
+
+impl std::default::Default for JMECheckingType {
+    fn default() -> Self {
+        Self::RelativeDifference(JMECheckingTypeData {
+            checking_accuracy: 0.0.into()
+        })   
+    }
 }
 
 #[skip_serializing_none]
