@@ -34,8 +34,6 @@ pub struct NormalExam {
     pub timing: Timing,
     /// The feedback settings for this exam
     pub feedback: Feedback,
-    /// The rulesets defined in this exam
-    pub rulesets: HashMap<String, JMERulesetItem>,
     /// The questions groups for this exam
     pub question_groups: Vec<QuestionGroup>,
     /// The settings to set for numbas
@@ -50,12 +48,6 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
         let timing = self.timing.to_numbas(locale);
 
         let feedback = self.feedback.to_numbas(locale);
-
-        //TODO
-        let functions = HashMap::new();
-
-        //TODO
-        let variables = HashMap::new();
 
         let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
             self.question_groups.to_numbas(locale);
@@ -96,8 +88,6 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .collect::<Vec<_>>()
             .to_numbas(locale);
 
-        let rulesets = self.rulesets.to_numbas(locale);
-
         numbas::exam::Exam {
             basic_settings,
             resources,
@@ -106,11 +96,8 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             navigation,
             timing,
             feedback,
-            functions,
-            variables,
             question_groups,
             diagnostic: None,
-            rulesets,
         }
     }
 }
@@ -159,7 +146,6 @@ pub fn convert_normal_numbas_exam(
             numbas_settings: NumbasSettings {
                 theme: "default".to_string(),
             }, // todo: argument?
-            rulesets: exam.rulesets.to_rumbas(),
         },
         question_groups
             .into_iter()
