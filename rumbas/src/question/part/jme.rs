@@ -132,7 +132,8 @@ macro_rules! create_answer_simplification {
         impl std::default::Default for $struct {
             fn default() -> Self {
                 // load empty json object
-                serde_json::from_str("{}").unwrap()
+                let default_answer_simplification = numbas::question::part::jme::default_answer_simplification();
+                default_answer_simplification.to_rumbas() 
             }
         }
 

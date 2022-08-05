@@ -11,7 +11,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 
-fn default_answer_simplification() -> Vec<AnswerSimplificationType> {
+pub fn default_answer_simplification() -> Vec<AnswerSimplificationType> {
     let v: Vec<AnswerSimplificationRule> = vec![
         AnswerSimplificationRule::Basic(true),
         AnswerSimplificationRule::CancelUnitFactors(true),
