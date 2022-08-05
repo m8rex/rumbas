@@ -28,7 +28,7 @@ pub struct QuestionGroup {
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
     fn to_numbas(&self, locale: &str) -> numbas::exam::question_group::QuestionGroup {
         numbas::exam::question_group::QuestionGroup {
-            name: Some(self.name.to_numbas(locale)),
+            name: self.name.to_numbas(locale),
             picking_strategy: self.picking_strategy.to_numbas(locale),
             questions: self.questions.to_numbas(locale),
         }
@@ -38,7 +38,7 @@ impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
 impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     fn to_rumbas(&self) -> QuestionGroup {
         QuestionGroup {
-            name: self.name.clone().unwrap_or_default().to_rumbas(),
+            name: self.name.to_rumbas(),
             picking_strategy: self.picking_strategy.to_rumbas(),
             questions: self.questions.to_rumbas(),
         }

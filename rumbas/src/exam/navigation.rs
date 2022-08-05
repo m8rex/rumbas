@@ -311,12 +311,10 @@ impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
             show_names_of_question_groups: self
                 .basic_settings
                 .show_question_group_names
-                .unwrap_or(DEFAULTS.navigation_show_names_of_question_groups)
                 .to_rumbas(),
             allow_printing: self
                 .basic_settings
                 .allow_printing
-                .unwrap_or(DEFAULTS.basic_settings_allow_printing)
                 .to_rumbas(),
         }
     }
