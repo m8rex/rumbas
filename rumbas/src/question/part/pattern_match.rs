@@ -52,7 +52,7 @@ impl ToRumbas<QuestionPartPatternMatch>
                     self.case_sensitive
                         .to_rumbas(),
                 partial_credit:
-                    self.partial_credit                        
+                    self.partial_credit
                         .0.to_rumbas(),
                 pattern: self.answer.to_rumbas(),
                 display_answer:

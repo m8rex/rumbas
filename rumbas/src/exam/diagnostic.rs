@@ -98,9 +98,9 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .to_numbas(locale); // todo extract?
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
-       
+
         let rulesets = HashMap::new();
-        
+
         numbas::exam::Exam {
             basic_settings,
             resources,
@@ -122,10 +122,13 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
         numbas::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
-            duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale).unwrap_or(0),
+            duration_in_seconds: self
+                .timing
+                .duration_in_seconds
+                .to_numbas(locale)
+                .unwrap_or(0),
             percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
-            show_question_group_names: 
-                self.navigation.shared_data.show_names_of_question_groups,
+            show_question_group_names: self.navigation.shared_data.show_names_of_question_groups,
             show_student_name: self.feedback.clone().show_name_of_student,
             allow_printing: self.navigation.shared_data.allow_printing,
         }

@@ -40,21 +40,15 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
-                
-                    VariableValued::Value(
-                        answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>(),
-                    )
+                VariableValued::Value(answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>())
                     .to_numbas(locale),
-                
-                
-                    answers
-                        .iter()
-                        .map(|a| {
-                            a.feedback.clone() //TODO
-                        })
-                        .collect::<Vec<_>>()
-                        .to_numbas(locale),
-                
+                answers
+                    .iter()
+                    .map(|a| {
+                        a.feedback.clone() //TODO
+                    })
+                    .collect::<Vec<_>>()
+                    .to_numbas(locale),
             ),
             MultipleChoiceAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),

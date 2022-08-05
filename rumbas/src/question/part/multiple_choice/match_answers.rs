@@ -60,30 +60,28 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
-                
-                    VariableValued::Value(
-                        data.items.clone(), // TODO: better handling
-                    )
-                    .map(|v| {
-                        v.iter()
-                            .map(|i| {
-                                data.answers
-                                    .iter()
-                                    .map(|a| {
-                                        i.answer_marks
-                                            .iter()
-                                            .find(|am| &am.answer == a)
-                                            .map_or_else(
-                                                || "0".to_string().try_into().unwrap(),
-                                                |v| v.marks.clone(),
-                                            )
-                                    })
-                                    .collect::<Vec<_>>()
-                            })
-                            .collect::<Vec<_>>()
-                    })
-                    .to_numbas(locale),
-                
+                VariableValued::Value(
+                    data.items.clone(), // TODO: better handling
+                )
+                .map(|v| {
+                    v.iter()
+                        .map(|i| {
+                            data.answers
+                                .iter()
+                                .map(|a| {
+                                    i.answer_marks
+                                        .iter()
+                                        .find(|am| &am.answer == a)
+                                        .map_or_else(
+                                            || "0".to_string().try_into().unwrap(),
+                                            |v| v.marks.clone(),
+                                        )
+                                })
+                                .collect::<Vec<_>>()
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .to_numbas(locale),
             ),
             MultipleChoiceMatchAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
@@ -94,9 +92,18 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
         numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
             part_data: self.to_numbas(locale),
             min_answers: self.should_select_at_least.into(),
-            max_answers: self.should_select_at_most.to_numbas(locale).unwrap_or_default(),
-            min_marks: self.minimal_achievable_marks.to_numbas(locale).unwrap_or_default(),
-            max_marks: self.maximal_achievable_marks.to_numbas(locale).unwrap_or_default(),
+            max_answers: self
+                .should_select_at_most
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            min_marks: self
+                .minimal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            max_marks: self
+                .maximal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or_default(),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             shuffle_choices: self.shuffle_items.to_numbas(locale),
             answers,
@@ -182,8 +189,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                     answers: self.answers.to_rumbas(),
                     choices: self.choices.to_rumbas(),
 
-                    marks: self
-                        .marking_matrix.to_rumbas()
+                    marks: self.marking_matrix.to_rumbas(),
                 },
             ))
         }

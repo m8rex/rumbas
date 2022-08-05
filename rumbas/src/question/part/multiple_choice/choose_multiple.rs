@@ -58,34 +58,40 @@ impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultipl
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
-                
-                    VariableValued::Value(
-                        answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>(),
-                    )
-                    .to_numbas(locale)
-                ,
-                
-                    answers
-                        .iter()
-                        .map(|a| {
-                            a.feedback.clone() //TODO
-                        })
-                        .collect::<Vec<_>>()
-                        .to_numbas(locale),
-                
+                VariableValued::Value(answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>())
+                    .to_numbas(locale),
+                answers
+                    .iter()
+                    .map(|a| {
+                        a.feedback.clone() //TODO
+                    })
+                    .collect::<Vec<_>>()
+                    .to_numbas(locale),
             ),
             MultipleChoiceAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
                 data.marks.to_numbas(locale),
-                data.feedback.clone().map(|f| f.to_numbas(locale)).unwrap_or_default(),
+                data.feedback
+                    .clone()
+                    .map(|f| f.to_numbas(locale))
+                    .unwrap_or_default(),
             ),
         };
         numbas::question::part::choose_multiple::QuestionPartChooseMultiple {
             part_data: self.to_numbas(locale),
             min_answers: self.should_select_at_least.into(),
-            max_answers: self.should_select_at_most.to_numbas(locale).unwrap_or(0.into()),
-            min_marks: self.minimal_achievable_marks.to_numbas(locale).unwrap_or(0.into()),
-            max_marks: self.maximal_achievable_marks.to_numbas(locale).unwrap_or(0.into()),
+            max_answers: self
+                .should_select_at_most
+                .to_numbas(locale)
+                .unwrap_or(0.into()),
+            min_marks: self
+                .minimal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or(0.into()),
+            max_marks: self
+                .maximal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or(0.into()),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             choices,
             display_columns: self.columns.to_numbas(locale),

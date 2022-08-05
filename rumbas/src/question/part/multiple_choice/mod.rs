@@ -35,8 +35,7 @@ pub struct MultipleChoiceAnswerDataNumbasLike {
 
 fn extract_multiple_choice_answer_data(
     answers: &numbas::support::primitive::VariableValued<Vec<numbas::jme::ContentAreaString>>,
-    marking_matrix: &
-        numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
+    marking_matrix: &numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
     distractors: &Vec<numbas::jme::ContentAreaString>,
 ) -> MultipleChoiceAnswerData {
     if let (
@@ -45,7 +44,7 @@ fn extract_multiple_choice_answer_data(
     ) = (answers.clone(), marking_matrix.clone())
     {
         let answers_data: Vec<_> = if distractors.is_empty() {
-             answer_options
+            answer_options
                 .into_iter()
                 .zip(marking_matrix.into_iter())
                 .map(|(a, b)| (a, b, numbas::jme::ContentAreaString::default()))
@@ -74,7 +73,11 @@ fn extract_multiple_choice_answer_data(
 
             marks: marking_matrix.to_rumbas(),
 
-            feedback: if distractors.is_empty() { Noneable::None} else { Noneable::NotNone(distractors.to_rumbas()) }
+            feedback: if distractors.is_empty() {
+                Noneable::None
+            } else {
+                Noneable::NotNone(distractors.to_rumbas())
+            },
         }))
     }
 }
