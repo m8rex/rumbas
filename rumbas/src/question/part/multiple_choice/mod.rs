@@ -35,28 +35,28 @@ pub struct MultipleChoiceAnswerDataNumbasLike {
 
 fn extract_multiple_choice_answer_data(
     answers: &numbas::support::primitive::VariableValued<Vec<numbas::jme::ContentAreaString>>,
-    marking_matrix: &Option<
+    marking_matrix: &
         numbas::support::primitive::VariableValued<Vec<numbas::jme::JMEString>>,
-    >,
-    distractors: &Option<Vec<numbas::jme::ContentAreaString>>,
+    distractors: &Vec<numbas::jme::ContentAreaString>,
 ) -> MultipleChoiceAnswerData {
     if let (
         numbas::support::primitive::VariableValued::Value(answer_options),
-        Some(numbas::support::primitive::VariableValued::Value(marking_matrix)),
+        numbas::support::primitive::VariableValued::Value(marking_matrix),
     ) = (answers.clone(), marking_matrix.clone())
     {
-        let answers_data: Vec<_> = match distractors.clone() {
-            Some(d) => answer_options
-                .into_iter()
-                .zip(marking_matrix.into_iter())
-                .zip(d.into_iter())
-                .map(|((a, b), c)| (a, b, c))
-                .collect(),
-            None => answer_options
+        let answers_data: Vec<_> = if distractors.is_empty() {
+             answer_options
                 .into_iter()
                 .zip(marking_matrix.into_iter())
                 .map(|(a, b)| (a, b, numbas::jme::ContentAreaString::default()))
-                .collect(),
+                .collect()
+        } else {
+            answer_options
+                .into_iter()
+                .zip(marking_matrix.into_iter())
+                .zip(distractors.clone().into_iter())
+                .map(|((a, b), c)| (a, b, c))
+                .collect()
         };
         MultipleChoiceAnswerData::ItemBased(
             answers_data
@@ -72,15 +72,9 @@ fn extract_multiple_choice_answer_data(
         MultipleChoiceAnswerData::NumbasLike(Box::new(MultipleChoiceAnswerDataNumbasLike {
             answers: answers.to_rumbas(),
 
-            marks: marking_matrix
-                .clone()
-                .map(|m| m.to_rumbas())
-                .expect("How can the marking matrix be optional?"),
+            marks: marking_matrix.to_rumbas(),
 
-            feedback: distractors
-                .clone()
-                .map(|v| Noneable::NotNone(v.to_rumbas()))
-                .unwrap_or(Noneable::None),
+            feedback: if distractors.is_empty() { Noneable::None} else { Noneable::NotNone(distractors.to_rumbas()) }
         }))
     }
 }

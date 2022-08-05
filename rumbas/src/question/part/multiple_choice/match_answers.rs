@@ -60,7 +60,7 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
-                Some(
+                
                     VariableValued::Value(
                         data.items.clone(), // TODO: better handling
                     )
@@ -83,20 +83,20 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
                             .collect::<Vec<_>>()
                     })
                     .to_numbas(locale),
-                ),
+                
             ),
             MultipleChoiceMatchAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
                 data.choices.to_numbas(locale),
-                Some(data.marks.to_numbas(locale)),
+                data.marks.to_numbas(locale),
             ),
         };
         numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
             part_data: self.to_numbas(locale),
-            min_answers: Some(self.should_select_at_least.to_numbas(locale)),
-            max_answers: self.should_select_at_most.to_numbas(locale),
-            min_marks: self.minimal_achievable_marks.to_numbas(locale),
-            max_marks: self.maximal_achievable_marks.to_numbas(locale),
+            min_answers: self.should_select_at_least.into(),
+            max_answers: self.should_select_at_most.to_numbas(locale).unwrap_or_default(),
+            min_marks: self.minimal_achievable_marks.to_numbas(locale).unwrap_or_default(),
+            max_marks: self.maximal_achievable_marks.to_numbas(locale).unwrap_or_default(),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             shuffle_choices: self.shuffle_items.to_numbas(locale),
             answers,
@@ -122,18 +122,17 @@ impl ToRumbas<QuestionPartMatchAnswersWithItems>
                 shuffle_items: self.shuffle_choices.to_rumbas(),
                 show_cell_answer_state: self.show_cell_answer_state.to_rumbas(),
                 should_select_at_least:
-                    self.min_answers
-                        .unwrap_or(DEFAULTS.match_answers_with_items_min_answers)
-                        .0.to_rumbas(),
-                should_select_at_most:
-                    self.max_answers
-                        .map(|v| v.0).to_rumbas()
-                ,
+                    self.min_answers.0.to_rumbas(),
+                should_select_at_most: if self.max_answers.0 > 0 {
+                    Noneable::NotNone(self.max_answers.0.to_rumbas())
+                } else {
+                    Noneable::None
+                },
                 display: self.display_type.to_rumbas(),
                 layout: self.layout.to_rumbas(),
                 wrong_nb_answers_warning_type: self.wrong_nb_answers_warning.to_rumbas(),
-                minimal_achievable_marks: self.min_marks.map(|v| v.0).to_rumbas(),
-                maximal_achievable_marks: self.max_marks.map(|v| v.0).to_rumbas()
+                minimal_achievable_marks: if self.min_marks.0 > 0 { Noneable::NotNone(self.min_marks.0.to_rumbas()) } else { Noneable::None },
+                maximal_achievable_marks: if self.max_marks.0 > 0 { Noneable::NotNone(self.max_marks.0.to_rumbas()) } else { Noneable::None }
             }
         }
     }
@@ -146,7 +145,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
         if let (
             numbas::support::primitive::VariableValued::Value(answer_options),
             numbas::support::primitive::VariableValued::Value(choice_options),
-            Some(numbas::support::primitive::VariableValued::Value(marking_matrix)),
+            numbas::support::primitive::VariableValued::Value(marking_matrix),
         ) = (
             self.answers.clone(),
             self.choices.clone(),
@@ -184,10 +183,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
                     choices: self.choices.to_rumbas(),
 
                     marks: self
-                        .marking_matrix
-                        .clone()
-                        .map(|m| m.to_rumbas())
-                        .expect("How can the marking matrix be optional?"),
+                        .marking_matrix.to_rumbas()
                 },
             ))
         }

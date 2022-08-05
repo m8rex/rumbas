@@ -152,7 +152,7 @@ pub fn extract_part_common_extend_base_marking_algorithm(
 pub fn extract_part_common_steps(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> Vec<QuestionPart> {
-    pd.steps.clone().unwrap_or_default().to_rumbas()
+    pd.steps.to_rumbas()
 }
 
 /// Macro used to create a question part type for numbas

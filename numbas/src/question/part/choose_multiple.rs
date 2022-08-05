@@ -15,36 +15,45 @@ pub struct QuestionPartChooseMultiple {
     pub part_data: QuestionPartSharedData,
 
     #[serde(rename = "minMarks")]
+    #[serde(default)]
     /// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
-    pub min_marks: Option<SafeNatural>, //TODO; what is difference with minimum_marks?
+    pub min_marks: SafeNatural, //TODO; what is difference with minimum_marks?
     #[serde(rename = "maxMarks")]
+    #[serde(default)]
     /// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
-    pub max_marks: Option<SafeNatural>, // Is there a maximum number of marks the student can get?
+    pub max_marks: SafeNatural, // Is there a maximum number of marks the student can get?
     #[serde(rename = "minAnswers")]
+    #[serde(default)]
     /// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.
-    pub min_answers: Option<SafeNatural>, // Minimum number of responses the student can select
+    pub min_answers: SafeNatural, // Minimum number of responses the student can select
     #[serde(rename = "maxAnswers")]
+    #[serde(default)]
     /// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.
-    pub max_answers: Option<SafeNatural>, // Maximum number of responses the student can select
-    #[serde(rename = "warningType")]
+    pub max_answers: SafeNatural, // Maximum number of responses the student can select
+    #[serde(rename = "warningType", default)]
     pub wrong_nb_answers_warning: MultipleChoiceWarningType, // What to do if the student picks the wrong number of responses?
-
     #[serde(rename = "shuffleChoices")]
+    #[serde(default)]
     pub shuffle_answers: bool,
     #[serde(rename = "displayColumns")]
+    #[serde(default = "crate::util::safe_natural_one")]
     pub display_columns: SafeNatural, // How many columns to use to display the choices.
 
     #[serde(rename = "showCellAnswerState")]
+    #[serde(default = "crate::util::bool_true")]
     /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
     pub show_cell_answer_state: bool,
 
     /// This is either a list of embraced jme strings or a jme expression
+    #[serde(default)]
     pub choices: VariableValued<Vec<ContentAreaString>>,
     #[serde(rename = "matrix")]
+    #[serde(default)]
     /// This is either a list of jme strings or a jme expression
-    pub marking_matrix: Option<VariableValued<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
-    /// This is optional if marking_matrix is a JMEString
-    pub distractors: Option<Vec<ContentAreaString>>,
+    pub marking_matrix: VariableValued<Vec<JMEString>>, // Marks for each answer/choice pair. Arranged as `matrix[answer][choice]
+    /// This is optional if marking_matrix# is a JMEString
+    #[serde(default)]
+    pub distractors: Vec<ContentAreaString>,
     /// This determines how the student’s score is determined, based on their selections and the marking matrix.
     #[serde(rename = "markingMethod")]
     #[serde(default)]

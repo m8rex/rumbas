@@ -109,7 +109,8 @@ pub struct QuestionPartSharedData {
     /// The number of marks to award for answering the part correctly.
     pub marks: Number,
     /// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
-    pub steps: Option<Vec<QuestionPart>>,
+    #[serde(default)]
+    pub steps: Vec<QuestionPart>,
     #[serde(rename = "stepsPenalty", default)]
     /// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3×46=2 marks after revealing steps.
     pub steps_penalty: Number,
@@ -164,6 +165,7 @@ pub struct QuestionPartCustom {
     pub r#type: String,
     #[serde(flatten)]
     pub part_data: QuestionPartSharedData,
+    #[serde(default)]
     pub settings: std::collections::HashMap<String, CustomPartInputTypeValue>,
 }
 

@@ -66,9 +66,11 @@ pub struct QuestionPartJME {
     pub failure_rate: f64,
     #[serde(rename = "vsetRange")]
     #[serde(alias = "vsetrange")]
+    #[serde(default = "default_vset_range")]
     pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
     #[serde(rename = "vsetRangePoints")]
     #[serde(alias = "vsetrangepoints")]
+    #[serde(default = "default_vset_points")]
     pub vset_range_points: SafeNatural,
     #[serde(rename = "checkVariableNames")]
     #[serde(alias = "checkvariablenames")]
@@ -93,8 +95,16 @@ pub struct QuestionPartJME {
     pub may_not_have: Option<JMEStringRestriction>,
     #[serde(rename = "mustmatchpattern")]
     pub must_match_pattern: Option<JMEPatternRestriction>,
-    #[serde(rename = "valuegenerators")]
-    pub value_generators: Option<Vec<JMEValueGenerator>>,
+    #[serde(rename = "valuegenerators", default)]
+    pub value_generators: Vec<JMEValueGenerator>,
+}
+
+fn default_vset_range() -> [SafeFloat; 2] {
+    [0.0.into(), 1.0.into()]
+}
+
+fn default_vset_points() -> SafeNatural {
+    5.into()
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]

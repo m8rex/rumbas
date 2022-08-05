@@ -15,27 +15,27 @@ pub struct QuestionPartNumberEntry {
     #[serde(rename = "correctAnswerFraction")]
     #[serde(default = "bool::default")]
     pub correct_answer_fraction: bool,
-    #[serde(rename = "correctAnswerStyle")]
-    pub correct_answer_style: Option<AnswerStyle>,
+    #[serde(rename = "correctAnswerStyle", default)]
+    pub correct_answer_style: AnswerStyle,
     #[serde(rename = "allowFractions")]
     #[serde(default = "bool::default")]
     pub allow_fractions: bool,
-    #[serde(rename = "notationStyles")]
-    pub notation_styles: Option<Vec<AnswerStyle>>,
+    #[serde(rename = "notationStyles", default = "default_notation_styles")]
+    pub notation_styles: Vec<AnswerStyle>,
     /*#[serde(rename = "checkingType")]
     pub checking_type: Option<CheckingType>,*/ //TODO: check if being used
     /*#[serde(rename = "inputStep")]
     pub input_step: Option<usize>,*/ //TODO: check if being used
-    #[serde(rename = "mustBeReduced")]
-    pub fractions_must_be_reduced: Option<bool>,
-    #[serde(rename = "mustBeReducedPC")]
-    pub partial_credit_if_fraction_not_reduced: Option<Number>,
-    #[serde(flatten)]
-    pub precision: Option<QuestionPrecision>,
-    #[serde(rename = "showPrecisionHint")]
-    pub show_precision_hint: Option<bool>,
-    #[serde(rename = "showFractionHint")]
-    pub show_fraction_hint: Option<bool>,
+    #[serde(rename = "mustBeReduced", default)]
+    pub fractions_must_be_reduced: bool,
+    #[serde(rename = "mustBeReducedPC", default)]
+    pub partial_credit_if_fraction_not_reduced: Number,
+    #[serde(flatten, default)]
+    pub precision: QuestionPrecision,
+    #[serde(rename = "showPrecisionHint", default="crate::util::bool_true")]
+    pub show_precision_hint: bool,
+    #[serde(rename = "showFractionHint", default="crate::util::bool_true")]
+    pub show_fraction_hint: bool,
     #[serde(flatten)]
     pub answer: NumberEntryAnswerType,
 }
@@ -63,16 +63,22 @@ pub enum NumberEntryAnswerType {
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionPrecision {
-    #[serde(rename = "precisionType")]
-    precision_type: String, //TODO: enum ('none',...)
-    #[serde(rename = "precision")]
+    #[serde(rename = "precisionType", default)]
+    precision_type: QuestionPrecisionType,
+    #[serde(rename = "precision", default)]
     precision: SafeNatural,
-    #[serde(rename = "precisionPartialCredit")]
+    #[serde(rename = "precisionPartialCredit", default)]
     precision_partial_credit: SafeNatural,
-    #[serde(rename = "precisionMessage")]
+    #[serde(rename = "precisionMessage", default)]
     precision_message: String,
-    #[serde(rename = "strictPrecision")]
+    #[serde(rename = "strictPrecision", default="crate::util::bool_true")]
     strict_precision: bool,
+}
+
+impl std::default::Default for QuestionPrecision {
+    fn default() -> Self {
+        Self { precision_type: Default::default(), precision: 0.into(), precision_partial_credit: 0.into(), precision_message: String::new(), strict_precision: true }
+    }
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -83,4 +89,16 @@ pub enum QuestionPrecisionType {
     DecimalPlaces,
     #[serde(rename = "sigfig")]
     SignificantFigures,
+}
+
+impl std::default::Default for QuestionPrecisionType {
+    fn default() -> Self {
+        Self::None
+    }
+}
+
+fn default_notation_styles() -> Vec<AnswerStyle> {
+    vec![
+        AnswerStyle::English, AnswerStyle::EnglishSI, AnswerStyle::EnglishPlain
+    ]
 }

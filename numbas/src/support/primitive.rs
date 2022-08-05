@@ -13,6 +13,12 @@ use std::convert::TryInto;
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
 
+impl std::default::Default for SafeNatural {
+    fn default() -> Self {
+        Self(Default::default())
+    }
+}
+
 impl std::convert::TryFrom<Primitive> for SafeNatural {
     type Error = String;
     fn try_from(p: Primitive) -> Result<Self, Self::Error> {
@@ -34,6 +40,12 @@ impl std::convert::From<usize> for SafeNatural {
 #[serde(try_from = "Primitive")]
 /// A decimal number (float) that can be parsed from primitive
 pub struct SafeFloat(pub f64);
+
+impl std::default::Default for SafeFloat {
+    fn default() -> Self {
+        SafeFloat(0.0)
+    }
+}
 
 impl std::convert::TryFrom<Primitive> for SafeFloat {
     type Error = String;
@@ -86,6 +98,12 @@ impl std::fmt::Display for SafeBool {
 pub enum VariableValued<T> {
     Variable(JMEString),
     Value(T),
+}
+
+impl<T: std::default::Default> std::default::Default for VariableValued<T> {
+    fn default() -> Self {
+        VariableValued::Value(T::default())
+    }
 }
 
 impl<T> VariableValued<T> {

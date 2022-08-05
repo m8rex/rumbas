@@ -15,39 +15,46 @@ pub struct QuestionPartMatchAnswersWithChoices {
     pub part_data: QuestionPartSharedData,
 
     #[serde(rename = "minMarks")]
+    #[serde(default)]
     /// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
-    pub min_marks: Option<SafeNatural>, //TODO; what is difference with minimum_marks?
+    pub min_marks: SafeNatural, //TODO; what is difference with minimum_marks?
     #[serde(rename = "maxMarks")]
+    #[serde(default)]
     /// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
-    pub max_marks: Option<SafeNatural>, // Is there a maximum number of marks the student can get?
+    pub max_marks: SafeNatural, // Is there a maximum number of marks the student can get?
     #[serde(rename = "minAnswers")]
+    #[serde(default)]
     /// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.
-    pub min_answers: Option<SafeNatural>, // Minimum number of responses the student can select
+    pub min_answers: SafeNatural, // Minimum number of responses the student can select
     #[serde(rename = "maxAnswers")]
+    #[serde(default)]
     /// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.
-    pub max_answers: Option<SafeNatural>, // Maximum number of responses the student can select
-    #[serde(rename = "warningType")]
+    pub max_answers: SafeNatural, // Maximum number of responses the student can select
+    #[serde(rename = "warningType", default)]
     pub wrong_nb_answers_warning: MultipleChoiceWarningType, // What to do if the student picks the wrong number of responses?
 
-    #[serde(rename = "shuffleChoices")]
+    #[serde(rename = "shuffleChoices", default)]
     pub shuffle_choices: bool,
-    #[serde(rename = "shuffleAnswers")]
+    #[serde(rename = "shuffleAnswers", default)]
     pub shuffle_answers: bool,
 
-    #[serde(flatten)]
+    #[serde(flatten, default)]
     pub display_type: MatchAnswersWithChoicesDisplayType, // How to display the response selectors -> only for 1_n_2?
     //#[serde(rename = "displayColumns")] //TODO?
     //pub displayed_columns: usize, // How many columns to use to display the choices.
+    #[serde(default)]
     pub layout: MatchAnswersWithChoicesLayout,
 
-    #[serde(rename = "showCellAnswerState")]
+    #[serde(rename = "showCellAnswerState", default="crate::util::bool_true")]
     /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
     pub show_cell_answer_state: bool,
 
+    #[serde(default)]
     pub choices: VariableValued<Vec<ContentAreaString>>,
+    #[serde(default)]
     pub answers: VariableValued<Vec<ContentAreaString>>,
-    #[serde(rename = "matrix")]
-    pub marking_matrix: Option<VariableValued<Vec<Vec<JMEString>>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
+    #[serde(rename = "matrix", default)]
+    pub marking_matrix: VariableValued<Vec<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -57,6 +64,12 @@ pub enum MatchAnswersWithChoicesDisplayType {
     Check(MatchAnswersWithChoicesDisplayTypeCheck),
     #[serde(rename = "radiogroup")]
     Radio,
+}
+
+impl std::default::Default for MatchAnswersWithChoicesDisplayType {
+    fn default() -> Self {
+        Self::Radio
+    }
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
@@ -75,6 +88,13 @@ pub enum MultipleChoiceWarningType {
     //TODO: also prevent and warn -> same as leave actions?
     //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
 }
+
+impl std::default::Default for MultipleChoiceWarningType {
+    fn default() -> Self {
+        Self::None
+    }
+}
+
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub enum MatchAnswersWithChoicesLayoutType {
     #[serde(rename = "all")]
@@ -89,4 +109,10 @@ pub enum MatchAnswersWithChoicesLayoutType {
 pub struct MatchAnswersWithChoicesLayout {
     pub r#type: MatchAnswersWithChoicesLayoutType,
     pub expression: String, // TODO: expression only needed for custom type?
+}
+
+impl std::default::Default for MatchAnswersWithChoicesLayout {
+    fn default() -> Self {
+        Self { r#type: MatchAnswersWithChoicesLayoutType::All, expression: String::new() }
+    }
 }
