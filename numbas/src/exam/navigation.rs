@@ -7,7 +7,7 @@ use serde_with::skip_serializing_none;
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Navigation {
     #[serde(rename = "startpassword")]
-    pub start_password: Option<String>, //TODO: if empty string -> also None
+    pub start_password: Option<String>, //TODO: if empty string -> also None || make this type a string?
     #[serde(rename = "allowregen", default)]
     pub allow_regenerate: bool,
     #[serde(flatten)]
@@ -52,7 +52,7 @@ pub struct NavigationModeDiagnostic {
 #[serde(tag = "action")]
 pub enum LeaveAction {
     #[serde(rename = "none")]
-    None { message: String }, //This message doesn't do anything
+    None { message: String }, // This message doesn't do anything
     #[serde(rename = "warnifunattempted")]
     WarnIfNotAttempted { message: String }, // Show a warning message if a user moves away from a question that is not attempted
     #[serde(rename = "preventifunattempted")]

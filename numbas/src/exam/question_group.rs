@@ -6,9 +6,9 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct QuestionGroup {
-    //TODO
-    pub name: Option<String>,
-    #[serde(flatten)]
+    #[serde(default)]
+    pub name: String,
+    #[serde(flatten, default)]
     pub picking_strategy: QuestionGroupPickingStrategy,
     pub questions: Vec<Question>,
 }
@@ -25,4 +25,10 @@ pub enum QuestionGroupPickingStrategy {
         #[serde(rename = "pickQuestions")]
         pick_questions: usize,
     },
+}
+
+impl std::default::Default for QuestionGroupPickingStrategy {
+    fn default() -> Self {
+        Self::AllOrdered
+    }
 }

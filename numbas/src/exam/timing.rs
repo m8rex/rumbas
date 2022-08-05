@@ -6,10 +6,11 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Timing {
-    #[serde(rename = "allowPause")]
+    #[serde(rename = "allowPause", default="crate::util::bool_true")]
     pub allow_pause: bool,
+    #[serde(default)]
     pub timeout: TimeoutAction, // Action to do on timeout
-    #[serde(rename = "timedwarning")]
+    #[serde(rename = "timedwarning", default)]
     pub timed_warning: TimeoutAction, // Action to do five minutes before timeout
 }
 
@@ -20,4 +21,10 @@ pub enum TimeoutAction {
     None { message: String }, //This message doesn't do anything
     #[serde(rename = "warn")]
     Warn { message: String }, // Show a warning message
+}
+
+impl std::default::Default for TimeoutAction {
+    fn default() -> Self {
+        Self::None { message: String::new() }
+    }
 }

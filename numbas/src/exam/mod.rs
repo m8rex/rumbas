@@ -25,8 +25,11 @@ use timing::Timing;
 pub struct Exam {
     #[serde(flatten)]
     pub basic_settings: BasicExamSettings,
+    #[serde(default)]
     pub resources: Vec<Resource>,
+    #[serde(default)]
     pub extensions: Vec<String>,
+    #[serde(default)]
     pub custom_part_types: Vec<CustomPartType>,
 
     pub navigation: Navigation,
@@ -34,8 +37,11 @@ pub struct Exam {
     pub feedback: Feedback,
 
     //rulesets: HashMap<String, String>, //TODO + Type
-    pub functions: Option<HashMap<String, Function>>,
-    pub variables: Option<HashMap<String, Variable>>,
+    #[serde(default)]
+    pub functions: HashMap<String, Function>,
+    #[serde(default)]
+    pub variables: HashMap<String, Variable>,
+    #[serde(default)]
     pub question_groups: Vec<QuestionGroup>,
     //contributors TODO
     //metadata TODO
@@ -86,14 +92,18 @@ impl Exam {
 pub struct BasicExamSettings {
     pub name: String,
     #[serde(rename = "duration")]
-    pub duration_in_seconds: Option<usize>,
+    #[serde(default)]
+    pub duration_in_seconds: usize,
     #[serde(rename = "percentPass", deserialize_with = "from_str_optional")]
     pub percentage_needed_to_pass: Option<f64>,
     #[serde(rename = "showQuestionGroupNames")]
-    pub show_question_group_names: Option<bool>,
+    #[serde(default)]
+    pub show_question_group_names: bool,
     #[serde(rename = "showstudentname")]
-    pub show_student_name: Option<bool>,
+    #[serde(default = "crate::util::bool_true")]
+    pub show_student_name: bool,
     #[serde(rename = "allowPrinting")]
+    #[serde(default = "crate::util::bool_true")]
     /// Whether students are ammpwed to print an exam transcript
-    pub allow_printing: Option<bool>,
+    pub allow_printing: bool,
 }
