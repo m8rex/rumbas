@@ -98,7 +98,9 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .to_numbas(locale); // todo extract?
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
-
+       
+        let rulesets = HashMap::new();
+        
         numbas::exam::Exam {
             basic_settings,
             resources,
@@ -109,6 +111,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             feedback,
             functions,
             variables,
+            rulesets,
             question_groups,
             diagnostic,
         }

@@ -11,6 +11,7 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
+use crate::question::part::jme::{JMEAnswerSimplification, JMEAnswerDisplay, JMERulesetItem};
 use crate::exam::{FileReadError, ParseError};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::part::question_part::QuestionPart;
@@ -64,6 +65,8 @@ pub struct Question {
     /// The custom part types used in this exam
     #[input(skip)]
     pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options
+    /// The rulesets defined in this question
+    pub rulesets: HashMap<String, JMERulesetItem>,
 }
 
 impl ToNumbas<numbas::question::Question> for Question {
@@ -104,8 +107,8 @@ impl ToNumbas<numbas::question::Question> for Question {
                 .map(|(k, _)| k)
                 .collect(),
             variable_groups: Vec::new(), // Don't add variable groups
-            rulesets: HashMap::new(),    //TODO: add to Question type ?
             preamble: self.preamble.to_numbas(locale),
+            rulesets: self.rulesets.to_numbas(locale),
             navigation: self.navigation.to_numbas(locale),
             extensions: self.extensions.to_numbas(locale),
             tags: self
@@ -145,6 +148,7 @@ impl ToRumbas<Question> for numbas::question::Question {
                 .collect(),
             resources: self.resources.to_rumbas(),
             custom_part_types: self.custom_part_types.to_rumbas(),
+            rulesets: self.rulesets.to_rumbas()
         }
     }
 }

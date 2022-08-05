@@ -568,3 +568,53 @@ impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenera
         }
     }
 }
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "JMERulesetItemInput")]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+pub enum JMERulesetItem {
+    Simplification(JMEAnswerSimplification),
+    Display(JMEAnswerDisplay)
+}
+
+
+impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
+    for JMERulesetItem
+{
+    fn to_numbas(
+        &self,
+        locale: &str,
+    ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
+        match self {
+            Self::Simplification(s) => s.to_numbas(locale),
+            Self::Display(d) => d.to_numbas(locale)
+        }
+    }
+}
+
+        impl ToRumbas<JMERulesetItem>
+            for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
+        {
+            fn to_rumbas(&self) -> JMERulesetItem {
+                let has_different_types = (0..self.len()-1).any(|i| match (&self[i], &self[i+1]) {
+                    (&numbas::question::answer_simplification::AnswerSimplificationType::Rule(_), &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_)) => false,
+                    (&numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(_), &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(_)) => false,
+                    _ => true
+                });
+                if has_different_types {
+                    // It would be needed to create two different ruleset's for and they should have a different name.
+                    // Their usage should be changed in the jme
+                    // TODO
+                    log::error!("Importing rulesets with both Simplification rules and DisplayOptions, is currently not supported. Only adding simplification rules.");
+                }
+
+                if has_different_types {
+                    JMERulesetItem::Simplification(self.to_rumbas())
+                } else if let Some(numbas::question::answer_simplification::AnswerSimplificationType::Rule(_)) = self.get(0) {
+                    JMERulesetItem::Simplification(self.to_rumbas())
+                } else {
+                    JMERulesetItem::Display(self.to_rumbas())
+                }
+
+            }
+        }
