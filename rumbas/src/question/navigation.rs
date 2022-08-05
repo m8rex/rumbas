@@ -28,7 +28,7 @@ impl ToNumbas<numbas::question::navigation::Navigation> for QuestionNavigation {
         numbas::question::navigation::Navigation {
             allow_regenerate: self.can_regenerate.to_numbas(locale),
             show_frontpage: self.show_title_page.to_numbas(locale),
-            confirm_when_leaving: Some(self.confirm_when_leaving.to_numbas(locale)),
+            confirm_when_leaving: self.confirm_when_leaving.to_numbas(locale),
         }
     }
 }
@@ -40,7 +40,6 @@ impl ToRumbas<QuestionNavigation> for numbas::question::navigation::Navigation {
             show_title_page: self.show_frontpage.to_rumbas(),
             confirm_when_leaving: self
                 .confirm_when_leaving
-                .unwrap_or(DEFAULTS.question_navigation_prevent_leaving)
                 .to_rumbas(),
         }
     }
