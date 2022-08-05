@@ -133,7 +133,28 @@ macro_rules! create_answer_simplification {
             fn default() -> Self {
                 // load empty json object
                 let default_answer_simplification = numbas::question::part::jme::default_answer_simplification();
-                default_answer_simplification.to_rumbas() 
+                let mut result = $struct {
+                    $(
+                        $name: false
+                    ),*
+                };
+                    for a in default_answer_simplification.into_iter() {
+                        match a {
+                            numbas::question::answer_simplification::AnswerSimplificationType::$variant(r) =>
+                                match r {
+                                    numbas::question::answer_simplification::$variant_struct::All(b) => {
+                                        $(if $partofall {
+                                            result.$name = b;
+                                        })*
+                                    }
+                                    $(numbas::question::answer_simplification::$variant_struct::$numbas_name(b) => {
+                                        result.$name = b;
+                                    })*
+                                }
+                            _ => ()
+                        }
+                    }
+                    result
             }
         }
 
