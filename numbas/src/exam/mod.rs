@@ -38,12 +38,6 @@ pub struct Exam {
     pub feedback: Feedback,
 
     #[serde(default)]
-    pub rulesets: HashMap<String, Vec<AnswerSimplificationType>>,
-    #[serde(default)]
-    pub functions: HashMap<String, Function>,
-    #[serde(default)]
-    pub variables: HashMap<String, Variable>,
-    #[serde(default)]
     pub question_groups: Vec<QuestionGroup>,
     //contributors TODO
     //metadata TODO

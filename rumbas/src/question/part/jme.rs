@@ -572,6 +572,7 @@ impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenera
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMERulesetItemInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(tag = "type", content = "rules")]
 pub enum JMERulesetItem {
     Simplification(JMEAnswerSimplification),
     Display(JMEAnswerDisplay),

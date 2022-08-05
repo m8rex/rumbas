@@ -51,12 +51,6 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
 
         let feedback = self.feedback.to_numbas(locale);
 
-        //TODO
-        let functions = HashMap::new();
-
-        //TODO
-        let variables = HashMap::new();
-
         let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
             self.question_groups.to_numbas(locale);
 
@@ -99,8 +93,6 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
 
         let diagnostic = Some(self.diagnostic.to_numbas(locale));
 
-        let rulesets = HashMap::new();
-
         numbas::exam::Exam {
             basic_settings,
             resources,
@@ -109,9 +101,6 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             navigation,
             timing,
             feedback,
-            functions,
-            variables,
-            rulesets,
             question_groups,
             diagnostic,
         }
