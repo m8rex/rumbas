@@ -4,6 +4,7 @@ pub mod navigation;
 pub mod question_group;
 pub mod timing;
 
+use crate::question::answer_simplification::AnswerSimplificationType;
 use crate::question::custom_part_type::CustomPartType;
 use crate::question::function::Function;
 use crate::question::resource::Resource;
@@ -36,7 +37,8 @@ pub struct Exam {
     pub timing: Timing,
     pub feedback: Feedback,
 
-    //rulesets: HashMap<String, String>, //TODO + Type
+    #[serde(default)]
+    pub rulesets: HashMap<String, Vec<AnswerSimplificationType>>,
     #[serde(default)]
     pub functions: HashMap<String, Function>,
     #[serde(default)]

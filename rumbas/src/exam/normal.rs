@@ -7,6 +7,7 @@ use crate::exam::question_group::QuestionGroup;
 use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::question::part::jme::{JMEAnswerSimplification, JMEAnswerDisplay, JMERulesetItem};
 use crate::question::extension::Extensions;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
@@ -33,6 +34,8 @@ pub struct NormalExam {
     pub timing: Timing,
     /// The feedback settings for this exam
     pub feedback: Feedback,
+    /// The rulesets defined in this exam
+    pub rulesets: HashMap<String, JMERulesetItem>,
     /// The questions groups for this exam
     pub question_groups: Vec<QuestionGroup>,
     /// The settings to set for numbas
@@ -92,6 +95,8 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .into_iter()
             .collect::<Vec<_>>()
             .to_numbas(locale);
+        
+            let rulesets = self.rulesets.to_numbas(locale);
 
         numbas::exam::Exam {
             basic_settings,
@@ -105,6 +110,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             variables,
             question_groups,
             diagnostic: None,
+            rulesets,
         }
     }
 }
@@ -149,6 +155,7 @@ pub fn convert_normal_numbas_exam(
             numbas_settings: NumbasSettings {
                 theme: "default".to_string(),
             }, // todo: argument?
+            rulesets: exam.rulesets.to_rumbas()
         },
         question_groups
             .into_iter()

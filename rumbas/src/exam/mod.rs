@@ -20,7 +20,6 @@ use crate::support::default::combine_exam_with_default_files;
 use crate::support::file_manager::CACHE;
 use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
-use crate::support::translatable::TranslatableString;
 use crate::support::yaml::YamlError;
 use comparable::Comparable;
 use rumbas_support::preamble::*;
