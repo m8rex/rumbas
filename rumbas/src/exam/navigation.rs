@@ -24,8 +24,7 @@ impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
             allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
             allow_steps: self.to_shared_data().show_steps.to_numbas(locale),
             show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
-            confirm_when_leaving: 
-                self.to_shared_data().confirm_when_leaving.to_numbas(locale),
+            confirm_when_leaving: self.to_shared_data().confirm_when_leaving.to_numbas(locale),
             start_password: Some(self.to_shared_data().start_password.to_numbas(locale)),
             navigation_mode: self.to_numbas(locale),
         }
@@ -298,24 +297,15 @@ impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
                 .unwrap_or(DEFAULTS.navigation_start_password)
                 .to_rumbas(),
             can_regenerate: self.navigation.allow_regenerate.to_rumbas(),
-            show_steps: self
-                .navigation
-                .allow_steps
-                .to_rumbas(),
+            show_steps: self.navigation.allow_steps.to_rumbas(),
 
             show_title_page: self.navigation.show_frontpage.to_rumbas(),
-            confirm_when_leaving: self
-                .navigation
-                .confirm_when_leaving
-                .to_rumbas(),
+            confirm_when_leaving: self.navigation.confirm_when_leaving.to_rumbas(),
             show_names_of_question_groups: self
                 .basic_settings
                 .show_question_group_names
                 .to_rumbas(),
-            allow_printing: self
-                .basic_settings
-                .allow_printing
-                .to_rumbas(),
+            allow_printing: self.basic_settings.allow_printing.to_rumbas(),
         }
     }
 }

@@ -38,9 +38,7 @@ impl ToRumbas<QuestionNavigation> for numbas::question::navigation::Navigation {
         QuestionNavigation {
             can_regenerate: self.allow_regenerate.to_rumbas(),
             show_title_page: self.show_frontpage.to_rumbas(),
-            confirm_when_leaving: self
-                .confirm_when_leaving
-                .to_rumbas(),
+            confirm_when_leaving: self.confirm_when_leaving.to_rumbas(),
         }
     }
 }

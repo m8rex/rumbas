@@ -7,8 +7,8 @@ use crate::exam::question_group::QuestionGroup;
 use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
-use crate::question::part::jme::{JMEAnswerSimplification, JMEAnswerDisplay, JMERulesetItem};
 use crate::question::extension::Extensions;
+use crate::question::part::jme::{JMEAnswerDisplay, JMEAnswerSimplification, JMERulesetItem};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -95,8 +95,8 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .into_iter()
             .collect::<Vec<_>>()
             .to_numbas(locale);
-        
-            let rulesets = self.rulesets.to_numbas(locale);
+
+        let rulesets = self.rulesets.to_numbas(locale);
 
         numbas::exam::Exam {
             basic_settings,
@@ -119,12 +119,16 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
     fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
         numbas::exam::BasicExamSettings {
             name: self.name.to_numbas(locale),
-            duration_in_seconds: self.timing.duration_in_seconds.to_numbas(locale).unwrap_or(0),
+            duration_in_seconds: self
+                .timing
+                .duration_in_seconds
+                .to_numbas(locale)
+                .unwrap_or(0),
             percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
-            show_question_group_names: 
-                self.navigation
-                    .to_shared_data()
-                    .show_names_of_question_groups,
+            show_question_group_names: self
+                .navigation
+                .to_shared_data()
+                .show_names_of_question_groups,
             show_student_name: self.feedback.show_name_of_student,
             allow_printing: self.navigation.to_shared_data().allow_printing,
         }
@@ -155,7 +159,7 @@ pub fn convert_normal_numbas_exam(
             numbas_settings: NumbasSettings {
                 theme: "default".to_string(),
             }, // todo: argument?
-            rulesets: exam.rulesets.to_rumbas()
+            rulesets: exam.rulesets.to_rumbas(),
         },
         question_groups
             .into_iter()

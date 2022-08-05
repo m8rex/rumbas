@@ -48,10 +48,7 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
         let review: Review = self.feedback.review.to_rumbas();
         Feedback {
             percentage_needed_to_pass: self.basic_settings.percentage_needed_to_pass.to_rumbas(),
-            show_name_of_student: self
-                .basic_settings
-                .show_student_name
-                .to_rumbas(),
+            show_name_of_student: self.basic_settings.show_student_name.to_rumbas(),
             show_current_marks: self.feedback.show_actual_mark.to_rumbas(),
             show_maximum_marks: self.feedback.show_total_mark.to_rumbas(),
             show_answer_state: self.feedback.show_answer_state.to_rumbas(),
@@ -92,18 +89,10 @@ impl ToNumbas<numbas::exam::feedback::Review> for Review {
 impl ToRumbas<Review> for numbas::exam::feedback::Review {
     fn to_rumbas(&self) -> Review {
         Review {
-            show_score: self
-                .show_score
-                .to_rumbas(),
-            show_feedback: self
-                .show_feedback
-                .to_rumbas(),
-            show_expected_answer: self
-                .show_expected_answer
-                .to_rumbas(),
-            show_advice: self
-                .show_advice
-                .to_rumbas(),
+            show_score: self.show_score.to_rumbas(),
+            show_feedback: self.show_feedback.to_rumbas(),
+            show_expected_answer: self.show_expected_answer.to_rumbas(),
+            show_advice: self.show_advice.to_rumbas(),
         }
     }
 }

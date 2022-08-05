@@ -46,12 +46,12 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
             allow_fractions: self.allow_fractions.to_numbas(locale),
             notation_styles: self.allowed_notation_styles.to_numbas(locale),
             fractions_must_be_reduced: self.fractions_must_be_reduced.to_numbas(locale),
-            partial_credit_if_fraction_not_reduced: 
-                self.partial_credit_if_fraction_not_reduced
-                    .to_numbas(locale),
-            
-            precision: Default::default(),           //TODO
-            show_precision_hint: true, //TODO
+            partial_credit_if_fraction_not_reduced: self
+                .partial_credit_if_fraction_not_reduced
+                .to_numbas(locale),
+
+            precision: Default::default(), //TODO
+            show_precision_hint: true,     //TODO
             show_fraction_hint: self.hint_fraction.to_numbas(locale),
             answer: self.answer.to_numbas(locale),
             // checking_type: Some(numbas::exam::CheckingType::Range), //TODO

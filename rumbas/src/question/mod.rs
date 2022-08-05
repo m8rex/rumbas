@@ -11,9 +11,9 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
-use crate::question::part::jme::{JMEAnswerSimplification, JMEAnswerDisplay, JMERulesetItem};
 use crate::exam::{FileReadError, ParseError};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
+use crate::question::part::jme::{JMEAnswerDisplay, JMEAnswerSimplification, JMERulesetItem};
 use crate::question::part::question_part::QuestionPart;
 use crate::support::file_manager::CACHE;
 use crate::support::template::TemplateFile;
@@ -148,7 +148,7 @@ impl ToRumbas<Question> for numbas::question::Question {
                 .collect(),
             resources: self.resources.to_rumbas(),
             custom_part_types: self.custom_part_types.to_rumbas(),
-            rulesets: self.rulesets.to_rumbas()
+            rulesets: self.rulesets.to_rumbas(),
         }
     }
 }
