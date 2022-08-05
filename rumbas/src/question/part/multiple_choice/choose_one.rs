@@ -40,13 +40,13 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
                         .collect::<Vec<_>>(),
                 )
                 .to_numbas(locale),
-                Some(
+                
                     VariableValued::Value(
                         answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>(),
                     )
                     .to_numbas(locale),
-                ),
-                Some(
+                
+                
                     answers
                         .iter()
                         .map(|a| {
@@ -54,12 +54,12 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
                         })
                         .collect::<Vec<_>>()
                         .to_numbas(locale),
-                ),
+                
             ),
             MultipleChoiceAnswerData::NumbasLike(data) => (
                 data.answers.to_numbas(locale),
-                Some(data.marks.to_numbas(locale)),
-                data.feedback.clone().map(|f| f.to_numbas(locale)).into(),
+                data.marks.to_numbas(locale),
+                data.feedback.to_numbas(locale).unwrap_or_default(),
             ),
         };
         numbas::question::part::choose_one::QuestionPartChooseOne {
@@ -68,7 +68,7 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
             choices,
             display_type: self.display.to_numbas(locale),
             columns: self.display.get_nb_columns().into(),
-            show_cell_answer_state: Some(self.show_cell_answer_state.to_numbas(locale)),
+            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
             marking_matrix,
             distractors,
         }
@@ -83,8 +83,7 @@ impl ToRumbas<QuestionPartChooseOne> for numbas::question::part::choose_one::Que
                     display: self.to_rumbas(),
                     shuffle_answers: self.shuffle_answers.to_rumbas(),
                     show_cell_answer_state:
-                        self.show_cell_answer_state
-                            .unwrap_or(DEFAULTS.choose_one_show_cell_answer_state).to_rumbas()
+                        self.show_cell_answer_state.to_rumbas()
             }
         }
     }

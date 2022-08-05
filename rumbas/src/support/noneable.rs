@@ -183,6 +183,17 @@ impl<T: std::clone::Clone> Noneable<T> {
     }
 }
 
+impl<T: std::default::Default> Noneable<T> {
+    #[inline]
+    pub fn unwrap_or_default(self) -> T {
+        match self {
+            Noneable::None => T::default(),
+            Noneable::NotNone(x) => x
+        }
+    }
+}
+
+
 impl<T> Noneable<T> {
     pub fn map<U, F: FnOnce(T) -> U>(self, f: F) -> Noneable<U> {
         match self {

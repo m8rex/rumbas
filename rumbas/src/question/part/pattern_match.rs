@@ -33,8 +33,8 @@ impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     ) -> numbas::question::part::pattern_match::QuestionPartPatternMatch {
         numbas::question::part::pattern_match::QuestionPartPatternMatch {
             part_data: self.to_numbas(locale),
-            case_sensitive: Some(self.case_sensitive.to_numbas(locale)),
-            partial_credit: Some(self.partial_credit.to_numbas(locale)),
+            case_sensitive: self.case_sensitive.to_numbas(locale),
+            partial_credit: self.partial_credit.to_numbas(locale),
             answer: self.pattern.to_numbas(locale),
             display_answer: Some(self.display_answer.to_numbas(locale)),
             match_mode: self.match_mode.to_numbas(locale),
@@ -50,10 +50,9 @@ impl ToRumbas<QuestionPartPatternMatch>
             QuestionPartPatternMatch with &self.part_data => {
                 case_sensitive:
                     self.case_sensitive
-                        .unwrap_or(DEFAULTS.pattern_match_case_sensitive).to_rumbas(),
+                        .to_rumbas(),
                 partial_credit:
-                    self.partial_credit
-                        .unwrap_or(DEFAULTS.pattern_match_partial_credit)
+                    self.partial_credit                        
                         .0.to_rumbas(),
                 pattern: self.answer.to_rumbas(),
                 display_answer:

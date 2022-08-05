@@ -32,3 +32,9 @@ pub enum AnswerStyle {
     #[serde(rename = "ch")]
     Swiss,
 }
+
+impl std::default::Default for AnswerStyle {
+    fn default() -> Self {
+        Self::EnglishPlain
+    }
+}

@@ -62,7 +62,7 @@ impl ToNumbas<numbas::question::part::jme::QuestionPartJME> for QuestionPartJME 
             must_have: self.must_have.to_numbas(locale),
             may_not_have: self.may_not_have.to_numbas(locale),
             must_match_pattern: self.must_match_pattern.to_numbas(locale),
-            value_generators: self.value_generators.to_numbas(locale),
+            value_generators: self.value_generators.to_numbas(locale).unwrap_or_default(),
         }
     }
 }
@@ -103,8 +103,11 @@ impl ToRumbas<QuestionPartJME> for numbas::question::part::jme::QuestionPartJME 
                     self.must_match_pattern
                         .to_rumbas(),
                 value_generators:
-                    self.value_generators
-                        .to_rumbas()
+                    if self.value_generators.is_empty() { 
+                        Noneable::None 
+                    } else { 
+                        Noneable::NotNone(self.value_generators.to_rumbas()) 
+                    }
             }
         }
     }

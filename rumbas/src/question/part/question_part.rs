@@ -316,7 +316,7 @@ macro_rules! question_part_type {
                     adaptive_marking_penalty: self.adaptive_marking_penalty.to_numbas(locale),
                     custom_marking_algorithm: self.custom_marking_algorithm_notes.to_numbas(&locale),
                     extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale),
-                    steps: Some(self.steps.to_numbas(&locale)),
+                    steps: self.steps.to_numbas(&locale),
                 }
 
             }

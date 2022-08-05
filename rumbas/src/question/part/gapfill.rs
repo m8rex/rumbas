@@ -27,7 +27,7 @@ impl ToNumbas<numbas::question::part::gapfill::QuestionPartGapFill> for Question
     fn to_numbas(&self, locale: &str) -> numbas::question::part::gapfill::QuestionPartGapFill {
         numbas::question::part::gapfill::QuestionPartGapFill {
             part_data: self.to_numbas(locale),
-            sort_answers: Some(self.sort_answers.to_numbas(locale)),
+            sort_answers: self.sort_answers.to_numbas(locale),
             gaps: self.gaps.to_numbas(locale),
         }
     }
@@ -38,7 +38,7 @@ impl ToRumbas<QuestionPartGapFill> for numbas::question::part::gapfill::Question
         create_question_part! {
             QuestionPartGapFill with &self.part_data => {
 
-                sort_answers: self.sort_answers.unwrap_or(DEFAULTS.gapfill_sort_answers).to_rumbas(),
+                sort_answers: self.sort_answers.to_rumbas(),
 
                 gaps: self.gaps.to_rumbas()
             }

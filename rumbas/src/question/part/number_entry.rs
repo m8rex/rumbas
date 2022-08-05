@@ -42,17 +42,17 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
         numbas::question::part::number_entry::QuestionPartNumberEntry {
             part_data: self.to_numbas(locale),
             correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
-            correct_answer_style: Some(self.display_correct_in_style.to_numbas(locale)),
+            correct_answer_style: self.display_correct_in_style.to_numbas(locale),
             allow_fractions: self.allow_fractions.to_numbas(locale),
-            notation_styles: Some(self.allowed_notation_styles.to_numbas(locale)),
-            fractions_must_be_reduced: Some(self.fractions_must_be_reduced.to_numbas(locale)),
-            partial_credit_if_fraction_not_reduced: Some(
+            notation_styles: self.allowed_notation_styles.to_numbas(locale),
+            fractions_must_be_reduced: self.fractions_must_be_reduced.to_numbas(locale),
+            partial_credit_if_fraction_not_reduced: 
                 self.partial_credit_if_fraction_not_reduced
                     .to_numbas(locale),
-            ),
-            precision: None,           //TODO
-            show_precision_hint: None, //TODO
-            show_fraction_hint: Some(self.hint_fraction.to_numbas(locale)),
+            
+            precision: Default::default(),           //TODO
+            show_precision_hint: true, //TODO
+            show_fraction_hint: self.hint_fraction.to_numbas(locale),
             answer: self.answer.to_numbas(locale),
             // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
         }
@@ -69,24 +69,17 @@ impl ToRumbas<QuestionPartNumberEntry>
                 display_correct_as_fraction: self.correct_answer_fraction.to_rumbas(),
                 allow_fractions: self.allow_fractions.to_rumbas(),
                 allowed_notation_styles:
-                    self.notation_styles.clone().unwrap_or_default().to_rumbas(),
+                    self.notation_styles.to_rumbas(),
 
                 display_correct_in_style:
-                    self.correct_answer_style
-                        .clone()
-                        .unwrap_or(DEFAULTS.number_entry_correct_answer_style)
-                        .to_rumbas(),
+                    self.correct_answer_style.to_rumbas(),
 
                 fractions_must_be_reduced:
-                    self.fractions_must_be_reduced
-                        .unwrap_or(DEFAULTS.number_entry_fractions_must_be_reduced).to_rumbas(),
+                    self.fractions_must_be_reduced.to_rumbas(),
                 partial_credit_if_fraction_not_reduced:
-                    self.partial_credit_if_fraction_not_reduced
-                        .clone()
-                        .unwrap_or(DEFAULTS.number_entry_partial_credit_if_fraction_not_reduced).to_rumbas(),
+                    self.partial_credit_if_fraction_not_reduced.to_rumbas(),
                 hint_fraction:
-                    self.show_fraction_hint
-                        .unwrap_or(DEFAULTS.number_entry_hint_fraction).to_rumbas()
+                    self.show_fraction_hint.to_rumbas()
 
             }
         }

@@ -10,7 +10,7 @@ use serde_with::skip_serializing_none;
 pub struct QuestionPartGapFill {
     #[serde(flatten)]
     pub part_data: QuestionPartSharedData,
-    #[serde(rename = "sortAnswers")]
-    pub sort_answers: Option<bool>,
+    #[serde(rename = "sortAnswers", default)]
+    pub sort_answers: bool,
     pub gaps: Vec<QuestionPart>,
 }
