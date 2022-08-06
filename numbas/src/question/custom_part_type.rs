@@ -106,6 +106,8 @@ pub struct CustomPartRadioButtonsInputOptions {
 pub enum CustomPartAvailability {
     #[serde(rename = "always")]
     Always,
+    #[serde(rename = "restricted")]
+    Restricted
 }
 
 // TODO: other

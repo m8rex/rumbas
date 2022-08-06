@@ -5,16 +5,31 @@ use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::question::QuestionFileType;
 use rumbas::support::to_rumbas::ToRumbas;
 
+fn read_pretty_exam(path: &std::path::Path) -> String {
+    let pretty_path = path.with_extension("exam.pretty");
+    if !pretty_path.exists() {
+        let normal_content =  std::fs::read_to_string(path).expect("Invalid file path");
+        let json_content = numbas::exam::Exam::clean_exam_str(&normal_content[..]);
+        let v : serde_json::Value = serde_json::from_str(json_content).expect("failed parsing exam json");
+        let pretty_exam = serde_json::to_string_pretty(&v).expect("failed generating json of parsed exam json");
+        let pretty_exam_content = numbas::exam::Exam::to_exam_str(&pretty_exam[..]);
+        std::fs::write(&pretty_path, pretty_exam_content).expect("Writing pretty exam file to work");
+    }
+    let content = 
+        std::fs::read_to_string(pretty_path).expect("Invalid file path");
+    content
+}
+
 macro_rules! read_exam {
     ($file_name: expr) => {{
-        let content = std::fs::read_to_string($file_name).expect("Invalid file path");
+        let content = read_pretty_exam($file_name);
         NExam::from_exam_str(content.as_ref())
     }};
 }
 
 macro_rules! read_question {
     ($file_name: expr) => {{
-        let content = std::fs::read_to_string($file_name).expect("Invalid file path");
+        let content = read_pretty_exam($file_name);
         numbas::question::Question::from_question_exam_str(content.as_ref())
     }};
 }

@@ -652,18 +652,22 @@ fn unescape(string: &str) -> Option<String> {
 }
 
 pub fn parse_as_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    log::debug!("Parsing as JME: {}", s);
     jme::JMEParser::parse(Rule::jme, s)
 }
 
 pub fn parse_as_embraced_jme(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    log::debug!("Parsing as embraced JME: {}", s);
     jme::JMEParser::parse(Rule::embraced_jme, s)
 }
 
 pub fn parse_as_content_area(s: &str) -> Result<Pairs<'_, HTMLRule>, pest::error::Error<HTMLRule>> {
+    log::debug!("Parsing as content area: {}", s);
     html::HTMLParser::parse(HTMLRule::content_area, s)
 }
 
 pub fn parse_as_jme_script(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Error<Rule>> {
+    log::debug!("Parsing as JME script: {}", s);
     jme::JMEParser::parse(Rule::script, s)
 }
 

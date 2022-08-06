@@ -55,25 +55,30 @@ pub enum WriteResult {
 }
 
 impl Exam {
-    pub fn from_exam_str(s: &str) -> serde_json::Result<Exam> {
-        let json = if s.starts_with("// Numbas version: exam_results_page_options") {
+    pub fn clean_exam_str(s: &str) -> &str {
+        if s.starts_with("// Numbas version: exam_results_page_options") {
             s.splitn(2, '\n').collect::<Vec<_>>()[1]
         } else {
             s
-        };
+        }
+    }
+    pub fn from_exam_str(s: &str) -> serde_json::Result<Exam> {
+        let json = Self::clean_exam_str(s);
         let json = hacky_fix_exam(json);
         serde_json::from_str(json.as_str())
     }
-
+    pub fn to_exam_str(s: &str) -> String {
+        format!(
+            r#"// Numbas version: exam_results_page_options
+{}"#,
+            s
+        )
+    }
     pub fn write(&self, file_name: &str) -> WriteResult {
         match serde_json::to_string(self) {
             Ok(s) => match std::fs::write(
                 file_name,
-                format!(
-                    r#"// Numbas version: exam_results_page_options
-{}"#,
-                    s
-                ),
+                Self::to_exam_str(&s[..])
             ) {
                 Ok(_) => WriteResult::Ok,
                 Err(e) => WriteResult::IOError(e),
