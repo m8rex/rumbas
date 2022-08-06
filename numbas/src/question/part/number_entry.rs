@@ -1,7 +1,7 @@
 use crate::jme::JMEString;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::answer_style::AnswerStyle;
-use crate::support::primitive::{Number, SafeNatural};
+use crate::support::primitive::{Number, SafeNatural, VariableValued};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -66,7 +66,7 @@ pub struct QuestionPrecision {
     #[serde(rename = "precisionType", default)]
     precision_type: QuestionPrecisionType,
     #[serde(rename = "precision", default)]
-    precision: SafeNatural,
+    precision: VariableValued<SafeNatural>,
     #[serde(rename = "precisionPartialCredit", default)]
     precision_partial_credit: SafeNatural,
     #[serde(rename = "precisionMessage", default)]
@@ -77,7 +77,7 @@ pub struct QuestionPrecision {
 
 impl std::default::Default for QuestionPrecision {
     fn default() -> Self {
-        Self { precision_type: Default::default(), precision: 0.into(), precision_partial_credit: 0.into(), precision_message: String::new(), strict_precision: true }
+        Self { precision_type: Default::default(), precision: VariableValued::Value(0.into()), precision_partial_credit: 0.into(), precision_message: String::new(), strict_precision: true }
     }
 }
 

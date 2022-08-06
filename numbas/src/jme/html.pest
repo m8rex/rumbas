@@ -35,9 +35,10 @@ brace_close = _{ !"\\}" ~ "}" }
 normal_char = _{ "\\{" | "\\}" | "\\n" | (!(brace_open | brace_close) ~ (!"\\" ~ ANY)) }
 html_latex_dollar = _{ "$" ~ (!"$" ~ latex_content)*  ~ "$" }
 html_latex_block_normal = _{ "\\[" ~ (!"\\]" ~ latex_content)*  ~ "\\]" }
+html_latex_block_round = _{ "\\(" ~ (!"\\)" ~ latex_content)*  ~ "\\)" }
 html_latex_block_align = _{ "\\begin{align}" ~ (!"\\end{align}" ~ latex_content)*  ~ "\\end{align}" }
 html_latex_block_array = _{ "\\begin{array}" ~ (!"\\end{array}" ~ latex_content)*  ~ "\\end{array}" }
-html_latex_block = _{ html_latex_block_normal | html_latex_block_align | html_latex_block_array }
+html_latex_block = _{ html_latex_block_normal | html_latex_block_round | html_latex_block_align | html_latex_block_array }
 html_latex = _{ html_latex_dollar | html_latex_block }
 internal_expression = _{ (normal_char | "{" ~ internal_expression ~ "}")* }
 expression = { internal_expression }
@@ -139,5 +140,3 @@ html_equal = _{ "=" }
 html_quote_dubble = _{ "\"" }
 html_quote_single = _{ "'" }
 html_quote = _{ html_quote_dubble | html_quote_single }
-
-

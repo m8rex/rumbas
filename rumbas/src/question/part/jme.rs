@@ -596,7 +596,7 @@ impl ToRumbas<JMERulesetItem>
     for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
 {
     fn to_rumbas(&self) -> JMERulesetItem {
-        let has_different_types = (0..self.len() - 1).any(|i| match (&self[i], &self[i + 1]) {
+        let has_different_types = self.len() > 0 && (0..self.len() - 1).any(|i| match (&self[i], &self[i + 1]) {
             (
                 &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
                 &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
