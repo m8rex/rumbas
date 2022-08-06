@@ -120,7 +120,7 @@ WORKDIR /usr/app
 RUN apk add git
 RUN git clone https://github.com/numbas/numbas-extension-quantities.git quantities
 WORKDIR /usr/app/quantities
-RUN git fetch && git checkout 05fa4bba4bbac078747c6dab2600496036a82857
+RUN git fetch && git checkout 80638525826df733a0c4fa1d7f1fa32e115a2df2
 RUN rm -r .git # remove large folders
 
 # Fetch optimisation extension
