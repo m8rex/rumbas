@@ -38,7 +38,7 @@ fn main() {
     match rc_res {
         Ok(rc) => {
             let rc_version = rc.version();
-            if rc_version < rumbas_version && matches.subcommand_matches("update_repo").is_none() {
+            if rc_version < rumbas_version && matches.subcommand_matches("update_repo").is_none() && matches.subcommand_matches("init").is_none(){
                 log::error!("This repository uses an older rumbas version than the one that is compiling it ({} vs {}).", rc_version, rumbas_version);
                 log::error!("Please execute `rumbas update_repo`.");
                 std::process::exit(1)

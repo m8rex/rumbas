@@ -10,3 +10,4 @@ themes
 _output
 .rumbas
 tmp
+.rumbasrc.yaml
