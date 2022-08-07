@@ -7,7 +7,20 @@ use rumbas::support::to_rumbas::ToRumbas;
 
 fn read_pretty_exam(path: &std::path::Path) -> String {
     let pretty_path = path.with_extension("exam.pretty");
-    if !pretty_path.exists() {
+    let exam_changed = pretty_path
+        .metadata()
+        .map(|m| m.modified())
+        .and_then(std::convert::identity) // flatten result
+        .map(|pretty_time| {
+            path.metadata()
+                .map(|m| m.modified())
+                .and_then(std::convert::identity)
+                .map(|normal_time| normal_time > pretty_time)
+        })
+        .and_then(std::convert::identity);
+    let should_create_pretty =
+        !pretty_path.exists() || exam_changed.is_err() || exam_changed.unwrap();
+    if should_create_pretty {
         let normal_content = std::fs::read_to_string(path).expect("Invalid file path");
         let json_content = numbas::exam::Exam::clean_exam_str(&normal_content[..]);
         let v: serde_json::Value =
