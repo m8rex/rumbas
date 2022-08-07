@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
 expression: "&example"
-
 ---
 statement: ~
 advice: ~
@@ -40,4 +39,15 @@ extensions: "template:template_key"
 diagnostic_topic_names: ~
 resources: ~
 custom_part_types: ~
+rulesets:
+  nonjmetext§:
+    type: Display
+    rules:
+      broken_as_fractions: false
+      mixed_fractions: false
+      flat_fractions: false
+      vector_as_row: false
+      always_show_multiplication_sign: false
+      use_dot_as_multiplication_sign: false
+      matrices_without_parentheses: false
 

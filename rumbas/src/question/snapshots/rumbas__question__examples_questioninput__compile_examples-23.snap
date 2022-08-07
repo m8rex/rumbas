@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
 expression: "&example"
-
 ---
 statement: "template:template_key"
 advice: "template:template_key"
@@ -106,4 +105,30 @@ extensions:
 diagnostic_topic_names: "template:template_key"
 resources: "template:template_key"
 custom_part_types: ~
+rulesets:
+  nonjmetext§:
+    type: Simplification
+    rules:
+      simplify_basic: "template:template_key"
+      cancel_unit_factors: "template:template_key"
+      cancel_unit_powers: "template:template_key"
+      cancel_unit_denominators: "template:template_key"
+      cancel_zero_factors: "template:template_key"
+      omit_zero_terms: "template:template_key"
+      cancel_zero_powers: "template:template_key"
+      cancel_powers_with_base_zero: "template:template_key"
+      collect_numbers: "template:template_key"
+      constants_first: "template:template_key"
+      collect_sqrt_products: "template:template_key"
+      collect_sqrt_divisions: "template:template_key"
+      cancel_sqrt_square: "template:template_key"
+      evaluate_powers_of_numbers: "template:template_key"
+      rewrite_to_no_leading_minus: "template:template_key"
+      simplify_fractions: "template:template_key"
+      simplify_trigonometric: "template:template_key"
+      collect_terms: "template:template_key"
+      collect_powers_of_common_factors: "template:template_key"
+      collect_like_fractions: "template:template_key"
+      order_canonical: "template:template_key"
+      expand_brackets: "template:template_key"
 

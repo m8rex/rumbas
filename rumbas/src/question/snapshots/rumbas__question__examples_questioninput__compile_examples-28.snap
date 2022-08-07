@@ -1,8 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
-assertion_line: 42
 expression: "&example"
-
 ---
 statement: "file:path/to/file"
 advice: "file:path/to/file"
@@ -25,7 +23,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -344,7 +342,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -516,7 +514,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -670,7 +668,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -862,7 +860,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -922,7 +920,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1017,7 +1015,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1166,7 +1164,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: ~
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -1255,7 +1253,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1307,7 +1305,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1.5
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1575,7 +1573,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1662,7 +1660,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -1691,7 +1689,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1708,7 +1706,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1782,7 +1780,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -1799,7 +1797,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1829,7 +1827,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -2052,7 +2050,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -2208,7 +2206,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2232,7 +2230,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -2313,7 +2311,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -2335,7 +2333,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2367,7 +2365,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -2457,7 +2455,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -2685,7 +2683,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -2845,7 +2843,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2873,7 +2871,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -2958,7 +2956,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -2986,7 +2984,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3024,7 +3022,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3119,7 +3117,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3413,7 +3411,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -3457,7 +3455,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3573,7 +3571,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3663,7 +3661,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -3695,7 +3693,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3738,7 +3736,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3835,7 +3833,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: ~
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -3876,7 +3874,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3979,7 +3977,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4016,7 +4014,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4041,7 +4039,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4131,7 +4129,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4154,7 +4152,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4190,7 +4188,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4295,7 +4293,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: ~
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4332,7 +4330,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4355,7 +4353,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1.5
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4481,7 +4479,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4597,7 +4595,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4655,7 +4653,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4699,7 +4697,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4776,7 +4774,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4796,7 +4794,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4829,7 +4827,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4914,7 +4912,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -4941,7 +4939,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4956,7 +4954,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5028,7 +5026,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5043,7 +5041,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5071,7 +5069,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5156,7 +5154,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5183,7 +5181,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5198,7 +5196,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5270,7 +5268,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5285,7 +5283,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5313,7 +5311,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5408,7 +5406,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5445,7 +5443,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5476,7 +5474,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5564,7 +5562,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5595,7 +5593,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5639,7 +5637,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5740,7 +5738,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: ~
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5775,7 +5773,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5798,7 +5796,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1.5
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5909,7 +5907,7 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: 1
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5996,7 +5994,7 @@ parts:
           placeholders: {}
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1.5
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -6025,7 +6023,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -6042,7 +6040,7 @@ parts:
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 2
+    steps_penalty: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -6115,7 +6113,7 @@ parts:
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty: 1
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -6131,7 +6129,7 @@ parts:
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: ~
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -6252,4 +6250,5 @@ diagnostic_topic_names:
 resources:
   - "template:template_key"
 custom_part_types: ~
+rulesets: ~
 

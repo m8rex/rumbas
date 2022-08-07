@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
 expression: "&example"
-
 ---
 statement: "template:template_key"
 advice: "template:template_key"
@@ -23,4 +22,6 @@ extensions: ~
 diagnostic_topic_names: "template:template_key"
 resources: "template:template_key"
 custom_part_types: ~
+rulesets:
+  nonjmetext§: "template:template_key"
 
