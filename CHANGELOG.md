@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Support for `rulesets`.
+- Some builtin `jme` functions.
+- Support for superscript powers in `jme`.
+- Support for the new variable naming restrictions in `jme`. (Can start with a `$` and `_` now).
+- Better error messages on failing import of numbas exams. A formatted file of the exam is saved and the failing line is shown for this formatted line.
+- Support for `restricted` option in `CustomPartAvailability`
+
+
+### Changed
+- Version of quantities extension.
+- `startpassword` is now a noneable field (`startpassword: none` is the same as `startpassword: ""`)
+
+### Fixed
+- Importing of (older) numbas exams.
+  - Use default values used by numbas when the exam file doesn't specify a value for the field.
+  - Support `\(` and `\)` for latex blocks.
+
 ## [0.5.4] - 2022-02-12
 
 ### Added
