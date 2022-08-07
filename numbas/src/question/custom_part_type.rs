@@ -107,7 +107,7 @@ pub enum CustomPartAvailability {
     #[serde(rename = "always")]
     Always,
     #[serde(rename = "restricted")]
-    Restricted
+    Restricted,
 }
 
 // TODO: other

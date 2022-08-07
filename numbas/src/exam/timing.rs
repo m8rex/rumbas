@@ -6,7 +6,7 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Timing {
-    #[serde(rename = "allowPause", default="crate::util::bool_true")]
+    #[serde(rename = "allowPause", default = "crate::util::bool_true")]
     pub allow_pause: bool,
     #[serde(default)]
     pub timeout: TimeoutAction, // Action to do on timeout
@@ -25,6 +25,8 @@ pub enum TimeoutAction {
 
 impl std::default::Default for TimeoutAction {
     fn default() -> Self {
-        Self::None { message: String::new() }
+        Self::None {
+            message: String::new(),
+        }
     }
 }

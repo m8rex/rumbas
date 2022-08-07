@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate rumbas_support_derive;
 
+use comparable::Comparable;
 use rumbas_support::preamble::*;
 use serde::Deserialize;
 use serde::Serialize;
-use comparable::Comparable;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]

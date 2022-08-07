@@ -596,7 +596,9 @@ impl ToRumbas<JMERulesetItem>
     for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
 {
     fn to_rumbas(&self) -> JMERulesetItem {
-        let has_different_types = self.len() > 0 && (0..self.len() - 1).any(|i| match (&self[i], &self[i + 1]) {
+        let has_different_types = self.len() > 0
+            && (0..self.len() - 1).any(|i| {
+                match (&self[i], &self[i + 1]) {
             (
                 &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
                 &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
@@ -610,7 +612,8 @@ impl ToRumbas<JMERulesetItem>
                 ),
             ) => false,
             _ => true,
-        });
+        }
+            });
         if has_different_types {
             // It would be needed to create two different ruleset's for and they should have a different name.
             // Their usage should be changed in the jme

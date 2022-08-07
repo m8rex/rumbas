@@ -45,7 +45,7 @@ pub struct QuestionPartMatchAnswersWithChoices {
     #[serde(default)]
     pub layout: MatchAnswersWithChoicesLayout,
 
-    #[serde(rename = "showCellAnswerState", default="crate::util::bool_true")]
+    #[serde(rename = "showCellAnswerState", default = "crate::util::bool_true")]
     /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
     pub show_cell_answer_state: bool,
 
@@ -121,6 +121,9 @@ pub struct MatchAnswersWithChoicesLayout {
 
 impl std::default::Default for MatchAnswersWithChoicesLayout {
     fn default() -> Self {
-        Self { r#type: MatchAnswersWithChoicesLayoutType::All, expression: String::new() }
+        Self {
+            r#type: MatchAnswersWithChoicesLayoutType::All,
+            expression: String::new(),
+        }
     }
 }

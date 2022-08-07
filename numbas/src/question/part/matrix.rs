@@ -15,11 +15,17 @@ pub struct QuestionPartMatrix {
     #[serde(rename = "correctAnswerFractions")]
     #[serde(default)]
     pub correct_answer_fractions: bool,
-    #[serde(rename = "numRows", default="crate::util::variable_safe_natural_three")]
+    #[serde(
+        rename = "numRows",
+        default = "crate::util::variable_safe_natural_three"
+    )]
     pub num_rows: VariableValued<SafeNatural>,
-    #[serde(rename = "numColumns", default="crate::util::variable_safe_natural_three")]
+    #[serde(
+        rename = "numColumns",
+        default = "crate::util::variable_safe_natural_three"
+    )]
     pub num_columns: VariableValued<SafeNatural>,
-    #[serde(rename = "allowResize", default="crate::util::bool_true")]
+    #[serde(rename = "allowResize", default = "crate::util::bool_true")]
     pub allow_resize: bool,
     #[serde(rename = "minColumns", default)]
     pub min_columns: VariableValued<usize>,
