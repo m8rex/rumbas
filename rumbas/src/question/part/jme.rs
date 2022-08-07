@@ -10,7 +10,6 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use comparable::Comparable;
-use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -462,7 +461,7 @@ impl ToNumbas<numbas::question::part::jme::JMELengthRestriction> for JMELengthRe
     fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMELengthRestriction {
         numbas::question::part::jme::JMELengthRestriction {
             restriction: self.restriction.to_numbas(locale),
-            length: Some(self.length.to_numbas(locale)),
+            length: self.length.to_numbas(locale),
         }
     }
 }
@@ -471,11 +470,7 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
     fn to_rumbas(&self) -> JMELengthRestriction {
         JMELengthRestriction {
             restriction: self.restriction.to_rumbas(),
-            length: self
-                .length
-                .map(|v| v.0)
-                .unwrap_or(DEFAULTS.length_restriction_length)
-                .to_rumbas(),
+            length: self.length.0.to_rumbas(),
         }
     }
 }

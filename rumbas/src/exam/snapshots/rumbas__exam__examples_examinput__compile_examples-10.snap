@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales:
@@ -48,20 +47,20 @@ locales:
   - "template:template_key"
 name: "file:path/to/file"
 navigation:
-  allow_printing: false
+  allow_printing: "template:template_key"
   browsing_enabled: false
   can_move_to_previous: false
-  can_regenerate: false
-  confirm_when_leaving: false
+  can_regenerate: "template:template_key"
+  confirm_when_leaving: "template:template_key"
   mode: sequential
   on_leave:
     action: prevent_if_not_attempted
     message: "file:path/to/file"
-  show_names_of_question_groups: false
+  show_names_of_question_groups: "template:template_key"
   show_results_page: never
-  show_steps: false
-  show_title_page: false
-  start_password: "file:path/to/file"
+  show_steps: "template:template_key"
+  show_title_page: "template:template_key"
+  start_password: none
 timing: ~
 feedback:
   percentage_needed_to_pass: none

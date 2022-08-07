@@ -1,7 +1,6 @@
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use comparable::Comparable;
-use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
@@ -14,7 +13,7 @@ macro_rules! builtin_constants {
         pub struct $struct: ident {
             $(
                 $(#[$inner:meta])*
-                $field: ident: $type: ty: $name: literal: $default: ident
+                $field: ident: $type: ty: $name: literal
             ),+
         }
     ) => {
@@ -38,9 +37,10 @@ macro_rules! builtin_constants {
         }
         impl ToRumbas<BuiltinConstants> for numbas::question::constants::BuiltinConstants {
             fn to_rumbas(&self) -> BuiltinConstants {
+                let defaults = numbas::question::constants::BuiltinConstants::default();
                 BuiltinConstants {
                 $(
-                    $field: *self.0.get(&$name.to_string()).unwrap_or(&DEFAULTS.$default)
+                    $field: *self.0.get(&$name.to_string()).unwrap_or(&defaults.0[$name])
                 ),*
                 }
             }
@@ -55,11 +55,11 @@ builtin_constants! {
     /// Specify which builtin constants should be enabled
     pub struct BuiltinConstants {
         /// Whether the constant e is enabled
-        e: bool: "e": builtin_constants_e,
+        e: bool: "e",
         /// Whether the constant pi is enabled
-        pi: bool: "pi,\u{03c0}": builtin_constants_pi,
+        pi: bool: "pi,\u{03c0}",
         /// Whether the constant i is enabled-
-        i: bool: "i": builtin_constants_i
+        i: bool: "i"
     }
 }
 

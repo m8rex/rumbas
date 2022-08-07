@@ -9,9 +9,9 @@ impl Default for BuiltinConstants {
     fn default() -> Self {
         BuiltinConstants(
             vec![
-                ("e".to_string(), true),
-                ("pi,\u{03c0}".to_string(), true),
-                ("i".to_string(), true),
+                ("e".to_string(), false),
+                ("pi,\u{03c0}".to_string(), false),
+                ("i".to_string(), false),
             ]
             .into_iter()
             .collect(),

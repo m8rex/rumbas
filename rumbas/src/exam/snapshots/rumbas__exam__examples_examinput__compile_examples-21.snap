@@ -1,12 +1,12 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: diagnostic
-locales: ~
+locales: "template:template_key"
 name:
-  content: "file:path/to/file"
+  content:
+    nonjmetext§: "template:template_key"
   placeholders:
     placeholder1:
       content:
@@ -19,14 +19,14 @@ name:
         nl: nl version of placeholder2
       placeholders: {}
 navigation:
-  allow_printing: ~
-  can_regenerate: ~
-  confirm_when_leaving: ~
+  allow_printing: "template:template_key"
+  can_regenerate: "template:template_key"
+  confirm_when_leaving: "template:template_key"
   on_leave:
     action: warn_if_not_attempted
     message:
       content:
-        nonjmetext§: "template:template_key"
+        nonjmetext§: "file:path/to/file"
       placeholders:
         placeholder1:
           content:
@@ -38,18 +38,18 @@ navigation:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  show_names_of_question_groups: ~
-  show_steps: ~
-  show_title_page: ~
-  start_password: ~
+  show_names_of_question_groups: "template:template_key"
+  show_steps: "template:template_key"
+  show_title_page: "template:template_key"
+  start_password: none
 timing:
-  duration_in_seconds: "template:template_key"
-  allow_pause: ~
+  duration_in_seconds: none
+  allow_pause: "template:template_key"
   on_timeout:
     action: warn
     message:
       content:
-        nonjmetext§: "template:template_key"
+        nonjmetext§: "file:path/to/file"
       placeholders:
         placeholder1:
           content:
@@ -65,64 +65,6 @@ timing:
     action: warn
     message:
       content:
-        nonjmetext§: "template:template_key"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-feedback:
-  percentage_needed_to_pass: "template:template_key"
-  show_name_of_student: ~
-  show_current_marks: ~
-  show_maximum_marks: ~
-  show_answer_state: ~
-  allow_reveal_answer: ~
-  review:
-    show_score: ~
-    show_feedback: ~
-    show_expected_answer: ~
-    show_advice: ~
-  advice:
-    content: "file:path/to/file"
-    placeholders:
-      placeholder1:
-        content:
-          en: en value of placeholder1
-          nl: nl value of placeholder1
-        placeholders: {}
-      placeholder2:
-        content:
-          en: en version of placeholder2
-          nl: nl version of placeholder2
-        placeholders: {}
-  intro:
-    content: "file:path/to/file"
-    placeholders:
-      placeholder1:
-        content:
-          en: en value of placeholder1
-          nl: nl value of placeholder1
-        placeholders: {}
-      placeholder2:
-        content:
-          en: en version of placeholder2
-          nl: nl version of placeholder2
-        placeholders: {}
-  feedback_messages: ~
-question_groups: ~
-numbas_settings:
-  theme: ~
-diagnostic:
-  script:
-    custom:
-      content:
         nonjmetext§: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -135,6 +77,52 @@ diagnostic:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  objectives: ~
-  topics: ~
+feedback:
+  percentage_needed_to_pass: none
+  show_name_of_student: "template:template_key"
+  show_current_marks: "template:template_key"
+  show_maximum_marks: "template:template_key"
+  show_answer_state: "template:template_key"
+  allow_reveal_answer: "template:template_key"
+  review:
+    show_score: "template:template_key"
+    show_feedback: "template:template_key"
+    show_expected_answer: "template:template_key"
+    show_advice: "template:template_key"
+  advice:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content:
+      nonjmetext§: "template:template_key"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: "template:template_key"
+question_groups: "template:template_key"
+numbas_settings:
+  theme: "template:template_key"
+diagnostic:
+  script: diagnosys
+  objectives: "template:template_key"
+  topics: "template:template_key"
 

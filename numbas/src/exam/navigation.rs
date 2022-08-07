@@ -6,8 +6,8 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
 pub struct Navigation {
-    #[serde(rename = "startpassword")]
-    pub start_password: Option<String>, //TODO: if empty string -> also None || make this type a string?
+    #[serde(rename = "startpassword", default)]
+    pub start_password: String,
     #[serde(rename = "allowregen", default)]
     pub allow_regenerate: bool,
     #[serde(flatten)]

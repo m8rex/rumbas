@@ -1,9 +1,8 @@
-use crate::support::file_reference::FileString;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::{file_reference::FileString, noneable::Noneable};
 use comparable::Comparable;
-use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -25,7 +24,11 @@ impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
             allow_steps: self.to_shared_data().show_steps.to_numbas(locale),
             show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
             confirm_when_leaving: self.to_shared_data().confirm_when_leaving.to_numbas(locale),
-            start_password: Some(self.to_shared_data().start_password.to_numbas(locale)),
+            start_password: self
+                .to_shared_data()
+                .start_password
+                .to_numbas(locale)
+                .unwrap_or_default(),
             navigation_mode: self.to_numbas(locale),
         }
     }
@@ -141,7 +144,11 @@ impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
             allow_steps: self.shared_data.show_steps.to_numbas(locale),
             show_frontpage: self.shared_data.show_title_page.to_numbas(locale),
             confirm_when_leaving: self.shared_data.confirm_when_leaving.to_numbas(locale),
-            start_password: Some(self.shared_data.start_password.to_numbas(locale)),
+            start_password: self
+                .shared_data
+                .start_password
+                .to_numbas(locale)
+                .unwrap_or_default(),
             navigation_mode: numbas::exam::navigation::NavigationMode::Diagnostic(
                 numbas::exam::navigation::NavigationModeDiagnostic {
                     on_leave: self.on_leave.clone().to_numbas(locale),
@@ -266,7 +273,8 @@ pub struct LeaveActionMessage {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct NavigationSharedData {
     /// Password to begin the exam
-    pub start_password: FileString, //TODO: Noneable, but "" is none in this case?
+    /// none and "" are the same
+    pub start_password: Noneable<FileString>,
     /// Whether the student can regenerate questions
     /// Old name was `allow_regenerate`
     #[serde(alias = "allow_regenerate")]
@@ -290,12 +298,12 @@ pub struct NavigationSharedData {
 impl ToRumbas<NavigationSharedData> for numbas::exam::Exam {
     fn to_rumbas(&self) -> NavigationSharedData {
         NavigationSharedData {
-            start_password: self
-                .navigation
-                .start_password
-                .clone()
-                .unwrap_or(DEFAULTS.navigation_start_password)
-                .to_rumbas(),
+            start_password: if self.navigation.start_password.is_empty() {
+                None
+            } else {
+                Some(self.navigation.start_password.clone())
+            }
+            .to_rumbas(),
             can_regenerate: self.navigation.allow_regenerate.to_rumbas(),
             show_steps: self.navigation.allow_steps.to_rumbas(),
 

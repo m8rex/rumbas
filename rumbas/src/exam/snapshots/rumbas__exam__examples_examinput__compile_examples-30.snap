@@ -1,78 +1,422 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: diagnostic
-locales: ~
-name: ~
+locales: "template:template_key"
+name: "template:template_key"
 navigation:
   allow_printing: ~
   can_regenerate: ~
   confirm_when_leaving: ~
-  on_leave: "template:template_key"
+  on_leave:
+    action: prevent_if_not_attempted
+    message: "template:template_key"
   show_names_of_question_groups: ~
   show_steps: ~
   show_title_page: ~
-  start_password: ~
+  start_password: "template:template_key"
 timing:
-  duration_in_seconds: none
-  allow_pause: "template:template_key"
+  duration_in_seconds: 2
+  allow_pause: false
   on_timeout:
-    action: warn
-    message:
-      content:
-        nonjmetext§: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
+    action: none
   timed_warning:
-    action: warn
-    message:
-      content:
-        nonjmetext§: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
+    action: none
 feedback:
-  percentage_needed_to_pass: ~
-  show_name_of_student: false
-  show_current_marks: false
-  show_maximum_marks: false
-  show_answer_state: false
-  allow_reveal_answer: false
-  review: "template:template_key"
-  advice: "file:path/to/file"
-  intro: "file:path/to/file"
-  feedback_messages:
-    - message: nonjmetext§
-      threshold: nonjmetext§
-    - message: "template:template_key"
-      threshold: "template:template_key"
-    - message: ~
-      threshold: ~
-    - "template:template_key"
-question_groups: ~
+  percentage_needed_to_pass: "template:template_key"
+  show_name_of_student: ~
+  show_current_marks: ~
+  show_maximum_marks: ~
+  show_answer_state: ~
+  allow_reveal_answer: ~
+  review:
+    show_score: ~
+    show_feedback: ~
+    show_expected_answer: ~
+    show_advice: ~
+  advice:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: ~
+question_groups: "template:template_key"
 numbas_settings:
-  theme: "template:template_key"
+  theme: nonjmetext§
 diagnostic:
-  script: diagnosys
-  objectives: "template:template_key"
-  topics: "template:template_key"
+  script: mastery
+  objectives:
+    - name:
+        content:
+          nonjmetext§: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content:
+          nonjmetext§: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+    - name:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+    - name:
+        content: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+    - name: "file:path/to/file"
+      description: "file:path/to/file"
+    - name: "template:template_key"
+      description: "template:template_key"
+    - name: ~
+      description: ~
+    - "template:template_key"
+  topics:
+    - name:
+        content:
+          nonjmetext§: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content:
+          nonjmetext§: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      objectives:
+        - content:
+            nonjmetext§: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content:
+            nonjmetext§: "template:template_key"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - "file:path/to/file"
+        - "template:template_key"
+      depends_on:
+        - content:
+            nonjmetext§: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content:
+            nonjmetext§: "template:template_key"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - "file:path/to/file"
+        - "template:template_key"
+    - name:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      objectives: "template:template_key"
+      depends_on: "template:template_key"
+    - name:
+        content: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      description:
+        content: "file:path/to/file"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      objectives: ~
+      depends_on: ~
+    - name: "file:path/to/file"
+      description: "file:path/to/file"
+      objectives:
+        - content:
+            nonjmetext§: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content:
+            nonjmetext§: "template:template_key"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - "file:path/to/file"
+        - "template:template_key"
+      depends_on:
+        - content:
+            nonjmetext§: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content:
+            nonjmetext§: "template:template_key"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - content: "file:path/to/file"
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        - "file:path/to/file"
+        - "template:template_key"
+    - name: "template:template_key"
+      description: "template:template_key"
+      objectives: "template:template_key"
+      depends_on: "template:template_key"
+    - name: ~
+      description: ~
+      objectives: ~
+      depends_on: ~
+    - "template:template_key"
 

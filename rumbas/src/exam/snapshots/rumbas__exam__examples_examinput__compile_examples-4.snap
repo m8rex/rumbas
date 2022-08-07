@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales:
@@ -73,7 +72,7 @@ navigation:
   show_results_page: ~
   show_steps: false
   show_title_page: false
-  start_password: "file:path/to/file"
+  start_password: ~
 timing:
   duration_in_seconds: ~
   allow_pause: false

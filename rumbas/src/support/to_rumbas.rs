@@ -4,7 +4,6 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
-use numbas::defaults::DEFAULTS;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use numbas::support::primitive::Number;
 use std::convert::TryInto;

@@ -9,7 +9,6 @@ use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::variable_valued::VariableValued;
 use comparable::Comparable;
-use numbas::defaults::DEFAULTS;
 use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;

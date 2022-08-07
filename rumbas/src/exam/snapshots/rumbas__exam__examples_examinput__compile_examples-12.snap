@@ -1,23 +1,22 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales: ~
 name: ~
 navigation:
-  allow_printing: ~
+  allow_printing: false
   browsing_enabled: ~
   can_move_to_previous: ~
-  can_regenerate: ~
-  confirm_when_leaving: ~
+  can_regenerate: false
+  confirm_when_leaving: false
   mode: sequential
   on_leave: "template:template_key"
-  show_names_of_question_groups: ~
+  show_names_of_question_groups: false
   show_results_page: ~
-  show_steps: ~
-  show_title_page: ~
+  show_steps: false
+  show_title_page: false
   start_password: ~
 timing:
   duration_in_seconds: none

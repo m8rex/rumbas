@@ -10,7 +10,6 @@ use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::variable_valued::VariableValued;
 use comparable::Comparable;
-use numbas::defaults::DEFAULTS;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
