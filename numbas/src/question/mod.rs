@@ -127,6 +127,9 @@ pub struct QuestionVariablesTest {
 
 impl std::default::Default for QuestionVariablesTest {
     fn default() -> Self {
-        Self { condition: JMEString::default(), max_runs: 10.into() }
+        Self {
+            condition: JMEString::default(),
+            max_runs: 10.into(),
+        }
     }
 }

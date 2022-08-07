@@ -12,6 +12,9 @@ pub struct Preamble {
 
 impl std::default::Default for Preamble {
     fn default() -> Self {
-        Self { js: "".to_string(), css: "".to_string() }
+        Self {
+            js: "".to_string(),
+            css: "".to_string(),
+        }
     }
 }

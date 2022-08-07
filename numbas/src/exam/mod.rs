@@ -76,10 +76,7 @@ impl Exam {
     }
     pub fn write(&self, file_name: &str) -> WriteResult {
         match serde_json::to_string(self) {
-            Ok(s) => match std::fs::write(
-                file_name,
-                Self::to_exam_str(&s[..])
-            ) {
+            Ok(s) => match std::fs::write(file_name, Self::to_exam_str(&s[..])) {
                 Ok(_) => WriteResult::Ok,
                 Err(e) => WriteResult::IOError(e),
             },

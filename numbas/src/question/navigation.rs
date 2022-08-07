@@ -8,8 +8,8 @@ use serde_with::skip_serializing_none;
 pub struct Navigation {
     #[serde(rename = "allowregen", default)]
     pub allow_regenerate: bool,
-    #[serde(rename = "showfrontpage", default="crate::util::bool_true")]
+    #[serde(rename = "showfrontpage", default = "crate::util::bool_true")]
     pub show_frontpage: bool,
-    #[serde(rename = "preventleave", default="crate::util::bool_true")]
+    #[serde(rename = "preventleave", default = "crate::util::bool_true")]
     pub confirm_when_leaving: bool,
 }

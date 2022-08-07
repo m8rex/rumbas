@@ -59,7 +59,9 @@ where
             "string expected but found something else: {}",
             v
         ))),
-        Err(_) => Err(serde::de::Error::custom("Invalid string expected for answer simplifcations".to_string())),
+        Err(_) => Err(serde::de::Error::custom(
+            "Invalid string expected for answer simplifcations".to_string(),
+        )),
     }
 }
 

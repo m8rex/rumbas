@@ -63,5 +63,5 @@ pub const DEFAULTS: NumbasDefaults = NumbasDefaults {
     number_entry_partial_credit_if_fraction_not_reduced: crate::support::primitive::Number::Integer(
         0,
     ),
-    number_entry_hint_fraction: true
-    };
+    number_entry_hint_fraction: true,
+};

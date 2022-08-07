@@ -32,9 +32,9 @@ pub struct QuestionPartNumberEntry {
     pub partial_credit_if_fraction_not_reduced: Number,
     #[serde(flatten, default)]
     pub precision: QuestionPrecision,
-    #[serde(rename = "showPrecisionHint", default="crate::util::bool_true")]
+    #[serde(rename = "showPrecisionHint", default = "crate::util::bool_true")]
     pub show_precision_hint: bool,
-    #[serde(rename = "showFractionHint", default="crate::util::bool_true")]
+    #[serde(rename = "showFractionHint", default = "crate::util::bool_true")]
     pub show_fraction_hint: bool,
     #[serde(flatten)]
     pub answer: NumberEntryAnswerType,
@@ -50,9 +50,9 @@ pub enum CheckingType {
 #[serde(untagged)]
 pub enum NumberEntryAnswerType {
     MinMax {
-        #[serde(rename = "minValue", alias="minvalue")]
+        #[serde(rename = "minValue", alias = "minvalue")]
         min_value: JMEString,
-        #[serde(rename = "maxValue", alias="maxvalue")]
+        #[serde(rename = "maxValue", alias = "maxvalue")]
         max_value: JMEString,
     },
     Answer {
@@ -71,13 +71,19 @@ pub struct QuestionPrecision {
     precision_partial_credit: SafeNatural,
     #[serde(rename = "precisionMessage", default)]
     precision_message: String,
-    #[serde(rename = "strictPrecision", default="crate::util::bool_true")]
+    #[serde(rename = "strictPrecision", default = "crate::util::bool_true")]
     strict_precision: bool,
 }
 
 impl std::default::Default for QuestionPrecision {
     fn default() -> Self {
-        Self { precision_type: Default::default(), precision: VariableValued::Value(0.into()), precision_partial_credit: 0.into(), precision_message: String::new(), strict_precision: true }
+        Self {
+            precision_type: Default::default(),
+            precision: VariableValued::Value(0.into()),
+            precision_partial_credit: 0.into(),
+            precision_message: String::new(),
+            strict_precision: true,
+        }
     }
 }
 
@@ -99,6 +105,8 @@ impl std::default::Default for QuestionPrecisionType {
 
 fn default_notation_styles() -> Vec<AnswerStyle> {
     vec![
-        AnswerStyle::English, AnswerStyle::EnglishSI, AnswerStyle::EnglishPlain
+        AnswerStyle::English,
+        AnswerStyle::EnglishSI,
+        AnswerStyle::EnglishPlain,
     ]
 }

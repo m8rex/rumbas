@@ -24,14 +24,24 @@ impl std::convert::TryFrom<Primitive> for SafeNatural {
     fn try_from(p: Primitive) -> Result<Self, Self::Error> {
         match p {
             Primitive::Natural(n) => Ok(SafeNatural(n)),
-            Primitive::Float(n) =>  {
-                if n.fract() == 0.0 && n >= 0.0 { // if the float is whole
+            Primitive::Float(n) => {
+                if n.fract() == 0.0 && n >= 0.0 {
+                    // if the float is whole
                     Ok(SafeNatural(n as usize))
                 } else {
-                    Err(format!("Please use an unsigned integer instead of the float {}.", n))
+                    Err(format!(
+                        "Please use an unsigned integer instead of the float {}.",
+                        n
+                    ))
                 }
-            },
-            Primitive::String(n) => n.parse().map(SafeNatural).map_err(|e| format!("Failed parsing string: '{}' as usize with error: {}", n, e.to_string())),
+            }
+            Primitive::String(n) => n.parse().map(SafeNatural).map_err(|e| {
+                format!(
+                    "Failed parsing string: '{}' as usize with error: {}",
+                    n,
+                    e.to_string()
+                )
+            }),
         }
     }
 }

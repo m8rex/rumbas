@@ -11,7 +11,7 @@ use std::convert::TryInto;
 pub enum AnswerSimplificationType {
     Rule(AnswerSimplificationRule),
     DisplayOption(AnswerSimplificationDisplayOption),
-    Ruleset(String)
+    Ruleset(String),
 }
 
 impl std::convert::TryFrom<&str> for AnswerSimplificationType {
@@ -37,7 +37,7 @@ impl std::fmt::Display for AnswerSimplificationType {
         match self {
             Self::Rule(r) => r.fmt(f),
             Self::DisplayOption(d) => d.fmt(f),
-            Self::Ruleset(ruleset) => write!(f, "{}", ruleset)
+            Self::Ruleset(ruleset) => write!(f, "{}", ruleset),
         }
     }
 }

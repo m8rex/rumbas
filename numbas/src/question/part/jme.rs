@@ -1,6 +1,6 @@
 use crate::jme::EmbracedJMEString;
 use crate::jme::JMEString;
-use crate::question::answer_simplification::{AnswerSimplificationType, AnswerSimplificationRule};
+use crate::question::answer_simplification::{AnswerSimplificationRule, AnswerSimplificationType};
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::{SafeFloat, SafeNatural};
 use crate::support::serde_functions::{
@@ -34,9 +34,11 @@ pub fn default_answer_simplification() -> Vec<AnswerSimplificationType> {
         AnswerSimplificationRule::EvaluatePowersOfNumbers(true),
         AnswerSimplificationRule::CollectTerms(true),
         AnswerSimplificationRule::CollectPowersOfCommonFactors(true),
-        AnswerSimplificationRule::CollectLikeFractions(true)       
+        AnswerSimplificationRule::CollectLikeFractions(true),
     ];
-    v.into_iter().map(AnswerSimplificationType::Rule).collect::<Vec<_>>()
+    v.into_iter()
+        .map(AnswerSimplificationType::Rule)
+        .collect::<Vec<_>>()
 }
 
 #[skip_serializing_none]
@@ -131,8 +133,8 @@ pub enum JMECheckingType {
 impl std::default::Default for JMECheckingType {
     fn default() -> Self {
         Self::RelativeDifference(JMECheckingTypeData {
-            checking_accuracy: 0.0.into()
-        })   
+            checking_accuracy: 0.0.into(),
+        })
     }
 }
 

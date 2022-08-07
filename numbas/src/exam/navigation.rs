@@ -12,11 +12,11 @@ pub struct Navigation {
     pub allow_regenerate: bool,
     #[serde(flatten)]
     pub navigation_mode: NavigationMode,
-    #[serde(rename = "allowsteps", default="crate::util::bool_true")]
+    #[serde(rename = "allowsteps", default = "crate::util::bool_true")]
     pub allow_steps: bool,
-    #[serde(rename = "showfrontpage", default="crate::util::bool_true")]
+    #[serde(rename = "showfrontpage", default = "crate::util::bool_true")]
     pub show_frontpage: bool,
-    #[serde(rename = "preventleave", default="crate::util::bool_true")]
+    #[serde(rename = "preventleave", default = "crate::util::bool_true")]
     pub confirm_when_leaving: bool,
 }
 
@@ -36,9 +36,9 @@ pub struct NavigationModeSequential {
     pub on_leave: LeaveAction,
     #[serde(rename = "showresultspage", default)]
     pub show_results_page: ShowResultsPage,
-    #[serde(rename = "reverse", default="crate::util::bool_true")]
+    #[serde(rename = "reverse", default = "crate::util::bool_true")]
     pub can_move_to_previous: bool,
-    #[serde(rename = "browse", default="crate::util::bool_true")]
+    #[serde(rename = "browse", default = "crate::util::bool_true")]
     pub browsing_enabled: bool,
 }
 
