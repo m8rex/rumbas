@@ -101,6 +101,22 @@ pub enum BuiltinFunctions {
     #[serde(rename = "parsedecimal_or_fraction")]
     /// Works the same as parsedecimal(), but also accepts strings of the form number/number, which it interprets as fractions.
     ParseDecimalOrFraction,
+    /// Write the given number in binary: base 2.
+    ToBinary,
+    /// Write the given number in octal: base 8.
+    ToOctal,
+    /// Write the given number in hexadecimal: base 16.
+    ToHexadecimal,
+    /// Write the given number in the given base. base can be any integer between 2 and 36.
+    ToBase,
+    /// Convert a string representing a number written in binary (base 2) to a integer value.
+    FromBinary,
+    /// Convert a string representing a number written in octal (base 8) to a integer value.
+    FromOctal,
+    /// Convert a string representing a number written in hexadecimal (base 16) to a integer value.
+    FromHexadecimal,
+    /// Convert a string representing a number written in the given base to a integer value. base can be any integer between 2 and 36.
+    FromBase,
     /// Is n the “not a number” value, NaN?
     IsNan,
 
@@ -147,6 +163,12 @@ pub enum BuiltinFunctions {
     Fact,
     /// Factorise n. Returns the exponents of the prime factorisation of n as a list.
     Factorise,
+    /// Returns the divisors of n as a list: positive integers d such that d || n.
+    Divisors,
+    #[serde(rename = "proper_divisors")]
+    /// Returns the proper divisors of n as a list: positive integers d < n such that d || n.
+    /// That is, the divisors of n, excluding n itself.
+    ProperDivisors,
     /// Gamma function
     Gamma,
     /// Round up to the nearest integer. When x is complex, each component is rounded separately.
@@ -200,6 +222,11 @@ pub enum BuiltinFunctions {
     #[serde(rename = "is_zero")]
     /// Returns true if every component of the vector x is zero.
     IsZeroVector,
+    #[serde(rename = "is_scalar_multiple")]
+    /// Returns true if u is a scalar multiple of v. That is, if u = k*v for some real number k.
+    /// The optional arguments rel_tol and abs_tol specify the relative and absolute tolerance of
+    /// the equality check for each component; see isclose.
+    IsScalarMultiple,
     /// Determinant of a matrix. Throws an error if used on anything larger than a 3×3 matrix.
     Det, // Why not for larger matrices?
     /// Matrix transpose.
@@ -207,6 +234,15 @@ pub enum BuiltinFunctions {
     /// Calculate the sum of all the cells in a matrix.
     #[serde(rename = "sum_cells")]
     SumCells,
+    #[serde(alias = "combine_horizontally")]
+    /// Combine two matrices horizontally: given r1 x c1 a matrix m1 and a r2 x c2 matrix m2, returns a new max(1, r2) x (c1 + c2) matrix formed by putting the two matrices side, and padding with zeros where necessary.
+    Augment,
+    #[serde(alias = "combine_vertically")]
+    /// Combine two matrices vertically: given a r1 x c1 matrix m1 and a r2 x c2 matrix m2, returns a new (r1 + r2) x max(c1, c2) matrix formed by putting m1 above m2, and padding with zeros where necessary.
+    Stack,
+    #[serde(rename = "combine_diagonally")]
+    /// Combine two matrices diagonally: given a r1 x c1 matrix m1 and a r2 x c2 matrix m2, returns a new (r1 + r2) x (c1 + c2) matrix whose top-left quadrant is m1 and bottom-right quadrant is m2.
+    CombineDiagonally,
 
     /// Convert x to a string.
     /// When converting a expression value to a string, you can give a list of display options as a second argument, either as a comma-separated string or a list of strings.
