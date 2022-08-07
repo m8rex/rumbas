@@ -20,6 +20,13 @@ mod html {
 }
 use html::Rule as HTMLRule;
 
+pub enum ParserResultError<R: Copy + std::fmt::Debug + std::hash::Hash + std::cmp::Ord> {
+    ParseErrors(Vec<Error<R>>),
+    EnteredUnreachableCode(String),
+}
+
+type ParserResult<N, R> = Result<N, ParserResultError<R>>;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ParserNode<'i> {
     pub expr: ParserExpr<'i>,
@@ -48,6 +55,7 @@ pub enum ParserExpr<'i> {
     Prefix(String, Box<ParserNode<'i>>),
     Faculty(Box<ParserNode<'i>>),
     Indexation(Box<ParserNode<'i>>),
+    Superscript(Box<ParserNode<'i>>, String),
     Cast(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
     Sequence(Box<ParserNode<'i>>, Box<ParserNode<'i>>),
 }
@@ -63,67 +71,109 @@ pub enum ScriptParserExpr<'i> {
     Note(String, Option<String>, ParserNode<'i>, String),
 }
 
-impl<'i> std::convert::From<ParserNode<'i>> for ast::Expr {
-    fn from(node: ParserNode<'i>) -> ast::Expr {
-        node.expr.into()
+impl<'i> std::convert::TryFrom<ParserNode<'i>> for ast::Expr {
+    type Error = ParserResultError<Rule>;
+    fn try_from(node: ParserNode<'i>) -> ParserResult<ast::Expr, Rule> {
+        node.expr.try_into()
     }
 }
-impl<'i> std::convert::From<ParserExpr<'i>> for ast::Expr {
-    fn from(expr: ParserExpr<'i>) -> ast::Expr {
-        match expr {
+impl<'i> std::convert::TryFrom<ParserExpr<'i>> for ast::Expr {
+    type Error = ParserResultError<Rule>;
+    fn try_from(expr: ParserExpr<'i>) -> ParserResult<ast::Expr, Rule> {
+        Ok(match expr {
             ParserExpr::Str(s) => ast::Expr::Str(s),
             ParserExpr::Int(i) => ast::Expr::Int(i),
             ParserExpr::Float(i, s) => ast::Expr::Float(i, s),
             ParserExpr::Bool(b) => ast::Expr::Bool(b),
             ParserExpr::Range(o, n1, n2) => {
-                ast::Expr::Range(o, Box::new((*n1).into()), Box::new((*n2).into()))
+                ast::Expr::Range(o, Box::new((*n1).try_into()?), Box::new((*n2).try_into()?))
             }
             ParserExpr::Arithmetic(a, n1, n2) => {
-                ast::Expr::Arithmetic(a, Box::new((*n1).into()), Box::new((*n2).into()))
+                ast::Expr::Arithmetic(a, Box::new((*n1).try_into()?), Box::new((*n2).try_into()?))
             }
             ParserExpr::AnnotatedIdent(s) => ast::Expr::Ident(s.into()),
             ParserExpr::AnnotatedConstant(s) => ast::Expr::Constant(s.into()),
-            ParserExpr::Relation(s, n1, n2) => {
-                ast::Expr::Relation(s.into(), Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::Logic(s, n1, n2) => {
-                ast::Expr::Logic(s.into(), Box::new((*n1).into()), Box::new((*n2).into()))
-            }
-            ParserExpr::List(n1) => ast::Expr::List(n1.into_iter().map(|n| n.into()).collect()),
+            ParserExpr::Relation(s, n1, n2) => ast::Expr::Relation(
+                s.into(),
+                Box::new((*n1).try_into()?),
+                Box::new((*n2).try_into()?),
+            ),
+            ParserExpr::Logic(s, n1, n2) => ast::Expr::Logic(
+                s.into(),
+                Box::new((*n1).try_into()?),
+                Box::new((*n2).try_into()?),
+            ),
+            ParserExpr::List(n1) => ast::Expr::List(
+                n1.into_iter()
+                    .map(|n| n.try_into())
+                    .collect::<Result<_, _>>()?,
+            ),
             ParserExpr::Dictionary(n1) => {
-                ast::Expr::Dictionary(n1.into_iter().map(|(k, v)| (k.into(), v.into())).collect())
+                let (keys, values): (Vec<_>, Vec<_>) = n1.into_iter().unzip();
+                let keys: Vec<_> = keys
+                    .into_iter()
+                    .map(|n| n.try_into())
+                    .collect::<Result<_, _>>()?;
+                let values: Vec<_> = values
+                    .into_iter()
+                    .map(|n| n.try_into())
+                    .collect::<Result<_, _>>()?;
+                ast::Expr::Dictionary(keys.into_iter().zip(values.into_iter()).collect())
             }
-            ParserExpr::FunctionApplication(s, n1) => {
-                ast::Expr::FunctionApplication(s.into(), n1.into_iter().map(|n| n.into()).collect())
-            }
-            ParserExpr::Prefix(s, n) => ast::Expr::Prefix(s.into(), Box::new((*n).into())),
-            ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).into())),
-            ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).into())),
+            ParserExpr::FunctionApplication(s, n1) => ast::Expr::FunctionApplication(
+                s.into(),
+                n1.into_iter()
+                    .map(|n| n.try_into())
+                    .collect::<Result<_, _>>()?,
+            ),
+            ParserExpr::Prefix(s, n) => ast::Expr::Prefix(s.into(), Box::new((*n).try_into()?)),
+            ParserExpr::Faculty(n) => ast::Expr::Faculty(Box::new((*n).try_into()?)),
+            ParserExpr::Indexation(n) => ast::Expr::Indexation(Box::new((*n).try_into()?)),
             ParserExpr::Cast(n1, n2) => {
-                ast::Expr::Cast(Box::new((*n1).into()), Box::new((*n2).into()))
+                ast::Expr::Cast(Box::new((*n1).try_into()?), Box::new((*n2).try_into()?))
             }
             ParserExpr::Sequence(n1, n2) => {
-                ast::Expr::Sequence(Box::new((*n1).into()), Box::new((*n2).into()))
+                ast::Expr::Sequence(Box::new((*n1).try_into()?), Box::new((*n2).try_into()?))
             }
-        }
+            ParserExpr::Superscript(n1, superscripts) => {
+                let superscripts_map: std::collections::HashMap<_, _> = "⁰¹²³⁴⁵⁶⁷⁸⁹⁽⁾⁺⁻⁼ⁿⁱ"
+                    .chars()
+                    .zip("0123456789()+-=ni".chars())
+                    .collect();
+
+                let normal_characters: String =
+                    superscripts.chars().map(|c| superscripts_map[&c]).collect();
+                let superscripts_pairs = parse_as_jme(&normal_characters[..])
+                    .map_err(|e| ParserResultError::ParseErrors(vec![e]))?;
+                let rhs = consume_one_expression_as_parse_node(superscripts_pairs)?;
+                let rhs: ast::Expr = rhs.try_into()?;
+                ast::Expr::Arithmetic(
+                    ast::ArithmeticOperator::Power,
+                    Box::new((*n1).try_into()?),
+                    Box::new(rhs),
+                )
+            }
+        })
     }
 }
 
-impl<'i> std::convert::From<ScriptParserNode<'i>> for ast::Note {
-    fn from(node: ScriptParserNode<'i>) -> ast::Note {
-        node.expr.into()
+impl<'i> std::convert::TryFrom<ScriptParserNode<'i>> for ast::Note {
+    type Error = ParserResultError<Rule>;
+    fn try_from(node: ScriptParserNode<'i>) -> ParserResult<ast::Note, Rule> {
+        node.expr.try_into()
     }
 }
-impl<'i> std::convert::From<ScriptParserExpr<'i>> for ast::Note {
-    fn from(expr: ScriptParserExpr<'i>) -> ast::Note {
+impl<'i> std::convert::TryFrom<ScriptParserExpr<'i>> for ast::Note {
+    type Error = ParserResultError<Rule>;
+    fn try_from(expr: ScriptParserExpr<'i>) -> ParserResult<ast::Note, Rule> {
         match expr {
             ScriptParserExpr::Note(name, description, expression, expression_string) => {
-                ast::Note::create(
+                Ok(ast::Note::create(
                     name.into(),
                     description,
-                    expression.into(),
+                    expression.try_into()?,
                     expression_string,
-                )
+                ))
             }
         }
     }
@@ -182,35 +232,41 @@ pub fn consume_content_area_expressions(
 
 pub fn consume_notes(pairs: Pairs<Rule>) -> Result<Vec<ast::Note>, ConsumeError> {
     let pairs = pairs.clone().next().unwrap().into_inner();
-    let res_res = std::panic::catch_unwind(|| {
-        let expression = consume_note_with_spans(pairs)?;
-        //let errors = validator::validate_ast(&rules);
-        //if errors.is_empty() {
-        Ok(expression.into_iter().map(|e| e.into()).collect())
-        /*} else {
-            Err(errors)
-        }*/
-    });
+    let res_res = consume_note_with_spans(pairs);
     match res_res {
-        Ok(res) => res.map_err(ConsumeError::JMEParseError),
-        Err(_err) => Err(ConsumeError::UnknownParseError),
+        Ok(expression) => Ok(expression
+            .into_iter()
+            .map(|e| {
+                e.try_into().map_err(|e| match e {
+                    ParserResultError::ParseErrors(e) => ConsumeError::JMEParseError(e),
+                    ParserResultError::EnteredUnreachableCode(s) => ConsumeError::UnknownParseError,
+                })
+            })
+            .collect::<Result<_, _>>()?),
+        Err(ParserResultError::ParseErrors(e)) => Err(ConsumeError::JMEParseError(e)),
+        Err(ParserResultError::EnteredUnreachableCode(s)) => Err(ConsumeError::UnknownParseError),
     }
 }
 
-pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, ConsumeError> {
+fn consume_expressions_as_parse_nodes(pairs: Pairs<Rule>) -> ParserResult<Vec<ParserNode>, Rule> {
     let pairs = pairs.clone().next().unwrap().into_inner();
-    let res_res = std::panic::catch_unwind(|| {
-        let expression = consume_expression_with_spans(pairs)?;
-        //let errors = validator::validate_ast(&rules);
-        //if errors.is_empty() {
-        Ok(expression.into_iter().map(|e| e.into()).collect())
-        /*} else {
-            Err(errors)
-        }*/
-    });
+    consume_expression_with_spans(pairs)
+}
+
+pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, ConsumeError> {
+    let res_res = consume_expressions_as_parse_nodes(pairs);
     match res_res {
-        Ok(res) => res.map_err(ConsumeError::JMEParseError),
-        Err(_err) => Err(ConsumeError::UnknownParseError),
+        Ok(expression) => Ok(expression
+            .into_iter()
+            .map(|e| {
+                e.try_into().map_err(|e| match e {
+                    ParserResultError::ParseErrors(e) => ConsumeError::JMEParseError(e),
+                    ParserResultError::EnteredUnreachableCode(s) => ConsumeError::UnknownParseError,
+                })
+            })
+            .collect::<Result<_, _>>()?),
+        Err(ParserResultError::ParseErrors(e)) => Err(ConsumeError::JMEParseError(e)),
+        Err(ParserResultError::EnteredUnreachableCode(s)) => Err(ConsumeError::UnknownParseError),
     }
 }
 
@@ -218,7 +274,11 @@ pub fn consume_one_expression(pairs: Pairs<Rule>) -> Result<ast::Expr, ConsumeEr
     consume_expressions(pairs).map(|v| v.into_iter().next().unwrap())
 }
 
-fn consume_note_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ScriptParserNode>, Vec<Error<Rule>>> {
+fn consume_one_expression_as_parse_node(pairs: Pairs<Rule>) -> ParserResult<ParserNode, Rule> {
+    consume_expressions_as_parse_nodes(pairs).map(|v| v.into_iter().next().unwrap())
+}
+
+fn consume_note_with_spans(pairs: Pairs<Rule>) -> ParserResult<Vec<ScriptParserNode>, Rule> {
     let mut results = Vec::new();
     for note in pairs.filter(|pair| pair.as_rule() == Rule::note) {
         results.push(consume_note(note.into_inner().peekable())?);
@@ -226,7 +286,7 @@ fn consume_note_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ScriptParserNode>, 
     Ok(results)
 }
 
-fn consume_note(mut pairs: Peekable<Pairs<Rule>>) -> Result<ScriptParserNode, Vec<Error<Rule>>> {
+fn consume_note(mut pairs: Peekable<Pairs<Rule>>) -> ParserResult<ScriptParserNode, Rule> {
     let first = pairs.next().unwrap();
     //let start = first.as_span().start();
     let s = first.as_str().to_string();
@@ -248,7 +308,7 @@ fn consume_note(mut pairs: Peekable<Pairs<Rule>>) -> Result<ScriptParserNode, Ve
     })
 }
 
-fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, Vec<Error<Rule>>> {
+fn consume_expression_with_spans(pairs: Pairs<Rule>) -> ParserResult<Vec<ParserNode>, Rule> {
     let mut results = Vec::new();
     for expression in pairs.filter(|pair| pair.as_rule() == Rule::expression) {
         results.push(consume_expression(expression)?);
@@ -256,7 +316,7 @@ fn consume_expression_with_spans(pairs: Pairs<Rule>) -> Result<Vec<ParserNode>, 
     Ok(results)
 }
 
-fn consume_expression(expression: Pair<Rule>) -> Result<ParserNode, Vec<Error<Rule>>> {
+fn consume_expression(expression: Pair<Rule>) -> ParserResult<ParserNode, Rule> {
     let climber = PrecClimber::new(vec![
         Operator::new(Rule::sequence_operator, Assoc::Left),
         Operator::new(Rule::logic_binary_operator, Assoc::Left),
@@ -278,11 +338,11 @@ fn consume_expression(expression: Pair<Rule>) -> Result<ParserNode, Vec<Error<Ru
 fn consume_expression_internal<'i>(
     pairs: Peekable<Pairs<'i, Rule>>,
     climber: &PrecClimber<Rule>,
-) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
+) -> ParserResult<ParserNode<'i>, Rule> {
     fn unaries<'i>(
         mut pairs: Peekable<Pairs<'i, Rule>>,
         climber: &PrecClimber<Rule>,
-    ) -> Result<ParserNode<'i>, Vec<Error<Rule>>> {
+    ) -> ParserResult<ParserNode<'i>, Rule> {
         let pair = pairs.next().unwrap();
 
         let node = match pair.as_rule() {
@@ -290,31 +350,31 @@ fn consume_expression_internal<'i>(
                 let node = unaries(pairs, climber)?;
                 let end = node.span.end_pos();
 
-                ParserNode {
+                Ok(ParserNode {
                     expr: ParserExpr::Prefix(pair.as_str().trim().to_owned(), Box::new(node)),
                     span: pair.as_span().start_pos().span(&end),
-                }
+                })
             }
             other_rule => {
                 let node = match other_rule {
                     Rule::expression => {
-                        consume_expression_internal(pair.into_inner().peekable(), climber)?
+                        consume_expression_internal(pair.into_inner().peekable(), climber)
                     }
-                    Rule::annotated_ident => ParserNode {
+                    Rule::annotated_ident => Ok(ParserNode {
                         expr: ParserExpr::AnnotatedIdent(pair.as_str().trim().to_owned()),
                         span: pair.clone().as_span(),
-                    },
-                    Rule::constant => ParserNode {
+                    }),
+                    Rule::constant => Ok(ParserNode {
                         expr: ParserExpr::AnnotatedConstant(pair.as_str().trim().to_owned()),
                         span: pair.clone().as_span(),
-                    },
+                    }),
                     Rule::string => {
                         let string =
                             unescape(pair.as_str().trim()).expect("incorrect string literal");
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::Str(string[1..string.len() - 1].to_owned()),
                             span: pair.clone().as_span(),
-                        }
+                        })
                     }
                     Rule::boolean => {
                         let b: bool = pair
@@ -322,10 +382,10 @@ fn consume_expression_internal<'i>(
                             .trim()
                             .parse()
                             .expect("incorrect bool literal");
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::Bool(b),
                             span: pair.clone().as_span(),
-                        }
+                        })
                     }
                     Rule::integer => {
                         let integer: isize = pair
@@ -333,10 +393,10 @@ fn consume_expression_internal<'i>(
                             .trim()
                             .parse()
                             .expect("incorrect integer literal");
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::Int(integer),
                             span: pair.clone().as_span(),
-                        }
+                        })
                     }
                     Rule::broken_number => {
                         let mut pairs = pair.into_inner();
@@ -348,10 +408,10 @@ fn consume_expression_internal<'i>(
                             .expect("incorrect integer part of float literal");
                         let pair = pairs.next().unwrap();
                         let broken_part: String = pair.as_str().trim().to_owned();
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::Float(integer, broken_part),
                             span: pair.clone().as_span(),
-                        }
+                        })
                     }
                     Rule::list => {
                         let span = pair.as_span();
@@ -363,10 +423,10 @@ fn consume_expression_internal<'i>(
                                 climber,
                             )?);
                         }
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::List(elements),
                             span,
-                        }
+                        })
                     }
                     Rule::dictionary => {
                         let span = pair.as_span();
@@ -387,10 +447,10 @@ fn consume_expression_internal<'i>(
                                 )?,
                             ));
                         }
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::Dictionary(elements),
                             span,
-                        }
+                        })
                     }
                     Rule::function_application => {
                         let mut pairs = pair.into_inner();
@@ -408,48 +468,63 @@ fn consume_expression_internal<'i>(
                                 climber,
                             )?);
                         }
-                        ParserNode {
+                        Ok(ParserNode {
                             expr: ParserExpr::FunctionApplication(ident.to_string(), arguments),
                             span: start_pos.span(&end_pos),
-                        }
+                        })
                     }
-                    _ => unreachable!(),
+                    r => Err(ParserResultError::EnteredUnreachableCode(format!(
+                        "Unexpected rule {:?} below function application",
+                        r
+                    ))),
                 };
 
-                pairs.fold(
-                    Ok(node),
-                    |node: Result<ParserNode<'i>, Vec<Error<Rule>>>, pair| {
-                        let node = node?;
-                        let node = match pair.as_rule() {
-                            Rule::faculty_operator => {
-                                let start = node.span.start_pos();
-                                ParserNode {
-                                    expr: ParserExpr::Faculty(Box::new(node)),
-                                    span: start.span(&pair.as_span().end_pos()),
-                                }
-                            }
-                            Rule::index_operator => {
-                                let start = node.span.start_pos();
-                                ParserNode {
-                                    expr: ParserExpr::Indexation(Box::new(node)),
-                                    span: start.span(&pair.as_span().end_pos()),
-                                }
-                            }
-                            _ => unreachable!(),
-                        };
+                pairs.fold(node, |node: ParserResult<ParserNode<'i>, Rule>, pair| {
+                    let node = node?;
+                    let node = match pair.as_rule() {
+                        Rule::faculty_operator => {
+                            let start = node.span.start_pos();
+                            Ok(ParserNode {
+                                expr: ParserExpr::Faculty(Box::new(node)),
+                                span: start.span(&pair.as_span().end_pos()),
+                            })
+                        }
+                        Rule::index_operator => {
+                            let start = node.span.start_pos();
+                            Ok(ParserNode {
+                                expr: ParserExpr::Indexation(Box::new(node)),
+                                span: start.span(&pair.as_span().end_pos()),
+                            })
+                        }
+                        Rule::superscript_operator => {
+                            let start = node.span.start_pos();
+                            let superscripts = pair.as_str();
 
-                        Ok(node)
-                    },
-                )?
+                            Ok(ParserNode {
+                                expr: ParserExpr::Superscript(
+                                    Box::new(node),
+                                    superscripts.to_string(),
+                                ),
+                                span: start.span(&pair.as_span().end_pos()),
+                            })
+                        }
+                        r => Err(ParserResultError::EnteredUnreachableCode(format!(
+                            "Unexpected rule {:?} as postfix operator",
+                            r
+                        ))),
+                    };
+
+                    node
+                })
             }
         };
 
-        Ok(node)
+        node
     }
     let term = |pair: Pair<'i, Rule>| unaries(pair.into_inner().peekable(), climber);
-    let infix = |lhs: Result<ParserNode<'i>, Vec<Error<Rule>>>,
+    let infix = |lhs: ParserResult<ParserNode<'i>, Rule>,
                  op: Pair<'i, Rule>,
-                 rhs: Result<ParserNode<'i>, Vec<Error<Rule>>>| match op.as_rule() {
+                 rhs: ParserResult<ParserNode<'i>, Rule>| match op.as_rule() {
         Rule::add => {
             let lhs = lhs?;
             let rhs = rhs?;
@@ -618,7 +693,10 @@ fn consume_expression_internal<'i>(
                 span: start.span(&end),
             })
         }
-        _ => unreachable!(),
+        r => Err(ParserResultError::EnteredUnreachableCode(format!(
+            "Unexpected infix rule {:?}",
+            r
+        ))),
     };
 
     climber.climb(pairs, term, infix)
@@ -675,7 +753,18 @@ pub fn parse_as_jme_script(s: &str) -> Result<Pairs<'_, Rule>, pest::error::Erro
 mod test {
     use super::*;
 
-    const VALID_NAMES: [&str; 6] = ["x", "x_1", "time_between_trials", "var1", "row1val2", "y''"];
+    const VALID_NAMES: [&str; 10] = [
+        "x",
+        "x_1",
+        "time_between_trials",
+        "var1",
+        "row1val2",
+        "y''",
+        "_",
+        "_test",
+        "$_test",
+        "äàß",
+    ];
     const VALID_ANNOTATIONS: [&str; 11] = [
         "verb", "op", "v", "vector", "unit", "dot", "m", "matrix", "diff", "degrees", "vec",
     ];
@@ -766,5 +855,11 @@ mod test {
     #[test]
     fn embraced_expression() {
         assert!(parse_as_embraced_jme("hallo {x+5} test {x*y+7} \\{xxxtest\\}").is_ok());
+    }
+
+    #[test]
+    fn superscripts() {
+        assert!(parse_as_jme("x¹").is_ok());
+        assert!(parse_as_jme("x⁽¹⁺¹⁰⁾").is_ok());
     }
 }

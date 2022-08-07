@@ -1,4 +1,4 @@
-WHITESPACE = _{ !multiple_newline ~ (" " | "\t" | newline | "&nbsp;" ) }
+WHITESPACE = _{ !multiple_newline ~ (WHITE_SPACE | "&nbsp;" ) }
 COMMENT    = _{ block_comment | ("//" ~ (!newline ~ ANY)*) }
 newline    = _{ !(newline_item~newline_item) ~ newline_item }
 newline_item    = _{ "\n" | "\r\n" }
@@ -78,8 +78,10 @@ builtin_annotation = { verb_annotation | op_annotation | vector_annotation | uni
 other_annotation = { ASCII_ALPHA+ ~ ":" }
 annotation = { builtin_annotation | other_annotation }
 ident_char_all = _{ ident_char | "'" }
-ident_char = _{ CASED_LETTER | ASCII_DIGIT | "_"  }
-ident_name = @{ !reserved ~ CASED_LETTER ~ ident_char* ~ "'"* }
+ident_char = _{ ident_first_char_no_dollar | DECIMAL_NUMBER | LETTER_NUMBER | "_"  }
+ident_first_char_no_dollar = _{ CASED_LETTER | TITLECASE_LETTER | OTHER_LETTER | "_" }
+ident_first_char = _{ ident_first_char_no_dollar | "$" }
+ident_name = @{ !reserved ~ ident_first_char ~ ident_char* ~ "'"* }
 annotated_ident = { (annotation)* ~ ident_name }
 ident = _{ annotated_ident }
 
@@ -120,7 +122,9 @@ infix_operator = _{ arithmetic_operator | cast_operator | relational_operator | 
 
 index_operator = { "[" ~ (string | integer | ident_name) ~ "]" } 
 faculty_operator =  { "!" }
-postfix_operator = _{ faculty_operator | index_operator }
+superscript_characters = { "⁰" | "¹" | "²" | "³" | "⁴" | "⁵" | "⁶" | "⁷" | "⁸" | "⁹" | "⁽" | "⁾" | "⁺" | "⁻" | "⁼" | "ⁿ" | "ⁱ" }
+superscript_operator = { superscript_characters+ }
+postfix_operator = _{ faculty_operator | index_operator | superscript_operator }
 
 not_operator = _{ "!" | "not" }
 unary_minus = _{ "-" }

@@ -419,6 +419,27 @@ mod test {
         assert_eq!(ast.validate(), vec![]);
     }
 
+    #[test]
+    fn ast_superscript() {
+        let to_compare = vec![
+            ("x^5", "x⁵"),
+            ("x^(5+3)", "x⁵⁺³"),
+            ("x^5+3", "x⁵+3"),
+            ("x^(5+3)", "x⁽⁵⁺³⁾"),
+            ("x^(55-3)", "x⁵⁵⁻³"),
+            ("x^(55-(3)(5))", "x⁵⁵⁻⁽³⁾⁽⁵⁾"),
+        ];
+
+        for (input1, input2) in to_compare {
+            let pairs = parse_as_jme(input1).unwrap();
+            let ast1 = consume_one_expression(pairs).unwrap();
+            let pairs = parse_as_jme(input2).unwrap();
+            let ast2 = consume_one_expression(pairs).unwrap();
+            assert_eq!(ast1, ast2);
+            assert_eq!(ast1.validate(), vec![]);
+        }
+    }
+
     #[derive(Serialize, Deserialize)]
     struct DocTest {
         name: String,
