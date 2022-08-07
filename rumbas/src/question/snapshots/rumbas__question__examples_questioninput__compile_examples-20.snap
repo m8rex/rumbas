@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/mod.rs
 expression: "&example"
-
 ---
 statement:
   content:
@@ -49,4 +48,5 @@ extensions: ~
 diagnostic_topic_names: "template:template_key"
 resources: "template:template_key"
 custom_part_types: ~
+rulesets: "template:template_key"
 
