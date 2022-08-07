@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales: ~
@@ -19,11 +18,11 @@ name:
         nl: nl version of placeholder2
       placeholders: {}
 navigation:
-  allow_printing: ~
+  allow_printing: false
   browsing_enabled: ~
   can_move_to_previous: ~
-  can_regenerate: ~
-  confirm_when_leaving: ~
+  can_regenerate: false
+  confirm_when_leaving: false
   mode: sequential
   on_leave:
     action: prevent_if_not_attempted
@@ -40,11 +39,11 @@ navigation:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  show_names_of_question_groups: ~
+  show_names_of_question_groups: false
   show_results_page: on_completion
-  show_steps: ~
-  show_title_page: ~
-  start_password: ~
+  show_steps: false
+  show_title_page: false
+  start_password: "file:path/to/file"
 timing: "template:template_key"
 feedback:
   percentage_needed_to_pass: 1.2

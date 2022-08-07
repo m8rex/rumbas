@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales: ~
@@ -45,7 +44,7 @@ navigation:
   show_results_page: "template:template_key"
   show_steps: ~
   show_title_page: ~
-  start_password: ~
+  start_password: "template:template_key"
 timing:
   duration_in_seconds: "template:template_key"
   allow_pause: ~

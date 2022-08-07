@@ -152,7 +152,8 @@ pub struct JMERestriction {
 pub struct JMELengthRestriction {
     #[serde(flatten)]
     pub restriction: JMERestriction,
-    pub length: Option<SafeNatural>,
+    #[serde(default)]
+    pub length: SafeNatural,
 }
 
 #[skip_serializing_none]

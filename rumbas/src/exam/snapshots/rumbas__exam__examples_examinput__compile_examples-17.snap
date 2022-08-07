@@ -1,12 +1,19 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales: "template:template_key"
 name: "template:template_key"
-navigation: "template:template_key"
+navigation:
+  allow_printing: false
+  can_regenerate: false
+  confirm_when_leaving: false
+  mode: menu
+  show_names_of_question_groups: false
+  show_steps: false
+  show_title_page: false
+  start_password: ~
 timing:
   duration_in_seconds: "template:template_key"
   allow_pause: false
