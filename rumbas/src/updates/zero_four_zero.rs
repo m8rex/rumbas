@@ -40,7 +40,7 @@ macro_rules! update_hash {
 }
 
 /// Update from version 0.4.0 to 0.5.0
-pub fn update() -> String {
+pub fn update() -> semver::Version {
     // TODO: extract code to read questions and exams
     let question_files = CACHE
         .read_all_questions()
@@ -419,7 +419,7 @@ pub fn update() -> String {
 
     log::error!("Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.");
 
-    "0.5.0".to_string()
+    semver::Version::new(0,5,0)
 }
 
 fn update_translatable_string(yaml: Yaml) -> Yaml {

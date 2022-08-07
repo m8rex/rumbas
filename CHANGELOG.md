@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Changed
-- Version of quantities extension.
+- `rumbas` now checks whether the version in the `rc` file equals the version of the rumbas binary.
+- Version of the `quantities` extension.
 - `startpassword` is now a noneable field (`startpassword: none` is the same as `startpassword: ""`)
 
 ### Fixed
