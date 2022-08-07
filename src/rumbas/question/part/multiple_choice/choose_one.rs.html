@@ -137,14 +137,6 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">extract_multiple_choice_answer_data</span>, <span class="ident">MultipleChoiceAnswerData</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy</span>;
@@ -154,7 +146,6 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::variable_valued::VariableValued</span>;
 <span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
 <span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -187,26 +178,20 @@
                         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
                 )
                 .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="prelude-val">Some</span>(
-                    <span class="ident">VariableValued::Value</span>(
-                        <span class="ident">answers</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-                    )
+                <span class="ident">VariableValued::Value</span>(<span class="ident">answers</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">marks</span>.<span class="ident">clone</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>())
                     .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                ),
-                <span class="prelude-val">Some</span>(
-                    <span class="ident">answers</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                            <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>() <span class="comment">//TODO</span>
-                        })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                        .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                ),
+                <span class="ident">answers</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                        <span class="ident">a</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>() <span class="comment">//TODO</span>
+                    })
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             ),
             <span class="ident">MultipleChoiceAnswerData::NumbasLike</span>(<span class="ident">data</span>) =&gt; (
                 <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
-                <span class="ident">data</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)).<span class="ident">into</span>(),
+                <span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                <span class="ident">data</span>.<span class="ident">feedback</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(),
             ),
         };
         <span class="ident">numbas::question::part::choose_one::QuestionPartChooseOne</span> {
@@ -215,7 +200,7 @@
             <span class="ident">choices</span>,
             <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">columns</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">get_nb_columns</span>().<span class="ident">into</span>(),
-            <span class="ident">show_cell_answer_state</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">marking_matrix</span>,
             <span class="ident">distractors</span>,
         }
@@ -230,8 +215,7 @@
                     <span class="ident">display</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
                     <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">to_rumbas</span>(),
                     <span class="ident">show_cell_answer_state</span>:
-                        <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>
-                            .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">choose_one_show_cell_answer_state</span>).<span class="ident">to_rumbas</span>()
+                        <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">to_rumbas</span>()
             }
         }
     }
@@ -293,4 +277,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

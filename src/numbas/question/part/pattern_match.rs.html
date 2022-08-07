@@ -32,6 +32,12 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::EmbracedJMEString</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::SafeFloat</span>;
@@ -44,18 +50,18 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartPatternMatch</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
     <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;caseSensitive&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">case_sensitive</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;partialCredit&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;caseSensitive&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">case_sensitive</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;partialCredit&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="doccomment">/// Partial credit for answer not matching case</span>
-    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeFloat</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="ident">SafeFloat</span>,
     <span class="doccomment">/// The text or pattern the student must match.</span>
     <span class="doccomment">/// When Match test is Regular expression, this is a regular expression defining the strings to be accepted as correct. If there are several valid answers, separate them with a | character. If you’re using the full regular expression functionality, note that ^ and $ are automatically added to the start and end of the answer pattern to ensure that the student’s whole answer matches the pattern.</span>
     <span class="kw">pub</span> <span class="ident">answer</span>: <span class="ident">EmbracedJMEString</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;displayAnswer&quot;</span>)]</span>
     <span class="comment">// Only a value when Regex pattern mode</span>
     <span class="kw">pub</span> <span class="ident">display_answer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EmbracedJMEString</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matchMode&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matchMode&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">match_mode</span>: <span class="ident">PatternMatchMode</span>,
 }
 
@@ -66,5 +72,11 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;exact&quot;</span>)]</span>
     <span class="ident">Exact</span>,
 }
+
+<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">PatternMatchMode</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="ident">PatternMatchMode</span> {
+        <span class="ident"><span class="self">Self</span>::Regex</span>
+    }
+}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

@@ -546,6 +546,42 @@
 <span id="546">546</span>
 <span id="547">547</span>
 <span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
@@ -649,6 +685,22 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;parsedecimal_or_fraction&quot;</span>)]</span>
     <span class="doccomment">/// Works the same as parsedecimal(), but also accepts strings of the form number/number, which it interprets as fractions.</span>
     <span class="ident">ParseDecimalOrFraction</span>,
+    <span class="doccomment">/// Write the given number in binary: base 2.</span>
+    <span class="ident">ToBinary</span>,
+    <span class="doccomment">/// Write the given number in octal: base 8.</span>
+    <span class="ident">ToOctal</span>,
+    <span class="doccomment">/// Write the given number in hexadecimal: base 16.</span>
+    <span class="ident">ToHexadecimal</span>,
+    <span class="doccomment">/// Write the given number in the given base. base can be any integer between 2 and 36.</span>
+    <span class="ident">ToBase</span>,
+    <span class="doccomment">/// Convert a string representing a number written in binary (base 2) to a integer value.</span>
+    <span class="ident">FromBinary</span>,
+    <span class="doccomment">/// Convert a string representing a number written in octal (base 8) to a integer value.</span>
+    <span class="ident">FromOctal</span>,
+    <span class="doccomment">/// Convert a string representing a number written in hexadecimal (base 16) to a integer value.</span>
+    <span class="ident">FromHexadecimal</span>,
+    <span class="doccomment">/// Convert a string representing a number written in the given base to a integer value. base can be any integer between 2 and 36.</span>
+    <span class="ident">FromBase</span>,
     <span class="doccomment">/// Is n the “not a number” value, NaN?</span>
     <span class="ident">IsNan</span>,
 
@@ -695,6 +747,12 @@
     <span class="ident">Fact</span>,
     <span class="doccomment">/// Factorise n. Returns the exponents of the prime factorisation of n as a list.</span>
     <span class="ident">Factorise</span>,
+    <span class="doccomment">/// Returns the divisors of n as a list: positive integers d such that d || n.</span>
+    <span class="ident">Divisors</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;proper_divisors&quot;</span>)]</span>
+    <span class="doccomment">/// Returns the proper divisors of n as a list: positive integers d &lt; n such that d || n.</span>
+    <span class="doccomment">/// That is, the divisors of n, excluding n itself.</span>
+    <span class="ident">ProperDivisors</span>,
     <span class="doccomment">/// Gamma function</span>
     <span class="ident">Gamma</span>,
     <span class="doccomment">/// Round up to the nearest integer. When x is complex, each component is rounded separately.</span>
@@ -748,6 +806,11 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;is_zero&quot;</span>)]</span>
     <span class="doccomment">/// Returns true if every component of the vector x is zero.</span>
     <span class="ident">IsZeroVector</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;is_scalar_multiple&quot;</span>)]</span>
+    <span class="doccomment">/// Returns true if u is a scalar multiple of v. That is, if u = k*v for some real number k.</span>
+    <span class="doccomment">/// The optional arguments rel_tol and abs_tol specify the relative and absolute tolerance of</span>
+    <span class="doccomment">/// the equality check for each component; see isclose.</span>
+    <span class="ident">IsScalarMultiple</span>,
     <span class="doccomment">/// Determinant of a matrix. Throws an error if used on anything larger than a 3×3 matrix.</span>
     <span class="ident">Det</span>, <span class="comment">// Why not for larger matrices?</span>
     <span class="doccomment">/// Matrix transpose.</span>
@@ -755,6 +818,15 @@
     <span class="doccomment">/// Calculate the sum of all the cells in a matrix.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;sum_cells&quot;</span>)]</span>
     <span class="ident">SumCells</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;combine_horizontally&quot;</span>)]</span>
+    <span class="doccomment">/// Combine two matrices horizontally: given r1 x c1 a matrix m1 and a r2 x c2 matrix m2, returns a new max(1, r2) x (c1 + c2) matrix formed by putting the two matrices side, and padding with zeros where necessary.</span>
+    <span class="ident">Augment</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;combine_vertically&quot;</span>)]</span>
+    <span class="doccomment">/// Combine two matrices vertically: given a r1 x c1 matrix m1 and a r2 x c2 matrix m2, returns a new (r1 + r2) x max(c1, c2) matrix formed by putting m1 above m2, and padding with zeros where necessary.</span>
+    <span class="ident">Stack</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;combine_diagonally&quot;</span>)]</span>
+    <span class="doccomment">/// Combine two matrices diagonally: given a r1 x c1 matrix m1 and a r2 x c2 matrix m2, returns a new (r1 + r2) x (c1 + c2) matrix whose top-left quadrant is m1 and bottom-right quadrant is m2.</span>
+    <span class="ident">CombineDiagonally</span>,
 
     <span class="doccomment">/// Convert x to a string.</span>
     <span class="doccomment">/// When converting a expression value to a string, you can give a list of display options as a second argument, either as a comma-separated string or a list of strings.</span>
@@ -1095,4 +1167,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

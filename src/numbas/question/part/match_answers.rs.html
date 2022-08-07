@@ -90,6 +90,43 @@
 <span id="90">90</span>
 <span id="91">91</span>
 <span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::choose_multiple::MultipleChoiceMarkingMethod</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
@@ -107,39 +144,46 @@
     <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minMarks&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</span>
-    <span class="kw">pub</span> <span class="ident">min_marks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">//TODO; what is difference with minimum_marks?</span>
+    <span class="kw">pub</span> <span class="ident">min_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">//TODO; what is difference with minimum_marks?</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxMarks&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</span>
-    <span class="kw">pub</span> <span class="ident">max_marks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Is there a maximum number of marks the student can get?</span>
+    <span class="kw">pub</span> <span class="ident">max_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Is there a maximum number of marks the student can get?</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minAnswers&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.</span>
-    <span class="kw">pub</span> <span class="ident">min_answers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Minimum number of responses the student can select</span>
+    <span class="kw">pub</span> <span class="ident">min_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Minimum number of responses the student can select</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxAnswers&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.</span>
-    <span class="kw">pub</span> <span class="ident">max_answers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Maximum number of responses the student can select</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;warningType&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">max_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Maximum number of responses the student can select</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;warningType&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">wrong_nb_answers_warning</span>: <span class="ident">MultipleChoiceWarningType</span>, <span class="comment">// What to do if the student picks the wrong number of responses?</span>
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleChoices&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleChoices&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">shuffle_choices</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleAnswers&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleAnswers&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">shuffle_answers</span>: <span class="ident">bool</span>,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">display_type</span>: <span class="ident">MatchAnswersWithChoicesDisplayType</span>, <span class="comment">// How to display the response selectors -&gt; only for 1_n_2?</span>
     <span class="comment">//#[serde(rename = &quot;displayColumns&quot;)] //TODO?</span>
     <span class="comment">//pub displayed_columns: usize, // How many columns to use to display the choices.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">layout</span>: <span class="ident">MatchAnswersWithChoicesLayout</span>,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showCellAnswerState&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showCellAnswerState&quot;</span>, <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
     <span class="doccomment">/// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</span>
     <span class="kw">pub</span> <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
 
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[choice][answer]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[choice][answer]</span>
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
@@ -149,6 +193,12 @@
     <span class="ident">Check</span>(<span class="ident">MatchAnswersWithChoicesDisplayTypeCheck</span>),
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;radiogroup&quot;</span>)]</span>
     <span class="ident">Radio</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesDisplayType</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Radio</span>
+    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
@@ -167,6 +217,13 @@
     <span class="comment">//TODO: also prevent and warn -&gt; same as leave actions?</span>
     <span class="comment">//https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493</span>
 }
+
+<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MultipleChoiceWarningType</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::None</span>
+    }
+}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;all&quot;</span>)]</span>
@@ -175,12 +232,29 @@
     <span class="ident">LowerTriangle</span>,
     <span class="comment">//TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766</span>
 }
+
+<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::All</span>
+    }
+}
+
 <span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="doccomment">/// Define which choices are available to be picked. If Custom expression is selected, give either a list of lists of boolean values, or a matrix with as many rows as the part has choices and as many columns as the part has answers. Any non-zero value in the matrix indicates that the corresponding choice-answer pair should be available to the student.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersWithChoicesLayout</span> {
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">r#type</span>: <span class="ident">MatchAnswersWithChoicesLayoutType</span>,
     <span class="kw">pub</span> <span class="ident">expression</span>: <span class="ident">String</span>, <span class="comment">// TODO: expression only needed for custom type?</span>
 }
+
+<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayout</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">r#type</span>: <span class="ident">MatchAnswersWithChoicesLayoutType::All</span>,
+            <span class="ident">expression</span>: <span class="ident">String::new</span>(),
+        }
+    }
+}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

@@ -145,7 +145,7 @@
 <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::question_group::QuestionGroup</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionGroup</span> {
     <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
         <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
-            <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">picking_strategy</span>: <span class="self">self</span>.<span class="ident">picking_strategy</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">questions</span>: <span class="self">self</span>.<span class="ident">questions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
         }
@@ -155,7 +155,7 @@
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionGroup</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionGroup</span> {
         <span class="ident">QuestionGroup</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">to_rumbas</span>(),
+            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">picking_strategy</span>: <span class="self">self</span>.<span class="ident">picking_strategy</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">questions</span>: <span class="self">self</span>.<span class="ident">questions</span>.<span class="ident">to_rumbas</span>(),
         }
@@ -233,4 +233,4 @@
     <span class="ident">name</span>
 );
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

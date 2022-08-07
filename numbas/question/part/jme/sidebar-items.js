@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["JMECheckingType",""]],"struct":[["JMECheckingTypeData",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["JMEValueGenerator",""],["QuestionPartJME",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["JMECheckingType",""]],"fn":[["default_answer_simplification",""]],"struct":[["JMECheckingTypeData",""],["JMELengthRestriction",""],["JMEPatternRestriction",""],["JMERestriction",""],["JMEStringRestriction",""],["JMEValueGenerator",""],["QuestionPartJME",""]]};

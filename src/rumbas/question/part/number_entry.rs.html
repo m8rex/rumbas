@@ -205,14 +205,6 @@
 <span id="205">205</span>
 <span id="206">206</span>
 <span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::QuestionPart</span>;
@@ -220,7 +212,6 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
 <span class="kw">use</span> <span class="ident">numbas::jme::JMEString</span>;
 <span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
@@ -257,17 +248,17 @@
         <span class="ident">numbas::question::part::number_entry::QuestionPartNumberEntry</span> {
             <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">correct_answer_fraction</span>: <span class="self">self</span>.<span class="ident">display_correct_as_fraction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer_style</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">display_correct_in_style</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">correct_answer_style</span>: <span class="self">self</span>.<span class="ident">display_correct_in_style</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">notation_styles</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">allowed_notation_styles</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
-            <span class="ident">fractions_must_be_reduced</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
-            <span class="ident">partial_credit_if_fraction_not_reduced</span>: <span class="prelude-val">Some</span>(
-                <span class="self">self</span>.<span class="ident">partial_credit_if_fraction_not_reduced</span>
-                    .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            ),
-            <span class="ident">precision</span>: <span class="prelude-val">None</span>,           <span class="comment">//TODO</span>
-            <span class="ident">show_precision_hint</span>: <span class="prelude-val">None</span>, <span class="comment">//TODO</span>
-            <span class="ident">show_fraction_hint</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">hint_fraction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">notation_styles</span>: <span class="self">self</span>.<span class="ident">allowed_notation_styles</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">fractions_must_be_reduced</span>: <span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">partial_credit_if_fraction_not_reduced</span>: <span class="self">self</span>
+                .<span class="ident">partial_credit_if_fraction_not_reduced</span>
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+
+            <span class="ident">precision</span>: <span class="ident">Default::default</span>(), <span class="comment">//TODO</span>
+            <span class="ident">show_precision_hint</span>: <span class="bool-val">true</span>,     <span class="comment">//TODO</span>
+            <span class="ident">show_fraction_hint</span>: <span class="self">self</span>.<span class="ident">hint_fraction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="comment">// checking_type: Some(numbas::exam::CheckingType::Range), //TODO</span>
         }
@@ -284,24 +275,17 @@
                 <span class="ident">display_correct_as_fraction</span>: <span class="self">self</span>.<span class="ident">correct_answer_fraction</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">allowed_notation_styles</span>:
-                    <span class="self">self</span>.<span class="ident">notation_styles</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">to_rumbas</span>(),
+                    <span class="self">self</span>.<span class="ident">notation_styles</span>.<span class="ident">to_rumbas</span>(),
 
                 <span class="ident">display_correct_in_style</span>:
-                    <span class="self">self</span>.<span class="ident">correct_answer_style</span>
-                        .<span class="ident">clone</span>()
-                        .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">number_entry_correct_answer_style</span>)
-                        .<span class="ident">to_rumbas</span>(),
+                    <span class="self">self</span>.<span class="ident">correct_answer_style</span>.<span class="ident">to_rumbas</span>(),
 
                 <span class="ident">fractions_must_be_reduced</span>:
-                    <span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>
-                        .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">number_entry_fractions_must_be_reduced</span>).<span class="ident">to_rumbas</span>(),
+                    <span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">partial_credit_if_fraction_not_reduced</span>:
-                    <span class="self">self</span>.<span class="ident">partial_credit_if_fraction_not_reduced</span>
-                        .<span class="ident">clone</span>()
-                        .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">number_entry_partial_credit_if_fraction_not_reduced</span>).<span class="ident">to_rumbas</span>(),
+                    <span class="self">self</span>.<span class="ident">partial_credit_if_fraction_not_reduced</span>.<span class="ident">to_rumbas</span>(),
                 <span class="ident">hint_fraction</span>:
-                    <span class="self">self</span>.<span class="ident">show_fraction_hint</span>
-                        .<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">number_entry_hint_fraction</span>).<span class="ident">to_rumbas</span>()
+                    <span class="self">self</span>.<span class="ident">show_fraction_hint</span>.<span class="ident">to_rumbas</span>()
 
             }
         }
@@ -429,4 +413,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

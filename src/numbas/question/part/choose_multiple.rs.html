@@ -66,6 +66,15 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::match_answers::MultipleChoiceWarningType</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
@@ -83,36 +92,45 @@
     <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minMarks&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</span>
-    <span class="kw">pub</span> <span class="ident">min_marks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">//TODO; what is difference with minimum_marks?</span>
+    <span class="kw">pub</span> <span class="ident">min_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">//TODO; what is difference with minimum_marks?</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxMarks&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</span>
-    <span class="kw">pub</span> <span class="ident">max_marks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Is there a maximum number of marks the student can get?</span>
+    <span class="kw">pub</span> <span class="ident">max_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Is there a maximum number of marks the student can get?</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minAnswers&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.</span>
-    <span class="kw">pub</span> <span class="ident">min_answers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Minimum number of responses the student can select</span>
+    <span class="kw">pub</span> <span class="ident">min_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Minimum number of responses the student can select</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxAnswers&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.</span>
-    <span class="kw">pub</span> <span class="ident">max_answers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>, <span class="comment">// Maximum number of responses the student can select</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;warningType&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">max_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Maximum number of responses the student can select</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;warningType&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">wrong_nb_answers_warning</span>: <span class="ident">MultipleChoiceWarningType</span>, <span class="comment">// What to do if the student picks the wrong number of responses?</span>
-
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleChoices&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">shuffle_answers</span>: <span class="ident">bool</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;displayColumns&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::safe_natural_one&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">display_columns</span>: <span class="ident">SafeNatural</span>, <span class="comment">// How many columns to use to display the choices.</span>
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showCellAnswerState&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
     <span class="doccomment">/// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</span>
     <span class="kw">pub</span> <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
 
     <span class="doccomment">/// This is either a list of embraced jme strings or a jme expression</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="doccomment">/// This is either a list of jme strings or a jme expression</span>
-    <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[answer][choice]</span>
-    <span class="doccomment">/// This is optional if marking_matrix is a JMEString</span>
-    <span class="kw">pub</span> <span class="ident">distractors</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[answer][choice]</span>
+    <span class="doccomment">/// This is optional if marking_matrix# is a JMEString</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">distractors</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span>,
     <span class="doccomment">/// This determines how the student’s score is determined, based on their selections and the marking matrix.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;markingMethod&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
@@ -135,4 +153,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

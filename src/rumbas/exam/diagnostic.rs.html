@@ -315,12 +315,6 @@
 <span id="315">315</span>
 <span id="316">316</span>
 <span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::feedback::Feedback</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::locale::Locale</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::locale::SupportedLocale</span>;
@@ -374,12 +368,6 @@
 
         <span class="kw">let</span> <span class="ident">feedback</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
 
-        <span class="comment">//TODO</span>
-        <span class="kw">let</span> <span class="ident">functions</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HashMap::new</span>());
-
-        <span class="comment">//TODO</span>
-        <span class="kw">let</span> <span class="ident">variables</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HashMap::new</span>());
-
         <span class="kw">let</span> <span class="ident">question_groups</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::exam::question_group::QuestionGroup</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="self">self</span>.<span class="ident">question_groups</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
 
@@ -430,8 +418,6 @@
             <span class="ident">navigation</span>,
             <span class="ident">timing</span>,
             <span class="ident">feedback</span>,
-            <span class="ident">functions</span>,
-            <span class="ident">variables</span>,
             <span class="ident">question_groups</span>,
             <span class="ident">diagnostic</span>,
         }
@@ -442,13 +428,15 @@
     <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::BasicExamSettings</span> {
         <span class="ident">numbas::exam::BasicExamSettings</span> {
             <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">duration_in_seconds</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="ident">duration_in_seconds</span>: <span class="self">self</span>
+                .<span class="ident">timing</span>
+                .<span class="ident">duration_in_seconds</span>
+                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
+                .<span class="ident">unwrap_or</span>(<span class="number">0</span>),
             <span class="ident">percentage_needed_to_pass</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">percentage_needed_to_pass</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_question_group_names</span>: <span class="prelude-val">Some</span>(
-                <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">shared_data</span>.<span class="ident">show_names_of_question_groups</span>,
-            ),
-            <span class="ident">show_student_name</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">show_name_of_student</span>),
-            <span class="ident">allow_printing</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">shared_data</span>.<span class="ident">allow_printing</span>),
+            <span class="ident">show_question_group_names</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">shared_data</span>.<span class="ident">show_names_of_question_groups</span>,
+            <span class="ident">show_student_name</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">clone</span>().<span class="ident">show_name_of_student</span>,
+            <span class="ident">allow_printing</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">shared_data</span>.<span class="ident">allow_printing</span>,
         }
     }
 }
@@ -645,4 +633,4 @@
     )
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

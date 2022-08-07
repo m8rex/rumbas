@@ -82,6 +82,8 @@
 <span id="82">82</span>
 <span id="83">83</span>
 <span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
@@ -116,7 +118,9 @@
 <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Timing</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
     <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Timing</span> {
         <span class="ident">Timing</span> {
-            <span class="ident">duration_in_seconds</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_rumbas</span>(),
+            <span class="ident">duration_in_seconds</span>: <span class="ident">Noneable::NotNone</span>(
+                <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_rumbas</span>(),
+            ),
             <span class="ident">allow_pause</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">allow_pause</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">on_timeout</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">timeout</span>.<span class="ident">to_rumbas</span>(),
             <span class="ident">timed_warning</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">timed_warning</span>.<span class="ident">to_rumbas</span>(),
@@ -167,4 +171,4 @@
     <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">TranslatableString</span>,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

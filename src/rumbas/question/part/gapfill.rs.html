@@ -44,14 +44,12 @@
 <span id="44">44</span>
 <span id="45">45</span>
 <span id="46">46</span>
-<span id="47">47</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part</span>::{<span class="ident">QuestionPart</span>, <span class="ident">VariableReplacementStrategy</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
 <span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::defaults::DEFAULTS</span>;
 <span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -74,7 +72,7 @@
     <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::gapfill::QuestionPartGapFill</span> {
         <span class="ident">numbas::question::part::gapfill::QuestionPartGapFill</span> {
             <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">sort_answers</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">sort_answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
+            <span class="ident">sort_answers</span>: <span class="self">self</span>.<span class="ident">sort_answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
             <span class="ident">gaps</span>: <span class="self">self</span>.<span class="ident">gaps</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
         }
     }
@@ -85,7 +83,7 @@
         <span class="macro">create_question_part!</span> {
             <span class="ident">QuestionPartGapFill</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {
 
-                <span class="ident">sort_answers</span>: <span class="self">self</span>.<span class="ident">sort_answers</span>.<span class="ident">unwrap_or</span>(<span class="ident">DEFAULTS</span>.<span class="ident">gapfill_sort_answers</span>).<span class="ident">to_rumbas</span>(),
+                <span class="ident">sort_answers</span>: <span class="self">self</span>.<span class="ident">sort_answers</span>.<span class="ident">to_rumbas</span>(),
 
                 <span class="ident">gaps</span>: <span class="self">self</span>.<span class="ident">gaps</span>.<span class="ident">to_rumbas</span>()
             }
@@ -93,4 +91,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

@@ -45,25 +45,25 @@
 <span id="45">45</span>
 <span id="46">46</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::RC_FILE_NAME</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">semver</span>::{<span class="ident">Version</span>};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="doccomment">/// &quot;Run commands&quot; that specify how this rumbas repo should be executed</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RC</span> {
-    <span class="ident">version</span>: <span class="ident">String</span>, <span class="comment">// TODO ? x.x.x ?</span>
+    <span class="ident">version</span>: <span class="ident">Version</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">RC</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">version</span>: <span class="string">&quot;0.4.0&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">version</span>: <span class="ident">Version::new</span>(<span class="number">0</span>,<span class="number">4</span>,<span class="number">0</span>)
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">RC</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">version</span>: <span class="ident">String</span>) -&gt; <span class="ident">RC</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">version</span>: <span class="ident">Version</span>) -&gt; <span class="ident">RC</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="ident">rc</span>.<span class="ident">version</span> <span class="op">=</span> <span class="ident">version</span>;
         <span class="ident">rc</span>
@@ -74,7 +74,7 @@
         <span class="ident">std::fs::write</span>(<span class="ident">RC_FILE_NAME</span>, <span class="ident">s</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Version</span> {
         <span class="self">self</span>.<span class="ident">version</span>.<span class="ident">clone</span>()
     }
 }
@@ -91,4 +91,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>

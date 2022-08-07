@@ -764,6 +764,105 @@
 <span id="764">764</span>
 <span id="765">765</span>
 <span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::ast</span>;
 <span class="kw">use</span> <span class="ident">pest::error::Error</span>;
 <span class="kw">use</span> <span class="ident">pest::iterators::Pair</span>;
@@ -785,6 +884,13 @@
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HTMLParser</span>;
 }
 <span class="kw">use</span> <span class="ident">html::Rule</span> <span class="kw">as</span> <span class="ident">HTMLRule</span>;
+
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">std::cmp::Ord</span><span class="op">&gt;</span> {
+    <span class="ident">ParseErrors</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+    <span class="ident">EnteredUnreachableCode</span>(<span class="ident">String</span>),
+}
+
+<span class="kw">type</span> <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
@@ -814,6 +920,7 @@
     <span class="ident">Prefix</span>(<span class="ident">String</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>),
     <span class="ident">Faculty</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>),
     <span class="ident">Indexation</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+    <span class="ident">Superscript</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">String</span>),
     <span class="ident">Cast</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>),
     <span class="ident">Sequence</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span>),
 }
@@ -829,67 +936,109 @@
     <span class="ident">Note</span>(<span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">String</span>),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Expr</span> {
-        <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">into</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">node</span>: <span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ast::Expr</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
+        <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">try_into</span>()
     }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Expr</span> {
-        <span class="kw">match</span> <span class="ident">expr</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Expr</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">expr</span>: <span class="ident">ParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ast::Expr</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">expr</span> {
             <span class="ident">ParserExpr::Str</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Str</span>(<span class="ident">s</span>),
             <span class="ident">ParserExpr::Int</span>(<span class="ident">i</span>) =&gt; <span class="ident">ast::Expr::Int</span>(<span class="ident">i</span>),
             <span class="ident">ParserExpr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Float</span>(<span class="ident">i</span>, <span class="ident">s</span>),
             <span class="ident">ParserExpr::Bool</span>(<span class="ident">b</span>) =&gt; <span class="ident">ast::Expr::Bool</span>(<span class="ident">b</span>),
             <span class="ident">ParserExpr::Range</span>(<span class="ident">o</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Range</span>(<span class="ident">o</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
+                <span class="ident">ast::Expr::Range</span>(<span class="ident">o</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>))
             }
             <span class="ident">ParserExpr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
+                <span class="ident">ast::Expr::Arithmetic</span>(<span class="ident">a</span>, <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>))
             }
             <span class="ident">ParserExpr::AnnotatedIdent</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Ident</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
             <span class="ident">ParserExpr::AnnotatedConstant</span>(<span class="ident">s</span>) =&gt; <span class="ident">ast::Expr::Constant</span>(<span class="ident">s</span>.<span class="ident">into</span>()),
-            <span class="ident">ParserExpr::Relation</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Relation</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
-            }
-            <span class="ident">ParserExpr::Logic</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Logic</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
-            }
-            <span class="ident">ParserExpr::List</span>(<span class="ident">n1</span>) =&gt; <span class="ident">ast::Expr::List</span>(<span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>()),
+            <span class="ident">ParserExpr::Relation</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; <span class="ident">ast::Expr::Relation</span>(
+                <span class="ident">s</span>.<span class="ident">into</span>(),
+                <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>),
+                <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>),
+            ),
+            <span class="ident">ParserExpr::Logic</span>(<span class="ident">s</span>, <span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; <span class="ident">ast::Expr::Logic</span>(
+                <span class="ident">s</span>.<span class="ident">into</span>(),
+                <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>),
+                <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>),
+            ),
+            <span class="ident">ParserExpr::List</span>(<span class="ident">n1</span>) =&gt; <span class="ident">ast::Expr::List</span>(
+                <span class="ident">n1</span>.<span class="ident">into_iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">try_into</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+            ),
             <span class="ident">ParserExpr::Dictionary</span>(<span class="ident">n1</span>) =&gt; {
-                <span class="ident">ast::Expr::Dictionary</span>(<span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">into</span>(), <span class="ident">v</span>.<span class="ident">into</span>())).<span class="ident">collect</span>())
+                <span class="kw">let</span> (<span class="ident">keys</span>, <span class="ident">values</span>): (<span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>) <span class="op">=</span> <span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">unzip</span>();
+                <span class="kw">let</span> <span class="ident">keys</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">keys</span>
+                    .<span class="ident">into_iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">try_into</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">values</span>
+                    .<span class="ident">into_iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">try_into</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                <span class="ident">ast::Expr::Dictionary</span>(<span class="ident">keys</span>.<span class="ident">into_iter</span>().<span class="ident">zip</span>(<span class="ident">values</span>.<span class="ident">into_iter</span>()).<span class="ident">collect</span>())
             }
-            <span class="ident">ParserExpr::FunctionApplication</span>(<span class="ident">s</span>, <span class="ident">n1</span>) =&gt; {
-                <span class="ident">ast::Expr::FunctionApplication</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">n1</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>())
-            }
-            <span class="ident">ParserExpr::Prefix</span>(<span class="ident">s</span>, <span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Prefix</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
-            <span class="ident">ParserExpr::Faculty</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Faculty</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
-            <span class="ident">ParserExpr::Indexation</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Indexation</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">into</span>())),
+            <span class="ident">ParserExpr::FunctionApplication</span>(<span class="ident">s</span>, <span class="ident">n1</span>) =&gt; <span class="ident">ast::Expr::FunctionApplication</span>(
+                <span class="ident">s</span>.<span class="ident">into</span>(),
+                <span class="ident">n1</span>.<span class="ident">into_iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">try_into</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+            ),
+            <span class="ident">ParserExpr::Prefix</span>(<span class="ident">s</span>, <span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Prefix</span>(<span class="ident">s</span>.<span class="ident">into</span>(), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>)),
+            <span class="ident">ParserExpr::Faculty</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Faculty</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>)),
+            <span class="ident">ParserExpr::Indexation</span>(<span class="ident">n</span>) =&gt; <span class="ident">ast::Expr::Indexation</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>)),
             <span class="ident">ParserExpr::Cast</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Cast</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
+                <span class="ident">ast::Expr::Cast</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>))
             }
             <span class="ident">ParserExpr::Sequence</span>(<span class="ident">n1</span>, <span class="ident">n2</span>) =&gt; {
-                <span class="ident">ast::Expr::Sequence</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">into</span>()), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">into</span>()))
+                <span class="ident">ast::Expr::Sequence</span>(<span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>), <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n2</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>))
             }
-        }
+            <span class="ident">ParserExpr::Superscript</span>(<span class="ident">n1</span>, <span class="ident">superscripts</span>) =&gt; {
+                <span class="kw">let</span> <span class="ident">superscripts_map</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="string">&quot;⁰¹²³⁴⁵⁶⁷⁸⁹⁽⁾⁺⁻⁼ⁿⁱ&quot;</span>
+                    .<span class="ident">chars</span>()
+                    .<span class="ident">zip</span>(<span class="string">&quot;0123456789()+-=ni&quot;</span>.<span class="ident">chars</span>())
+                    .<span class="ident">collect</span>();
+
+                <span class="kw">let</span> <span class="ident">normal_characters</span>: <span class="ident">String</span> <span class="op">=</span>
+                    <span class="ident">superscripts</span>.<span class="ident">chars</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">superscripts_map</span>[<span class="kw-2">&amp;</span><span class="ident">c</span>]).<span class="ident">collect</span>();
+                <span class="kw">let</span> <span class="ident">superscripts_pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="kw-2">&amp;</span><span class="ident">normal_characters</span>[..])
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">ParserResultError::ParseErrors</span>(<span class="macro">vec!</span>[<span class="ident">e</span>]))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">consume_one_expression_as_parse_node</span>(<span class="ident">superscripts_pairs</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">rhs</span>: <span class="ident">ast::Expr</span> <span class="op">=</span> <span class="ident">rhs</span>.<span class="ident">try_into</span>()<span class="question-mark">?</span>;
+                <span class="ident">ast::Expr::Arithmetic</span>(
+                    <span class="ident">ast::ArithmeticOperator::Power</span>,
+                    <span class="ident">Box::new</span>((<span class="kw-2">*</span><span class="ident">n1</span>).<span class="ident">try_into</span>()<span class="question-mark">?</span>),
+                    <span class="ident">Box::new</span>(<span class="ident">rhs</span>),
+                )
+            }
+        })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">node</span>: <span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Note</span> {
-        <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">into</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">node</span>: <span class="ident">ScriptParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ast::Note</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
+        <span class="ident">node</span>.<span class="ident">expr</span>.<span class="ident">try_into</span>()
     }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">expr</span>: <span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ast::Note</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ast::Note</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParserResultError</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">expr</span>: <span class="ident">ScriptParserExpr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ast::Note</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">expr</span> {
             <span class="ident">ScriptParserExpr::Note</span>(<span class="ident">name</span>, <span class="ident">description</span>, <span class="ident">expression</span>, <span class="ident">expression_string</span>) =&gt; {
-                <span class="ident">ast::Note::create</span>(
+                <span class="prelude-val">Ok</span>(<span class="ident">ast::Note::create</span>(
                     <span class="ident">name</span>.<span class="ident">into</span>(),
                     <span class="ident">description</span>,
-                    <span class="ident">expression</span>.<span class="ident">into</span>(),
+                    <span class="ident">expression</span>.<span class="ident">try_into</span>()<span class="question-mark">?</span>,
                     <span class="ident">expression_string</span>,
-                )
+                ))
             }
         }
     }
@@ -948,35 +1097,41 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_notes</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Note</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">clone</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into_inner</span>();
-    <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">std::panic::catch_unwind</span>(<span class="op">|</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>)<span class="question-mark">?</span>;
-        <span class="comment">//let errors = validator::validate_ast(&amp;rules);</span>
-        <span class="comment">//if errors.is_empty() {</span>
-        <span class="prelude-val">Ok</span>(<span class="ident">expression</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()).<span class="ident">collect</span>())
-        <span class="comment">/*} else {
-            Err(errors)
-        }*/</span>
-    });
+    <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>);
     <span class="kw">match</span> <span class="ident">res_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) =&gt; <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
+        <span class="prelude-val">Ok</span>(<span class="ident">expression</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">expression</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+                <span class="ident">e</span>.<span class="ident">try_into</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
+                    <span class="ident">ParserResultError::ParseErrors</span>(<span class="ident">e</span>) =&gt; <span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">e</span>),
+                    <span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="ident">s</span>) =&gt; <span class="ident">ConsumeError::UnknownParseError</span>,
+                })
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::ParseErrors</span>(<span class="ident">e</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">e</span>)),
+        <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="ident">s</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_expressions_as_parse_nodes</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">clone</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into_inner</span>();
-    <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">std::panic::catch_unwind</span>(<span class="op">|</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">expression</span> <span class="op">=</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>)<span class="question-mark">?</span>;
-        <span class="comment">//let errors = validator::validate_ast(&amp;rules);</span>
-        <span class="comment">//if errors.is_empty() {</span>
-        <span class="prelude-val">Ok</span>(<span class="ident">expression</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>()).<span class="ident">collect</span>())
-        <span class="comment">/*} else {
-            Err(errors)
-        }*/</span>
-    });
+    <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ast::Expr</span><span class="op">&gt;</span>, <span class="ident">ConsumeError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">res_res</span> <span class="op">=</span> <span class="ident">consume_expressions_as_parse_nodes</span>(<span class="ident">pairs</span>);
     <span class="kw">match</span> <span class="ident">res_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">res</span>) =&gt; <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">ConsumeError::JMEParseError</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">_err</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
+        <span class="prelude-val">Ok</span>(<span class="ident">expression</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">expression</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+                <span class="ident">e</span>.<span class="ident">try_into</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
+                    <span class="ident">ParserResultError::ParseErrors</span>(<span class="ident">e</span>) =&gt; <span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">e</span>),
+                    <span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="ident">s</span>) =&gt; <span class="ident">ConsumeError::UnknownParseError</span>,
+                })
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::ParseErrors</span>(<span class="ident">e</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::JMEParseError</span>(<span class="ident">e</span>)),
+        <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="ident">s</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ConsumeError::UnknownParseError</span>),
     }
 }
 
@@ -984,7 +1139,11 @@
     <span class="ident">consume_expressions</span>(<span class="ident">pairs</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_one_expression_as_parse_node</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
+    <span class="ident">consume_expressions_as_parse_nodes</span>(<span class="ident">pairs</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>())
+}
+
+<span class="kw">fn</span> <span class="ident">consume_note_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
     <span class="kw">for</span> <span class="ident">note</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::note</span>) {
         <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">consume_note</span>(<span class="ident">note</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>())<span class="question-mark">?</span>);
@@ -992,7 +1151,7 @@
     <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">consume_note</span>(<span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_note</span>(<span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ScriptParserNode</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
     <span class="comment">//let start = first.as_span().start();</span>
     <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">first</span>.<span class="ident">as_str</span>().<span class="ident">to_string</span>();
@@ -1014,7 +1173,7 @@
     })
 }
 
-<span class="kw">fn</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_expression_with_spans</span>(<span class="ident">pairs</span>: <span class="ident">Pairs</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
     <span class="kw">for</span> <span class="ident">expression</span> <span class="kw">in</span> <span class="ident">pairs</span>.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() <span class="op">==</span> <span class="ident">Rule::expression</span>) {
         <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">consume_expression</span>(<span class="ident">expression</span>)<span class="question-mark">?</span>);
@@ -1022,7 +1181,7 @@
     <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">consume_expression</span>(<span class="ident">expression</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">consume_expression</span>(<span class="ident">expression</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">climber</span> <span class="op">=</span> <span class="ident">PrecClimber::new</span>(<span class="macro">vec!</span>[
         <span class="ident">Operator::new</span>(<span class="ident">Rule::sequence_operator</span>, <span class="ident">Assoc::Left</span>),
         <span class="ident">Operator::new</span>(<span class="ident">Rule::logic_binary_operator</span>, <span class="ident">Assoc::Left</span>),
@@ -1044,11 +1203,11 @@
 <span class="kw">fn</span> <span class="ident">consume_expression_internal</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>(
     <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">climber</span>: <span class="kw-2">&amp;</span><span class="ident">PrecClimber</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">unaries</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>(
         <span class="kw-2">mut</span> <span class="ident">pairs</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">climber</span>: <span class="kw-2">&amp;</span><span class="ident">PrecClimber</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() {
@@ -1056,31 +1215,31 @@
                 <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">unaries</span>(<span class="ident">pairs</span>, <span class="ident">climber</span>)<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">end_pos</span>();
 
-                <span class="ident">ParserNode</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                     <span class="ident">expr</span>: <span class="ident">ParserExpr::Prefix</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>(), <span class="ident">Box::new</span>(<span class="ident">node</span>)),
                     <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">start_pos</span>().<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
-                }
+                })
             }
             <span class="ident">other_rule</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">other_rule</span> {
                     <span class="ident">Rule::expression</span> =&gt; {
-                        <span class="ident">consume_expression_internal</span>(<span class="ident">pair</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(), <span class="ident">climber</span>)<span class="question-mark">?</span>
+                        <span class="ident">consume_expression_internal</span>(<span class="ident">pair</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(), <span class="ident">climber</span>)
                     }
-                    <span class="ident">Rule::annotated_ident</span> =&gt; <span class="ident">ParserNode</span> {
+                    <span class="ident">Rule::annotated_ident</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                         <span class="ident">expr</span>: <span class="ident">ParserExpr::AnnotatedIdent</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>()),
                         <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                    },
-                    <span class="ident">Rule::constant</span> =&gt; <span class="ident">ParserNode</span> {
+                    }),
+                    <span class="ident">Rule::constant</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                         <span class="ident">expr</span>: <span class="ident">ParserExpr::AnnotatedConstant</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>()),
                         <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                    },
+                    }),
                     <span class="ident">Rule::string</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span>
                             <span class="ident">unescape</span>(<span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>()).<span class="ident">expect</span>(<span class="string">&quot;incorrect string literal&quot;</span>);
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::Str</span>(<span class="ident">string</span>[<span class="number">1</span>..<span class="ident">string</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_owned</span>()),
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                        }
+                        })
                     }
                     <span class="ident">Rule::boolean</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">b</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="ident">pair</span>
@@ -1088,10 +1247,10 @@
                             .<span class="ident">trim</span>()
                             .<span class="ident">parse</span>()
                             .<span class="ident">expect</span>(<span class="string">&quot;incorrect bool literal&quot;</span>);
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::Bool</span>(<span class="ident">b</span>),
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                        }
+                        })
                     }
                     <span class="ident">Rule::integer</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">integer</span>: <span class="ident">isize</span> <span class="op">=</span> <span class="ident">pair</span>
@@ -1099,10 +1258,10 @@
                             .<span class="ident">trim</span>()
                             .<span class="ident">parse</span>()
                             .<span class="ident">expect</span>(<span class="string">&quot;incorrect integer literal&quot;</span>);
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::Int</span>(<span class="ident">integer</span>),
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                        }
+                        })
                     }
                     <span class="ident">Rule::broken_number</span> =&gt; {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
@@ -1114,10 +1273,10 @@
                             .<span class="ident">expect</span>(<span class="string">&quot;incorrect integer part of float literal&quot;</span>);
                         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="ident">pairs</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
                         <span class="kw">let</span> <span class="ident">broken_part</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_str</span>().<span class="ident">trim</span>().<span class="ident">to_owned</span>();
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::Float</span>(<span class="ident">integer</span>, <span class="ident">broken_part</span>),
                             <span class="ident">span</span>: <span class="ident">pair</span>.<span class="ident">clone</span>().<span class="ident">as_span</span>(),
-                        }
+                        })
                     }
                     <span class="ident">Rule::list</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_span</span>();
@@ -1129,10 +1288,10 @@
                                 <span class="ident">climber</span>,
                             )<span class="question-mark">?</span>);
                         }
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::List</span>(<span class="ident">elements</span>),
                             <span class="ident">span</span>,
-                        }
+                        })
                     }
                     <span class="ident">Rule::dictionary</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_span</span>();
@@ -1153,10 +1312,10 @@
                                 )<span class="question-mark">?</span>,
                             ));
                         }
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::Dictionary</span>(<span class="ident">elements</span>),
                             <span class="ident">span</span>,
-                        }
+                        })
                     }
                     <span class="ident">Rule::function_application</span> =&gt; {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">into_inner</span>();
@@ -1174,48 +1333,63 @@
                                 <span class="ident">climber</span>,
                             )<span class="question-mark">?</span>);
                         }
-                        <span class="ident">ParserNode</span> {
+                        <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
                             <span class="ident">expr</span>: <span class="ident">ParserExpr::FunctionApplication</span>(<span class="ident">ident</span>.<span class="ident">to_string</span>(), <span class="ident">arguments</span>),
                             <span class="ident">span</span>: <span class="ident">start_pos</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end_pos</span>),
-                        }
+                        })
                     }
-                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                    <span class="ident">r</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="macro">format!</span>(
+                        <span class="string">&quot;Unexpected rule {:?} below function application&quot;</span>,
+                        <span class="ident">r</span>
+                    ))),
                 };
 
-                <span class="ident">pairs</span>.<span class="ident">fold</span>(
-                    <span class="prelude-val">Ok</span>(<span class="ident">node</span>),
-                    <span class="op">|</span><span class="ident">node</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pair</span><span class="op">|</span> {
-                        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span><span class="question-mark">?</span>;
-                        <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() {
-                            <span class="ident">Rule::faculty_operator</span> =&gt; {
-                                <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
-                                <span class="ident">ParserNode</span> {
-                                    <span class="ident">expr</span>: <span class="ident">ParserExpr::Faculty</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
-                                    <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
-                                }
-                            }
-                            <span class="ident">Rule::index_operator</span> =&gt; {
-                                <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
-                                <span class="ident">ParserNode</span> {
-                                    <span class="ident">expr</span>: <span class="ident">ParserExpr::Indexation</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
-                                    <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
-                                }
-                            }
-                            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
-                        };
+                <span class="ident">pairs</span>.<span class="ident">fold</span>(<span class="ident">node</span>, <span class="op">|</span><span class="ident">node</span>: <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pair</span><span class="op">|</span> {
+                    <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span><span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pair</span>.<span class="ident">as_rule</span>() {
+                        <span class="ident">Rule::faculty_operator</span> =&gt; {
+                            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
+                            <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
+                                <span class="ident">expr</span>: <span class="ident">ParserExpr::Faculty</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
+                                <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
+                            })
+                        }
+                        <span class="ident">Rule::index_operator</span> =&gt; {
+                            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
+                            <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
+                                <span class="ident">expr</span>: <span class="ident">ParserExpr::Indexation</span>(<span class="ident">Box::new</span>(<span class="ident">node</span>)),
+                                <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
+                            })
+                        }
+                        <span class="ident">Rule::superscript_operator</span> =&gt; {
+                            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">span</span>.<span class="ident">start_pos</span>();
+                            <span class="kw">let</span> <span class="ident">superscripts</span> <span class="op">=</span> <span class="ident">pair</span>.<span class="ident">as_str</span>();
 
-                        <span class="prelude-val">Ok</span>(<span class="ident">node</span>)
-                    },
-                )<span class="question-mark">?</span>
+                            <span class="prelude-val">Ok</span>(<span class="ident">ParserNode</span> {
+                                <span class="ident">expr</span>: <span class="ident">ParserExpr::Superscript</span>(
+                                    <span class="ident">Box::new</span>(<span class="ident">node</span>),
+                                    <span class="ident">superscripts</span>.<span class="ident">to_string</span>(),
+                                ),
+                                <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">pair</span>.<span class="ident">as_span</span>().<span class="ident">end_pos</span>()),
+                            })
+                        }
+                        <span class="ident">r</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="macro">format!</span>(
+                            <span class="string">&quot;Unexpected rule {:?} as postfix operator&quot;</span>,
+                            <span class="ident">r</span>
+                        ))),
+                    };
+
+                    <span class="ident">node</span>
+                })
             }
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">node</span>)
+        <span class="ident">node</span>
     }
     <span class="kw">let</span> <span class="ident">term</span> <span class="op">=</span> <span class="op">|</span><span class="ident">pair</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">|</span> <span class="ident">unaries</span>(<span class="ident">pair</span>.<span class="ident">into_inner</span>().<span class="ident">peekable</span>(), <span class="ident">climber</span>);
-    <span class="kw">let</span> <span class="ident">infix</span> <span class="op">=</span> <span class="op">|</span><span class="ident">lhs</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">let</span> <span class="ident">infix</span> <span class="op">=</span> <span class="op">|</span><span class="ident">lhs</span>: <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span>,
                  <span class="ident">op</span>: <span class="ident">Pair</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Rule</span><span class="op">&gt;</span>,
-                 <span class="ident">rhs</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">op</span>.<span class="ident">as_rule</span>() {
+                 <span class="ident">rhs</span>: <span class="ident">ParserResult</span><span class="op">&lt;</span><span class="ident">ParserNode</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">Rule</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">op</span>.<span class="ident">as_rule</span>() {
         <span class="ident">Rule::add</span> =&gt; {
             <span class="kw">let</span> <span class="ident">lhs</span> <span class="op">=</span> <span class="ident">lhs</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">rhs</span> <span class="op">=</span> <span class="ident">rhs</span><span class="question-mark">?</span>;
@@ -1384,7 +1558,10 @@
                 <span class="ident">span</span>: <span class="ident">start</span>.<span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="ident">end</span>),
             })
         }
-        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+        <span class="ident">r</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParserResultError::EnteredUnreachableCode</span>(<span class="macro">format!</span>(
+            <span class="string">&quot;Unexpected infix rule {:?}&quot;</span>,
+            <span class="ident">r</span>
+        ))),
     };
 
     <span class="ident">climber</span>.<span class="ident">climb</span>(<span class="ident">pairs</span>, <span class="ident">term</span>, <span class="ident">infix</span>)
@@ -1418,18 +1595,22 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">log::debug!</span>(<span class="string">&quot;Parsing as JME: {}&quot;</span>, <span class="ident">s</span>);
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::jme</span>, <span class="ident">s</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_embraced_jme</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">log::debug!</span>(<span class="string">&quot;Parsing as embraced JME: {}&quot;</span>, <span class="ident">s</span>);
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::embraced_jme</span>, <span class="ident">s</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_content_area</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">HTMLRule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">HTMLRule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">log::debug!</span>(<span class="string">&quot;Parsing as content area: {}&quot;</span>, <span class="ident">s</span>);
     <span class="ident">html::HTMLParser::parse</span>(<span class="ident">HTMLRule::content_area</span>, <span class="ident">s</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_as_jme_script</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">pest::error::Error</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">log::debug!</span>(<span class="string">&quot;Parsing as JME script: {}&quot;</span>, <span class="ident">s</span>);
     <span class="ident">jme::JMEParser::parse</span>(<span class="ident">Rule::script</span>, <span class="ident">s</span>)
 }
 
@@ -1437,7 +1618,18 @@
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">const</span> <span class="ident">VALID_NAMES</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">6</span>] <span class="op">=</span> [<span class="string">&quot;x&quot;</span>, <span class="string">&quot;x_1&quot;</span>, <span class="string">&quot;time_between_trials&quot;</span>, <span class="string">&quot;var1&quot;</span>, <span class="string">&quot;row1val2&quot;</span>, <span class="string">&quot;y&#39;&#39;&quot;</span>];
+    <span class="kw">const</span> <span class="ident">VALID_NAMES</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">10</span>] <span class="op">=</span> [
+        <span class="string">&quot;x&quot;</span>,
+        <span class="string">&quot;x_1&quot;</span>,
+        <span class="string">&quot;time_between_trials&quot;</span>,
+        <span class="string">&quot;var1&quot;</span>,
+        <span class="string">&quot;row1val2&quot;</span>,
+        <span class="string">&quot;y&#39;&#39;&quot;</span>,
+        <span class="string">&quot;_&quot;</span>,
+        <span class="string">&quot;_test&quot;</span>,
+        <span class="string">&quot;$_test&quot;</span>,
+        <span class="string">&quot;äàß&quot;</span>,
+    ];
     <span class="kw">const</span> <span class="ident">VALID_ANNOTATIONS</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">11</span>] <span class="op">=</span> [
         <span class="string">&quot;verb&quot;</span>, <span class="string">&quot;op&quot;</span>, <span class="string">&quot;v&quot;</span>, <span class="string">&quot;vector&quot;</span>, <span class="string">&quot;unit&quot;</span>, <span class="string">&quot;dot&quot;</span>, <span class="string">&quot;m&quot;</span>, <span class="string">&quot;matrix&quot;</span>, <span class="string">&quot;diff&quot;</span>, <span class="string">&quot;degrees&quot;</span>, <span class="string">&quot;vec&quot;</span>,
     ];
@@ -1529,6 +1721,12 @@
     <span class="kw">fn</span> <span class="ident">embraced_expression</span>() {
         <span class="macro">assert!</span>(<span class="ident">parse_as_embraced_jme</span>(<span class="string">&quot;hallo {x+5} test {x*y+7} \\{xxxtest\\}&quot;</span>).<span class="ident">is_ok</span>());
     }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">superscripts</span>() {
+        <span class="macro">assert!</span>(<span class="ident">parse_as_jme</span>(<span class="string">&quot;x¹&quot;</span>).<span class="ident">is_ok</span>());
+        <span class="macro">assert!</span>(<span class="ident">parse_as_jme</span>(<span class="string">&quot;x⁽¹⁺¹⁰⁾&quot;</span>).<span class="ident">is_ok</span>());
+    }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (4493a0f47 2022-08-02)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (2befdefdd 2022-08-06)" ></div></body></html>
