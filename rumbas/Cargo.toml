@@ -45,5 +45,7 @@ rumbas_support = { path="../rumbas_support" }
 
 notify = "4.0.17"
 
+semver = { version = "1.0", features = ["serde"] }
+
 [dev-dependencies]
 insta = "1.8.0"

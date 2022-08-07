@@ -1,23 +1,23 @@
 use crate::RC_FILE_NAME;
-use comparable::Comparable;
 use serde::{Deserialize, Serialize};
+use semver::{Version};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Comparable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 /// "Run commands" that specify how this rumbas repo should be executed
 pub struct RC {
-    version: String, // TODO ? x.x.x ?
+    version: Version,
 }
 
 impl Default for RC {
     fn default() -> Self {
         Self {
-            version: "0.4.0".to_string(),
+            version: Version::new(0,4,0)
         }
     }
 }
 
 impl RC {
-    pub fn with_version(&self, version: String) -> RC {
+    pub fn with_version(&self, version: Version) -> RC {
         let mut rc = self.clone();
         rc.version = version;
         rc
@@ -28,7 +28,7 @@ impl RC {
         std::fs::write(RC_FILE_NAME, s)
     }
 
-    pub fn version(&self) -> String {
+    pub fn version(&self) -> Version {
         self.version.clone()
     }
 }
