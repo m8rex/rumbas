@@ -170,11 +170,10 @@ impl QuestionInput {
                         file_path: template_file.clone(),
                         locale_dependant: false,
                     })
-                    .map(|lf| match lf {
+                    .and_then(|lf| match lf {
                         LoadedFile::Normal(n) => Some(n.content),
                         LoadedFile::Localized(_) => None,
                     })
-                    .flatten()
                     .ok_or_else(|| {
                         ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
                     })?;

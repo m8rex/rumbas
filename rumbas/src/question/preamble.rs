@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 // TODO: maybe translatable? So different text's can be set for different languages?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PreambleInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Preamble {
     /// The JavaScript to add to the outputfiles
     pub js: FileString,

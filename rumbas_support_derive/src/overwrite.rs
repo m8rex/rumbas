@@ -107,7 +107,7 @@ fn overwrite_handle_struct_struct(
         .collect::<Vec<_>>();
 
     let enum_input_ident = syn::Ident::new(
-        &format!("{}Enum", input_ident.to_string())[..],
+        &format!("{}Enum", input_ident)[..],
         input_ident.span(),
     );
 

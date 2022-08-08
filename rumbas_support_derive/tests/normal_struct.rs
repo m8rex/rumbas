@@ -37,7 +37,7 @@ pub struct TestOverwrite {
 #[input(name = "TestFromAndIntoInput")]
 #[input(from = "String")]
 #[input(into = "String")]
-#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq, Eq)]
 pub struct TestFromAndInto {
     // TODO: add real test
     field1: String,
@@ -48,14 +48,14 @@ impl std::convert::From<String> for TestFromAndIntoInput {
     fn from(s: String) -> TestFromAndIntoInput {
         Self {
             field1: Value::Normal(s.clone()),
-            field2: Value::Normal(s.clone()),
+            field2: Value::Normal(s),
         }
     }
 }
 
 impl std::convert::From<TestFromAndIntoInput> for String {
     fn from(s: TestFromAndIntoInput) -> String {
-        s.field1.clone().unwrap()
+        s.field1.unwrap()
     }
 }
 

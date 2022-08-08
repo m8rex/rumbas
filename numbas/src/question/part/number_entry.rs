@@ -40,13 +40,13 @@ pub struct QuestionPartNumberEntry {
     pub answer: NumberEntryAnswerType,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum CheckingType {
     #[serde(rename = "range")]
     Range,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswerType {
     MinMax {
@@ -61,7 +61,7 @@ pub enum NumberEntryAnswerType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct QuestionPrecision {
     #[serde(rename = "precisionType", default)]
     precision_type: QuestionPrecisionType,
@@ -87,7 +87,7 @@ impl std::default::Default for QuestionPrecision {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum QuestionPrecisionType {
     #[serde(rename = "none")]
     None,

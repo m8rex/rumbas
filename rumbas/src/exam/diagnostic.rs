@@ -125,7 +125,7 @@ impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// Information needed for a diagnostic test
 pub struct Diagnostic {
     /// The script to use
@@ -167,7 +167,7 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticScriptInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum DiagnosticScript {
     Mastery,
@@ -209,7 +209,7 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LearningObjectiveInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// A Learning Objective
 pub struct LearningObjective {
     /// The name
@@ -245,7 +245,7 @@ impl ToRumbas<LearningObjective>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LearningTopicInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// A learning Topic
 pub struct LearningTopic {
     /// The name

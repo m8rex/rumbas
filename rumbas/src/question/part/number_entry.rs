@@ -87,7 +87,7 @@ impl ToRumbas<QuestionPartNumberEntry>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
     Normal(JMEString),
@@ -97,7 +97,7 @@ pub enum NumberEntryAnswer {
 // TODO, better (add toRumbas etc)
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "NumberEntryAnswerRangeInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct NumberEntryAnswerRange {
     pub from: JMEString,
     pub to: JMEString,
@@ -143,7 +143,7 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "AnswerStyleInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum AnswerStyle {
     /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "english")]

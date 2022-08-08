@@ -184,7 +184,7 @@ impl QuestionPartBuiltinInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENotesInput")]
-#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq)]
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq, Eq)]
 #[serde(transparent)]
 pub struct JMENotes(pub Vec<JMENote>);
 
@@ -237,7 +237,7 @@ impl Default for JMENotes {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENoteInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct JMENote {
     pub name: String,
     pub description: Noneable<String>,
@@ -344,7 +344,7 @@ question_part_type! {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CustomPartInputTypeValueInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
@@ -416,7 +416,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableReplacementStrategyInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
     OriginalFirst,

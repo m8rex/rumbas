@@ -148,17 +148,15 @@ pub fn update() -> semver::Version {
                     locale_dependant: false,
                 });
                 lf_opt
-                    .map(|lf| match lf {
+                    .and_then(|lf| match lf {
                         LoadedFile::Normal(n) => Some(n),
                         _ => None,
                     })
-                    .flatten()
-                    .map(|lf| {
+                    .and_then(|lf| {
                         YamlLoader::load_from_str(&lf.content[..])
                             .ok()
                             .map(|a| (lf.clone(), a[0].clone()))
                     })
-                    .flatten()
             }
             _ => None,
         })
@@ -229,12 +227,11 @@ pub fn update() -> semver::Version {
                 LoadedFile::Normal(n) => Some(n),
                 _ => None,
             }
-            .map(|lf| {
+            .and_then(|lf| {
                 YamlLoader::load_from_str(&lf.content[..])
                     .ok()
                     .map(|a| (lf.clone(), a[0].clone()))
             })
-            .flatten()
         })
         .collect();
 
@@ -280,12 +277,11 @@ pub fn update() -> semver::Version {
                 LoadedFile::Normal(n) => Some(n),
                 _ => None,
             }
-            .map(|lf| {
+            .and_then(|lf| {
                 YamlLoader::load_from_str(&lf.content[..])
                     .ok()
                     .map(|a| (lf.clone(), a[0].clone()))
             })
-            .flatten()
         })
         .collect();
 
@@ -332,12 +328,11 @@ pub fn update() -> semver::Version {
                 LoadedFile::Normal(n) => Some(n),
                 _ => None,
             }
-            .map(|lf| {
+            .and_then(|lf| {
                 YamlLoader::load_from_str(&lf.content[..])
                     .ok()
                     .map(|a| (lf.clone(), a[0].clone()))
             })
-            .flatten()
         })
         .collect();
 
@@ -383,12 +378,11 @@ pub fn update() -> semver::Version {
                 LoadedFile::Normal(n) => Some(n),
                 _ => None,
             }
-            .map(|lf| {
+            .and_then(|lf| {
                 YamlLoader::load_from_str(&lf.content[..])
                     .ok()
                     .map(|a| (lf.clone(), a[0].clone()))
             })
-            .flatten()
         })
         .collect();
 
@@ -544,7 +538,7 @@ fn update_part(yaml: Yaml) -> Yaml {
             vec!["max_length", "min_length", "must_have", "may_not_have", "must_match_pattern"], update_jme_restriction => [|hash: &Yaml| hash["type"] == Yaml::String("jme".to_string())]:
             vec!["answers", "answer_data"], update_choose_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string()) || hash["type"] == Yaml::String("choose_multiple".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]:
             vec!["display"], |internal_yaml: Yaml| update_choose_one_display(yaml["columns"].clone(), internal_yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("choose_one".to_string())]:
-            vec!["display"], |internal_yaml: Yaml| update_match_answers_display(internal_yaml) => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())]:
+            vec!["display"], update_match_answers_display => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())]:
             vec!["answers", "answer_data"], update_match_answer_data => [|hash: &Yaml| hash["type"] == Yaml::String("match_answers".to_string())] rename [|_name: &Yaml| Yaml::String("answer_data".to_string())]
         ),
         vec!["columns", "has_to_select_option"],
@@ -634,7 +628,7 @@ fn update_match_answers_display(yaml: Yaml) -> Yaml {
     match yaml {
         Yaml::String(v) => Yaml::Hash({
             let mut fields = vec![(Yaml::String("type".to_string()), Yaml::String(v.clone()))];
-            if v == "check".to_string() {
+            if v == *"check" {
                 fields.push((
                     Yaml::String("marking_method".to_string()),
                     Yaml::String("sum_ticked_cells".to_string()),
@@ -787,14 +781,13 @@ fn add_default_answer_display(yaml: Yaml) -> Yaml {
             let use_dot_as_multiplication_sign = h
                 .iter()
                 .find(|(k, _v)| k == &&Yaml::String("answer_simplification".to_string()))
-                .map(|(_k, v)| match v {
+                .and_then(|(_k, v)| match v {
                     Yaml::Hash(simp) => simp
                         .iter()
                         .find(|(k, _v)| k == &&Yaml::String("use_times_dot".to_string()))
                         .map(|(_k, v)| v.clone()),
                     _ => None,
                 })
-                .flatten()
                 .unwrap_or(Yaml::Boolean(false));
 
             h.into_iter()

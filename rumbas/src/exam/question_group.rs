@@ -14,7 +14,7 @@ use std::convert::Into;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionGroup {
     /// The name
     pub name: TranslatableString,
@@ -47,7 +47,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(tag = "picking_strategy")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
@@ -99,7 +99,7 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "PickingStrategyRandomSubsetInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct PickingStrategyRandomSubset {
     pub pick_questions: usize,
 }

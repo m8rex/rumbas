@@ -29,17 +29,15 @@ pub fn update() -> semver::Version {
                     locale_dependant: false,
                 });
                 lf_opt
-                    .map(|lf| match lf {
+                    .and_then(|lf| match lf {
                         LoadedFile::Normal(n) => Some(n),
                         _ => None,
                     })
-                    .flatten()
-                    .map(|lf| {
+                    .and_then(|lf| {
                         YamlLoader::load_from_str(&lf.content[..])
                             .ok()
                             .map(|a| (lf.clone(), a[0].clone()))
                     })
-                    .flatten()
             }
             _ => None,
         })

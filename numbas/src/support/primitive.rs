@@ -39,7 +39,7 @@ impl std::convert::TryFrom<Primitive> for SafeNatural {
                 format!(
                     "Failed parsing string: '{}' as usize with error: {}",
                     n,
-                    e.to_string()
+                    e
                 )
             }),
         }
@@ -80,7 +80,7 @@ impl std::convert::From<f64> for SafeFloat {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(try_from = "BooledPrimitive")]
 /// A boolean that can be parsed from (booled) primitive
 pub struct SafeBool(pub bool);

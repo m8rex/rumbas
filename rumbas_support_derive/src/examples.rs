@@ -129,7 +129,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_examples",
-                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
+                    f.ident.as_ref().map(clean_ident_name).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -141,7 +141,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_iterator",
-                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
+                    f.ident.as_ref().map(clean_ident_name).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -153,7 +153,7 @@ fn struct_body(
             syn::Ident::new(
                 &format!(
                     "{}_option",
-                    f.ident.as_ref().map(|v| clean_ident_name(v)).unwrap(),
+                    f.ident.as_ref().map(clean_ident_name).unwrap(),
                 )[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
@@ -250,7 +250,7 @@ fn handle_struct_struct(
     let body = struct_body(fields, quote!(Self));
 
     let enum_input_ident = syn::Ident::new(
-        &format!("{}Enum", input_ident.to_string())[..],
+        &format!("{}Enum", input_ident)[..],
         input_ident.span(),
     );
 

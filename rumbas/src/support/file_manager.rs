@@ -91,7 +91,7 @@ impl FileManager {
         //Look for translation dirs
         let mut translated_content = HashMap::new();
         for (path, locale) in self
-            .read_folder(&file_dir.to_path_buf())
+            .read_folder(file_dir)
             .into_iter()
             .filter_map(|e| match e {
                 RumbasRepoEntry::File(_f) => None,
@@ -166,7 +166,7 @@ impl FileManager {
         }
     }
     fn read_all_folders(&self, path: &Path) -> Vec<RumbasRepoFolderData> {
-        self.read_folder(&path.to_path_buf())
+        self.read_folder(path)
             .into_iter()
             .filter_map(|e| match e {
                 RumbasRepoEntry::Folder(f) => Some(
@@ -182,7 +182,7 @@ impl FileManager {
     }
     pub fn find_default_folders(&self) -> Vec<RumbasRepoFolderData> {
         // TODO find repo base
-        self.read_all_folders(&std::path::Path::new(".").to_path_buf())
+        self.read_all_folders(std::path::Path::new("."))
             .into_iter()
             .filter(|f| f.r#type == RumbasRepoFolderType::DefaultFolder)
             .collect()
@@ -538,55 +538,55 @@ impl RumbasRepoFileType {
 #[cfg(test)]
 mod test {
     use super::RumbasRepoFileType;
-    use std::path::{Path, PathBuf};
+    use std::path::{Path};
 
     #[test]
     fn rumbas_repo_file_type() {
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(&Path::new("defaults/file.yaml"))
+            RumbasRepoFileType::from(Path::new("defaults/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::QuestionFile,
-            RumbasRepoFileType::from(&Path::new("questions/something/file.yaml"))
+            RumbasRepoFileType::from(Path::new("questions/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(&Path::new("questions/defaults/file.yaml"))
+            RumbasRepoFileType::from(Path::new("questions/defaults/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::LocaleFile(
                 "a".to_string(),
                 Path::new("questions/file.yaml").to_path_buf()
             ),
-            RumbasRepoFileType::from(&Path::new("questions/locale-a/file.yaml"))
+            RumbasRepoFileType::from(Path::new("questions/locale-a/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::ExamFile,
-            RumbasRepoFileType::from(&Path::new("exams/something/file.yaml"))
+            RumbasRepoFileType::from(Path::new("exams/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(&Path::new("exams/defaults/file.yaml"))
+            RumbasRepoFileType::from(Path::new("exams/defaults/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::LocaleFile(
                 "e".to_string(),
                 Path::new("exams/file.yaml").to_path_buf()
             ),
-            RumbasRepoFileType::from(&Path::new("exams/locale-e/file.yaml"))
+            RumbasRepoFileType::from(Path::new("exams/locale-e/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::QuestionTemplateFile,
-            RumbasRepoFileType::from(&Path::new("question_templates/something/file.yaml"))
+            RumbasRepoFileType::from(Path::new("question_templates/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::ExamTemplateFile,
-            RumbasRepoFileType::from(&Path::new("exam_templates/something/file.yaml"))
+            RumbasRepoFileType::from(Path::new("exam_templates/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::CustomPartTypeFile,
-            RumbasRepoFileType::from(&Path::new("custom_part_types/something/file.yaml"))
+            RumbasRepoFileType::from(Path::new("custom_part_types/something/file.yaml"))
         );
     }
 }

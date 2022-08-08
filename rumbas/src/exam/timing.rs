@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimingInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Timing {
     pub duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
     pub allow_pause: bool,
@@ -44,7 +44,7 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimeoutActionInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum TimeoutAction {
@@ -80,7 +80,7 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TimeoutActionWarnInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct TimeoutActionWarn {
     pub message: TranslatableString,
 }

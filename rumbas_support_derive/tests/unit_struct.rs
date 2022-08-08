@@ -8,7 +8,7 @@ use serde::Serialize;
 
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
-#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq, Eq)]
 pub struct Test;
 
 type TestInputs = Vec<Test>;

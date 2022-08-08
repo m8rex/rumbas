@@ -25,7 +25,7 @@ pub struct QuestionPartPatternMatch {
     pub match_mode: PatternMatchMode,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PatternMatchMode {
     #[serde(rename = "regex")]
     Regex, // TODO: only here we need the display_answer
