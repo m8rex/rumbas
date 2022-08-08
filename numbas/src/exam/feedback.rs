@@ -4,7 +4,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Feedback {
     #[serde(rename = "showactualmark")]
     #[serde(default = "crate::util::bool_true")]
@@ -29,7 +29,7 @@ pub struct Feedback {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Review {
     #[serde(rename = "reviewshowscore")]
     #[serde(default = "crate::util::bool_true")]
@@ -46,7 +46,7 @@ pub struct Review {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct FeedbackMessage {
     pub message: String,
     pub threshold: String, //TODO type

@@ -60,7 +60,7 @@ pub struct QuestionPartChooseMultiple {
     pub marking_method: MultipleChoiceMarkingMethod,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum MultipleChoiceMarkingMethod {
     #[serde(rename = "sum ticked cells")]
     SumTickedCells,

@@ -62,7 +62,7 @@ impl ToRumbas<Feedback> for numbas::exam::Exam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ReviewInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Review {
     /// Whether to show score in result overview page
     pub show_score: bool,
@@ -98,7 +98,7 @@ impl ToRumbas<Review> for numbas::exam::feedback::Review {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "FeedbackMessageInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct FeedbackMessage {
     pub message: String,   //TODO: inputstring or filestring?
     pub threshold: String, //TODO type

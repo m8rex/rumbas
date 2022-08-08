@@ -8,7 +8,7 @@ use std::convert::TryInto;
 //TODO: check what is optional etc
 //TODO: advicethreshold?
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, Eq)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
@@ -109,7 +109,7 @@ impl std::fmt::Display for SafeBool {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),

@@ -5,7 +5,7 @@ use serde_with::skip_serializing_none;
 use std::convert::TryInto;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(try_from = "&str")]
 #[serde(into = "String")]
 pub enum AnswerSimplificationType {
@@ -62,7 +62,7 @@ macro_rules! create_simplification {
             #[$outer]
         )*
         #[skip_serializing_none]
-        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+        #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
         #[serde(try_from = "&str")]
         #[serde(into = "String")]
         pub enum $enum {

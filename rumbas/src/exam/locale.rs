@@ -6,7 +6,7 @@ use serde::Serialize;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "LocaleInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Locale {
     pub name: String, //TODO: document names best used for shareability?
     /// The locale to use in the Numbas interface
@@ -18,7 +18,7 @@ macro_rules! create_support_locale {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = "SupportedLocaleInput")]
         /// Locales supported by Numbas
-        #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, Copy, PartialEq)]
+        #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, Copy, PartialEq, Eq)]
         pub enum SupportedLocale {
             $(
                 #[serde(rename = $key)]

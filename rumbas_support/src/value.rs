@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum ValueType<T> {
     Template(TemplateString),
@@ -195,7 +195,7 @@ mod value_type_schema {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(transparent)]
 pub struct Value<T>(pub Option<ValueType<T>>);
 
@@ -343,7 +343,7 @@ impl<T> Default for Value<T> {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq, Eq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 pub struct TemplateString {

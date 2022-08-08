@@ -109,7 +109,7 @@ fn default_vset_points() -> SafeNatural {
     5.into()
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct JMECheckingTypeData<T> {
     #[serde(rename = "checkingAccuracy")]
     #[serde(alias = "checkingaccuracy")]
@@ -178,7 +178,7 @@ pub struct JMEPatternRestriction {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct JMEValueGenerator {
     pub name: String,
     pub value: JMEString,

@@ -8,7 +8,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartType {
     pub name: String,
     pub short_name: String,
@@ -28,7 +28,7 @@ pub struct CustomPartType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartMarkingNote {
     pub name: String,
     pub definition: JMEString,
@@ -45,7 +45,7 @@ impl std::convert::From<crate::jme::ast::Note> for CustomPartMarkingNote {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "input_widget", content = "input_options")]
 pub enum CustomPartInputWidget {
     //TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
@@ -61,7 +61,7 @@ pub enum CustomPartInputWidget {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartInputOptionValue<T: Clone> {
     pub value: T,
     /// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
@@ -70,7 +70,7 @@ pub struct CustomPartInputOptionValue<T: Clone> {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartStringInputOptions {
     //TODO? hint & correctAnswer is shared for all..., macro?
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
@@ -81,7 +81,7 @@ pub struct CustomPartStringInputOptions {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartNumberInputOptions {
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
@@ -93,7 +93,7 @@ pub struct CustomPartNumberInputOptions {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartRadioButtonsInputOptions {
     pub hint: CustomPartInputOptionValue<String>, // A string displayed next to the input field, giving any necessary information about how to enter their answer.
     #[serde(rename = "correctAnswer")]
@@ -102,7 +102,7 @@ pub struct CustomPartRadioButtonsInputOptions {
     pub choices: CustomPartInputOptionValue<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum CustomPartAvailability {
     #[serde(rename = "always")]
     Always,
@@ -112,7 +112,7 @@ pub enum CustomPartAvailability {
 
 // TODO: other
 // https://docs.numbas.org.uk/en/latest/custom-part-types/reference.html?highlight=Custom#setting-types
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "input_type")]
 pub enum CustomPartTypeSetting {
     #[serde(rename = "checkbox")]
@@ -130,7 +130,7 @@ pub enum CustomPartTypeSetting {
     // TODO see https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html?highlight=content%20area#setting-types
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingSharedData {
     /// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting, but doesn’t need to be very descriptive - the label can do that.
     pub name: String,
@@ -142,7 +142,7 @@ pub struct CustomPartTypeSettingSharedData {
     pub hint: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingString {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
@@ -153,7 +153,7 @@ pub struct CustomPartTypeSettingString {
     pub default_value: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingMathematicalExpression {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
@@ -164,7 +164,7 @@ pub struct CustomPartTypeSettingMathematicalExpression {
     pub default_value: EmbracedJMEString,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingCode {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
@@ -173,7 +173,7 @@ pub struct CustomPartTypeSettingCode {
     pub evaluate: bool,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingCheckBox {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
@@ -181,7 +181,7 @@ pub struct CustomPartTypeSettingCheckBox {
     pub default_value: bool,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingDropDown {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,
@@ -190,13 +190,13 @@ pub struct CustomPartTypeSettingDropDown {
     pub choices: Vec<CustomPartTypeSettingDropDownChoice>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingDropDownChoice {
     pub value: String,
     pub label: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingPercentage {
     #[serde(flatten)]
     pub shared_data: CustomPartTypeSettingSharedData,

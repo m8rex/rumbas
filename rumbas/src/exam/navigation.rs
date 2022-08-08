@@ -183,7 +183,7 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ShowResultsPageInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowResultsPage {
     OnCompletion,

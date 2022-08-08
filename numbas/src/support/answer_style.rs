@@ -2,7 +2,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // See https://github.com/numbas/Numbas/blob/26e5c25be75f5bb1a7d6b625bc8ed0c6a59224e5/runtime/scripts/util.js#L1259
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum AnswerStyle {
     /// English style - commas separate thousands, dot for decimal point
     #[serde(rename = "en")]

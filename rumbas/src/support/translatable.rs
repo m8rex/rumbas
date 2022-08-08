@@ -207,7 +207,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "TranslationContentInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum TranslationContent {
     Locales(HashMap<String, FileString>),
@@ -303,7 +303,7 @@ mod helpers {
 
 #[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TranslationInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[input(from = "helpers::TranslationInput")]
 #[input(into = "helpers::TranslationInput")]
 pub struct Translation {
@@ -462,7 +462,7 @@ macro_rules! translatable_type {
     ) => {
         paste::paste! {
 
-            #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
             pub struct [<$type Input>](TranslationInputEnum);
 
             impl std::convert::From<$subtype> for [<$type Input>] {
@@ -501,7 +501,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable, Eq)]
             pub struct $type(Translation);
 
             impl Input for [<$type Input>] {

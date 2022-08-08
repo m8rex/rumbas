@@ -16,7 +16,7 @@ pub mod match_answers;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum MultipleChoiceAnswerData {
     ItemBased(Vec<MultipleChoiceAnswer>),
@@ -25,7 +25,7 @@ pub enum MultipleChoiceAnswerData {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub marks: VariableValued<Vec<JMETranslatableString>>,
@@ -83,7 +83,7 @@ fn extract_multiple_choice_answer_data(
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceAnswerInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswer {
     pub statement: ContentAreaTranslatableString,
     pub feedback: ContentAreaTranslatableString,
@@ -92,7 +92,7 @@ pub struct MultipleChoiceAnswer {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMarkingMethodInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Copy, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Copy, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MultipleChoiceMarkingMethod {
     SumTickedCells,

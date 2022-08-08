@@ -5,7 +5,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Function {
     //TODO
     pub parameters: Vec<FunctionParameter>,
@@ -17,7 +17,7 @@ pub struct Function {
 
 pub type FunctionParameter = (String, FunctionType);
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "language")]
 pub enum FunctionDefinition {
     #[serde(rename = "jme")]
@@ -26,7 +26,7 @@ pub enum FunctionDefinition {
     Javascript { definition: String },
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy, Eq)]
 pub enum FunctionType {
     #[serde(rename = "boolean")]
     Boolean,

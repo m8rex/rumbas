@@ -8,7 +8,7 @@ use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, Eq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),

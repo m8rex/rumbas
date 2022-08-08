@@ -41,7 +41,7 @@ impl std::convert::From<StringOrNumber> for String {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
@@ -105,7 +105,7 @@ impl JMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct EmbracedJMEString {
@@ -175,7 +175,7 @@ impl EmbracedJMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
@@ -232,7 +232,7 @@ impl ContentAreaString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.

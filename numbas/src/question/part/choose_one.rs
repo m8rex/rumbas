@@ -37,7 +37,7 @@ pub struct QuestionPartChooseOne {
     pub distractors: Vec<ContentAreaString>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum ChooseOneDisplayType {
     #[serde(rename = "radiogroup")]
     Radio,

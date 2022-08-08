@@ -4,7 +4,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Timing {
     #[serde(rename = "allowPause", default = "crate::util::bool_true")]
     pub allow_pause: bool,
@@ -14,7 +14,7 @@ pub struct Timing {
     pub timed_warning: TimeoutAction, // Action to do five minutes before timeout
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "action")]
 pub enum TimeoutAction {
     #[serde(rename = "none")]

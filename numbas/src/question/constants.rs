@@ -2,7 +2,7 @@ use crate::jme::JMEString;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct BuiltinConstants(pub std::collections::HashMap<String, bool>);
 
 impl Default for BuiltinConstants {
@@ -19,7 +19,7 @@ impl Default for BuiltinConstants {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct QuestionConstant {
     pub name: String,
     pub value: JMEString,
