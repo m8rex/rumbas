@@ -8,7 +8,6 @@ use crate::exam::question_group::QuestionPath;
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
-use crate::question::part::jme::{JMEAnswerDisplay, JMEAnswerSimplification, JMERulesetItem};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -16,7 +15,6 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
 #[derive(Input, Overwrite, RumbasCheck, Examples)]

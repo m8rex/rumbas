@@ -4,11 +4,8 @@ pub mod navigation;
 pub mod question_group;
 pub mod timing;
 
-use crate::question::answer_simplification::AnswerSimplificationType;
 use crate::question::custom_part_type::CustomPartType;
-use crate::question::function::Function;
 use crate::question::resource::Resource;
-use crate::question::variable::Variable;
 use crate::support::serde_functions::from_str_optional;
 use diagnostic::Diagnostic;
 use feedback::Feedback;
@@ -18,7 +15,6 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
-use std::collections::HashMap;
 use timing::Timing;
 
 #[skip_serializing_none]

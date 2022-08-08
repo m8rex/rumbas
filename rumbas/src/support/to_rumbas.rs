@@ -6,7 +6,6 @@ use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
 use numbas::support::primitive::Number;
-use std::convert::TryInto;
 
 pub trait ToRumbas<RumbasType>: Clone {
     fn to_rumbas(&self) -> RumbasType;

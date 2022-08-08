@@ -1,9 +1,6 @@
-use crate::support::default::{DefaultExamFileType, DefaultFile, DefaultQuestionFileType};
+use crate::support::default::{DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
-use crate::support::noneable::Noneable;
-use crate::support::to_rumbas::ToRumbas;
-use rumbas_support::preamble::{FileToLoad, LoadedFile, LoadedNormalFile};
-use std::convert::TryFrom;
+use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 /// Update from version 0.5.* to 0.6.0

@@ -1,8 +1,8 @@
-use crate::support::default::{DefaultExamFileType, DefaultFile, DefaultQuestionFileType};
+use crate::support::default::{DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
 use crate::support::noneable::Noneable;
 use crate::support::to_rumbas::ToRumbas;
-use rumbas_support::preamble::{FileToLoad, LoadedFile, LoadedNormalFile};
+use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use std::convert::TryFrom;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
@@ -419,7 +419,7 @@ pub fn update() -> semver::Version {
 
     log::error!("Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.");
 
-    semver::Version::new(0,5,0)
+    semver::Version::new(0, 5, 0)
 }
 
 fn update_translatable_string(yaml: Yaml) -> Yaml {

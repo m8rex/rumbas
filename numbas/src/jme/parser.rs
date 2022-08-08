@@ -239,12 +239,18 @@ pub fn consume_notes(pairs: Pairs<Rule>) -> Result<Vec<ast::Note>, ConsumeError>
             .map(|e| {
                 e.try_into().map_err(|e| match e {
                     ParserResultError::ParseErrors(e) => ConsumeError::JMEParseError(e),
-                    ParserResultError::EnteredUnreachableCode(s) => ConsumeError::UnknownParseError,
+                    ParserResultError::EnteredUnreachableCode(s) => {
+                        log::error!("Entered unreachable code: {}", s);
+                        ConsumeError::UnknownParseError
+                    }
                 })
             })
             .collect::<Result<_, _>>()?),
         Err(ParserResultError::ParseErrors(e)) => Err(ConsumeError::JMEParseError(e)),
-        Err(ParserResultError::EnteredUnreachableCode(s)) => Err(ConsumeError::UnknownParseError),
+        Err(ParserResultError::EnteredUnreachableCode(s)) => {
+            log::error!("Entered unreachable code: {}", s);
+            Err(ConsumeError::UnknownParseError)
+        }
     }
 }
 
@@ -261,7 +267,10 @@ pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, Consume
             .map(|e| {
                 e.try_into().map_err(|e| match e {
                     ParserResultError::ParseErrors(e) => ConsumeError::JMEParseError(e),
-                    ParserResultError::EnteredUnreachableCode(s) => ConsumeError::UnknownParseError,
+                    ParserResultError::EnteredUnreachableCode(s) => {
+                        log::error!("Entered unreachable code: {}", s);
+                        ConsumeError::UnknownParseError
+                    }
                 })
             })
             .collect::<Result<_, _>>()?),
