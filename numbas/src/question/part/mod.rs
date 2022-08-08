@@ -1,7 +1,6 @@
 use crate::jme::ContentAreaString;
 use crate::jme::JMENotesString;
 use crate::support::primitive::Number;
-use crate::support::serde_functions::from_str_optional;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;

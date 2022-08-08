@@ -275,7 +275,10 @@ pub fn consume_expressions(pairs: Pairs<Rule>) -> Result<Vec<ast::Expr>, Consume
             })
             .collect::<Result<_, _>>()?),
         Err(ParserResultError::ParseErrors(e)) => Err(ConsumeError::JMEParseError(e)),
-        Err(ParserResultError::EnteredUnreachableCode(s)) => Err(ConsumeError::UnknownParseError),
+        Err(ParserResultError::EnteredUnreachableCode(s)) => {
+            log::error!("Entered unreachable code: {}", s);
+            Err(ConsumeError::UnknownParseError)
+        }
     }
 }
 

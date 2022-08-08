@@ -9,12 +9,13 @@ pub fn init() {
         rumbas::THEMES_FOLDER,
         rumbas::CUSTOM_PART_TYPES_FOLDER,
     ];
-    let paths = folders
-        .iter()
-        .map(|f| std::path::Path::new(f))
-        .collect::<Vec<_>>();
+    let paths = folders.iter().map(std::path::Path::new).collect::<Vec<_>>();
     let file_paths = vec![std::path::Path::new(rumbas::RC_FILE_NAME)];
-    let existing_paths = paths.iter().chain(file_paths.iter()).filter(|p| p.exists()).collect::<Vec<_>>();
+    let existing_paths = paths
+        .iter()
+        .chain(file_paths.iter())
+        .filter(|p| p.exists())
+        .collect::<Vec<_>>();
 
     if !existing_paths.is_empty() {
         log::error!(
@@ -37,5 +38,4 @@ pub fn init() {
         let rc = rc.with_version(rumbas_version);
         rc.write().expect("writing of rc file to work.");
     }
-
 }

@@ -62,9 +62,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
 
     println!("Compiling (preview) exam html-outputs.");
     let folder_compilation_result = compile_internal(
-        CompilationContext {
-            compile_paths: compile_paths.clone(),
-        },
+        CompilationContext { compile_paths },
         FileCompilationContext {
             use_scorm: false,
             as_zip: false,

@@ -1,4 +1,4 @@
-use crate::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use crate::jme::{ContentAreaString, JMEString};
 use crate::question::part::choose_multiple::MultipleChoiceMarkingMethod;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::SafeNatural;

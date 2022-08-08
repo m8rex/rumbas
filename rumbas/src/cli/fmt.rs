@@ -31,12 +31,9 @@ pub fn fmt_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
 
     let failures: Vec<_> = check_results
         .par_iter()
-        .filter(|(result, _)| match result {
-            RumbasFormatResult::Ok => false,
-            _ => true,
-        })
+        .filter(|(result, _)| !matches!(result, RumbasFormatResult::Ok))
         .collect();
-    if failures.len() > 0 {
+    if !failures.is_empty() {
         for (check_result, path) in failures.iter() {
             log::error!("Format for {} failed:", path.display());
             check_result.log(path);
