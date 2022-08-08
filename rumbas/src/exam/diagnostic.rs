@@ -16,7 +16,6 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "DiagnosticExamInput")]

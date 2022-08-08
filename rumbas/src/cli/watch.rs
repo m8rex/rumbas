@@ -53,11 +53,11 @@ fn watch_internal(context: WatchContext) {
     loop {
         match rx.recv() {
             Ok(event) => match event {
-                DebouncedEvent::Create(p) => handle_if_needed(&p, handler), // Shouldn'tdo anything?
+                DebouncedEvent::Create(p) => handle_if_needed(&p, handler), // Shouldn't do anything?
                 DebouncedEvent::Write(p) => handle_if_needed(&p, handler),
                 DebouncedEvent::Chmod(p) => handle_if_needed(&p, handler),
                 DebouncedEvent::Remove(p) => handle_if_needed(&p, handler),
-                DebouncedEvent::Rename(previous, new) => (), // TODO do the rename in the dependencies?
+                DebouncedEvent::Rename(_previous, _new) => (), // TODO do the rename in the dependencies?
                 _ => (),
             },
             Err(e) => log::error!("watch error: {:?}", e),

@@ -1,4 +1,4 @@
-use crate::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+use crate::jme::{ContentAreaString, JMEString};
 use crate::question::part::match_answers::MultipleChoiceWarningType;
 use crate::question::part::QuestionPartSharedData;
 use crate::support::primitive::SafeNatural;

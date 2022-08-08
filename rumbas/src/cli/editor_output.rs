@@ -1,8 +1,6 @@
 use super::compile::{
     compile_internal, CompilationContext, FileCompilationContext, InternalCompilationResult,
 };
-use crate::cli::check::CheckResult;
-use rayon::prelude::*;
 use rumbas::support::rc::find_root;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -88,7 +86,6 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
                 )
             })
             .collect();
-    println!("{:?}", matching);
 
     if !context.output_path.exists() {
         std::fs::create_dir(&context.output_path).expect("creating a folder to work");
@@ -111,13 +108,13 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     let s = serde_json::to_string_pretty(&exams).expect("Json generation failed");
     std::fs::write(available_exams_path, s).expect("Writing file failed");
 
-    Ok(())
+    Ok(()) // TODO: fail if not everything compiled?
 }
 
 #[derive(Clone, Serialize, Deserialize)]
 struct ApiHandshake {
-    numbas_editor: usize,     // always 1
-    site_title: &'static str, // for now
+    numbas_editor: usize, // always 1 for now
+    site_title: &'static str,
 }
 
 impl Default for ApiHandshake {

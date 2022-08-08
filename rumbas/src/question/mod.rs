@@ -13,7 +13,7 @@ pub mod variable_test;
 
 use crate::exam::{FileReadError, ParseError};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
-use crate::question::part::jme::{JMEAnswerDisplay, JMEAnswerSimplification, JMERulesetItem};
+use crate::question::part::jme::JMERulesetItem;
 use crate::question::part::question_part::QuestionPart;
 use crate::support::file_manager::CACHE;
 use crate::support::template::TemplateFile;
