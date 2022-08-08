@@ -7,6 +7,5 @@ members = [
 ]
 
 [patch.crates-io]
-comparable = { git = "https://github.com/jhoobergs/comparable.git" }
 serde = { git = "https://github.com/jhoobergs/serde.git"}
 
