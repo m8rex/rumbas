@@ -28,17 +28,17 @@ pub struct EditorOutputContext {
 fn find_complete_outputs(
     scorm_compilation_result: InternalCompilationResult,
     folder_compilation_result: InternalCompilationResult,
-) -> Vec<PathBuf> {
+) -> Vec<(PathBuf, String)> {
     let s = scorm_compilation_result
-        .created_output_paths
+        .created_outputs
         .into_iter()
         .collect::<HashSet<_>>();
     folder_compilation_result
-        .created_output_paths
+        .created_outputs
         .into_iter()
-        .filter(|p| {
+        .filter(|(p, _)| {
             let scorm = p.with_extension("zip");
-            s.contains(&scorm)
+            s.iter().any(|(p, _)| p == &scorm)
         })
         .collect()
 }
@@ -78,11 +78,14 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     let matching: Vec<_> =
         find_complete_outputs(scorm_compilation_result, folder_compilation_result)
             .into_iter()
-            .map(|p| {
-                p.as_path()
-                    .strip_prefix(root.clone())
-                    .expect("stripping to work")
-                    .to_owned()
+            .map(|(p, name)| {
+                (
+                    p.as_path()
+                        .strip_prefix(root.clone())
+                        .expect("stripping to work")
+                        .to_owned(),
+                    name,
+                )
             })
             .collect();
     println!("{:?}", matching);
@@ -95,7 +98,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     let handshake_path = context.output_path.join("handshake.json");
     handshake.write(&handshake_path);
 
-    let projects = vec![ApiProject::new(0, matching.len())];
+    let projects = vec![ApiProject::new(0, matching.len(), &context.url_prefix)];
     let project_path = context.output_path.join("projects.json");
     let s = serde_json::to_string_pretty(&projects).expect("Json generation failed");
     std::fs::write(project_path, s).expect("Writing file failed");
@@ -103,7 +106,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     let available_exams_path = context.output_path.join("available_exams.json");
     let exams: Vec<_> = matching
         .into_iter()
-        .map(|p| ApiExam::new(&p, &context.url_prefix))
+        .map(|(p, name)| ApiExam::new(&p, &name, &context.url_prefix))
         .collect();
     let s = serde_json::to_string_pretty(&exams).expect("Json generation failed");
     std::fs::write(available_exams_path, s).expect("Writing file failed");
@@ -147,13 +150,13 @@ struct ApiProject {
 }
 
 impl ApiProject {
-    fn new(num_questions: usize, num_exams: usize) -> Self {
+    fn new(num_questions: usize, num_exams: usize, url_prefix: &String) -> Self {
         Self {
             name: "Main project".to_string(),
             remote_id: 0,
             description: "All exams in the rumbas repo".to_string(),
-            homepage: "".to_string(),
-            url: "".to_string(),
+            homepage: format!("{}", url_prefix),
+            url: format!("{}", url_prefix),
             owner: Default::default(),
             num_questions,
             num_exams,
@@ -194,14 +197,14 @@ struct ApiExam {
 }
 
 impl ApiExam {
-    pub fn new(p: &Path, url_prefix: &String) -> Self {
+    pub fn new(p: &Path, name: &String, url_prefix: &String) -> Self {
         let url = format!("{}/{}", url_prefix, p.display());
         let zip_url = format!("{}.zip", url);
         let preview_url = url.clone();
         Self {
             url,
-            name: "todo".to_string(),
-            project_url: "todo".to_string(),
+            name: name.to_owned(),
+            project_url: format!("{}", url_prefix),
             edit_url: "todo".to_string(),
             author: ApiUser::default(),
             metadata: ApiMetadata {
