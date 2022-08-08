@@ -120,6 +120,7 @@ impl WatchCompiler {
             use_scorm: false,
             as_zip: false,
             minify: false,
+            output_folder: Path::new(crate::cli::compile::OUTPUT_FOLDER).to_path_buf(),
         }
     }
 }

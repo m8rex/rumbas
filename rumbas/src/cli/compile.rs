@@ -13,7 +13,17 @@ pub const CACHE_FOLDER: &str = ".rumbas";
 pub const OUTPUT_FOLDER: &str = "_output";
 
 pub fn compile(compile_paths: Vec<String>, use_scorm: bool, as_zip: bool, no_minification: bool) {
-    match compile_internal(CompilationContext { compile_paths }, FileCompilationContext { use_scorm, as_zip, minify: !no_minification }).has_failures {
+    match compile_internal(
+        CompilationContext { compile_paths },
+        FileCompilationContext {
+            use_scorm,
+            as_zip,
+            minify: !no_minification,
+            output_folder: Path::new(OUTPUT_FOLDER).to_path_buf(),
+        },
+    )
+    .has_failures
+    {
         false => (),
         true => std::process::exit(1),
     }
@@ -147,6 +157,7 @@ pub struct FileCompilationContext {
     pub use_scorm: bool,
     pub as_zip: bool,
     pub minify: bool,
+    pub output_folder: PathBuf,
 }
 
 pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileResult {
@@ -168,6 +179,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
                     theme,
                     exam: numbas_exam,
                     minify: context.minify,
+                    output_folder: context.output_folder.clone(),
                 };
                 if compiler.compile() {
                     passed_compilations.push((locale, compiler.output_path()))
@@ -193,6 +205,7 @@ pub struct NumbasCompiler {
     theme: String,
     minify: bool,
     exam: numbas::exam::Exam,
+    output_folder: PathBuf,
 }
 
 impl NumbasCompiler {
@@ -207,7 +220,7 @@ impl NumbasCompiler {
     }
     /// Returns the locale folder within the output folder
     fn locale_output_folder(&self) -> PathBuf {
-        Path::new(OUTPUT_FOLDER).join(&self.locale)
+        self.output_folder.join(&self.locale)
     }
     /// Creates the output path for the generated html
     pub fn output_path(&self) -> PathBuf {
