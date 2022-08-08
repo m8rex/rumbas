@@ -36,7 +36,7 @@ pub struct CompilationContext {
 
 pub struct InternalCompilationResult {
     pub has_failures: bool,
-    pub created_output_paths: Vec<PathBuf>,
+    pub created_outputs: Vec<(PathBuf, String)>, // (path, name)
 }
 
 pub fn compile_internal(
@@ -51,7 +51,7 @@ pub fn compile_internal(
             log::error!("Absolute path's are not supported");
             return InternalCompilationResult {
                 has_failures: true,
-                created_output_paths: vec![],
+                created_outputs: vec![],
             };
         }
         files.extend(crate::cli::check::find_all_files(path).into_iter());
@@ -79,17 +79,17 @@ pub fn compile_internal(
         log::info!("All compilations passed.");
         false
     };
-    let created_output_paths = compile_results
+    let created_outputs = compile_results
         .par_iter()
         .into_par_iter()
         .flat_map(|(result, _)| match result {
-            CompileResult::Partial(p) => p.created_output_paths(),
+            CompileResult::Partial(p) => p.created_outputs(),
             _ => vec![],
         })
         .collect();
     InternalCompilationResult {
         has_failures,
-        created_output_paths,
+        created_outputs,
     }
 }
 
@@ -102,16 +102,19 @@ pub enum CompileResult {
 
 pub struct RumbasCompileData {
     failed_check: Vec<(String, rumbas_support::rumbas_check::RumbasCheckResult)>,
-    failed: Vec<String>,            // locale
-    passed: Vec<(String, PathBuf)>, // locale, path of generated exam
+    failed: Vec<String>,                    // locale
+    passed: Vec<(String, PathBuf, String)>, // locale, path of generated exam, name of generated exam
 }
 
 impl RumbasCompileData {
     pub fn has_failure(&self) -> bool {
         !(self.failed.is_empty() && self.failed_check.is_empty())
     }
-    pub fn created_output_paths(&self) -> Vec<PathBuf> {
-        self.passed.iter().map(|(_, p)| p.clone()).collect()
+    pub fn created_outputs(&self) -> Vec<(PathBuf, String)> {
+        self.passed
+            .iter()
+            .map(|(_, p, name)| (p.clone(), name.clone()))
+            .collect()
     }
     pub fn log(&self, path: &Path) {
         for (locale, check_result) in self.failed_check.iter() {
@@ -130,11 +133,12 @@ impl RumbasCompileData {
                 path.display()
             );
         }
-        for (locale, output_path) in self.passed.iter() {
+        for (locale, output_path, name) in self.passed.iter() {
             log::info!(
-                "Succesfully compiled locale {} for {} with numbas. The output can be found at {}.",
+                "Succesfully compiled locale {} for {} ({}) with numbas. The output can be found at {}.",
                 locale,
                 path.display(),
+                name,
                 output_path.display()
             );
         }
@@ -170,6 +174,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
             let mut passed_compilations = Vec::new();
             let mut failed_compilations = Vec::new();
             for (locale, numbas_exam, numbas_locale, theme) in p.passed() {
+                let name = numbas_exam.basic_settings.name.clone();
                 let compiler = NumbasCompiler {
                     use_scorm: context.use_scorm,
                     as_zip: context.as_zip,
@@ -182,7 +187,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
                     output_folder: context.output_folder.clone(),
                 };
                 if compiler.compile() {
-                    passed_compilations.push((locale, compiler.output_path()))
+                    passed_compilations.push((locale, compiler.output_path(), name))
                 } else {
                     failed_compilations.push(locale)
                 }
