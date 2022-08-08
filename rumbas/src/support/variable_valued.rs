@@ -175,7 +175,7 @@ impl<T> VariableValued<T> {
 }
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
 #[serde(untagged)]
 pub enum ReverseVariableValued<T> {
     Value(T), // Different ordering

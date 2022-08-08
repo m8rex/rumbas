@@ -8,7 +8,7 @@ use serde::Deserialize;
 
 #[derive(Input, Overwrite)]
 #[input(name = "TempInput")]
-#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct Temp {
     name: String,
     test: String,
@@ -237,11 +237,11 @@ fn check_enums() {
     assert_no_missing!(tuple1);
 
     let mut struct1 = TempEnumInput::Struct {
-        a: Value::Normal(t.0.clone()),
+        a: Value::Normal(t.0),
         b: Value::None(),
     };
     let struct2 = TempEnumInput::Struct {
-        a: Value::Normal(tt.0.clone()),
+        a: Value::Normal(tt.0),
         b: Value::Normal(true),
     };
     struct1.overwrite(&struct2);

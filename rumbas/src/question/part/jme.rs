@@ -120,7 +120,7 @@ macro_rules! create_answer_simplification {
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
-        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
         pub struct $struct {
             $(
                 $(#[$inner])*
@@ -253,7 +253,7 @@ macro_rules! create_answer_display_type {
         ),*) => {
         #[derive(Input, Overwrite, RumbasCheck, Examples)]
         #[input(name = $input)]
-        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
         pub struct $struct {
             $(
                 $(#[$inner])*
@@ -342,7 +342,7 @@ impl
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "CheckingTypeDataNaturalInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct CheckingTypeDataNatural {
     pub amount: usize,
 }
@@ -539,7 +539,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMEValueGeneratorInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct JMEValueGenerator {
     pub name: FileString,
     pub value: JMEFileString,
@@ -566,7 +566,7 @@ impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenera
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMERulesetItemInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(tag = "type", content = "rules")]
 pub enum JMERulesetItem {
     Simplification(JMEAnswerSimplification),
@@ -591,7 +591,7 @@ impl ToRumbas<JMERulesetItem>
     for Vec<numbas::question::answer_simplification::AnswerSimplificationType>
 {
     fn to_rumbas(&self) -> JMERulesetItem {
-        let has_different_types = self.len() > 0
+        let has_different_types = !self.is_empty()
             && (0..self.len() - 1).any(|i| {
                 match (&self[i], &self[i + 1]) {
             (

@@ -84,7 +84,7 @@ mod test {
     fn no_translation() {
         let val = "some string".to_string();
         let t: Translation = FileString::s(&val).into();
-        assert_eq!(t.to_string(&"any locale".to_string()), Some(val));
+        assert_eq!(t.to_string("any locale"), Some(val));
     }
 
     #[test]
@@ -98,8 +98,8 @@ mod test {
             content: TranslationContent::Locales(m),
             placeholders: HashMap::new(),
         };
-        assert_eq!(t.to_string(&"nl".to_string()), Some(val_nl));
-        assert_eq!(t.to_string(&"en".to_string()), Some(val_en));
+        assert_eq!(t.to_string("nl"), Some(val_nl));
+        assert_eq!(t.to_string("en"), Some(val_en));
     }
 
     #[test]
@@ -115,14 +115,14 @@ mod test {
         placeholders.insert(
             "0".to_string(),
             Translation {
-                content: TranslationContent::Content(FileString::s(&val1.to_string())),
+                content: TranslationContent::Content(FileString::s(val1)),
                 placeholders: HashMap::new(),
             },
         );
         placeholders.insert(
             "func".to_string(),
             Translation {
-                content: TranslationContent::Content(FileString::s(&val2.to_string())),
+                content: TranslationContent::Content(FileString::s(val2)),
                 placeholders: HashMap::new(),
             },
         );
@@ -131,11 +131,11 @@ mod test {
             placeholders,
         };
         assert_eq!(
-            t.to_string(&"nl".to_string()),
+            t.to_string("nl"),
             Some(format!("een string met functie {} en {}", val2, val1))
         );
         assert_eq!(
-            t.to_string(&"en".to_string()),
+            t.to_string("en"),
             Some(format!("some string with function {} and {}", val2, val1))
         );
     }
@@ -153,7 +153,7 @@ mod test {
         placeholders.insert(
             "0".to_string(),
             Translation {
-                content: TranslationContent::Content(FileString::s(&val1.to_string())),
+                content: TranslationContent::Content(FileString::s(val1)),
                 placeholders: HashMap::new(),
             },
         );
@@ -163,11 +163,11 @@ mod test {
         let mut m3 = HashMap::new();
         m3.insert(
             "nl".to_string(),
-            FileString::s(&"met x groter dan 0".to_string()),
+            FileString::s("met x groter dan 0"),
         );
         m3.insert(
             "en".to_string(),
-            FileString::s(&"with x larger than 0".to_string()),
+            FileString::s("with x larger than 0"),
         );
         placeholders2.insert(
             "cond".to_string(),
@@ -180,7 +180,7 @@ mod test {
         placeholders.insert(
             "func".to_string(),
             Translation {
-                content: TranslationContent::Content(FileString::s(&val2.to_string())),
+                content: TranslationContent::Content(FileString::s(val2)),
                 placeholders: placeholders2,
             },
         );
@@ -189,14 +189,14 @@ mod test {
             placeholders,
         };
         assert_eq!(
-            t.to_string(&"nl".to_string()),
+            t.to_string("nl"),
             Some(format!(
                 "een string met functie e^x (met x groter dan 0) en {}",
                 val1
             ))
         );
         assert_eq!(
-            t.to_string(&"en".to_string()),
+            t.to_string("en"),
             Some(format!(
                 "some string with function e^x (with x larger than 0) and {}",
                 val1
@@ -405,7 +405,7 @@ impl Examples for TranslationInput {
             })
             .chain(contents.into_iter().filter_map(|c| match c {
                 TranslationContentInput::Content(_) => Some(TranslationInput {
-                    content: Value::Normal(c.clone()),
+                    content: Value::Normal(c),
                     placeholders: Value::Normal(Default::default()),
                 }),
                 _ => None,
@@ -425,7 +425,7 @@ impl Translation {
         ) -> Option<String> {
             pattern
                 .as_ref()
-                .map(|pattern| {
+                .and_then(|pattern| {
                     let mut result = pattern.to_string();
                     let mut substituted = false;
                     for (placeholder, val) in translation.placeholders.iter() {
@@ -444,12 +444,10 @@ impl Translation {
                         Some(result)
                     }
                 })
-                .flatten()
         }
         self.content
             .get(locale)
-            .map(|s| substitute(&s.get_content(locale), locale, self))
-            .flatten()
+            .and_then(|s| substitute(&s.get_content(locale), locale, self))
     }
 }
 

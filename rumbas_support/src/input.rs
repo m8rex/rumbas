@@ -390,7 +390,7 @@ impl InputCheckResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InputCheckPath {
     parts: Vec<String>,
     last_part: Option<String>,
@@ -426,7 +426,7 @@ impl std::fmt::Display for InputCheckPath {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InputCheckMissingData {
     path: InputCheckPath,
 }
@@ -437,7 +437,7 @@ impl std::fmt::Display for InputCheckMissingData {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InputCheckInvalidYamlData {
     path: InputCheckPath,
     data: serde_yaml::Value,

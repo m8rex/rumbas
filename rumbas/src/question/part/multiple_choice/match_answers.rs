@@ -196,7 +196,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswerWithItemsDisplayInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "type")]
 pub enum MatchAnswerWithItemsDisplay {
     #[serde(rename = "radio")]
@@ -242,7 +242,7 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersWithChoicesDisplayCheckInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesDisplayCheck {
     marking_method: MultipleChoiceMarkingMethod,
 }
@@ -272,7 +272,7 @@ impl ToRumbas<MatchAnswersWithChoicesDisplayCheck>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswerDataInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "type")]
 pub enum MultipleChoiceMatchAnswerData {
     #[serde(rename = "item_based")]
@@ -283,7 +283,7 @@ pub enum MultipleChoiceMatchAnswerData {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
     pub choices: VariableValued<Vec<ContentAreaTranslatableString>>,
@@ -292,7 +292,7 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceMatchAnswersInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceMatchAnswers {
     /// Values of the answers
     pub answers: Vec<ContentAreaTranslatableString>,
@@ -302,7 +302,7 @@ pub struct MultipleChoiceMatchAnswers {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersItemInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItem {
     pub statement: ContentAreaTranslatableString,
     /// Map points to strings of answers ! use anchors in yaml
@@ -311,7 +311,7 @@ pub struct MatchAnswersItem {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersItemMarksInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItemMarks {
     pub marks: JMEString,
     pub answer: ContentAreaTranslatableString,
@@ -319,7 +319,7 @@ pub struct MatchAnswersItemMarks {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MultipleChoiceWarningTypeInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MultipleChoiceWarningType {
     None,
@@ -355,7 +355,7 @@ impl ToRumbas<MultipleChoiceWarningType>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersWithChoicesLayoutTypeInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MatchAnswersWithChoicesLayoutType {
     All,
@@ -391,7 +391,7 @@ impl ToRumbas<MatchAnswersWithChoicesLayoutType>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "MatchAnswersWithChoicesLayoutInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesLayout {
     #[serde(rename = "type")]
     layout_type: MatchAnswersWithChoicesLayoutType, // Renamed because of bug in Comparable

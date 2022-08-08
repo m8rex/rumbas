@@ -92,7 +92,7 @@ impl ToRumbas<MultipleChoiceAnswerData>
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "ChooseOneDisplayInput")]
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "type")]
 pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]

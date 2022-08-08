@@ -16,7 +16,7 @@ impl<T: Overwrite<T>> Overwrite<HashMap<String, T>> for HashMap<String, T> {
 
 impl<T: Overwrite<T>> Overwrite<Box<T>> for Box<T> {
     fn overwrite(&mut self, other: &Box<T>) {
-        (**self).overwrite(&*other)
+        (**self).overwrite(other)
     }
 }
 

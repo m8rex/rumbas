@@ -228,7 +228,7 @@ impl RangeData {
     }
     pub fn try_from_random_range(s: &str) -> Option<RangeData> {
         if s.starts_with("random(") && s.ends_with(')') {
-            return RangeData::try_from_range(&s[7..s.len() - 1].to_string());
+            return RangeData::try_from_range(&s[7..s.len() - 1]);
         }
         None
     }
@@ -335,7 +335,7 @@ mod test {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Variable {
     pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
     pub description: String,
@@ -380,7 +380,7 @@ impl Variable {
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum VariableTemplateType {
     /// Not specified

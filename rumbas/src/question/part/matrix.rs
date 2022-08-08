@@ -81,7 +81,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionsInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionPartMatrixDimensions {
     pub rows: QuestionPartMatrixDimension,
     pub columns: QuestionPartMatrixDimension,
@@ -95,7 +95,7 @@ impl QuestionPartMatrixDimensions {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum QuestionPartMatrixDimension {
     Fixed(ReverseVariableValued<usize>),
     Resizable(Box<QuestionPartMatrixRangedDimension>),
@@ -149,7 +149,7 @@ impl QuestionPartMatrixDimension {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixRangedDimensionInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionPartMatrixRangedDimension {
     /// The default size
     pub default: ReverseVariableValued<usize>,

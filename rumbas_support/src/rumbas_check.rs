@@ -161,7 +161,7 @@ impl RumbasCheckResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RumbasCheckPath {
     parts: Vec<String>,
     last_part: Option<String>,
@@ -197,7 +197,7 @@ impl std::fmt::Display for RumbasCheckPath {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RumbasCheckMissingData {
     path: RumbasCheckPath,
 }
@@ -208,7 +208,7 @@ impl std::fmt::Display for RumbasCheckMissingData {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RumbasCheckInvalidJMEStringData {
     path: RumbasCheckPath,
     error: numbas::jme::parser::ConsumeError,
