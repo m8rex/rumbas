@@ -183,7 +183,6 @@ WORKDIR /usr/app/Numbas
 
 RUN apk add --no-cache yarn tzdata
 RUN yarn global add uglify-js uglifycss
-RUN apk del yarn
 
 ENV TZ=UTC
 RUN cp /usr/share/zoneinfo/UTC /etc/localtime
