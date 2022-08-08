@@ -181,8 +181,12 @@ RUN rm -r .git # remove large folders
 FROM python:3.6.10-alpine 
 WORKDIR /usr/app/Numbas
 
-RUN apk add yarn
+RUN apk add --no-cache yarn tzdata
 RUN yarn global add uglify-js uglifycss
+RUN apk del yarn
+
+ENV TZ=UTC
+RUN cp /usr/share/zoneinfo/UTC /etc/localtime
 
 COPY --from=numbas_fetcher /usr/app/Numbas /usr/app/Numbas
 RUN pip install -r requirements.txt
