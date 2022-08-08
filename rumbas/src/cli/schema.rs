@@ -2,7 +2,7 @@ use rumbas::exam::ExamFileTypeInput;
 use rumbas::question::QuestionFileTypeInput;
 use schemars::schema_for;
 
-pub fn schema(_matches: &clap::ArgMatches) {
+pub fn schema() {
     let schema = schema_for!(ExamFileTypeInput);
     let file_name = "exam-schema.json";
     std::fs::write(file_name, serde_json::to_string_pretty(&schema).unwrap())

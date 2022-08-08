@@ -1,7 +1,7 @@
 use rumbas::support::rc;
 use rumbas::updates;
 
-pub fn update_repo(_matches: &clap::ArgMatches) {
+pub fn update_repo() {
     let rc_res = rc::read();
     match rc_res {
         Ok(rc) => {

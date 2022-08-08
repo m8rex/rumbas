@@ -6,19 +6,14 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
-pub fn fmt(matches: &clap::ArgMatches) {
-    match fmt_internal(
-        matches
-            .values_of("EXAM_OR_QUESTION_PATH")
-            .map(|vals| vals.collect::<Vec<_>>())
-            .unwrap_or_default(),
-    ) {
+pub fn fmt(exam_question_paths: Vec<String>) {
+    match fmt_internal(exam_question_paths) {
         Ok(_) => (),
         Err(_) => std::process::exit(1),
     }
 }
 
-pub fn fmt_internal(exam_question_paths: Vec<&str>) -> Result<(), ()> {
+pub fn fmt_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
     let mut files: HashSet<PathBuf> = HashSet::new();
     for exam_question_path in exam_question_paths.iter() {
         let path = Path::new(exam_question_path);
