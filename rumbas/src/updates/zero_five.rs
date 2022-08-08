@@ -81,5 +81,5 @@ pub fn update() -> semver::Version {
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
 
-    semver::Version::new(0, 6, 1)
+    semver::Version::new(0, 6, 2)
 }

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2022-08-08
+
+### Fixed
+- Minifying in docker works again
+
 ## [0.6.1] - 2022-08-08
 
 ### Fixed
