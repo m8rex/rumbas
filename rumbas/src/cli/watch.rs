@@ -8,23 +8,17 @@ use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-pub fn watch(matches: &clap::ArgMatches) {
-    watch_internal(matches.to_owned().into())
+pub fn watch(watch_path: String, only_check: bool) {
+    watch_internal(WatchContext {
+        watch_path,
+        only_check,
+    })
 }
 
 #[derive(Debug, Clone)]
 pub struct WatchContext {
     pub watch_path: String,
     pub only_check: bool,
-}
-
-impl From<clap::ArgMatches> for WatchContext {
-    fn from(matches: clap::ArgMatches) -> Self {
-        Self {
-            watch_path: matches.value_of("PATH").unwrap().to_string(),
-            only_check: matches.is_present("only_check"),
-        }
-    }
 }
 
 fn watch_internal(context: WatchContext) {
@@ -112,7 +106,7 @@ pub struct WatchChecker;
 impl WatchHandler for WatchChecker {
     fn handle_setup(&self, path: &str) {
         // TODO
-        crate::cli::check::check_internal(vec![path]);
+        crate::cli::check::check_internal(vec![path.to_string()]);
     }
     fn handle_file(&self, path: &Path) {
         crate::cli::check::check_file(path);

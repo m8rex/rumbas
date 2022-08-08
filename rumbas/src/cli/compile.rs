@@ -12,8 +12,8 @@ pub const CACHE_FOLDER: &str = ".rumbas";
 /// The name of the local folder used for the output.
 pub const OUTPUT_FOLDER: &str = "_output";
 
-pub fn compile(matches: &clap::ArgMatches) {
-    match compile_internal(matches.to_owned().into(), matches.to_owned().into()).has_failures {
+pub fn compile(compile_paths: Vec<String>, use_scorm: bool, as_zip: bool, no_minification: bool) {
+    match compile_internal(CompilationContext { compile_paths }, FileCompilationContext { use_scorm, as_zip, minify: !no_minification }).has_failures {
         false => (),
         true => std::process::exit(1),
     }
@@ -22,17 +22,6 @@ pub fn compile(matches: &clap::ArgMatches) {
 #[derive(Debug, Clone)]
 pub struct CompilationContext {
     pub compile_paths: Vec<String>,
-}
-
-impl From<clap::ArgMatches> for CompilationContext {
-    fn from(matches: clap::ArgMatches) -> Self {
-        Self {
-            compile_paths: matches
-                .values_of("EXAM_OR_QUESTION_PATH")
-                .map(|vals| vals.map(|v| v.to_string()).collect::<Vec<_>>())
-                .unwrap_or_default(),
-        }
-    }
 }
 
 pub struct InternalCompilationResult {
@@ -158,16 +147,6 @@ pub struct FileCompilationContext {
     pub use_scorm: bool,
     pub as_zip: bool,
     pub minify: bool,
-}
-
-impl From<clap::ArgMatches> for FileCompilationContext {
-    fn from(matches: clap::ArgMatches) -> Self {
-        Self {
-            use_scorm: matches.is_present("scorm"),
-            as_zip: matches.is_present("zip"),
-            minify: !matches.is_present("no-minification"),
-        }
-    }
 }
 
 pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileResult {

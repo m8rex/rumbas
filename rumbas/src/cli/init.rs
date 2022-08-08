@@ -1,4 +1,4 @@
-pub fn init(_matches: &clap::ArgMatches) {
+pub fn init() {
     let folders = [
         rumbas::QUESTIONS_FOLDER,
         rumbas::EXAMS_FOLDER,

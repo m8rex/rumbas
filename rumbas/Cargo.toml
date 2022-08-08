@@ -2,6 +2,7 @@
 name = "rumbas"
 version = "0.6.2"
 authors = ["Jesse Hoobergs <jesse@hoobergs.be>"]
+description = "Make online exercises great again!"
 edition = "2021"
 
 [[bin]]
@@ -23,7 +24,7 @@ comparable = { version = "0.5.1", features = ["derive"] }
 yaml-rust = { version = "0.5", package = "yaml-rust-davvid" }
 numbas = {path="../numbas"}
 regex = "1"
-clap = {version = "3.0.5", features = ["yaml", "cargo"]}
+clap = {version = "3.0.5", features = ["derive", "cargo"]}
 sanitize-filename = "0.3.0"
 
 lazy_static = "1.4.0"

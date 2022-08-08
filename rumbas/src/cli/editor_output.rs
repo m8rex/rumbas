@@ -6,12 +6,14 @@ use rayon::prelude::*;
 use rumbas::support::rc::find_root;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use std::env;
 use std::path::Path;
 use std::path::PathBuf;
 
-pub fn create_editor_output(matches: &clap::ArgMatches) {
-    match create_editor_output_internal(matches.to_owned().into()) {
+pub fn create_editor_output(output_path: String, url_prefix: String) {
+    match create_editor_output_internal(EditorOutputContext {
+        output_path: Path::new(&output_path).to_path_buf(),
+        url_prefix,
+    }) {
         Ok(_) => (),
         Err(_) => std::process::exit(1),
     }
@@ -21,16 +23,6 @@ pub fn create_editor_output(matches: &clap::ArgMatches) {
 pub struct EditorOutputContext {
     pub output_path: PathBuf,
     pub url_prefix: String,
-}
-
-impl From<clap::ArgMatches> for EditorOutputContext {
-    fn from(matches: clap::ArgMatches) -> Self {
-        Self {
-            output_path: Path::new(&matches.value_of("OUTPUT_PATH").unwrap().to_string())
-                .to_path_buf(),
-            url_prefix: matches.value_of("URL_PREFIX").unwrap().to_string(),
-        }
-    }
 }
 
 fn find_complete_outputs(
@@ -56,7 +48,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     println!("{:?}", root);
 
     let compile_paths = vec!["exams".to_string()];
-    println!("Compiling scorm packages.");
+    println!("Compiling scorm packages for exams.");
     let scorm_compilation_result = compile_internal(
         CompilationContext {
             compile_paths: compile_paths.clone(),
@@ -68,7 +60,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
         },
     );
 
-    println!("Compiling (preview) exam folders.");
+    println!("Compiling (preview) exam html-outputs.");
     let folder_compilation_result = compile_internal(
         CompilationContext {
             compile_paths: compile_paths.clone(),

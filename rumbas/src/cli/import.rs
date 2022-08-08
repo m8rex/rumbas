@@ -49,9 +49,9 @@ macro_rules! read_question {
     }};
 }
 
-pub fn import(matches: &clap::ArgMatches) {
-    let path = std::path::Path::new(matches.value_of("EXAM_PATH").unwrap());
-    if matches.is_present("question") {
+pub fn import(path: String, is_question: bool) {
+    let path = std::path::Path::new(&path);
+    if is_question {
         let question_res = read_question!(path);
         match question_res {
             Ok(question) => {
