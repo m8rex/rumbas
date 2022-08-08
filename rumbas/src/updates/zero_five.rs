@@ -8,7 +8,6 @@ use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 /// Update from version 0.5.* to 0.6.0
 pub fn update() -> semver::Version {
-
     // Add rulesets field in default question file
     let default_files = crate::support::file_manager::CACHE
         .find_default_folders()
@@ -51,8 +50,7 @@ pub fn update() -> semver::Version {
 
     for default_question in &mut default_questions {
         log::info!("Updating {}", default_question.0.file_path.display());
-         if default_question.0.file_path.starts_with("./defaults") {
-            
+        if default_question.0.file_path.starts_with("./defaults") {
             log::info!(
                 "Updating main default file {}",
                 default_question.0.file_path.display()
@@ -61,9 +59,10 @@ pub fn update() -> semver::Version {
                 default_question.1 = Yaml::Hash(
                     h.into_iter()
                         .chain(
-                            vec![
-                                (Yaml::String("rulesets".to_string()), Yaml::Hash(Vec::new().into_iter().collect())),
-                            ]
+                            vec![(
+                                Yaml::String("rulesets".to_string()),
+                                Yaml::Hash(Vec::new().into_iter().collect()),
+                            )]
                             .into_iter(),
                         )
                         .collect(),
@@ -82,5 +81,5 @@ pub fn update() -> semver::Version {
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }
 
-    semver::Version::new(0,6,0)
+    semver::Version::new(0, 6, 1)
 }
