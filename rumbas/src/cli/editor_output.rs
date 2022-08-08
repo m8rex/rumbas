@@ -43,8 +43,9 @@ fn find_complete_outputs(
         .collect()
 }
 
-pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(), ()> {
+pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(), &'static str> {
     let root = find_root();
+    let root = root.ok_or("Missing rc file")?;
     println!("{:?}", root);
 
     let compile_paths = vec!["exams".to_string()];
@@ -57,6 +58,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
             use_scorm: true,
             as_zip: true,
             minify: true,
+            output_folder: context.output_path.clone(),
         },
     );
 
@@ -69,11 +71,25 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
             use_scorm: false,
             as_zip: false,
             minify: false,
+            output_folder: context.output_path.clone(),
         },
     );
 
-    let matching = find_complete_outputs(scorm_compilation_result, folder_compilation_result);
+    let matching: Vec<_> =
+        find_complete_outputs(scorm_compilation_result, folder_compilation_result)
+            .into_iter()
+            .map(|p| {
+                p.as_path()
+                    .strip_prefix(root.clone())
+                    .expect("stripping to work")
+                    .to_owned()
+            })
+            .collect();
     println!("{:?}", matching);
+
+    if !context.output_path.exists() {
+        std::fs::create_dir(&context.output_path).expect("creating a folder to work");
+    }
 
     let handshake = ApiHandshake::default();
     let handshake_path = context.output_path.join("handshake.json");
@@ -180,8 +196,8 @@ struct ApiExam {
 impl ApiExam {
     pub fn new(p: &Path, url_prefix: &String) -> Self {
         let url = format!("{}/{}", url_prefix, p.display());
-        let zip_url = format!("{}/{}", url_prefix, p.display());
-        let preview_url = format!("{}/{}", url_prefix, p.display());
+        let zip_url = format!("{}.zip", url);
+        let preview_url = url.clone();
         Self {
             url,
             name: "todo".to_string(),
