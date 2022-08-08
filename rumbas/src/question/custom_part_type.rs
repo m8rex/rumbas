@@ -223,10 +223,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingString>
         numbas::question::custom_part_type::CustomPartTypeSettingString {
             shared_data: self.shared_data.to_numbas(locale),
             evaluate_enclosed_expressions: self.evaluate_enclosed_expressions.to_numbas(locale),
-            default_value: self
-                .default_value
-                .to_numbas(locale)
-                .unwrap_or_else(String::new), // TODO implement String to Noneable<String> where it is None if string is empty
+            default_value: self.default_value.to_numbas(locale).unwrap_or_default(), // TODO implement String to Noneable<String> where it is None if string is empty
         }
     }
 }

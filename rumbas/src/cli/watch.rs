@@ -76,7 +76,7 @@ fn handle_if_needed(path: &Path, handler: &dyn WatchHandler) {
     if relative_path.starts_with(crate::cli::compile::CACHE_FOLDER)
         || relative_path.starts_with(crate::cli::compile::OUTPUT_FOLDER)
     {
-        return;
+        // do nothing
     } else {
         handler.recompile_dependant(path)
     }

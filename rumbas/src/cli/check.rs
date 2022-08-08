@@ -54,17 +54,11 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
     let failures: Vec<_> = check_results
         .par_iter()
         .filter(|(result, _)| match result {
-            CheckResult::Partial(p) => {
-                if p.failed.is_empty() {
-                    false
-                } else {
-                    true
-                }
-            }
+            CheckResult::Partial(p) => !p.failed.is_empty(),
             _ => true,
         })
         .collect();
-    if failures.len() > 0 {
+    if !failures.is_empty() {
         for (check_result, path) in failures.iter() {
             log::error!("Check for {} failed:", path.display());
             check_result.log(path);

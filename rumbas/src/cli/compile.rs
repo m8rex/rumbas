@@ -68,7 +68,7 @@ pub fn compile_internal(
             _ => true,
         })
         .collect();
-    let has_failures = if failures.len() > 0 {
+    let has_failures = if !failures.is_empty() {
         for (check_result, path) in failures.iter() {
             log::error!("Compilation for {} failed:", path.display());
             check_result.log(path);

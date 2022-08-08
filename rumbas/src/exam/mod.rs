@@ -74,11 +74,10 @@ impl ExamInput {
                         file_path: file.to_path_buf(),
                         locale_dependant: false,
                     })
-                    .map(|lf| match lf {
+                    .and_then(|lf| match lf {
                         LoadedFile::Normal(n) => Some(n.content),
                         LoadedFile::Localized(_) => None,
                     })
-                    .flatten()
                     .ok_or_else(|| ParseError::FileReadError(FileReadError(file.to_path_buf())))?;
 
                 serde_yaml::from_str(&yaml)
@@ -120,11 +119,10 @@ impl ExamInput {
                             file_path: template_file.clone(),
                             locale_dependant: false,
                         })
-                        .map(|lf| match lf {
+                        .and_then(|lf| match lf {
                             LoadedFile::Normal(n) => Some(n.content),
                             LoadedFile::Localized(_) => None,
                         })
-                        .flatten()
                         .ok_or_else(|| {
                             ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
                         })?;

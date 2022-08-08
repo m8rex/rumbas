@@ -31,8 +31,7 @@ fn read_pretty_exam(path: &std::path::Path) -> String {
         std::fs::write(&pretty_path, pretty_exam_content)
             .expect("Writing pretty exam file to work");
     }
-    let content = std::fs::read_to_string(pretty_path).expect("Invalid file path");
-    content
+    std::fs::read_to_string(pretty_path).expect("Invalid file path")
 }
 
 macro_rules! read_exam {

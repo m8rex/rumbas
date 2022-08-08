@@ -203,9 +203,6 @@ enum Command {
 
 impl Command {
     fn can_execute_in_old_version(&self) -> bool {
-        match self {
-            Self::UpdateRepo | Self::Init => true,
-            _ => false,
-        }
+        matches!(self, Self::UpdateRepo | Self::Init)
     }
 }

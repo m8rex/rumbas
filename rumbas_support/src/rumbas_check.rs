@@ -204,7 +204,7 @@ pub struct RumbasCheckMissingData {
 
 impl std::fmt::Display for RumbasCheckMissingData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.path.to_string())
+        write!(f, "{}", self.path)
     }
 }
 
