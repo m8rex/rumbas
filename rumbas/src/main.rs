@@ -36,7 +36,7 @@ fn main() {
             let rc_version = rc.version();
             if rc_version < rumbas_version && !args.command.can_execute_in_old_version() {
                 log::error!("This repository uses an older rumbas version than the one that is compiling it ({} vs {}).", rc_version, rumbas_version);
-                log::error!("Please execute `rumbas update_repo`.");
+                log::error!("Please execute `rumbas update-repo`.");
                 std::process::exit(1)
             } else if rc_version > rumbas_version {
                 log::error!("This repository uses a newer rumbas version than the one you are using ({} vs {}).", rc_version, rumbas_version);
