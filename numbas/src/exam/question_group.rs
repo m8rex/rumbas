@@ -13,7 +13,7 @@ pub struct QuestionGroup {
     pub questions: Vec<Question>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "pickingStrategy")]
 pub enum QuestionGroupPickingStrategy {
     #[serde(rename = "all-ordered")]

@@ -150,8 +150,8 @@ impl ApiProject {
             name: "Main project".to_string(),
             remote_id: 0,
             description: "All exams in the rumbas repo".to_string(),
-            homepage: format!("{}", url_prefix),
-            url: format!("{}", url_prefix),
+            homepage: url_prefix.to_string(),
+            url: url_prefix.to_string(),
             owner: Default::default(),
             num_questions,
             num_exams,
@@ -199,7 +199,7 @@ impl ApiExam {
         Self {
             url,
             name: name.to_owned(),
-            project_url: format!("{}", url_prefix),
+            project_url: url_prefix.to_string(),
             edit_url: "todo".to_string(),
             author: ApiUser::default(),
             metadata: ApiMetadata {

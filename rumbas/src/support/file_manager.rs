@@ -483,7 +483,7 @@ impl RumbasRepoFileData {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RumbasRepoFileType {
     QuestionFile,
     QuestionTemplateFile,
@@ -618,7 +618,7 @@ pub struct RumbasRepoFolderEntries {
     entries: Vec<RumbasRepoEntry>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RumbasRepoFolderType {
     DefaultFolder,
     LocalizedFolder { locale: String },

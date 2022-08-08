@@ -118,7 +118,7 @@ impl Question {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct QuestionVariablesTest {
     pub condition: JMEString,
     #[serde(rename = "maxRuns")]

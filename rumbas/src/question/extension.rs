@@ -14,7 +14,7 @@ macro_rules! extensions {
     ) => {
             #[derive(Input, Overwrite, RumbasCheck, Examples)]
             #[input(name = "ExtensionsInput")]
-            #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+            #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
             /// Specify which extensions should be enabled
             pub struct Extensions {
                 $(

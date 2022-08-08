@@ -179,7 +179,7 @@ impl<'i> std::convert::TryFrom<ScriptParserExpr<'i>> for ast::Note {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ConsumeError {
     JMEParseError(Vec<Error<Rule>>),
     HTMLParseError(Vec<Error<HTMLRule>>),

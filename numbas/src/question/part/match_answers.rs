@@ -57,7 +57,7 @@ pub struct QuestionPartMatchAnswersWithChoices {
     pub marking_matrix: VariableValued<Vec<Vec<JMEString>>>, // Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "displayType")]
 pub enum MatchAnswersWithChoicesDisplayType {
     #[serde(rename = "checkbox")]
@@ -72,14 +72,14 @@ impl std::default::Default for MatchAnswersWithChoicesDisplayType {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesDisplayTypeCheck {
     #[serde(rename = "markingMethod")]
     #[serde(default)]
     pub marking_method: MultipleChoiceMarkingMethod,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy, Eq)]
 pub enum MultipleChoiceWarningType {
     #[serde(rename = "none")]
     None,
@@ -95,7 +95,7 @@ impl std::default::Default for MultipleChoiceWarningType {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum MatchAnswersWithChoicesLayoutType {
     #[serde(rename = "all")]
     All,
@@ -111,7 +111,7 @@ impl std::default::Default for MatchAnswersWithChoicesLayoutType {
 }
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 /// Define which choices are available to be picked. If Custom expression is selected, give either a list of lists of boolean values, or a matrix with as many rows as the part has choices and as many columns as the part has answers. Any non-zero value in the matrix indicates that the corresponding choice-answer pair should be available to the student.
 pub struct MatchAnswersWithChoicesLayout {
     #[serde(default)]

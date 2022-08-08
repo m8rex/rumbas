@@ -169,7 +169,7 @@ pub struct QuestionPartCustom {
 }
 
 // TODO: other types
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
@@ -185,7 +185,7 @@ impl std::convert::From<CustomPartInputTypeValue> for String {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "originalfirst")]
     /// The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.

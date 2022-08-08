@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// It supports the shorthand µ for \var
 /// It supports the shorthand § for \simplify
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(from = "String")]
 #[serde(into = "String")]
 pub struct InputString(pub String);

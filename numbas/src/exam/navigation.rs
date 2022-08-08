@@ -4,7 +4,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Navigation {
     #[serde(rename = "startpassword", default)]
     pub start_password: String,
@@ -20,7 +20,7 @@ pub struct Navigation {
     pub confirm_when_leaving: bool,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 #[serde(tag = "navigatemode")]
 pub enum NavigationMode {
@@ -30,7 +30,7 @@ pub enum NavigationMode {
     Diagnostic(NavigationModeDiagnostic),
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct NavigationModeSequential {
     #[serde(rename = "onleave")]
     pub on_leave: LeaveAction,
@@ -42,13 +42,13 @@ pub struct NavigationModeSequential {
     pub browsing_enabled: bool,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct NavigationModeDiagnostic {
     #[serde(rename = "onleave")]
     pub on_leave: LeaveAction,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "action")]
 pub enum LeaveAction {
     #[serde(rename = "none")]
@@ -59,7 +59,7 @@ pub enum LeaveAction {
     PreventIfNotAttempted { message: String }, // Prevent a user from moving away from a question that is not attempted
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum ShowResultsPage {
     #[serde(rename = "oncompletion")]
     OnCompletion,

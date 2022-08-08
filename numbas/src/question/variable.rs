@@ -4,7 +4,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct Variable {
     pub name: String,
     pub definition: String, // TODO: jme?
@@ -21,7 +21,7 @@ pub struct Variable {
     pub can_override: bool,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub enum VariableTemplateType {
     #[serde(rename = "anything")]
     Anything, //JME
@@ -47,7 +47,7 @@ impl std::default::Default for VariableTemplateType {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct VariableGroup {
     pub variables: Vec<String>,
     pub name: String,

@@ -46,7 +46,7 @@ macro_rules! file_type {
         rumbas_check $check_expr: expr
     ) => {
         paste::paste! {
-            #[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
+            #[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq, Eq)]
             #[serde(from = "AnyString")]
             #[serde(into = "String")]
             $(
@@ -58,7 +58,7 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable)]
+            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
             #[serde(into = "String")]
             $(
                 #[$outer]
