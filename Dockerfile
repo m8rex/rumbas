@@ -1,7 +1,11 @@
 FROM rust:1.62.1-slim as builder
 
 WORKDIR /usr/app
+ENV OPENSSL_DIR=/usr \
+    PKG_CONFIG_ALLOW_CROSS=1 \
+    OPENSSL_STATIC=true
 RUN rustup target add x86_64-unknown-linux-musl
+RUN apt-get update && apt-get install -y pkg-config libssl-dev musl-tools make
 
 # Copy workspace
 COPY Cargo.toml Cargo.toml
@@ -26,12 +30,12 @@ RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependenc
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/support.rs
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/updates.rs
 RUN echo "fn main() {println!(\"if you see this, we are rebuilding the dependencies of rumbas\")}" > rumbas/src/main.rs
-RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
+RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --features vendored --release
 RUN rm -f rumbas/target/x86_64-unknown-linux-musl/release/deps/rumbas*
 RUN rm -f rumbas/src/exam.rs rumbas/src/question.rs rumbas/src/support.rs rumbas/src/updates.rs
 
 COPY rumbas/src rumbas/src
-RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --release
+RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --features vendored --release
 
 FROM alpine as numbas_fetcher
 WORKDIR /usr/app
