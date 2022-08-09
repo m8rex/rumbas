@@ -305,10 +305,7 @@ fn input_handle_struct_struct(
         })
         .collect::<Vec<_>>();
 
-    let enum_input_ident = syn::Ident::new(
-        &format!("{}Enum", input_ident)[..],
-        input_ident.span(),
-    );
+    let enum_input_ident = syn::Ident::new(&format!("{}Enum", input_ident)[..], input_ident.span());
 
     let input_attributes_input = &input_attributes.0;
     let input_attributes_enum = &input_attributes.1;

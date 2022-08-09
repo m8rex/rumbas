@@ -106,10 +106,7 @@ fn overwrite_handle_struct_struct(
         .map(|f| f.ident.as_ref().map(|v| quote!(#v)).unwrap())
         .collect::<Vec<_>>();
 
-    let enum_input_ident = syn::Ident::new(
-        &format!("{}Enum", input_ident)[..],
-        input_ident.span(),
-    );
+    let enum_input_ident = syn::Ident::new(&format!("{}Enum", input_ident)[..], input_ident.span());
 
     tokens.extend(quote! {
         #[automatically_derived]

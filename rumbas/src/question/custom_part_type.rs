@@ -384,9 +384,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingDropDown>
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
         numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
             shared_data: self.shared_data.to_numbas(locale),
-            default_value: self
-                .default_value
-                .to_numbas(locale).unwrap_or_default(),
+            default_value: self.default_value.to_numbas(locale).unwrap_or_default(),
             choices: self.choices.to_numbas(locale),
         }
     }

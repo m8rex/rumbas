@@ -538,7 +538,7 @@ impl RumbasRepoFileType {
 #[cfg(test)]
 mod test {
     use super::RumbasRepoFileType;
-    use std::path::{Path};
+    use std::path::Path;
 
     #[test]
     fn rumbas_repo_file_type() {

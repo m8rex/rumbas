@@ -315,8 +315,10 @@ mod test {
             Box::new(Bool(false)),
         );
 
-        for input in &["a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false",
-            "{a} * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false"] {
+        for input in &[
+            "a * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false",
+            "{a} * 7 > 5 and true or 9^10 + 8 * 5 < 6 / 10 && false",
+        ] {
             let pairs = parse_as_jme(input).unwrap();
             let ast = consume_one_expression(pairs).unwrap();
 
@@ -356,11 +358,13 @@ mod test {
 
     #[test]
     fn ast_implicit_multiplication() {
-        for (implicit, explicit) in &[("(b+2)(a+1)", "(b+2)*(a+1)"),
+        for (implicit, explicit) in &[
+            ("(b+2)(a+1)", "(b+2)*(a+1)"),
             ("(a+1)2", "(a+1)*2"),
             ("(x+y)z", "(x+y)*z"),
             ("2x", "2*x"),
-            ("x y", "x*y")] {
+            ("x y", "x*y"),
+        ] {
             println!("Handling {}", implicit);
             let pairs = parse_as_jme(implicit).unwrap();
             let ast = consume_one_expression(pairs).unwrap();
