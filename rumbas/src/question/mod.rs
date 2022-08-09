@@ -159,7 +159,7 @@ impl QuestionInput {
         let input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
             .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
         match input {
-            Normal(e) => Ok(*e),
+            Normal(e) => Ok((*e).0),
             Template(t_res) => {
                 let t = t_res.to_normal(); // TODO?
                 let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)

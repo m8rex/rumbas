@@ -41,7 +41,7 @@ impl std::convert::From<StringOrNumber> for String {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
@@ -90,22 +90,13 @@ impl std::fmt::Display for JMEString {
     }
 }
 
-impl Default for JMEString {
-    fn default() -> Self {
-        JMEString {
-            s: String::new(),
-            ast: None,
-        }
-    }
-}
-
 impl JMEString {
     pub fn is_empty(&self) -> bool {
         self.s.is_empty()
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct EmbracedJMEString {
@@ -154,15 +145,6 @@ impl std::fmt::Display for EmbracedJMEString {
     }
 }
 
-impl Default for EmbracedJMEString {
-    fn default() -> Self {
-        EmbracedJMEString {
-            s: String::new(),
-            asts: None,
-        }
-    }
-}
-
 impl EmbracedJMEString {
     pub fn is_empty(&self) -> bool {
         self.s.is_empty()
@@ -175,7 +157,7 @@ impl EmbracedJMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
@@ -217,22 +199,13 @@ impl std::fmt::Display for ContentAreaString {
     }
 }
 
-impl Default for ContentAreaString {
-    fn default() -> Self {
-        ContentAreaString {
-            s: String::new(),
-            asts: None,
-        }
-    }
-}
-
 impl ContentAreaString {
     pub fn is_empty(&self) -> bool {
         self.s.is_empty()
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
@@ -271,15 +244,6 @@ impl std::convert::From<JMENotesString> for String {
 impl std::fmt::Display for JMENotesString {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.s)
-    }
-}
-
-impl Default for JMENotesString {
-    fn default() -> Self {
-        JMENotesString {
-            s: String::new(),
-            notes: None,
-        }
     }
 }
 

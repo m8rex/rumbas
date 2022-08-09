@@ -8,16 +8,12 @@ use std::convert::TryInto;
 //TODO: check what is optional etc
 //TODO: advicethreshold?
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, Eq)]
+#[derive(
+    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, Eq, Default,
+)]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
 pub struct SafeNatural(pub usize);
-
-impl std::default::Default for SafeNatural {
-    fn default() -> Self {
-        Self(Default::default())
-    }
-}
 
 impl std::convert::TryFrom<Primitive> for SafeNatural {
     type Error = String;
@@ -35,13 +31,10 @@ impl std::convert::TryFrom<Primitive> for SafeNatural {
                     ))
                 }
             }
-            Primitive::String(n) => n.parse().map(SafeNatural).map_err(|e| {
-                format!(
-                    "Failed parsing string: '{}' as usize with error: {}",
-                    n,
-                    e
-                )
-            }),
+            Primitive::String(n) => n
+                .parse()
+                .map(SafeNatural)
+                .map_err(|e| format!("Failed parsing string: '{}' as usize with error: {}", n, e)),
         }
     }
 }

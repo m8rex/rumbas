@@ -593,21 +593,18 @@ impl ToRumbas<JMERulesetItem>
     fn to_rumbas(&self) -> JMERulesetItem {
         let has_different_types = !self.is_empty()
             && (0..self.len() - 1).any(|i| {
-                match (&self[i], &self[i + 1]) {
-            (
-                &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
-                &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
-            ) => false,
-            (
-                &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
-                    _,
-                ),
-                &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
-                    _,
-                ),
-            ) => false,
-            _ => true,
-        }
+                !matches!((&self[i], &self[i + 1]), 
+                (
+                                     &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
+                                     &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
+                                 ) | (
+                                     &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
+                                         _,
+                                     ),
+                                     &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
+                                         _,
+                                     ),
+                ))
             });
         if has_different_types {
             // It would be needed to create two different ruleset's for and they should have a different name.

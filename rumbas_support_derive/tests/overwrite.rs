@@ -16,7 +16,7 @@ pub struct Temp {
 
 #[derive(Input, Overwrite)]
 #[input(name = "Temp2Input")]
-#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct Temp2 {
     other: String,
     t: Temp,
@@ -24,7 +24,7 @@ pub struct Temp2 {
 
 #[derive(Input, Overwrite)]
 #[input(name = "TempEnumInput")]
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub enum TempEnum {
     Unit,
     Tuple(Temp, Temp2),

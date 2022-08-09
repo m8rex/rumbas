@@ -82,7 +82,7 @@ impl_rumbas_check!(numbas::support::answer_style::AnswerStyle);
 impl_rumbas_check!(numbas::support::primitive::Number);
 impl_rumbas_check!(numbas::question::function::FunctionType);
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RumbasCheckResult {
     // When adding a field, do also add it to is_empty
     missing_translations: Vec<RumbasCheckMissingData>,
