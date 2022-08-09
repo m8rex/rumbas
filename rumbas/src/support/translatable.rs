@@ -161,14 +161,8 @@ mod test {
         let mut placeholders2 = HashMap::new();
 
         let mut m3 = HashMap::new();
-        m3.insert(
-            "nl".to_string(),
-            FileString::s("met x groter dan 0"),
-        );
-        m3.insert(
-            "en".to_string(),
-            FileString::s("with x larger than 0"),
-        );
+        m3.insert("nl".to_string(), FileString::s("met x groter dan 0"));
+        m3.insert("en".to_string(), FileString::s("with x larger than 0"));
         placeholders2.insert(
             "cond".to_string(),
             Translation {
@@ -423,27 +417,25 @@ impl Translation {
             locale: &str,
             translation: &Translation,
         ) -> Option<String> {
-            pattern
-                .as_ref()
-                .and_then(|pattern| {
-                    let mut result = pattern.to_string();
-                    let mut substituted = false;
-                    for (placeholder, val) in translation.placeholders.iter() {
-                        let before = result.clone();
-                        if let Some(v) = val.to_string(locale) {
-                            let key = format!("{{{}}}", placeholder);
-                            result = result.replace(&key[..], &v);
-                            substituted = substituted || before != result;
-                        } else {
-                            return None;
-                        }
-                    }
-                    if substituted {
-                        substitute(&Some(result), locale, translation)
+            pattern.as_ref().and_then(|pattern| {
+                let mut result = pattern.to_string();
+                let mut substituted = false;
+                for (placeholder, val) in translation.placeholders.iter() {
+                    let before = result.clone();
+                    if let Some(v) = val.to_string(locale) {
+                        let key = format!("{{{}}}", placeholder);
+                        result = result.replace(&key[..], &v);
+                        substituted = substituted || before != result;
                     } else {
-                        Some(result)
+                        return None;
                     }
-                })
+                }
+                if substituted {
+                    substitute(&Some(result), locale, translation)
+                } else {
+                    Some(result)
+                }
+            })
         }
         self.content
             .get(locale)

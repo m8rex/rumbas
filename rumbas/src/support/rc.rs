@@ -1,6 +1,6 @@
 use crate::RC_FILE_NAME;
+use semver::Version;
 use serde::{Deserialize, Serialize};
-use semver::{Version};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12,7 +12,7 @@ pub struct RC {
 impl Default for RC {
     fn default() -> Self {
         Self {
-            version: Version::new(0,4,0)
+            version: Version::new(0, 4, 0),
         }
     }
 }

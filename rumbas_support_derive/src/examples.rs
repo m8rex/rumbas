@@ -151,10 +151,7 @@ fn struct_body(
         .iter()
         .map(|f| {
             syn::Ident::new(
-                &format!(
-                    "{}_option",
-                    f.ident.as_ref().map(clean_ident_name).unwrap(),
-                )[..],
+                &format!("{}_option", f.ident.as_ref().map(clean_ident_name).unwrap(),)[..],
                 f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
         })
@@ -249,10 +246,7 @@ fn handle_struct_struct(
     let (imp, ty, wher) = generics.split_for_impl();
     let body = struct_body(fields, quote!(Self));
 
-    let enum_input_ident = syn::Ident::new(
-        &format!("{}Enum", input_ident)[..],
-        input_ident.span(),
-    );
+    let enum_input_ident = syn::Ident::new(&format!("{}Enum", input_ident)[..], input_ident.span());
 
     tokens.extend(quote! {
         #[automatically_derived]

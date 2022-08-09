@@ -2321,10 +2321,7 @@ parts:
     custom_marking_algorithm_notes: "template:template_key"
     extend_base_marking_algorithm: "template:template_key"
     steps: ~
-    answer_data:
-      answers: ~
-      marks: ~
-      feedback: ~
+    answer_data: "template:template_key"
     shuffle_answers: "template:template_key"
     show_cell_answer_state: "template:template_key"
     display: "template:template_key"
@@ -2343,100 +2340,10 @@ parts:
     custom_marking_algorithm_notes: ~
     extend_base_marking_algorithm: ~
     steps: ~
-    answer_data: "template:template_key"
+    answer_data: ~
     shuffle_answers: ~
     show_cell_answer_state: ~
     display: ~
-  - type: choose_one
-    marks: "template:template_key"
-    prompt:
-      content:
-        nonjmetext§: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    use_custom_name: false
-    custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
-    enable_minimum_marks: false
-    minimum_marks: 2
-    show_correct_answer: false
-    show_feedback_icon: false
-    variable_replacement_strategy: original_first
-    adaptive_marking_penalty: 2
-    custom_marking_algorithm_notes:
-      - name: nonjmetext§
-        description: nonjmetext§
-        expression:
-          content:
-            nonjmetext§: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: "template:template_key"
-        description: none
-        expression:
-          content:
-            nonjmetext§: "template:template_key"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: ~
-        description: "template:template_key"
-        expression:
-          content: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: nonjmetext§
-        description: ~
-        expression: "file:path/to/file"
-      - name: "template:template_key"
-        description: nonjmetext§
-        expression: "template:template_key"
-      - name: ~
-        description: none
-        expression: ~
-      - "template:template_key"
-    extend_base_marking_algorithm: false
-    steps: ~
-    answer_data: ~
-    shuffle_answers: false
-    show_cell_answer_state: false
-    display:
-      type: dropdown
   - type: choose_multiple
     marks: 1
     prompt:
@@ -2966,10 +2873,7 @@ parts:
     custom_marking_algorithm_notes: "template:template_key"
     extend_base_marking_algorithm: "template:template_key"
     steps: ~
-    answer_data:
-      answers: ~
-      marks: ~
-      feedback: ~
+    answer_data: "template:template_key"
     shuffle_answers: "template:template_key"
     show_cell_answer_state: "template:template_key"
     should_select_at_least: "template:template_key"
@@ -2994,7 +2898,7 @@ parts:
     custom_marking_algorithm_notes: ~
     extend_base_marking_algorithm: ~
     steps: ~
-    answer_data: "template:template_key"
+    answer_data: ~
     shuffle_answers: ~
     show_cell_answer_state: ~
     should_select_at_least: ~
@@ -3004,101 +2908,6 @@ parts:
     minimal_achievable_marks: none
     maximal_achievable_marks: none
     marking_method: sum_ticked_cells
-  - type: choose_multiple
-    marks: "template:template_key"
-    prompt:
-      content:
-        nonjmetext§: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    use_custom_name: false
-    custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
-    enable_minimum_marks: false
-    minimum_marks: 2
-    show_correct_answer: false
-    show_feedback_icon: false
-    variable_replacement_strategy: original_first
-    adaptive_marking_penalty: 2
-    custom_marking_algorithm_notes:
-      - name: nonjmetext§
-        description: nonjmetext§
-        expression:
-          content:
-            nonjmetext§: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: "template:template_key"
-        description: none
-        expression:
-          content:
-            nonjmetext§: "template:template_key"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: ~
-        description: "template:template_key"
-        expression:
-          content: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: nonjmetext§
-        description: ~
-        expression: "file:path/to/file"
-      - name: "template:template_key"
-        description: nonjmetext§
-        expression: "template:template_key"
-      - name: ~
-        description: none
-        expression: ~
-      - "template:template_key"
-    extend_base_marking_algorithm: false
-    steps: ~
-    answer_data: ~
-    shuffle_answers: false
-    show_cell_answer_state: false
-    should_select_at_least: 2
-    should_select_at_most: "template:template_key"
-    columns: 2
-    wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achievable_marks: "template:template_key"
-    maximal_achievable_marks: "template:template_key"
-    marking_method: score_per_matched_cell
   - type: match_answers
     marks: 1
     prompt:
@@ -3703,11 +3512,7 @@ parts:
     custom_marking_algorithm_notes: ~
     extend_base_marking_algorithm: ~
     steps: ~
-    answer_data:
-      type: numbas_like
-      answers: ~
-      choices: ~
-      marks: ~
+    answer_data: "template:template_key"
     shuffle_answers: ~
     shuffle_items: ~
     show_cell_answer_state: ~
@@ -3803,7 +3608,7 @@ parts:
       - "template:template_key"
     extend_base_marking_algorithm: false
     steps: ~
-    answer_data: "template:template_key"
+    answer_data: ~
     shuffle_answers: false
     shuffle_items: false
     show_cell_answer_state: false
@@ -3815,47 +3620,6 @@ parts:
     wrong_nb_answers_warning_type: "template:template_key"
     minimal_achievable_marks: "template:template_key"
     maximal_achievable_marks: "template:template_key"
-  - type: match_answers
-    marks: ~
-    prompt:
-      content:
-        nonjmetext§: "template:template_key"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    use_custom_name: "template:template_key"
-    custom_name: "template:template_key"
-    steps_penalty: ~
-    enable_minimum_marks: "template:template_key"
-    minimum_marks: "template:template_key"
-    show_correct_answer: "template:template_key"
-    show_feedback_icon: "template:template_key"
-    variable_replacement_strategy: "template:template_key"
-    adaptive_marking_penalty: "template:template_key"
-    custom_marking_algorithm_notes: "template:template_key"
-    extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    answer_data: ~
-    shuffle_answers: "template:template_key"
-    shuffle_items: "template:template_key"
-    show_cell_answer_state: "template:template_key"
-    should_select_at_least: "template:template_key"
-    should_select_at_most: ~
-    display:
-      type: radio
-    layout:
-      type: lower_triangle
-    wrong_nb_answers_warning_type: ~
-    minimal_achievable_marks: ~
-    maximal_achievable_marks: ~
   - type: number_entry
     marks: 1
     prompt:

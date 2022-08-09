@@ -593,7 +593,7 @@ impl ToRumbas<JMERulesetItem>
     fn to_rumbas(&self) -> JMERulesetItem {
         let has_different_types = !self.is_empty()
             && (0..self.len() - 1).any(|i| {
-                !matches!((&self[i], &self[i + 1]), 
+                !matches!((&self[i], &self[i + 1]),
                 (
                                      &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
                                      &numbas::question::answer_simplification::AnswerSimplificationType::Rule(_),
@@ -603,7 +603,7 @@ impl ToRumbas<JMERulesetItem>
                                      ),
                                      &numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
                                          _,
-                                     ),
+                                     )
                 ))
             });
         if has_different_types {
