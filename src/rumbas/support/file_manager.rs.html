@@ -976,7 +976,7 @@
         <span class="comment">//Look for translation dirs</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">translated_content</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
         <span class="kw">for</span> (<span class="ident">path</span>, <span class="ident">locale</span>) <span class="kw">in</span> <span class="self">self</span>
-            .<span class="ident">read_folder</span>(<span class="kw-2">&amp;</span><span class="ident">file_dir</span>.<span class="ident">to_path_buf</span>())
+            .<span class="ident">read_folder</span>(<span class="ident">file_dir</span>)
             .<span class="ident">into_iter</span>()
             .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
                 <span class="ident">RumbasRepoEntry::File</span>(<span class="ident">_f</span>) =&gt; <span class="prelude-val">None</span>,
@@ -1051,7 +1051,7 @@
         }
     }
     <span class="kw">fn</span> <span class="ident">read_all_folders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoFolderData</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">read_folder</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>.<span class="ident">to_path_buf</span>())
+        <span class="self">self</span>.<span class="ident">read_folder</span>(<span class="ident">path</span>)
             .<span class="ident">into_iter</span>()
             .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
                 <span class="ident">RumbasRepoEntry::Folder</span>(<span class="ident">f</span>) =&gt; <span class="prelude-val">Some</span>(
@@ -1067,7 +1067,7 @@
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_default_folders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoFolderData</span><span class="op">&gt;</span> {
         <span class="comment">// TODO find repo base</span>
-        <span class="self">self</span>.<span class="ident">read_all_folders</span>(<span class="kw-2">&amp;</span><span class="ident">std::path::Path::new</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">to_path_buf</span>())
+        <span class="self">self</span>.<span class="ident">read_all_folders</span>(<span class="ident">std::path::Path::new</span>(<span class="string">&quot;.&quot;</span>))
             .<span class="ident">into_iter</span>()
             .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">r#type</span> <span class="op">==</span> <span class="ident">RumbasRepoFolderType::DefaultFolder</span>)
             .<span class="ident">collect</span>()
@@ -1368,7 +1368,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RumbasRepoFileType</span> {
     <span class="ident">QuestionFile</span>,
     <span class="ident">QuestionTemplateFile</span>,
@@ -1423,55 +1423,55 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RumbasRepoFileType</span>;
-    <span class="kw">use</span> <span class="ident">std::path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
+    <span class="kw">use</span> <span class="ident">std::path::Path</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">rumbas_repo_file_type</span>() {
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;defaults/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::QuestionFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::LocaleFile</span>(
                 <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
                 <span class="ident">Path::new</span>(<span class="string">&quot;questions/file.yaml&quot;</span>).<span class="ident">to_path_buf</span>()
             ),
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::ExamFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::LocaleFile</span>(
                 <span class="string">&quot;e&quot;</span>.<span class="ident">to_string</span>(),
                 <span class="ident">Path::new</span>(<span class="string">&quot;exams/file.yaml&quot;</span>).<span class="ident">to_path_buf</span>()
             ),
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::QuestionTemplateFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::ExamTemplateFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">RumbasRepoFileType::CustomPartTypeFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="kw-2">&amp;</span><span class="ident">Path::new</span>(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
+            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
         );
     }
 }
@@ -1503,7 +1503,7 @@
     <span class="ident">entries</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoEntry</span><span class="op">&gt;</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RumbasRepoFolderType</span> {
     <span class="ident">DefaultFolder</span>,
     <span class="ident">LocalizedFolder</span> { <span class="ident">locale</span>: <span class="ident">String</span> },
@@ -1769,4 +1769,4 @@
 }
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">create_from_string_type</span>;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>

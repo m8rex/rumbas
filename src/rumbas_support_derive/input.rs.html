@@ -1069,9 +1069,6 @@
 <span id="1069">1069</span>
 <span id="1070">1070</span>
 <span id="1071">1071</span>
-<span id="1072">1072</span>
-<span id="1073">1073</span>
-<span id="1074">1074</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">darling::ast</span>;
 <span class="kw">use</span> <span class="ident">darling</span>::{<span class="ident">FromDeriveInput</span>, <span class="ident">FromField</span>, <span class="ident">FromVariant</span>};
 <span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">ToTokens</span>};
@@ -1379,10 +1376,7 @@
         })
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
-    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(
-        <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>.<span class="ident">to_string</span>())[..],
-        <span class="ident">input_ident</span>.<span class="ident">span</span>(),
-    );
+    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>)[..], <span class="ident">input_ident</span>.<span class="ident">span</span>());
 
     <span class="kw">let</span> <span class="ident">input_attributes_input</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input_attributes</span>.<span class="number">0</span>;
     <span class="kw">let</span> <span class="ident">input_attributes_enum</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">input_attributes</span>.<span class="number">1</span>;
@@ -2147,4 +2141,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>

@@ -625,7 +625,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">InputInverse</span><span class="op">&gt;</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Input</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Input</span>;
+    <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::EnumInput</span><span class="op">&gt;</span>;
 }
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">O</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span>;
@@ -778,7 +778,7 @@
 <span class="macro">impl_input!</span>(<span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting</span>);
 <span class="macro">impl_input!</span>(<span class="ident">numbas::support::primitive::Number</span>);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InputCheckResult</span> {
     <span class="comment">// When adding a field, do also add it to is_empty</span>
     <span class="ident">missing_values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">InputCheckMissingData</span><span class="op">&gt;</span>,
@@ -854,7 +854,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InputCheckPath</span> {
     <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">last_part</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -890,18 +890,18 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InputCheckMissingData</span> {
     <span class="ident">path</span>: <span class="ident">InputCheckPath</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">InputCheckMissingData</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>())
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">path</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InputCheckInvalidYamlData</span> {
     <span class="ident">path</span>: <span class="ident">InputCheckPath</span>,
     <span class="ident">data</span>: <span class="ident">serde_yaml::Value</span>,
@@ -927,4 +927,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>

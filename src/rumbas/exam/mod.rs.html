@@ -232,8 +232,6 @@
 <span id="232">232</span>
 <span id="233">233</span>
 <span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains all the exam types</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">diagnostic</span>;
@@ -310,11 +308,10 @@
                         <span class="ident">file_path</span>: <span class="ident">file</span>.<span class="ident">to_path_buf</span>(),
                         <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
                     })
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
+                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
                         <span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">n</span>.<span class="ident">content</span>),
                         <span class="ident">LoadedFile::Localized</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     })
-                    .<span class="ident">flatten</span>()
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::FileReadError</span>(<span class="ident">FileReadError</span>(<span class="ident">file</span>.<span class="ident">to_path_buf</span>())))<span class="question-mark">?</span>;
 
                 <span class="ident">serde_yaml::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">yaml</span>)
@@ -356,11 +353,10 @@
                             <span class="ident">file_path</span>: <span class="ident">template_file</span>.<span class="ident">clone</span>(),
                             <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
                         })
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
+                        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
                             <span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">n</span>.<span class="ident">content</span>),
                             <span class="ident">LoadedFile::Localized</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                         })
-                        .<span class="ident">flatten</span>()
                         .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
                             <span class="ident">ParseError::FileReadError</span>(<span class="ident">FileReadError</span>(<span class="ident">template_file</span>.<span class="ident">to_path_buf</span>()))
                         })<span class="question-mark">?</span>;
@@ -471,4 +467,4 @@
     )
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>

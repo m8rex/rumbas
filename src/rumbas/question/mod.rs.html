@@ -209,7 +209,6 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
-<span id="212">212</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains all the data types</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">constants</span>;
@@ -225,7 +224,7 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam</span>::{<span class="ident">FileReadError</span>, <span class="ident">ParseError</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::custom_part_type::CustomPartTypeDefinitionPath</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::jme</span>::{<span class="ident">JMEAnswerDisplay</span>, <span class="ident">JMEAnswerSimplification</span>, <span class="ident">JMERulesetItem</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::jme::JMERulesetItem</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::QuestionPart</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_manager::CACHE</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::template::TemplateFile</span>;
@@ -371,7 +370,7 @@
         <span class="kw">let</span> <span class="ident">input</span>: <span class="ident">QuestionFileTypeInput</span> <span class="op">=</span> <span class="ident">serde_yaml::from_str</span>(<span class="ident">yaml</span>)
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">ParseError::YamlError</span>(<span class="ident">YamlError::from</span>(<span class="ident">e</span>, <span class="ident">file</span>.<span class="ident">to_path_buf</span>())))<span class="question-mark">?</span>;
         <span class="kw">match</span> <span class="ident">input</span> {
-            <span class="ident">Normal</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="kw-2">*</span><span class="ident">e</span>),
+            <span class="ident">Normal</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="kw-2">*</span><span class="ident">e</span>).<span class="number">0</span>),
             <span class="ident">Template</span>(<span class="ident">t_res</span>) =&gt; {
                 <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">t_res</span>.<span class="ident">to_normal</span>(); <span class="comment">// TODO?</span>
                 <span class="kw">let</span> <span class="ident">template_file</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER</span>)
@@ -382,11 +381,10 @@
                         <span class="ident">file_path</span>: <span class="ident">template_file</span>.<span class="ident">clone</span>(),
                         <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
                     })
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
+                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
                         <span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">n</span>.<span class="ident">content</span>),
                         <span class="ident">LoadedFile::Localized</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     })
-                    .<span class="ident">flatten</span>()
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
                         <span class="ident">ParseError::FileReadError</span>(<span class="ident">FileReadError</span>(<span class="ident">template_file</span>.<span class="ident">to_path_buf</span>()))
                     })<span class="question-mark">?</span>;
@@ -423,4 +421,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>

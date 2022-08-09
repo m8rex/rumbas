@@ -245,9 +245,6 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::input</span>::{<span class="ident">InputFieldReceiver</span>, <span class="ident">InputVariantReceiver</span>};
 <span class="kw">use</span> <span class="ident">darling::ast</span>;
 <span class="kw">use</span> <span class="ident">darling::FromDeriveInput</span>;
@@ -356,10 +353,7 @@
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="macro">quote!</span>(#<span class="ident">v</span>)).<span class="ident">unwrap</span>())
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
-    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(
-        <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>.<span class="ident">to_string</span>())[..],
-        <span class="ident">input_ident</span>.<span class="ident">span</span>(),
-    );
+    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>)[..], <span class="ident">input_ident</span>.<span class="ident">span</span>());
 
     <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
         <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
@@ -499,4 +493,4 @@
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (d394408fb 2022-08-07)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
