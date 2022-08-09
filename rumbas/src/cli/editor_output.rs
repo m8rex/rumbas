@@ -1,3 +1,4 @@
+use super::compile::PassedRumbasCompileData;
 use super::compile::{
     compile_internal, CompilationContext, FileCompilationContext, InternalCompilationResult,
 };
@@ -23,22 +24,58 @@ pub struct EditorOutputContext {
     pub url_prefix: String,
 }
 
+#[derive(Debug, Clone)]
+pub struct EditorOutputCompileData {
+    pub locale: String,
+    pub generated_path: PathBuf,
+    pub generated_zip_path: PathBuf,
+    pub exam_name: String,
+    pub exam_path: PathBuf,
+}
+
 fn find_complete_outputs(
     scorm_compilation_result: InternalCompilationResult,
     folder_compilation_result: InternalCompilationResult,
-) -> Vec<(PathBuf, String)> {
-    let s = scorm_compilation_result
-        .created_outputs
-        .into_iter()
-        .collect::<HashSet<_>>();
+    root: &PathBuf,
+) -> Vec<EditorOutputCompileData> {
+    let s = scorm_compilation_result.created_outputs;
     folder_compilation_result
         .created_outputs
         .into_iter()
-        .filter(|(p, _)| {
-            let scorm = p.with_extension("zip");
-            s.iter().any(|(p, _)| p == &scorm)
+        .filter_map(|result| {
+            let scorm = s
+                .iter()
+                .find(|r| r.exam_path == result.exam_path && r.locale == result.locale);
+
+            scorm.map(|scorm_result| EditorOutputCompileData {
+                locale: result.locale,
+                generated_path: result
+                    .generated_path
+                    .as_path()
+                    .strip_prefix(root.clone())
+                    .expect("stripping to work")
+                    .to_owned(),
+                generated_zip_path: scorm_result
+                    .generated_path
+                    .as_path()
+                    .strip_prefix(root.clone())
+                    .expect("stripping to work")
+                    .to_owned(),
+                exam_name: result.exam_name,
+                exam_path: result.exam_path,
+            })
         })
         .collect()
+}
+
+fn find_git_url() -> Option<String> {
+    let repo = git2::Repository::discover(".").ok()?;
+    let remote = repo.find_remote("origin").ok().or_else(|| {
+        repo.remotes()
+            .ok()
+            .and_then(|remotes| remotes.get(0).and_then(|name| repo.find_remote(name).ok()))
+    });
+    remote.and_then(|r| r.url().map(|r| r.to_string()))
 }
 
 pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(), &'static str> {
@@ -72,18 +109,7 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     );
 
     let matching: Vec<_> =
-        find_complete_outputs(scorm_compilation_result, folder_compilation_result)
-            .into_iter()
-            .map(|(p, name)| {
-                (
-                    p.as_path()
-                        .strip_prefix(root.clone())
-                        .expect("stripping to work")
-                        .to_owned(),
-                    name,
-                )
-            })
-            .collect();
+        find_complete_outputs(scorm_compilation_result, folder_compilation_result, &root);
 
     if !context.output_path.exists() {
         std::fs::create_dir(&context.output_path).expect("creating a folder to work");
@@ -98,10 +124,16 @@ pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(),
     let s = serde_json::to_string_pretty(&projects).expect("Json generation failed");
     std::fs::write(project_path, s).expect("Writing file failed");
 
+    let remote_url = find_git_url().unwrap_or_default();
+    let remote_url = remote_url
+        .replace(":", "/")
+        .replace(r"git@", "https://")
+        .replace(".git", "");
+
     let available_exams_path = context.output_path.join("available_exams.json");
     let exams: Vec<_> = matching
         .into_iter()
-        .map(|(p, name)| ApiExam::new(&p, &name, &context.url_prefix))
+        .map(|result| ApiExam::new(result, &context.url_prefix, &remote_url))
         .collect();
     let s = serde_json::to_string_pretty(&exams).expect("Json generation failed");
     std::fs::write(available_exams_path, s).expect("Writing file failed");
@@ -192,18 +224,32 @@ struct ApiExam {
 }
 
 impl ApiExam {
-    pub fn new(p: &Path, name: &String, url_prefix: &String) -> Self {
-        let url = format!("{}/{}", url_prefix, p.display());
-        let zip_url = format!("{}.zip", url);
+    pub fn new(
+        compile_result: EditorOutputCompileData,
+        url_prefix: &String,
+        git_prefix: &String,
+    ) -> Self {
+        let url = format!("{}/{}", url_prefix, compile_result.generated_path.display());
         let preview_url = url.clone();
+        let project_url = url.clone();
+        let zip_url = format!(
+            "{}/{}",
+            url_prefix,
+            compile_result.generated_zip_path.display()
+        );
+        let edit_url = format!(
+            "{}/tree/master/{}",
+            git_prefix,
+            compile_result.exam_path.display()
+        );
         Self {
             url,
-            name: name.to_owned(),
-            project_url: url_prefix.to_string(),
-            edit_url: "todo".to_string(),
+            name: compile_result.exam_name.to_owned(),
+            project_url,
+            edit_url,
             author: ApiUser::default(),
             metadata: ApiMetadata {
-                description: "".to_string(),
+                description: compile_result.exam_path.display().to_string(),
             },
             zip_url,
             preview_url,
