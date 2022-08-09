@@ -68,7 +68,8 @@ impl QuestionPartInput {
 #[serde(tag = "type")]
 pub enum QuestionPartBuiltin {
     #[serde(rename = "jme")]
-    JME(QuestionPartJME),
+    // Box due to much larger size than other variant (clippy warning)
+    JME(Box<QuestionPartJME>),
     #[serde(rename = "gapfill")]
     GapFill(QuestionPartGapFill),
     #[serde(rename = "choose_one")]
@@ -93,7 +94,7 @@ impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuilt
     fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartBuiltin {
         match self {
             QuestionPartBuiltin::JME(d) => {
-                numbas::question::part::QuestionPartBuiltin::JME(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::JME((*d).to_numbas(locale))
             }
             QuestionPartBuiltin::GapFill(d) => {
                 numbas::question::part::QuestionPartBuiltin::GapFill(d.to_numbas(locale))
@@ -132,7 +133,7 @@ impl ToRumbas<QuestionPartBuiltin> for numbas::question::part::QuestionPartBuilt
     fn to_rumbas(&self) -> QuestionPartBuiltin {
         match self {
             numbas::question::part::QuestionPartBuiltin::JME(p) => {
-                QuestionPartBuiltin::JME(p.to_rumbas())
+                QuestionPartBuiltin::JME(Box::new(p.to_rumbas()))
             }
             numbas::question::part::QuestionPartBuiltin::NumberEntry(p) => {
                 QuestionPartBuiltin::NumberEntry(p.to_rumbas())
@@ -168,7 +169,7 @@ impl ToRumbas<QuestionPartBuiltin> for numbas::question::part::QuestionPartBuilt
 impl QuestionPartBuiltinInput {
     pub fn get_steps(&mut self) -> &mut Value<Vec<ValueType<QuestionPartInput>>> {
         match self {
-            QuestionPartBuiltinInput::JME(d) => d.0.get_steps(),
+            QuestionPartBuiltinInput::JME(d) => d.as_mut().0.get_steps(),
             QuestionPartBuiltinInput::GapFill(d) => d.0.get_steps(),
             QuestionPartBuiltinInput::ChooseOne(d) => d.0.get_steps(),
             QuestionPartBuiltinInput::ChooseMultiple(d) => d.0.get_steps(),
@@ -184,7 +185,7 @@ impl QuestionPartBuiltinInput {
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "JMENotesInput")]
-#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq, Eq)]
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq, Eq, Default)]
 #[serde(transparent)]
 pub struct JMENotes(pub Vec<JMENote>);
 
@@ -226,12 +227,6 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
         } else {
             vec![]
         })
-    }
-}
-
-impl Default for JMENotes {
-    fn default() -> Self {
-        JMENotes(vec![])
     }
 }
 

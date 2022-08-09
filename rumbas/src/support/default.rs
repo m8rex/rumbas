@@ -286,8 +286,8 @@ macro_rules! handle_question {
                     question
                         .overwrite(&q.data);
                 }
-                DefaultQuestionData::QuestionPartJME(p) => handle_question_parts!(question, QuestionPartJMEInputEnum(p.data.clone()), JME),
-                DefaultQuestionData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap question, QuestionPartJMEInputEnum(p.data.clone()), JME),
+                DefaultQuestionData::QuestionPartJME(p) => handle_question_parts!(question, Box::new(QuestionPartJMEInputEnum(p.data.clone())), JME),
+                DefaultQuestionData::QuestionPartGapFillGapJME(p) => handle_question_parts!(gap question, Box::new(QuestionPartJMEInputEnum(p.data.clone())), JME),
                 DefaultQuestionData::QuestionPartGapFill(p) => handle_question_parts!(question, QuestionPartGapFillInputEnum(p.data.clone()), GapFill),
                 DefaultQuestionData::QuestionPartChooseOne(p) => handle_question_parts!(question, QuestionPartChooseOneInputEnum(p.data.clone()), ChooseOne),
                 DefaultQuestionData::QuestionPartGapFillGapChooseOne(p) => handle_question_parts!(gap question, QuestionPartChooseOneInputEnum(p.data.clone()), ChooseOne),

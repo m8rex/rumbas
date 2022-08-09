@@ -161,7 +161,7 @@ impl<O: Input> Input for HashMap<String, O> {
 
 impl<O: InputInverse> InputInverse for Box<O> {
     type Input = Box<<O as InputInverse>::Input>;
-    type EnumInput = Self::Input;
+    type EnumInput = Box<<O as InputInverse>::EnumInput>;
 }
 impl<O: Input> Input for Box<O> {
     type Normal = Box<<O as Input>::Normal>;
@@ -314,7 +314,7 @@ impl_input!(numbas::question::function::FunctionType);
 impl_input!(numbas::question::custom_part_type::CustomPartTypeSetting);
 impl_input!(numbas::support::primitive::Number);
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InputCheckResult {
     // When adding a field, do also add it to is_empty
     missing_values: Vec<InputCheckMissingData>,

@@ -82,15 +82,15 @@ impl ToNumbas<numbas::question::part::choose_multiple::QuestionPartChooseMultipl
             max_answers: self
                 .should_select_at_most
                 .to_numbas(locale)
-                .unwrap_or(0.into()),
+                .unwrap_or_else(|| 0.into()),
             min_marks: self
                 .minimal_achievable_marks
                 .to_numbas(locale)
-                .unwrap_or(0.into()),
+                .unwrap_or_else(|| 0.into()),
             max_marks: self
                 .maximal_achievable_marks
                 .to_numbas(locale)
-                .unwrap_or(0.into()),
+                .unwrap_or_else(|| 0.into()),
             shuffle_answers: self.shuffle_answers.to_numbas(locale),
             choices,
             display_columns: self.columns.to_numbas(locale),
