@@ -70,6 +70,8 @@ jobs:
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install dependencies
+        run: sudo apt install libssl-dev pkg-config 
       - name: Build
         run: cargo build --verbose
         working-directory: rumbas
