@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support_derive/src/examples.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>examples.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support_derive/src/examples.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>examples.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -480,411 +480,411 @@
 <span id="480">480</span>
 <span id="481">481</span>
 <span id="482">482</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::syn::spanned::Spanned</span>;
-<span class="kw">use</span> <span class="ident">darling::ast</span>;
-<span class="kw">use</span> <span class="ident">darling::FromDeriveInput</span>;
-<span class="kw">use</span> <span class="ident">darling::FromField</span>;
-<span class="kw">use</span> <span class="ident">darling::FromVariant</span>;
-<span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">ToTokens</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::syn::spanned::Spanned;
+<span class="kw">use </span>darling::ast;
+<span class="kw">use </span>darling::FromDeriveInput;
+<span class="kw">use </span>darling::FromField;
+<span class="kw">use </span>darling::FromVariant;
+<span class="kw">use </span>quote::{quote, ToTokens};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">FromDeriveInput</span>)]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">attributes</span>(<span class="ident">input</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExamplesReceiver</span> {
-    <span class="ident">ident</span>: <span class="ident">syn::Ident</span>,
+<span class="attribute">#[derive(FromDeriveInput)]
+#[darling(attributes(input))]
+</span><span class="kw">pub struct </span>ExamplesReceiver {
+    ident: syn::Ident,
 
-    <span class="doccomment">/// The type&#39;s generics. You&#39;ll need these any time your trait is expected</span>
-    <span class="doccomment">/// to work with types that declare generics.</span>
-    <span class="ident">generics</span>: <span class="ident">syn::Generics</span>,
+    <span class="doccomment">/// The type&#39;s generics. You&#39;ll need these any time your trait is expected
+    /// to work with types that declare generics.
+    </span>generics: syn::Generics,
 
-    <span class="ident">data</span>: <span class="ident">ast::Data</span><span class="op">&lt;</span><span class="ident">ExamplesVariantReceiver</span>, <span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
+    data: ast::Data&lt;ExamplesVariantReceiver, ExamplesFieldReceiver&gt;,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">test</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[darling(default)]
+    </span>test: bool,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">no_examples</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[darling(default)]
+    </span>no_examples: bool,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;name&quot;</span>)]</span>
-    <span class="ident">input_name</span>: <span class="ident">String</span>,
+    <span class="attribute">#[darling(rename = <span class="string">&quot;name&quot;</span>)]
+    </span>input_name: String,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[darling(default)]
+    </span>from: <span class="prelude-ty">Option</span>&lt;String&gt;,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">into</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[darling(default)]
+    </span>into: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">FromField</span>)]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">attributes</span>(<span class="ident">input</span>))]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">forward_attrs</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExamplesFieldReceiver</span> {
-    <span class="doccomment">/// Get the ident of the field. For fields in tuple or newtype structs or</span>
-    <span class="doccomment">/// enum bodies, this can be `None`.</span>
-    <span class="kw">pub</span> <span class="ident">ident</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">syn::Ident</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, FromField)]
+#[darling(attributes(input))]
+#[darling(forward_attrs)]
+</span><span class="kw">pub struct </span>ExamplesFieldReceiver {
+    <span class="doccomment">/// Get the ident of the field. For fields in tuple or newtype structs or
+    /// enum bodies, this can be `None`.
+    </span><span class="kw">pub </span>ident: <span class="prelude-ty">Option</span>&lt;syn::Ident&gt;,
 
-    <span class="kw">pub</span> <span class="ident">ty</span>: <span class="ident">syn::Type</span>,
-    <span class="kw">pub</span> <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">syn::Attribute</span><span class="op">&gt;</span>,
+    <span class="kw">pub </span>ty: syn::Type,
+    <span class="kw">pub </span>attrs: Vec&lt;syn::Attribute&gt;,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">skip</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[darling(default)]
+    </span><span class="kw">pub </span>skip: bool,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">FromVariant</span>)]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">attributes</span>(<span class="ident">input</span>))]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">forward_attrs</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExamplesVariantReceiver</span> {
-    <span class="kw">pub</span> <span class="ident">ident</span>: <span class="ident">syn::Ident</span>,
-    <span class="kw">pub</span> <span class="ident">fields</span>: <span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">syn::Attribute</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, FromVariant)]
+#[darling(attributes(input))]
+#[darling(forward_attrs)]
+</span><span class="kw">pub struct </span>ExamplesVariantReceiver {
+    <span class="kw">pub </span>ident: syn::Ident,
+    <span class="kw">pub </span>fields: ast::Fields&lt;ExamplesFieldReceiver&gt;,
+    <span class="kw">pub </span>attrs: Vec&lt;syn::Attribute&gt;,
 }
 
-<span class="kw">fn</span> <span class="ident">handle_unit_struct</span>(
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>handle_unit_struct(
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Examples</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-                <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
+    tokens.extend(<span class="macro">quote! </span>{
+            <span class="attribute">#[automatically_derived]
+            </span><span class="kw">impl </span>#imp Examples <span class="kw">for </span>#input_ident #ty #wher {
+                <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
                     <span class="macro">vec!</span>[<span class="self">Self</span>]
                 }
             }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">handle_tuple_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>handle_tuple_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;ExamplesFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
 
-    <span class="kw">let</span> <span class="ident">field_indexes</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">_f</span>)<span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">syn::Index::from</span>(<span class="ident">i</span>);
-            <span class="macro">quote!</span>(#<span class="ident">i</span>)
+    <span class="kw">let </span>field_indexes = fields
+        .iter()
+        .enumerate()
+        .map(|(i, _f)| {
+            <span class="kw">let </span>i = syn::Index::from(i);
+            <span class="macro">quote!</span>(#i)
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_types</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">ty</span>.<span class="ident">clone</span>();
-            <span class="macro">quote!</span>(#<span class="ident">ty</span>)
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_types = fields
+        .iter()
+        .map(|f| {
+            <span class="kw">let </span>ty = f.ty.clone();
+            <span class="macro">quote!</span>(#ty)
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Examples</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-                <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">tuple_data</span> <span class="op">=</span> <span class="op">&lt;</span>(#(<span class="op">&lt;</span>#<span class="ident">field_types</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span>,)<span class="kw-2">*</span>)<span class="op">&gt;</span><span class="ident">::examples</span>();
-                    <span class="ident">tuple_data</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="self">Self</span>(#(<span class="ident">t</span>.#<span class="ident">field_indexes</span>),<span class="kw-2">*</span>) ).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+    tokens.extend(<span class="macro">quote! </span>{
+            <span class="attribute">#[automatically_derived]
+            </span><span class="kw">impl </span>#imp Examples <span class="kw">for </span>#input_ident #ty #wher {
+                <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                    <span class="kw">let </span>tuple_data = &lt;(#(&lt;#field_types <span class="kw">as </span>InputInverse&gt;::Input,)<span class="kw-2">*</span>)&gt;::examples();
+                    tuple_data.into_iter().map(|t| <span class="self">Self</span>(#(t.#field_indexes),<span class="kw-2">*</span>) ).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
                 }
             }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">struct_body</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">type_name</span>: <span class="ident">proc_macro2::TokenStream</span>,
-) -&gt; <span class="ident">proc_macro2::TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">field_dos</span> <span class="op">=</span> <span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">skip</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_names</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="macro">quote!</span>(#<span class="ident">v</span>)).<span class="ident">unwrap</span>())
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_types</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">ty</span>.<span class="ident">clone</span>();
-            <span class="macro">quote!</span>(#<span class="ident">ty</span>)
+<span class="kw">fn </span>struct_body(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;ExamplesFieldReceiver&gt;,
+    type_name: proc_macro2::TokenStream,
+) -&gt; proc_macro2::TokenStream {
+    <span class="kw">let </span>field_dos = fields.iter().map(|f| !f.skip).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_names = fields
+        .iter()
+        .map(|f| f.ident.as_ref().map(|v| <span class="macro">quote!</span>(#v)).unwrap())
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_types = fields
+        .iter()
+        .map(|f| {
+            <span class="kw">let </span>ty = f.ty.clone();
+            <span class="macro">quote!</span>(#ty)
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_examples</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="ident">syn::Ident::new</span>(
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_examples = fields
+        .iter()
+        .map(|f| {
+            syn::Ident::new(
                 <span class="kw-2">&amp;</span><span class="macro">format!</span>(
                     <span class="string">&quot;{}_examples&quot;</span>,
-                    <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">clean_ident_name</span>).<span class="ident">unwrap</span>(),
+                    f.ident.as_ref().map(clean_ident_name).unwrap(),
                 )[..],
-                <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">span</span>()).<span class="ident">unwrap</span>(),
+                f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_iterators</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="ident">syn::Ident::new</span>(
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_iterators = fields
+        .iter()
+        .map(|f| {
+            syn::Ident::new(
                 <span class="kw-2">&amp;</span><span class="macro">format!</span>(
                     <span class="string">&quot;{}_iterator&quot;</span>,
-                    <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">clean_ident_name</span>).<span class="ident">unwrap</span>(),
+                    f.ident.as_ref().map(clean_ident_name).unwrap(),
                 )[..],
-                <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">span</span>()).<span class="ident">unwrap</span>(),
+                f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_options</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="ident">syn::Ident::new</span>(
-                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}_option&quot;</span>, <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">clean_ident_name</span>).<span class="ident">unwrap</span>(),)[..],
-                <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">span</span>()).<span class="ident">unwrap</span>(),
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_options = fields
+        .iter()
+        .map(|f| {
+            syn::Ident::new(
+                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}_option&quot;</span>, f.ident.as_ref().map(clean_ident_name).unwrap(),)[..],
+                f.ident.as_ref().map(|f| f.span()).unwrap(),
             )
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="comment">// TODO extract</span>
-    <span class="kw">let</span> <span class="ident">field_is_flattened</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-            <span class="ident">f</span>.<span class="ident">attrs</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">attr</span><span class="op">|</span> {
-                <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;serde&quot;</span>) {
-                    <span class="kw">match</span> <span class="ident">attr</span>.<span class="ident">parse_meta</span>() {
-                        <span class="prelude-val">Ok</span>(<span class="ident">syn::Meta::List</span>(<span class="ident">meta</span>)) =&gt; <span class="ident">meta</span>.<span class="ident">nested</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">m</span> {
-                            <span class="ident">syn::NestedMeta::Meta</span>(<span class="ident">syn::Meta::Path</span>(<span class="ident">m</span>)) =&gt; <span class="ident">m</span>.<span class="ident">is_ident</span>(<span class="string">&quot;flatten&quot;</span>),
-                            <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="comment">// TODO extract
+    </span><span class="kw">let </span>field_is_flattened = fields
+        .iter()
+        .map(|f| {
+            f.attrs.iter().any(|attr| {
+                <span class="kw">if </span>attr.path.is_ident(<span class="string">&quot;serde&quot;</span>) {
+                    <span class="kw">match </span>attr.parse_meta() {
+                        <span class="prelude-val">Ok</span>(syn::Meta::List(meta)) =&gt; meta.nested.iter().any(|m| <span class="kw">match </span>m {
+                            syn::NestedMeta::Meta(syn::Meta::Path(m)) =&gt; m.is_ident(<span class="string">&quot;flatten&quot;</span>),
+                            <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
                         }),
-                        <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
+                        <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
                     }
-                } <span class="kw">else</span> {
-                    <span class="bool-val">false</span>
-                }
+                } <span class="kw">else </span>{
+                    <span class="bool-val">false
+                </span>}
             })
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_types</span> <span class="op">=</span> <span class="ident">field_types</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">zip</span>(<span class="ident">field_is_flattened</span>.<span class="ident">iter</span>())
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">t</span>, <span class="ident">flattened</span>)<span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">flattened</span> {
-                <span class="macro">quote!</span>(<span class="op">&lt;</span>#<span class="ident">t</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span>)
-            } <span class="kw">else</span> {
-                <span class="macro">quote!</span>(<span class="ident">Value</span><span class="op">&lt;</span><span class="op">&lt;</span>#<span class="ident">t</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span><span class="op">&gt;</span>)
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_types = field_types
+        .iter()
+        .zip(field_is_flattened.iter())
+        .map(|(t, flattened)| {
+            <span class="kw">if </span><span class="kw-2">*</span>flattened {
+                <span class="macro">quote!</span>(&lt;#t <span class="kw">as </span>InputInverse&gt;::Input)
+            } <span class="kw">else </span>{
+                <span class="macro">quote!</span>(Value&lt;&lt;#t <span class="kw">as </span>InputInverse&gt;::Input&gt;)
             }
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_options_values</span> <span class="op">=</span> <span class="ident">field_dos</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">zip</span>(<span class="ident">field_name_iterators</span>.<span class="ident">iter</span>())
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">r#do</span>, <span class="ident">i</span>)<span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">r#do</span> {
-                <span class="macro">quote!</span>(#<span class="ident">i</span>.<span class="ident">next</span>())
-            } <span class="kw">else</span> {
-                <span class="macro">quote!</span>(<span class="prelude-val">Some</span>(<span class="ident">Default::default</span>()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_options_values = field_dos
+        .iter()
+        .zip(field_name_iterators.iter())
+        .map(|(r#do, i)| {
+            <span class="kw">if </span><span class="kw-2">*</span>r#do {
+                <span class="macro">quote!</span>(#i.next())
+            } <span class="kw">else </span>{
+                <span class="macro">quote!</span>(<span class="prelude-val">Some</span>(Default::default()))
             }
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="macro">quote!</span> {
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="macro">quote! </span>{
         #(
-            <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">field_name_examples</span> <span class="op">=</span>
-                <span class="kw">if</span> #<span class="ident">field_dos</span> {
-                    <span class="op">&lt;</span>#<span class="ident">field_types</span><span class="op">&gt;</span><span class="ident">::examples</span>()
-                 } <span class="kw">else</span> { <span class="macro">vec!</span>[] };
-        )<span class="op">*</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_examples_number</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>#field_name_examples =
+                <span class="kw">if </span>#field_dos {
+                    &lt;#field_types&gt;::examples()
+                 } <span class="kw">else </span>{ <span class="macro">vec!</span>[] };
+        )*
+        <span class="kw">let </span><span class="kw-2">mut </span>max_examples_number = <span class="number">0</span>;
         #(
-            <span class="ident">max_examples_number</span> <span class="op">=</span> <span class="ident">std::cmp::max</span>(<span class="ident">max_examples_number</span>, #<span class="ident">field_name_examples</span>.<span class="ident">len</span>());
-        )<span class="op">*</span>
+            max_examples_number = std::cmp::max(max_examples_number, #field_name_examples.len());
+        )*
         #(
-            <span class="kw">if</span> #<span class="ident">field_dos</span> {
-                <span class="kw">while</span> #<span class="ident">field_name_examples</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">max_examples_number</span> {
-                    #<span class="ident">field_name_examples</span>.<span class="ident">extend</span>(<span class="op">&lt;</span>#<span class="ident">field_types</span><span class="op">&gt;</span><span class="ident">::examples</span>());
+            <span class="kw">if </span>#field_dos {
+                <span class="kw">while </span>#field_name_examples.len() &lt; max_examples_number {
+                    #field_name_examples.extend(&lt;#field_types&gt;::examples());
                 }
             }
-            <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">field_name_iterators</span> <span class="op">=</span> #<span class="ident">field_name_examples</span>.<span class="ident">into_iter</span>();
-        )<span class="op">*</span>
+            <span class="kw">let </span><span class="kw-2">mut </span>#field_name_iterators = #field_name_examples.into_iter();
+        )*
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">loop</span> {
+        <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
+        <span class="kw">loop </span>{
             #(
-                <span class="kw">let</span> #<span class="ident">field_name_options</span> <span class="op">=</span> #<span class="ident">field_name_options_values</span>;
-                <span class="kw">if</span> #<span class="ident">field_name_options</span>.<span class="ident">is_none</span>() {
+                <span class="kw">let </span>#field_name_options = #field_name_options_values;
+                <span class="kw">if </span>#field_name_options.is_none() {
                     <span class="kw">break</span>;
                 }
-            )<span class="op">*</span>
-            <span class="ident">result</span>.<span class="ident">push</span>(
-                #<span class="ident">type_name</span> {
+            )*
+            result.push(
+                #type_name {
                     #(
-                       #<span class="ident">field_names</span>: #<span class="ident">field_name_options</span>.<span class="ident">unwrap</span>()
-                    ),<span class="op">*</span>
+                       #field_names: #field_name_options.unwrap()
+                    ),*
                 }
             )
         }
-        <span class="ident">result</span>
+        result
     }
 }
 
-<span class="kw">fn</span> <span class="ident">handle_struct_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>handle_struct_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;ExamplesFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">struct_body</span>(<span class="ident">fields</span>, <span class="macro">quote!</span>(<span class="self">Self</span>));
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
+    <span class="kw">let </span>body = struct_body(fields, <span class="macro">quote!</span>(<span class="self">Self</span>));
 
-    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>)[..], <span class="ident">input_ident</span>.<span class="ident">span</span>());
+    <span class="kw">let </span>enum_input_ident = syn::Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, input_ident)[..], input_ident.span());
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Examples</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                #<span class="ident">body</span>
+    tokens.extend(<span class="macro">quote! </span>{
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Examples <span class="kw">for </span>#input_ident #ty #wher {
+            <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                #body
             }
         }
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Examples</span> <span class="kw">for</span> #<span class="ident">enum_input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                <span class="op">&lt;</span>#<span class="ident">input_ident</span><span class="op">&gt;</span><span class="ident">::examples</span>().<span class="ident">into_iter</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">std::convert::TryInto::try_into</span>(<span class="ident">e</span>).<span class="ident">ok</span>()).<span class="ident">collect</span>()
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Examples <span class="kw">for </span>#enum_input_ident #ty #wher {
+            <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                &lt;#input_ident&gt;::examples().into_iter().filter_map(|e| std::convert::TryInto::try_into(e).ok()).collect()
             }
         }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">handle_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">ExamplesFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>handle_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;ExamplesFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">match</span> <span class="ident">fields</span>.<span class="ident">style</span> {
-        <span class="ident">ast::Style::Struct</span> =&gt; <span class="ident">handle_struct_struct</span>(<span class="ident">fields</span>, <span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-        <span class="ident">ast::Style::Tuple</span> =&gt; <span class="ident">handle_tuple_struct</span>(<span class="ident">fields</span>, <span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-        <span class="ident">ast::Style::Unit</span> =&gt; <span class="ident">handle_unit_struct</span>(<span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
+    <span class="kw">match </span>fields.style {
+        ast::Style::Struct =&gt; handle_struct_struct(fields, input_ident, generics, tokens),
+        ast::Style::Tuple =&gt; handle_tuple_struct(fields, input_ident, generics, tokens),
+        ast::Style::Unit =&gt; handle_unit_struct(input_ident, generics, tokens),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">handle_enum_check_variants</span>(
-    <span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">ExamplesVariantReceiver</span>],
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span><span class="op">&gt;</span> {
-    <span class="ident">v</span>.<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">variant</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">variant_ident</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">ident</span>;
-            <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">style</span> {
-                <span class="ident">ast::Style::Unit</span> =&gt; {
-                    <span class="macro">quote!</span> {
-                        <span class="macro">vec!</span>[#<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>]
+<span class="kw">fn </span>handle_enum_check_variants(
+    v: <span class="kw-2">&amp;</span>[ExamplesVariantReceiver],
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+) -&gt; Vec&lt;proc_macro2::TokenStream&gt; {
+    v.iter()
+        .map(|variant| {
+            <span class="kw">let </span>variant_ident = <span class="kw-2">&amp;</span>variant.ident;
+            <span class="kw">match </span>variant.fields.style {
+                ast::Style::Unit =&gt; {
+                    <span class="macro">quote! </span>{
+                        <span class="macro">vec!</span>[#input_ident::#variant_ident]
                     }
                 }
-                <span class="ident">ast::Style::Tuple</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">field_indexes</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">enumerate</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">_f</span>)<span class="op">|</span> {
-                            <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">syn::Index::from</span>(<span class="ident">i</span>);
-                            <span class="macro">quote!</span>(#<span class="ident">i</span>)
+                ast::Style::Tuple =&gt; {
+                    <span class="kw">let </span>field_indexes = variant.fields.fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, _f)| {
+                            <span class="kw">let </span>i = syn::Index::from(i);
+                            <span class="macro">quote!</span>(#i)
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="kw">let</span> <span class="ident">field_types</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> {
-                            <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">ty</span>.<span class="ident">clone</span>();
-                            <span class="macro">quote!</span>(#<span class="ident">ty</span>)
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="kw">let </span>field_types = variant.fields.fields
+                        .iter()
+                        .map(|f| {
+                            <span class="kw">let </span>ty = f.ty.clone();
+                            <span class="macro">quote!</span>(#ty)
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="macro">quote!</span> {
-                        <span class="kw">let</span> <span class="ident">tuple_data</span> <span class="op">=</span> <span class="op">&lt;</span>(#(<span class="op">&lt;</span>#<span class="ident">field_types</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::EnumInput</span>,)<span class="kw-2">*</span>)<span class="op">&gt;</span><span class="ident">::examples</span>();
-                        <span class="ident">tuple_data</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> #<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>(#(<span class="ident">t</span>.#<span class="ident">field_indexes</span>),<span class="kw-2">*</span>) ).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="macro">quote! </span>{
+                        <span class="kw">let </span>tuple_data = &lt;(#(&lt;#field_types <span class="kw">as </span>InputInverse&gt;::EnumInput,)<span class="kw-2">*</span>)&gt;::examples();
+                        tuple_data.into_iter().map(|t| #input_ident::#variant_ident(#(t.#field_indexes),<span class="kw-2">*</span>) ).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
                     }
                 },
-                <span class="ident">ast::Style::Struct</span> =&gt; {
-                    <span class="ident">struct_body</span>(<span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>, <span class="macro">quote!</span>(#<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>))
+                ast::Style::Struct =&gt; {
+                    struct_body(<span class="kw-2">&amp;</span>variant.fields, <span class="macro">quote!</span>(#input_ident::#variant_ident))
                 }
             }
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 }
 
-<span class="kw">fn</span> <span class="ident">handle_enum</span>(
-    <span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">ExamplesVariantReceiver</span>],
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>handle_enum(
+    v: <span class="kw-2">&amp;</span>[ExamplesVariantReceiver],
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
 
-    <span class="kw">let</span> <span class="ident">check_variants</span> <span class="op">=</span> <span class="ident">handle_enum_check_variants</span>(<span class="ident">v</span>, <span class="ident">input_ident</span>);
+    <span class="kw">let </span>check_variants = handle_enum_check_variants(v, input_ident);
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Examples</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">all</span> : <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    tokens.extend(<span class="macro">quote! </span>{
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Examples <span class="kw">for </span>#input_ident #ty #wher {
+            <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>all : Vec&lt;<span class="self">Self</span>&gt; = Vec::new();
                 #(
-                    <span class="ident">all</span>.<span class="ident">extend</span>({#<span class="ident">check_variants</span>}.<span class="ident">into_iter</span>());
-                )<span class="op">*</span>
-                <span class="ident">all</span>
+                    all.extend({#check_variants}.into_iter());
+                )*
+                all
             }
         }
     });
 }
 
-<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">ExamplesReceiver</span> {
-    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>) {
-        <span class="kw">let</span> <span class="ident">ExamplesReceiver</span> {
-            <span class="kw-2">ref</span> <span class="ident">ident</span>,
-            <span class="kw-2">ref</span> <span class="ident">generics</span>,
-            <span class="kw-2">ref</span> <span class="ident">data</span>,
-            <span class="ident">test</span>,
-            <span class="ident">no_examples</span>,
-            <span class="kw-2">ref</span> <span class="ident">input_name</span>,
-            <span class="ident">from</span>: <span class="kw">_</span>,
-            <span class="ident">into</span>: <span class="kw">_</span>,
-        } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+<span class="kw">impl </span>ToTokens <span class="kw">for </span>ExamplesReceiver {
+    <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream) {
+        <span class="kw">let </span>ExamplesReceiver {
+            <span class="kw-2">ref </span>ident,
+            <span class="kw-2">ref </span>generics,
+            <span class="kw-2">ref </span>data,
+            test,
+            no_examples,
+            <span class="kw-2">ref </span>input_name,
+            from: <span class="kw">_</span>,
+            into: <span class="kw">_</span>,
+        } = <span class="kw-2">*</span><span class="self">self</span>;
 
-        <span class="kw">let</span> <span class="ident">input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="ident">input_name</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">no_examples</span> {
-            <span class="kw">match</span> <span class="ident">data</span> {
-                <span class="ident">ast::Data::Enum</span>(<span class="ident">v</span>) =&gt; <span class="ident">handle_enum</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-                <span class="ident">ast::Data::Struct</span>(<span class="ident">fields</span>) =&gt; <span class="ident">handle_struct</span>(<span class="ident">fields</span>, <span class="kw-2">&amp;</span><span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
+        <span class="kw">let </span>input_ident = syn::Ident::new(input_name, ident.span());
+        <span class="kw">if </span>!no_examples {
+            <span class="kw">match </span>data {
+                ast::Data::Enum(v) =&gt; handle_enum(v, <span class="kw-2">&amp;</span>input_ident, generics, tokens),
+                ast::Data::Struct(fields) =&gt; handle_struct(fields, <span class="kw-2">&amp;</span>input_ident, generics, tokens),
             }
         }
 
-        <span class="kw">if</span> <span class="ident">test</span> {
-            <span class="kw">let</span> <span class="ident">mod_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(
-                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;examples_{}&quot;</span>, <span class="ident">input_ident</span>.<span class="ident">to_string</span>().<span class="ident">to_lowercase</span>())[..],
-                <span class="ident">ident</span>.<span class="ident">span</span>(),
+        <span class="kw">if </span>test {
+            <span class="kw">let </span>mod_ident = syn::Ident::new(
+                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;examples_{}&quot;</span>, input_ident.to_string().to_lowercase())[..],
+                ident.span(),
             );
 
-            <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-                <span class="kw">mod</span> #<span class="ident">mod_ident</span> {
-                    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-                    <span class="kw">use</span> <span class="ident">rumbas_support::example::Examples</span>;
-                    <span class="kw">use</span> <span class="ident">std::error::Error</span>;
-                    <span class="attribute">#[<span class="ident">test</span>]</span>
-                    <span class="kw">fn</span> <span class="ident">compile_examples</span>() {
-                        <span class="kw">for</span> <span class="ident">example</span> <span class="kw">in</span> <span class="op">&lt;</span>#<span class="ident">input_ident</span><span class="op">&gt;</span><span class="ident">::examples</span>().<span class="ident">into_iter</span>() {
-                            <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="ident">serde_yaml::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">example</span>);
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">item</span> {
-                                <span class="macro">println!</span>(<span class="string">&quot;Examples {:#?}&quot;</span>, <span class="ident">example</span>);
-                                <span class="macro">println!</span>(<span class="string">&quot;Error: {:#?}&quot;</span>, <span class="ident">e</span>);
-                                <span class="macro">println!</span>(<span class="string">&quot;Caused by: {:#?}&quot;</span>, <span class="ident">e</span>.<span class="ident">source</span>());
+            tokens.extend(<span class="macro">quote! </span>{
+                <span class="attribute">#[cfg(test)]
+                </span><span class="kw">mod </span>#mod_ident {
+                    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+                    <span class="kw">use </span>rumbas_support::example::Examples;
+                    <span class="kw">use </span>std::error::Error;
+                    <span class="attribute">#[test]
+                    </span><span class="kw">fn </span>compile_examples() {
+                        <span class="kw">for </span>example <span class="kw">in </span>&lt;#input_ident&gt;::examples().into_iter() {
+                            <span class="kw">let </span>item = serde_yaml::to_string(<span class="kw-2">&amp;</span>example);
+                            <span class="kw">if let </span><span class="prelude-val">Err</span>(<span class="kw-2">ref </span>e) = item {
+                                <span class="macro">println!</span>(<span class="string">&quot;Examples {:#?}&quot;</span>, example);
+                                <span class="macro">println!</span>(<span class="string">&quot;Error: {:#?}&quot;</span>, e);
+                                <span class="macro">println!</span>(<span class="string">&quot;Caused by: {:#?}&quot;</span>, e.source());
 
                             }
-                            <span class="macro">assert!</span>(<span class="ident">item</span>.<span class="ident">is_ok</span>());
-                            <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">unwrap</span>();
-                            <span class="kw">let</span> <span class="ident">parsed</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span>#<span class="ident">input_ident</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_yaml::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">item</span>[..]);
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">parsed</span> {
-                                <span class="kw">if</span> <span class="string">&quot;No field is set to a not-none value.&quot;</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">to_string</span>()[..] {
+                            <span class="macro">assert!</span>(item.is_ok());
+                            <span class="kw">let </span>item = item.unwrap();
+                            <span class="kw">let </span>parsed: <span class="prelude-ty">Result</span>&lt;#input_ident, <span class="kw">_</span>&gt; = serde_yaml::from_str(<span class="kw-2">&amp;</span>item[..]);
+                            <span class="kw">if let </span><span class="prelude-val">Err</span>(<span class="kw-2">ref </span>e) = parsed {
+                                <span class="kw">if </span><span class="string">&quot;No field is set to a not-none value.&quot; </span>== <span class="kw-2">&amp;</span>e.to_string()[..] {
                                     <span class="kw">continue</span>;
                                 }
-                                <span class="macro">println!</span>(<span class="string">&quot;Input: {:#?}&quot;</span>, <span class="ident">item</span>);
-                                <span class="macro">println!</span>(<span class="string">&quot;Error: {:#?}&quot;</span>, <span class="ident">e</span>);
+                                <span class="macro">println!</span>(<span class="string">&quot;Input: {:#?}&quot;</span>, item);
+                                <span class="macro">println!</span>(<span class="string">&quot;Error: {:#?}&quot;</span>, e);
                             }
-                            <span class="macro">assert!</span>(<span class="ident">parsed</span>.<span class="ident">is_ok</span>());
-                            <span class="kw">let</span> <span class="ident">parsed</span> <span class="op">=</span> <span class="ident">parsed</span>.<span class="ident">unwrap</span>();
-                            <span class="macro">comparable::assert_changes!</span>(<span class="kw-2">&amp;</span><span class="ident">example</span>, <span class="kw-2">&amp;</span><span class="ident">parsed</span>, <span class="ident">comparable::Changed::Unchanged</span>);
-                            <span class="comment">// Should not fail anymore</span>
-                            <span class="macro">assert_eq!</span>(<span class="ident">example</span>, <span class="ident">parsed</span>);
-                            <span class="macro">insta::with_settings!</span>({<span class="ident">sort_maps</span> =&gt; <span class="bool-val">true</span>}, {
-                                <span class="macro">insta::assert_yaml_snapshot!</span>(<span class="kw-2">&amp;</span><span class="ident">example</span>);
+                            <span class="macro">assert!</span>(parsed.is_ok());
+                            <span class="kw">let </span>parsed = parsed.unwrap();
+                            <span class="macro">comparable::assert_changes!</span>(<span class="kw-2">&amp;</span>example, <span class="kw-2">&amp;</span>parsed, comparable::Changed::Unchanged);
+                            <span class="comment">// Should not fail anymore
+                            </span><span class="macro">assert_eq!</span>(example, parsed);
+                            <span class="macro">insta::with_settings!</span>({sort_maps =&gt; <span class="bool-val">true</span>}, {
+                                <span class="macro">insta::assert_yaml_snapshot!</span>(<span class="kw-2">&amp;</span>example);
                             });
                         }
                     }
@@ -894,73 +894,73 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impl_for_tuple</span>(<span class="ident">tup</span>: <span class="ident">syn::TypeTuple</span>) -&gt; <span class="ident">proc_macro2::TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">field_types</span> <span class="op">=</span> <span class="ident">tup</span>.<span class="ident">elems</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">quote!</span>(#<span class="ident">e</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_examples</span> <span class="op">=</span> <span class="ident">tup</span>
-        .<span class="ident">elems</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">t</span>)<span class="op">|</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;examples{}&quot;</span>, <span class="ident">i</span>,)[..], <span class="ident">t</span>.<span class="ident">span</span>()))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_iterators</span> <span class="op">=</span> <span class="ident">tup</span>
-        .<span class="ident">elems</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">t</span>)<span class="op">|</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;iterator{}&quot;</span>, <span class="ident">i</span>,)[..], <span class="ident">t</span>.<span class="ident">span</span>()))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="kw">let</span> <span class="ident">field_name_options</span> <span class="op">=</span> <span class="ident">tup</span>
-        .<span class="ident">elems</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">t</span>)<span class="op">|</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;option{}&quot;</span>, <span class="ident">i</span>,)[..], <span class="ident">t</span>.<span class="ident">span</span>()))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-    <span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> <span class="op">&lt;</span>#(#<span class="ident">field_types</span>: <span class="ident">Examples</span>,)<span class="kw-2">*</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> (#(#<span class="ident">field_types</span>,)<span class="kw-2">*</span>) {
-                <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+<span class="kw">pub fn </span>impl_for_tuple(tup: syn::TypeTuple) -&gt; proc_macro2::TokenStream {
+    <span class="kw">let </span>field_types = tup.elems.iter().map(|e| <span class="macro">quote!</span>(#e)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_examples = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;examples{}&quot;</span>, i,)[..], t.span()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_iterators = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;iterator{}&quot;</span>, i,)[..], t.span()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">let </span>field_name_options = tup
+        .elems
+        .iter()
+        .enumerate()
+        .map(|(i, t)| syn::Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;option{}&quot;</span>, i,)[..], t.span()))
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="macro">quote! </span>{
+            <span class="attribute">#[automatically_derived]
+            </span><span class="kw">impl </span>&lt;#(#field_types: Examples,)<span class="kw-2">*</span>&gt; Examples <span class="kw">for </span>(#(#field_types,)<span class="kw-2">*</span>) {
+                <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
                     #(
-                        <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">field_name_examples</span> <span class="op">=</span> <span class="op">&lt;</span>#<span class="ident">field_types</span><span class="op">&gt;</span><span class="ident">::examples</span>();
-                    )<span class="op">*</span>
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_examples_number</span> <span class="op">=</span> <span class="number">0</span>;
+                        <span class="kw">let </span><span class="kw-2">mut </span>#field_name_examples = &lt;#field_types&gt;::examples();
+                    )*
+                    <span class="kw">let </span><span class="kw-2">mut </span>max_examples_number = <span class="number">0</span>;
                     #(
-                        <span class="ident">max_examples_number</span> <span class="op">=</span> <span class="ident">std::cmp::max</span>(<span class="ident">max_examples_number</span>, #<span class="ident">field_name_examples</span>.<span class="ident">len</span>());
-                    )<span class="op">*</span>
+                        max_examples_number = std::cmp::max(max_examples_number, #field_name_examples.len());
+                    )*
                     #(
-                        <span class="kw">while</span> #<span class="ident">field_name_examples</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">max_examples_number</span> {
-                            #<span class="ident">field_name_examples</span>.<span class="ident">extend</span>(<span class="op">&lt;</span>#<span class="ident">field_types</span><span class="op">&gt;</span><span class="ident">::examples</span>());
+                        <span class="kw">while </span>#field_name_examples.len() &lt; max_examples_number {
+                            #field_name_examples.extend(&lt;#field_types&gt;::examples());
                         }
-                        <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">field_name_iterators</span> <span class="op">=</span> #<span class="ident">field_name_examples</span>.<span class="ident">into_iter</span>();
-                    )<span class="op">*</span>
+                        <span class="kw">let </span><span class="kw-2">mut </span>#field_name_iterators = #field_name_examples.into_iter();
+                    )*
 
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">loop</span> {
+                    <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
+                    <span class="kw">loop </span>{
                         #(
-                            <span class="kw">let</span> #<span class="ident">field_name_options</span> <span class="op">=</span> #<span class="ident">field_name_iterators</span>.<span class="ident">next</span>();
-                            <span class="kw">if</span> #<span class="ident">field_name_options</span>.<span class="ident">is_none</span>() {
+                            <span class="kw">let </span>#field_name_options = #field_name_iterators.next();
+                            <span class="kw">if </span>#field_name_options.is_none() {
                                 <span class="kw">break</span>;
                             }
-                        )<span class="op">*</span>
-                        <span class="ident">result</span>.<span class="ident">push</span>(
+                        )*
+                        result.push(
                             (
                                 #(
-                                   #<span class="ident">field_name_options</span>.<span class="ident">unwrap</span>(),
-                                )<span class="op">*</span>
+                                   #field_name_options.unwrap(),
+                                )*
                     )
                         )
                     }
-                    <span class="ident">result</span>
+                    result
             }
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">clean_ident_name</span>(<span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">to_string</span>();
-    <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&quot;r#&quot;</span>) {
-        <span class="ident">s</span>.<span class="ident">split_off</span>(<span class="number">2</span>)
-    } <span class="kw">else</span> {
-        <span class="ident">s</span>
+<span class="kw">fn </span>clean_ident_name(ident: <span class="kw-2">&amp;</span>syn::Ident) -&gt; String {
+    <span class="kw">let </span><span class="kw-2">mut </span>s = ident.to_string();
+    <span class="kw">if </span>s.starts_with(<span class="string">&quot;r#&quot;</span>) {
+        s.split_off(<span class="number">2</span>)
+    } <span class="kw">else </span>{
+        s
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

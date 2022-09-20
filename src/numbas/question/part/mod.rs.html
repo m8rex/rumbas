@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -200,51 +200,51 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::ContentAreaString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMENotesString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::Number</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">serde_json::Error</span>;
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::ContentAreaString;
+<span class="kw">use </span><span class="kw">crate</span>::jme::JMENotesString;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::Number;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>serde_json::Error;
+<span class="kw">use </span>serde_with::skip_serializing_none;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">choose_multiple</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">choose_one</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">extension</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gapfill</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">information</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">jme</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">match_answers</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">matrix</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">number_entry</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pattern_match</span>;
+<span class="kw">pub mod </span>choose_multiple;
+<span class="kw">pub mod </span>choose_one;
+<span class="kw">pub mod </span>extension;
+<span class="kw">pub mod </span>gapfill;
+<span class="kw">pub mod </span>information;
+<span class="kw">pub mod </span>jme;
+<span class="kw">pub mod </span>match_answers;
+<span class="kw">pub mod </span>matrix;
+<span class="kw">pub mod </span>number_entry;
+<span class="kw">pub mod </span>pattern_match;
 
-<span class="kw">use</span> <span class="ident">choose_multiple::QuestionPartChooseMultiple</span>;
-<span class="kw">use</span> <span class="ident">choose_one::QuestionPartChooseOne</span>;
-<span class="kw">use</span> <span class="ident">extension::QuestionPartExtension</span>;
-<span class="kw">use</span> <span class="ident">gapfill::QuestionPartGapFill</span>;
-<span class="kw">use</span> <span class="ident">information::QuestionPartInformation</span>;
-<span class="kw">use</span> <span class="ident">jme::QuestionPartJME</span>;
-<span class="kw">use</span> <span class="ident">match_answers::QuestionPartMatchAnswersWithChoices</span>;
-<span class="kw">use</span> <span class="ident">matrix::QuestionPartMatrix</span>;
-<span class="kw">use</span> <span class="ident">number_entry::QuestionPartNumberEntry</span>;
-<span class="kw">use</span> <span class="ident">pattern_match::QuestionPartPatternMatch</span>;
+<span class="kw">use </span>choose_multiple::QuestionPartChooseMultiple;
+<span class="kw">use </span>choose_one::QuestionPartChooseOne;
+<span class="kw">use </span>extension::QuestionPartExtension;
+<span class="kw">use </span>gapfill::QuestionPartGapFill;
+<span class="kw">use </span>information::QuestionPartInformation;
+<span class="kw">use </span>jme::QuestionPartJME;
+<span class="kw">use </span>match_answers::QuestionPartMatchAnswersWithChoices;
+<span class="kw">use </span>matrix::QuestionPartMatrix;
+<span class="kw">use </span>number_entry::QuestionPartNumberEntry;
+<span class="kw">use </span>pattern_match::QuestionPartPatternMatch;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;std::collections::BTreeMap&lt;String, serde_json::Value&gt;&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionPart</span> {
-    <span class="ident">Builtin</span>(<span class="ident">QuestionPartBuiltin</span>),
-    <span class="ident">Custom</span>(<span class="ident">QuestionPartCustom</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(try_from = <span class="string">&quot;std::collections::BTreeMap&lt;String, serde_json::Value&gt;&quot;</span>)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>QuestionPart {
+    Builtin(QuestionPartBuiltin),
+    Custom(QuestionPartCustom),
 }
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">std::collections::BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json::Value</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPart</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">serde_json::Error</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(
-        <span class="ident">map</span>: <span class="ident">std::collections::BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json::Value</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QuestionPart</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">serde_json::Value::String</span>(<span class="ident">r#type</span>)) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-            <span class="kw">if</span> [
+<span class="kw">impl </span>std::convert::TryFrom&lt;std::collections::BTreeMap&lt;String, serde_json::Value&gt;&gt; <span class="kw">for </span>QuestionPart {
+    <span class="kw">type </span>Error = serde_json::Error;
+    <span class="kw">fn </span>try_from(
+        map: std::collections::BTreeMap&lt;String, serde_json::Value&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;QuestionPart, Error&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(serde_json::Value::String(r#type)) = map.get(<span class="string">&quot;type&quot;</span>) {
+            <span class="kw">if </span>[
                 <span class="string">&quot;jme&quot;</span>,
                 <span class="string">&quot;numberentry&quot;</span>,
                 <span class="string">&quot;matrix&quot;</span>,
@@ -256,151 +256,151 @@
                 <span class="string">&quot;information&quot;</span>,
                 <span class="string">&quot;extension&quot;</span>,
             ]
-            .<span class="ident">contains</span>(<span class="op">&amp;&amp;</span><span class="ident">r#type</span>[..])
+            .contains(&amp;&amp;r#type[..])
             {
-                <span class="ident">QuestionPartBuiltin::deserialize</span>(<span class="ident">serde_json::Value::Object</span>(
-                    <span class="ident">map</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>(),
+                QuestionPartBuiltin::deserialize(serde_json::Value::Object(
+                    map.into_iter().collect(),
                 ))
-                .<span class="ident">map_err</span>(<span class="ident">serde::de::Error::custom</span>)
-                .<span class="ident">map</span>(<span class="ident">QuestionPart::Builtin</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">QuestionPartCustom::deserialize</span>(<span class="ident">serde_json::Value::Object</span>(
-                    <span class="ident">map</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>(),
+                .map_err(serde::de::Error::custom)
+                .map(QuestionPart::Builtin)
+            } <span class="kw">else </span>{
+                QuestionPartCustom::deserialize(serde_json::Value::Object(
+                    map.into_iter().collect(),
                 ))
-                .<span class="ident">map_err</span>(<span class="ident">serde::de::Error::custom</span>)
-                .<span class="ident">map</span>(<span class="ident">QuestionPart::Custom</span>)
+                .map_err(serde::de::Error::custom)
+                .map(QuestionPart::Custom)
             }
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">serde::de::Error::custom</span>(<span class="string">&quot;Missing type field&quot;</span>))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(serde::de::Error::custom(<span class="string">&quot;Missing type field&quot;</span>))
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionPartBuiltin</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;jme&quot;</span>)]</span>
-    <span class="ident">JME</span>(<span class="ident">QuestionPartJME</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;numberentry&quot;</span>)]</span>
-    <span class="ident">NumberEntry</span>(<span class="ident">QuestionPartNumberEntry</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>)]</span>
-    <span class="ident">Matrix</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">QuestionPartMatrix</span><span class="op">&gt;</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;patternmatch&quot;</span>)]</span>
-    <span class="ident">PatternMatch</span>(<span class="ident">QuestionPartPatternMatch</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;1_n_2&quot;</span>)]</span>
-    <span class="ident">ChooseOne</span>(<span class="ident">QuestionPartChooseOne</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;m_n_2&quot;</span>)]</span>
-    <span class="ident">ChooseMultiple</span>(<span class="ident">QuestionPartChooseMultiple</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;m_n_x&quot;</span>)]</span>
-    <span class="ident">MatchAnswersWithChoices</span>(<span class="ident">QuestionPartMatchAnswersWithChoices</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;gapfill&quot;</span>)]</span>
-    <span class="ident">GapFill</span>(<span class="ident">QuestionPartGapFill</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;information&quot;</span>)]</span>
-    <span class="ident">Information</span>(<span class="ident">QuestionPartInformation</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;extension&quot;</span>)]</span>
-    <span class="ident">Extension</span>(<span class="ident">QuestionPartExtension</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>QuestionPartBuiltin {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;jme&quot;</span>)]
+    </span>JME(QuestionPartJME),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;numberentry&quot;</span>)]
+    </span>NumberEntry(QuestionPartNumberEntry),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;matrix&quot;</span>)]
+    </span>Matrix(Box&lt;QuestionPartMatrix&gt;),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;patternmatch&quot;</span>)]
+    </span>PatternMatch(QuestionPartPatternMatch),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;1_n_2&quot;</span>)]
+    </span>ChooseOne(QuestionPartChooseOne),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;m_n_2&quot;</span>)]
+    </span>ChooseMultiple(QuestionPartChooseMultiple),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;m_n_x&quot;</span>)]
+    </span>MatchAnswersWithChoices(QuestionPartMatchAnswersWithChoices),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;gapfill&quot;</span>)]
+    </span>GapFill(QuestionPartGapFill),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;information&quot;</span>)]
+    </span>Information(QuestionPartInformation),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;extension&quot;</span>)]
+    </span>Extension(QuestionPartExtension),
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartSharedData</span> {
-    <span class="doccomment">/// A content area used to prompt the student for an answer.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">prompt</span>: <span class="ident">ContentAreaString</span>, <span class="comment">//TODO option? Maybe not in this type, but in other. Some types require this, other&#39;s not?</span>
-    <span class="doccomment">/// The number of marks to award for answering the part correctly.</span>
-    <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">Number</span>,
-    <span class="doccomment">/// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">steps</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;stepsPenalty&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="doccomment">/// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3×46=2 marks after revealing steps.</span>
-    <span class="kw">pub</span> <span class="ident">steps_penalty</span>: <span class="ident">Number</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showCorrectAnswer&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="doccomment">/// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</span>
-    <span class="kw">pub</span> <span class="ident">show_correct_answer</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showFeedbackIcon&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="doccomment">/// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</span>
-    <span class="kw">pub</span> <span class="ident">show_feedback_icon</span>: <span class="ident">bool</span>,
-    <span class="comment">// TODO: &quot;Score_counts_toward_objective&quot;</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;customMarkingAlgorithm&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">custom_marking_algorithm</span>: <span class="ident">JMENotesString</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;extendBaseMarkingAlgorithm&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="doccomment">/// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.</span>
-    <span class="kw">pub</span> <span class="ident">extend_base_marking_algorithm</span>: <span class="ident">bool</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>QuestionPartSharedData {
+    <span class="doccomment">/// A content area used to prompt the student for an answer.
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>prompt: ContentAreaString, <span class="comment">//TODO option? Maybe not in this type, but in other. Some types require this, other&#39;s not?
+    </span><span class="doccomment">/// The number of marks to award for answering the part correctly.
+    </span><span class="kw">pub </span>marks: Number,
+    <span class="doccomment">/// An optional list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>steps: Vec&lt;QuestionPart&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;stepsPenalty&quot;</span>, default)]
+    </span><span class="doccomment">/// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3×46=2 marks after revealing steps.
+    </span><span class="kw">pub </span>steps_penalty: Number,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;showCorrectAnswer&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="doccomment">/// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.
+    </span><span class="kw">pub </span>show_correct_answer: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;showFeedbackIcon&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="doccomment">/// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.
+    </span><span class="kw">pub </span>show_feedback_icon: bool,
+    <span class="comment">// TODO: &quot;Score_counts_toward_objective&quot;
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;customMarkingAlgorithm&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>custom_marking_algorithm: JMENotesString,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;extendBaseMarkingAlgorithm&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="doccomment">/// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.
+    </span><span class="kw">pub </span>extend_base_marking_algorithm: bool,
 
-    <span class="comment">// TODO below not listed in</span>
-    <span class="comment">// https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#generic-part-properties</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;useCustomName&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">use_custom_name</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;customName&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">custom_name</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;enableMinimumMarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">enable_minimum_marks</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minimumMarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">minimum_marks</span>: <span class="ident">usize</span>,
+    <span class="comment">// TODO below not listed in
+    // https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#generic-part-properties
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;useCustomName&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>use_custom_name: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;customName&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>custom_name: String,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;enableMinimumMarks&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="kw">pub </span>enable_minimum_marks: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;minimumMarks&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>minimum_marks: usize,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;variableReplacementStrategy&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// The circumstances under which the variable replacements are used, and adaptive marking is applied.</span>
-    <span class="kw">pub</span> <span class="ident">variable_replacement_strategy</span>: <span class="ident">VariableReplacementStrategy</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;adaptiveMarkingPenalty&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for using adaptive marking is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without the penalty is instead worth 3×46=2 marks when adaptive marking is used.</span>
-    <span class="kw">pub</span> <span class="ident">adaptive_marking_penalty</span>: <span class="ident">usize</span>,
-    <span class="comment">//scripts TODO</span>
-    <span class="comment">//https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#scripts</span>
-    <span class="comment">//[serde(rename= &quot;variableReplacements&quot;)]</span>
+    <span class="attribute">#[serde(rename = <span class="string">&quot;variableReplacementStrategy&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// The circumstances under which the variable replacements are used, and adaptive marking is applied.
+    </span><span class="kw">pub </span>variable_replacement_strategy: VariableReplacementStrategy,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;adaptiveMarkingPenalty&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for using adaptive marking is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without the penalty is instead worth 3×46=2 marks when adaptive marking is used.
+    </span><span class="kw">pub </span>adaptive_marking_penalty: usize,
+    <span class="comment">//scripts TODO
+    //https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html?highlight=content%20area#scripts
+    //[serde(rename= &quot;variableReplacements&quot;)]
+</span>}
+
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>QuestionPartCustom {
+    <span class="kw">pub </span>r#type: String,
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>part_data: QuestionPartSharedData,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>settings: std::collections::HashMap&lt;String, CustomPartInputTypeValue&gt;,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartCustom</span> {
-    <span class="kw">pub</span> <span class="ident">r#type</span>: <span class="ident">String</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">settings</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">CustomPartInputTypeValue</span><span class="op">&gt;</span>,
+<span class="comment">// TODO: other types
+</span><span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>CustomPartInputTypeValue {
+    CheckBox(bool),
+    Code(String),
 }
 
-<span class="comment">// TODO: other types</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartInputTypeValue</span> {
-    <span class="ident">CheckBox</span>(<span class="ident">bool</span>),
-    <span class="ident">Code</span>(<span class="ident">String</span>),
-}
-
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">CustomPartInputTypeValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">CustomPartInputTypeValue</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">v</span> {
-            <span class="ident">CustomPartInputTypeValue::CheckBox</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">to_string</span>(),
-            <span class="ident">CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+<span class="kw">impl </span>std::convert::From&lt;CustomPartInputTypeValue&gt; <span class="kw">for </span>String {
+    <span class="kw">fn </span>from(v: CustomPartInputTypeValue) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>v {
+            CustomPartInputTypeValue::CheckBox(v) =&gt; v.to_string(),
+            CustomPartInputTypeValue::Code(v) =&gt; v,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableReplacementStrategy</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;originalfirst&quot;</span>)]</span>
-    <span class="doccomment">/// The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.</span>
-    <span class="ident">OriginalFirst</span>,
-    <span class="comment">//#[serde(rename = &quot;always&quot;)] // TODO: check name etc</span>
-    <span class="comment">// /// The student’s answer is only marked once, with the defined variable replacements applied.</span>
-    <span class="comment">//Always,</span>
-}
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>VariableReplacementStrategy {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;originalfirst&quot;</span>)]
+    </span><span class="doccomment">/// The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.
+    </span>OriginalFirst,
+    <span class="comment">//#[serde(rename = &quot;always&quot;)] // TODO: check name etc
+    // /// The student’s answer is only marked once, with the defined variable replacements applied.
+    //Always,
+</span>}
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">VariableReplacementStrategy</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::OriginalFirst</span>
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>VariableReplacementStrategy {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::OriginalFirst
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

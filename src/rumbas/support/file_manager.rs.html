@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -883,802 +883,802 @@
 <span id="883">883</span>
 <span id="884">884</span>
 <span id="885">885</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rayon::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::input</span>::{<span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span>, <span class="ident">LoadedLocalizedFile</span>, <span class="ident">LoadedNormalFile</span>};
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
-<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections::HashMap</span>,
-    <span class="ident">sync</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>},
+</pre><pre class="rust"><code><span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
+<span class="kw">use </span>std::path::Path;
+<span class="kw">use </span>std::path::PathBuf;
+<span class="kw">use </span>std::{
+    collections::HashMap,
+    sync::{Mutex, RwLock},
 };
 
-<span class="macro">lazy_static!</span> {
-    <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">CACHE</span>: <span class="ident">FileManager</span> <span class="op">=</span> <span class="ident">FileManager::default</span>();
+<span class="macro">lazy_static! </span>{
+    <span class="kw">pub static </span><span class="kw-2">ref </span>CACHE: FileManager = FileManager::default();
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FileManager</span> {
-    <span class="ident">cache</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">dir_cache</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">PathBuf</span>, <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">RumbasRepoFolderEntries</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>FileManager {
+    cache: RwLock&lt;HashMap&lt;FileToLoad, Mutex&lt;LoadedFile&gt;&gt;&gt;,
+    dir_cache: RwLock&lt;HashMap&lt;PathBuf, Mutex&lt;RumbasRepoFolderEntries&gt;&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">FileManager</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">cache</span>: <span class="ident">RwLock::new</span>(<span class="ident">HashMap::new</span>()),
-            <span class="ident">dir_cache</span>: <span class="ident">RwLock::new</span>(<span class="ident">HashMap::new</span>()),
+<span class="kw">impl </span>Default <span class="kw">for </span>FileManager {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            cache: RwLock::new(HashMap::new()),
+            dir_cache: RwLock::new(HashMap::new()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FileManager</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="ident">FileToLoad</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">read</span>().<span class="ident">expect</span>(<span class="string">&quot;Can read cache map&quot;</span>);
-        <span class="macro">log::debug!</span>(<span class="string">&quot;Checking if {} is in the cache.&quot;</span>, <span class="ident">file</span>.<span class="ident">file_path</span>.<span class="ident">display</span>());
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>) {
-            <span class="macro">log::debug!</span>(<span class="string">&quot;Found {} in the cache.&quot;</span>, <span class="ident">file</span>.<span class="ident">file_path</span>.<span class="ident">display</span>());
-            <span class="prelude-val">Some</span>(<span class="ident">val</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;unlock loaded file mutex&quot;</span>).<span class="ident">clone</span>())
-        } <span class="kw">else</span> {
-            <span class="ident">std::mem::drop</span>(<span class="ident">map</span>); <span class="comment">// remove the read lock</span>
+<span class="kw">impl </span>FileManager {
+    <span class="kw">pub fn </span>read_file(<span class="kw-2">&amp;</span><span class="self">self</span>, file: FileToLoad) -&gt; <span class="prelude-ty">Option</span>&lt;LoadedFile&gt; {
+        <span class="kw">let </span>map = <span class="self">self</span>.cache.read().expect(<span class="string">&quot;Can read cache map&quot;</span>);
+        <span class="macro">log::debug!</span>(<span class="string">&quot;Checking if {} is in the cache.&quot;</span>, file.file_path.display());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = map.get(<span class="kw-2">&amp;</span>file) {
+            <span class="macro">log::debug!</span>(<span class="string">&quot;Found {} in the cache.&quot;</span>, file.file_path.display());
+            <span class="prelude-val">Some</span>(val.lock().expect(<span class="string">&quot;unlock loaded file mutex&quot;</span>).clone())
+        } <span class="kw">else </span>{
+            std::mem::drop(map); <span class="comment">// remove the read lock
 
-            <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">file</span>.<span class="ident">locale_dependant</span> {
-                <span class="bool-val">true</span> =&gt; <span class="self">self</span>
-                    .<span class="ident">read_localized_file</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>.<span class="ident">file_path</span>)
-                    .<span class="ident">map</span>(<span class="ident">rumbas_support::input::LoadedFile::Localized</span>),
-                <span class="bool-val">false</span> =&gt; <span class="ident"><span class="self">Self</span>::read_normal_file</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>.<span class="ident">file_path</span>)
-                    .<span class="ident">map</span>(<span class="ident">rumbas_support::input::LoadedFile::Normal</span>),
+            </span><span class="kw">let </span>res = <span class="kw">match </span>file.locale_dependant {
+                <span class="bool-val">true </span>=&gt; <span class="self">self
+                    </span>.read_localized_file(<span class="kw-2">&amp;</span>file.file_path)
+                    .map(rumbas_support::input::LoadedFile::Localized),
+                <span class="bool-val">false </span>=&gt; <span class="self">Self</span>::read_normal_file(<span class="kw-2">&amp;</span>file.file_path)
+                    .map(rumbas_support::input::LoadedFile::Normal),
             };
-            <span class="kw">match</span> <span class="ident">res</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">r</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">write</span>().<span class="ident">expect</span>(<span class="string">&quot;Can write cache map&quot;</span>);
-                    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">file</span>.<span class="ident">clone</span>(), <span class="ident">Mutex::new</span>(<span class="ident">r</span>.<span class="ident">clone</span>()));
-                    <span class="prelude-val">Some</span>(<span class="ident">r</span>)
+            <span class="kw">match </span>res {
+                <span class="prelude-val">Ok</span>(r) =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>map = <span class="self">self</span>.cache.write().expect(<span class="string">&quot;Can write cache map&quot;</span>);
+                    map.insert(file.clone(), Mutex::new(r.clone()));
+                    <span class="prelude-val">Some</span>(r)
                 }
                 <span class="prelude-val">Err</span>(()) =&gt; {
-                    <span class="macro">log::error!</span>(<span class="string">&quot;Couldn&#39;t resolve {}&quot;</span>, <span class="ident">file</span>.<span class="ident">file_path</span>.<span class="ident">display</span>());
-                    <span class="prelude-val">None</span>
-                }
+                    <span class="macro">log::error!</span>(<span class="string">&quot;Couldn&#39;t resolve {}&quot;</span>, file.file_path.display());
+                    <span class="prelude-val">None
+                </span>}
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_files</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">files</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span>) -&gt; <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">result</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">files</span>
-            .<span class="ident">into_par_iter</span>()
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">file</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">read_file</span>(<span class="ident">file</span>.<span class="ident">clone</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> (<span class="ident">file</span>, <span class="ident">l</span>)))
-            .<span class="ident">collect</span>();
-        <span class="ident">result</span>
+    <span class="kw">pub fn </span>read_files(<span class="kw-2">&amp;</span><span class="self">self</span>, files: Vec&lt;FileToLoad&gt;) -&gt; HashMap&lt;FileToLoad, LoadedFile&gt; {
+        <span class="kw">let </span>result: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = files
+            .into_par_iter()
+            .filter_map(|file| <span class="self">self</span>.read_file(file.clone()).map(|l| (file, l)))
+            .collect();
+        result
     }
 
-    <span class="kw">fn</span> <span class="ident">read_normal_file</span>(<span class="ident">file_path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">LoadedNormalFile</span>, ()<span class="op">&gt;</span> {
-        <span class="macro">log::debug!</span>(<span class="string">&quot;Reading normal file {}.&quot;</span>, <span class="ident">file_path</span>.<span class="ident">display</span>());
-        <span class="kw">match</span> <span class="ident">std::fs::read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">file_path</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">content</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">LoadedNormalFile</span> {
-                <span class="ident">content</span>,
-                <span class="ident">file_path</span>: <span class="ident">file_path</span>.<span class="ident">to_path_buf</span>(),
+    <span class="kw">fn </span>read_normal_file(file_path: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedNormalFile, ()&gt; {
+        <span class="macro">log::debug!</span>(<span class="string">&quot;Reading normal file {}.&quot;</span>, file_path.display());
+        <span class="kw">match </span>std::fs::read_to_string(<span class="kw-2">&amp;</span>file_path) {
+            <span class="prelude-val">Ok</span>(content) =&gt; <span class="prelude-val">Ok</span>(LoadedNormalFile {
+                content,
+                file_path: file_path.to_path_buf(),
             }),
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
+            <span class="prelude-val">Err</span>(e) =&gt; {
                 <span class="macro">log::error!</span>(
                     <span class="string">&quot;Failed read content of {} with error {}&quot;</span>,
-                    <span class="ident">file_path</span>.<span class="ident">display</span>(),
-                    <span class="ident">e</span>
+                    file_path.display(),
+                    e
                 );
                 <span class="prelude-val">Err</span>(())
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">read_localized_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file_path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">LoadedLocalizedFile</span>, ()<span class="op">&gt;</span> {
-        <span class="macro">log::debug!</span>(<span class="string">&quot;Reading localized file {}.&quot;</span>, <span class="ident">file_path</span>.<span class="ident">display</span>());
-        <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="ident">file_path</span>.<span class="ident">file_name</span>().<span class="ident">unwrap</span>().<span class="ident">to_str</span>().<span class="ident">unwrap</span>(); <span class="comment">//TODO</span>
-        <span class="kw">let</span> <span class="ident">file_dir</span> <span class="op">=</span> <span class="ident">file_path</span>.<span class="ident">parent</span>().<span class="ident">ok_or</span>(())<span class="question-mark">?</span>;
-        <span class="macro">log::debug!</span>(<span class="string">&quot;Looking for localized files in {}.&quot;</span>, <span class="ident">file_dir</span>.<span class="ident">display</span>());
-        <span class="comment">//Look for translation dirs</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">translated_content</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="kw">for</span> (<span class="ident">path</span>, <span class="ident">locale</span>) <span class="kw">in</span> <span class="self">self</span>
-            .<span class="ident">read_folder</span>(<span class="ident">file_dir</span>)
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
-                <span class="ident">RumbasRepoEntry::File</span>(<span class="ident">_f</span>) =&gt; <span class="prelude-val">None</span>,
-                <span class="ident">RumbasRepoEntry::Folder</span>(<span class="ident">f</span>) =&gt; <span class="kw">match</span> <span class="ident">f</span>.<span class="ident">r#type</span> {
-                    <span class="ident">RumbasRepoFolderType::LocalizedFolder</span> { <span class="ident">locale</span> } =&gt; <span class="prelude-val">Some</span>((<span class="ident">f</span>.<span class="ident">path</span>, <span class="ident">locale</span>)),
-                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+    <span class="kw">fn </span>read_localized_file(<span class="kw-2">&amp;</span><span class="self">self</span>, file_path: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedLocalizedFile, ()&gt; {
+        <span class="macro">log::debug!</span>(<span class="string">&quot;Reading localized file {}.&quot;</span>, file_path.display());
+        <span class="kw">let </span>file_name = file_path.file_name().unwrap().to_str().unwrap(); <span class="comment">//TODO
+        </span><span class="kw">let </span>file_dir = file_path.parent().ok_or(())<span class="question-mark">?</span>;
+        <span class="macro">log::debug!</span>(<span class="string">&quot;Looking for localized files in {}.&quot;</span>, file_dir.display());
+        <span class="comment">//Look for translation dirs
+        </span><span class="kw">let </span><span class="kw-2">mut </span>translated_content = HashMap::new();
+        <span class="kw">for </span>(path, locale) <span class="kw">in </span><span class="self">self
+            </span>.read_folder(file_dir)
+            .into_iter()
+            .filter_map(|e| <span class="kw">match </span>e {
+                RumbasRepoEntry::File(_f) =&gt; <span class="prelude-val">None</span>,
+                RumbasRepoEntry::Folder(f) =&gt; <span class="kw">match </span>f.r#type {
+                    RumbasRepoFolderType::LocalizedFolder { locale } =&gt; <span class="prelude-val">Some</span>((f.path, locale)),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
                 },
             })
         {
-            <span class="kw">let</span> <span class="ident">locale_file_path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">join</span>(<span class="ident">file_name</span>);
-            <span class="kw">if</span> <span class="ident">locale_file_path</span>.<span class="ident">exists</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">std::fs::read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">locale_file_path</span>) {
-                    <span class="macro">log::debug!</span>(<span class="string">&quot;Found localized file {}.&quot;</span>, <span class="ident">locale_file_path</span>.<span class="ident">display</span>());
-                    <span class="ident">translated_content</span>.<span class="ident">insert</span>(<span class="ident">locale</span>, <span class="ident">s</span>);
-                } <span class="kw">else</span> {
-                    <span class="macro">log::warn!</span>(<span class="string">&quot;Failed reading {}&quot;</span>, <span class="ident">locale_file_path</span>.<span class="ident">display</span>());
+            <span class="kw">let </span>locale_file_path = path.join(file_name);
+            <span class="kw">if </span>locale_file_path.exists() {
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(s) = std::fs::read_to_string(<span class="kw-2">&amp;</span>locale_file_path) {
+                    <span class="macro">log::debug!</span>(<span class="string">&quot;Found localized file {}.&quot;</span>, locale_file_path.display());
+                    translated_content.insert(locale, s);
+                } <span class="kw">else </span>{
+                    <span class="macro">log::warn!</span>(<span class="string">&quot;Failed reading {}&quot;</span>, locale_file_path.display());
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">std::fs::read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">file_path</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">s</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
+        <span class="kw">let </span>content = <span class="kw">match </span>std::fs::read_to_string(<span class="kw-2">&amp;</span>file_path) {
+            <span class="prelude-val">Ok</span>(s) =&gt; <span class="prelude-val">Some</span>(s),
+            <span class="prelude-val">Err</span>(e) =&gt; {
                 <span class="macro">log::debug!</span>(
                     <span class="string">&quot;Failed reading content for default localized file {} with error {}&quot;</span>,
-                    <span class="ident">file_path</span>.<span class="ident">display</span>(),
-                    <span class="ident">e</span>
+                    file_path.display(),
+                    e
                 );
-                <span class="prelude-val">None</span>
-            }
+                <span class="prelude-val">None
+            </span>}
         };
-        <span class="prelude-val">Ok</span>(<span class="ident">LoadedLocalizedFile</span> {
-            <span class="ident">file_path</span>: <span class="ident">file_path</span>.<span class="ident">to_path_buf</span>(),
-            <span class="ident">content</span>,
-            <span class="ident">localized_content</span>: <span class="ident">translated_content</span>,
+        <span class="prelude-val">Ok</span>(LoadedLocalizedFile {
+            file_path: file_path.to_path_buf(),
+            content,
+            localized_content: translated_content,
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FileManager</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoEntry</span><span class="op">&gt;</span> {
-        <span class="comment">// TODO: handle symlinks...</span>
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dir_cache</span>.<span class="ident">read</span>().<span class="ident">expect</span>(<span class="string">&quot;Can read dir cache map&quot;</span>);
-        <span class="macro">log::debug!</span>(<span class="string">&quot;Checking if {} is in the dir_cache.&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>());
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="ident">path</span>) {
-            <span class="macro">log::debug!</span>(<span class="string">&quot;Found {} in the dir_cache.&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>());
-            <span class="ident">val</span>.<span class="ident">lock</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;unlock loaded file mutex&quot;</span>)
-                .<span class="ident">entries</span>
-                .<span class="ident">clone</span>()
-        } <span class="kw">else</span> {
-            <span class="ident">std::mem::drop</span>(<span class="ident">map</span>); <span class="comment">// remove the read lock</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entries</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-            <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">is_dir</span>() {
-                <span class="kw">for</span> <span class="ident">entry</span> <span class="kw">in</span> <span class="ident">path</span>.<span class="ident">read_dir</span>().<span class="ident">expect</span>(<span class="string">&quot;read_dir call failed&quot;</span>).<span class="ident">flatten</span>()
-                <span class="comment">// We only care about the ones that are &#39;Ok&#39;</span>
-                {
-                    <span class="ident">entries</span>.<span class="ident">push</span>(<span class="ident">RumbasRepoEntry::from</span>(<span class="kw-2">&amp;</span><span class="ident">entry</span>.<span class="ident">path</span>()));
+<span class="kw">impl </span>FileManager {
+    <span class="kw">pub fn </span>read_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; Vec&lt;RumbasRepoEntry&gt; {
+        <span class="comment">// TODO: handle symlinks...
+        </span><span class="kw">let </span>map = <span class="self">self</span>.dir_cache.read().expect(<span class="string">&quot;Can read dir cache map&quot;</span>);
+        <span class="macro">log::debug!</span>(<span class="string">&quot;Checking if {} is in the dir_cache.&quot;</span>, path.display());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = map.get(path) {
+            <span class="macro">log::debug!</span>(<span class="string">&quot;Found {} in the dir_cache.&quot;</span>, path.display());
+            val.lock()
+                .expect(<span class="string">&quot;unlock loaded file mutex&quot;</span>)
+                .entries
+                .clone()
+        } <span class="kw">else </span>{
+            std::mem::drop(map); <span class="comment">// remove the read lock
+            </span><span class="kw">let </span><span class="kw-2">mut </span>entries = Vec::new();
+            <span class="kw">if </span>path.is_dir() {
+                <span class="kw">for </span>entry <span class="kw">in </span>path.read_dir().expect(<span class="string">&quot;read_dir call failed&quot;</span>).flatten()
+                <span class="comment">// We only care about the ones that are &#39;Ok&#39;
+                </span>{
+                    entries.push(RumbasRepoEntry::from(<span class="kw-2">&amp;</span>entry.path()));
                 }
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dir_cache</span>.<span class="ident">write</span>().<span class="ident">expect</span>(<span class="string">&quot;Can write dir_cache map&quot;</span>);
-                <span class="ident">map</span>.<span class="ident">insert</span>(
-                    <span class="ident">path</span>.<span class="ident">to_path_buf</span>(),
-                    <span class="ident">Mutex::new</span>(<span class="ident">RumbasRepoFolderEntries</span> {
-                        <span class="ident">r#type</span>: <span class="ident">RumbasRepoFolderType::from</span>(<span class="ident">path</span>),
-                        <span class="ident">entries</span>: <span class="ident">entries</span>.<span class="ident">clone</span>(),
+                <span class="kw">let </span><span class="kw-2">mut </span>map = <span class="self">self</span>.dir_cache.write().expect(<span class="string">&quot;Can write dir_cache map&quot;</span>);
+                map.insert(
+                    path.to_path_buf(),
+                    Mutex::new(RumbasRepoFolderEntries {
+                        r#type: RumbasRepoFolderType::from(path),
+                        entries: entries.clone(),
                     }),
                 );
-                <span class="ident">entries</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Vec::new</span>()
+                entries
+            } <span class="kw">else </span>{
+                Vec::new()
             }
         }
     }
-    <span class="kw">fn</span> <span class="ident">read_all_folders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoFolderData</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">read_folder</span>(<span class="ident">path</span>)
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
-                <span class="ident">RumbasRepoEntry::Folder</span>(<span class="ident">f</span>) =&gt; <span class="prelude-val">Some</span>(
-                    <span class="self">self</span>.<span class="ident">read_all_folders</span>(<span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">path</span>)
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">chain</span>(<span class="macro">vec!</span>[<span class="ident">f</span>].<span class="ident">into_iter</span>())
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+    <span class="kw">fn </span>read_all_folders(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
+        <span class="self">self</span>.read_folder(path)
+            .into_iter()
+            .filter_map(|e| <span class="kw">match </span>e {
+                RumbasRepoEntry::Folder(f) =&gt; <span class="prelude-val">Some</span>(
+                    <span class="self">self</span>.read_all_folders(<span class="kw-2">&amp;</span>f.path)
+                        .into_iter()
+                        .chain(<span class="macro">vec!</span>[f].into_iter())
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
                 ),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             })
-            .<span class="ident">flatten</span>()
-            .<span class="ident">collect</span>()
+            .flatten()
+            .collect()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_default_folders</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoFolderData</span><span class="op">&gt;</span> {
-        <span class="comment">// TODO find repo base</span>
-        <span class="self">self</span>.<span class="ident">read_all_folders</span>(<span class="ident">std::path::Path::new</span>(<span class="string">&quot;.&quot;</span>))
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">r#type</span> <span class="op">==</span> <span class="ident">RumbasRepoFolderType::DefaultFolder</span>)
-            .<span class="ident">collect</span>()
+    <span class="kw">pub fn </span>find_default_folders(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
+        <span class="comment">// TODO find repo base
+        </span><span class="self">self</span>.read_all_folders(std::path::Path::new(<span class="string">&quot;.&quot;</span>))
+            .into_iter()
+            .filter(|f| f.r#type == RumbasRepoFolderType::DefaultFolder)
+            .collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FileManager</span> {
-    <span class="kw">fn</span> <span class="ident">find_all_yaml_files</span>(
+<span class="kw">impl </span>FileManager {
+    <span class="kw">fn </span>find_all_yaml_files(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">path</span>: <span class="ident">PathBuf</span>,
-        <span class="ident">wanted_file_type</span>: <span class="ident">RumbasRepoFileType</span>,
-    ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">files</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">for</span> <span class="ident">entry</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">read_folder</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>) {
-            <span class="kw">match</span> <span class="ident">entry</span> {
-                <span class="ident">RumbasRepoEntry::File</span>(<span class="ident">file</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">file</span>.<span class="ident">r#type</span> <span class="op">==</span> <span class="ident">wanted_file_type</span> {
-                        <span class="ident">files</span>.<span class="ident">push</span>(<span class="ident">FileToLoad</span> {
-                            <span class="ident">file_path</span>: <span class="ident">file</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
-                            <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+        path: PathBuf,
+        wanted_file_type: RumbasRepoFileType,
+    ) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>files = Vec::new();
+        <span class="kw">for </span>entry <span class="kw">in </span><span class="self">self</span>.read_folder(<span class="kw-2">&amp;</span>path) {
+            <span class="kw">match </span>entry {
+                RumbasRepoEntry::File(file) =&gt; {
+                    <span class="kw">if </span>file.r#type == wanted_file_type {
+                        files.push(FileToLoad {
+                            file_path: file.path.clone(),
+                            locale_dependant: <span class="bool-val">false</span>,
                         })
                     }
                 }
-                <span class="ident">RumbasRepoEntry::Folder</span>(<span class="ident">folder</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">folder</span>.<span class="ident">r#type</span> <span class="op">==</span> <span class="ident">RumbasRepoFolderType::Folder</span> {
-                        <span class="ident">files</span>
-                            .<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">find_all_yaml_files</span>(<span class="ident">folder</span>.<span class="ident">path</span>, <span class="ident">wanted_file_type</span>.<span class="ident">clone</span>()))
+                RumbasRepoEntry::Folder(folder) =&gt; {
+                    <span class="kw">if </span>folder.r#type == RumbasRepoFolderType::Folder {
+                        files
+                            .extend(<span class="self">self</span>.find_all_yaml_files(folder.path, wanted_file_type.clone()))
                     }
                 }
             }
         }
-        <span class="ident">files</span>
+        files
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_all_questions_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">find_all_yaml_files</span>(<span class="ident">folder_path</span>, <span class="ident">RumbasRepoFileType::QuestionFile</span>)
+    <span class="kw">pub fn </span>find_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_questions_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_all_questions_in_folder</span>(<span class="ident">folder_path</span>);
-        <span class="self">self</span>.<span class="ident">read_files</span>(<span class="ident">files</span>).<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">l</span>)<span class="op">|</span> <span class="ident">l</span>).<span class="ident">collect</span>()
+    <span class="kw">pub fn </span>read_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>files = <span class="self">self</span>.find_all_questions_in_folder(folder_path);
+        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_questions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">read_all_questions_in_folder</span>(
-            <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTIONS_FOLDER</span>).<span class="ident">to_path_buf</span>(),
-        ) <span class="comment">// TODO, find root of rumbas repo by looking for rc file</span>
+    <span class="kw">pub fn </span>read_all_questions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="self">self</span>.read_all_questions_in_folder(
+            std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER).to_path_buf(),
+        ) <span class="comment">// TODO, find root of rumbas repo by looking for rc file
+    </span>}
+    <span class="kw">pub fn </span>find_all_question_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_all_question_templates_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">find_all_yaml_files</span>(<span class="ident">folder_path</span>, <span class="ident">RumbasRepoFileType::QuestionTemplateFile</span>)
+    <span class="kw">pub fn </span>read_all_question_templates(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER).to_path_buf(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file
+        </span><span class="kw">let </span>files = <span class="self">self</span>.find_all_question_templates_in_folder(folder_path);
+        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_question_templates</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">folder_path</span> <span class="op">=</span> <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER</span>).<span class="ident">to_path_buf</span>(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file</span>
-        <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_all_question_templates_in_folder</span>(<span class="ident">folder_path</span>);
-        <span class="self">self</span>.<span class="ident">read_files</span>(<span class="ident">files</span>).<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">l</span>)<span class="op">|</span> <span class="ident">l</span>).<span class="ident">collect</span>()
+    <span class="kw">pub fn </span>find_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_all_exams_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">find_all_yaml_files</span>(<span class="ident">folder_path</span>, <span class="ident">RumbasRepoFileType::ExamFile</span>)
+    <span class="kw">pub fn </span>read_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>files = <span class="self">self</span>.find_all_exams_in_folder(folder_path);
+        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_exams_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_all_exams_in_folder</span>(<span class="ident">folder_path</span>);
-        <span class="self">self</span>.<span class="ident">read_files</span>(<span class="ident">files</span>).<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">l</span>)<span class="op">|</span> <span class="ident">l</span>).<span class="ident">collect</span>()
+    <span class="kw">pub fn </span>read_all_exams(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="self">self</span>.read_all_exams_in_folder(std::path::Path::new(<span class="kw">crate</span>::EXAMS_FOLDER).to_path_buf())
+        <span class="comment">// TODO, find root of rumbas repo by looking for rc file
+    </span>}
+    <span class="kw">pub fn </span>find_all_exam_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_exams</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">read_all_exams_in_folder</span>(<span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::EXAMS_FOLDER</span>).<span class="ident">to_path_buf</span>())
-        <span class="comment">// TODO, find root of rumbas repo by looking for rc file</span>
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_all_exam_templates_in_folder</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">folder_path</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">find_all_yaml_files</span>(<span class="ident">folder_path</span>, <span class="ident">RumbasRepoFileType::ExamTemplateFile</span>)
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_all_exam_templates</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LoadedFile</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">folder_path</span> <span class="op">=</span> <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER</span>).<span class="ident">to_path_buf</span>(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file</span>
-        <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">find_all_exam_templates_in_folder</span>(<span class="ident">folder_path</span>);
-        <span class="self">self</span>.<span class="ident">read_files</span>(<span class="ident">files</span>).<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">l</span>)<span class="op">|</span> <span class="ident">l</span>).<span class="ident">collect</span>()
+    <span class="kw">pub fn </span>read_all_exam_templates(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER).to_path_buf(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file
+        </span><span class="kw">let </span>files = <span class="self">self</span>.find_all_exam_templates_in_folder(folder_path);
+        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FileManager</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="ident">FileToLoad</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">write</span>().<span class="ident">expect</span>(<span class="string">&quot;Can write cache map&quot;</span>);
-        <span class="kw">if</span> <span class="ident">map</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>) {
-            <span class="macro">log::debug!</span>(<span class="string">&quot;Deleting {} from the cache.&quot;</span>, <span class="ident">file</span>.<span class="ident">file_path</span>.<span class="ident">display</span>());
-            <span class="ident">map</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>);
+<span class="kw">impl </span>FileManager {
+    <span class="kw">pub fn </span>delete_file(<span class="kw-2">&amp;</span><span class="self">self</span>, file: FileToLoad) {
+        <span class="kw">let </span><span class="kw-2">mut </span>map = <span class="self">self</span>.cache.write().expect(<span class="string">&quot;Can write cache map&quot;</span>);
+        <span class="kw">if </span>map.contains_key(<span class="kw-2">&amp;</span>file) {
+            <span class="macro">log::debug!</span>(<span class="string">&quot;Deleting {} from the cache.&quot;</span>, file.file_path.display());
+            map.remove(<span class="kw-2">&amp;</span>file);
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FileToRead</span> {
-    <span class="ident">Text</span>(<span class="ident">TextFileToRead</span>),
-    <span class="ident">CustomPartType</span>(<span class="ident">CustomPartTypeFileToRead</span>),
-    <span class="ident">Question</span>(<span class="ident">QuestionFileToRead</span>),
-    <span class="ident">Exam</span>(<span class="ident">ExamFileToRead</span>),
+<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+</span><span class="kw">pub enum </span>FileToRead {
+    Text(TextFileToRead),
+    CustomPartType(CustomPartTypeFileToRead),
+    Question(QuestionFileToRead),
+    Exam(ExamFileToRead),
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">FileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rumbas_support::input::FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">FileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">s</span> {
-            <span class="ident">FileToRead::Text</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::CustomPartType</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::Question</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::Exam</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
+<span class="kw">impl </span>std::convert::From&lt;FileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
+    <span class="kw">fn </span>from(s: FileToRead) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>s {
+            FileToRead::Text(t) =&gt; t.into(),
+            FileToRead::CustomPartType(t) =&gt; t.into(),
+            FileToRead::Question(t) =&gt; t.into(),
+            FileToRead::Exam(t) =&gt; t.into(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">FileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathBuf</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">FileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">s</span> {
-            <span class="ident">FileToRead::Text</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::CustomPartType</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::Question</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
-            <span class="ident">FileToRead::Exam</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">into</span>(),
+<span class="kw">impl </span>std::convert::From&lt;FileToRead&gt; <span class="kw">for </span>PathBuf {
+    <span class="kw">fn </span>from(s: FileToRead) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>s {
+            FileToRead::Text(t) =&gt; t.into(),
+            FileToRead::CustomPartType(t) =&gt; t.into(),
+            FileToRead::Question(t) =&gt; t.into(),
+            FileToRead::Exam(t) =&gt; t.into(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TextFileToRead</span> {
-    <span class="ident">file_path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+</span><span class="kw">pub struct </span>TextFileToRead {
+    file_path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">TextFileToRead</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_file_name</span>(<span class="ident">file_name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTIONS_FOLDER</span>).<span class="ident">join</span>(<span class="ident">file_name</span>);
-        <span class="self">Self</span> { <span class="ident">file_path</span> }
+<span class="kw">impl </span>TextFileToRead {
+    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER).join(file_name);
+        <span class="self">Self </span>{ file_path }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">TextFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileToRead</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">TextFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">FileToRead::Text</span>(<span class="ident">s</span>)
+<span class="kw">impl </span>std::convert::From&lt;TextFileToRead&gt; <span class="kw">for </span>FileToRead {
+    <span class="kw">fn </span>from(s: TextFileToRead) -&gt; <span class="self">Self </span>{
+        FileToRead::Text(s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">TextFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rumbas_support::input::FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">TextFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">file_path</span>: <span class="ident">s</span>.<span class="ident">file_path</span>,
-            <span class="ident">locale_dependant</span>: <span class="bool-val">true</span>,
+<span class="kw">impl </span>std::convert::From&lt;TextFileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
+    <span class="kw">fn </span>from(s: TextFileToRead) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            file_path: s.file_path,
+            locale_dependant: <span class="bool-val">true</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">TextFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathBuf</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">TextFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">s</span>.<span class="ident">file_path</span>
+<span class="kw">impl </span>std::convert::From&lt;TextFileToRead&gt; <span class="kw">for </span>PathBuf {
+    <span class="kw">fn </span>from(s: TextFileToRead) -&gt; <span class="self">Self </span>{
+        s.file_path
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeFileToRead</span> {
-    <span class="ident">file_path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+</span><span class="kw">pub struct </span>CustomPartTypeFileToRead {
+    file_path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">CustomPartTypeFileToRead</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_file_name</span>(<span class="ident">file_name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER</span>)
-            .<span class="ident">join</span>(<span class="ident">file_name</span>)
-            .<span class="ident">with_extension</span>(<span class="string">&quot;yaml&quot;</span>);
-        <span class="self">Self</span> { <span class="ident">file_path</span> }
+<span class="kw">impl </span>CustomPartTypeFileToRead {
+    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER)
+            .join(file_name)
+            .with_extension(<span class="string">&quot;yaml&quot;</span>);
+        <span class="self">Self </span>{ file_path }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">CustomPartTypeFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileToRead</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">CustomPartTypeFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">FileToRead::CustomPartType</span>(<span class="ident">s</span>)
+<span class="kw">impl </span>std::convert::From&lt;CustomPartTypeFileToRead&gt; <span class="kw">for </span>FileToRead {
+    <span class="kw">fn </span>from(s: CustomPartTypeFileToRead) -&gt; <span class="self">Self </span>{
+        FileToRead::CustomPartType(s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">CustomPartTypeFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rumbas_support::input::FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">CustomPartTypeFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">file_path</span>: <span class="ident">s</span>.<span class="ident">file_path</span>,
-            <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>std::convert::From&lt;CustomPartTypeFileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
+    <span class="kw">fn </span>from(s: CustomPartTypeFileToRead) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            file_path: s.file_path,
+            locale_dependant: <span class="bool-val">false</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">CustomPartTypeFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathBuf</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">CustomPartTypeFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">s</span>.<span class="ident">file_path</span>
+<span class="kw">impl </span>std::convert::From&lt;CustomPartTypeFileToRead&gt; <span class="kw">for </span>PathBuf {
+    <span class="kw">fn </span>from(s: CustomPartTypeFileToRead) -&gt; <span class="self">Self </span>{
+        s.file_path
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionFileToRead</span> {
-    <span class="ident">file_path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+</span><span class="kw">pub struct </span>QuestionFileToRead {
+    file_path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionFileToRead</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_file_name</span>(<span class="ident">file_name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">std::path::Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTIONS_FOLDER</span>)
-            .<span class="ident">join</span>(<span class="ident">file_name</span>)
-            .<span class="ident">with_extension</span>(<span class="string">&quot;yaml&quot;</span>);
-        <span class="self">Self</span> { <span class="ident">file_path</span> }
+<span class="kw">impl </span>QuestionFileToRead {
+    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER)
+            .join(file_name)
+            .with_extension(<span class="string">&quot;yaml&quot;</span>);
+        <span class="self">Self </span>{ file_path }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">QuestionFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileToRead</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">QuestionFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">FileToRead::Question</span>(<span class="ident">s</span>)
+<span class="kw">impl </span>std::convert::From&lt;QuestionFileToRead&gt; <span class="kw">for </span>FileToRead {
+    <span class="kw">fn </span>from(s: QuestionFileToRead) -&gt; <span class="self">Self </span>{
+        FileToRead::Question(s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">QuestionFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rumbas_support::input::FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">QuestionFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">file_path</span>: <span class="ident">s</span>.<span class="ident">file_path</span>,
-            <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>std::convert::From&lt;QuestionFileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
+    <span class="kw">fn </span>from(s: QuestionFileToRead) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            file_path: s.file_path,
+            locale_dependant: <span class="bool-val">false</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">QuestionFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathBuf</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">QuestionFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">s</span>.<span class="ident">file_path</span>
+<span class="kw">impl </span>std::convert::From&lt;QuestionFileToRead&gt; <span class="kw">for </span>PathBuf {
+    <span class="kw">fn </span>from(s: QuestionFileToRead) -&gt; <span class="self">Self </span>{
+        s.file_path
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExamFileToRead</span> {
-    <span class="ident">file_path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+</span><span class="kw">pub struct </span>ExamFileToRead {
+    file_path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ExamFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileToRead</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">ExamFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">FileToRead::Exam</span>(<span class="ident">s</span>)
+<span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>FileToRead {
+    <span class="kw">fn </span>from(s: ExamFileToRead) -&gt; <span class="self">Self </span>{
+        FileToRead::Exam(s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ExamFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">rumbas_support::input::FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">ExamFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">file_path</span>: <span class="ident">s</span>.<span class="ident">file_path</span>,
-            <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+<span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
+    <span class="kw">fn </span>from(s: ExamFileToRead) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            file_path: s.file_path,
+            locale_dependant: <span class="bool-val">false</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">ExamFileToRead</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathBuf</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">ExamFileToRead</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">s</span>.<span class="ident">file_path</span>
+<span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>PathBuf {
+    <span class="kw">fn </span>from(s: ExamFileToRead) -&gt; <span class="self">Self </span>{
+        s.file_path
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RumbasRepoEntry</span> {
-    <span class="ident">File</span>(<span class="ident">RumbasRepoFileData</span>),
-    <span class="ident">Folder</span>(<span class="ident">RumbasRepoFolderData</span>),
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub enum </span>RumbasRepoEntry {
+    File(RumbasRepoFileData),
+    Folder(RumbasRepoFolderData),
 }
-<span class="kw">impl</span> <span class="ident">RumbasRepoEntry</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">is_dir</span>() {
-            <span class="ident"><span class="self">Self</span>::Folder</span>(<span class="ident">RumbasRepoFolderData::from</span>(<span class="ident">p</span>))
-        } <span class="kw">else</span> {
-            <span class="comment">// if p.is_file() { TODO: symlink?</span>
-            <span class="ident"><span class="self">Self</span>::File</span>(<span class="ident">RumbasRepoFileData::from</span>(<span class="ident">p</span>))
+<span class="kw">impl </span>RumbasRepoEntry {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+        <span class="kw">if </span>p.is_dir() {
+            <span class="self">Self</span>::Folder(RumbasRepoFolderData::from(p))
+        } <span class="kw">else </span>{
+            <span class="comment">// if p.is_file() { TODO: symlink?
+            </span><span class="self">Self</span>::File(RumbasRepoFileData::from(p))
         }
     }
 }
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasRepoFileData</span> {
-    <span class="ident">r#type</span>: <span class="ident">RumbasRepoFileType</span>,
-    <span class="ident">path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>RumbasRepoFileData {
+    r#type: RumbasRepoFileType,
+    path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasRepoFileData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PathBuf</span> {
-        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>()
+<span class="kw">impl </span>RumbasRepoFileData {
+    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+        <span class="self">self</span>.path.clone()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dependency_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PathBuf</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">r#type</span>.<span class="ident">clone</span>() {
-            <span class="ident">RumbasRepoFileType::LocaleFile</span>(<span class="kw">_</span>, <span class="ident">p</span>) =&gt; <span class="ident">p</span>,
-            <span class="kw">_</span> =&gt; <span class="self">self</span>.<span class="ident">path</span>(),
+    <span class="kw">pub fn </span>dependency_path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+        <span class="kw">match </span><span class="self">self</span>.r#type.clone() {
+            RumbasRepoFileType::LocaleFile(<span class="kw">_</span>, p) =&gt; p,
+            <span class="kw">_ </span>=&gt; <span class="self">self</span>.path(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">RumbasRepoFileData</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FileToLoad</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">r</span>: <span class="ident">RumbasRepoFileData</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">r</span>.<span class="ident">r#type</span>.<span class="ident">clone</span>() {
-            <span class="ident">RumbasRepoFileType::LocaleFile</span>(<span class="kw">_</span>, <span class="ident">p</span>) =&gt; <span class="ident">FileToLoad</span> {
-                <span class="ident">file_path</span>: <span class="ident">p</span>,
-                <span class="ident">locale_dependant</span>: <span class="bool-val">true</span>,
+<span class="kw">impl </span>std::convert::From&lt;RumbasRepoFileData&gt; <span class="kw">for </span>FileToLoad {
+    <span class="kw">fn </span>from(r: RumbasRepoFileData) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>r.r#type.clone() {
+            RumbasRepoFileType::LocaleFile(<span class="kw">_</span>, p) =&gt; FileToLoad {
+                file_path: p,
+                locale_dependant: <span class="bool-val">true</span>,
             },
-            <span class="kw">_</span> =&gt; <span class="ident">FileToLoad</span> {
-                <span class="ident">file_path</span>: <span class="ident">r</span>.<span class="ident">path</span>,
-                <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+            <span class="kw">_ </span>=&gt; FileToLoad {
+                file_path: r.path,
+                locale_dependant: <span class="bool-val">false</span>,
             },
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasRepoFileData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">r#type</span>: <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">p</span>),
-            <span class="ident">path</span>: <span class="ident">p</span>.<span class="ident">to_owned</span>(),
+<span class="kw">impl </span>RumbasRepoFileData {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            r#type: RumbasRepoFileType::from(p),
+            path: p.to_owned(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RumbasRepoFileType</span> {
-    <span class="ident">QuestionFile</span>,
-    <span class="ident">QuestionTemplateFile</span>,
-    <span class="ident">ExamFile</span>,
-    <span class="ident">ExamTemplateFile</span>,
-    <span class="ident">CustomPartTypeFile</span>,
-    <span class="ident">DefaultFile</span>,
-    <span class="ident">LocaleFile</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>),
-    <span class="ident">File</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>RumbasRepoFileType {
+    QuestionFile,
+    QuestionTemplateFile,
+    ExamFile,
+    ExamTemplateFile,
+    CustomPartTypeFile,
+    DefaultFile,
+    LocaleFile(String, PathBuf),
+    File,
 }
-<span class="kw">impl</span> <span class="ident">RumbasRepoFileType</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">folder_type</span> <span class="op">=</span> <span class="ident">RumbasRepoFolderType::from</span>(<span class="ident">p</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>());
+<span class="kw">impl </span>RumbasRepoFileType {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>folder_type = RumbasRepoFolderType::from(p.parent().unwrap());
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">RumbasRepoFolderType::LocalizedFolder</span> { <span class="ident">locale</span> } <span class="op">=</span> <span class="ident">folder_type</span> {
-            <span class="kw">let</span> <span class="ident">resource_path</span> <span class="op">=</span> <span class="ident">p</span>
-                .<span class="ident">parent</span>()
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">parent</span>()
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">join</span>(<span class="ident">p</span>.<span class="ident">file_name</span>().<span class="ident">unwrap</span>());
+        <span class="kw">if let </span>RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
+            <span class="kw">let </span>resource_path = p
+                .parent()
+                .unwrap()
+                .parent()
+                .unwrap()
+                .join(p.file_name().unwrap());
 
-            <span class="ident"><span class="self">Self</span>::LocaleFile</span>(<span class="ident">locale</span>, <span class="ident">resource_path</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">RumbasRepoFolderType::DefaultFolder</span> <span class="op">=</span> <span class="ident">folder_type</span> {
-            <span class="ident"><span class="self">Self</span>::DefaultFile</span> <span class="comment">// TODO: fix DefaultFile</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ext</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">extension</span>() {
-            <span class="kw">if</span> <span class="ident">ext</span> <span class="op">==</span> <span class="string">&quot;yaml&quot;</span> {
-                <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::DEFAULTS_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::DefaultFile</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::QUESTIONS_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::QuestionFile</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::QuestionTemplateFile</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::EXAMS_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::ExamFile</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::ExamTemplateFile</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER</span>) {
-                    <span class="ident"><span class="self">Self</span>::CustomPartTypeFile</span>
-                } <span class="kw">else</span> {
-                    <span class="ident"><span class="self">Self</span>::File</span>
+            <span class="self">Self</span>::LocaleFile(locale, resource_path)
+        } <span class="kw">else if let </span>RumbasRepoFolderType::DefaultFolder = folder_type {
+            <span class="self">Self</span>::DefaultFile <span class="comment">// TODO: fix DefaultFile
+        </span>} <span class="kw">else if let </span><span class="prelude-val">Some</span>(ext) = p.extension() {
+            <span class="kw">if </span>ext == <span class="string">&quot;yaml&quot; </span>{
+                <span class="kw">if </span>p.starts_with(<span class="kw">crate</span>::DEFAULTS_FOLDER) {
+                    <span class="self">Self</span>::DefaultFile
+                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::QUESTIONS_FOLDER) {
+                    <span class="self">Self</span>::QuestionFile
+                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER) {
+                    <span class="self">Self</span>::QuestionTemplateFile
+                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::EXAMS_FOLDER) {
+                    <span class="self">Self</span>::ExamFile
+                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER) {
+                    <span class="self">Self</span>::ExamTemplateFile
+                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER) {
+                    <span class="self">Self</span>::CustomPartTypeFile
+                } <span class="kw">else </span>{
+                    <span class="self">Self</span>::File
                 }
-            } <span class="kw">else</span> {
-                <span class="ident"><span class="self">Self</span>::File</span>
+            } <span class="kw">else </span>{
+                <span class="self">Self</span>::File
             }
-        } <span class="kw">else</span> {
-            <span class="ident"><span class="self">Self</span>::File</span>
+        } <span class="kw">else </span>{
+            <span class="self">Self</span>::File
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RumbasRepoFileType</span>;
-    <span class="kw">use</span> <span class="ident">std::path::Path</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">super</span>::RumbasRepoFileType;
+    <span class="kw">use </span>std::path::Path;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">rumbas_repo_file_type</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>rumbas_repo_file_type() {
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::QuestionFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::QuestionFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::LocaleFile</span>(
-                <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">Path::new</span>(<span class="string">&quot;questions/file.yaml&quot;</span>).<span class="ident">to_path_buf</span>()
+            RumbasRepoFileType::LocaleFile(
+                <span class="string">&quot;a&quot;</span>.to_string(),
+                Path::new(<span class="string">&quot;questions/file.yaml&quot;</span>).to_path_buf()
             ),
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::ExamFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::ExamFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::DefaultFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::DefaultFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::LocaleFile</span>(
-                <span class="string">&quot;e&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">Path::new</span>(<span class="string">&quot;exams/file.yaml&quot;</span>).<span class="ident">to_path_buf</span>()
+            RumbasRepoFileType::LocaleFile(
+                <span class="string">&quot;e&quot;</span>.to_string(),
+                Path::new(<span class="string">&quot;exams/file.yaml&quot;</span>).to_path_buf()
             ),
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::QuestionTemplateFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::QuestionTemplateFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::ExamTemplateFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::ExamTemplateFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">RumbasRepoFileType::CustomPartTypeFile</span>,
-            <span class="ident">RumbasRepoFileType::from</span>(<span class="ident">Path::new</span>(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::CustomPartTypeFile,
+            RumbasRepoFileType::from(Path::new(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
         );
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasRepoFolderData</span> {
-    <span class="ident">r#type</span>: <span class="ident">RumbasRepoFolderType</span>,
-    <span class="ident">path</span>: <span class="ident">PathBuf</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>RumbasRepoFolderData {
+    r#type: RumbasRepoFolderType,
+    path: PathBuf,
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasRepoFolderData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PathBuf</span> {
-        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>()
+<span class="kw">impl </span>RumbasRepoFolderData {
+    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+        <span class="self">self</span>.path.clone()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasRepoFolderData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">r#type</span>: <span class="ident">RumbasRepoFolderType::from</span>(<span class="ident">p</span>),
-            <span class="ident">path</span>: <span class="ident">p</span>.<span class="ident">to_owned</span>(),
+<span class="kw">impl </span>RumbasRepoFolderData {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            r#type: RumbasRepoFolderType::from(p),
+            path: p.to_owned(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasRepoFolderEntries</span> {
-    <span class="ident">r#type</span>: <span class="ident">RumbasRepoFolderType</span>,
-    <span class="ident">entries</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasRepoEntry</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>RumbasRepoFolderEntries {
+    r#type: RumbasRepoFolderType,
+    entries: Vec&lt;RumbasRepoEntry&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RumbasRepoFolderType</span> {
-    <span class="ident">DefaultFolder</span>,
-    <span class="ident">LocalizedFolder</span> { <span class="ident">locale</span>: <span class="ident">String</span> },
-    <span class="ident">Folder</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>RumbasRepoFolderType {
+    DefaultFolder,
+    LocalizedFolder { locale: String },
+    Folder,
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasRepoFolderType</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stem</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">file_stem</span>() {
-            <span class="kw">if</span> <span class="ident">stem</span> <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::DEFAULTS_FOLDER</span> {
-                <span class="ident"><span class="self">Self</span>::DefaultFolder</span>
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">stem</span>
-                .<span class="ident">to_str</span>()
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">starts_with</span>(<span class="ident"><span class="kw">crate</span>::LOCALE_FOLDER_PREFIX</span>)
+<span class="kw">impl </span>RumbasRepoFolderType {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(stem) = p.file_stem() {
+            <span class="kw">if </span>stem == <span class="kw">crate</span>::DEFAULTS_FOLDER {
+                <span class="self">Self</span>::DefaultFolder
+            } <span class="kw">else if </span>stem
+                .to_str()
+                .unwrap()
+                .starts_with(<span class="kw">crate</span>::LOCALE_FOLDER_PREFIX)
             {
-                <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">stem</span>
-                    .<span class="ident">to_str</span>()
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">splitn</span>(<span class="number">2</span>, <span class="ident"><span class="kw">crate</span>::LOCALE_FOLDER_PREFIX</span>)
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                    .<span class="ident">get</span>(<span class="number">1</span>)
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">to_string</span>();
-                <span class="ident"><span class="self">Self</span>::LocalizedFolder</span> { <span class="ident">locale</span> }
-            } <span class="kw">else</span> {
-                <span class="ident"><span class="self">Self</span>::Folder</span>
+                <span class="kw">let </span>locale = stem
+                    .to_str()
+                    .unwrap()
+                    .splitn(<span class="number">2</span>, <span class="kw">crate</span>::LOCALE_FOLDER_PREFIX)
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                    .get(<span class="number">1</span>)
+                    .unwrap()
+                    .to_string();
+                <span class="self">Self</span>::LocalizedFolder { locale }
+            } <span class="kw">else </span>{
+                <span class="self">Self</span>::Folder
             }
-        } <span class="kw">else</span> {
+        } <span class="kw">else </span>{
             <span class="macro">log::debug!</span>(
                 <span class="string">&quot;Unkown file_stem for {}, assuming it is just a folder&quot;</span>,
-                <span class="ident">p</span>.<span class="ident">display</span>()
+                p.display()
             );
-            <span class="ident"><span class="self">Self</span>::Folder</span>
+            <span class="self">Self</span>::Folder
         }
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">create_from_string_type</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">data</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">datai</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">read_type</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n_type</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">schema</span>: <span class="ident">literal</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">combine</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">filename_field</span>: <span class="ident">ident</span>) =&gt; {
-        <span class="comment">// TODO: remove this JsonSchema</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>)]</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">pub</span> <span class="ident">file_name</span>: <span class="ident">String</span>,
-            <span class="kw">pub</span> <span class="ident">data</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">data</span>,
+<span class="macro">macro_rules! </span>create_from_string_type {
+    (<span class="macro-nonterminal">$t</span>: ident, <span class="macro-nonterminal">$ti</span>: ident, <span class="macro-nonterminal">$data</span>: ty, <span class="macro-nonterminal">$datai</span>: ty, <span class="macro-nonterminal">$read_type</span>: ty, <span class="macro-nonterminal">$n_type</span>: ty, <span class="macro-nonterminal">$schema</span>: literal, <span class="macro-nonterminal">$combine</span>: expr, <span class="macro-nonterminal">$filename_field</span>: ident) =&gt; {
+        <span class="comment">// TODO: remove this JsonSchema
+        </span><span class="attribute">#[derive(Debug, Clone, Serialize, Deserialize, Comparable, JsonSchema)]
+        #[serde(into = <span class="string">&quot;String&quot;</span>)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">pub </span>file_name: String,
+            <span class="kw">pub </span>data: <span class="macro-nonterminal">$data</span>,
         }
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">pub</span> <span class="ident">file_name</span>: <span class="ident">String</span>,
-            <span class="kw">pub</span> <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">datai</span><span class="op">&gt;</span>,
-            <span class="kw">pub</span> <span class="ident">error_message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        }
-
-        <span class="kw">impl</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">type</span> <span class="ident">Input</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span>;
-            <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span>;
+        <span class="attribute">#[derive(Serialize, Deserialize, Comparable, Debug, Clone)]
+        #[serde(from = <span class="string">&quot;String&quot;</span>)]
+        #[serde(into = <span class="string">&quot;String&quot;</span>)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">pub </span>file_name: String,
+            <span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="macro-nonterminal">$datai</span>&gt;,
+            <span class="kw">pub </span>error_message: <span class="prelude-ty">Option</span>&lt;String&gt;,
         }
 
-        <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                <span class="macro">vec!</span>[<span class="self">Self</span> {
-                    <span class="ident">file_name</span>: <span class="string">&quot;path&quot;</span>.<span class="ident">to_string</span>(),
-                    <span class="ident">data</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">error_message</span>: <span class="prelude-val">None</span>,
+        <span class="kw">impl </span>InputInverse <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">type </span>Input = <span class="macro-nonterminal">$ti</span>;
+            <span class="kw">type </span>EnumInput = <span class="macro-nonterminal">$ti</span>;
+        }
+
+        <span class="kw">impl </span>Examples <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                <span class="macro">vec!</span>[<span class="self">Self </span>{
+                    file_name: <span class="string">&quot;path&quot;</span>.to_string(),
+                    data: <span class="prelude-val">None</span>,
+                    error_message: <span class="prelude-val">None</span>,
                 }]
             }
         }
-        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">dependency</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FileToRead</span> {
-                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">read_type</span><span class="op">&gt;</span><span class="ident">::with_file_name</span>(<span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">clone</span>()).<span class="ident">into</span>()
+        <span class="kw">impl </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>dependency(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FileToRead {
+                &lt;<span class="macro-nonterminal">$read_type</span>&gt;::with_file_name(<span class="self">self</span>.file_name.clone()).into()
             }
 
-            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_to_read</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileToRead</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="prelude-val">None</span>
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">dependency</span>().<span class="ident">into</span>())
+            <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw">_</span>) = <span class="kw-2">&amp;</span><span class="self">self</span>.data {
+                    <span class="prelude-val">None
+                </span>} <span class="kw">else </span>{
+                    <span class="prelude-val">Some</span>(<span class="self">self</span>.dependency().into())
                 }
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>;
-            <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
-                <span class="ident"><span class="self">Self</span>::Normal</span> {
-                    <span class="ident">file_name</span>: <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">to_normal</span>()).<span class="ident">unwrap</span>(),
+        <span class="kw">impl </span>Input <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">type </span>Normal = <span class="macro-nonterminal">$t</span>;
+            <span class="kw">fn </span>to_normal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Normal {
+                <span class="self">Self</span>::Normal {
+                    file_name: <span class="self">self</span>.file_name.to_owned(),
+                    data: <span class="self">self</span>.data.as_ref().map(|d| d.to_normal()).unwrap(),
                 }
             }
-            <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
-                <span class="self">Self</span> {
-                    <span class="ident">file_name</span>: <span class="ident">normal</span>.<span class="ident">file_name</span>,
-                    <span class="ident">data</span>: <span class="prelude-val">Some</span>(<span class="ident">Input::from_normal</span>(<span class="ident">normal</span>.<span class="ident">data</span>)),
-                    <span class="ident">error_message</span>: <span class="prelude-val">None</span>,
+            <span class="kw">fn </span>from_normal(normal: <span class="self">Self</span>::Normal) -&gt; <span class="self">Self </span>{
+                <span class="self">Self </span>{
+                    file_name: normal.file_name,
+                    data: <span class="prelude-val">Some</span>(Input::from_normal(normal.data)),
+                    error_message: <span class="prelude-val">None</span>,
                 }
             }
-            <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">q</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">find_missing</span>();
-                    <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">clone</span>());
-                    <span class="ident">previous_result</span>
-                } <span class="kw">else</span> {
-                    <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">clone</span>()))
+            <span class="kw">fn </span>find_missing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; InputCheckResult {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>q) = <span class="self">self</span>.data {
+                    <span class="kw">let </span><span class="kw-2">mut </span>previous_result = q.find_missing();
+                    previous_result.extend_path(<span class="self">self</span>.file_name.clone());
+                    previous_result
+                } <span class="kw">else </span>{
+                    InputCheckResult::from_missing(<span class="prelude-val">Some</span>(<span class="self">self</span>.file_name.clone()))
                 }
             }
-            <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">q</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="ident">q</span>.<span class="ident">insert_template_value</span>(<span class="ident">key</span>, <span class="ident">val</span>);
+            <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>q) = <span class="self">self</span>.data {
+                    q.insert_template_value(key, val);
                 }
             }
-            <span class="kw">fn</span> <span class="ident">files_to_load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">file</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">file_to_read</span>() {
-                    <span class="macro">vec!</span>[<span class="ident">file</span>.<span class="ident">into</span>()]
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">q</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="comment">// TODO: is this used like this?</span>
-                    <span class="ident">q</span>.<span class="ident">files_to_load</span>()
-                } <span class="kw">else</span> {
+            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(file) = <span class="self">self</span>.file_to_read() {
+                    <span class="macro">vec!</span>[file.into()]
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>q) = <span class="self">self</span>.data {
+                    <span class="comment">// TODO: is this used like this?
+                    </span>q.files_to_load()
+                } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>();
                 }
             }
-            <span class="kw">fn</span> <span class="ident">dependencies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="ident">std::path::PathBuf</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">path</span>: <span class="ident">std::path::PathBuf</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dependency</span>().<span class="ident">into</span>();
-                <span class="kw">let</span> <span class="ident">deps</span>: <span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">path</span>].<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+                <span class="kw">let </span>path: std::path::PathBuf = <span class="self">self</span>.dependency().into();
+                <span class="kw">let </span>deps: std::collections::HashSet&lt;<span class="kw">_</span>&gt; = <span class="macro">vec!</span>[path].into_iter().collect();
 
-                <span class="kw">let</span> <span class="ident">deps</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">data</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="ident">data</span>.<span class="ident">dependencies</span>()
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">chain</span>(<span class="ident">deps</span>.<span class="ident">into_iter</span>())
-                        .<span class="ident">collect</span>()
-                } <span class="kw">else</span> {
-                    <span class="ident">deps</span>
+                <span class="kw">let </span>deps = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>data) = <span class="self">self</span>.data {
+                    data.dependencies()
+                        .into_iter()
+                        .chain(deps.into_iter())
+                        .collect()
+                } <span class="kw">else </span>{
+                    deps
                 };
 
-                <span class="ident">deps</span>
+                deps
             }
-            <span class="kw">fn</span> <span class="ident">insert_loaded_files</span>(
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-                <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span><span class="op">&gt;</span>,
+            <span class="kw">fn </span>insert_loaded_files(
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+                files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
             ) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">q</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span> {
-                    <span class="ident">q</span>.<span class="ident">insert_loaded_files</span>(<span class="ident">files</span>);
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">file_to_read</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">file</span> {
-                        <span class="kw">let</span> <span class="ident">file_to_load</span>: <span class="ident">FileToLoad</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">into</span>();
-                        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">files</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">file_to_load</span>);
-                        <span class="kw">match</span> <span class="ident">file</span> {
-                            <span class="prelude-val">Some</span>(<span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>)) =&gt; {
-                                <span class="kw">let</span> <span class="ident">data_res</span> <span class="op">=</span> <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">datai</span><span class="op">&gt;</span><span class="ident">::from_str</span>(
-                                    <span class="kw-2">&amp;</span><span class="ident">n</span>.<span class="ident">content</span>[..],
-                                    <span class="ident">file_to_load</span>.<span class="ident">file_path</span>.<span class="ident">clone</span>(),
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>q) = <span class="self">self</span>.data {
+                    q.insert_loaded_files(files);
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
+                        <span class="kw">let </span>file_to_load: FileToLoad = f.into();
+                        <span class="kw">let </span>file = files.get(<span class="kw-2">&amp;</span>file_to_load);
+                        <span class="kw">match </span>file {
+                            <span class="prelude-val">Some</span>(LoadedFile::Normal(n)) =&gt; {
+                                <span class="kw">let </span>data_res = &lt;<span class="macro-nonterminal">$datai</span>&gt;::from_str(
+                                    <span class="kw-2">&amp;</span>n.content[..],
+                                    file_to_load.file_path.clone(),
                                 );
-                                <span class="kw">match</span> <span class="ident">data_res</span> {
-                                    <span class="prelude-val">Ok</span>(<span class="ident">q</span>) =&gt; {
-                                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">q</span>.<span class="ident">clone</span>();
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">combine</span>(<span class="kw-2">&amp;</span><span class="ident">file_to_load</span>.<span class="ident">file_path</span>, <span class="kw-2">&amp;mut</span> <span class="ident">input</span>);
-                                        <span class="kw">let</span> <span class="ident">files_to_load</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">files_to_load</span>();
-                                        <span class="kw">let</span> <span class="ident">loaded_files</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::support::file_manager::CACHE</span>
-                                            .<span class="ident">read_files</span>(<span class="ident">files_to_load</span>);
-                                        <span class="ident">input</span>.<span class="ident">insert_loaded_files</span>(<span class="kw-2">&amp;</span><span class="ident">loaded_files</span>);
+                                <span class="kw">match </span>data_res {
+                                    <span class="prelude-val">Ok</span>(q) =&gt; {
+                                        <span class="kw">let </span><span class="kw-2">mut </span>input = q.clone();
+                                        <span class="macro-nonterminal">$combine</span>(<span class="kw-2">&amp;</span>file_to_load.file_path, <span class="kw-2">&amp;mut </span>input);
+                                        <span class="kw">let </span>files_to_load = input.files_to_load();
+                                        <span class="kw">let </span>loaded_files = <span class="kw">crate</span>::support::file_manager::CACHE
+                                            .read_files(files_to_load);
+                                        input.insert_loaded_files(<span class="kw-2">&amp;</span>loaded_files);
 
-                                        <span class="self">self</span>.<span class="ident">data</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">input</span>)
+                                        <span class="self">self</span>.data = <span class="prelude-val">Some</span>(input)
                                     }
-                                    <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="self">self</span>.<span class="ident">error_message</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">to_string</span>()),
+                                    <span class="prelude-val">Err</span>(e) =&gt; <span class="self">self</span>.error_message = <span class="prelude-val">Some</span>(e.to_string()),
                                 }
                             }
-                            <span class="prelude-val">Some</span>(<span class="ident">LoadedFile::Localized</span>(<span class="ident">_l</span>)) =&gt; {
+                            <span class="prelude-val">Some</span>(LoadedFile::Localized(_l)) =&gt; {
                                 <span class="macro">unreachable!</span>()
                             }
-                            <span class="prelude-val">None</span> =&gt; {
-                                <span class="self">self</span>.<span class="ident">error_message</span> <span class="op">=</span>
-                                    <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;Missing file: {}&quot;</span>, <span class="self">self</span>.<span class="ident">file_name</span>))
+                            <span class="prelude-val">None </span>=&gt; {
+                                <span class="self">self</span>.error_message =
+                                    <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;Missing file: {}&quot;</span>, <span class="self">self</span>.file_name))
                             }
                         }
                     }
@@ -1686,87 +1686,87 @@
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-                <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">clone</span>());
-                <span class="ident">previous_result</span>
+        <span class="kw">impl </span>RumbasCheck <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+                <span class="kw">let </span><span class="kw-2">mut </span>previous_result = <span class="self">self</span>.data.check(locale);
+                previous_result.extend_path(<span class="self">self</span>.file_name.clone());
+                previous_result
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">Overwrite</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) {}
+        <span class="kw">impl </span>Overwrite&lt;<span class="macro-nonterminal">$ti</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="self">Self</span>) {}
         }
 
-        <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">n_type</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n_type</span> {
-                <span class="self">self</span>.<span class="ident">data</span>
-                    .<span class="ident">clone</span>()
-                    .<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">clone</span>())
+        <span class="kw">impl </span>ToNumbas&lt;<span class="macro-nonterminal">$n_type</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="macro-nonterminal">$n_type </span>{
+                <span class="self">self</span>.data
+                    .clone()
+                    .to_numbas_with_name(locale, <span class="self">self</span>.file_name.clone())
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n_type</span> {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-                    <span class="ident">file_name</span>: <span class="ident">sanitize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">filename_field</span>),
-                    <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
+        <span class="kw">impl </span>ToRumbas&lt;<span class="macro-nonterminal">$t</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$n_type </span>{
+            <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$t </span>{
+                <span class="macro-nonterminal">$t </span>{
+                    file_name: sanitize(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="macro-nonterminal">$filename_field</span>),
+                    data: <span class="self">self</span>.to_rumbas(),
                 }
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">schema</span>.<span class="ident">to_owned</span>()
+        <span class="kw">impl </span>JsonSchema <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>schema_name() -&gt; String {
+                <span class="macro-nonterminal">$schema</span>.to_owned()
             }
 
-            <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-                <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
+            <span class="kw">fn </span>json_schema(gen: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+                gen.subschema_for::&lt;String&gt;()
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-                <span class="self">Self</span> {
-                    <span class="ident">file_name</span>: <span class="ident">s</span>,
-                    <span class="ident">data</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">error_message</span>: <span class="prelude-val">None</span>,
+        <span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+                <span class="self">Self </span>{
+                    file_name: s,
+                    data: <span class="prelude-val">None</span>,
+                    error_message: <span class="prelude-val">None</span>,
                 }
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">q</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>) -&gt; <span class="self">Self</span> {
-                <span class="ident">q</span>.<span class="ident">file_name</span>
+        <span class="kw">impl </span>std::convert::From&lt;<span class="macro-nonterminal">$t</span>&gt; <span class="kw">for </span>String {
+            <span class="kw">fn </span>from(q: <span class="macro-nonterminal">$t</span>) -&gt; <span class="self">Self </span>{
+                q.file_name
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">q</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span>) -&gt; <span class="self">Self</span> {
-                <span class="ident">q</span>.<span class="ident">file_name</span>
+        <span class="kw">impl </span>std::convert::From&lt;<span class="macro-nonterminal">$ti</span>&gt; <span class="kw">for </span>String {
+            <span class="kw">fn </span>from(q: <span class="macro-nonterminal">$ti</span>) -&gt; <span class="self">Self </span>{
+                q.file_name
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">std::hash::Hash</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">H</span>) {
-                <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">hash</span>(<span class="ident">state</span>);
+        <span class="kw">impl </span>std::hash::Hash <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">fn </span>hash&lt;H: std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+                <span class="self">self</span>.file_name.hash(state);
             }
         }
-        <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-                <span class="self">self</span>.<span class="ident">file_name</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">file_name</span>
+        <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+                <span class="self">self</span>.file_name == other.file_name
             }
         }
-        <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {}
+        <span class="kw">impl </span>Eq <span class="kw">for </span><span class="macro-nonterminal">$t </span>{}
 
-        <span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {
-            <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-                <span class="self">self</span>.<span class="ident">file_name</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">file_name</span>
+        <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{
+            <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+                <span class="self">self</span>.file_name == other.file_name
             }
         }
-        <span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ti</span> {}
+        <span class="kw">impl </span>Eq <span class="kw">for </span><span class="macro-nonterminal">$ti </span>{}
     };
 }
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">create_from_string_type</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>create_from_string_type;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

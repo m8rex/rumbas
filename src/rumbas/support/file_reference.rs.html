@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_reference.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_reference.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_reference.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_reference.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -357,364 +357,364 @@
 <span id="357">357</span>
 <span id="358">358</span>
 <span id="359">359</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_manager</span>::{<span class="ident">FileToRead</span>, <span class="ident">TextFileToRead</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::input_string::InputString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMEString</span>};
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::convert::Into</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::file_manager::{FileToRead, TextFileToRead};
+<span class="kw">use </span><span class="kw">crate</span>::support::input_string::InputString;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>numbas::jme::{ContentAreaString, EmbracedJMEString, JMEString};
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::convert::Into;
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="doccomment">/// The prefix used to specify a file reference</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FILE_PREFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;file&quot;</span>;
+<span class="doccomment">/// The prefix used to specify a file reference
+</span><span class="kw">pub const </span>FILE_PREFIX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;file&quot;</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnyString</span> {
-    <span class="ident">Str</span>(<span class="ident">InputString</span>),
-    <span class="ident">Isize</span>(<span class="ident">isize</span>),
-    <span class="ident">Float</span>(<span class="ident">f64</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>AnyString {
+    Str(InputString),
+    Isize(isize),
+    Float(f64),
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">AnyString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">a</span>: <span class="ident">AnyString</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">a</span> {
-            <span class="ident">AnyString::Str</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">into</span>(),
-            <span class="ident">AnyString::Isize</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">to_string</span>(),
-            <span class="ident">AnyString::Float</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">to_string</span>(),
+<span class="kw">impl </span>std::convert::From&lt;AnyString&gt; <span class="kw">for </span>String {
+    <span class="kw">fn </span>from(a: AnyString) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>a {
+            AnyString::Str(s) =&gt; s.into(),
+            AnyString::Isize(v) =&gt; v.to_string(),
+            AnyString::Float(v) =&gt; v.to_string(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AnyString</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Str</span>(<span class="ident">s</span>.<span class="ident">to_string</span>().<span class="ident">into</span>())
+<span class="kw">impl </span>std::convert::From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; <span class="kw">for </span>AnyString {
+    <span class="kw">fn </span>from(s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Str(s.to_string().into())
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">file_type</span> {
+<span class="macro">macro_rules! </span>file_type {
     (
-        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-        <span class="kw">type</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
-        <span class="ident">subtype</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>: <span class="ident">ty</span>,
-        <span class="ident">rumbas_check</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>: <span class="ident">expr</span>
+        $(<span class="attribute">#[<span class="macro-nonterminal">$outer</span>:meta]</span>)*
+        <span class="kw">type </span><span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
+        subtype <span class="macro-nonterminal">$subtype</span>: ty,
+        rumbas_check <span class="macro-nonterminal">$check_expr</span>: expr
     ) =&gt; {
-        <span class="macro">paste::paste!</span> {
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-            <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;AnyString&quot;</span>)]</span>
-            <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-            $(
-                <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>]</span>
-            )<span class="op">*</span>
-            <span class="kw">pub</span> <span class="kw">struct</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="ident">file_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-                <span class="ident">content</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-                <span class="ident">translated_content</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
-                <span class="ident">error_message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="macro">paste::paste! </span>{
+            <span class="attribute">#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq, Eq)]
+            #[serde(from = <span class="string">&quot;AnyString&quot;</span>)]
+            #[serde(into = <span class="string">&quot;String&quot;</span>)]
+            </span>$(
+                <span class="attribute">#[<span class="macro-nonterminal">$outer</span>]
+            </span>)*
+            <span class="kw">pub struct </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                file_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+                content: <span class="prelude-ty">Option</span>&lt;String&gt;,
+                translated_content: HashMap&lt;String, String&gt;,
+                error_message: <span class="prelude-ty">Option</span>&lt;String&gt;,
             }
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Comparable</span>, <span class="ident">Eq</span>)]</span>
-            <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-            $(
-                <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>]</span>
-            )<span class="op">*</span>
-            <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="macro-nonterminal">file_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-                <span class="ident">content</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-                <span class="ident">translated_content</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
+            <span class="attribute">#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+            #[serde(into = <span class="string">&quot;String&quot;</span>)]
+            </span>$(
+                <span class="attribute">#[<span class="macro-nonterminal">$outer</span>]
+            </span>)*
+            <span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="macro-nonterminal">file_name</span>: <span class="prelude-ty">Option</span>&lt;String&gt;,
+                content: <span class="prelude-ty">Option</span>&lt;String&gt;,
+                translated_content: HashMap&lt;String, String&gt;,
             }
-            <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                    <span class="macro">vec!</span>[<span class="self">Self</span> { <span class="ident">file_name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;path/to/file&quot;</span>.<span class="ident">to_string</span>()), <span class="ident">content</span>: <span class="prelude-val">None</span>, <span class="ident">translated_content</span>: <span class="ident">Default::default</span>(), <span class="ident">error_message</span>: <span class="prelude-val">None</span> }] <span class="comment">// TODO file: string</span>
+            <span class="kw">impl </span>Examples <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                    <span class="macro">vec!</span>[<span class="self">Self </span>{ file_name: <span class="prelude-val">Some</span>(<span class="string">&quot;path/to/file&quot;</span>.to_string()), content: <span class="prelude-val">None</span>, translated_content: Default::default(), error_message: <span class="prelude-val">None </span>}] <span class="comment">// TODO file: string
+                </span>}
+            }
+            <span class="kw">impl </span>Examples <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">examples</span>() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                    &lt;[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]&gt;::examples().into_iter().map(|a| <span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                        <span class="macro-nonterminal">file_name</span>: a.file_name,
+                        content: a.content,
+                        translated_content: a.translated_content
+                    }).collect()
                 }
             }
-            <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                    <span class="op">&lt;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]<span class="op">&gt;</span><span class="ident">::examples</span>().<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                        <span class="macro-nonterminal">file_name</span>: <span class="ident">a</span>.<span class="ident">file_name</span>,
-                        <span class="ident">content</span>: <span class="ident">a</span>.<span class="ident">content</span>,
-                        <span class="ident">translated_content</span>: <span class="ident">a</span>.<span class="ident">translated_content</span>
-                    }).<span class="ident">collect</span>()
-                }
-            }
-            <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-                    <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>);
-                    <span class="kw">match</span> <span class="ident">content</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">conversion_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">try_into</span>();
-                            <span class="kw">match</span> <span class="ident">conversion_res</span> {
-                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="ident">RumbasCheckResult::empty</span>(),
-                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>(<span class="ident">e</span>),
+            <span class="kw">impl </span>RumbasCheck <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+                    <span class="kw">let </span>content = <span class="self">self</span>.get_content(locale);
+                    <span class="kw">match </span>content {
+                        <span class="prelude-val">Some</span>(c) =&gt; {
+                            <span class="kw">let </span>conversion_res: <span class="prelude-ty">Result</span>&lt;<span class="macro-nonterminal">$subtype</span>, <span class="kw">_</span>&gt; = c.try_into();
+                            <span class="kw">match </span>conversion_res {
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; RumbasCheckResult::empty(),
+                                <span class="prelude-val">Err</span>(e) =&gt; <span class="macro-nonterminal">$check_expr</span>(e),
                             }
                         }
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">RumbasCheckResult::from_missing_translation</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>.<span class="ident">to_string</span>())),
+                        <span class="prelude-val">None </span>=&gt; RumbasCheckResult::from_missing_translation(<span class="prelude-val">Some</span>(locale.to_string())),
                     }
                 }
             }
-            <span class="kw">impl</span> <span class="ident">Overwrite</span><span class="op">&lt;</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="kw">for</span>  [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_other</span>: <span class="kw-2">&amp;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]) {}
+            <span class="kw">impl </span>Overwrite&lt; [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]&gt; <span class="kw">for  </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]) {}
             }
 
-            <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)-&gt; <span class="ident">String</span> {
-                    <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()
+            <span class="kw">impl </span>ToNumbas&lt;String&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str)-&gt; String {
+                    <span class="self">self</span>.get_content(locale).unwrap()
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)-&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span> {
-                    <span class="self">self</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>()
+            <span class="kw">impl </span>ToNumbas&lt;<span class="macro-nonterminal">$subtype</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str)-&gt; <span class="macro-nonterminal">$subtype </span>{
+                    <span class="self">self</span>.get_content(locale).unwrap().try_into().unwrap()
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> { <span class="comment">// TODO: needed?</span>
-                <span class="kw">fn</span> <span class="macro-nonterminal">schema_name</span>() -&gt; <span class="ident">String</span> {
+            <span class="kw">impl </span>JsonSchema <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{ <span class="comment">// TODO: needed?
+                </span><span class="kw">fn </span><span class="macro-nonterminal">schema_name</span>() -&gt; String {
                     <span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="kw">type</span>).<span class="macro-nonterminal">to_owned</span>()
                 }
 
-                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-                    <span class="kw">let</span> <span class="ident">file_schema</span> <span class="op">=</span> <span class="ident">schemars::schema::SchemaObject</span> {
-                        <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
-                        <span class="ident">string</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::StringValidation</span> {
-                            <span class="ident">min_length</span>: <span class="prelude-val">Some</span>(<span class="number">1</span> <span class="op">+</span> (<span class="ident">FILE_PREFIX</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)),
-                            <span class="ident">max_length</span>: <span class="prelude-val">None</span>,
-                            <span class="ident">pattern</span>: <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;^{}:.*$&quot;</span>, <span class="ident">FILE_PREFIX</span>)),
+                <span class="kw">fn </span>json_schema(gen: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+                    <span class="kw">let </span>file_schema = schemars::schema::SchemaObject {
+                        instance_type: <span class="prelude-val">Some</span>(schemars::schema::InstanceType::String.into()),
+                        string: <span class="prelude-val">Some</span>(Box::new(schemars::schema::StringValidation {
+                            min_length: <span class="prelude-val">Some</span>(<span class="number">1 </span>+ (FILE_PREFIX.len() <span class="kw">as </span>u32)),
+                            max_length: <span class="prelude-val">None</span>,
+                            pattern: <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;^{}:.*$&quot;</span>, FILE_PREFIX)),
                         })),
-                        ..<span class="ident">Default::default</span>()
+                        ..Default::default()
                     };
-                    <span class="ident">schemars::schema::SchemaObject</span> {
-                        <span class="ident">subschemas</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::SubschemaValidation</span> {
-                            <span class="ident">any_of</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">file_schema</span>.<span class="ident">into</span>(), <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()]),
-                            ..<span class="ident">Default::default</span>()
+                    schemars::schema::SchemaObject {
+                        subschemas: <span class="prelude-val">Some</span>(Box::new(schemars::schema::SubschemaValidation {
+                            any_of: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[file_schema.into(), gen.subschema_for::&lt;String&gt;()]),
+                            ..Default::default()
                         })),
-                        ..<span class="ident">Default::default</span>()
+                        ..Default::default()
                     }
-                    .<span class="ident">into</span>()
+                    .into()
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
-                    <span class="macro">stringify!</span>([<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]).<span class="ident">to_owned</span>()
+            <span class="kw">impl </span>JsonSchema <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>schema_name() -&gt; String {
+                    <span class="macro">stringify!</span>([&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]).to_owned()
                 }
 
-                <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-                    <span class="kw">let</span> <span class="ident">file_schema</span> <span class="op">=</span> <span class="ident">schemars::schema::SchemaObject</span> {
-                        <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
-                        <span class="ident">string</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::StringValidation</span> {
-                            <span class="ident">min_length</span>: <span class="prelude-val">Some</span>(<span class="number">1</span> <span class="op">+</span> (<span class="ident">FILE_PREFIX</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)),
-                            <span class="ident">max_length</span>: <span class="prelude-val">None</span>,
-                            <span class="ident">pattern</span>: <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;^{}:.*$&quot;</span>, <span class="ident">FILE_PREFIX</span>)),
+                <span class="kw">fn </span>json_schema(gen: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+                    <span class="kw">let </span>file_schema = schemars::schema::SchemaObject {
+                        instance_type: <span class="prelude-val">Some</span>(schemars::schema::InstanceType::String.into()),
+                        string: <span class="prelude-val">Some</span>(Box::new(schemars::schema::StringValidation {
+                            min_length: <span class="prelude-val">Some</span>(<span class="number">1 </span>+ (FILE_PREFIX.len() <span class="kw">as </span>u32)),
+                            max_length: <span class="prelude-val">None</span>,
+                            pattern: <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;^{}:.*$&quot;</span>, FILE_PREFIX)),
                         })),
-                        ..<span class="ident">Default::default</span>()
+                        ..Default::default()
                     };
-                    <span class="ident">schemars::schema::SchemaObject</span> {
-                        <span class="ident">subschemas</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::SubschemaValidation</span> {
-                            <span class="ident">any_of</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">file_schema</span>.<span class="ident">into</span>(), <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()]),
-                            ..<span class="ident">Default::default</span>()
+                    schemars::schema::SchemaObject {
+                        subschemas: <span class="prelude-val">Some</span>(Box::new(schemars::schema::SubschemaValidation {
+                            any_of: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[file_schema.into(), gen.subschema_for::&lt;String&gt;()]),
+                            ..Default::default()
                         })),
-                        ..<span class="ident">Default::default</span>()
+                        ..Default::default()
                     }
-                    .<span class="ident">into</span>()
+                    .into()
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">AnyString</span><span class="op">&gt;</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">a</span>: <span class="ident">AnyString</span>) -&gt; <span class="self">Self</span> {
-                    <span class="kw">let</span> <span class="ident">s</span> : <span class="ident">String</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">into</span>();
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="ident">FILE_PREFIX</span>.<span class="ident">to_owned</span>();
-                    <span class="ident">prefix</span>.<span class="ident">push</span>(<span class="string">&#39;:&#39;</span>);
-                    <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="ident">prefix</span>) {
-                        <span class="kw">if</span> <span class="ident">s</span> <span class="op">==</span> <span class="ident">prefix</span> {
-                            <span class="self">Self</span> {
-                                <span class="ident">file_name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
-                                <span class="ident">content</span>: <span class="prelude-val">None</span>,
-                                <span class="ident">translated_content</span>: <span class="ident">HashMap::new</span>(),
-                                <span class="ident">error_message</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;Missing filename&quot;</span>.<span class="ident">to_string</span>()),
+            <span class="kw">impl </span>std::convert::From&lt;AnyString&gt; <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>from(a: AnyString) -&gt; <span class="self">Self </span>{
+                    <span class="kw">let </span>s : String = a.into();
+                    <span class="kw">let </span><span class="kw-2">mut </span>prefix = FILE_PREFIX.to_owned();
+                    prefix.push(<span class="string">&#39;:&#39;</span>);
+                    <span class="kw">if </span>s.starts_with(<span class="kw-2">&amp;</span>prefix) {
+                        <span class="kw">if </span>s == prefix {
+                            <span class="self">Self </span>{
+                                file_name: <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>.to_string()),
+                                content: <span class="prelude-val">None</span>,
+                                translated_content: HashMap::new(),
+                                error_message: <span class="prelude-val">Some</span>(<span class="string">&quot;Missing filename&quot;</span>.to_string()),
                             }
-                        } <span class="kw">else</span> {
-                            <span class="kw">let</span> <span class="ident">relative_file_name</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="kw-2">&amp;</span><span class="ident">prefix</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>()[<span class="number">1</span>];
-                                <span class="self">Self</span> {
-                                    <span class="ident">file_name</span>: <span class="prelude-val">Some</span>(<span class="ident">relative_file_name</span>.<span class="ident">to_string</span>()),
-                                    <span class="ident">content</span>: <span class="prelude-val">None</span>,
-                                    <span class="ident">translated_content</span>: <span class="ident">HashMap::new</span>(),
-                                    <span class="ident">error_message</span>: <span class="prelude-val">None</span>
-                                }
+                        } <span class="kw">else </span>{
+                            <span class="kw">let </span>relative_file_name = s.split(<span class="kw-2">&amp;</span>prefix).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;()[<span class="number">1</span>];
+                                <span class="self">Self </span>{
+                                    file_name: <span class="prelude-val">Some</span>(relative_file_name.to_string()),
+                                    content: <span class="prelude-val">None</span>,
+                                    translated_content: HashMap::new(),
+                                    error_message: <span class="prelude-val">None
+                                </span>}
                         }
-                    } <span class="kw">else</span> {
-                        <span class="ident"><span class="self">Self</span>::s</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
+                    } <span class="kw">else </span>{
+                        <span class="self">Self</span>::s(<span class="kw-2">&amp;</span>s)
                     }
                 }
             }
 
-            <span class="comment">// Currently only implemented for conversion from numbas to rumbas: so not with translations or</span>
-            <span class="comment">// file references</span>
-            <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">fs</span>: [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]) -&gt; <span class="self">Self</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">file_name</span>) <span class="op">=</span> <span class="ident">fs</span>.<span class="ident">file_name</span> {
-                        <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">FILE_PREFIX</span>, <span class="ident">file_name</span>)
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>) <span class="op">=</span> <span class="ident">fs</span>.<span class="ident">content</span> {
-                        <span class="ident">content</span>.<span class="ident">into</span>()
-                    } <span class="kw">else</span> {
+            <span class="comment">// Currently only implemented for conversion from numbas to rumbas: so not with translations or
+            // file references
+            </span><span class="kw">impl </span>std::convert::From&lt;[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]&gt; <span class="kw">for </span>String {
+                <span class="kw">fn </span>from(fs: [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]) -&gt; <span class="self">Self </span>{
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(file_name) = fs.file_name {
+                        <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, FILE_PREFIX, file_name)
+                    } <span class="kw">else if let </span><span class="prelude-val">Some</span>(content) = fs.content {
+                        content.into()
+                    } <span class="kw">else </span>{
                         <span class="macro">panic!</span>(<span class="string">&quot;Deserializing FileRef only supported when plain String or filename&quot;</span>)
                     }
                 }
             }
 
-            <span class="comment">// Currently only implemented for conversion from numbas to rumbas: so not with translations or</span>
-            <span class="comment">// file references</span>
-            <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">String</span> {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">fs</span>: [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span>]) -&gt; <span class="macro-nonterminal">Self</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">file_name</span>) <span class="op">=</span> <span class="ident">fs</span>.<span class="ident">file_name</span> {
-                        <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">FILE_PREFIX</span>, <span class="ident">file_name</span>)
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>) <span class="op">=</span> <span class="ident">fs</span>.<span class="ident">content</span> {
-                        <span class="ident">content</span>.<span class="ident">into</span>()
-                    } <span class="kw">else</span> {
+            <span class="comment">// Currently only implemented for conversion from numbas to rumbas: so not with translations or
+            // file references
+            </span><span class="kw">impl </span>std::convert::From&lt;[&lt;<span class="macro-nonterminal">$</span><span class="kw">type</span>&gt;]&gt; <span class="kw">for </span><span class="macro-nonterminal">String </span>{
+                <span class="kw">fn </span>from(fs: [&lt;<span class="macro-nonterminal">$</span><span class="kw">type</span>&gt;]) -&gt; <span class="macro-nonterminal">Self </span>{
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(file_name) = fs.file_name {
+                        <span class="macro">format!</span>(<span class="string">&quot;{}:{}&quot;</span>, FILE_PREFIX, file_name)
+                    } <span class="kw">else if let </span><span class="prelude-val">Some</span>(content) = fs.content {
+                        content.into()
+                    } <span class="kw">else </span>{
                         <span class="macro">panic!</span>(<span class="string">&quot;Deserializing FileRef only supported when plain String or filename&quot;</span>)
                     }
                 }
             }
 
-            <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">get_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">translated_content</span>.<span class="ident">get</span>(<span class="ident">locale</span>) {
-                        <span class="prelude-val">Some</span>(<span class="ident">c</span>.<span class="ident">clone</span>().<span class="ident">into</span>())
-                    } <span class="kw">else</span> {
-                        <span class="self">self</span>.<span class="ident">content</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">clone</span>().<span class="ident">into</span>())
+            <span class="kw">impl </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">pub fn </span><span class="macro-nonterminal">get_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(c) = <span class="self">self</span>.translated_content.get(locale) {
+                        <span class="prelude-val">Some</span>(c.clone().into())
+                    } <span class="kw">else </span>{
+                        <span class="self">self</span>.content.as_ref().map(|c| c.clone().into())
                     }
                 }
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-                    <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>();
-                    <span class="self">Self</span> {
-                        <span class="ident">file_name</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">content</span>: <span class="ident">content</span>.<span class="ident">clone</span>().<span class="ident">ok</span>(),
-                        <span class="ident">translated_content</span>: <span class="ident">HashMap::new</span>(),
+                <span class="kw">pub fn </span>s(content: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+                    <span class="kw">let </span>content = content.to_string().try_into();
+                    <span class="self">Self </span>{
+                        file_name: <span class="prelude-val">None</span>,
+                        content: content.clone().ok(),
+                        translated_content: HashMap::new(),
                     }
                 }
             }
-            <span class="kw">impl</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">s</span>(<span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-                    <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>.<span class="ident">to_string</span>();
-                    <span class="self">Self</span> {
-                        <span class="ident">file_name</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">content</span>: <span class="prelude-val">Some</span>(<span class="ident">content</span>),
-                        <span class="ident">translated_content</span>: <span class="ident">HashMap::new</span>(),
-                        <span class="ident">error_message</span>: <span class="prelude-val">None</span>,
+            <span class="kw">impl </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">pub fn </span>s(content: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+                    <span class="kw">let </span>content = content.to_string();
+                    <span class="self">Self </span>{
+                        file_name: <span class="prelude-val">None</span>,
+                        content: <span class="prelude-val">Some</span>(content),
+                        translated_content: HashMap::new(),
+                        error_message: <span class="prelude-val">None</span>,
                     }
                 }
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_to_read</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileToRead</span><span class="op">&gt;</span> {
-                    <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">file_name</span><span class="op">|</span> {
-                        <span class="ident">TextFileToRead::with_file_name</span>(<span class="ident">file_name</span>.<span class="ident">clone</span>()).<span class="ident">into</span>()
+                <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
+                    <span class="self">self</span>.file_name.as_ref().map(|file_name| {
+                        TextFileToRead::with_file_name(file_name.clone()).into()
                     })
                 }
             }
-            <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>;
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Normal</span> {
-                    <span class="ident"><span class="self">Self</span>::Normal</span> {
-                        <span class="ident">file_name</span>: <span class="self">self</span>.<span class="ident">file_name</span>.<span class="ident">to_owned</span>(),
-                        <span class="ident">content</span>: <span class="self">self</span>.<span class="ident">content</span>.<span class="ident">to_owned</span>(),
-                        <span class="ident">translated_content</span>: <span class="self">self</span>.<span class="ident">translated_content</span>.<span class="ident">to_owned</span>(),
+            <span class="kw">impl </span>Input <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">type </span>Normal = <span class="macro-nonterminal">$</span><span class="kw">type</span>;
+                <span class="kw">fn </span><span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Normal {
+                    <span class="self">Self</span>::Normal {
+                        file_name: <span class="self">self</span>.file_name.to_owned(),
+                        content: <span class="self">self</span>.content.to_owned(),
+                        translated_content: <span class="self">self</span>.translated_content.to_owned(),
                     }
                 }
-                <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="ident"><span class="self">Self</span>::Normal</span>) -&gt; <span class="self">Self</span> {
-                    <span class="self">Self</span> {
-                        <span class="ident">file_name</span>: <span class="ident">normal</span>.<span class="ident">file_name</span>,
-                        <span class="ident">content</span>: <span class="ident">normal</span>.<span class="ident">content</span>,
-                        <span class="ident">translated_content</span>: <span class="ident">normal</span>.<span class="ident">translated_content</span>,
-                        <span class="ident">error_message</span>: <span class="prelude-val">None</span>
-                    }
+                <span class="kw">fn </span>from_normal(normal: <span class="self">Self</span>::Normal) -&gt; <span class="self">Self </span>{
+                    <span class="self">Self </span>{
+                        file_name: normal.file_name,
+                        content: normal.content,
+                        translated_content: normal.translated_content,
+                        error_message: <span class="prelude-val">None
+                    </span>}
                 }
-                <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">error_message</span> {
-                        <span class="ident">InputCheckResult::from_missing</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">clone</span>()))
-                    } <span class="kw">else</span> {
-                        <span class="ident">InputCheckResult::empty</span>()
+                <span class="kw">fn </span>find_missing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; InputCheckResult {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(e) = <span class="kw-2">&amp;</span><span class="self">self</span>.error_message {
+                        InputCheckResult::from_missing(<span class="prelude-val">Some</span>(e.clone()))
+                    } <span class="kw">else </span>{
+                        InputCheckResult::empty()
                     }
                 }
 
-                <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">_val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {}
+                <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>str, _val: <span class="kw-2">&amp;</span>serde_yaml::Value) {}
 
-                <span class="kw">fn</span> <span class="ident">files_to_load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">file_to_read</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">file</span> {
-                        <span class="macro">vec!</span>[<span class="ident">f</span>.<span class="ident">into</span>()]
+                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
+                        <span class="macro">vec!</span>[f.into()]
                     }
-                    <span class="kw">else</span> { <span class="macro">vec!</span>[] }
+                    <span class="kw">else </span>{ <span class="macro">vec!</span>[] }
                 }
 
-                <span class="kw">fn</span> <span class="ident">insert_loaded_files</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span><span class="op">&gt;</span>) {
-                    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">file_to_read</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">file</span> {
-                        <span class="kw">let</span> <span class="ident">file</span> : <span class="ident">FileToLoad</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">into</span>();
-                        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">files</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>);
-                        <span class="kw">match</span> <span class="ident">file</span> {
-                            <span class="prelude-val">Some</span>(<span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>)) =&gt; {
-                                <span class="self">self</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">n</span>.<span class="ident">content</span>.<span class="ident">clone</span>());
+                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
+                        <span class="kw">let </span>file : FileToLoad = f.into();
+                        <span class="kw">let </span>file = files.get(<span class="kw-2">&amp;</span>file);
+                        <span class="kw">match </span>file {
+                            <span class="prelude-val">Some</span>(LoadedFile::Normal(n)) =&gt; {
+                                <span class="self">self</span>.content = <span class="prelude-val">Some</span>(n.content.clone());
                             }
-                            <span class="prelude-val">Some</span>(<span class="ident">LoadedFile::Localized</span>(<span class="ident">l</span>)) =&gt; {
-                                <span class="self">self</span>.<span class="ident">content</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">content</span>.<span class="ident">clone</span>();
-                                <span class="self">self</span>.<span class="ident">translated_content</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">localized_content</span>.<span class="ident">clone</span>();
+                            <span class="prelude-val">Some</span>(LoadedFile::Localized(l)) =&gt; {
+                                <span class="self">self</span>.content = l.content.clone();
+                                <span class="self">self</span>.translated_content = l.localized_content.clone();
                             }
-                            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">error_message</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;Missing content&quot;</span>))
+                            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.error_message = <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;Missing content&quot;</span>))
                         }
                     }
                 }
 
-                <span class="kw">fn</span> <span class="ident">dependencies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="ident">std::path::PathBuf</span><span class="op">&gt;</span> {
-                    <span class="self">self</span>.<span class="ident">file_to_read</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                        <span class="kw">let</span> <span class="ident">p</span> : <span class="ident">std::path::PathBuf</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">into</span>();
-                        <span class="macro">vec!</span>[<span class="ident">p</span>].<span class="ident">into_iter</span>().<span class="ident">collect</span>()
-                    }).<span class="ident">unwrap_or_else</span>(<span class="ident">std::collections::HashSet::new</span>)
+                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+                    <span class="self">self</span>.file_to_read().map(|a| {
+                        <span class="kw">let </span>p : std::path::PathBuf = a.into();
+                        <span class="macro">vec!</span>[p].into_iter().collect()
+                    }).unwrap_or_else(std::collections::HashSet::new)
                 }
             }
-            <span class="kw">impl</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">type</span> <span class="macro-nonterminal">Input</span> <span class="op">=</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>];
-                <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>];
+            <span class="kw">impl </span>InputInverse <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">type </span><span class="macro-nonterminal">Input </span>= [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;];
+                <span class="kw">type </span>EnumInput = [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;];
             }
         }
     }
 }
 
-<span class="macro">file_type!</span> {
-    <span class="doccomment">/// A string that has to be read from a file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Specified by a string starting with [FILE_PREFIX].</span>
-    <span class="kw">type</span> <span class="ident">FileString</span>,
-    <span class="ident">subtype</span> <span class="ident">InputString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::empty</span>() <span class="comment">// never happens</span>
+<span class="macro">file_type! </span>{
+    <span class="doccomment">/// A string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    </span><span class="kw">type </span>FileString,
+    subtype InputString,
+    rumbas_check |_e| RumbasCheckResult::empty() <span class="comment">// never happens
+</span>}
+
+<span class="macro">file_type! </span>{
+    <span class="doccomment">/// A JME string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    </span><span class="kw">type </span>JMEFileString,
+    subtype JMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 }
 
-<span class="macro">file_type!</span> {
-    <span class="doccomment">/// A JME string that has to be read from a file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Specified by a string starting with [FILE_PREFIX].</span>
-    <span class="kw">type</span> <span class="ident">JMEFileString</span>,
-    <span class="ident">subtype</span> <span class="ident">JMEString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
+<span class="macro">file_type! </span>{
+    <span class="doccomment">/// An embraced JME string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    </span><span class="kw">type </span>EmbracedJMEFileString,
+    subtype EmbracedJMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 }
 
-<span class="macro">file_type!</span> {
-    <span class="doccomment">/// An embraced JME string that has to be read from a file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Specified by a string starting with [FILE_PREFIX].</span>
-    <span class="kw">type</span> <span class="ident">EmbracedJMEFileString</span>,
-    <span class="ident">subtype</span> <span class="ident">EmbracedJMEString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
-}
-
-<span class="macro">file_type!</span> {
-    <span class="doccomment">/// An ContentArea string that has to be read from a file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Specified by a string starting with [FILE_PREFIX].</span>
-    <span class="kw">type</span> <span class="ident">ContentAreaFileString</span>,
-    <span class="ident">subtype</span> <span class="ident">ContentAreaString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
+<span class="macro">file_type! </span>{
+    <span class="doccomment">/// An ContentArea string that has to be read from a file.
+    ///
+    /// Specified by a string starting with [FILE_PREFIX].
+    </span><span class="kw">type </span>ContentAreaFileString,
+    subtype ContentAreaString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

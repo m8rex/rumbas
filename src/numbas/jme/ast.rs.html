@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/jme/ast.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ast.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/jme/ast.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ast.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -540,430 +540,430 @@
 <span id="540">540</span>
 <span id="541">541</span>
 <span id="542">542</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::builtin_functions::BuiltinFunctions</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::builtin_functions::BuiltinFunctions;
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ArithmeticOperator</span> {
-    <span class="ident">Add</span>,
-    <span class="ident">Subtract</span>,
-    <span class="ident">Multiply</span>,
-    <span class="ident">Divide</span>,
-    <span class="ident">Power</span>,
-    <span class="ident">Except</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ArithmeticOperator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Power,
+    Except,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RelationalOperator</span> {
-    <span class="ident">LessThan</span>,
-    <span class="ident">LessThanOrEqual</span>,
-    <span class="ident">GreaterThan</span>,
-    <span class="ident">GreaterThanOrEqual</span>,
-    <span class="ident">Equals</span>,
-    <span class="ident">NotEquals</span>,
-    <span class="ident">In</span>,
-    <span class="ident">IsA</span>,
-    <span class="ident">Divides</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RelationalOperator {
+    LessThan,
+    LessThanOrEqual,
+    GreaterThan,
+    GreaterThanOrEqual,
+    Equals,
+    NotEquals,
+    In,
+    IsA,
+    Divides,
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RelationalOperator</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">s</span>[..] {
-            <span class="string">&quot;&lt;&quot;</span> =&gt; <span class="ident">RelationalOperator::LessThan</span>,
-            <span class="string">&quot;&lt;=&quot;</span> =&gt; <span class="ident">RelationalOperator::LessThanOrEqual</span>,
-            <span class="string">&quot;&gt;&quot;</span> =&gt; <span class="ident">RelationalOperator::GreaterThan</span>,
-            <span class="string">&quot;&gt;=&quot;</span> =&gt; <span class="ident">RelationalOperator::GreaterThanOrEqual</span>,
-            <span class="string">&quot;=&quot;</span> =&gt; <span class="ident">RelationalOperator::Equals</span>,
-            <span class="string">&quot;&lt;&gt;&quot;</span> =&gt; <span class="ident">RelationalOperator::NotEquals</span>,
-            <span class="string">&quot;isa&quot;</span> =&gt; <span class="ident">RelationalOperator::IsA</span>,
-            <span class="string">&quot;in&quot;</span> =&gt; <span class="ident">RelationalOperator::In</span>,
-            <span class="string">&quot;|&quot;</span> =&gt; <span class="ident">RelationalOperator::Divides</span>,
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>RelationalOperator {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="kw-2">&amp;</span>s[..] {
+            <span class="string">&quot;&lt;&quot; </span>=&gt; RelationalOperator::LessThan,
+            <span class="string">&quot;&lt;=&quot; </span>=&gt; RelationalOperator::LessThanOrEqual,
+            <span class="string">&quot;&gt;&quot; </span>=&gt; RelationalOperator::GreaterThan,
+            <span class="string">&quot;&gt;=&quot; </span>=&gt; RelationalOperator::GreaterThanOrEqual,
+            <span class="string">&quot;=&quot; </span>=&gt; RelationalOperator::Equals,
+            <span class="string">&quot;&lt;&gt;&quot; </span>=&gt; RelationalOperator::NotEquals,
+            <span class="string">&quot;isa&quot; </span>=&gt; RelationalOperator::IsA,
+            <span class="string">&quot;in&quot; </span>=&gt; RelationalOperator::In,
+            <span class="string">&quot;|&quot; </span>=&gt; RelationalOperator::Divides,
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LogicalOperator</span> {
-    <span class="ident">And</span>,
-    <span class="ident">Or</span>,
-    <span class="ident">Xor</span>,
-    <span class="ident">Implies</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>LogicalOperator {
+    And,
+    Or,
+    Xor,
+    Implies,
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LogicalOperator</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">s</span>[..] {
-            <span class="string">&quot;and&quot;</span> <span class="op">|</span> <span class="string">&quot;&amp;&amp;&quot;</span> <span class="op">|</span> <span class="string">&quot;&amp;&quot;</span> =&gt; <span class="ident">LogicalOperator::And</span>,
-            <span class="string">&quot;or&quot;</span> <span class="op">|</span> <span class="string">&quot;||&quot;</span> =&gt; <span class="ident">LogicalOperator::Or</span>,
-            <span class="string">&quot;xor&quot;</span> =&gt; <span class="ident">LogicalOperator::Xor</span>,
-            <span class="string">&quot;implies&quot;</span> =&gt; <span class="ident">LogicalOperator::Implies</span>,
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>LogicalOperator {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="kw-2">&amp;</span>s[..] {
+            <span class="string">&quot;and&quot; </span>| <span class="string">&quot;&amp;&amp;&quot; </span>| <span class="string">&quot;&amp;&quot; </span>=&gt; LogicalOperator::And,
+            <span class="string">&quot;or&quot; </span>| <span class="string">&quot;||&quot; </span>=&gt; LogicalOperator::Or,
+            <span class="string">&quot;xor&quot; </span>=&gt; LogicalOperator::Xor,
+            <span class="string">&quot;implies&quot; </span>=&gt; LogicalOperator::Implies,
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RangeOperator</span> {
-    <span class="ident">Create</span>,
-    <span class="ident">Step</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RangeOperator {
+    Create,
+    Step,
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RangeOperator</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">s</span>[..] {
-            <span class="string">&quot;..&quot;</span> =&gt; <span class="ident">RangeOperator::Create</span>,
-            <span class="string">&quot;#&quot;</span> =&gt; <span class="ident">RangeOperator::Step</span>,
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>RangeOperator {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="kw-2">&amp;</span>s[..] {
+            <span class="string">&quot;..&quot; </span>=&gt; RangeOperator::Create,
+            <span class="string">&quot;#&quot; </span>=&gt; RangeOperator::Step,
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PrefixOperator</span> {
-    <span class="ident">Not</span>,
-    <span class="ident">Minus</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>PrefixOperator {
+    Not,
+    Minus,
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PrefixOperator</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">s</span>[..] {
-            <span class="string">&quot;!&quot;</span> <span class="op">|</span> <span class="string">&quot;not&quot;</span> =&gt; <span class="ident">PrefixOperator::Not</span>,
-            <span class="string">&quot;-&quot;</span> =&gt; <span class="ident">PrefixOperator::Minus</span>,
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>PrefixOperator {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><span class="kw-2">&amp;</span>s[..] {
+            <span class="string">&quot;!&quot; </span>| <span class="string">&quot;not&quot; </span>=&gt; PrefixOperator::Not,
+            <span class="string">&quot;-&quot; </span>=&gt; PrefixOperator::Minus,
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Ident</span> {
-    <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="ident">annotations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// TODO: enum value</span>
-}
+<span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Ident {
+    name: String,
+    annotations: Vec&lt;String&gt;, <span class="comment">// TODO: enum value
+</span>}
 
-<span class="kw">impl</span> <span class="ident">Ident</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_builtin_funtion</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">BuiltinFunctions::get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>[..]).<span class="ident">is_some</span>()
+<span class="kw">impl </span>Ident {
+    <span class="kw">pub fn </span>is_builtin_funtion(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        BuiltinFunctions::get(<span class="kw-2">&amp;</span><span class="self">self</span>.name[..]).is_some()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">Ident</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>Ident {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
         <span class="macro">write!</span>(
-            <span class="ident">f</span>,
+            f,
             <span class="string">&quot;{}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">annotations</span>
-                .<span class="ident">clone</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="macro">vec!</span>[<span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>()].<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                .<span class="ident">join</span>(<span class="string">&quot;:&quot;</span>)
+            <span class="self">self</span>.annotations
+                .clone()
+                .into_iter()
+                .chain(<span class="macro">vec!</span>[<span class="self">self</span>.name.clone()].into_iter())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                .join(<span class="string">&quot;:&quot;</span>)
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Ident</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;:&#39;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">annotations</span> <span class="op">=</span> <span class="ident">items</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_owned</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">annotations</span>.<span class="ident">pop</span>().<span class="ident">expect</span>(<span class="string">&quot;impossible&quot;</span>);
-        <span class="ident">Ident</span> { <span class="ident">name</span>, <span class="ident">annotations</span> }
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>Ident {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>items = s.split(<span class="string">&#39;:&#39;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>annotations = items.map(|s| s.to_owned()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>name = annotations.pop().expect(<span class="string">&quot;impossible&quot;</span>);
+        Ident { name, annotations }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Note</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">Ident</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">expression</span>: <span class="ident">Expr</span>,
-    <span class="ident">expression_string</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Note {
+    <span class="kw">pub </span>name: Ident,
+    <span class="kw">pub </span>description: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>expression: Expr,
+    expression_string: String,
 }
 
-<span class="kw">impl</span> <span class="ident">Note</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>(
-        <span class="ident">name</span>: <span class="ident">Ident</span>,
-        <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="ident">expression</span>: <span class="ident">Expr</span>,
-        <span class="ident">expression_string</span>: <span class="ident">String</span>,
-    ) -&gt; <span class="ident">Note</span> {
-        <span class="ident">Note</span> {
-            <span class="ident">name</span>,
-            <span class="ident">description</span>,
-            <span class="ident">expression</span>,
-            <span class="ident">expression_string</span>,
+<span class="kw">impl </span>Note {
+    <span class="kw">pub fn </span>create(
+        name: Ident,
+        description: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        expression: Expr,
+        expression_string: String,
+    ) -&gt; Note {
+        Note {
+            name,
+            description,
+            expression,
+            expression_string,
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expression_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">crate</span>::jme::JMEString</span> {
-        <span class="self">self</span>.<span class="ident">expression_string</span>.<span class="ident">clone</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>expression_string(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">crate</span>::jme::JMEString {
+        <span class="self">self</span>.expression_string.clone().try_into().unwrap()
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Expr</span> {
-    <span class="doccomment">/// Matches an exact string, e.g. `&quot;a&quot;`</span>
-    <span class="ident">Str</span>(<span class="ident">String</span>),
-    <span class="doccomment">/// Matches an integer,</span>
-    <span class="ident">Int</span>(<span class="ident">isize</span>),
-    <span class="doccomment">/// Matches a broken number</span>
-    <span class="ident">Float</span>(<span class="ident">isize</span>, <span class="ident">String</span>),
-    <span class="doccomment">/// Matches a boolean</span>
-    <span class="ident">Bool</span>(<span class="ident">bool</span>),
-    <span class="doccomment">/// Matches a range operation-</span>
-    <span class="ident">Range</span>(<span class="ident">RangeOperator</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches an arithmetic operation of two expressions`</span>
-    <span class="ident">Arithmetic</span>(<span class="ident">ArithmeticOperator</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches an identifier</span>
-    <span class="ident">Ident</span>(<span class="ident">Ident</span>),
-    <span class="doccomment">/// Matches a constant</span>
-    <span class="ident">Constant</span>(<span class="ident">Ident</span>),
-    <span class="doccomment">/// Matches a relationship between two expressions`</span>
-    <span class="ident">Relation</span>(<span class="ident">RelationalOperator</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a logical operation between two expressions`</span>
-    <span class="ident">Logic</span>(<span class="ident">LogicalOperator</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a list</span>
-    <span class="ident">List</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a dictionary</span>
-    <span class="ident">Dictionary</span>(<span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Expr</span>, <span class="ident">Expr</span>)<span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a function application</span>
-    <span class="ident">FunctionApplication</span>(<span class="ident">Ident</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a prefixed expression</span>
-    <span class="ident">Prefix</span>(<span class="ident">PrefixOperator</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a faculty expression</span>
-    <span class="ident">Faculty</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches an indexation expression</span>
-    <span class="ident">Indexation</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a cast expression</span>
-    <span class="ident">Cast</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// Matches a sequence expression</span>
-    <span class="ident">Sequence</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Expr</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Expr {
+    <span class="doccomment">/// Matches an exact string, e.g. `&quot;a&quot;`
+    </span>Str(String),
+    <span class="doccomment">/// Matches an integer,
+    </span>Int(isize),
+    <span class="doccomment">/// Matches a broken number
+    </span>Float(isize, String),
+    <span class="doccomment">/// Matches a boolean
+    </span>Bool(bool),
+    <span class="doccomment">/// Matches a range operation-
+    </span>Range(RangeOperator, Box&lt;Expr&gt;, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches an arithmetic operation of two expressions`
+    </span>Arithmetic(ArithmeticOperator, Box&lt;Expr&gt;, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches an identifier
+    </span>Ident(Ident),
+    <span class="doccomment">/// Matches a constant
+    </span>Constant(Ident),
+    <span class="doccomment">/// Matches a relationship between two expressions`
+    </span>Relation(RelationalOperator, Box&lt;Expr&gt;, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a logical operation between two expressions`
+    </span>Logic(LogicalOperator, Box&lt;Expr&gt;, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a list
+    </span>List(Vec&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a dictionary
+    </span>Dictionary(Vec&lt;(Expr, Expr)&gt;),
+    <span class="doccomment">/// Matches a function application
+    </span>FunctionApplication(Ident, Vec&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a prefixed expression
+    </span>Prefix(PrefixOperator, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a faculty expression
+    </span>Faculty(Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches an indexation expression
+    </span>Indexation(Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a cast expression
+    </span>Cast(Box&lt;Expr&gt;, Box&lt;Expr&gt;),
+    <span class="doccomment">/// Matches a sequence expression
+    </span>Sequence(Box&lt;Expr&gt;, Box&lt;Expr&gt;),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ExprValidationError</span> {
-    <span class="ident">UnknownFunction</span>(<span class="ident">Ident</span>),
-    <span class="ident">UnknownVariable</span>(<span class="ident">Ident</span>),
+<span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ExprValidationError {
+    UnknownFunction(Ident),
+    UnknownVariable(Ident),
 }
 
-<span class="kw">impl</span> <span class="ident">Expr</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ExprValidationError</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Expr::Str</span>(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
-            <span class="ident">Expr::Int</span>(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
-            <span class="ident">Expr::Float</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
-            <span class="ident">Expr::Bool</span>(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
-            <span class="ident">Expr::Range</span>(<span class="kw">_</span>, <span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">Expr::Arithmetic</span>(<span class="kw">_</span>, <span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">Expr::Ident</span>(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[], <span class="comment">// TODO: check if part of variable list</span>
-            <span class="ident">Expr::Constant</span>(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
-            <span class="ident">Expr::Relation</span>(<span class="kw">_</span>, <span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">Expr::Logic</span>(<span class="kw">_</span>, <span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">Expr::List</span>(<span class="ident">es</span>) =&gt; <span class="ident">es</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">validate</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-            <span class="ident">Expr::Dictionary</span>(<span class="ident">es</span>) =&gt; <span class="ident">es</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">flat_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="macro">vec!</span>[<span class="ident">k</span>, <span class="ident">v</span>])
-                .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">validate</span>())
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-            <span class="ident">Expr::FunctionApplication</span>(<span class="ident">ident</span>, <span class="ident">es</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">es</span>.<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">validate</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                <span class="kw">if</span> <span class="ident">ident</span>.<span class="ident">is_builtin_funtion</span>() {
-                    <span class="ident">base</span>
-                } <span class="kw">else</span> {
-                    <span class="ident">base</span>.<span class="ident">into_iter</span>()
-                        .<span class="ident">chain</span>(
-                            <span class="macro">vec!</span>[<span class="ident">ExprValidationError::UnknownFunction</span>(<span class="ident">ident</span>.<span class="ident">clone</span>())].<span class="ident">into_iter</span>(),
+<span class="kw">impl </span>Expr {
+    <span class="kw">pub fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;ExprValidationError&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Expr::Str(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
+            Expr::Int(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
+            Expr::Float(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
+            Expr::Bool(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
+            Expr::Range(<span class="kw">_</span>, e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Arithmetic(<span class="kw">_</span>, e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Ident(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[], <span class="comment">// TODO: check if part of variable list
+            </span>Expr::Constant(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
+            Expr::Relation(<span class="kw">_</span>, e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Logic(<span class="kw">_</span>, e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::List(es) =&gt; es.iter().flat_map(|e| e.validate()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+            Expr::Dictionary(es) =&gt; es
+                .iter()
+                .flat_map(|(k, v)| <span class="macro">vec!</span>[k, v])
+                .flat_map(|e| e.validate())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+            Expr::FunctionApplication(ident, es) =&gt; {
+                <span class="kw">let </span>base = es.iter().flat_map(|e| e.validate()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="kw">if </span>ident.is_builtin_funtion() {
+                    base
+                } <span class="kw">else </span>{
+                    base.into_iter()
+                        .chain(
+                            <span class="macro">vec!</span>[ExprValidationError::UnknownFunction(ident.clone())].into_iter(),
                         )
-                        .<span class="ident">collect</span>()
+                        .collect()
                 }
             }
-            <span class="ident">Expr::Prefix</span>(<span class="kw">_</span>, <span class="ident">e1</span>) =&gt; <span class="ident">e1</span>.<span class="ident">validate</span>(),
-            <span class="ident">Expr::Faculty</span>(<span class="ident">e1</span>) =&gt; <span class="ident">e1</span>.<span class="ident">validate</span>(),
-            <span class="ident">Expr::Indexation</span>(<span class="ident">e1</span>) =&gt; <span class="ident">e1</span>.<span class="ident">validate</span>(),
-            <span class="ident">Expr::Cast</span>(<span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">Expr::Sequence</span>(<span class="ident">e1</span>, <span class="ident">e2</span>) =&gt; <span class="ident">e1</span>
-                .<span class="ident">validate</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">e2</span>.<span class="ident">validate</span>().<span class="ident">into_iter</span>())
-                .<span class="ident">collect</span>(),
+            Expr::Prefix(<span class="kw">_</span>, e1) =&gt; e1.validate(),
+            Expr::Faculty(e1) =&gt; e1.validate(),
+            Expr::Indexation(e1) =&gt; e1.validate(),
+            Expr::Cast(e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
+            Expr::Sequence(e1, e2) =&gt; e1
+                .validate()
+                .into_iter()
+                .chain(e2.validate().into_iter())
+                .collect(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ArithmeticOperator</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Expr</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ExprValidationError</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Ident</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::LogicalOperator</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RangeOperator</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RelationalOperator</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::parser::consume_one_expression</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::parser::parse_as_jme</span>;
-    <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">std::fmt::Write</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">super</span>::ArithmeticOperator::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">super</span>::Expr::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">super</span>::ExprValidationError::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">super</span>::Ident;
+    <span class="kw">use </span><span class="kw">super</span>::LogicalOperator::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">super</span>::RangeOperator::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">super</span>::RelationalOperator::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::jme::parser::consume_one_expression;
+    <span class="kw">use </span><span class="kw">crate</span>::jme::parser::parse_as_jme;
+    <span class="kw">use </span>serde::{Deserialize, Serialize};
+    <span class="kw">use </span>std::fmt::Write;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Logic</span>(
-            <span class="ident">And</span>,
-            <span class="ident">Box::new</span>(<span class="ident">Logic</span>(
-                <span class="ident">Or</span>,
-                <span class="ident">Box::new</span>(<span class="ident">Logic</span>(
-                    <span class="ident">And</span>,
-                    <span class="ident">Box::new</span>(<span class="ident">Relation</span>(
-                        <span class="ident">GreaterThan</span>,
-                        <span class="ident">Box::new</span>(<span class="ident">Arithmetic</span>(
-                            <span class="ident">Multiply</span>,
-                            <span class="ident">Box::new</span>(<span class="ident">Ident</span>(<span class="ident">Ident</span> {
-                                <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>(),
-                                <span class="ident">annotations</span>: <span class="macro">vec!</span>[],
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast() {
+        <span class="kw">let </span>expected = Logic(
+            And,
+            Box::new(Logic(
+                Or,
+                Box::new(Logic(
+                    And,
+                    Box::new(Relation(
+                        GreaterThan,
+                        Box::new(Arithmetic(
+                            Multiply,
+                            Box::new(Ident(Ident {
+                                name: <span class="string">&quot;a&quot;</span>.to_string(),
+                                annotations: <span class="macro">vec!</span>[],
                             })),
-                            <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">7</span>)),
+                            Box::new(Int(<span class="number">7</span>)),
                         )),
-                        <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">5</span>)),
+                        Box::new(Int(<span class="number">5</span>)),
                     )),
-                    <span class="ident">Box::new</span>(<span class="ident">Bool</span>(<span class="bool-val">true</span>)),
+                    Box::new(Bool(<span class="bool-val">true</span>)),
                 )),
-                <span class="ident">Box::new</span>(<span class="ident">Relation</span>(
-                    <span class="ident">LessThan</span>,
-                    <span class="ident">Box::new</span>(<span class="ident">Arithmetic</span>(
-                        <span class="ident">Add</span>,
-                        <span class="ident">Box::new</span>(<span class="ident">Arithmetic</span>(<span class="ident">Power</span>, <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">9</span>)), <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">10</span>)))),
-                        <span class="ident">Box::new</span>(<span class="ident">Arithmetic</span>(<span class="ident">Multiply</span>, <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">8</span>)), <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">5</span>)))),
+                Box::new(Relation(
+                    LessThan,
+                    Box::new(Arithmetic(
+                        Add,
+                        Box::new(Arithmetic(Power, Box::new(Int(<span class="number">9</span>)), Box::new(Int(<span class="number">10</span>)))),
+                        Box::new(Arithmetic(Multiply, Box::new(Int(<span class="number">8</span>)), Box::new(Int(<span class="number">5</span>)))),
                     )),
-                    <span class="ident">Box::new</span>(<span class="ident">Arithmetic</span>(<span class="ident">Divide</span>, <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">6</span>)), <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">10</span>)))),
+                    Box::new(Arithmetic(Divide, Box::new(Int(<span class="number">6</span>)), Box::new(Int(<span class="number">10</span>)))),
                 )),
             )),
-            <span class="ident">Box::new</span>(<span class="ident">Bool</span>(<span class="bool-val">false</span>)),
+            Box::new(Bool(<span class="bool-val">false</span>)),
         );
 
-        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="kw-2">&amp;</span>[
+        <span class="kw">for </span>input <span class="kw">in </span><span class="kw-2">&amp;</span>[
             <span class="string">&quot;a * 7 &gt; 5 and true or 9^10 + 8 * 5 &lt; 6 / 10 &amp;&amp; false&quot;</span>,
             <span class="string">&quot;{a} * 7 &gt; 5 and true or 9^10 + 8 * 5 &lt; 6 / 10 &amp;&amp; false&quot;</span>,
         ] {
-            <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
+            <span class="kw">let </span>pairs = parse_as_jme(input).unwrap();
+            <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
 
-            <span class="macro">assert_eq!</span>(<span class="ident">ast</span>, <span class="ident">expected</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+            <span class="macro">assert_eq!</span>(ast, expected);
+            <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_range</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;repeat(random(1..4),5)&quot;</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_range() {
+        <span class="kw">let </span>input = <span class="string">&quot;repeat(random(1..4),5)&quot;</span>;
 
-        <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>pairs = parse_as_jme(input).unwrap();
+        <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">ast</span>,
-            <span class="ident">FunctionApplication</span>(
-                <span class="ident">Ident</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;repeat&quot;</span>.<span class="ident">to_string</span>(),
-                    <span class="ident">annotations</span>: <span class="macro">vec!</span>[]
+            ast,
+            FunctionApplication(
+                Ident {
+                    name: <span class="string">&quot;repeat&quot;</span>.to_string(),
+                    annotations: <span class="macro">vec!</span>[]
                 },
                 <span class="macro">vec!</span>[
-                    <span class="ident">FunctionApplication</span>(
-                        <span class="ident">Ident</span> {
-                            <span class="ident">name</span>: <span class="string">&quot;random&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">annotations</span>: <span class="macro">vec!</span>[]
+                    FunctionApplication(
+                        Ident {
+                            name: <span class="string">&quot;random&quot;</span>.to_string(),
+                            annotations: <span class="macro">vec!</span>[]
                         },
-                        <span class="macro">vec!</span>[<span class="ident">Range</span>(<span class="ident">Create</span>, <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">1</span>)), <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">4</span>)))]
+                        <span class="macro">vec!</span>[Range(Create, Box::new(Int(<span class="number">1</span>)), Box::new(Int(<span class="number">4</span>)))]
                     ),
-                    <span class="ident">Int</span>(<span class="number">5</span>)
+                    Int(<span class="number">5</span>)
                 ]
             )
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+        <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_implicit_multiplication</span>() {
-        <span class="kw">for</span> (<span class="ident">implicit</span>, <span class="ident">explicit</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_implicit_multiplication() {
+        <span class="kw">for </span>(implicit, explicit) <span class="kw">in </span><span class="kw-2">&amp;</span>[
             (<span class="string">&quot;(b+2)(a+1)&quot;</span>, <span class="string">&quot;(b+2)*(a+1)&quot;</span>),
             (<span class="string">&quot;(a+1)2&quot;</span>, <span class="string">&quot;(a+1)*2&quot;</span>),
             (<span class="string">&quot;(x+y)z&quot;</span>, <span class="string">&quot;(x+y)*z&quot;</span>),
             (<span class="string">&quot;2x&quot;</span>, <span class="string">&quot;2*x&quot;</span>),
             (<span class="string">&quot;x y&quot;</span>, <span class="string">&quot;x*y&quot;</span>),
         ] {
-            <span class="macro">println!</span>(<span class="string">&quot;Handling {}&quot;</span>, <span class="ident">implicit</span>);
-            <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">implicit</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">explicit_ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">parse_as_jme</span>(<span class="ident">explicit</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="macro">println!</span>(<span class="string">&quot;Handling {}&quot;</span>, implicit);
+            <span class="kw">let </span>pairs = parse_as_jme(implicit).unwrap();
+            <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
+            <span class="kw">let </span>explicit_ast = consume_one_expression(parse_as_jme(explicit).unwrap()).unwrap();
 
-            <span class="macro">assert_eq!</span>(<span class="ident">ast</span>, <span class="ident">explicit_ast</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+            <span class="macro">assert_eq!</span>(ast, explicit_ast);
+            <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_implicit_multiplication_precedence</span>() {
-        <span class="kw">let</span> <span class="ident">explicit_ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">parse_as_jme</span>(<span class="string">&quot;(b+2)*(a+1)^2&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;(b+2)(a+1)^2&quot;</span>;
-        <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_implicit_multiplication_precedence() {
+        <span class="kw">let </span>explicit_ast = consume_one_expression(parse_as_jme(<span class="string">&quot;(b+2)*(a+1)^2&quot;</span>).unwrap()).unwrap();
+        <span class="kw">let </span>input = <span class="string">&quot;(b+2)(a+1)^2&quot;</span>;
+        <span class="kw">let </span>pairs = parse_as_jme(input).unwrap();
+        <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">ast</span>, <span class="ident">explicit_ast</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+        <span class="macro">assert_eq!</span>(ast, explicit_ast);
+        <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_list</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;[1,2,3]+4&quot;</span>;
-        <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_list() {
+        <span class="kw">let </span>input = <span class="string">&quot;[1,2,3]+4&quot;</span>;
+        <span class="kw">let </span>pairs = parse_as_jme(input).unwrap();
+        <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">ast</span>,
-            <span class="ident">Arithmetic</span>(
-                <span class="ident">Add</span>,
-                <span class="ident">Box::new</span>(<span class="ident">List</span>(<span class="macro">vec!</span>[<span class="ident">Int</span>(<span class="number">1</span>), <span class="ident">Int</span>(<span class="number">2</span>), <span class="ident">Int</span>(<span class="number">3</span>)])),
-                <span class="ident">Box::new</span>(<span class="ident">Int</span>(<span class="number">4</span>))
+            ast,
+            Arithmetic(
+                Add,
+                Box::new(List(<span class="macro">vec!</span>[Int(<span class="number">1</span>), Int(<span class="number">2</span>), Int(<span class="number">3</span>)])),
+                Box::new(Int(<span class="number">4</span>))
             )
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+        <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_non_ascii_ident</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;vec:ε&quot;</span>;
-        <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_non_ascii_ident() {
+        <span class="kw">let </span>input = <span class="string">&quot;vec:ε&quot;</span>;
+        <span class="kw">let </span>pairs = parse_as_jme(input).unwrap();
+        <span class="kw">let </span>ast = consume_one_expression(pairs).unwrap();
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">ast</span>,
-            <span class="ident">Ident</span>(<span class="ident">Ident</span> {
-                <span class="ident">name</span>: <span class="string">&quot;ε&quot;</span>.<span class="ident">to_owned</span>(),
-                <span class="ident">annotations</span>: <span class="macro">vec!</span>[<span class="string">&quot;vec&quot;</span>.<span class="ident">to_owned</span>()]
+            ast,
+            Ident(Ident {
+                name: <span class="string">&quot;ε&quot;</span>.to_owned(),
+                annotations: <span class="macro">vec!</span>[<span class="string">&quot;vec&quot;</span>.to_owned()]
             })
         );
-        <span class="macro">assert_eq!</span>(<span class="ident">ast</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+        <span class="macro">assert_eq!</span>(ast.validate(), <span class="macro">vec!</span>[]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ast_superscript</span>() {
-        <span class="kw">let</span> <span class="ident">to_compare</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>ast_superscript() {
+        <span class="kw">let </span>to_compare = <span class="macro">vec!</span>[
             (<span class="string">&quot;x^5&quot;</span>, <span class="string">&quot;x⁵&quot;</span>),
             (<span class="string">&quot;x^(5+3)&quot;</span>, <span class="string">&quot;x⁵⁺³&quot;</span>),
             (<span class="string">&quot;x^5+3&quot;</span>, <span class="string">&quot;x⁵+3&quot;</span>),
@@ -972,115 +972,115 @@
             (<span class="string">&quot;x^(55-(3)(5))&quot;</span>, <span class="string">&quot;x⁵⁵⁻⁽³⁾⁽⁵⁾&quot;</span>),
         ];
 
-        <span class="kw">for</span> (<span class="ident">input1</span>, <span class="ident">input2</span>) <span class="kw">in</span> <span class="ident">to_compare</span> {
-            <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input1</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">ast1</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="ident">input2</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">ast2</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>).<span class="ident">unwrap</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">ast1</span>, <span class="ident">ast2</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">ast1</span>.<span class="ident">validate</span>(), <span class="macro">vec!</span>[]);
+        <span class="kw">for </span>(input1, input2) <span class="kw">in </span>to_compare {
+            <span class="kw">let </span>pairs = parse_as_jme(input1).unwrap();
+            <span class="kw">let </span>ast1 = consume_one_expression(pairs).unwrap();
+            <span class="kw">let </span>pairs = parse_as_jme(input2).unwrap();
+            <span class="kw">let </span>ast2 = consume_one_expression(pairs).unwrap();
+            <span class="macro">assert_eq!</span>(ast1, ast2);
+            <span class="macro">assert_eq!</span>(ast1.validate(), <span class="macro">vec!</span>[]);
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">DocTest</span> {
-        <span class="ident">name</span>: <span class="ident">String</span>,
-        <span class="ident">fns</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DocTestFn</span><span class="op">&gt;</span>,
+    <span class="attribute">#[derive(Serialize, Deserialize)]
+    </span><span class="kw">struct </span>DocTest {
+        name: String,
+        fns: Vec&lt;DocTestFn&gt;,
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">DocTestFn</span> {
-        <span class="ident">name</span>: <span class="ident">String</span>,
-        <span class="ident">examples</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DocTestFnExample</span><span class="op">&gt;</span>,
+    <span class="attribute">#[derive(Serialize, Deserialize)]
+    </span><span class="kw">struct </span>DocTestFn {
+        name: String,
+        examples: Vec&lt;DocTestFnExample&gt;,
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">DocTestFnExample</span> {
-        <span class="ident">r#in</span>: <span class="ident">String</span>,
-        <span class="ident">out</span>: <span class="ident">String</span>,
+    <span class="attribute">#[derive(Serialize, Deserialize)]
+    </span><span class="kw">struct </span>DocTestFnExample {
+        r#in: String,
+        out: String,
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">numbas_doc_tests</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_tests</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">passed_parse_as_jme_tests</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">passed_validate_tests</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">String::new</span>();
-        <span class="kw">let</span> <span class="ident">doc_tests_json</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;numbas-jme-doc-tests.json&quot;</span>);
-        <span class="kw">let</span> <span class="ident">doc_tests</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DocTest</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="ident">serde_json::from_str</span>(<span class="ident">doc_tests_json</span>).<span class="ident">expect</span>(<span class="string">&quot;it to parse_as_jme the docstest json&quot;</span>);
-        <span class="kw">for</span> <span class="ident">test</span> <span class="kw">in</span> <span class="ident">doc_tests</span>.<span class="ident">into_iter</span>() {
-            <span class="kw">for</span> <span class="ident">r#fn</span> <span class="kw">in</span> <span class="ident">test</span>.<span class="ident">fns</span> {
-                <span class="kw">for</span> <span class="ident">example</span> <span class="kw">in</span> <span class="ident">r#fn</span>.<span class="ident">examples</span> {
-                    <span class="ident">total_tests</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                    <span class="kw">let</span> <span class="ident">use_hacky_f_g_fix</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>numbas_doc_tests() {
+        <span class="kw">let </span><span class="kw-2">mut </span>total_tests = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>passed_parse_as_jme_tests = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>passed_validate_tests = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>output = String::new();
+        <span class="kw">let </span>doc_tests_json = <span class="macro">include_str!</span>(<span class="string">&quot;numbas-jme-doc-tests.json&quot;</span>);
+        <span class="kw">let </span>doc_tests: Vec&lt;DocTest&gt; =
+            serde_json::from_str(doc_tests_json).expect(<span class="string">&quot;it to parse_as_jme the docstest json&quot;</span>);
+        <span class="kw">for </span>test <span class="kw">in </span>doc_tests.into_iter() {
+            <span class="kw">for </span>r#fn <span class="kw">in </span>test.fns {
+                <span class="kw">for </span>example <span class="kw">in </span>r#fn.examples {
+                    total_tests += <span class="number">1</span>;
+                    <span class="kw">let </span>use_hacky_f_g_fix = <span class="macro">vec!</span>[
                         <span class="string">&quot;canonical_compare(f(y),g(x))&quot;</span>,
                         <span class="string">&quot;canonical_compare(f(x),g(x))&quot;</span>,
                     ]
-                    .<span class="ident">contains</span>(<span class="op">&amp;&amp;</span><span class="ident">example</span>.<span class="ident">r#in</span>[..]);
+                    .contains(&amp;&amp;example.r#in[..]);
 
-                    <span class="kw">let</span> <span class="ident">pairs_res</span> <span class="op">=</span> <span class="ident">parse_as_jme</span>(<span class="kw-2">&amp;</span><span class="ident">example</span>.<span class="ident">r#in</span>[..]);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">failed_parsing</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">failed_validating</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">pairs</span>) <span class="op">=</span> <span class="ident">pairs_res</span>.<span class="ident">clone</span>() {
-                        <span class="kw">let</span> <span class="ident">ast_res</span> <span class="op">=</span> <span class="ident">consume_one_expression</span>(<span class="ident">pairs</span>);
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">ast</span>) <span class="op">=</span> <span class="ident">ast_res</span> {
-                            <span class="ident">failed_parsing</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                            <span class="kw">let</span> <span class="ident">validation_errors</span> <span class="op">=</span> <span class="ident">ast</span>.<span class="ident">validate</span>();
-                            <span class="kw">if</span> <span class="ident">validation_errors</span>.<span class="ident">is_empty</span>()
-                                <span class="op">|</span><span class="op">|</span> (<span class="ident">use_hacky_f_g_fix</span>
-                                    <span class="op">&amp;&amp;</span> <span class="ident">validation_errors</span>
-                                        <span class="op">==</span> <span class="macro">vec!</span>[
-                                            <span class="ident">UnknownFunction</span>(<span class="ident">Ident</span> {
-                                                <span class="ident">name</span>: <span class="string">&quot;f&quot;</span>.<span class="ident">to_owned</span>(),
-                                                <span class="ident">annotations</span>: <span class="macro">vec!</span>[],
+                    <span class="kw">let </span>pairs_res = parse_as_jme(<span class="kw-2">&amp;</span>example.r#in[..]);
+                    <span class="kw">let </span><span class="kw-2">mut </span>failed_parsing = <span class="bool-val">true</span>;
+                    <span class="kw">let </span><span class="kw-2">mut </span>failed_validating = <span class="bool-val">true</span>;
+                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(pairs) = pairs_res.clone() {
+                        <span class="kw">let </span>ast_res = consume_one_expression(pairs);
+                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(ast) = ast_res {
+                            failed_parsing = <span class="bool-val">false</span>;
+                            <span class="kw">let </span>validation_errors = ast.validate();
+                            <span class="kw">if </span>validation_errors.is_empty()
+                                || (use_hacky_f_g_fix
+                                    &amp;&amp; validation_errors
+                                        == <span class="macro">vec!</span>[
+                                            UnknownFunction(Ident {
+                                                name: <span class="string">&quot;f&quot;</span>.to_owned(),
+                                                annotations: <span class="macro">vec!</span>[],
                                             }),
-                                            <span class="ident">UnknownFunction</span>(<span class="ident">Ident</span> {
-                                                <span class="ident">name</span>: <span class="string">&quot;g&quot;</span>.<span class="ident">to_owned</span>(),
-                                                <span class="ident">annotations</span>: <span class="macro">vec!</span>[],
+                                            UnknownFunction(Ident {
+                                                name: <span class="string">&quot;g&quot;</span>.to_owned(),
+                                                annotations: <span class="macro">vec!</span>[],
                                             }),
                                         ])
                             {
-                                <span class="ident">failed_validating</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                            } <span class="kw">else</span> {
+                                failed_validating = <span class="bool-val">false</span>;
+                            } <span class="kw">else </span>{
                                 <span class="macro">writeln!</span>(
-                                    <span class="ident">output</span>,
+                                    output,
                                     <span class="string">&quot;VALIDATE: {}.{}.{}: {:?}&quot;</span>,
-                                    <span class="ident">test</span>.<span class="ident">name</span>,
-                                    <span class="ident">r#fn</span>.<span class="ident">name</span>,
-                                    <span class="ident">example</span>.<span class="ident">r#in</span>,
-                                    <span class="ident">validation_errors</span>
-                                        .<span class="ident">iter</span>()
-                                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">v</span>))
-                                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                                        .<span class="ident">join</span>(<span class="string">&quot; &amp; &quot;</span>)
+                                    test.name,
+                                    r#fn.name,
+                                    example.r#in,
+                                    validation_errors
+                                        .iter()
+                                        .map(|v| <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, v))
+                                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                                        .join(<span class="string">&quot; &amp; &quot;</span>)
                                 )
-                                .<span class="ident">expect</span>(<span class="string">&quot;Error occured while trying to write to string&quot;</span>);
+                                .expect(<span class="string">&quot;Error occured while trying to write to string&quot;</span>);
                             }
                         }
                     }
-                    <span class="kw">if</span> <span class="ident">failed_parsing</span> {
+                    <span class="kw">if </span>failed_parsing {
                         <span class="macro">writeln!</span>(
-                            <span class="ident">output</span>,
-                            <span class="string">&quot;parse_as_jme: {}.{}.{}:&quot;</span>, <span class="comment">//&quot; {:?}&quot;,</span>
-                            <span class="ident">test</span>.<span class="ident">name</span>,
-                            <span class="ident">r#fn</span>.<span class="ident">name</span>,
-                            <span class="ident">example</span>.<span class="ident">r#in</span> <span class="comment">//, pairs_res</span>
-                        )
-                        .<span class="ident">expect</span>(<span class="string">&quot;Error occured while trying to write to string&quot;</span>);
-                    } <span class="kw">else</span> {
-                        <span class="ident">passed_parse_as_jme_tests</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                            output,
+                            <span class="string">&quot;parse_as_jme: {}.{}.{}:&quot;</span>, <span class="comment">//&quot; {:?}&quot;,
+                            </span>test.name,
+                            r#fn.name,
+                            example.r#in <span class="comment">//, pairs_res
+                        </span>)
+                        .expect(<span class="string">&quot;Error occured while trying to write to string&quot;</span>);
+                    } <span class="kw">else </span>{
+                        passed_parse_as_jme_tests += <span class="number">1</span>;
                     }
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">failed_validating</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">failed_parsing</span> {
-                        <span class="ident">passed_validate_tests</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="kw">if </span>!failed_validating &amp;&amp; !failed_parsing {
+                        passed_validate_tests += <span class="number">1</span>;
                     }
                 }
             }
         }
-        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">output</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">total_tests</span>, <span class="ident">passed_parse_as_jme_tests</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">total_tests</span>, <span class="ident">passed_validate_tests</span>);
+        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, output);
+        <span class="macro">assert_eq!</span>(total_tests, passed_parse_as_jme_tests);
+        <span class="macro">assert_eq!</span>(total_tests, passed_validate_tests);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

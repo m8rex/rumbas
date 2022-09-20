@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/matrix.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>matrix.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/matrix.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>matrix.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -45,52 +45,52 @@
 <span id="45">45</span>
 <span id="46">46</span>
 <span id="47">47</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive</span>::{<span class="ident">SafeNatural</span>, <span class="ident">VariableValued</span>};
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::JMEString;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::QuestionPartSharedData;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::{SafeNatural, VariableValued};
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>serde_with::skip_serializing_none;
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartMatrix</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;correctAnswer&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMEString</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;correctAnswerFractions&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer_fractions</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;numRows&quot;</span>,
-        <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::variable_safe_natural_three&quot;</span>
-    )]</span>
-    <span class="kw">pub</span> <span class="ident">num_rows</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;numColumns&quot;</span>,
-        <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::variable_safe_natural_three&quot;</span>
-    )]</span>
-    <span class="kw">pub</span> <span class="ident">num_columns</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">SafeNatural</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowResize&quot;</span>, <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow_resize</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minColumns&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">min_columns</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxColumns&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">max_columns</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minRows&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">min_rows</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxRows&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">max_rows</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;tolerance&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">tolerance</span>: <span class="ident">f64</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;markPerCell&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">mark_per_cell</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowFractions&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow_fractions</span>: <span class="ident">bool</span>,
-    <span class="comment">//#[serde(flatten)]  // todo</span>
-    <span class="comment">//precision: QuestionPrecision,</span>
-}
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>QuestionPartMatrix {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>part_data: QuestionPartSharedData,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;correctAnswer&quot;</span>)]
+    </span><span class="kw">pub </span>correct_answer: JMEString,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;correctAnswerFractions&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>correct_answer_fractions: bool,
+    <span class="attribute">#[serde(
+        rename = <span class="string">&quot;numRows&quot;</span>,
+        default = <span class="string">&quot;crate::util::variable_safe_natural_three&quot;
+    </span>)]
+    </span><span class="kw">pub </span>num_rows: VariableValued&lt;SafeNatural&gt;,
+    <span class="attribute">#[serde(
+        rename = <span class="string">&quot;numColumns&quot;</span>,
+        default = <span class="string">&quot;crate::util::variable_safe_natural_three&quot;
+    </span>)]
+    </span><span class="kw">pub </span>num_columns: VariableValued&lt;SafeNatural&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;allowResize&quot;</span>, default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="kw">pub </span>allow_resize: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;minColumns&quot;</span>, default)]
+    </span><span class="kw">pub </span>min_columns: VariableValued&lt;usize&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;maxColumns&quot;</span>, default)]
+    </span><span class="kw">pub </span>max_columns: VariableValued&lt;usize&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;minRows&quot;</span>, default)]
+    </span><span class="kw">pub </span>min_rows: VariableValued&lt;usize&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;maxRows&quot;</span>, default)]
+    </span><span class="kw">pub </span>max_rows: VariableValued&lt;usize&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;tolerance&quot;</span>, default)]
+    </span><span class="kw">pub </span>tolerance: f64,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;markPerCell&quot;</span>, default)]
+    </span><span class="kw">pub </span>mark_per_cell: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;allowFractions&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>allow_fractions: bool,
+    <span class="comment">//#[serde(flatten)]  // todo
+    //precision: QuestionPrecision,
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

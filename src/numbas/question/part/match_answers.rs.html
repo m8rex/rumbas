@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/match_answers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>match_answers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/match_answers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>match_answers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -127,134 +127,134 @@
 <span id="127">127</span>
 <span id="128">128</span>
 <span id="129">129</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">JMEString</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::choose_multiple::MultipleChoiceMarkingMethod</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::VariableValued</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::{ContentAreaString, JMEString};
+<span class="kw">use </span><span class="kw">crate</span>::question::part::choose_multiple::MultipleChoiceMarkingMethod;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::QuestionPartSharedData;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::SafeNatural;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::VariableValued;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>serde_with::skip_serializing_none;
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartMatchAnswersWithChoices</span> {
-    <span class="comment">//TODO -&gt; Split for different types</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>QuestionPartMatchAnswersWithChoices {
+    <span class="comment">//TODO -&gt; Split for different types
+    </span><span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>part_data: QuestionPartSharedData,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minMarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</span>
-    <span class="kw">pub</span> <span class="ident">min_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">//TODO; what is difference with minimum_marks?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxMarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</span>
-    <span class="kw">pub</span> <span class="ident">max_marks</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Is there a maximum number of marks the student can get?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minAnswers&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.</span>
-    <span class="kw">pub</span> <span class="ident">min_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Minimum number of responses the student can select</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxAnswers&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.</span>
-    <span class="kw">pub</span> <span class="ident">max_answers</span>: <span class="ident">SafeNatural</span>, <span class="comment">// Maximum number of responses the student can select</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;warningType&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">wrong_nb_answers_warning</span>: <span class="ident">MultipleChoiceWarningType</span>, <span class="comment">// What to do if the student picks the wrong number of responses?</span>
+    <span class="attribute">#[serde(rename = <span class="string">&quot;minMarks&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
+    </span><span class="kw">pub </span>min_marks: SafeNatural, <span class="comment">//TODO; what is difference with minimum_marks?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;maxMarks&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
+    </span><span class="kw">pub </span>max_marks: SafeNatural, <span class="comment">// Is there a maximum number of marks the student can get?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;minAnswers&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.
+    </span><span class="kw">pub </span>min_answers: SafeNatural, <span class="comment">// Minimum number of responses the student can select
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;maxAnswers&quot;</span>)]
+    #[serde(default)]
+    </span><span class="doccomment">/// For choose several from a list and match choices with answers parts, the student must select at most this many choices. The value 0 means “no maximum”.
+    </span><span class="kw">pub </span>max_answers: SafeNatural, <span class="comment">// Maximum number of responses the student can select
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;warningType&quot;</span>, default)]
+    </span><span class="kw">pub </span>wrong_nb_answers_warning: MultipleChoiceWarningType, <span class="comment">// What to do if the student picks the wrong number of responses?
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleChoices&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shuffle_choices</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;shuffleAnswers&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shuffle_answers</span>: <span class="ident">bool</span>,
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;shuffleChoices&quot;</span>, default)]
+    </span><span class="kw">pub </span>shuffle_choices: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;shuffleAnswers&quot;</span>, default)]
+    </span><span class="kw">pub </span>shuffle_answers: bool,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">display_type</span>: <span class="ident">MatchAnswersWithChoicesDisplayType</span>, <span class="comment">// How to display the response selectors -&gt; only for 1_n_2?</span>
-    <span class="comment">//#[serde(rename = &quot;displayColumns&quot;)] //TODO?</span>
-    <span class="comment">//pub displayed_columns: usize, // How many columns to use to display the choices.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">layout</span>: <span class="ident">MatchAnswersWithChoicesLayout</span>,
+    <span class="attribute">#[serde(flatten, default)]
+    </span><span class="kw">pub </span>display_type: MatchAnswersWithChoicesDisplayType, <span class="comment">// How to display the response selectors -&gt; only for 1_n_2?
+    //#[serde(rename = &quot;displayColumns&quot;)] //TODO?
+    //pub displayed_columns: usize, // How many columns to use to display the choices.
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>layout: MatchAnswersWithChoicesLayout,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showCellAnswerState&quot;</span>, <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="doccomment">/// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</span>
-    <span class="kw">pub</span> <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;showCellAnswerState&quot;</span>, default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="doccomment">/// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
+    </span><span class="kw">pub </span>show_cell_answer_state: bool,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">marking_matrix</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[choice][answer]</span>
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>choices: VariableValued&lt;Vec&lt;ContentAreaString&gt;&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>answers: VariableValued&lt;Vec&lt;ContentAreaString&gt;&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;matrix&quot;</span>, default)]
+    </span><span class="kw">pub </span>marking_matrix: VariableValued&lt;Vec&lt;Vec&lt;JMEString&gt;&gt;&gt;, <span class="comment">// Marks for each answer/choice pair. Arranged as `matrix[choice][answer]
+</span>}
+
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;displayType&quot;</span>)]
+</span><span class="kw">pub enum </span>MatchAnswersWithChoicesDisplayType {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;checkbox&quot;</span>)]
+    </span>Check(MatchAnswersWithChoicesDisplayTypeCheck),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;radiogroup&quot;</span>)]
+    </span>Radio,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;displayType&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MatchAnswersWithChoicesDisplayType</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;checkbox&quot;</span>)]</span>
-    <span class="ident">Check</span>(<span class="ident">MatchAnswersWithChoicesDisplayTypeCheck</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;radiogroup&quot;</span>)]</span>
-    <span class="ident">Radio</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesDisplayType</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Radio</span>
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>MatchAnswersWithChoicesDisplayType {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Radio
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersWithChoicesDisplayTypeCheck</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;markingMethod&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">marking_method</span>: <span class="ident">MultipleChoiceMarkingMethod</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MatchAnswersWithChoicesDisplayTypeCheck {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;markingMethod&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>marking_method: MultipleChoiceMarkingMethod,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MultipleChoiceWarningType</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
-    <span class="prelude-val">None</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;prevent&quot;</span>)]</span>
-    <span class="ident">Prevent</span>,
-    <span class="comment">//TODO: also prevent and warn -&gt; same as leave actions?</span>
-    <span class="comment">//https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493</span>
-}
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Copy, Eq)]
+</span><span class="kw">pub enum </span>MultipleChoiceWarningType {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;none&quot;</span>)]
+    </span><span class="prelude-val">None</span>,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;prevent&quot;</span>)]
+    </span>Prevent,
+    <span class="comment">//TODO: also prevent and warn -&gt; same as leave actions?
+    //https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L493
+</span>}
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MultipleChoiceWarningType</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::None</span>
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>MultipleChoiceWarningType {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::None
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;all&quot;</span>)]</span>
-    <span class="ident">All</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;lowertriangle&quot;</span>)]</span>
-    <span class="ident">LowerTriangle</span>,
-    <span class="comment">//TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766</span>
-}
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>MatchAnswersWithChoicesLayoutType {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;all&quot;</span>)]
+    </span>All,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;lowertriangle&quot;</span>)]
+    </span>LowerTriangle,
+    <span class="comment">//TODO: https://github.com/numbas/Numbas/blob/master/runtime/scripts/parts/multipleresponse.js#L766
+</span>}
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::All</span>
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>MatchAnswersWithChoicesLayoutType {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::All
     }
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="doccomment">/// Define which choices are available to be picked. If Custom expression is selected, give either a list of lists of boolean values, or a matrix with as many rows as the part has choices and as many columns as the part has answers. Any non-zero value in the matrix indicates that the corresponding choice-answer pair should be available to the student.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersWithChoicesLayout</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">r#type</span>: <span class="ident">MatchAnswersWithChoicesLayoutType</span>,
-    <span class="kw">pub</span> <span class="ident">expression</span>: <span class="ident">String</span>, <span class="comment">// TODO: expression only needed for custom type?</span>
-}
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="doccomment">/// Define which choices are available to be picked. If Custom expression is selected, give either a list of lists of boolean values, or a matrix with as many rows as the part has choices and as many columns as the part has answers. Any non-zero value in the matrix indicates that the corresponding choice-answer pair should be available to the student.
+</span><span class="kw">pub struct </span>MatchAnswersWithChoicesLayout {
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>r#type: MatchAnswersWithChoicesLayoutType,
+    <span class="kw">pub </span>expression: String, <span class="comment">// TODO: expression only needed for custom type?
+</span>}
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayout</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">r#type</span>: <span class="ident">MatchAnswersWithChoicesLayoutType::All</span>,
-            <span class="ident">expression</span>: <span class="ident">String::new</span>(),
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>MatchAnswersWithChoicesLayout {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            r#type: MatchAnswersWithChoicesLayoutType::All,
+            expression: String::new(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

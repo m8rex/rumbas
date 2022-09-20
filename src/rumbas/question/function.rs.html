@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/function.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>function.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/function.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>function.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -168,175 +168,175 @@
 <span id="168">168</span>
 <span id="169">169</span>
 <span id="170">170</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable</span>::{<span class="ident">JMETranslatableString</span>, <span class="ident">TranslatableString</span>};
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::{JMETranslatableString, TranslatableString};
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FunctionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Function</span> {
-    <span class="comment">// TODO: don&#39;t directly use numbas type</span>
-    <span class="kw">pub</span> <span class="ident">parameters</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">FunctionType</span>)<span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">output_type</span>: <span class="ident">FunctionType</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">definition</span>: <span class="ident">FunctionDefinition</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FunctionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Function {
+    <span class="comment">// TODO: don&#39;t directly use numbas type
+    </span><span class="kw">pub </span>parameters: Vec&lt;(String, FunctionType)&gt;,
+    <span class="kw">pub </span>output_type: FunctionType,
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>definition: FunctionDefinition,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::function::Function</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Function</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::function::Function</span> {
-        <span class="ident">numbas::question::function::Function</span> {
-            <span class="ident">parameters</span>: <span class="self">self</span>.<span class="ident">parameters</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">output_type</span>: <span class="self">self</span>.<span class="ident">output_type</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::function::Function&gt; <span class="kw">for </span>Function {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::function::Function {
+        numbas::question::function::Function {
+            parameters: <span class="self">self</span>.parameters.to_numbas(locale),
+            output_type: <span class="self">self</span>.output_type.to_numbas(locale),
+            definition: <span class="self">self</span>.definition.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Function</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::function::Function</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Function</span> {
-        <span class="ident">Function</span> {
-            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">output_type</span>: <span class="self">self</span>.<span class="ident">output_type</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">parameters</span>: <span class="self">self</span>.<span class="ident">parameters</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;Function&gt; <span class="kw">for </span>numbas::question::function::Function {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Function {
+        Function {
+            definition: <span class="self">self</span>.definition.to_rumbas(),
+            output_type: <span class="self">self</span>.output_type.to_rumbas(),
+            parameters: <span class="self">self</span>.parameters.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FunctionDefinitionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;language&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FunctionDefinition</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;jme&quot;</span>)]</span>
-    <span class="ident">JME</span>(<span class="ident">FunctionDefinitionJME</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;javascript&quot;</span>)]</span>
-    <span class="ident">Javascript</span>(<span class="ident">FunctionDefinitionJavascript</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FunctionDefinitionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;language&quot;</span>)]
+</span><span class="kw">pub enum </span>FunctionDefinition {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;jme&quot;</span>)]
+    </span>JME(FunctionDefinitionJME),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;javascript&quot;</span>)]
+    </span>Javascript(FunctionDefinitionJavascript),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::function::FunctionDefinition</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FunctionDefinition</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::function::FunctionDefinition</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FunctionDefinition::JME</span>(<span class="ident">c</span>) =&gt; <span class="ident">numbas::question::function::FunctionDefinition::JME</span> {
-                <span class="ident">definition</span>: <span class="ident">c</span>.<span class="ident">definition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::function::FunctionDefinition&gt; <span class="kw">for </span>FunctionDefinition {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::function::FunctionDefinition {
+        <span class="kw">match </span><span class="self">self </span>{
+            FunctionDefinition::JME(c) =&gt; numbas::question::function::FunctionDefinition::JME {
+                definition: c.definition.to_numbas(locale),
             },
-            <span class="ident">FunctionDefinition::Javascript</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::function::FunctionDefinition::Javascript</span> {
-                    <span class="ident">definition</span>: <span class="ident">c</span>.<span class="ident">definition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            FunctionDefinition::Javascript(c) =&gt; {
+                numbas::question::function::FunctionDefinition::Javascript {
+                    definition: c.definition.to_numbas(locale),
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">FunctionDefinition</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::function::FunctionDefinition</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FunctionDefinition</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::function::FunctionDefinition::JME</span> { <span class="ident">definition</span> } =&gt; {
-                <span class="ident">FunctionDefinition::JME</span>(<span class="ident">FunctionDefinitionJME</span> {
-                    <span class="ident">definition</span>: <span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;FunctionDefinition&gt; <span class="kw">for </span>numbas::question::function::FunctionDefinition {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FunctionDefinition {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::function::FunctionDefinition::JME { definition } =&gt; {
+                FunctionDefinition::JME(FunctionDefinitionJME {
+                    definition: definition.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::question::function::FunctionDefinition::Javascript</span> { <span class="ident">definition</span> } =&gt; {
-                <span class="ident">FunctionDefinition::Javascript</span>(<span class="ident">FunctionDefinitionJavascript</span> {
-                    <span class="ident">definition</span>: <span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
+            numbas::question::function::FunctionDefinition::Javascript { definition } =&gt; {
+                FunctionDefinition::Javascript(FunctionDefinitionJavascript {
+                    definition: definition.to_rumbas(),
                 })
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FunctionDefinitionJMEInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FunctionDefinitionJME</span> {
-    <span class="kw">pub</span> <span class="ident">definition</span>: <span class="ident">JMETranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FunctionDefinitionJMEInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>FunctionDefinitionJME {
+    <span class="kw">pub </span>definition: JMETranslatableString,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FunctionDefinitionJavascriptInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FunctionDefinitionJavascript</span> {
-    <span class="kw">pub</span> <span class="ident">definition</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FunctionDefinitionJavascriptInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>FunctionDefinitionJavascript {
+    <span class="kw">pub </span>definition: TranslatableString,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FunctionTypeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FunctionType</span> {
-    <span class="ident">Boolean</span>,
-    <span class="ident">Decimal</span>,
-    <span class="ident">Dictionary</span>,
-    <span class="ident">Expression</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;html&quot;</span>)]</span>
-    <span class="ident">HTML</span>,
-    <span class="ident">Integer</span>,
-    <span class="ident">KeyPair</span>,
-    <span class="ident">List</span>,
-    <span class="ident">Matrix</span>,
-    <span class="ident">Nothing</span>,
-    <span class="ident">Number</span>,
-    <span class="ident">Range</span>,
-    <span class="ident">Rational</span>,
-    <span class="ident">Set</span>,
-    <span class="ident">r#String</span>,
-    <span class="ident">Vector</span>,
-    <span class="ident">ExtensionGeogebraApplet</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FunctionTypeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>FunctionType {
+    Boolean,
+    Decimal,
+    Dictionary,
+    Expression,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;html&quot;</span>)]
+    </span>HTML,
+    Integer,
+    KeyPair,
+    List,
+    Matrix,
+    Nothing,
+    Number,
+    Range,
+    Rational,
+    Set,
+    r#String,
+    Vector,
+    ExtensionGeogebraApplet,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::function::FunctionType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FunctionType</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::function::FunctionType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Boolean</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Boolean</span>,
-            <span class="ident"><span class="self">Self</span>::Decimal</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Decimal</span>,
-            <span class="ident"><span class="self">Self</span>::Dictionary</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Dictionary</span>,
-            <span class="ident"><span class="self">Self</span>::Expression</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Expression</span>,
-            <span class="ident"><span class="self">Self</span>::HTML</span> =&gt; <span class="ident">numbas::question::function::FunctionType::HTML</span>,
-            <span class="ident"><span class="self">Self</span>::Integer</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Integer</span>,
-            <span class="ident"><span class="self">Self</span>::KeyPair</span> =&gt; <span class="ident">numbas::question::function::FunctionType::KeyPair</span>,
-            <span class="ident"><span class="self">Self</span>::List</span> =&gt; <span class="ident">numbas::question::function::FunctionType::List</span>,
-            <span class="ident"><span class="self">Self</span>::Matrix</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Matrix</span>,
-            <span class="ident"><span class="self">Self</span>::Nothing</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Nothing</span>,
-            <span class="ident"><span class="self">Self</span>::Number</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Number</span>,
-            <span class="ident"><span class="self">Self</span>::Range</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Range</span>,
-            <span class="ident"><span class="self">Self</span>::Rational</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Rational</span>,
-            <span class="ident"><span class="self">Self</span>::Set</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Set</span>,
-            <span class="self">Self</span>::<span class="ident">r#String</span> =&gt; <span class="ident">numbas::question::function::FunctionType</span>::<span class="ident">r#String</span>,
-            <span class="ident"><span class="self">Self</span>::Vector</span> =&gt; <span class="ident">numbas::question::function::FunctionType::Vector</span>,
-            <span class="ident"><span class="self">Self</span>::ExtensionGeogebraApplet</span> =&gt; {
-                <span class="ident">numbas::question::function::FunctionType::ExtensionGeogebraApplet</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::function::FunctionType&gt; <span class="kw">for </span>FunctionType {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::function::FunctionType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Boolean =&gt; numbas::question::function::FunctionType::Boolean,
+            <span class="self">Self</span>::Decimal =&gt; numbas::question::function::FunctionType::Decimal,
+            <span class="self">Self</span>::Dictionary =&gt; numbas::question::function::FunctionType::Dictionary,
+            <span class="self">Self</span>::Expression =&gt; numbas::question::function::FunctionType::Expression,
+            <span class="self">Self</span>::HTML =&gt; numbas::question::function::FunctionType::HTML,
+            <span class="self">Self</span>::Integer =&gt; numbas::question::function::FunctionType::Integer,
+            <span class="self">Self</span>::KeyPair =&gt; numbas::question::function::FunctionType::KeyPair,
+            <span class="self">Self</span>::List =&gt; numbas::question::function::FunctionType::List,
+            <span class="self">Self</span>::Matrix =&gt; numbas::question::function::FunctionType::Matrix,
+            <span class="self">Self</span>::Nothing =&gt; numbas::question::function::FunctionType::Nothing,
+            <span class="self">Self</span>::Number =&gt; numbas::question::function::FunctionType::Number,
+            <span class="self">Self</span>::Range =&gt; numbas::question::function::FunctionType::Range,
+            <span class="self">Self</span>::Rational =&gt; numbas::question::function::FunctionType::Rational,
+            <span class="self">Self</span>::Set =&gt; numbas::question::function::FunctionType::Set,
+            <span class="self">Self</span>::r#String =&gt; numbas::question::function::FunctionType::r#String,
+            <span class="self">Self</span>::Vector =&gt; numbas::question::function::FunctionType::Vector,
+            <span class="self">Self</span>::ExtensionGeogebraApplet =&gt; {
+                numbas::question::function::FunctionType::ExtensionGeogebraApplet
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">FunctionType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::function::FunctionType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FunctionType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Boolean</span> =&gt; <span class="ident">FunctionType::Boolean</span>,
-            <span class="ident"><span class="self">Self</span>::Decimal</span> =&gt; <span class="ident">FunctionType::Decimal</span>,
-            <span class="ident"><span class="self">Self</span>::Dictionary</span> =&gt; <span class="ident">FunctionType::Dictionary</span>,
-            <span class="ident"><span class="self">Self</span>::Expression</span> =&gt; <span class="ident">FunctionType::Expression</span>,
-            <span class="ident"><span class="self">Self</span>::HTML</span> =&gt; <span class="ident">FunctionType::HTML</span>,
-            <span class="ident"><span class="self">Self</span>::Integer</span> =&gt; <span class="ident">FunctionType::Integer</span>,
-            <span class="ident"><span class="self">Self</span>::KeyPair</span> =&gt; <span class="ident">FunctionType::KeyPair</span>,
-            <span class="ident"><span class="self">Self</span>::List</span> =&gt; <span class="ident">FunctionType::List</span>,
-            <span class="ident"><span class="self">Self</span>::Matrix</span> =&gt; <span class="ident">FunctionType::Matrix</span>,
-            <span class="ident"><span class="self">Self</span>::Nothing</span> =&gt; <span class="ident">FunctionType::Nothing</span>,
-            <span class="ident"><span class="self">Self</span>::Number</span> =&gt; <span class="ident">FunctionType::Number</span>,
-            <span class="ident"><span class="self">Self</span>::Range</span> =&gt; <span class="ident">FunctionType::Range</span>,
-            <span class="ident"><span class="self">Self</span>::Rational</span> =&gt; <span class="ident">FunctionType::Rational</span>,
-            <span class="ident"><span class="self">Self</span>::Set</span> =&gt; <span class="ident">FunctionType::Set</span>,
-            <span class="self">Self</span>::<span class="ident">r#String</span> =&gt; <span class="ident">FunctionType</span>::<span class="ident">r#String</span>,
-            <span class="ident"><span class="self">Self</span>::Vector</span> =&gt; <span class="ident">FunctionType::Vector</span>,
-            <span class="ident"><span class="self">Self</span>::ExtensionGeogebraApplet</span> =&gt; <span class="ident">FunctionType::ExtensionGeogebraApplet</span>,
+<span class="kw">impl </span>ToRumbas&lt;FunctionType&gt; <span class="kw">for </span>numbas::question::function::FunctionType {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FunctionType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Boolean =&gt; FunctionType::Boolean,
+            <span class="self">Self</span>::Decimal =&gt; FunctionType::Decimal,
+            <span class="self">Self</span>::Dictionary =&gt; FunctionType::Dictionary,
+            <span class="self">Self</span>::Expression =&gt; FunctionType::Expression,
+            <span class="self">Self</span>::HTML =&gt; FunctionType::HTML,
+            <span class="self">Self</span>::Integer =&gt; FunctionType::Integer,
+            <span class="self">Self</span>::KeyPair =&gt; FunctionType::KeyPair,
+            <span class="self">Self</span>::List =&gt; FunctionType::List,
+            <span class="self">Self</span>::Matrix =&gt; FunctionType::Matrix,
+            <span class="self">Self</span>::Nothing =&gt; FunctionType::Nothing,
+            <span class="self">Self</span>::Number =&gt; FunctionType::Number,
+            <span class="self">Self</span>::Range =&gt; FunctionType::Range,
+            <span class="self">Self</span>::Rational =&gt; FunctionType::Rational,
+            <span class="self">Self</span>::Set =&gt; FunctionType::Set,
+            <span class="self">Self</span>::r#String =&gt; FunctionType::r#String,
+            <span class="self">Self</span>::Vector =&gt; FunctionType::Vector,
+            <span class="self">Self</span>::ExtensionGeogebraApplet =&gt; FunctionType::ExtensionGeogebraApplet,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/timing.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timing.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/timing.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timing.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -84,91 +84,91 @@
 <span id="84">84</span>
 <span id="85">85</span>
 <span id="86">86</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TimingInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Timing</span> {
-    <span class="kw">pub</span> <span class="ident">duration_in_seconds</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="comment">// if &quot;none&quot; (or 0) -&gt; unlimited time</span>
-    <span class="kw">pub</span> <span class="ident">allow_pause</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Action to do on timeout</span>
-    <span class="kw">pub</span> <span class="ident">on_timeout</span>: <span class="ident">TimeoutAction</span>,
-    <span class="doccomment">/// Action to do five minutes before timeout</span>
-    <span class="kw">pub</span> <span class="ident">timed_warning</span>: <span class="ident">TimeoutAction</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;TimingInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Timing {
+    <span class="kw">pub </span>duration_in_seconds: Noneable&lt;usize&gt;, <span class="comment">// if &quot;none&quot; (or 0) -&gt; unlimited time
+    </span><span class="kw">pub </span>allow_pause: bool,
+    <span class="doccomment">/// Action to do on timeout
+    </span><span class="kw">pub </span>on_timeout: TimeoutAction,
+    <span class="doccomment">/// Action to do five minutes before timeout
+    </span><span class="kw">pub </span>timed_warning: TimeoutAction,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::timing::Timing</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Timing</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::timing::Timing</span> {
-        <span class="ident">numbas::exam::timing::Timing</span> {
-            <span class="ident">allow_pause</span>: <span class="self">self</span>.<span class="ident">allow_pause</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">timeout</span>: <span class="self">self</span>.<span class="ident">on_timeout</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">timed_warning</span>: <span class="self">self</span>.<span class="ident">timed_warning</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::timing::Timing&gt; <span class="kw">for </span>Timing {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::timing::Timing {
+        numbas::exam::timing::Timing {
+            allow_pause: <span class="self">self</span>.allow_pause.to_numbas(locale),
+            timeout: <span class="self">self</span>.on_timeout.to_numbas(locale),
+            timed_warning: <span class="self">self</span>.timed_warning.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Timing</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Timing</span> {
-        <span class="ident">Timing</span> {
-            <span class="ident">duration_in_seconds</span>: <span class="ident">Noneable::NotNone</span>(
-                <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">duration_in_seconds</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;Timing&gt; <span class="kw">for </span>numbas::exam::Exam {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Timing {
+        Timing {
+            duration_in_seconds: Noneable::NotNone(
+                <span class="self">self</span>.basic_settings.duration_in_seconds.to_rumbas(),
             ),
-            <span class="ident">allow_pause</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">allow_pause</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">on_timeout</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">timeout</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">timed_warning</span>: <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">timed_warning</span>.<span class="ident">to_rumbas</span>(),
+            allow_pause: <span class="self">self</span>.timing.allow_pause.to_rumbas(),
+            on_timeout: <span class="self">self</span>.timing.timeout.to_rumbas(),
+            timed_warning: <span class="self">self</span>.timing.timed_warning.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TimeoutActionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;action&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TimeoutAction</span> {
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;TimeoutActionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+#[serde(tag = <span class="string">&quot;action&quot;</span>)]
+</span><span class="kw">pub enum </span>TimeoutAction {
     <span class="prelude-val">None</span>,
-    <span class="ident">Warn</span>(<span class="ident">TimeoutActionWarn</span>),
+    Warn(TimeoutActionWarn),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::timing::TimeoutAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TimeoutAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::timing::TimeoutAction</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">TimeoutAction::None</span> =&gt; <span class="ident">numbas::exam::timing::TimeoutAction::None</span> {
-                <span class="ident">message</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(), <span class="comment">// message doesn&#39;t mean anything</span>
-            },
-            <span class="ident">TimeoutAction::Warn</span>(<span class="ident">wm</span>) =&gt; <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> {
-                <span class="ident">message</span>: <span class="ident">wm</span>.<span class="ident">message</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::timing::TimeoutAction&gt; <span class="kw">for </span>TimeoutAction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::timing::TimeoutAction {
+        <span class="kw">match </span><span class="self">self </span>{
+            TimeoutAction::None =&gt; numbas::exam::timing::TimeoutAction::None {
+                message: <span class="string">&quot;&quot;</span>.to_string(), <span class="comment">// message doesn&#39;t mean anything
+            </span>},
+            TimeoutAction::Warn(wm) =&gt; numbas::exam::timing::TimeoutAction::Warn {
+                message: wm.message.to_string(locale).unwrap(),
             },
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">TimeoutAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::timing::TimeoutAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TimeoutAction</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::exam::timing::TimeoutAction::None</span> { <span class="ident">message</span>: <span class="kw">_</span> } =&gt; <span class="ident">TimeoutAction::None</span>,
-            <span class="ident">numbas::exam::timing::TimeoutAction::Warn</span> { <span class="ident">message</span> } =&gt; {
-                <span class="ident">TimeoutAction::Warn</span>(<span class="ident">TimeoutActionWarn</span> {
-                    <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">to_owned</span>().<span class="ident">into</span>(),
+<span class="kw">impl </span>ToRumbas&lt;TimeoutAction&gt; <span class="kw">for </span>numbas::exam::timing::TimeoutAction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TimeoutAction {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::exam::timing::TimeoutAction::None { message: <span class="kw">_ </span>} =&gt; TimeoutAction::None,
+            numbas::exam::timing::TimeoutAction::Warn { message } =&gt; {
+                TimeoutAction::Warn(TimeoutActionWarn {
+                    message: message.to_owned().into(),
                 })
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TimeoutActionWarnInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TimeoutActionWarn</span> {
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;TimeoutActionWarnInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>TimeoutActionWarn {
+    <span class="kw">pub </span>message: TranslatableString,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

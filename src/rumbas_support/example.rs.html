@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/example.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>example.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/example.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>example.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -490,497 +490,497 @@
 <span id="490">490</span>
 <span id="491">491</span>
 <span id="492">492</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::value</span>::{<span class="ident">Value</span>, <span class="ident">ValueType</span>};
-<span class="kw">use</span> <span class="ident">std::convert::Into</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::value::{Value, ValueType};
+<span class="kw">use </span>std::convert::Into;
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Examples</span> {
-    <span class="doccomment">/// Method that return a list of examples for the given structs</span>
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>;
+<span class="kw">pub trait </span>Examples {
+    <span class="doccomment">/// Method that return a list of examples for the given structs
+    </span><span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized;
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">impl_examples</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>),<span class="op">+</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">res</span>: <span class="ident">expr</span>) =&gt; {
+<span class="macro">macro_rules! </span>impl_examples {
+    ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>),+ : <span class="macro-nonterminal">$res</span>: expr) =&gt; {
         $(
-        <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">res</span>
-            }
+        <span class="kw">impl </span>Examples <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">examples</span>() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+                <span class="macro-nonterminal">$res
+            </span>}
         }
-        )<span class="op">+</span>
+        )+
     };
 }
 
-<span class="macro">impl_examples!</span>(<span class="ident">u8</span>, <span class="ident">u16</span>, <span class="ident">u32</span>, <span class="ident">u64</span>, <span class="ident">u128</span>, <span class="ident">usize</span>: <span class="macro">vec!</span>[<span class="number">2</span>]);
-<span class="macro">impl_examples!</span>(<span class="ident">i8</span>, <span class="ident">i16</span>, <span class="ident">i32</span>, <span class="ident">i64</span>, <span class="ident">i128</span>, <span class="ident">isize</span>: <span class="macro">vec!</span>[<span class="op">-</span><span class="number">1</span>]);
+<span class="macro">impl_examples!</span>(u8, u16, u32, u64, u128, usize: <span class="macro">vec!</span>[<span class="number">2</span>]);
+<span class="macro">impl_examples!</span>(i8, i16, i32, i64, i128, isize: <span class="macro">vec!</span>[-<span class="number">1</span>]);
 
-<span class="macro">impl_examples!</span>(<span class="ident">f32</span>, <span class="ident">f64</span>: <span class="macro">vec!</span>[<span class="number">1.2</span>]);
+<span class="macro">impl_examples!</span>(f32, f64: <span class="macro">vec!</span>[<span class="number">1.2</span>]);
 
-<span class="macro">impl_examples!</span>(<span class="ident">String</span>: <span class="macro">vec!</span>[<span class="string">&quot;nonjmetext§&quot;</span>.<span class="ident">to_string</span>(),]);
+<span class="macro">impl_examples!</span>(String: <span class="macro">vec!</span>[<span class="string">&quot;nonjmetext§&quot;</span>.to_string(),]);
 
-<span class="macro">impl_examples!</span>(<span class="ident">bool</span>: <span class="macro">vec!</span>[<span class="bool-val">false</span>]);
+<span class="macro">impl_examples!</span>(bool: <span class="macro">vec!</span>[<span class="bool-val">false</span>]);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">T::examples</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="ident">ValueType::Normal</span>)
-            .<span class="ident">chain</span>(
-                <span class="macro">vec!</span>[<span class="ident">ValueType::Template</span>(
-                    <span class="string">&quot;template:template_key&quot;</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
+<span class="kw">impl</span>&lt;T: Examples&gt; Examples <span class="kw">for </span>ValueType&lt;T&gt; {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        T::examples()
+            .into_iter()
+            .map(ValueType::Normal)
+            .chain(
+                <span class="macro">vec!</span>[ValueType::Template(
+                    <span class="string">&quot;template:template_key&quot;</span>.to_string().try_into().unwrap(),
                 )]
-                .<span class="ident">into_iter</span>(),
+                .into_iter(),
             )
-            .<span class="ident">collect</span>()
+            .collect()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">valuetype_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>valuetype_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Bool</span>(<span class="ident">bool</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Bool</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Bool</span>(<span class="bool-val">true</span>), <span class="ident">Bool</span>(<span class="bool-val">false</span>)]
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Bool(bool);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Bool {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Bool(<span class="bool-val">true</span>), Bool(<span class="bool-val">false</span>)]
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">valuetype_test</span>() {
-        <span class="kw">let</span> <span class="ident">examples</span> <span class="op">=</span> <span class="ident">Bool::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>valuetype_test() {
+        <span class="kw">let </span>examples = Bool::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="ident">ValueType</span>::<span class="op">&lt;</span><span class="ident">Bool</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
+            ValueType::&lt;Bool&gt;::examples(),
             <span class="macro">vec!</span>[
-                <span class="ident">ValueType::Normal</span>(<span class="ident">examples</span>[<span class="number">0</span>]),
-                <span class="ident">ValueType::Normal</span>(<span class="ident">examples</span>[<span class="number">1</span>]),
-                <span class="ident">ValueType::Template</span>(<span class="string">&quot;template:template_key&quot;</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>())
+                ValueType::Normal(examples[<span class="number">0</span>]),
+                ValueType::Normal(examples[<span class="number">1</span>]),
+                ValueType::Template(<span class="string">&quot;template:template_key&quot;</span>.to_string().try_into().unwrap())
             ]
         )
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">ValueType</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::examples</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>)))
-            .<span class="ident">chain</span>(<span class="macro">vec!</span>[<span class="ident">Value</span>(<span class="prelude-val">None</span>)].<span class="ident">into_iter</span>())
-            .<span class="ident">collect</span>()
+<span class="kw">impl</span>&lt;T: Examples&gt; Examples <span class="kw">for </span>Value&lt;T&gt; {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        ValueType::&lt;T&gt;::examples()
+            .into_iter()
+            .map(|e| Value(<span class="prelude-val">Some</span>(e)))
+            .chain(<span class="macro">vec!</span>[Value(<span class="prelude-val">None</span>)].into_iter())
+            .collect()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">value_test</span> {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Usize</span>(<span class="ident">usize</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Usize</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Usize</span>(<span class="number">0</span>), <span class="ident">Usize</span>(<span class="number">1</span>), <span class="ident">Usize</span>(<span class="number">5</span>), <span class="ident">Usize</span>(<span class="number">10</span>)]
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>value_test {
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Usize(usize);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Usize {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Usize(<span class="number">0</span>), Usize(<span class="number">1</span>), Usize(<span class="number">5</span>), Usize(<span class="number">10</span>)]
         }
     }
 
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">value_test</span>() {
-        <span class="kw">let</span> <span class="ident">valuetype_examples</span> <span class="op">=</span> <span class="ident">ValueType</span>::<span class="op">&lt;</span><span class="ident">Usize</span><span class="op">&gt;</span><span class="ident">::examples</span>();
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>value_test() {
+        <span class="kw">let </span>valuetype_examples = ValueType::&lt;Usize&gt;::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="ident">Value</span>::<span class="op">&lt;</span><span class="ident">Usize</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
+            Value::&lt;Usize&gt;::examples(),
             <span class="macro">vec!</span>[
-                <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">valuetype_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>())),
-                <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">valuetype_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>())),
-                <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">valuetype_examples</span>[<span class="number">2</span>].<span class="ident">clone</span>())),
-                <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">valuetype_examples</span>[<span class="number">3</span>].<span class="ident">clone</span>())),
-                <span class="ident">Value</span>(<span class="prelude-val">Some</span>(<span class="ident">valuetype_examples</span>[<span class="number">4</span>].<span class="ident">clone</span>())),
-                <span class="ident">Value</span>(<span class="prelude-val">None</span>)
+                Value(<span class="prelude-val">Some</span>(valuetype_examples[<span class="number">0</span>].clone())),
+                Value(<span class="prelude-val">Some</span>(valuetype_examples[<span class="number">1</span>].clone())),
+                Value(<span class="prelude-val">Some</span>(valuetype_examples[<span class="number">2</span>].clone())),
+                Value(<span class="prelude-val">Some</span>(valuetype_examples[<span class="number">3</span>].clone())),
+                Value(<span class="prelude-val">Some</span>(valuetype_examples[<span class="number">4</span>].clone())),
+                Value(<span class="prelude-val">None</span>)
             ]
         )
     }
 }
 
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>,));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">H</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">H</span>, <span class="ident">I</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">J</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">J</span>, <span class="ident">K</span>));
-<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">J</span>, <span class="ident">K</span>, <span class="ident">L</span>));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A,));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G, H));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G, H, I));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G, H, I, J));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G, H, I, J, K));
+<span class="macro">rumbas_support_derive::impl_examples_for_tuple!</span>((A, B, C, D, E, F, G, H, I, J, K, L));
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tuples_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tuples_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Usize</span>(<span class="ident">usize</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Usize</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Usize</span>(<span class="number">0</span>), <span class="ident">Usize</span>(<span class="number">1</span>), <span class="ident">Usize</span>(<span class="number">5</span>), <span class="ident">Usize</span>(<span class="number">10</span>)]
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Usize(usize);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Usize {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Usize(<span class="number">0</span>), Usize(<span class="number">1</span>), Usize(<span class="number">5</span>), Usize(<span class="number">10</span>)]
         }
     }
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Text</span>(<span class="ident">String</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Text</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="attribute">#[derive(Clone, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Text(String);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Text {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
             <span class="macro">vec!</span>[
-                <span class="ident">Text</span>(<span class="string">&quot;some text&quot;</span>.<span class="ident">to_string</span>()),
-                <span class="ident">Text</span>(<span class="string">&quot;other text&quot;</span>.<span class="ident">to_string</span>()),
+                Text(<span class="string">&quot;some text&quot;</span>.to_string()),
+                Text(<span class="string">&quot;other text&quot;</span>.to_string()),
             ]
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">tuple_test_one</span>() {
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>tuple_test_one() {
+        <span class="kw">let </span>usize_examples = Usize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>(<span class="ident">Usize</span>,)<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;(Usize,)&gt;::examples(),
             <span class="macro">vec!</span>[
-                (<span class="ident">usize_examples</span>[<span class="number">0</span>],),
-                (<span class="ident">usize_examples</span>[<span class="number">1</span>],),
-                (<span class="ident">usize_examples</span>[<span class="number">2</span>],),
-                (<span class="ident">usize_examples</span>[<span class="number">3</span>],)
+                (usize_examples[<span class="number">0</span>],),
+                (usize_examples[<span class="number">1</span>],),
+                (usize_examples[<span class="number">2</span>],),
+                (usize_examples[<span class="number">3</span>],)
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">tuple_test_two</span>() {
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize::examples</span>();
-        <span class="kw">let</span> <span class="ident">string_examples</span> <span class="op">=</span> <span class="ident">Text::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>tuple_test_two() {
+        <span class="kw">let </span>usize_examples = Usize::examples();
+        <span class="kw">let </span>string_examples = Text::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>(<span class="ident">Usize</span>, <span class="ident">Text</span>)<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;(Usize, Text)&gt;::examples(),
             <span class="macro">vec!</span>[
-                (<span class="ident">usize_examples</span>[<span class="number">0</span>], <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">1</span>], <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">2</span>], <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">3</span>], <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>())
+                (usize_examples[<span class="number">0</span>], string_examples[<span class="number">0</span>].clone()),
+                (usize_examples[<span class="number">1</span>], string_examples[<span class="number">1</span>].clone()),
+                (usize_examples[<span class="number">2</span>], string_examples[<span class="number">0</span>].clone()),
+                (usize_examples[<span class="number">3</span>], string_examples[<span class="number">1</span>].clone())
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">tuple_test_three</span>() {
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize::examples</span>();
-        <span class="kw">let</span> <span class="ident">string_examples</span> <span class="op">=</span> <span class="ident">Text::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>tuple_test_three() {
+        <span class="kw">let </span>usize_examples = Usize::examples();
+        <span class="kw">let </span>string_examples = Text::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>(<span class="ident">Usize</span>, <span class="ident">Text</span>, <span class="ident">Text</span>)<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;(Usize, Text, Text)&gt;::examples(),
             <span class="macro">vec!</span>[
                 (
-                    <span class="ident">usize_examples</span>[<span class="number">0</span>],
-                    <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(),
-                    <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()
+                    usize_examples[<span class="number">0</span>],
+                    string_examples[<span class="number">0</span>].clone(),
+                    string_examples[<span class="number">0</span>].clone()
                 ),
                 (
-                    <span class="ident">usize_examples</span>[<span class="number">1</span>],
-                    <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(),
-                    <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>()
+                    usize_examples[<span class="number">1</span>],
+                    string_examples[<span class="number">1</span>].clone(),
+                    string_examples[<span class="number">1</span>].clone()
                 ),
                 (
-                    <span class="ident">usize_examples</span>[<span class="number">2</span>],
-                    <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(),
-                    <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()
+                    usize_examples[<span class="number">2</span>],
+                    string_examples[<span class="number">0</span>].clone(),
+                    string_examples[<span class="number">0</span>].clone()
                 ),
                 (
-                    <span class="ident">usize_examples</span>[<span class="number">3</span>],
-                    <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(),
-                    <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>()
+                    usize_examples[<span class="number">3</span>],
+                    string_examples[<span class="number">1</span>].clone(),
+                    string_examples[<span class="number">1</span>].clone()
                 )
             ]
         )
     }
 }
 
-<span class="kw">fn</span> <span class="ident">convert_vec_to_array</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; [<span class="ident">T</span>; <span class="ident">N</span>] {
-    <span class="ident">v</span>.<span class="ident">try_into</span>()
-        .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;Expected a Vec of length {} but it was {}&quot;</span>, <span class="ident">N</span>, <span class="ident">v</span>.<span class="ident">len</span>()))
+<span class="kw">fn </span>convert_vec_to_array&lt;T, <span class="kw">const </span>N: usize&gt;(v: Vec&lt;T&gt;) -&gt; [T; N] {
+    v.try_into()
+        .unwrap_or_else(|v: Vec&lt;T&gt;| <span class="macro">panic!</span>(<span class="string">&quot;Expected a Vec of length {} but it was {}&quot;</span>, N, v.len()))
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Examples</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> [<span class="ident">A</span>; <span class="ident">N</span>] {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">examples_a</span> <span class="op">=</span> <span class="ident">A::examples</span>();
+<span class="kw">impl</span>&lt;A: Examples, <span class="kw">const </span>N: usize&gt; Examples <span class="kw">for </span>[A; N] {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>examples_a = A::examples();
 
-        <span class="comment">// Make sure we have a multiple of N</span>
-        <span class="kw">while</span> <span class="ident">examples_a</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">N</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">for</span> <span class="ident">example</span> <span class="kw">in</span> <span class="ident">A::examples</span>().<span class="ident">into_iter</span>() {
-                <span class="ident">examples_a</span>.<span class="ident">push</span>(<span class="ident">example</span>);
-                <span class="kw">if</span> <span class="ident">examples_a</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">N</span> <span class="op">==</span> <span class="number">0</span> {
+        <span class="comment">// Make sure we have a multiple of N
+        </span><span class="kw">while </span>examples_a.len() % N != <span class="number">0 </span>{
+            <span class="kw">for </span>example <span class="kw">in </span>A::examples().into_iter() {
+                examples_a.push(example);
+                <span class="kw">if </span>examples_a.len() % N == <span class="number">0 </span>{
                     <span class="kw">break</span>;
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iterator</span> <span class="op">=</span> <span class="ident">examples_a</span>.<span class="ident">into_iter</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-            <span class="kw">for</span> <span class="ident">e</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">iterator</span> {
-                <span class="ident">parts</span>.<span class="ident">push</span>(<span class="ident">e</span>);
-                <span class="kw">if</span> <span class="ident">parts</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">N</span> {
+        <span class="kw">let </span><span class="kw-2">mut </span>iterator = examples_a.into_iter();
+        <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
+        <span class="kw">loop </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>parts: Vec&lt;<span class="kw">_</span>&gt; = Vec::new();
+            <span class="kw">for </span>e <span class="kw">in </span><span class="kw-2">&amp;mut </span>iterator {
+                parts.push(e);
+                <span class="kw">if </span>parts.len() == N {
                     <span class="kw">break</span>;
                 }
             }
-            <span class="kw">if</span> <span class="ident">parts</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">if </span>parts.is_empty() {
                 <span class="kw">break</span>;
             }
-            <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">convert_vec_to_array</span>(<span class="ident">parts</span>))
+            result.push(convert_vec_to_array(parts))
         }
-        <span class="ident">result</span>
+        result
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">array_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Isize</span>(<span class="ident">isize</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Isize</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Isize</span>(<span class="op">-</span><span class="number">1</span>), <span class="ident">Isize</span>(<span class="number">1</span>), <span class="ident">Isize</span>(<span class="op">-</span><span class="number">10</span>), <span class="ident">Isize</span>(<span class="number">10</span>)]
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>array_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Isize(isize);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Isize {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Isize(-<span class="number">1</span>), Isize(<span class="number">1</span>), Isize(-<span class="number">10</span>), Isize(<span class="number">10</span>)]
         }
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">array_test_one</span>() {
-        <span class="kw">let</span> <span class="ident">isize_examples</span> <span class="op">=</span> <span class="ident">Isize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>array_test_one() {
+        <span class="kw">let </span>isize_examples = Isize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>[<span class="ident">Isize</span>; <span class="number">1</span>]<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;[Isize; <span class="number">1</span>]&gt;::examples(),
             <span class="macro">vec!</span>[
-                [<span class="ident">isize_examples</span>[<span class="number">0</span>]],
-                [<span class="ident">isize_examples</span>[<span class="number">1</span>]],
-                [<span class="ident">isize_examples</span>[<span class="number">2</span>]],
-                [<span class="ident">isize_examples</span>[<span class="number">3</span>]],
+                [isize_examples[<span class="number">0</span>]],
+                [isize_examples[<span class="number">1</span>]],
+                [isize_examples[<span class="number">2</span>]],
+                [isize_examples[<span class="number">3</span>]],
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">array_test_two</span>() {
-        <span class="kw">let</span> <span class="ident">isize_examples</span> <span class="op">=</span> <span class="ident">Isize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>array_test_two() {
+        <span class="kw">let </span>isize_examples = Isize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>[<span class="ident">Isize</span>; <span class="number">2</span>]<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;[Isize; <span class="number">2</span>]&gt;::examples(),
             <span class="macro">vec!</span>[
-                [<span class="ident">isize_examples</span>[<span class="number">0</span>], <span class="ident">isize_examples</span>[<span class="number">1</span>]],
-                [<span class="ident">isize_examples</span>[<span class="number">2</span>], <span class="ident">isize_examples</span>[<span class="number">3</span>]],
+                [isize_examples[<span class="number">0</span>], isize_examples[<span class="number">1</span>]],
+                [isize_examples[<span class="number">2</span>], isize_examples[<span class="number">3</span>]],
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">array_test_three</span>() {
-        <span class="kw">let</span> <span class="ident">isize_examples</span> <span class="op">=</span> <span class="ident">Isize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>array_test_three() {
+        <span class="kw">let </span>isize_examples = Isize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>[<span class="ident">Isize</span>; <span class="number">3</span>]<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;[Isize; <span class="number">3</span>]&gt;::examples(),
             <span class="macro">vec!</span>[
-                [<span class="ident">isize_examples</span>[<span class="number">0</span>], <span class="ident">isize_examples</span>[<span class="number">1</span>], <span class="ident">isize_examples</span>[<span class="number">2</span>]],
-                [<span class="ident">isize_examples</span>[<span class="number">3</span>], <span class="ident">isize_examples</span>[<span class="number">0</span>], <span class="ident">isize_examples</span>[<span class="number">1</span>]],
+                [isize_examples[<span class="number">0</span>], isize_examples[<span class="number">1</span>], isize_examples[<span class="number">2</span>]],
+                [isize_examples[<span class="number">3</span>], isize_examples[<span class="number">0</span>], isize_examples[<span class="number">1</span>]],
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">array_test_four</span>() {
-        <span class="kw">let</span> <span class="ident">isize_examples</span> <span class="op">=</span> <span class="ident">Isize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>array_test_four() {
+        <span class="kw">let </span>isize_examples = Isize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>[<span class="ident">Isize</span>; <span class="number">4</span>]<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;[Isize; <span class="number">4</span>]&gt;::examples(),
             <span class="macro">vec!</span>[[
-                <span class="ident">isize_examples</span>[<span class="number">0</span>],
-                <span class="ident">isize_examples</span>[<span class="number">1</span>],
-                <span class="ident">isize_examples</span>[<span class="number">2</span>],
-                <span class="ident">isize_examples</span>[<span class="number">3</span>]
+                isize_examples[<span class="number">0</span>],
+                isize_examples[<span class="number">1</span>],
+                isize_examples[<span class="number">2</span>],
+                isize_examples[<span class="number">3</span>]
             ],]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">array_test_five</span>() {
-        <span class="kw">let</span> <span class="ident">isize_examples</span> <span class="op">=</span> <span class="ident">Isize::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>array_test_five() {
+        <span class="kw">let </span>isize_examples = Isize::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span>[<span class="ident">Isize</span>; <span class="number">5</span>]<span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;[Isize; <span class="number">5</span>]&gt;::examples(),
             <span class="macro">vec!</span>[[
-                <span class="ident">isize_examples</span>[<span class="number">0</span>],
-                <span class="ident">isize_examples</span>[<span class="number">1</span>],
-                <span class="ident">isize_examples</span>[<span class="number">2</span>],
-                <span class="ident">isize_examples</span>[<span class="number">3</span>],
-                <span class="ident">isize_examples</span>[<span class="number">0</span>]
+                isize_examples[<span class="number">0</span>],
+                isize_examples[<span class="number">1</span>],
+                isize_examples[<span class="number">2</span>],
+                isize_examples[<span class="number">3</span>],
+                isize_examples[<span class="number">0</span>]
             ],]
         )
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="macro">vec!</span>[<span class="ident">A::examples</span>()]
+<span class="kw">impl</span>&lt;A: Examples&gt; Examples <span class="kw">for </span>Vec&lt;A&gt; {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        <span class="macro">vec!</span>[A::examples()]
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">vec_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">vec_test</span>() {
-        <span class="kw">let</span> <span class="ident">f64_examples</span> <span class="op">=</span> <span class="ident">f64::examples</span>();
-        <span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::examples</span>(), <span class="macro">vec!</span>[<span class="ident">f64_examples</span>])
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>vec_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>vec_test() {
+        <span class="kw">let </span>f64_examples = f64::examples();
+        <span class="macro">assert_eq!</span>(&lt;Vec&lt;f64&gt;&gt;::examples(), <span class="macro">vec!</span>[f64_examples])
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Examples</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">std::cmp::Eq</span> <span class="op">+</span> <span class="ident">Clone</span>, <span class="ident">B</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span>
-    <span class="kw">for</span> <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">impl</span>&lt;A: Examples + std::hash::Hash + std::cmp::Eq + Clone, B: Examples&gt; Examples
+    <span class="kw">for </span>std::collections::HashMap&lt;A, B&gt;
 {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">examples_a</span> <span class="op">=</span> <span class="ident">A::examples</span>();
-        <span class="kw">let</span> <span class="ident">examples_b</span> <span class="op">=</span> <span class="ident">B::examples</span>();
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>examples_a = A::examples();
+        <span class="kw">let </span>examples_b = B::examples();
 
-        <span class="kw">if</span> <span class="ident">examples_a</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">examples_b</span>.<span class="ident">len</span>() {
-            <span class="comment">// We have enough keys</span>
-            <span class="macro">vec!</span>[<span class="op">&lt;</span>(<span class="ident">A</span>, <span class="ident">B</span>)<span class="op">&gt;</span><span class="ident">::examples</span>().<span class="ident">into_iter</span>().<span class="ident">collect</span>()]
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">nb_maps</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">examples_b</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">examples_a</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
-                <span class="ident">examples_b</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="ident">examples_a</span>.<span class="ident">len</span>()
-            } <span class="kw">else</span> {
-                <span class="ident">examples_b</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="ident">examples_a</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="number">1</span>
-            };
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">examples_b</span>.<span class="ident">into_iter</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">maps</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">nb_maps</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">std::collections::HashMap::new</span>();
-                <span class="kw">let</span> <span class="ident">examples_a</span> <span class="op">=</span> <span class="ident">A::examples</span>();
-                <span class="kw">for</span> <span class="ident">example_a</span> <span class="kw">in</span> <span class="ident">examples_a</span>.<span class="ident">into_iter</span>() {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">b</span>.<span class="ident">next</span>() {
-                        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">example_a</span>, <span class="ident">value</span>);
-                    } <span class="kw">else</span> {
+        <span class="kw">if </span>examples_a.len() &gt;= examples_b.len() {
+            <span class="comment">// We have enough keys
+            </span><span class="macro">vec!</span>[&lt;(A, B)&gt;::examples().into_iter().collect()]
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>nb_maps: usize = <span class="kw">if </span>examples_b.len() % examples_a.len() == <span class="number">0 </span>{
+                examples_b.len() / examples_a.len()
+            } <span class="kw">else </span>{
+                examples_b.len() / examples_a.len() + <span class="number">1
+            </span>};
+            <span class="kw">let </span><span class="kw-2">mut </span>b = examples_b.into_iter();
+            <span class="kw">let </span><span class="kw-2">mut </span>maps = Vec::new();
+            <span class="kw">for _ in </span><span class="number">0</span>..nb_maps {
+                <span class="kw">let </span><span class="kw-2">mut </span>map = std::collections::HashMap::new();
+                <span class="kw">let </span>examples_a = A::examples();
+                <span class="kw">for </span>example_a <span class="kw">in </span>examples_a.into_iter() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = b.next() {
+                        map.insert(example_a, value);
+                    } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
                 }
-                <span class="ident">maps</span>.<span class="ident">push</span>(<span class="ident">map</span>);
+                maps.push(map);
             }
-            <span class="ident">maps</span>
+            maps
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">hashmap_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">Eq</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Usize</span>(<span class="ident">usize</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Usize</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Usize</span>(<span class="number">0</span>), <span class="ident">Usize</span>(<span class="number">1</span>), <span class="ident">Usize</span>(<span class="number">5</span>), <span class="ident">Usize</span>(<span class="number">10</span>)]
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>hashmap_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug, Hash, Eq)]
+    </span><span class="kw">struct </span>Usize(usize);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Usize {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Usize(<span class="number">0</span>), Usize(<span class="number">1</span>), Usize(<span class="number">5</span>), Usize(<span class="number">10</span>)]
         }
     }
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Usize2</span>(<span class="ident">usize</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Usize2</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Usize2</span>(<span class="number">0</span>), <span class="ident">Usize2</span>(<span class="number">1</span>), <span class="ident">Usize2</span>(<span class="number">5</span>), <span class="ident">Usize2</span>(<span class="number">10</span>), <span class="ident">Usize2</span>(<span class="number">15</span>)]
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Usize2(usize);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Usize2 {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Usize2(<span class="number">0</span>), Usize2(<span class="number">1</span>), Usize2(<span class="number">5</span>), Usize2(<span class="number">10</span>), Usize2(<span class="number">15</span>)]
         }
     }
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">Eq</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Text</span>(<span class="ident">String</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Text</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="attribute">#[derive(Clone, PartialEq, Debug, Hash, Eq)]
+    </span><span class="kw">struct </span>Text(String);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Text {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
             <span class="macro">vec!</span>[
-                <span class="ident">Text</span>(<span class="string">&quot;some text&quot;</span>.<span class="ident">to_string</span>()),
-                <span class="ident">Text</span>(<span class="string">&quot;other text&quot;</span>.<span class="ident">to_string</span>()),
+                Text(<span class="string">&quot;some text&quot;</span>.to_string()),
+                Text(<span class="string">&quot;other text&quot;</span>.to_string()),
             ]
         }
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">hashmap_test_exact_multiple_of_values</span>() {
-        <span class="kw">let</span> <span class="ident">string_examples</span> <span class="op">=</span> <span class="ident">Text::examples</span>();
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize::examples</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">usize_examples</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">string_examples</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>hashmap_test_exact_multiple_of_values() {
+        <span class="kw">let </span>string_examples = Text::examples();
+        <span class="kw">let </span>usize_examples = Usize::examples();
+        <span class="macro">assert_eq!</span>(usize_examples.len() % string_examples.len(), <span class="number">0</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">Text</span>, <span class="ident">Usize</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;std::collections::HashMap&lt;Text, Usize&gt;&gt;::examples(),
             <span class="macro">vec!</span>[
                 <span class="macro">vec!</span>[
-                    (<span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">0</span>]),
-                    (<span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">1</span>])
+                    (string_examples[<span class="number">0</span>].clone(), usize_examples[<span class="number">0</span>]),
+                    (string_examples[<span class="number">1</span>].clone(), usize_examples[<span class="number">1</span>])
                 ]
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">collect</span>(),
+                .into_iter()
+                .collect(),
                 <span class="macro">vec!</span>[
-                    (<span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">2</span>]),
-                    (<span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">3</span>])
+                    (string_examples[<span class="number">0</span>].clone(), usize_examples[<span class="number">2</span>]),
+                    (string_examples[<span class="number">1</span>].clone(), usize_examples[<span class="number">3</span>])
                 ]
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">collect</span>()
+                .into_iter()
+                .collect()
             ]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">hashmap_test_less_values</span>() {
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize::examples</span>();
-        <span class="kw">let</span> <span class="ident">string_examples</span> <span class="op">=</span> <span class="ident">Text::examples</span>();
-        <span class="macro">assert!</span>(<span class="ident">usize_examples</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">string_examples</span>.<span class="ident">len</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>hashmap_test_less_values() {
+        <span class="kw">let </span>usize_examples = Usize::examples();
+        <span class="kw">let </span>string_examples = Text::examples();
+        <span class="macro">assert!</span>(usize_examples.len() &gt; string_examples.len());
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">Usize</span>, <span class="ident">Text</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;std::collections::HashMap&lt;Usize, Text&gt;&gt;::examples(),
             <span class="macro">vec!</span>[<span class="macro">vec!</span>[
-                (<span class="ident">usize_examples</span>[<span class="number">0</span>], <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">1</span>], <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">2</span>], <span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>()),
-                (<span class="ident">usize_examples</span>[<span class="number">3</span>], <span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>())
+                (usize_examples[<span class="number">0</span>], string_examples[<span class="number">0</span>].clone()),
+                (usize_examples[<span class="number">1</span>], string_examples[<span class="number">1</span>].clone()),
+                (usize_examples[<span class="number">2</span>], string_examples[<span class="number">0</span>].clone()),
+                (usize_examples[<span class="number">3</span>], string_examples[<span class="number">1</span>].clone())
             ]
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">collect</span>()]
+            .into_iter()
+            .collect()]
         )
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">hashmap_test_non_exact_multiple_of_values</span>() {
-        <span class="kw">let</span> <span class="ident">string_examples</span> <span class="op">=</span> <span class="ident">Text::examples</span>();
-        <span class="kw">let</span> <span class="ident">usize_examples</span> <span class="op">=</span> <span class="ident">Usize2::examples</span>();
-        <span class="macro">assert!</span>(<span class="ident">usize_examples</span>.<span class="ident">len</span>() <span class="op">%</span> <span class="ident">string_examples</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">usize_examples</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">string_examples</span>.<span class="ident">len</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>hashmap_test_non_exact_multiple_of_values() {
+        <span class="kw">let </span>string_examples = Text::examples();
+        <span class="kw">let </span>usize_examples = Usize2::examples();
+        <span class="macro">assert!</span>(usize_examples.len() % string_examples.len() != <span class="number">0</span>);
+        <span class="macro">assert!</span>(usize_examples.len() &gt; string_examples.len());
         <span class="macro">assert_eq!</span>(
-            <span class="op">&lt;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">Text</span>, <span class="ident">Usize2</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
+            &lt;std::collections::HashMap&lt;Text, Usize2&gt;&gt;::examples(),
             <span class="macro">vec!</span>[
                 <span class="macro">vec!</span>[
-                    (<span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">0</span>]),
-                    (<span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">1</span>])
+                    (string_examples[<span class="number">0</span>].clone(), usize_examples[<span class="number">0</span>]),
+                    (string_examples[<span class="number">1</span>].clone(), usize_examples[<span class="number">1</span>])
                 ]
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">collect</span>(),
+                .into_iter()
+                .collect(),
                 <span class="macro">vec!</span>[
-                    (<span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">2</span>]),
-                    (<span class="ident">string_examples</span>[<span class="number">1</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">3</span>])
+                    (string_examples[<span class="number">0</span>].clone(), usize_examples[<span class="number">2</span>]),
+                    (string_examples[<span class="number">1</span>].clone(), usize_examples[<span class="number">3</span>])
                 ]
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">collect</span>(),
-                <span class="macro">vec!</span>[(<span class="ident">string_examples</span>[<span class="number">0</span>].<span class="ident">clone</span>(), <span class="ident">usize_examples</span>[<span class="number">4</span>]),]
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">collect</span>()
+                .into_iter()
+                .collect(),
+                <span class="macro">vec!</span>[(string_examples[<span class="number">0</span>].clone(), usize_examples[<span class="number">4</span>]),]
+                    .into_iter()
+                    .collect()
             ]
         )
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">T::examples</span>().<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Box::new</span>).<span class="ident">collect</span>()
+<span class="kw">impl</span>&lt;T: Examples&gt; Examples <span class="kw">for </span>Box&lt;T&gt; {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        T::examples().into_iter().map(Box::new).collect()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">box_test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">Bool</span>(<span class="ident">bool</span>);
-    <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Bool</span> {
-        <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">Bool</span>(<span class="bool-val">true</span>), <span class="ident">Bool</span>(<span class="bool-val">false</span>)]
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>box_test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Debug)]
+    </span><span class="kw">struct </span>Bool(bool);
+    <span class="kw">impl </span>Examples <span class="kw">for </span>Bool {
+        <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+            <span class="macro">vec!</span>[Bool(<span class="bool-val">true</span>), Bool(<span class="bool-val">false</span>)]
         }
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">box_test</span>() {
-        <span class="kw">let</span> <span class="ident">examples</span> <span class="op">=</span> <span class="ident">Bool::examples</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>box_test() {
+        <span class="kw">let </span>examples = Bool::examples();
         <span class="macro">assert_eq!</span>(
-            <span class="ident">Box</span>::<span class="op">&lt;</span><span class="ident">Bool</span><span class="op">&gt;</span><span class="ident">::examples</span>(),
-            <span class="macro">vec!</span>[<span class="ident">Box::new</span>(<span class="ident">examples</span>[<span class="number">0</span>]), <span class="ident">Box::new</span>(<span class="ident">examples</span>[<span class="number">1</span>]),]
+            Box::&lt;Bool&gt;::examples(),
+            <span class="macro">vec!</span>[Box::new(examples[<span class="number">0</span>]), Box::new(examples[<span class="number">1</span>]),]
         )
     }
 }
 
-<span class="macro">impl_examples!</span>(<span class="ident">numbas::jme::JMEString</span>: <span class="macro">vec!</span>[<span class="string">&quot;x^5&quot;</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>()]);
-<span class="macro">impl_examples!</span>(<span class="ident">numbas::support::primitive::Number</span>: <span class="macro">vec!</span>[<span class="number">1usize</span>.<span class="ident">into</span>(), <span class="number">1.5</span>.<span class="ident">into</span>()]);
+<span class="macro">impl_examples!</span>(numbas::jme::JMEString: <span class="macro">vec!</span>[<span class="string">&quot;x^5&quot;</span>.to_string().try_into().unwrap()]);
+<span class="macro">impl_examples!</span>(numbas::support::primitive::Number: <span class="macro">vec!</span>[<span class="number">1usize</span>.into(), <span class="number">1.5</span>.into()]);
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

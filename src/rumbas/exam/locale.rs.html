@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/locale.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>locale.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/locale.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>locale.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -58,39 +58,39 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;LocaleInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Locale</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>, <span class="comment">//TODO: document names best used for shareability?</span>
-    <span class="doccomment">/// The locale to use in the Numbas interface</span>
-    <span class="kw">pub</span> <span class="ident">numbas_locale</span>: <span class="ident">SupportedLocale</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;LocaleInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Locale {
+    <span class="kw">pub </span>name: String, <span class="comment">//TODO: document names best used for shareability?
+    </span><span class="doccomment">/// The locale to use in the Numbas interface
+    </span><span class="kw">pub </span>numbas_locale: SupportedLocale,
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">create_support_locale</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>: <span class="ident">literal</span>),<span class="kw-2">*</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-        <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;SupportedLocaleInput&quot;</span>)]</span>
-        <span class="doccomment">/// Locales supported by Numbas</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SupportedLocale</span> {
+<span class="macro">macro_rules! </span>create_support_locale {
+    ($(<span class="macro-nonterminal">$name</span>: ident =&gt; <span class="macro-nonterminal">$key</span>: literal),<span class="kw-2">*</span>) =&gt; {
+        <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[input(name = <span class="string">&quot;SupportedLocaleInput&quot;</span>)]
+        </span><span class="doccomment">/// Locales supported by Numbas
+        </span><span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, Copy, PartialEq, Eq)]
+        </span><span class="kw">pub enum </span>SupportedLocale {
             $(
-                <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>)]</span>
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>
-            ),<span class="op">*</span>
+                <span class="attribute">#[serde(rename = <span class="macro-nonterminal">$key</span>)]
+                </span><span class="macro-nonterminal">$name
+            </span>),*
         }
 
-        <span class="comment">//TODO? macro to reduce duplication?</span>
-        <span class="kw">impl</span> <span class="ident">SupportedLocale</span> {
-            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_str</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-                <span class="kw">match</span> <span class="self">self</span> {
-                    $(<span class="ident">SupportedLocale</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">key</span>),<span class="op">*</span>
+        <span class="comment">//TODO? macro to reduce duplication?
+        </span><span class="kw">impl </span>SupportedLocale {
+            <span class="kw">pub fn </span>to_str(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+                <span class="kw">match </span><span class="self">self </span>{
+                    $(SupportedLocale::<span class="macro-nonterminal">$name </span>=&gt; <span class="macro-nonterminal">$key</span>),*
                 }
             }
         }
@@ -98,25 +98,25 @@
     }
 }
 
-<span class="macro">create_support_locale!</span> {
-    <span class="ident">ArSA</span> =&gt; <span class="string">&quot;ar-SA&quot;</span>,
-    <span class="ident">DeDE</span> =&gt; <span class="string">&quot;de-DE&quot;</span>,
-    <span class="ident">EnGB</span> =&gt; <span class="string">&quot;en-GB&quot;</span>,
-    <span class="ident">EsES</span> =&gt; <span class="string">&quot;es-ES&quot;</span>,
-    <span class="ident">FrFR</span> =&gt; <span class="string">&quot;fr-FR&quot;</span>,
-    <span class="ident">HeIL</span> =&gt; <span class="string">&quot;he-IL&quot;</span>,
-    <span class="ident">ItIT</span> =&gt; <span class="string">&quot;it-IT&quot;</span>,
-    <span class="ident">JaJP</span> =&gt; <span class="string">&quot;ja-JP&quot;</span>,
-    <span class="ident">KoKR</span> =&gt; <span class="string">&quot;ko-KR&quot;</span>,
-    <span class="ident">NbNO</span> =&gt; <span class="string">&quot;nb-NO&quot;</span>,
-    <span class="ident">NlNL</span> =&gt; <span class="string">&quot;nl-NL&quot;</span>,
-    <span class="ident">PlPL</span> =&gt; <span class="string">&quot;pl-PL&quot;</span>,
-    <span class="ident">PtBR</span> =&gt; <span class="string">&quot;pt-BR&quot;</span>,
-    <span class="ident">SqAL</span> =&gt; <span class="string">&quot;sq-AL&quot;</span>,
-    <span class="ident">SvSE</span> =&gt; <span class="string">&quot;sv-SE&quot;</span>,
-    <span class="ident">TrTR</span> =&gt; <span class="string">&quot;tr-TR&quot;</span>,
-    <span class="ident">ViVN</span> =&gt; <span class="string">&quot;vi-VN&quot;</span>,
-    <span class="ident">ZhCN</span> =&gt; <span class="string">&quot;zg-CN&quot;</span>
-}
+<span class="macro">create_support_locale! </span>{
+    ArSA =&gt; <span class="string">&quot;ar-SA&quot;</span>,
+    DeDE =&gt; <span class="string">&quot;de-DE&quot;</span>,
+    EnGB =&gt; <span class="string">&quot;en-GB&quot;</span>,
+    EsES =&gt; <span class="string">&quot;es-ES&quot;</span>,
+    FrFR =&gt; <span class="string">&quot;fr-FR&quot;</span>,
+    HeIL =&gt; <span class="string">&quot;he-IL&quot;</span>,
+    ItIT =&gt; <span class="string">&quot;it-IT&quot;</span>,
+    JaJP =&gt; <span class="string">&quot;ja-JP&quot;</span>,
+    KoKR =&gt; <span class="string">&quot;ko-KR&quot;</span>,
+    NbNO =&gt; <span class="string">&quot;nb-NO&quot;</span>,
+    NlNL =&gt; <span class="string">&quot;nl-NL&quot;</span>,
+    PlPL =&gt; <span class="string">&quot;pl-PL&quot;</span>,
+    PtBR =&gt; <span class="string">&quot;pt-BR&quot;</span>,
+    SqAL =&gt; <span class="string">&quot;sq-AL&quot;</span>,
+    SvSE =&gt; <span class="string">&quot;sv-SE&quot;</span>,
+    TrTR =&gt; <span class="string">&quot;tr-TR&quot;</span>,
+    ViVN =&gt; <span class="string">&quot;vi-VN&quot;</span>,
+    ZhCN =&gt; <span class="string">&quot;zg-CN&quot;
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

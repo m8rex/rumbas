@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/jme.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>jme.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/jme.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>jme.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -625,632 +625,632 @@
 <span id="625">625</span>
 <span id="626">626</span>
 <span id="627">627</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::QuestionPart</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference</span>::{<span class="ident">FileString</span>, <span class="ident">JMEFileString</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::EmbracedJMETranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::JMENotes;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy;
+<span class="kw">use </span><span class="kw">crate</span>::question::QuestionPart;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_reference::{FileString, JMEFileString};
+<span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::EmbracedJMETranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="macro">question_part_type!</span> {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartJMEInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartJME</span> {
-        <span class="ident">answer</span>: <span class="ident">EmbracedJMETranslatableString</span>, <span class="comment">//TODO: should this be translatable?</span>
-        <span class="ident">answer_simplification</span>: <span class="ident">JMEAnswerSimplification</span>,
-        <span class="ident">answer_display</span>: <span class="ident">JMEAnswerDisplay</span>,
-        <span class="ident">show_preview</span>: <span class="ident">bool</span>,
-        <span class="ident">answer_check</span>: <span class="ident">CheckingType</span>,
-        <span class="ident">failure_rate</span>: <span class="ident">f64</span>,
-        <span class="ident">vset_range</span>: [<span class="ident">f64</span>; <span class="number">2</span>], <span class="comment">// TODO: seperate (flattened) struct for vset items &amp; checking items etc?</span>
-        <span class="ident">vset_range_points</span>: <span class="ident">usize</span>,
-        <span class="ident">check_variable_names</span>: <span class="ident">bool</span>,
-        <span class="ident">single_letter_variables</span>: <span class="ident">bool</span>,
-        <span class="ident">allow_unknown_functions</span>: <span class="ident">bool</span>,
-        <span class="ident">implicit_function_composition</span>: <span class="ident">bool</span>,
-        <span class="ident">max_length</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span>,
-        <span class="ident">min_length</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span>,
-        <span class="ident">must_have</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span>,
-        <span class="ident">may_not_have</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span>,
-        <span class="ident">must_match_pattern</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMEPatternRestriction</span><span class="op">&gt;</span>,
-        <span class="ident">value_generators</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEValueGenerator</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="macro">question_part_type! </span>{
+    <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[input(name = <span class="string">&quot;QuestionPartJMEInput&quot;</span>)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+    </span><span class="kw">pub struct </span>QuestionPartJME {
+        answer: EmbracedJMETranslatableString, <span class="comment">//TODO: should this be translatable?
+        </span>answer_simplification: JMEAnswerSimplification,
+        answer_display: JMEAnswerDisplay,
+        show_preview: bool,
+        answer_check: CheckingType,
+        failure_rate: f64,
+        vset_range: [f64; <span class="number">2</span>], <span class="comment">// TODO: seperate (flattened) struct for vset items &amp; checking items etc?
+        </span>vset_range_points: usize,
+        check_variable_names: bool,
+        single_letter_variables: bool,
+        allow_unknown_functions: bool,
+        implicit_function_composition: bool,
+        max_length: Noneable&lt;JMELengthRestriction&gt;,
+        min_length: Noneable&lt;JMELengthRestriction&gt;,
+        must_have: Noneable&lt;JMEStringRestriction&gt;,
+        may_not_have: Noneable&lt;JMEStringRestriction&gt;,
+        must_match_pattern: Noneable&lt;JMEPatternRestriction&gt;,
+        value_generators: Noneable&lt;Vec&lt;JMEValueGenerator&gt;&gt;
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::QuestionPartJME</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartJME</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
-        <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
-            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">answer_simplification</span>: <span class="self">self</span>.<span class="ident">answer_simplification</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_preview</span>: <span class="self">self</span>.<span class="ident">show_preview</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">checking_type</span>: <span class="self">self</span>.<span class="ident">answer_check</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">failure_rate</span>: <span class="self">self</span>.<span class="ident">failure_rate</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">vset_range</span>: <span class="self">self</span>.<span class="ident">vset_range</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">vset_range_points</span>: <span class="self">self</span>.<span class="ident">vset_range_points</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">check_variable_names</span>: <span class="self">self</span>.<span class="ident">check_variable_names</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">single_letter_variables</span>: <span class="self">self</span>.<span class="ident">single_letter_variables</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allow_unknown_functions</span>: <span class="self">self</span>.<span class="ident">allow_unknown_functions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">implicit_function_composition</span>: <span class="self">self</span>.<span class="ident">implicit_function_composition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">max_length</span>: <span class="self">self</span>.<span class="ident">max_length</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">min_length</span>: <span class="self">self</span>.<span class="ident">min_length</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::QuestionPartJME&gt; <span class="kw">for </span>QuestionPartJME {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::QuestionPartJME {
+        numbas::question::part::jme::QuestionPartJME {
+            part_data: <span class="self">self</span>.to_numbas(locale),
+            answer: <span class="self">self</span>.answer.to_numbas(locale),
+            answer_simplification: <span class="self">self</span>.answer_simplification.to_numbas(locale),
+            show_preview: <span class="self">self</span>.show_preview.to_numbas(locale),
+            checking_type: <span class="self">self</span>.answer_check.to_numbas(locale),
+            failure_rate: <span class="self">self</span>.failure_rate.to_numbas(locale),
+            vset_range: <span class="self">self</span>.vset_range.to_numbas(locale),
+            vset_range_points: <span class="self">self</span>.vset_range_points.to_numbas(locale),
+            check_variable_names: <span class="self">self</span>.check_variable_names.to_numbas(locale),
+            single_letter_variables: <span class="self">self</span>.single_letter_variables.to_numbas(locale),
+            allow_unknown_functions: <span class="self">self</span>.allow_unknown_functions.to_numbas(locale),
+            implicit_function_composition: <span class="self">self</span>.implicit_function_composition.to_numbas(locale),
+            max_length: <span class="self">self</span>.max_length.to_numbas(locale),
+            min_length: <span class="self">self</span>.min_length.to_numbas(locale),
 
-            <span class="ident">must_have</span>: <span class="self">self</span>.<span class="ident">must_have</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">may_not_have</span>: <span class="self">self</span>.<span class="ident">may_not_have</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">must_match_pattern</span>: <span class="self">self</span>.<span class="ident">must_match_pattern</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">value_generators</span>: <span class="self">self</span>.<span class="ident">value_generators</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(),
+            must_have: <span class="self">self</span>.must_have.to_numbas(locale),
+            may_not_have: <span class="self">self</span>.may_not_have.to_numbas(locale),
+            must_match_pattern: <span class="self">self</span>.must_match_pattern.to_numbas(locale),
+            value_generators: <span class="self">self</span>.value_generators.to_numbas(locale).unwrap_or_default(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartJME</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::QuestionPartJME</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartJME</span> {
-        <span class="macro">create_question_part!</span> {
-            <span class="ident">QuestionPartJME</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {
-                <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">answer_simplification</span>: <span class="self">self</span>.<span class="ident">answer_simplification</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">answer_display</span>: <span class="self">self</span>.<span class="ident">answer_simplification</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">show_preview</span>: <span class="self">self</span>.<span class="ident">show_preview</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">answer_check</span>: <span class="self">self</span>.<span class="ident">checking_type</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">failure_rate</span>: <span class="self">self</span>.<span class="ident">failure_rate</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">vset_range</span>: [<span class="self">self</span>.<span class="ident">vset_range</span>[<span class="number">0</span>].<span class="number">0</span>, <span class="self">self</span>.<span class="ident">vset_range</span>[<span class="number">1</span>].<span class="number">0</span>].<span class="ident">to_rumbas</span>(),
-                <span class="ident">vset_range_points</span>: <span class="self">self</span>.<span class="ident">vset_range_points</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">check_variable_names</span>: <span class="self">self</span>.<span class="ident">check_variable_names</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">single_letter_variables</span>:
-                    <span class="self">self</span>.<span class="ident">single_letter_variables</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">allow_unknown_functions</span>:
-                    <span class="self">self</span>.<span class="ident">allow_unknown_functions</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">implicit_function_composition</span>:
-                    <span class="self">self</span>.<span class="ident">implicit_function_composition</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">max_length</span>:
-                    <span class="self">self</span>.<span class="ident">max_length</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">min_length</span>:
-                    <span class="self">self</span>.<span class="ident">min_length</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">must_have</span>:
-                    <span class="self">self</span>.<span class="ident">must_have</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">may_not_have</span>:
-                    <span class="self">self</span>.<span class="ident">may_not_have</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">must_match_pattern</span>:
-                    <span class="self">self</span>.<span class="ident">must_match_pattern</span>
-                        .<span class="ident">to_rumbas</span>(),
-                <span class="ident">value_generators</span>:
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">value_generators</span>.<span class="ident">is_empty</span>() {
-                        <span class="ident">Noneable::None</span>
-                    } <span class="kw">else</span> {
-                        <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">value_generators</span>.<span class="ident">to_rumbas</span>())
+<span class="kw">impl </span>ToRumbas&lt;QuestionPartJME&gt; <span class="kw">for </span>numbas::question::part::jme::QuestionPartJME {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPartJME {
+        <span class="macro">create_question_part! </span>{
+            QuestionPartJME with <span class="kw-2">&amp;</span><span class="self">self</span>.part_data =&gt; {
+                answer: <span class="self">self</span>.answer.to_rumbas(),
+                answer_simplification: <span class="self">self</span>.answer_simplification.to_rumbas(),
+                answer_display: <span class="self">self</span>.answer_simplification.to_rumbas(),
+                show_preview: <span class="self">self</span>.show_preview.to_rumbas(),
+                answer_check: <span class="self">self</span>.checking_type.to_rumbas(),
+                failure_rate: <span class="self">self</span>.failure_rate.to_rumbas(),
+                vset_range: [<span class="self">self</span>.vset_range[<span class="number">0</span>].<span class="number">0</span>, <span class="self">self</span>.vset_range[<span class="number">1</span>].<span class="number">0</span>].to_rumbas(),
+                vset_range_points: <span class="self">self</span>.vset_range_points.<span class="number">0</span>.to_rumbas(),
+                check_variable_names: <span class="self">self</span>.check_variable_names.to_rumbas(),
+                single_letter_variables:
+                    <span class="self">self</span>.single_letter_variables
+                        .to_rumbas(),
+                allow_unknown_functions:
+                    <span class="self">self</span>.allow_unknown_functions
+                        .to_rumbas(),
+                implicit_function_composition:
+                    <span class="self">self</span>.implicit_function_composition
+                        .to_rumbas(),
+                max_length:
+                    <span class="self">self</span>.max_length.to_rumbas(),
+                min_length:
+                    <span class="self">self</span>.min_length.to_rumbas(),
+                must_have:
+                    <span class="self">self</span>.must_have
+                        .to_rumbas(),
+                may_not_have:
+                    <span class="self">self</span>.may_not_have
+                        .to_rumbas(),
+                must_match_pattern:
+                    <span class="self">self</span>.must_match_pattern
+                        .to_rumbas(),
+                value_generators:
+                    <span class="kw">if </span><span class="self">self</span>.value_generators.is_empty() {
+                        Noneable::None
+                    } <span class="kw">else </span>{
+                        Noneable::NotNone(<span class="self">self</span>.value_generators.to_rumbas())
                     }
             }
         }
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">create_answer_simplification</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>: <span class="ident">literal</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>: <span class="ident">ident</span>,
+<span class="macro">macro_rules! </span>create_answer_simplification {
+    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>: <span class="macro-nonterminal">$input</span>: literal: <span class="macro-nonterminal">$variant</span>: ident: <span class="macro-nonterminal">$variant_struct</span>: ident,
         $(
-            $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">partofall</span>: <span class="ident">expr</span>
+            $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>:meta]</span>)*
+            <span class="macro-nonterminal">$name</span>: ident: <span class="macro-nonterminal">$numbas_name</span>: ident: <span class="macro-nonterminal">$partofall</span>: expr
         ),<span class="kw-2">*</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-        <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>)]</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+        <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[input(name = <span class="macro-nonterminal">$input</span>)]
+        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
             $(
-                $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>]</span>)<span class="op">*</span>
-                <span class="kw">pub</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">bool</span>
-            ),<span class="op">*</span>
+                $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>]</span>)*
+                <span class="kw">pub </span><span class="macro-nonterminal">$name</span>: bool
+            ),*
         }
 
-        <span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">default</span>() -&gt; <span class="self">Self</span> {
-                <span class="comment">// load empty json object</span>
-                <span class="kw">let</span> <span class="ident">default_answer_simplification</span> <span class="op">=</span> <span class="ident">numbas::question::part::jme::default_answer_simplification</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+        <span class="kw">impl </span>std::default::Default <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">default</span>() -&gt; <span class="self">Self </span>{
+                <span class="comment">// load empty json object
+                </span><span class="kw">let </span>default_answer_simplification = numbas::question::part::jme::default_answer_simplification();
+                <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
                     $(
-                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="bool-val">false</span>
-                    ),<span class="op">*</span>
+                        <span class="macro-nonterminal">$name</span>: <span class="bool-val">false
+                    </span>),*
                 };
-                    <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="ident">default_answer_simplification</span>.<span class="ident">into_iter</span>() {
-                        <span class="kw">match</span> <span class="ident">a</span> {
-                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) =&gt;
-                                <span class="kw">match</span> <span class="ident">r</span> {
-                                    <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct::All</span>(<span class="ident">b</span>) =&gt; {
-                                        $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">partofall</span> {
-                                            <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="ident">b</span>;
-                                        })<span class="op">*</span>
+                    <span class="kw">for </span>a <span class="kw">in </span>default_answer_simplification.into_iter() {
+                        <span class="kw">match </span>a {
+                            numbas::question::answer_simplification::AnswerSimplificationType::<span class="macro-nonterminal">$variant</span>(r) =&gt;
+                                <span class="kw">match </span>r {
+                                    numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct::All</span>(b) =&gt; {
+                                        $(<span class="kw">if </span><span class="macro-nonterminal">$partofall </span>{
+                                            result.<span class="macro-nonterminal">$name </span>= b;
+                                        })*
                                     }
-                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) =&gt; {
-                                        <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="ident">b</span>;
-                                    })<span class="op">*</span>
+                                    $(numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct</span>::<span class="macro-nonterminal">$numbas_name</span>(b) =&gt; {
+                                        result.<span class="macro-nonterminal">$name </span>= b;
+                                    })*
                                 }
-                            <span class="kw">_</span> =&gt; ()
+                            <span class="kw">_ </span>=&gt; ()
                         }
                     }
-                    <span class="ident">result</span>
+                    result
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span>
-        {
-            <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(
+        <span class="kw">impl </span>ToNumbas&lt;Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;&gt;
+            <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">struct
+        </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                $(<span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-                    <span class="ident">v</span>.<span class="ident">push</span>(
-                        <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(
-                            <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="bool-val">true</span>)
+                _locale: <span class="kw-2">&amp;</span>str,
+            ) -&gt; Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                $(<span class="kw">if </span><span class="self">self</span>.<span class="macro-nonterminal">$name </span>{
+                    v.push(
+                        numbas::question::answer_simplification::AnswerSimplificationType::<span class="macro-nonterminal">$variant</span>(
+                            numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct</span>::<span class="macro-nonterminal">$numbas_name</span>(<span class="bool-val">true</span>)
                         )
                     );
-                })<span class="op">*</span>
-                <span class="ident">v</span>
+                })*
+                v
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="macro-nonterminal">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span>
+        <span class="kw">impl </span>ToRumbas&lt;<span class="macro-nonterminal">$</span><span class="kw">struct</span>&gt;
+            <span class="kw">for </span><span class="macro-nonterminal">Vec</span>&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;
         {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">result</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="macro-nonterminal">::default</span>();
-                    <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>() {
-                        <span class="kw">match</span> <span class="ident">a</span> {
-                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) =&gt;
-                                <span class="kw">match</span> <span class="ident">r</span> {
-                                    <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct::All</span>(<span class="ident">b</span>) =&gt; {
-                                        $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">partofall</span> {
-                                            <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
-                                        })<span class="op">*</span>
+            <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span><span class="macro-nonterminal">result </span>= <span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="macro-nonterminal">::default</span>();
+                    <span class="kw">for </span>a <span class="kw">in </span><span class="self">self</span>.iter() {
+                        <span class="kw">match </span>a {
+                            numbas::question::answer_simplification::AnswerSimplificationType::<span class="macro-nonterminal">$variant</span>(r) =&gt;
+                                <span class="kw">match </span>r {
+                                    numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct::All</span>(b) =&gt; {
+                                        $(<span class="kw">if </span><span class="macro-nonterminal">$partofall </span>{
+                                            result.<span class="macro-nonterminal">$name </span>= <span class="kw-2">*</span>b;
+                                        })*
                                     }
-                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) =&gt; {
-                                        <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
-                                    })<span class="op">*</span>
+                                    $(numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct</span>::<span class="macro-nonterminal">$numbas_name</span>(b) =&gt; {
+                                        result.<span class="macro-nonterminal">$name </span>= <span class="kw-2">*</span>b;
+                                    })*
                                 }
-                            <span class="kw">_</span> =&gt; ()
+                            <span class="kw">_ </span>=&gt; ()
                         }
                     }
 
-                <span class="ident">result</span>
+                result
             }
         }
     }
 }
 
-<span class="comment">// See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets</span>
-<span class="macro">create_answer_simplification!</span> {
-    <span class="ident">JMEAnswerSimplification</span>: <span class="string">&quot;JMEAnswerSimplificationInput&quot;</span>: <span class="ident">Rule</span>: <span class="ident">AnswerSimplificationRule</span>,
-    <span class="ident">simplify_basic</span>: <span class="ident">Basic</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_unit_factor&quot;</span>)]</span>
-    <span class="ident">cancel_unit_factors</span>: <span class="ident">CancelUnitFactors</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_unit_power&quot;</span>)]</span>
-    <span class="ident">cancel_unit_powers</span>: <span class="ident">CancelUnitPowers</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_unit_denominator&quot;</span>)]</span>
-    <span class="ident">cancel_unit_denominators</span>: <span class="ident">CancelUnitDenominators</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_zero_factor&quot;</span>)]</span>
-    <span class="ident">cancel_zero_factors</span>: <span class="ident">CancelZeroFactors</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_zero_term&quot;</span>)]</span>
-    <span class="ident">omit_zero_terms</span>: <span class="ident">OmitZeroTerms</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_zero_power&quot;</span>)]</span>
-    <span class="ident">cancel_zero_powers</span>: <span class="ident">CancelZeroPowers</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_zero_base&quot;</span>)]</span>
-    <span class="ident">cancel_powers_with_base_zero</span>: <span class="ident">CancelPowersWithBaseZero</span>: <span class="bool-val">true</span>,
-    <span class="ident">collect_numbers</span>: <span class="ident">CollectNumbers</span>: <span class="bool-val">true</span>,
-    <span class="ident">constants_first</span>: <span class="ident">ConstantsFirst</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_sqrt_products&quot;</span>)]</span>
-    <span class="ident">collect_sqrt_products</span>: <span class="ident">CollectSqrtProducts</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_sqrt_division&quot;</span>)]</span>
-    <span class="ident">collect_sqrt_divisions</span>: <span class="ident">CollectSqrtDivisions</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_sqrt_square&quot;</span>)]</span>
-    <span class="ident">cancel_sqrt_square</span>: <span class="ident">CancelSqrtSquares</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_other_numbers&quot;</span>)]</span>
-    <span class="ident">evaluate_powers_of_numbers</span>: <span class="ident">EvaluatePowersOfNumbers</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;simplify_no_leading_minus&quot;</span>)]</span>
-    <span class="ident">rewrite_to_no_leading_minus</span>: <span class="ident">NoLeadingMinus</span>: <span class="bool-val">true</span>,
-    <span class="ident">simplify_fractions</span>: <span class="ident">Fractions</span>: <span class="bool-val">true</span>,
-    <span class="ident">simplify_trigonometric</span>: <span class="ident">Trigonometric</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;cancel_terms&quot;</span>)]</span>
-    <span class="ident">collect_terms</span>: <span class="ident">CollectTerms</span>: <span class="bool-val">true</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;cancel_factors&quot;</span>)]</span>
-    <span class="ident">collect_powers_of_common_factors</span>: <span class="ident">CollectPowersOfCommonFactors</span>: <span class="bool-val">true</span>,
-    <span class="ident">collect_like_fractions</span>: <span class="ident">CollectLikeFractions</span>: <span class="bool-val">true</span>,
-    <span class="ident">order_canonical</span>: <span class="ident">CanonicalOrder</span>: <span class="bool-val">false</span>,
-    <span class="ident">expand_brackets</span>: <span class="ident">ExpandBrackets</span>: <span class="bool-val">false</span>
-}
+<span class="comment">// See https://numbas-editor.readthedocs.io/en/latest/simplification.html#term-expandbrackets
+</span><span class="macro">create_answer_simplification! </span>{
+    JMEAnswerSimplification: <span class="string">&quot;JMEAnswerSimplificationInput&quot;</span>: Rule: AnswerSimplificationRule,
+    simplify_basic: Basic: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_unit_factor&quot;</span>)]
+    </span>cancel_unit_factors: CancelUnitFactors: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_unit_power&quot;</span>)]
+    </span>cancel_unit_powers: CancelUnitPowers: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_unit_denominator&quot;</span>)]
+    </span>cancel_unit_denominators: CancelUnitDenominators: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_zero_factor&quot;</span>)]
+    </span>cancel_zero_factors: CancelZeroFactors: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_zero_term&quot;</span>)]
+    </span>omit_zero_terms: OmitZeroTerms: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_zero_power&quot;</span>)]
+    </span>cancel_zero_powers: CancelZeroPowers: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_zero_base&quot;</span>)]
+    </span>cancel_powers_with_base_zero: CancelPowersWithBaseZero: <span class="bool-val">true</span>,
+    collect_numbers: CollectNumbers: <span class="bool-val">true</span>,
+    constants_first: ConstantsFirst: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_sqrt_products&quot;</span>)]
+    </span>collect_sqrt_products: CollectSqrtProducts: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_sqrt_division&quot;</span>)]
+    </span>collect_sqrt_divisions: CollectSqrtDivisions: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_sqrt_square&quot;</span>)]
+    </span>cancel_sqrt_square: CancelSqrtSquares: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_other_numbers&quot;</span>)]
+    </span>evaluate_powers_of_numbers: EvaluatePowersOfNumbers: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;simplify_no_leading_minus&quot;</span>)]
+    </span>rewrite_to_no_leading_minus: NoLeadingMinus: <span class="bool-val">true</span>,
+    simplify_fractions: Fractions: <span class="bool-val">true</span>,
+    simplify_trigonometric: Trigonometric: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;cancel_terms&quot;</span>)]
+    </span>collect_terms: CollectTerms: <span class="bool-val">true</span>,
+    <span class="attribute">#[serde(alias = <span class="string">&quot;cancel_factors&quot;</span>)]
+    </span>collect_powers_of_common_factors: CollectPowersOfCommonFactors: <span class="bool-val">true</span>,
+    collect_like_fractions: CollectLikeFractions: <span class="bool-val">true</span>,
+    order_canonical: CanonicalOrder: <span class="bool-val">false</span>,
+    expand_brackets: ExpandBrackets: <span class="bool-val">false
+</span>}
 
-<span class="macro">macro_rules!</span> <span class="ident">create_answer_display_type</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>: <span class="ident">literal</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>: <span class="ident">ident</span>,
+<span class="macro">macro_rules! </span>create_answer_display_type {
+    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>: <span class="macro-nonterminal">$input</span>: literal: <span class="macro-nonterminal">$variant</span>: ident: <span class="macro-nonterminal">$variant_struct</span>: ident,
         $(
-            $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>: <span class="ident">ident</span>
+            $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>:meta]</span>)*
+            <span class="macro-nonterminal">$name</span>: ident: <span class="macro-nonterminal">$numbas_name</span>: ident
         ),<span class="kw-2">*</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-        <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>)]</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+        <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[input(name = <span class="macro-nonterminal">$input</span>)]
+        #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
             $(
-                $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>]</span>)<span class="op">*</span>
-                <span class="kw">pub</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">bool</span>
-            ),<span class="op">*</span>
+                $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>]</span>)*
+                <span class="kw">pub </span><span class="macro-nonterminal">$name</span>: bool
+            ),*
         }
-        <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span>
-        {
-            <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(
+        <span class="kw">impl </span>ToNumbas&lt;Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;&gt;
+            <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">struct
+        </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                $(<span class="kw">if</span> <span class="self">self</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-                    <span class="ident">v</span>.<span class="ident">push</span>(
-                        <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(
-                            <span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="bool-val">true</span>)
+                _locale: <span class="kw-2">&amp;</span>str,
+            ) -&gt; Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                $(<span class="kw">if </span><span class="self">self</span>.<span class="macro-nonterminal">$name </span>{
+                    v.push(
+                        numbas::question::answer_simplification::AnswerSimplificationType::<span class="macro-nonterminal">$variant</span>(
+                            numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct</span>::<span class="macro-nonterminal">$numbas_name</span>(<span class="bool-val">true</span>)
                         )
                     );
-                })<span class="op">*</span>
-                <span class="ident">v</span>
+                })*
+                v
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="macro-nonterminal">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span>
+        <span class="kw">impl </span>ToRumbas&lt;<span class="macro-nonterminal">$</span><span class="kw">struct</span>&gt;
+            <span class="kw">for </span><span class="macro-nonterminal">Vec</span>&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;
         {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">result</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
+            <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span><span class="macro-nonterminal">result </span>= <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
                     $(
-                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="bool-val">false</span>
-                    ),<span class="op">*</span>
+                        <span class="macro-nonterminal">$name</span>: <span class="bool-val">false
+                    </span>),*
                 };
-                    <span class="kw">for</span> <span class="ident">a</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>() {
-                        <span class="kw">match</span> <span class="ident">a</span> {
-                            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant</span>(<span class="ident">r</span>) =&gt;
-                                <span class="kw">match</span> <span class="ident">r</span> {
-                                    $(<span class="ident">numbas::question::answer_simplification</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">variant_struct</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_name</span>(<span class="ident">b</span>) =&gt; {
-                                        <span class="ident">result</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">b</span>;
-                                    })<span class="op">*</span>
+                    <span class="kw">for </span>a <span class="kw">in </span><span class="self">self</span>.iter() {
+                        <span class="kw">match </span>a {
+                            numbas::question::answer_simplification::AnswerSimplificationType::<span class="macro-nonterminal">$variant</span>(r) =&gt;
+                                <span class="kw">match </span>r {
+                                    $(numbas::question::answer_simplification::<span class="macro-nonterminal">$variant_struct</span>::<span class="macro-nonterminal">$numbas_name</span>(b) =&gt; {
+                                        result.<span class="macro-nonterminal">$name </span>= <span class="kw-2">*</span>b;
+                                    })*
                                 }
-                            <span class="kw">_</span> =&gt; ()
+                            <span class="kw">_ </span>=&gt; ()
                         }
                     }
 
-                <span class="ident">result</span>
+                result
             }
         }
     }
 }
 
-<span class="macro">create_answer_display_type!</span> {
-    <span class="ident">JMEAnswerDisplay</span>: <span class="string">&quot;JMEAnswerDisplayInput&quot;</span>: <span class="ident">DisplayOption</span>: <span class="ident">AnswerSimplificationDisplayOption</span>,
-    <span class="ident">broken_as_fractions</span>: <span class="ident">Fractions</span>,
-    <span class="ident">mixed_fractions</span>: <span class="ident">MixedFractions</span>,
-    <span class="ident">flat_fractions</span>: <span class="ident">FlatFractions</span>,
-    <span class="ident">vector_as_row</span>: <span class="ident">RowVector</span>,
-    <span class="ident">always_show_multiplication_sign</span>: <span class="ident">AlwaysShowMultiplicationSign</span>,
-    <span class="ident">use_dot_as_multiplication_sign</span>: <span class="ident">DotAsMultiplicationSign</span>, <span class="comment">// Use \cdot instead of \times</span>
-    <span class="ident">matrices_without_parentheses</span>: <span class="ident">MatricesWithoutParentheses</span>
+<span class="macro">create_answer_display_type! </span>{
+    JMEAnswerDisplay: <span class="string">&quot;JMEAnswerDisplayInput&quot;</span>: DisplayOption: AnswerSimplificationDisplayOption,
+    broken_as_fractions: Fractions,
+    mixed_fractions: MixedFractions,
+    flat_fractions: FlatFractions,
+    vector_as_row: RowVector,
+    always_show_multiplication_sign: AlwaysShowMultiplicationSign,
+    use_dot_as_multiplication_sign: DotAsMultiplicationSign, <span class="comment">// Use \cdot instead of \times
+    </span>matrices_without_parentheses: MatricesWithoutParentheses
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CheckingTypeDataFloatInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CheckingTypeDataFloat</span> {
-    <span class="kw">pub</span> <span class="ident">max_difference</span>: <span class="ident">f64</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CheckingTypeDataFloatInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>CheckingTypeDataFloat {
+    <span class="kw">pub </span>max_difference: f64,
 }
 
-<span class="kw">impl</span>
-    <span class="ident">ToNumbas</span><span class="op">&lt;</span>
-        <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeFloat</span><span class="op">&gt;</span>,
-    <span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CheckingTypeDataFloat</span>
+<span class="kw">impl
+    </span>ToNumbas&lt;
+        numbas::question::part::jme::JMECheckingTypeData&lt;numbas::support::primitive::SafeFloat&gt;,
+    &gt; <span class="kw">for </span>CheckingTypeDataFloat
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeFloat</span><span class="op">&gt;</span>
+        _locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::jme::JMECheckingTypeData&lt;numbas::support::primitive::SafeFloat&gt;
     {
-        <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span> {
-            <span class="ident">checking_accuracy</span>: <span class="self">self</span>.<span class="ident">max_difference</span>.<span class="ident">into</span>(),
+        numbas::question::part::jme::JMECheckingTypeData {
+            checking_accuracy: <span class="self">self</span>.max_difference.into(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CheckingTypeDataNaturalInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CheckingTypeDataNatural</span> {
-    <span class="kw">pub</span> <span class="ident">amount</span>: <span class="ident">usize</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CheckingTypeDataNaturalInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CheckingTypeDataNatural {
+    <span class="kw">pub </span>amount: usize,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CheckingTypeDataNatural</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="ident">numbas::question::part::jme::JMECheckingTypeData</span> {
-            <span class="ident">checking_accuracy</span>: <span class="self">self</span>.<span class="ident">amount</span>,
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMECheckingTypeData&lt;usize&gt;&gt; <span class="kw">for </span>CheckingTypeDataNatural {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMECheckingTypeData&lt;usize&gt; {
+        numbas::question::part::jme::JMECheckingTypeData {
+            checking_accuracy: <span class="self">self</span>.amount,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CheckingTypeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CheckingType</span> {
-    <span class="ident">RelativeDifference</span>(<span class="ident">CheckingTypeDataFloat</span>),
-    <span class="ident">AbsoluteDifference</span>(<span class="ident">CheckingTypeDataFloat</span>),
-    <span class="ident">DecimalPlaces</span>(<span class="ident">CheckingTypeDataNatural</span>),
-    <span class="ident">SignificantFigures</span>(<span class="ident">CheckingTypeDataNatural</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CheckingTypeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>CheckingType {
+    RelativeDifference(CheckingTypeDataFloat),
+    AbsoluteDifference(CheckingTypeDataFloat),
+    DecimalPlaces(CheckingTypeDataNatural),
+    SignificantFigures(CheckingTypeDataNatural),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMECheckingType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CheckingType</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMECheckingType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CheckingType::RelativeDifference</span>(<span class="ident">f</span>) =&gt; {
-                <span class="ident">numbas::question::part::jme::JMECheckingType::RelativeDifference</span>(
-                    <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMECheckingType&gt; <span class="kw">for </span>CheckingType {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMECheckingType {
+        <span class="kw">match </span><span class="self">self </span>{
+            CheckingType::RelativeDifference(f) =&gt; {
+                numbas::question::part::jme::JMECheckingType::RelativeDifference(
+                    f.to_numbas(locale),
                 )
             }
-            <span class="ident">CheckingType::AbsoluteDifference</span>(<span class="ident">f</span>) =&gt; {
-                <span class="ident">numbas::question::part::jme::JMECheckingType::AbsoluteDifference</span>(
-                    <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            CheckingType::AbsoluteDifference(f) =&gt; {
+                numbas::question::part::jme::JMECheckingType::AbsoluteDifference(
+                    f.to_numbas(locale),
                 )
             }
-            <span class="ident">CheckingType::DecimalPlaces</span>(<span class="ident">f</span>) =&gt; {
-                <span class="ident">numbas::question::part::jme::JMECheckingType::DecimalPlaces</span>(<span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            CheckingType::DecimalPlaces(f) =&gt; {
+                numbas::question::part::jme::JMECheckingType::DecimalPlaces(f.to_numbas(locale))
             }
-            <span class="ident">CheckingType::SignificantFigures</span>(<span class="ident">f</span>) =&gt; {
-                <span class="ident">numbas::question::part::jme::JMECheckingType::SignificantFigures</span>(
-                    <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            CheckingType::SignificantFigures(f) =&gt; {
+                numbas::question::part::jme::JMECheckingType::SignificantFigures(
+                    f.to_numbas(locale),
                 )
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CheckingType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMECheckingType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CheckingType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::jme::JMECheckingType::RelativeDifference</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CheckingType::RelativeDifference</span>(<span class="ident">CheckingTypeDataFloat</span> {
-                    <span class="ident">max_difference</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;CheckingType&gt; <span class="kw">for </span>numbas::question::part::jme::JMECheckingType {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CheckingType {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::jme::JMECheckingType::RelativeDifference(v) =&gt; {
+                CheckingType::RelativeDifference(CheckingTypeDataFloat {
+                    max_difference: v.checking_accuracy.<span class="number">0</span>.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::AbsoluteDifference</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CheckingType::AbsoluteDifference</span>(<span class="ident">CheckingTypeDataFloat</span> {
-                    <span class="ident">max_difference</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
+            numbas::question::part::jme::JMECheckingType::AbsoluteDifference(v) =&gt; {
+                CheckingType::AbsoluteDifference(CheckingTypeDataFloat {
+                    max_difference: v.checking_accuracy.<span class="number">0</span>.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::DecimalPlaces</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CheckingType::DecimalPlaces</span>(<span class="ident">CheckingTypeDataNatural</span> {
-                    <span class="ident">amount</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="ident">to_rumbas</span>(),
+            numbas::question::part::jme::JMECheckingType::DecimalPlaces(v) =&gt; {
+                CheckingType::DecimalPlaces(CheckingTypeDataNatural {
+                    amount: v.checking_accuracy.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::question::part::jme::JMECheckingType::SignificantFigures</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CheckingType::SignificantFigures</span>(<span class="ident">CheckingTypeDataNatural</span> {
-                    <span class="ident">amount</span>: <span class="ident">v</span>.<span class="ident">checking_accuracy</span>.<span class="ident">to_rumbas</span>(),
+            numbas::question::part::jme::JMECheckingType::SignificantFigures(v) =&gt; {
+                CheckingType::SignificantFigures(CheckingTypeDataNatural {
+                    amount: v.checking_accuracy.to_rumbas(),
                 })
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMERestrictionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMERestriction</span> {
-    <span class="comment">// name: TranslatableString,</span>
-    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="ident">f64</span>, <span class="comment">//TODO, is number, so maybe usize?</span>
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMERestrictionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>JMERestriction {
+    <span class="comment">// name: TranslatableString,
+    </span><span class="kw">pub </span>partial_credit: f64, <span class="comment">//TODO, is number, so maybe usize?
+    </span><span class="kw">pub </span>message: TranslatableString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMERestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMERestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMERestriction</span> {
-        <span class="ident">numbas::question::part::jme::JMERestriction</span> {
-            <span class="comment">// name: self.name.clone().to_string(locale),</span>
-            <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMERestriction&gt; <span class="kw">for </span>JMERestriction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMERestriction {
+        numbas::question::part::jme::JMERestriction {
+            <span class="comment">// name: self.name.clone().to_string(locale),
+            </span>partial_credit: <span class="self">self</span>.partial_credit.clone().to_numbas(locale),
+            message: <span class="self">self</span>.message.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMERestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMERestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMERestriction</span> {
-        <span class="ident">JMERestriction</span> {
-            <span class="comment">//name: TranslatableString::s(&amp;self.name)),</span>
-            <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMERestriction&gt; <span class="kw">for </span>numbas::question::part::jme::JMERestriction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMERestriction {
+        JMERestriction {
+            <span class="comment">//name: TranslatableString::s(&amp;self.name)),
+            </span>partial_credit: <span class="self">self</span>.partial_credit.<span class="number">0</span>.to_rumbas(),
+            message: <span class="self">self</span>.message.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMELengthRestrictionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMELengthRestriction</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">restriction</span>: <span class="ident">JMERestriction</span>,
-    <span class="kw">pub</span> <span class="ident">length</span>: <span class="ident">usize</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMELengthRestrictionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>JMELengthRestriction {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>restriction: JMERestriction,
+    <span class="kw">pub </span>length: usize,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMELengthRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMELengthRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
-        <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
-            <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">length</span>: <span class="self">self</span>.<span class="ident">length</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMELengthRestriction&gt; <span class="kw">for </span>JMELengthRestriction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMELengthRestriction {
+        numbas::question::part::jme::JMELengthRestriction {
+            restriction: <span class="self">self</span>.restriction.to_numbas(locale),
+            length: <span class="self">self</span>.length.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMELengthRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMELengthRestriction</span> {
-        <span class="ident">JMELengthRestriction</span> {
-            <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">length</span>: <span class="self">self</span>.<span class="ident">length</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMELengthRestriction&gt; <span class="kw">for </span>numbas::question::part::jme::JMELengthRestriction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMELengthRestriction {
+        JMELengthRestriction {
+            restriction: <span class="self">self</span>.restriction.to_rumbas(),
+            length: <span class="self">self</span>.length.<span class="number">0</span>.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMEStringRestrictionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEStringRestriction</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">restriction</span>: <span class="ident">JMERestriction</span>,
-    <span class="kw">pub</span> <span class="ident">show_strings</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMEStringRestrictionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>JMEStringRestriction {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>restriction: JMERestriction,
+    <span class="kw">pub </span>show_strings: bool,
+    <span class="kw">pub </span>strings: Vec&lt;TranslatableString&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEStringRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEStringRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
-        <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
-            <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_strings</span>: <span class="self">self</span>.<span class="ident">show_strings</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">strings</span>: <span class="self">self</span>.<span class="ident">strings</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMEStringRestriction&gt; <span class="kw">for </span>JMEStringRestriction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMEStringRestriction {
+        numbas::question::part::jme::JMEStringRestriction {
+            restriction: <span class="self">self</span>.restriction.to_numbas(locale),
+            show_strings: <span class="self">self</span>.show_strings.to_numbas(locale),
+            strings: <span class="self">self</span>.strings.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEStringRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEStringRestriction</span> {
-        <span class="ident">JMEStringRestriction</span> {
-            <span class="ident">restriction</span>: <span class="self">self</span>.<span class="ident">restriction</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_strings</span>: <span class="self">self</span>.<span class="ident">show_strings</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">strings</span>: <span class="self">self</span>.<span class="ident">strings</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMEStringRestriction&gt; <span class="kw">for </span>numbas::question::part::jme::JMEStringRestriction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMEStringRestriction {
+        JMEStringRestriction {
+            restriction: <span class="self">self</span>.restriction.to_rumbas(),
+            show_strings: <span class="self">self</span>.show_strings.to_rumbas(),
+            strings: <span class="self">self</span>.strings.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMEPatternRestrictionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEPatternRestriction</span> {
-    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="ident">f64</span>, <span class="comment">//TODO, is number, so maybe usize?</span>
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">pattern</span>: <span class="ident">String</span>,         <span class="comment">//TODO type? If string -&gt; InputString?</span>
-    <span class="kw">pub</span> <span class="ident">name_to_compare</span>: <span class="ident">String</span>, <span class="comment">//TODO, translateable?</span>
-}
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMEPatternRestrictionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>JMEPatternRestriction {
+    <span class="kw">pub </span>partial_credit: f64, <span class="comment">//TODO, is number, so maybe usize?
+    </span><span class="kw">pub </span>message: TranslatableString,
+    <span class="kw">pub </span>pattern: String,         <span class="comment">//TODO type? If string -&gt; InputString?
+    </span><span class="kw">pub </span>name_to_compare: String, <span class="comment">//TODO, translateable?
+</span>}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEPatternRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEPatternRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
-        <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
-            <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">pattern</span>: <span class="self">self</span>.<span class="ident">pattern</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">name_to_compare</span>: <span class="self">self</span>.<span class="ident">name_to_compare</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMEPatternRestriction&gt; <span class="kw">for </span>JMEPatternRestriction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMEPatternRestriction {
+        numbas::question::part::jme::JMEPatternRestriction {
+            partial_credit: <span class="self">self</span>.partial_credit.to_numbas(locale),
+            message: <span class="self">self</span>.message.to_numbas(locale),
+            pattern: <span class="self">self</span>.pattern.to_numbas(locale),
+            name_to_compare: <span class="self">self</span>.name_to_compare.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEPatternRestriction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEPatternRestriction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEPatternRestriction</span> {
-        <span class="ident">JMEPatternRestriction</span> {
-            <span class="ident">partial_credit</span>: <span class="self">self</span>.<span class="ident">partial_credit</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">pattern</span>: <span class="self">self</span>.<span class="ident">pattern</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">name_to_compare</span>: <span class="self">self</span>.<span class="ident">name_to_compare</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMEPatternRestriction&gt; <span class="kw">for </span>numbas::question::part::jme::JMEPatternRestriction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMEPatternRestriction {
+        JMEPatternRestriction {
+            partial_credit: <span class="self">self</span>.partial_credit.<span class="number">0</span>.to_rumbas(),
+            message: <span class="self">self</span>.message.to_rumbas(),
+            pattern: <span class="self">self</span>.pattern.to_rumbas(),
+            name_to_compare: <span class="self">self</span>.name_to_compare.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMEValueGeneratorInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEValueGenerator</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">FileString</span>,
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">JMEFileString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMEValueGeneratorInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>JMEValueGenerator {
+    <span class="kw">pub </span>name: FileString,
+    <span class="kw">pub </span>value: JMEFileString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::jme::JMEValueGenerator</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMEValueGenerator</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
-        <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::jme::JMEValueGenerator&gt; <span class="kw">for </span>JMEValueGenerator {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::jme::JMEValueGenerator {
+        numbas::question::part::jme::JMEValueGenerator {
+            name: <span class="self">self</span>.name.to_numbas(locale),
+            value: <span class="self">self</span>.value.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMEValueGenerator</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::jme::JMEValueGenerator</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMEValueGenerator</span> {
-        <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">String</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">clone</span>().<span class="ident">into</span>();
-        <span class="ident">JMEValueGenerator</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">value</span>: <span class="ident">s</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMEValueGenerator&gt; <span class="kw">for </span>numbas::question::part::jme::JMEValueGenerator {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMEValueGenerator {
+        <span class="kw">let </span>s: String = <span class="self">self</span>.value.clone().into();
+        JMEValueGenerator {
+            name: <span class="self">self</span>.name.to_rumbas(),
+            value: s.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMERulesetItemInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;rules&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">JMERulesetItem</span> {
-    <span class="ident">Simplification</span>(<span class="ident">JMEAnswerSimplification</span>),
-    <span class="ident">Display</span>(<span class="ident">JMEAnswerDisplay</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMERulesetItemInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>, content = <span class="string">&quot;rules&quot;</span>)]
+</span><span class="kw">pub enum </span>JMERulesetItem {
+    Simplification(JMEAnswerSimplification),
+    Display(JMEAnswerDisplay),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">JMERulesetItem</span>
+<span class="kw">impl </span>ToNumbas&lt;Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;&gt;
+    <span class="kw">for </span>JMERulesetItem
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Simplification</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident"><span class="self">Self</span>::Display</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Simplification(s) =&gt; s.to_numbas(locale),
+            <span class="self">Self</span>::Display(d) =&gt; d.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMERulesetItem</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType</span><span class="op">&gt;</span>
+<span class="kw">impl </span>ToRumbas&lt;JMERulesetItem&gt;
+    <span class="kw">for </span>Vec&lt;numbas::question::answer_simplification::AnswerSimplificationType&gt;
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMERulesetItem</span> {
-        <span class="kw">let</span> <span class="ident">has_different_types</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">is_empty</span>()
-            <span class="op">&amp;&amp;</span> (<span class="number">0</span>..<span class="self">self</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>).<span class="ident">any</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
-                <span class="op">!</span><span class="macro">matches!</span>((<span class="kw-2">&amp;</span><span class="self">self</span>[<span class="ident">i</span>], <span class="kw-2">&amp;</span><span class="self">self</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>]),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMERulesetItem {
+        <span class="kw">let </span>has_different_types = !<span class="self">self</span>.is_empty()
+            &amp;&amp; (<span class="number">0</span>..<span class="self">self</span>.len() - <span class="number">1</span>).any(|i| {
+                !<span class="macro">matches!</span>((<span class="kw-2">&amp;</span><span class="self">self</span>[i], <span class="kw-2">&amp;</span><span class="self">self</span>[i + <span class="number">1</span>]),
                 (
-                                     <span class="kw-2">&amp;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType::Rule</span>(<span class="kw">_</span>),
-                                     <span class="kw-2">&amp;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType::Rule</span>(<span class="kw">_</span>),
-                                 ) <span class="op">|</span> (
-                                     <span class="kw-2">&amp;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption</span>(
+                                     <span class="kw-2">&amp;</span>numbas::question::answer_simplification::AnswerSimplificationType::Rule(<span class="kw">_</span>),
+                                     <span class="kw-2">&amp;</span>numbas::question::answer_simplification::AnswerSimplificationType::Rule(<span class="kw">_</span>),
+                                 ) | (
+                                     <span class="kw-2">&amp;</span>numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
                                          <span class="kw">_</span>,
                                      ),
-                                     <span class="kw-2">&amp;</span><span class="ident">numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption</span>(
+                                     <span class="kw-2">&amp;</span>numbas::question::answer_simplification::AnswerSimplificationType::DisplayOption(
                                          <span class="kw">_</span>,
                                      )
                 ))
             });
-        <span class="kw">if</span> <span class="ident">has_different_types</span> {
-            <span class="comment">// It would be needed to create two different ruleset&#39;s for and they should have a different name.</span>
-            <span class="comment">// Their usage should be changed in the jme</span>
-            <span class="comment">// TODO</span>
-            <span class="macro">log::error!</span>(<span class="string">&quot;Importing rulesets with both Simplification rules and DisplayOptions, is currently not supported. Only adding simplification rules.&quot;</span>);
+        <span class="kw">if </span>has_different_types {
+            <span class="comment">// It would be needed to create two different ruleset&#39;s for and they should have a different name.
+            // Their usage should be changed in the jme
+            // TODO
+            </span><span class="macro">log::error!</span>(<span class="string">&quot;Importing rulesets with both Simplification rules and DisplayOptions, is currently not supported. Only adding simplification rules.&quot;</span>);
         }
 
-        <span class="kw">if</span> <span class="ident">has_different_types</span> {
-            <span class="ident">JMERulesetItem::Simplification</span>(<span class="self">self</span>.<span class="ident">to_rumbas</span>())
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(
-            <span class="ident">numbas::question::answer_simplification::AnswerSimplificationType::Rule</span>(<span class="kw">_</span>),
-        ) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get</span>(<span class="number">0</span>)
+        <span class="kw">if </span>has_different_types {
+            JMERulesetItem::Simplification(<span class="self">self</span>.to_rumbas())
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(
+            numbas::question::answer_simplification::AnswerSimplificationType::Rule(<span class="kw">_</span>),
+        ) = <span class="self">self</span>.get(<span class="number">0</span>)
         {
-            <span class="ident">JMERulesetItem::Simplification</span>(<span class="self">self</span>.<span class="ident">to_rumbas</span>())
-        } <span class="kw">else</span> {
-            <span class="ident">JMERulesetItem::Display</span>(<span class="self">self</span>.<span class="ident">to_rumbas</span>())
+            JMERulesetItem::Simplification(<span class="self">self</span>.to_rumbas())
+        } <span class="kw">else </span>{
+            JMERulesetItem::Display(<span class="self">self</span>.to_rumbas())
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/rumbas_check.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rumbas_check.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/rumbas_check.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rumbas_check.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -220,227 +220,227 @@
 <span id="220">220</span>
 <span id="221">221</span>
 <span id="222">222</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RumbasCheck</span> {
-    <span class="doccomment">/// Check the read rumbas data</span>
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span>;
+<span class="kw">pub trait </span>RumbasCheck {
+    <span class="doccomment">/// Check the read rumbas data
+    </span><span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
-        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-            <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
-            <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>)
+<span class="kw">impl</span>&lt;O: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>Vec&lt;O&gt; {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>result = RumbasCheckResult::empty();
+        <span class="kw">for </span>(i, item) <span class="kw">in </span><span class="self">self</span>.iter().enumerate() {
+            <span class="kw">let </span><span class="kw-2">mut </span>previous_result = item.check(locale);
+            previous_result.extend_path(i.to_string());
+            result.union(<span class="kw-2">&amp;</span>previous_result)
         }
-        <span class="ident">result</span>
+        result
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
-        <span class="comment">// Key is not displayable, so show an index, just to differentiate</span>
-        <span class="kw">for</span> (<span class="ident">i</span>, (<span class="ident">_key</span>, <span class="ident">item</span>)) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-            <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
-            <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>)
+<span class="kw">impl</span>&lt;T: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>HashMap&lt;String, T&gt; {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>result = RumbasCheckResult::empty();
+        <span class="comment">// Key is not displayable, so show an index, just to differentiate
+        </span><span class="kw">for </span>(i, (_key, item)) <span class="kw">in </span><span class="self">self</span>.iter().enumerate() {
+            <span class="kw">let </span><span class="kw-2">mut </span>previous_result = item.check(locale);
+            previous_result.extend_path(i.to_string());
+            result.union(<span class="kw-2">&amp;</span>previous_result)
         }
-        <span class="ident">result</span>
+        result
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">check</span>(<span class="ident">locale</span>)
+<span class="kw">impl</span>&lt;O: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>Box&lt;O&gt; {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        (<span class="kw-2">**</span><span class="self">self</span>).check(locale)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">RumbasCheck</span>, <span class="ident">B</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">B</span>) {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RumbasCheckResult::empty</span>();
-        <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-        <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
-        <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>);
-        <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-        <span class="ident">previous_result</span>.<span class="ident">extend_path</span>(<span class="ident">i</span>.<span class="ident">to_string</span>());
-        <span class="ident">result</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">previous_result</span>);
-        <span class="ident">result</span>
+<span class="kw">impl</span>&lt;A: RumbasCheck, B: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>(A, B) {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>result = RumbasCheckResult::empty();
+        <span class="kw">let </span>i = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>previous_result = <span class="self">self</span>.<span class="number">0</span>.check(locale);
+        previous_result.extend_path(i.to_string());
+        result.union(<span class="kw-2">&amp;</span>previous_result);
+        <span class="kw">let </span>i = <span class="number">1</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>previous_result = <span class="self">self</span>.<span class="number">1</span>.check(locale);
+        previous_result.extend_path(i.to_string());
+        result.union(<span class="kw-2">&amp;</span>previous_result);
+        result
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">impl_rumbas_check</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>: <span class="ident">ty</span>),<span class="kw-2">*</span>) =&gt; {
+<span class="macro">macro_rules! </span>impl_rumbas_check {
+    ($(<span class="macro-nonterminal">$t</span>: ty),<span class="kw-2">*</span>) =&gt; {
         $(
-        <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> {
-            <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-                <span class="ident">RumbasCheckResult::empty</span>()
+        <span class="kw">impl </span>RumbasCheck <span class="kw">for </span><span class="macro-nonterminal">$t </span>{
+            <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+                RumbasCheckResult::empty()
             }
         }
-        )<span class="op">*</span>
+        )*
     };
 }
 
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">String</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">f64</span>, <span class="ident">f32</span>, [<span class="ident">f64</span>; <span class="number">2</span>]);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">u128</span>, <span class="ident">u64</span>, <span class="ident">u32</span>, <span class="ident">u16</span>, <span class="ident">u8</span>, <span class="ident">usize</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">i128</span>, <span class="ident">i64</span>, <span class="ident">i32</span>, <span class="ident">i16</span>, <span class="ident">i8</span>, <span class="ident">isize</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">bool</span>);
+<span class="macro">impl_rumbas_check!</span>(String);
+<span class="macro">impl_rumbas_check!</span>(f64, f32, [f64; <span class="number">2</span>]);
+<span class="macro">impl_rumbas_check!</span>(u128, u64, u32, u16, u8, usize);
+<span class="macro">impl_rumbas_check!</span>(i128, i64, i32, i16, i8, isize);
+<span class="macro">impl_rumbas_check!</span>(bool);
 
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">std::path::PathBuf</span>);
+<span class="macro">impl_rumbas_check!</span>(std::path::PathBuf);
 
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::jme::ContentAreaString</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::jme::EmbracedJMEString</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::jme::JMEString</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayout</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::question::part::pattern_match::PatternMatchMode</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::support::answer_style::AnswerStyle</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::support::primitive::Number</span>);
-<span class="macro">impl_rumbas_check!</span>(<span class="ident">numbas::question::function::FunctionType</span>);
+<span class="macro">impl_rumbas_check!</span>(numbas::jme::ContentAreaString);
+<span class="macro">impl_rumbas_check!</span>(numbas::jme::EmbracedJMEString);
+<span class="macro">impl_rumbas_check!</span>(numbas::jme::JMEString);
+<span class="macro">impl_rumbas_check!</span>(numbas::question::part::match_answers::MatchAnswersWithChoicesLayout);
+<span class="macro">impl_rumbas_check!</span>(numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType);
+<span class="macro">impl_rumbas_check!</span>(numbas::question::part::match_answers::MultipleChoiceWarningType);
+<span class="macro">impl_rumbas_check!</span>(numbas::question::part::pattern_match::PatternMatchMode);
+<span class="macro">impl_rumbas_check!</span>(numbas::support::answer_style::AnswerStyle);
+<span class="macro">impl_rumbas_check!</span>(numbas::support::primitive::Number);
+<span class="macro">impl_rumbas_check!</span>(numbas::question::function::FunctionType);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckResult</span> {
-    <span class="comment">// When adding a field, do also add it to is_empty</span>
-    <span class="ident">missing_translations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckMissingData</span><span class="op">&gt;</span>,
-    <span class="ident">invalid_jme_strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidJMEStringData</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RumbasCheckResult {
+    <span class="comment">// When adding a field, do also add it to is_empty
+    </span>missing_translations: Vec&lt;RumbasCheckMissingData&gt;,
+    invalid_jme_strings: Vec&lt;RumbasCheckInvalidJMEStringData&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasCheckResult</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_missing_translation</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="ident">RumbasCheckResult</span> {
-            <span class="ident">missing_translations</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckMissingData</span> {
-                <span class="ident">path</span>: <span class="ident">RumbasCheckPath::with_last</span>(<span class="ident">os</span>),
+<span class="kw">impl </span>RumbasCheckResult {
+    <span class="kw">pub fn </span>from_missing_translation(os: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; RumbasCheckResult {
+        RumbasCheckResult {
+            missing_translations: <span class="macro">vec!</span>[RumbasCheckMissingData {
+                path: RumbasCheckPath::with_last(os),
             }],
-            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[],
+            invalid_jme_strings: <span class="macro">vec!</span>[],
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_invalid_jme</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">numbas::jme::parser::ConsumeError</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="ident">RumbasCheckResult</span> {
-            <span class="ident">missing_translations</span>: <span class="macro">vec!</span>[],
-            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[<span class="ident">RumbasCheckInvalidJMEStringData</span> {
-                <span class="ident">path</span>: <span class="ident">RumbasCheckPath::without_last</span>(),
-                <span class="ident">error</span>: <span class="ident">e</span>.<span class="ident">clone</span>(),
+    <span class="kw">pub fn </span>from_invalid_jme(e: <span class="kw-2">&amp;</span>numbas::jme::parser::ConsumeError) -&gt; RumbasCheckResult {
+        RumbasCheckResult {
+            missing_translations: <span class="macro">vec!</span>[],
+            invalid_jme_strings: <span class="macro">vec!</span>[RumbasCheckInvalidJMEStringData {
+                path: RumbasCheckPath::without_last(),
+                error: e.clone(),
             }],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="ident">RumbasCheckResult</span> {
-            <span class="ident">missing_translations</span>: <span class="macro">vec!</span>[],
-            <span class="ident">invalid_jme_strings</span>: <span class="macro">vec!</span>[],
+    <span class="kw">pub fn </span>empty() -&gt; RumbasCheckResult {
+        RumbasCheckResult {
+            missing_translations: <span class="macro">vec!</span>[],
+            invalid_jme_strings: <span class="macro">vec!</span>[],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">missing_translations</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extend_path</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="ident">String</span>) {
-        <span class="kw">for</span> <span class="ident">missing_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">missing_translations</span>.<span class="ident">iter_mut</span>() {
-            <span class="ident">missing_value</span>.<span class="ident">path</span>.<span class="ident">add</span>(<span class="ident">s</span>.<span class="ident">clone</span>());
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.missing_translations.len() == <span class="number">0 </span>&amp;&amp; <span class="self">self</span>.invalid_jme_strings.len() == <span class="number">0
+    </span>}
+    <span class="kw">pub fn </span>extend_path(<span class="kw-2">&amp;mut </span><span class="self">self</span>, s: String) {
+        <span class="kw">for </span>missing_value <span class="kw">in </span><span class="self">self</span>.missing_translations.iter_mut() {
+            missing_value.path.add(s.clone());
         }
-        <span class="kw">for</span> <span class="ident">invalid_value</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">iter_mut</span>() {
-            <span class="ident">invalid_value</span>.<span class="ident">path</span>.<span class="ident">add</span>(<span class="ident">s</span>.<span class="ident">clone</span>());
+        <span class="kw">for </span>invalid_value <span class="kw">in </span><span class="self">self</span>.invalid_jme_strings.iter_mut() {
+            invalid_value.path.add(s.clone());
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">union</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
-        <span class="self">self</span>.<span class="ident">missing_translations</span>
-            .<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">missing_translations</span>.<span class="ident">clone</span>());
-        <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>
-            .<span class="ident">extend</span>(<span class="ident">other</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">clone</span>());
+    <span class="kw">pub fn </span>union(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
+        <span class="self">self</span>.missing_translations
+            .extend(other.missing_translations.clone());
+        <span class="self">self</span>.invalid_jme_strings
+            .extend(other.invalid_jme_strings.clone());
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">missing_translations</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckMissingData</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">missing_translations</span>.<span class="ident">clone</span>()
+    <span class="kw">pub fn </span>missing_translations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;RumbasCheckMissingData&gt; {
+        <span class="self">self</span>.missing_translations.clone()
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid_jme_fields</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RumbasCheckInvalidJMEStringData</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">invalid_jme_strings</span>.<span class="ident">clone</span>()
+    <span class="kw">pub fn </span>invalid_jme_fields(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;RumbasCheckInvalidJMEStringData&gt; {
+        <span class="self">self</span>.invalid_jme_strings.clone()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasCheckResult</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">missing_translations</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">missing_translations</span>();
-        <span class="kw">let</span> <span class="ident">invalid_jme_fields</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">invalid_jme_fields</span>();
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">missing_translations</span>.<span class="ident">is_empty</span>() {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} missing translations:&quot;</span>, <span class="ident">missing_translations</span>.<span class="ident">len</span>());
-            <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">error</span>) <span class="kw">in</span> <span class="ident">missing_translations</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, <span class="ident">idx</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">error</span>.<span class="ident">to_string</span>());
+<span class="kw">impl </span>RumbasCheckResult {
+    <span class="kw">pub fn </span>log(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let </span>missing_translations = <span class="self">self</span>.missing_translations();
+        <span class="kw">let </span>invalid_jme_fields = <span class="self">self</span>.invalid_jme_fields();
+        <span class="kw">if </span>!missing_translations.is_empty() {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} missing translations:&quot;</span>, missing_translations.len());
+            <span class="kw">for </span>(idx, error) <span class="kw">in </span>missing_translations.iter().enumerate() {
+                <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, idx + <span class="number">1</span>, error.to_string());
             }
         }
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">invalid_jme_fields</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">if </span>!invalid_jme_fields.is_empty() {
             <span class="macro">log::error!</span>(
                 <span class="string">&quot;Found {} invalid jme expressions:&quot;</span>,
-                <span class="ident">invalid_jme_fields</span>.<span class="ident">len</span>()
+                invalid_jme_fields.len()
             );
-            <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">error</span>) <span class="kw">in</span> <span class="ident">invalid_jme_fields</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, <span class="ident">idx</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">error</span>.<span class="ident">to_string</span>());
+            <span class="kw">for </span>(idx, error) <span class="kw">in </span>invalid_jme_fields.iter().enumerate() {
+                <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, idx + <span class="number">1</span>, error.to_string());
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckPath</span> {
-    <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">last_part</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RumbasCheckPath {
+    parts: Vec&lt;String&gt;,
+    last_part: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">RumbasCheckPath</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_last</span>(<span class="ident">os</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">RumbasCheckPath</span> {
-            <span class="ident">parts</span>: <span class="macro">vec!</span>[],
-            <span class="ident">last_part</span>: <span class="ident">os</span>,
+<span class="kw">impl </span>RumbasCheckPath {
+    <span class="kw">pub fn </span>with_last(os: <span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; <span class="self">Self </span>{
+        RumbasCheckPath {
+            parts: <span class="macro">vec!</span>[],
+            last_part: os,
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">without_last</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::with_last</span>(<span class="prelude-val">None</span>)
+    <span class="kw">pub fn </span>without_last() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::with_last(<span class="prelude-val">None</span>)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="ident">String</span>) {
-        <span class="self">self</span>.<span class="ident">parts</span>.<span class="ident">insert</span>(<span class="number">0</span>, <span class="ident">s</span>)
+    <span class="kw">pub fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, s: String) {
+        <span class="self">self</span>.parts.insert(<span class="number">0</span>, s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckPath</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parts</span>.<span class="ident">join</span>(<span class="string">&quot;.&quot;</span>);
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>RumbasCheckPath {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="kw">let </span>base = <span class="self">self</span>.parts.join(<span class="string">&quot;.&quot;</span>);
         <span class="macro">write!</span>(
-            <span class="ident">f</span>,
+            f,
             <span class="string">&quot;{}&quot;</span>,
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_part</span> {
-                <span class="macro">format!</span>(<span class="string">&quot;{}.{}&quot;</span>, <span class="ident">base</span>, <span class="ident">e</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">base</span>
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>e) = <span class="self">self</span>.last_part {
+                <span class="macro">format!</span>(<span class="string">&quot;{}.{}&quot;</span>, base, e)
+            } <span class="kw">else </span>{
+                base
             }
         )
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckMissingData</span> {
-    <span class="ident">path</span>: <span class="ident">RumbasCheckPath</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RumbasCheckMissingData {
+    path: RumbasCheckPath,
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckMissingData</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">path</span>)
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>RumbasCheckMissingData {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.path)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RumbasCheckInvalidJMEStringData</span> {
-    <span class="ident">path</span>: <span class="ident">RumbasCheckPath</span>,
-    <span class="ident">error</span>: <span class="ident">numbas::jme::parser::ConsumeError</span>,
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RumbasCheckInvalidJMEStringData {
+    path: RumbasCheckPath,
+    error: numbas::jme::parser::ConsumeError,
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">RumbasCheckInvalidJMEStringData</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">to_string</span>();
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}\n With error:\n{}&quot;</span>, <span class="ident">p</span>, <span class="self">self</span>.<span class="ident">error</span>)
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>RumbasCheckInvalidJMEStringData {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="kw">let </span>p = <span class="self">self</span>.path.to_string();
+        <span class="macro">write!</span>(f, <span class="string">&quot;{}\n With error:\n{}&quot;</span>, p, <span class="self">self</span>.error)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

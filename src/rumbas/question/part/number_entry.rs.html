@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/number_entry.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>number_entry.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/number_entry.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>number_entry.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -205,212 +205,212 @@
 <span id="205">205</span>
 <span id="206">206</span>
 <span id="207">207</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::QuestionPart</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::JMENotes;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy;
+<span class="kw">use </span><span class="kw">crate</span>::question::QuestionPart;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>numbas::jme::JMEString;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="macro">question_part_type!</span> {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartNumberEntryInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartNumberEntry</span> {
-        <span class="ident">answer</span>: <span class="ident">NumberEntryAnswer</span>,
-        <span class="ident">display_correct_as_fraction</span>: <span class="ident">bool</span>,
-        <span class="ident">allow_fractions</span>: <span class="ident">bool</span>,
-        <span class="ident">allowed_notation_styles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerStyle</span><span class="op">&gt;</span>,
+<span class="macro">question_part_type! </span>{
+    <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[input(name = <span class="string">&quot;QuestionPartNumberEntryInput&quot;</span>)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+    </span><span class="kw">pub struct </span>QuestionPartNumberEntry {
+        answer: NumberEntryAnswer,
+        display_correct_as_fraction: bool,
+        allow_fractions: bool,
+        allowed_notation_styles: Vec&lt;AnswerStyle&gt;,
 
-        <span class="ident">display_correct_in_style</span>: <span class="ident">AnswerStyle</span>,
-        <span class="ident">fractions_must_be_reduced</span>: <span class="ident">bool</span>,
-        <span class="ident">partial_credit_if_fraction_not_reduced</span>: <span class="ident">numbas::support::primitive::Number</span>,
+        display_correct_in_style: AnswerStyle,
+        fractions_must_be_reduced: bool,
+        partial_credit_if_fraction_not_reduced: numbas::support::primitive::Number,
 
-        <span class="ident">hint_fraction</span>: <span class="ident">bool</span>
+        hint_fraction: bool
 
-        <span class="comment">//TODO: precision, show_precision_hint</span>
-    }
+        <span class="comment">//TODO: precision, show_precision_hint
+    </span>}
 
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::number_entry::QuestionPartNumberEntry</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">QuestionPartNumberEntry</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::number_entry::QuestionPartNumberEntry&gt;
+    <span class="kw">for </span>QuestionPartNumberEntry
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::number_entry::QuestionPartNumberEntry</span> {
-        <span class="ident">numbas::question::part::number_entry::QuestionPartNumberEntry</span> {
-            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer_fraction</span>: <span class="self">self</span>.<span class="ident">display_correct_as_fraction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer_style</span>: <span class="self">self</span>.<span class="ident">display_correct_in_style</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">notation_styles</span>: <span class="self">self</span>.<span class="ident">allowed_notation_styles</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">fractions_must_be_reduced</span>: <span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">partial_credit_if_fraction_not_reduced</span>: <span class="self">self</span>
-                .<span class="ident">partial_credit_if_fraction_not_reduced</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::number_entry::QuestionPartNumberEntry {
+        numbas::question::part::number_entry::QuestionPartNumberEntry {
+            part_data: <span class="self">self</span>.to_numbas(locale),
+            correct_answer_fraction: <span class="self">self</span>.display_correct_as_fraction.to_numbas(locale),
+            correct_answer_style: <span class="self">self</span>.display_correct_in_style.to_numbas(locale),
+            allow_fractions: <span class="self">self</span>.allow_fractions.to_numbas(locale),
+            notation_styles: <span class="self">self</span>.allowed_notation_styles.to_numbas(locale),
+            fractions_must_be_reduced: <span class="self">self</span>.fractions_must_be_reduced.to_numbas(locale),
+            partial_credit_if_fraction_not_reduced: <span class="self">self
+                </span>.partial_credit_if_fraction_not_reduced
+                .to_numbas(locale),
 
-            <span class="ident">precision</span>: <span class="ident">Default::default</span>(), <span class="comment">//TODO</span>
-            <span class="ident">show_precision_hint</span>: <span class="bool-val">true</span>,     <span class="comment">//TODO</span>
-            <span class="ident">show_fraction_hint</span>: <span class="self">self</span>.<span class="ident">hint_fraction</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="comment">// checking_type: Some(numbas::exam::CheckingType::Range), //TODO</span>
-        }
+            precision: Default::default(), <span class="comment">//TODO
+            </span>show_precision_hint: <span class="bool-val">true</span>,     <span class="comment">//TODO
+            </span>show_fraction_hint: <span class="self">self</span>.hint_fraction.to_numbas(locale),
+            answer: <span class="self">self</span>.answer.to_numbas(locale),
+            <span class="comment">// checking_type: Some(numbas::exam::CheckingType::Range), //TODO
+        </span>}
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartNumberEntry</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::number_entry::QuestionPartNumberEntry</span>
+<span class="kw">impl </span>ToRumbas&lt;QuestionPartNumberEntry&gt;
+    <span class="kw">for </span>numbas::question::part::number_entry::QuestionPartNumberEntry
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartNumberEntry</span> {
-        <span class="macro">create_question_part!</span> {
-            <span class="ident">QuestionPartNumberEntry</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {
-                <span class="ident">answer</span>: <span class="self">self</span>.<span class="ident">answer</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">display_correct_as_fraction</span>: <span class="self">self</span>.<span class="ident">correct_answer_fraction</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">allowed_notation_styles</span>:
-                    <span class="self">self</span>.<span class="ident">notation_styles</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPartNumberEntry {
+        <span class="macro">create_question_part! </span>{
+            QuestionPartNumberEntry with <span class="kw-2">&amp;</span><span class="self">self</span>.part_data =&gt; {
+                answer: <span class="self">self</span>.answer.to_rumbas(),
+                display_correct_as_fraction: <span class="self">self</span>.correct_answer_fraction.to_rumbas(),
+                allow_fractions: <span class="self">self</span>.allow_fractions.to_rumbas(),
+                allowed_notation_styles:
+                    <span class="self">self</span>.notation_styles.to_rumbas(),
 
-                <span class="ident">display_correct_in_style</span>:
-                    <span class="self">self</span>.<span class="ident">correct_answer_style</span>.<span class="ident">to_rumbas</span>(),
+                display_correct_in_style:
+                    <span class="self">self</span>.correct_answer_style.to_rumbas(),
 
-                <span class="ident">fractions_must_be_reduced</span>:
-                    <span class="self">self</span>.<span class="ident">fractions_must_be_reduced</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">partial_credit_if_fraction_not_reduced</span>:
-                    <span class="self">self</span>.<span class="ident">partial_credit_if_fraction_not_reduced</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">hint_fraction</span>:
-                    <span class="self">self</span>.<span class="ident">show_fraction_hint</span>.<span class="ident">to_rumbas</span>()
+                fractions_must_be_reduced:
+                    <span class="self">self</span>.fractions_must_be_reduced.to_rumbas(),
+                partial_credit_if_fraction_not_reduced:
+                    <span class="self">self</span>.partial_credit_if_fraction_not_reduced.to_rumbas(),
+                hint_fraction:
+                    <span class="self">self</span>.show_fraction_hint.to_rumbas()
 
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;NumberEntryAnswerInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NumberEntryAnswer</span> {
-    <span class="ident">Normal</span>(<span class="ident">JMEString</span>),
-    <span class="ident">Range</span>(<span class="ident">NumberEntryAnswerRange</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;NumberEntryAnswerInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>NumberEntryAnswer {
+    Normal(JMEString),
+    Range(NumberEntryAnswerRange),
 }
 
-<span class="comment">// TODO, better (add toRumbas etc)</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;NumberEntryAnswerRangeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NumberEntryAnswerRange</span> {
-    <span class="kw">pub</span> <span class="ident">from</span>: <span class="ident">JMEString</span>,
-    <span class="kw">pub</span> <span class="ident">to</span>: <span class="ident">JMEString</span>,
+<span class="comment">// TODO, better (add toRumbas etc)
+</span><span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;NumberEntryAnswerRangeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>NumberEntryAnswerRange {
+    <span class="kw">pub </span>from: JMEString,
+    <span class="kw">pub </span>to: JMEString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NumberEntryAnswer</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::number_entry::NumberEntryAnswerType&gt; <span class="kw">for </span>NumberEntryAnswer {
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NumberEntryAnswer::Normal</span>(<span class="ident">f</span>) =&gt; {
-                <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType::Answer</span> {
-                    <span class="ident">answer</span>: <span class="ident">f</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::number_entry::NumberEntryAnswerType {
+        <span class="kw">match </span><span class="self">self </span>{
+            NumberEntryAnswer::Normal(f) =&gt; {
+                numbas::question::part::number_entry::NumberEntryAnswerType::Answer {
+                    answer: f.to_numbas(locale),
                 }
             }
-            <span class="ident">NumberEntryAnswer::Range</span>(<span class="ident">range</span>) =&gt; {
-                <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType::MinMax</span> {
-                    <span class="ident">min_value</span>: <span class="ident">range</span>.<span class="ident">from</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">max_value</span>: <span class="ident">range</span>.<span class="ident">to</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            NumberEntryAnswer::Range(range) =&gt; {
+                numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
+                    min_value: range.from.to_numbas(locale),
+                    max_value: range.to.to_numbas(locale),
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">NumberEntryAnswer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">NumberEntryAnswer</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType::MinMax</span> {
-                <span class="ident">min_value</span>,
-                <span class="ident">max_value</span>,
-            } =&gt; <span class="ident">NumberEntryAnswer::Range</span>(<span class="ident">NumberEntryAnswerRange</span> {
-                <span class="ident">from</span>: <span class="ident">min_value</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">to</span>: <span class="ident">max_value</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;NumberEntryAnswer&gt; <span class="kw">for </span>numbas::question::part::number_entry::NumberEntryAnswerType {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NumberEntryAnswer {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
+                min_value,
+                max_value,
+            } =&gt; NumberEntryAnswer::Range(NumberEntryAnswerRange {
+                from: min_value.to_rumbas(),
+                to: max_value.to_rumbas(),
             }),
-            <span class="ident">numbas::question::part::number_entry::NumberEntryAnswerType::Answer</span> { <span class="ident">answer</span> } =&gt; {
-                <span class="ident">NumberEntryAnswer::Normal</span>(<span class="ident">answer</span>.<span class="ident">to_rumbas</span>())
+            numbas::question::part::number_entry::NumberEntryAnswerType::Answer { answer } =&gt; {
+                NumberEntryAnswer::Normal(answer.to_rumbas())
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;AnswerStyleInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerStyle</span> {
-    <span class="doccomment">/// English style - commas separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;english&quot;</span>)]</span>
-    <span class="ident">English</span>,
-    <span class="doccomment">/// Plain English style - no thousands separator, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;english-plain&quot;</span>)]</span>
-    <span class="ident">EnglishPlain</span>,
-    <span class="doccomment">/// English SI style - spaces separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;english-si&quot;</span>)]</span>
-    <span class="ident">EnglishSI</span>,
-    <span class="doccomment">/// Continental European style - dots separate thousands, comma for decimal poin</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;european&quot;</span>)]</span>
-    <span class="ident">European</span>,
-    <span class="doccomment">/// Plain French style - no thousands separator, comma for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;european-plain&quot;</span>)]</span>
-    <span class="ident">EuropeanPlain</span>,
-    <span class="doccomment">/// French SI style - spaces separate thousands, comma for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;french-si&quot;</span>)]</span>
-    <span class="ident">FrenchSI</span>,
-    <span class="doccomment">/// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;indian&quot;</span>)]</span>
-    <span class="ident">Indian</span>,
-    <span class="doccomment">/// Significand-exponent (&quot;scientific&quot;) style</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;scientific&quot;</span>)]</span>
-    <span class="ident">Scientific</span>,
-    <span class="doccomment">/// Swiss style - apostrophes separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;swiss&quot;</span>)]</span>
-    <span class="ident">Swiss</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;AnswerStyleInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>AnswerStyle {
+    <span class="doccomment">/// English style - commas separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;english&quot;</span>)]
+    </span>English,
+    <span class="doccomment">/// Plain English style - no thousands separator, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;english-plain&quot;</span>)]
+    </span>EnglishPlain,
+    <span class="doccomment">/// English SI style - spaces separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;english-si&quot;</span>)]
+    </span>EnglishSI,
+    <span class="doccomment">/// Continental European style - dots separate thousands, comma for decimal poin
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;european&quot;</span>)]
+    </span>European,
+    <span class="doccomment">/// Plain French style - no thousands separator, comma for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;european-plain&quot;</span>)]
+    </span>EuropeanPlain,
+    <span class="doccomment">/// French SI style - spaces separate thousands, comma for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;french-si&quot;</span>)]
+    </span>FrenchSI,
+    <span class="doccomment">/// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;indian&quot;</span>)]
+    </span>Indian,
+    <span class="doccomment">/// Significand-exponent (&quot;scientific&quot;) style
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;scientific&quot;</span>)]
+    </span>Scientific,
+    <span class="doccomment">/// Swiss style - apostrophes separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;swiss&quot;</span>)]
+    </span>Swiss,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::support::answer_style::AnswerStyle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AnswerStyle</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::support::answer_style::AnswerStyle</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">AnswerStyle::English</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::English</span>,
-            <span class="ident">AnswerStyle::EnglishPlain</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::EnglishPlain</span>,
-            <span class="ident">AnswerStyle::EnglishSI</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::EnglishSI</span>,
-            <span class="ident">AnswerStyle::European</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::European</span>,
-            <span class="ident">AnswerStyle::EuropeanPlain</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::EuropeanPlain</span>,
-            <span class="ident">AnswerStyle::FrenchSI</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::FrenchSI</span>,
-            <span class="ident">AnswerStyle::Indian</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::Indian</span>,
-            <span class="ident">AnswerStyle::Scientific</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::Scientific</span>,
-            <span class="ident">AnswerStyle::Swiss</span> =&gt; <span class="ident">numbas::support::answer_style::AnswerStyle::Swiss</span>,
+<span class="kw">impl </span>ToNumbas&lt;numbas::support::answer_style::AnswerStyle&gt; <span class="kw">for </span>AnswerStyle {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::support::answer_style::AnswerStyle {
+        <span class="kw">match </span><span class="self">self </span>{
+            AnswerStyle::English =&gt; numbas::support::answer_style::AnswerStyle::English,
+            AnswerStyle::EnglishPlain =&gt; numbas::support::answer_style::AnswerStyle::EnglishPlain,
+            AnswerStyle::EnglishSI =&gt; numbas::support::answer_style::AnswerStyle::EnglishSI,
+            AnswerStyle::European =&gt; numbas::support::answer_style::AnswerStyle::European,
+            AnswerStyle::EuropeanPlain =&gt; numbas::support::answer_style::AnswerStyle::EuropeanPlain,
+            AnswerStyle::FrenchSI =&gt; numbas::support::answer_style::AnswerStyle::FrenchSI,
+            AnswerStyle::Indian =&gt; numbas::support::answer_style::AnswerStyle::Indian,
+            AnswerStyle::Scientific =&gt; numbas::support::answer_style::AnswerStyle::Scientific,
+            AnswerStyle::Swiss =&gt; numbas::support::answer_style::AnswerStyle::Swiss,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">AnswerStyle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::support::answer_style::AnswerStyle</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">AnswerStyle</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::support::answer_style::AnswerStyle::English</span> =&gt; <span class="ident">AnswerStyle::English</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::EnglishPlain</span> =&gt; <span class="ident">AnswerStyle::EnglishPlain</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::EnglishSI</span> =&gt; <span class="ident">AnswerStyle::EnglishSI</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::European</span> =&gt; <span class="ident">AnswerStyle::European</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::EuropeanPlain</span> =&gt; <span class="ident">AnswerStyle::EuropeanPlain</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::FrenchSI</span> =&gt; <span class="ident">AnswerStyle::FrenchSI</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::Indian</span> =&gt; <span class="ident">AnswerStyle::Indian</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::Scientific</span> =&gt; <span class="ident">AnswerStyle::Scientific</span>,
-            <span class="ident">numbas::support::answer_style::AnswerStyle::Swiss</span> =&gt; <span class="ident">AnswerStyle::Swiss</span>,
+<span class="kw">impl </span>ToRumbas&lt;AnswerStyle&gt; <span class="kw">for </span>numbas::support::answer_style::AnswerStyle {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; AnswerStyle {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::support::answer_style::AnswerStyle::English =&gt; AnswerStyle::English,
+            numbas::support::answer_style::AnswerStyle::EnglishPlain =&gt; AnswerStyle::EnglishPlain,
+            numbas::support::answer_style::AnswerStyle::EnglishSI =&gt; AnswerStyle::EnglishSI,
+            numbas::support::answer_style::AnswerStyle::European =&gt; AnswerStyle::European,
+            numbas::support::answer_style::AnswerStyle::EuropeanPlain =&gt; AnswerStyle::EuropeanPlain,
+            numbas::support::answer_style::AnswerStyle::FrenchSI =&gt; AnswerStyle::FrenchSI,
+            numbas::support::answer_style::AnswerStyle::Indian =&gt; AnswerStyle::Indian,
+            numbas::support::answer_style::AnswerStyle::Scientific =&gt; AnswerStyle::Scientific,
+            numbas::support::answer_style::AnswerStyle::Swiss =&gt; AnswerStyle::Swiss,
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

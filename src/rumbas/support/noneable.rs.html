@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/noneable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>noneable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/noneable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>noneable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -260,267 +260,267 @@
 <span id="260">260</span>
 <span id="261">261</span>
 <span id="262">262</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Noneable&lt;T&gt; {
     <span class="prelude-val">None</span>,
-    <span class="ident">NotNone</span>(<span class="ident">T</span>),
+    NotNone(T),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NoneableDesc</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Comparable</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span> {
+<span class="attribute">#[derive(Debug, PartialEq)]
+</span><span class="kw">pub enum </span>NoneableDesc&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
     <span class="prelude-val">None</span>,
-    <span class="ident">NotNone</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">comparable::Comparable</span><span class="op">&gt;</span><span class="ident">::Desc</span>),
+    NotNone(&lt;T <span class="kw">as </span>comparable::Comparable&gt;::Desc),
 }
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NoneableChange</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Comparable</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span> {
-    <span class="ident">BothNotNone</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">comparable::Comparable</span><span class="op">&gt;</span><span class="ident">::Change</span>),
-    <span class="ident">Different</span>(
-        <span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">comparable::Comparable</span><span class="op">&gt;</span><span class="ident">::Desc</span>,
-        <span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">comparable::Comparable</span><span class="op">&gt;</span><span class="ident">::Desc</span>,
+<span class="attribute">#[derive(Debug, PartialEq)]
+</span><span class="kw">pub enum </span>NoneableChange&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
+    BothNotNone(&lt;T <span class="kw">as </span>comparable::Comparable&gt;::Change),
+    Different(
+        &lt;Noneable&lt;T&gt; <span class="kw">as </span>comparable::Comparable&gt;::Desc,
+        &lt;Noneable&lt;T&gt; <span class="kw">as </span>comparable::Comparable&gt;::Desc,
     ),
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Comparable</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span> <span class="ident">comparable::Comparable</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Desc</span> <span class="op">=</span> <span class="ident">NoneableDesc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">describe</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Desc</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident">NoneableDesc::None</span>,
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">var0</span>) =&gt; <span class="ident">NoneableDesc::NotNone</span>(<span class="ident">var0</span>.<span class="ident">describe</span>()),
+<span class="kw">impl</span>&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; comparable::Comparable <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">type </span>Desc = NoneableDesc&lt;T&gt;;
+    <span class="kw">fn </span>describe(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Desc {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::None =&gt; NoneableDesc::None,
+            Noneable::NotNone(var0) =&gt; NoneableDesc::NotNone(var0.describe()),
         }
     }
-    <span class="kw">type</span> <span class="ident">Change</span> <span class="op">=</span> <span class="ident">NoneableChange</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">comparison</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">comparable::Changed</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Change</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> (<span class="self">self</span>, <span class="ident">other</span>) {
-            (<span class="ident">Noneable::None</span>, <span class="ident">Noneable::None</span>) =&gt; <span class="ident">comparable::Changed::Unchanged</span>,
-            (<span class="ident">Noneable::NotNone</span>(<span class="ident">self_var0</span>), <span class="ident">Noneable::NotNone</span>(<span class="ident">other_var0</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">changes_var0</span> <span class="op">=</span> <span class="ident">self_var0</span>.<span class="ident">comparison</span>(<span class="ident">other_var0</span>);
-                <span class="ident">changes_var0</span>.<span class="ident">map</span>(<span class="ident">NoneableChange::BothNotNone</span>)
+    <span class="kw">type </span>Change = NoneableChange&lt;T&gt;;
+    <span class="kw">fn </span>comparison(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; comparable::Changed&lt;<span class="self">Self</span>::Change&gt; {
+        <span class="kw">match </span>(<span class="self">self</span>, other) {
+            (Noneable::None, Noneable::None) =&gt; comparable::Changed::Unchanged,
+            (Noneable::NotNone(self_var0), Noneable::NotNone(other_var0)) =&gt; {
+                <span class="kw">let </span>changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(NoneableChange::BothNotNone)
             }
-            (<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">comparable::Changed::Changed</span>(<span class="ident">NoneableChange::Different</span>(
-                <span class="self">self</span>.<span class="ident">describe</span>(),
-                <span class="ident">other</span>.<span class="ident">describe</span>(),
+            (<span class="kw">_</span>, <span class="kw">_</span>) =&gt; comparable::Changed::Changed(NoneableChange::Different(
+                <span class="self">self</span>.describe(),
+                other.describe(),
             )),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Examples</span><span class="op">&gt;</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">T::examples</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="ident"><span class="self">Self</span>::NotNone</span>)
-            .<span class="ident">chain</span>(<span class="macro">vec!</span>[<span class="ident">Noneable::None</span>].<span class="ident">into_iter</span>())
-            .<span class="ident">collect</span>()
+<span class="kw">impl</span>&lt;T: Examples&gt; Examples <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        T::examples()
+            .into_iter()
+            .map(<span class="self">Self</span>::NotNone)
+            .chain(<span class="macro">vec!</span>[Noneable::None].into_iter())
+            .collect()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">InputInverse</span><span class="op">&gt;</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Input</span> <span class="op">=</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Input</span>;
+<span class="kw">impl</span>&lt;T: InputInverse&gt; InputInverse <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">type </span>Input = Noneable&lt;&lt;T <span class="kw">as </span>InputInverse&gt;::Input&gt;;
+    <span class="kw">type </span>EnumInput = <span class="self">Self</span>::Input;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Input</span><span class="op">&gt;</span> <span class="ident">Input</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Noneable</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_normal</span>())
+<span class="kw">impl</span>&lt;T: Input&gt; Input <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">type </span>Normal = Noneable&lt;&lt;T <span class="kw">as </span>Input&gt;::Normal&gt;;
+    <span class="kw">fn </span>to_normal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Noneable&lt;&lt;T <span class="kw">as </span>Input&gt;::Normal&gt; {
+        <span class="self">self</span>.clone().map(|a| a.to_normal())
     }
-    <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">normal</span>.<span class="ident">map</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::from_normal</span>)
+    <span class="kw">fn </span>from_normal(normal: &lt;<span class="self">Self </span><span class="kw">as </span>Input&gt;::Normal) -&gt; <span class="self">Self </span>{
+        normal.map(&lt;T <span class="kw">as </span>Input&gt;::from_normal)
     }
-    <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">find_missing</span>(),
-            <span class="kw">_</span> =&gt; <span class="ident">InputCheckResult::empty</span>(),
+    <span class="kw">fn </span>find_missing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; InputCheckResult {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; val.find_missing(),
+            <span class="kw">_ </span>=&gt; InputCheckResult::empty(),
         }
     }
-    <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="ident">item</span>) <span class="op">=</span> <span class="self">self</span> {
-            <span class="ident">item</span>.<span class="ident">insert_template_value</span>(<span class="ident">key</span>, <span class="ident">val</span>);
+    <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value) {
+        <span class="kw">if let </span>Noneable::NotNone(item) = <span class="self">self </span>{
+            item.insert_template_value(key, val);
         }
     }
-    <span class="kw">fn</span> <span class="ident">files_to_load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">files_to_load</span>(),
-            <span class="kw">_</span> =&gt; <span class="ident">Vec::new</span>(),
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; val.files_to_load(),
+            <span class="kw">_ </span>=&gt; Vec::new(),
         }
     }
-    <span class="kw">fn</span> <span class="ident">insert_loaded_files</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span><span class="op">&gt;</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">item</span>) <span class="op">=</span> <span class="self">self</span> {
-            <span class="ident">item</span>.<span class="ident">insert_loaded_files</span>(<span class="ident">files</span>);
+    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+        <span class="kw">if let </span>Noneable::NotNone(<span class="kw-2">ref mut </span>item) = <span class="self">self </span>{
+            item.insert_loaded_files(files);
         }
     }
-    <span class="kw">fn</span> <span class="ident">dependencies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="ident">std::path::PathBuf</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">dependencies</span>(),
-            <span class="kw">_</span> =&gt; <span class="ident">std::collections::HashSet::new</span>(),
+    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; val.dependencies(),
+            <span class="kw">_ </span>=&gt; std::collections::HashSet::new(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Overwrite</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Overwrite</span><span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">val</span>) <span class="op">=</span> <span class="self">self</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="ident">other_val</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">other</span> {
-                <span class="ident">val</span>.<span class="ident">overwrite</span>(<span class="ident">other_val</span>);
+<span class="kw">impl</span>&lt;T: Overwrite&lt;T&gt;&gt; Overwrite&lt;Noneable&lt;T&gt;&gt; <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Noneable&lt;T&gt;) {
+        <span class="kw">if let </span>Noneable::NotNone(<span class="kw-2">ref mut </span>val) = <span class="self">self </span>{
+            <span class="kw">if let </span>Noneable::NotNone(other_val) = <span class="kw-2">&amp;</span>other {
+                val.overwrite(other_val);
             }
-        } <span class="kw">else</span> {
-            <span class="comment">// Do nothing, none is a valid value</span>
+        } <span class="kw">else </span>{
+            <span class="comment">// Do nothing, none is a valid value
+        </span>}
+    }
+}
+
+<span class="kw">impl</span>&lt;T: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; val.check(locale),
+            <span class="kw">_ </span>=&gt; RumbasCheckResult::empty(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="ident">val</span>.<span class="ident">check</span>(<span class="ident">locale</span>),
-            <span class="kw">_</span> =&gt; <span class="ident">RumbasCheckResult::empty</span>(),
+<span class="kw">impl</span>&lt;S, T: ToNumbas&lt;S&gt; + RumbasCheck&gt; ToNumbas&lt;<span class="prelude-ty">Option</span>&lt;S&gt;&gt; <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;S&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; <span class="prelude-val">Some</span>(val.clone().to_numbas(locale)),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        }
+    }
+    <span class="kw">fn </span>to_numbas_with_name(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str, name: String) -&gt; <span class="prelude-ty">Option</span>&lt;S&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(val) =&gt; <span class="prelude-val">Some</span>(val.clone().to_numbas_with_name(locale, name)),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">T</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">RumbasCheck</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">val</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>)),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
-        }
-    }
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">val</span>.<span class="ident">clone</span>().<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="ident">name</span>)),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
-        }
+<span class="kw">impl</span>&lt;T, O: ToRumbas&lt;T&gt;&gt; ToRumbas&lt;Noneable&lt;T&gt;&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;O&gt; {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Noneable&lt;T&gt; {
+        <span class="self">self</span>.clone()
+            .map(|item| item.to_rumbas())
+            .map_or(Noneable::None, Noneable::NotNone)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">O</span>: <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="ident">item</span>.<span class="ident">to_rumbas</span>())
-            .<span class="ident">map_or</span>(<span class="ident">Noneable::None</span>, <span class="ident">Noneable::NotNone</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">JsonSchema</span><span class="op">&gt;</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="string">&quot;Noneable_{}&quot;</span>, <span class="ident">T::schema_name</span>())
+<span class="kw">impl</span>&lt;T: JsonSchema&gt; JsonSchema <span class="kw">for </span>Noneable&lt;T&gt; {
+    <span class="kw">fn </span>schema_name() -&gt; String {
+        <span class="macro">format!</span>(<span class="string">&quot;Noneable_{}&quot;</span>, T::schema_name())
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="ident">gen</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-        <span class="kw">let</span> <span class="ident">none_schema</span> <span class="op">=</span> <span class="ident">schemars::schema::SchemaObject</span> {
-            <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
-            <span class="ident">enum_values</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="macro">serde_json::json!</span>(<span class="string">&quot;none&quot;</span>)]),
-            ..<span class="ident">Default::default</span>()
+    <span class="kw">fn </span>json_schema(gen: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+        <span class="kw">let </span>none_schema = schemars::schema::SchemaObject {
+            instance_type: <span class="prelude-val">Some</span>(schemars::schema::InstanceType::String.into()),
+            enum_values: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="macro">serde_json::json!</span>(<span class="string">&quot;none&quot;</span>)]),
+            ..Default::default()
         };
-        <span class="ident">schemars::schema::SchemaObject</span> {
-            <span class="ident">subschemas</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">schemars::schema::SubschemaValidation</span> {
-                <span class="ident">any_of</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">none_schema</span>.<span class="ident">into</span>(), <span class="ident">gen</span>.<span class="ident">subschema_for</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()]),
-                ..<span class="ident">Default::default</span>()
+        schemars::schema::SchemaObject {
+            subschemas: <span class="prelude-val">Some</span>(Box::new(schemars::schema::SubschemaValidation {
+                any_of: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[none_schema.into(), gen.subschema_for::&lt;T&gt;()]),
+                ..Default::default()
             })),
-            ..<span class="ident">Default::default</span>()
+            ..Default::default()
         }
-        .<span class="ident">into</span>()
+        .into()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::clone::Clone</span><span class="op">&gt;</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="ident">T</span>) -&gt; <span class="ident">T</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident">other</span>,
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">nn</span>) =&gt; <span class="ident">nn</span>.<span class="ident">clone</span>(),
+<span class="kw">impl</span>&lt;T: std::clone::Clone&gt; Noneable&lt;T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>unwrap_or(<span class="kw-2">&amp;</span><span class="self">self</span>, other: T) -&gt; T {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::None =&gt; other,
+            Noneable::NotNone(nn) =&gt; nn.clone(),
         }
     }
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_or_else</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">T</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident">f</span>(),
-        }
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::default::Default</span><span class="op">&gt;</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_or_default</span>(<span class="self">self</span>) -&gt; <span class="ident">T</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident">T::default</span>(),
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>unwrap_or_else&lt;F: FnOnce() -&gt; T&gt;(<span class="self">self</span>, f: F) -&gt; T {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::NotNone(x) =&gt; x,
+            Noneable::None =&gt; f(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident">Noneable::None</span>,
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">x</span>) =&gt; <span class="ident">Noneable::NotNone</span>(<span class="ident">f</span>(<span class="ident">x</span>)),
+<span class="kw">impl</span>&lt;T: std::default::Default&gt; Noneable&lt;T&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>unwrap_or_default(<span class="self">self</span>) -&gt; T {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::None =&gt; T::default(),
+            Noneable::NotNone(x) =&gt; x,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">n</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">n</span> {
-            <span class="ident">Noneable::None</span> =&gt; <span class="ident"><span class="self">Self</span>::None</span>,
-            <span class="ident">Noneable::NotNone</span>(<span class="ident">n</span>) =&gt; <span class="ident"><span class="self">Self</span>::Some</span>(<span class="ident">n</span>),
+<span class="kw">impl</span>&lt;T&gt; Noneable&lt;T&gt; {
+    <span class="kw">pub fn </span>map&lt;U, F: FnOnce(T) -&gt; U&gt;(<span class="self">self</span>, f: F) -&gt; Noneable&lt;U&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Noneable::None =&gt; Noneable::None,
+            Noneable::NotNone(x) =&gt; Noneable::NotNone(f(x)),
         }
     }
 }
 
-<span class="kw">mod</span> <span class="ident">serde_noneable</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Noneable</span>;
-    <span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-    <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">serde::Serialize</span>,
+<span class="kw">impl</span>&lt;T&gt; std::convert::From&lt;Noneable&lt;T&gt;&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>from(n: Noneable&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>n {
+            Noneable::None =&gt; <span class="self">Self</span>::None,
+            Noneable::NotNone(n) =&gt; <span class="self">Self</span>::Some(n),
+        }
+    }
+}
+
+<span class="kw">mod </span>serde_noneable {
+    <span class="kw">use </span><span class="kw">super</span>::Noneable;
+    <span class="kw">use </span>serde::Deserialize;
+    <span class="kw">use </span>serde::Serialize;
+    <span class="kw">impl</span>&lt;T&gt; Serialize <span class="kw">for </span>Noneable&lt;T&gt;
+    <span class="kw">where
+        </span>T: serde::Serialize,
     {
-        <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span>
-        <span class="kw">where</span>
-            <span class="ident">S</span>: <span class="ident">serde::Serializer</span>,
+        <span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, s: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
+        <span class="kw">where
+            </span>S: serde::Serializer,
         {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Noneable::None</span> =&gt; <span class="ident">s</span>.<span class="ident">serialize_str</span>(<span class="string">&quot;none&quot;</span>),
-                <span class="ident">Noneable::NotNone</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">serialize</span>(<span class="ident">s</span>),
+            <span class="kw">match </span><span class="self">self </span>{
+                Noneable::None =&gt; s.serialize_str(<span class="string">&quot;none&quot;</span>),
+                Noneable::NotNone(v) =&gt; v.serialize(s),
             }
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">serde::Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, T&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>Noneable&lt;T&gt;
+    <span class="kw">where
+        </span>T: serde::Deserialize&lt;<span class="lifetime">&#39;de</span>&gt;,
     {
-        <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
-        <span class="kw">where</span>
-            <span class="ident">D</span>: <span class="ident">serde::Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="kw">fn </span>deserialize&lt;D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;Noneable&lt;T&gt;, D::Error&gt;
+        <span class="kw">where
+            </span>D: serde::Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
         {
-            <span class="kw">let</span> <span class="ident">deser_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NoneableDeserialize</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span>
-                <span class="ident">serde::Deserialize::deserialize</span>(<span class="ident">deserializer</span>);
-            <span class="ident">deser_res</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">res</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">res</span> {
-                <span class="ident">NoneableDeserialize::None</span>(<span class="ident">_v</span>) =&gt; <span class="ident">Noneable::None</span>,
-                <span class="ident">NoneableDeserialize::NotNone</span>(<span class="ident">v</span>) =&gt; <span class="ident">Noneable::NotNone</span>(<span class="ident">v</span>),
+            <span class="kw">let </span>deser_res: <span class="prelude-ty">Result</span>&lt;NoneableDeserialize&lt;T&gt;, <span class="kw">_</span>&gt; =
+                serde::Deserialize::deserialize(deserializer);
+            deser_res.map(|res| <span class="kw">match </span>res {
+                NoneableDeserialize::None(_v) =&gt; Noneable::None,
+                NoneableDeserialize::NotNone(v) =&gt; Noneable::NotNone(v),
             })
         }
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="kw">enum</span> <span class="ident">NoneEnum</span> {
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
-        <span class="prelude-val">None</span>,
+    <span class="attribute">#[derive(Debug, Clone, PartialEq, Deserialize)]
+    </span><span class="kw">enum </span>NoneEnum {
+        <span class="attribute">#[serde(rename = <span class="string">&quot;none&quot;</span>)]
+        </span><span class="prelude-val">None</span>,
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-    <span class="kw">enum</span> <span class="ident">NoneableDeserialize</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="prelude-val">None</span>(<span class="ident">NoneEnum</span>),
-        <span class="ident">NotNone</span>(<span class="ident">T</span>),
+    <span class="attribute">#[derive(Debug, Clone, PartialEq, Deserialize)]
+    #[serde(untagged)]
+    </span><span class="kw">enum </span>NoneableDeserialize&lt;T&gt; {
+        <span class="prelude-val">None</span>(NoneEnum),
+        NotNone(T),
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

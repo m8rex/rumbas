@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/to_numbas.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>to_numbas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/to_numbas.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>to_numbas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -91,98 +91,98 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rumbas_support::rumbas_check</span>::{<span class="ident">RumbasCheck</span>, <span class="ident">RumbasCheckResult</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>rumbas_support::rumbas_check::{RumbasCheck, RumbasCheckResult};
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">RumbasCheckResult</span><span class="op">&gt;</span>;
+<span class="kw">pub type </span>NumbasResult&lt;T&gt; = <span class="prelude-ty">Result</span>&lt;T, RumbasCheckResult&gt;;
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">NumbasType</span><span class="op">&gt;</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">RumbasCheck</span> {
-    <span class="doccomment">/// Method that safely converts a type to another (probably numbas) type</span>
-    <span class="kw">fn</span> <span class="ident">to_numbas_safe</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">NumbasResult</span><span class="op">&lt;</span><span class="ident">NumbasType</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">check</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">check</span>(<span class="ident">locale</span>);
-        <span class="kw">if</span> <span class="ident">check</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">check</span>)
+<span class="kw">pub trait </span>ToNumbas&lt;NumbasType&gt;: Clone + RumbasCheck {
+    <span class="doccomment">/// Method that safely converts a type to another (probably numbas) type
+    </span><span class="kw">fn </span>to_numbas_safe(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; NumbasResult&lt;NumbasType&gt; {
+        <span class="kw">let </span>check = <span class="self">self</span>.check(locale);
+        <span class="kw">if </span>check.is_empty() {
+            <span class="prelude-val">Ok</span>(<span class="self">self</span>.to_numbas(locale))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(check)
         }
     }
-    <span class="doccomment">/// Method that converts a type to another type</span>
-    <span class="doccomment">/// This method assumes that it is called by a function that is initially called from `to_numbas_safe`</span>
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">NumbasType</span>;
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">_name</span>: <span class="ident">String</span>) -&gt; <span class="ident">NumbasType</span> {
-        <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
+    <span class="doccomment">/// Method that converts a type to another type
+    /// This method assumes that it is called by a function that is initially called from `to_numbas_safe`
+    </span><span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; NumbasType;
+    <span class="kw">fn </span>to_numbas_with_name(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str, _name: String) -&gt; NumbasType {
+        <span class="self">self</span>.to_numbas(locale)
     }
 }
 
-<span class="macro">impl_to_numbas!</span>(<span class="ident">String</span>, <span class="ident">bool</span>, <span class="ident">f64</span>, <span class="ident">usize</span>);
-<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::jme::JMEString</span>);
-<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::jme::EmbracedJMEString</span>);
-<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::jme::ContentAreaString</span>);
-<span class="macro">impl_to_numbas!</span>(<span class="ident">numbas::support::primitive::Number</span>);
+<span class="macro">impl_to_numbas!</span>(String, bool, f64, usize);
+<span class="macro">impl_to_numbas!</span>(numbas::jme::JMEString);
+<span class="macro">impl_to_numbas!</span>(numbas::jme::EmbracedJMEString);
+<span class="macro">impl_to_numbas!</span>(numbas::jme::ContentAreaString);
+<span class="macro">impl_to_numbas!</span>(numbas::support::primitive::Number);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">O</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>() {
-            <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">item</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>));
+<span class="kw">impl</span>&lt;S, O: ToNumbas&lt;S&gt;&gt; ToNumbas&lt;Vec&lt;S&gt;&gt; <span class="kw">for </span>Vec&lt;O&gt; {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;S&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+        <span class="kw">for </span>item <span class="kw">in </span><span class="self">self</span>.iter() {
+            v.push(item.to_numbas(locale));
         }
-        <span class="ident">v</span>
+        v
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">std::cmp::Eq</span>, <span class="ident">S</span>, <span class="ident">O</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">O</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">O</span><span class="op">&gt;</span>: <span class="ident">RumbasCheck</span>,
+<span class="kw">impl</span>&lt;K: Clone + std::hash::Hash + std::cmp::Eq, S, O: ToNumbas&lt;S&gt;&gt;
+    ToNumbas&lt;std::collections::HashMap&lt;K, S&gt;&gt; <span class="kw">for </span>std::collections::HashMap&lt;K, O&gt;
+<span class="kw">where
+    </span>std::collections::HashMap&lt;K, O&gt;: RumbasCheck,
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">to_owned</span>(), <span class="ident">v</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)))
-            .<span class="ident">collect</span>()
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; std::collections::HashMap&lt;K, S&gt; {
+        <span class="self">self</span>.iter()
+            .map(|(k, v)| (k.to_owned(), v.to_numbas(locale)))
+            .collect()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AA</span>, <span class="ident">A</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">AA</span><span class="op">&gt;</span>, <span class="ident">BB</span>, <span class="ident">B</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">BB</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span>(<span class="ident">AA</span>, <span class="ident">BB</span>)<span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">B</span>)
-<span class="kw">where</span>
-    (<span class="ident">A</span>, <span class="ident">B</span>): <span class="ident">RumbasCheck</span>,
+<span class="kw">impl</span>&lt;AA, A: ToNumbas&lt;AA&gt;, BB, B: ToNumbas&lt;BB&gt;&gt; ToNumbas&lt;(AA, BB)&gt; <span class="kw">for </span>(A, B)
+<span class="kw">where
+    </span>(A, B): RumbasCheck,
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; (<span class="ident">AA</span>, <span class="ident">BB</span>) {
-        (<span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; (AA, BB) {
+        (<span class="self">self</span>.<span class="number">0</span>.to_numbas(locale), <span class="self">self</span>.<span class="number">1</span>.to_numbas(locale))
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AA</span>, <span class="ident">A</span>: <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">AA</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span>[<span class="ident">AA</span>; <span class="number">2</span>]<span class="op">&gt;</span> <span class="kw">for</span> [<span class="ident">A</span>; <span class="number">2</span>]
-<span class="kw">where</span>
-    [<span class="ident">A</span>; <span class="number">2</span>]: <span class="ident">RumbasCheck</span>,
+<span class="kw">impl</span>&lt;AA, A: ToNumbas&lt;AA&gt;&gt; ToNumbas&lt;[AA; <span class="number">2</span>]&gt; <span class="kw">for </span>[A; <span class="number">2</span>]
+<span class="kw">where
+    </span>[A; <span class="number">2</span>]: RumbasCheck,
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; [<span class="ident">AA</span>; <span class="number">2</span>] {
-        [<span class="self">self</span>[<span class="number">0</span>].<span class="ident">to_numbas</span>(<span class="ident">locale</span>), <span class="self">self</span>[<span class="number">1</span>].<span class="ident">to_numbas</span>(<span class="ident">locale</span>)]
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; [AA; <span class="number">2</span>] {
+        [<span class="self">self</span>[<span class="number">0</span>].to_numbas(locale), <span class="self">self</span>[<span class="number">1</span>].to_numbas(locale)]
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeFloat</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">f64</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::support::primitive::SafeFloat</span> {
-        (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>()
+<span class="kw">impl </span>ToNumbas&lt;numbas::support::primitive::SafeFloat&gt; <span class="kw">for </span>f64 {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::support::primitive::SafeFloat {
+        (<span class="kw-2">*</span><span class="self">self</span>).into()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::support::primitive::SafeNatural</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">usize</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::support::primitive::SafeNatural</span> {
-        (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">into</span>()
+<span class="kw">impl </span>ToNumbas&lt;numbas::support::primitive::SafeNatural&gt; <span class="kw">for </span>usize {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::support::primitive::SafeNatural {
+        (<span class="kw-2">*</span><span class="self">self</span>).into()
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">impl_to_numbas</span> {
+<span class="macro">macro_rules! </span>impl_to_numbas {
     ($(<span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>), <span class="kw-2">*</span>) =&gt; {
         $(
-        <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="macro-nonterminal">self</span>.<span class="ident">clone</span>()
+        <span class="kw">impl </span>ToNumbas&lt;<span class="macro-nonterminal">$</span><span class="kw">type</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="macro-nonterminal">self</span>.clone()
             }
         }
-        )<span class="op">*</span>
+        )*
     };
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">impl_to_numbas</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>impl_to_numbas;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

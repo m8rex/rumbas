@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/jme.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>jme.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/part/jme.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>jme.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../numbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -183,190 +183,190 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::EmbracedJMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::answer_simplification</span>::{<span class="ident">AnswerSimplificationRule</span>, <span class="ident">AnswerSimplificationType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::QuestionPartSharedData</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive</span>::{<span class="ident">SafeFloat</span>, <span class="ident">SafeNatural</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::serde_functions</span>::{
-    <span class="ident">answer_simplification_deserialize_string</span>, <span class="ident">answer_simplification_serialize_string</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::EmbracedJMEString;
+<span class="kw">use </span><span class="kw">crate</span>::jme::JMEString;
+<span class="kw">use </span><span class="kw">crate</span>::question::answer_simplification::{AnswerSimplificationRule, AnswerSimplificationType};
+<span class="kw">use </span><span class="kw">crate</span>::question::part::QuestionPartSharedData;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::{SafeFloat, SafeNatural};
+<span class="kw">use </span><span class="kw">crate</span>::support::serde_functions::{
+    answer_simplification_deserialize_string, answer_simplification_serialize_string,
 };
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>serde_with::skip_serializing_none;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_answer_simplification</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationType</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationRule</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[
-        <span class="ident">AnswerSimplificationRule::Basic</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelUnitFactors</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelUnitPowers</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelUnitDenominators</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelZeroFactors</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::OmitZeroTerms</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelZeroFactors</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::OmitZeroTerms</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelZeroPowers</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::NoLeadingMinus</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectNumbers</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::Fractions</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelPowersWithBaseZero</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::ConstantsFirst</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectSqrtProducts</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectSqrtDivisions</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CancelSqrtSquares</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::Trigonometric</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::EvaluatePowersOfNumbers</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectTerms</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectPowersOfCommonFactors</span>(<span class="bool-val">true</span>),
-        <span class="ident">AnswerSimplificationRule::CollectLikeFractions</span>(<span class="bool-val">true</span>),
+<span class="kw">pub fn </span>default_answer_simplification() -&gt; Vec&lt;AnswerSimplificationType&gt; {
+    <span class="kw">let </span>v: Vec&lt;AnswerSimplificationRule&gt; = <span class="macro">vec!</span>[
+        AnswerSimplificationRule::Basic(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelUnitFactors(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelUnitPowers(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelUnitDenominators(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelZeroFactors(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::OmitZeroTerms(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelZeroFactors(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::OmitZeroTerms(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelZeroPowers(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::NoLeadingMinus(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectNumbers(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::Fractions(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelPowersWithBaseZero(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::ConstantsFirst(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectSqrtProducts(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectSqrtDivisions(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CancelSqrtSquares(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::Trigonometric(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::EvaluatePowersOfNumbers(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectTerms(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectPowersOfCommonFactors(<span class="bool-val">true</span>),
+        AnswerSimplificationRule::CollectLikeFractions(<span class="bool-val">true</span>),
     ];
-    <span class="ident">v</span>.<span class="ident">into_iter</span>()
-        .<span class="ident">map</span>(<span class="ident">AnswerSimplificationType::Rule</span>)
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+    v.into_iter()
+        .map(AnswerSimplificationType::Rule)
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartJME</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">part_data</span>: <span class="ident">QuestionPartSharedData</span>,
-    <span class="kw">pub</span> <span class="ident">answer</span>: <span class="ident">EmbracedJMEString</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;answerSimplification&quot;</span>,
-        <span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;default_answer_simplification&quot;</span>,
-        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;answer_simplification_deserialize_string&quot;</span>,
-        <span class="ident">serialize_with</span> <span class="op">=</span> <span class="string">&quot;answer_simplification_serialize_string&quot;</span>
-    )]</span>
-    <span class="kw">pub</span> <span class="ident">answer_simplification</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationType</span><span class="op">&gt;</span>, <span class="comment">//comma separated list</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showPreview&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;showpreview&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">show_preview</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;checkingType&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;checkingtype&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">checking_type</span>: <span class="ident">JMECheckingType</span>,
-    <span class="doccomment">/// If the comparison fails this many times or more, the student’s answer is marked as wrong.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;failureRate&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::float_one&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">failure_rate</span>: <span class="ident">f64</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;vsetRange&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;vsetrange&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;default_vset_range&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">vset_range</span>: [<span class="ident">SafeFloat</span>; <span class="number">2</span>], <span class="comment">// TODO: seperate (flattened) struct for vset items &amp; checking items etc?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;vsetRangePoints&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;vsetrangepoints&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;default_vset_points&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">vset_range_points</span>: <span class="ident">SafeNatural</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;checkVariableNames&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;checkvariablenames&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">check_variable_names</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;singleLetterVariables&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">single_letter_variables</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowUnknownFunctions&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;crate::util::bool_true&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow_unknown_functions</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;implicitFunctionComposition&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">implicit_function_composition</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxlength&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">max_length</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span>, <span class="comment">// TODO: all restrictions to one flattended struct?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;minlength&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">min_length</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JMELengthRestriction</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;musthave&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">must_have</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;notallowed&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">may_not_have</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JMEStringRestriction</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;mustmatchpattern&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">must_match_pattern</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">JMEPatternRestriction</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;valuegenerators&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">value_generators</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEValueGenerator</span><span class="op">&gt;</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>QuestionPartJME {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>part_data: QuestionPartSharedData,
+    <span class="kw">pub </span>answer: EmbracedJMEString,
+    <span class="attribute">#[serde(
+        rename = <span class="string">&quot;answerSimplification&quot;</span>,
+        default = <span class="string">&quot;default_answer_simplification&quot;</span>,
+        deserialize_with = <span class="string">&quot;answer_simplification_deserialize_string&quot;</span>,
+        serialize_with = <span class="string">&quot;answer_simplification_serialize_string&quot;
+    </span>)]
+    </span><span class="kw">pub </span>answer_simplification: Vec&lt;AnswerSimplificationType&gt;, <span class="comment">//comma separated list
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;showPreview&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;showpreview&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="kw">pub </span>show_preview: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;checkingType&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;checkingtype&quot;</span>)]
+    #[serde(flatten, default)]
+    </span><span class="kw">pub </span>checking_type: JMECheckingType,
+    <span class="doccomment">/// If the comparison fails this many times or more, the student’s answer is marked as wrong.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;failureRate&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::float_one&quot;</span>)]
+    </span><span class="kw">pub </span>failure_rate: f64,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;vsetRange&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;vsetrange&quot;</span>)]
+    #[serde(default = <span class="string">&quot;default_vset_range&quot;</span>)]
+    </span><span class="kw">pub </span>vset_range: [SafeFloat; <span class="number">2</span>], <span class="comment">// TODO: seperate (flattened) struct for vset items &amp; checking items etc?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;vsetRangePoints&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;vsetrangepoints&quot;</span>)]
+    #[serde(default = <span class="string">&quot;default_vset_points&quot;</span>)]
+    </span><span class="kw">pub </span>vset_range_points: SafeNatural,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;checkVariableNames&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;checkvariablenames&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>check_variable_names: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;singleLetterVariables&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>single_letter_variables: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;allowUnknownFunctions&quot;</span>)]
+    #[serde(default = <span class="string">&quot;crate::util::bool_true&quot;</span>)]
+    </span><span class="kw">pub </span>allow_unknown_functions: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;implicitFunctionComposition&quot;</span>)]
+    #[serde(default)]
+    </span><span class="kw">pub </span>implicit_function_composition: bool,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;maxlength&quot;</span>)]
+    </span><span class="kw">pub </span>max_length: <span class="prelude-ty">Option</span>&lt;JMELengthRestriction&gt;, <span class="comment">// TODO: all restrictions to one flattended struct?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;minlength&quot;</span>)]
+    </span><span class="kw">pub </span>min_length: <span class="prelude-ty">Option</span>&lt;JMELengthRestriction&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;musthave&quot;</span>)]
+    </span><span class="kw">pub </span>must_have: <span class="prelude-ty">Option</span>&lt;JMEStringRestriction&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;notallowed&quot;</span>)]
+    </span><span class="kw">pub </span>may_not_have: <span class="prelude-ty">Option</span>&lt;JMEStringRestriction&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;mustmatchpattern&quot;</span>)]
+    </span><span class="kw">pub </span>must_match_pattern: <span class="prelude-ty">Option</span>&lt;JMEPatternRestriction&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;valuegenerators&quot;</span>, default)]
+    </span><span class="kw">pub </span>value_generators: Vec&lt;JMEValueGenerator&gt;,
 }
 
-<span class="kw">fn</span> <span class="ident">default_vset_range</span>() -&gt; [<span class="ident">SafeFloat</span>; <span class="number">2</span>] {
-    [<span class="number">0.0</span>.<span class="ident">into</span>(), <span class="number">1.0</span>.<span class="ident">into</span>()]
+<span class="kw">fn </span>default_vset_range() -&gt; [SafeFloat; <span class="number">2</span>] {
+    [<span class="number">0.0</span>.into(), <span class="number">1.0</span>.into()]
 }
 
-<span class="kw">fn</span> <span class="ident">default_vset_points</span>() -&gt; <span class="ident">SafeNatural</span> {
-    <span class="number">5</span>.<span class="ident">into</span>()
+<span class="kw">fn </span>default_vset_points() -&gt; SafeNatural {
+    <span class="number">5</span>.into()
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;checkingAccuracy&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;checkingaccuracy&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">checking_accuracy</span>: <span class="ident">T</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>JMECheckingTypeData&lt;T&gt; {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;checkingAccuracy&quot;</span>)]
+    #[serde(alias = <span class="string">&quot;checkingaccuracy&quot;</span>)]
+    </span><span class="kw">pub </span>checking_accuracy: T,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;checkingType&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">JMECheckingType</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;reldiff&quot;</span>)]</span>
-    <span class="ident">RelativeDifference</span>(<span class="ident">JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">SafeFloat</span><span class="op">&gt;</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;absdiff&quot;</span>)]</span>
-    <span class="ident">AbsoluteDifference</span>(<span class="ident">JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">SafeFloat</span><span class="op">&gt;</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;dp&quot;</span>)]</span>
-    <span class="ident">DecimalPlaces</span>(<span class="ident">JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;sigfig&quot;</span>)]</span>
-    <span class="ident">SignificantFigures</span>(<span class="ident">JMECheckingTypeData</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(tag = <span class="string">&quot;checkingType&quot;</span>)]
+</span><span class="kw">pub enum </span>JMECheckingType {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;reldiff&quot;</span>)]
+    </span>RelativeDifference(JMECheckingTypeData&lt;SafeFloat&gt;),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;absdiff&quot;</span>)]
+    </span>AbsoluteDifference(JMECheckingTypeData&lt;SafeFloat&gt;),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;dp&quot;</span>)]
+    </span>DecimalPlaces(JMECheckingTypeData&lt;usize&gt;),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;sigfig&quot;</span>)]
+    </span>SignificantFigures(JMECheckingTypeData&lt;usize&gt;),
 }
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">JMECheckingType</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::RelativeDifference</span>(<span class="ident">JMECheckingTypeData</span> {
-            <span class="ident">checking_accuracy</span>: <span class="number">0.0</span>.<span class="ident">into</span>(),
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>JMECheckingType {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::RelativeDifference(JMECheckingTypeData {
+            checking_accuracy: <span class="number">0.0</span>.into(),
         })
     }
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMERestriction</span> {
-    <span class="comment">//pub name: String,</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;partialCredit&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="ident">SafeFloat</span>, <span class="comment">//TODO: maybe SafeNatural?</span>
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">String</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>JMERestriction {
+    <span class="comment">//pub name: String,
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;partialCredit&quot;</span>)]
+    </span><span class="kw">pub </span>partial_credit: SafeFloat, <span class="comment">//TODO: maybe SafeNatural?
+    </span><span class="kw">pub </span>message: String,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMELengthRestriction</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">restriction</span>: <span class="ident">JMERestriction</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">length</span>: <span class="ident">SafeNatural</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>JMELengthRestriction {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>restriction: JMERestriction,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>length: SafeNatural,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEStringRestriction</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">restriction</span>: <span class="ident">JMERestriction</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;showStrings&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">show_strings</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">strings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>JMEStringRestriction {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>restriction: JMERestriction,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;showStrings&quot;</span>)]
+    </span><span class="kw">pub </span>show_strings: bool,
+    <span class="kw">pub </span>strings: Vec&lt;String&gt;,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEPatternRestriction</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;partialCredit&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">partial_credit</span>: <span class="ident">SafeFloat</span>, <span class="comment">//TODO: maybe SafeNatural?</span>
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">pattern</span>: <span class="ident">String</span>, <span class="comment">//TODO type?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;nameToCompare&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">name_to_compare</span>: <span class="ident">String</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>JMEPatternRestriction {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;partialCredit&quot;</span>)]
+    </span><span class="kw">pub </span>partial_credit: SafeFloat, <span class="comment">//TODO: maybe SafeNatural?
+    </span><span class="kw">pub </span>message: String,
+    <span class="kw">pub </span>pattern: String, <span class="comment">//TODO type?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;nameToCompare&quot;</span>)]
+    </span><span class="kw">pub </span>name_to_compare: String,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMEValueGenerator</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">JMEString</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>JMEValueGenerator {
+    <span class="kw">pub </span>name: String,
+    <span class="kw">pub </span>value: JMEString,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

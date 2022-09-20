@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/primitive.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>primitive.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/primitive.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>primitive.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -235,242 +235,242 @@
 <span id="235">235</span>
 <span id="236">236</span>
 <span id="237">237</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
-<span class="comment">//TODO: remove Exam from front of all types?</span>
-<span class="comment">//TODO: check what is optional etc</span>
-<span class="comment">//TODO: advicethreshold?</span>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::JMEString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::convert::TryInto;
+<span class="comment">//TODO: remove Exam from front of all types?
+//TODO: check what is optional etc
+//TODO: advicethreshold?
 
-<span class="attribute">#[<span class="ident">derive</span>(
-    <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">Default</span>,
-)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;Primitive&quot;</span>)]</span>
-<span class="doccomment">/// A natural number (unsigned int) that can be parsed from primitive</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeNatural</span>(<span class="kw">pub</span> <span class="ident">usize</span>);
+</span><span class="attribute">#[derive(
+    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, Eq, Default,
+)]
+#[serde(try_from = <span class="string">&quot;Primitive&quot;</span>)]
+</span><span class="doccomment">/// A natural number (unsigned int) that can be parsed from primitive
+</span><span class="kw">pub struct </span>SafeNatural(<span class="kw">pub </span>usize);
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">Primitive</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeNatural</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">p</span>: <span class="ident">Primitive</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">p</span> {
-            <span class="ident">Primitive::Natural</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">SafeNatural</span>(<span class="ident">n</span>)),
-            <span class="ident">Primitive::Float</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">n</span>.<span class="ident">fract</span>() <span class="op">==</span> <span class="number">0.0</span> <span class="op">&amp;&amp;</span> <span class="ident">n</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0.0</span> {
-                    <span class="comment">// if the float is whole</span>
-                    <span class="prelude-val">Ok</span>(<span class="ident">SafeNatural</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">usize</span>))
-                } <span class="kw">else</span> {
+<span class="kw">impl </span>std::convert::TryFrom&lt;Primitive&gt; <span class="kw">for </span>SafeNatural {
+    <span class="kw">type </span>Error = String;
+    <span class="kw">fn </span>try_from(p: Primitive) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>p {
+            Primitive::Natural(n) =&gt; <span class="prelude-val">Ok</span>(SafeNatural(n)),
+            Primitive::Float(n) =&gt; {
+                <span class="kw">if </span>n.fract() == <span class="number">0.0 </span>&amp;&amp; n &gt;= <span class="number">0.0 </span>{
+                    <span class="comment">// if the float is whole
+                    </span><span class="prelude-val">Ok</span>(SafeNatural(n <span class="kw">as </span>usize))
+                } <span class="kw">else </span>{
                     <span class="prelude-val">Err</span>(<span class="macro">format!</span>(
                         <span class="string">&quot;Please use an unsigned integer instead of the float {}.&quot;</span>,
-                        <span class="ident">n</span>
+                        n
                     ))
                 }
             }
-            <span class="ident">Primitive::String</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>
-                .<span class="ident">parse</span>()
-                .<span class="ident">map</span>(<span class="ident">SafeNatural</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Failed parsing string: &#39;{}&#39; as usize with error: {}&quot;</span>, <span class="ident">n</span>, <span class="ident">e</span>)),
+            Primitive::String(n) =&gt; n
+                .parse()
+                .map(SafeNatural)
+                .map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Failed parsing string: &#39;{}&#39; as usize with error: {}&quot;</span>, n, e)),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeNatural</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">u</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">SafeNatural</span>(<span class="ident">u</span>)
+<span class="kw">impl </span>std::convert::From&lt;usize&gt; <span class="kw">for </span>SafeNatural {
+    <span class="kw">fn </span>from(u: usize) -&gt; <span class="self">Self </span>{
+        SafeNatural(u)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Copy</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;Primitive&quot;</span>)]</span>
-<span class="doccomment">/// A decimal number (float) that can be parsed from primitive</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeFloat</span>(<span class="kw">pub</span> <span class="ident">f64</span>);
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[serde(try_from = <span class="string">&quot;Primitive&quot;</span>)]
+</span><span class="doccomment">/// A decimal number (float) that can be parsed from primitive
+</span><span class="kw">pub struct </span>SafeFloat(<span class="kw">pub </span>f64);
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">SafeFloat</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">SafeFloat</span>(<span class="number">0.0</span>)
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>SafeFloat {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        SafeFloat(<span class="number">0.0</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">Primitive</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeFloat</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">p</span>: <span class="ident">Primitive</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">p</span> {
-            <span class="ident">Primitive::Natural</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">SafeFloat</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">f64</span>)),
-            <span class="ident">Primitive::Float</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">SafeFloat</span>(<span class="ident">n</span>)),
-            <span class="ident">Primitive::String</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">parse</span>().<span class="ident">map</span>(<span class="ident">SafeFloat</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()),
+<span class="kw">impl </span>std::convert::TryFrom&lt;Primitive&gt; <span class="kw">for </span>SafeFloat {
+    <span class="kw">type </span>Error = String;
+    <span class="kw">fn </span>try_from(p: Primitive) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>p {
+            Primitive::Natural(n) =&gt; <span class="prelude-val">Ok</span>(SafeFloat(n <span class="kw">as </span>f64)),
+            Primitive::Float(n) =&gt; <span class="prelude-val">Ok</span>(SafeFloat(n)),
+            Primitive::String(n) =&gt; n.parse().map(SafeFloat).map_err(|e| e.to_string()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeFloat</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">f64</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">SafeFloat</span>(<span class="ident">v</span>)
+<span class="kw">impl </span>std::convert::From&lt;f64&gt; <span class="kw">for </span>SafeFloat {
+    <span class="kw">fn </span>from(v: f64) -&gt; <span class="self">Self </span>{
+        SafeFloat(v)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;BooledPrimitive&quot;</span>)]</span>
-<span class="doccomment">/// A boolean that can be parsed from (booled) primitive</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SafeBool</span>(<span class="kw">pub</span> <span class="ident">bool</span>);
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(try_from = <span class="string">&quot;BooledPrimitive&quot;</span>)]
+</span><span class="doccomment">/// A boolean that can be parsed from (booled) primitive
+</span><span class="kw">pub struct </span>SafeBool(<span class="kw">pub </span>bool);
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">BooledPrimitive</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeBool</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">p</span>: <span class="ident">BooledPrimitive</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">p</span> {
-            <span class="ident">BooledPrimitive::Natural</span>(<span class="ident">_n</span>) =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Please use a boolean value.&quot;</span>.<span class="ident">to_string</span>()),
-            <span class="ident">BooledPrimitive::Float</span>(<span class="ident">_n</span>) =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Please use a boolean value.&quot;</span>.<span class="ident">to_string</span>()),
-            <span class="ident">BooledPrimitive::String</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">parse</span>().<span class="ident">map</span>(<span class="ident">SafeBool</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()),
-            <span class="ident">BooledPrimitive::Bool</span>(<span class="ident">b</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">SafeBool</span>(<span class="ident">b</span>)),
+<span class="kw">impl </span>std::convert::TryFrom&lt;BooledPrimitive&gt; <span class="kw">for </span>SafeBool {
+    <span class="kw">type </span>Error = String;
+    <span class="kw">fn </span>try_from(p: BooledPrimitive) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>p {
+            BooledPrimitive::Natural(_n) =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Please use a boolean value.&quot;</span>.to_string()),
+            BooledPrimitive::Float(_n) =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Please use a boolean value.&quot;</span>.to_string()),
+            BooledPrimitive::String(n) =&gt; n.parse().map(SafeBool).map_err(|e| e.to_string()),
+            BooledPrimitive::Bool(b) =&gt; <span class="prelude-val">Ok</span>(SafeBool(b)),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SafeBool</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">b</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">SafeBool</span>(<span class="ident">b</span>)
+<span class="kw">impl </span>std::convert::From&lt;bool&gt; <span class="kw">for </span>SafeBool {
+    <span class="kw">fn </span>from(b: bool) -&gt; <span class="self">Self </span>{
+        SafeBool(b)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">SafeBool</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>)
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>SafeBool {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">Variable</span>(<span class="ident">JMEString</span>),
-    <span class="ident">Value</span>(<span class="ident">T</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>VariableValued&lt;T&gt; {
+    Variable(JMEString),
+    Value(T),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::default::Default</span><span class="op">&gt;</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">VariableValued::Value</span>(<span class="ident">T::default</span>())
+<span class="kw">impl</span>&lt;T: std::default::Default&gt; std::default::Default <span class="kw">for </span>VariableValued&lt;T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        VariableValued::Value(T::default())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableValued::Variable</span>(<span class="ident">x</span>) =&gt; <span class="ident">VariableValued::Variable</span>(<span class="ident">x</span>),
-            <span class="ident">VariableValued::Value</span>(<span class="ident">x</span>) =&gt; <span class="ident">VariableValued::Value</span>(<span class="ident">f</span>(<span class="ident">x</span>)),
+<span class="kw">impl</span>&lt;T&gt; VariableValued&lt;T&gt; {
+    <span class="kw">pub fn </span>map&lt;U, F: FnOnce(T) -&gt; U&gt;(<span class="self">self</span>, f: F) -&gt; VariableValued&lt;U&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            VariableValued::Variable(x) =&gt; VariableValued::Variable(x),
+            VariableValued::Value(x) =&gt; VariableValued::Value(f(x)),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Primitive</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">v</span> {
-            <span class="ident">VariableValued::Value</span>(<span class="ident">f</span>) =&gt; <span class="ident">Primitive::Float</span>(<span class="ident">f</span>),
-            <span class="ident">VariableValued::Variable</span>(<span class="ident">jme_s</span>) =&gt; <span class="ident">Primitive::String</span>(<span class="ident">jme_s</span>.<span class="ident">to_string</span>()),
+<span class="kw">impl </span>std::convert::From&lt;VariableValued&lt;f64&gt;&gt; <span class="kw">for </span>Primitive {
+    <span class="kw">fn </span>from(v: VariableValued&lt;f64&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>v {
+            VariableValued::Value(f) =&gt; Primitive::Float(f),
+            VariableValued::Variable(jme_s) =&gt; Primitive::String(jme_s.to_string()),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Primitive</span> {
-    <span class="ident">Natural</span>(<span class="ident">usize</span>),
-    <span class="ident">Float</span>(<span class="ident">f64</span>),
-    <span class="ident">String</span>(<span class="ident">String</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+</span><span class="kw">enum </span>Primitive {
+    Natural(usize),
+    Float(f64),
+    String(String),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">enum</span> <span class="ident">BooledPrimitive</span> {
-    <span class="ident">String</span>(<span class="ident">String</span>),
-    <span class="ident">Natural</span>(<span class="ident">usize</span>),
-    <span class="ident">Float</span>(<span class="ident">f64</span>),
-    <span class="ident">Bool</span>(<span class="ident">bool</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(untagged)]
+</span><span class="kw">enum </span>BooledPrimitive {
+    String(String),
+    Natural(usize),
+    Float(f64),
+    Bool(bool),
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Primitive</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">u</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Primitive::Natural</span>(<span class="ident">u</span>)
+<span class="kw">impl </span>std::convert::From&lt;usize&gt; <span class="kw">for </span>Primitive {
+    <span class="kw">fn </span>from(u: usize) -&gt; <span class="self">Self </span>{
+        Primitive::Natural(u)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Primitive</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">f64</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Primitive::Float</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>std::convert::From&lt;f64&gt; <span class="kw">for </span>Primitive {
+    <span class="kw">fn </span>from(f: f64) -&gt; <span class="self">Self </span>{
+        Primitive::Float(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Primitive</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Primitive::String</span>(<span class="ident">s</span>)
+<span class="kw">impl </span>std::convert::From&lt;String&gt; <span class="kw">for </span>Primitive {
+    <span class="kw">fn </span>from(s: String) -&gt; <span class="self">Self </span>{
+        Primitive::String(s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::fmt::Display</span> <span class="kw">for</span> <span class="ident">Primitive</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Primitive::String</span>(<span class="ident">s</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>),
-            <span class="ident">Primitive::Natural</span>(<span class="ident">n</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">n</span>),
-            <span class="ident">Primitive::Float</span>(<span class="ident">fl</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">fl</span>),
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>Primitive {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter) -&gt; std::fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            Primitive::String(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, s),
+            Primitive::Natural(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, n),
+            Primitive::Float(fl) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, fl),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;Primitive&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Number</span> {
-    <span class="ident">Integer</span>(<span class="ident">isize</span>),
-    <span class="ident">Float</span>(<span class="ident">f64</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(try_from = <span class="string">&quot;Primitive&quot;</span>)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>Number {
+    Integer(isize),
+    Float(f64),
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">u</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">u</span> <span class="kw">as</span> <span class="ident">isize</span>)
+<span class="kw">impl </span>std::convert::From&lt;usize&gt; <span class="kw">for </span>Number {
+    <span class="kw">fn </span>from(u: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Integer(u <span class="kw">as </span>isize)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">i</span>: <span class="ident">isize</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">i</span>)
+<span class="kw">impl </span>std::convert::From&lt;isize&gt; <span class="kw">for </span>Number {
+    <span class="kw">fn </span>from(i: isize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Integer(i)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">f64</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Float</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>std::convert::From&lt;f64&gt; <span class="kw">for </span>Number {
+    <span class="kw">fn </span>from(f: f64) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Float(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">float</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">parse</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">float</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Number::Float</span>(<span class="ident">f</span>));
+<span class="kw">impl </span>std::convert::TryFrom&lt;String&gt; <span class="kw">for </span>Number {
+    <span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+    <span class="kw">fn </span>try_from(value: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">let </span>float: <span class="prelude-ty">Result</span>&lt;f64, <span class="kw">_</span>&gt; = value.parse();
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(f) = float {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(Number::Float(f));
         }
-        <span class="kw">let</span> <span class="ident">integer</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">isize</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">parse</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">integer</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Number::Integer</span>(<span class="ident">i</span>));
+        <span class="kw">let </span>integer: <span class="prelude-ty">Result</span>&lt;isize, <span class="kw">_</span>&gt; = value.parse();
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(i) = integer {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(Number::Integer(i));
         }
         <span class="prelude-val">Err</span>(<span class="string">&quot;String value can&#39;t be parsed as a Number&quot;</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">Primitive</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">Primitive</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="ident">Primitive::Natural</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">n</span>.<span class="ident">into</span>()),
-            <span class="ident">Primitive::Float</span>(<span class="ident">f</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">f</span>.<span class="ident">into</span>()),
-            <span class="ident">Primitive::String</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">try_into</span>(),
+<span class="kw">impl </span>std::convert::TryFrom&lt;Primitive&gt; <span class="kw">for </span>Number {
+    <span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+    <span class="kw">fn </span>try_from(value: Primitive) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>value {
+            Primitive::Natural(n) =&gt; <span class="prelude-val">Ok</span>(n.into()),
+            Primitive::Float(f) =&gt; <span class="prelude-val">Ok</span>(f.into()),
+            Primitive::String(s) =&gt; s.try_into(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">Number</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Number::Integer</span>(<span class="number">0</span>)
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>Number {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Number::Integer(<span class="number">0</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

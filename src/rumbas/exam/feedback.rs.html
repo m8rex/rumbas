@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/feedback.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>feedback.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/feedback.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>feedback.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -121,128 +121,128 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FeedbackInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Feedback</span> {
-    <span class="kw">pub</span> <span class="ident">percentage_needed_to_pass</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="comment">// if &quot;none&quot; (or 0) -&gt; no percentage shown in frontpage, otherwise it is shown</span>
-    <span class="kw">pub</span> <span class="ident">show_name_of_student</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether current marks are shown during exam or not (show_actual_mark in numbas)</span>
-    <span class="kw">pub</span> <span class="ident">show_current_marks</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)</span>
-    <span class="kw">pub</span> <span class="ident">show_maximum_marks</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether answer feedback is shown (right or wrong etc)</span>
-    <span class="kw">pub</span> <span class="ident">show_answer_state</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the &#39;reveal answer&#39; button is present</span>
-    <span class="kw">pub</span> <span class="ident">allow_reveal_answer</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">review</span>: <span class="ident">Review</span>, <span class="comment">// If none, everything is true???</span>
-    <span class="kw">pub</span> <span class="ident">advice</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">intro</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">feedback_messages</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FeedbackMessage</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FeedbackInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>Feedback {
+    <span class="kw">pub </span>percentage_needed_to_pass: Noneable&lt;f64&gt;, <span class="comment">// if &quot;none&quot; (or 0) -&gt; no percentage shown in frontpage, otherwise it is shown
+    </span><span class="kw">pub </span>show_name_of_student: bool,
+    <span class="doccomment">/// Whether current marks are shown during exam or not (show_actual_mark in numbas)
+    </span><span class="kw">pub </span>show_current_marks: bool,
+    <span class="doccomment">/// Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)
+    </span><span class="kw">pub </span>show_maximum_marks: bool,
+    <span class="doccomment">/// Whether answer feedback is shown (right or wrong etc)
+    </span><span class="kw">pub </span>show_answer_state: bool,
+    <span class="doccomment">/// Whether the &#39;reveal answer&#39; button is present
+    </span><span class="kw">pub </span>allow_reveal_answer: bool,
+    <span class="kw">pub </span>review: Review, <span class="comment">// If none, everything is true???
+    </span><span class="kw">pub </span>advice: TranslatableString,
+    <span class="kw">pub </span>intro: TranslatableString,
+    <span class="kw">pub </span>feedback_messages: Vec&lt;FeedbackMessage&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::Feedback</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Feedback</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::Feedback</span> {
-        <span class="ident">numbas::exam::feedback::Feedback</span> {
-            <span class="ident">show_actual_mark</span>: <span class="self">self</span>.<span class="ident">show_current_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_total_mark</span>: <span class="self">self</span>.<span class="ident">show_maximum_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_answer_state</span>: <span class="self">self</span>.<span class="ident">show_answer_state</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allow_reveal_answer</span>: <span class="self">self</span>.<span class="ident">allow_reveal_answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">review</span>: <span class="self">self</span>.<span class="ident">review</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">advice</span>: <span class="self">self</span>.<span class="ident">advice</span>.<span class="ident">clone</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>),
-            <span class="ident">intro</span>: <span class="self">self</span>.<span class="ident">intro</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">feedback_messages</span>: <span class="self">self</span>.<span class="ident">feedback_messages</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::feedback::Feedback&gt; <span class="kw">for </span>Feedback {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::feedback::Feedback {
+        numbas::exam::feedback::Feedback {
+            show_actual_mark: <span class="self">self</span>.show_current_marks.to_numbas(locale),
+            show_total_mark: <span class="self">self</span>.show_maximum_marks.to_numbas(locale),
+            show_answer_state: <span class="self">self</span>.show_answer_state.to_numbas(locale),
+            allow_reveal_answer: <span class="self">self</span>.allow_reveal_answer.to_numbas(locale),
+            review: <span class="self">self</span>.review.clone().to_numbas(locale),
+            advice: <span class="self">self</span>.advice.clone().to_string(locale),
+            intro: <span class="self">self</span>.intro.clone().to_numbas(locale),
+            feedback_messages: <span class="self">self</span>.feedback_messages.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Feedback</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Feedback</span> {
-        <span class="kw">let</span> <span class="ident">review</span>: <span class="ident">Review</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">review</span>.<span class="ident">to_rumbas</span>();
-        <span class="ident">Feedback</span> {
-            <span class="ident">percentage_needed_to_pass</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">percentage_needed_to_pass</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_name_of_student</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">show_student_name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_current_marks</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">show_actual_mark</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_maximum_marks</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">show_total_mark</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_answer_state</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">show_answer_state</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">allow_reveal_answer</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">allow_reveal_answer</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">review</span>,
-            <span class="ident">advice</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">advice</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">to_rumbas</span>(),
-            <span class="ident">intro</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">intro</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">feedback_messages</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">feedback_messages</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;Feedback&gt; <span class="kw">for </span>numbas::exam::Exam {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Feedback {
+        <span class="kw">let </span>review: Review = <span class="self">self</span>.feedback.review.to_rumbas();
+        Feedback {
+            percentage_needed_to_pass: <span class="self">self</span>.basic_settings.percentage_needed_to_pass.to_rumbas(),
+            show_name_of_student: <span class="self">self</span>.basic_settings.show_student_name.to_rumbas(),
+            show_current_marks: <span class="self">self</span>.feedback.show_actual_mark.to_rumbas(),
+            show_maximum_marks: <span class="self">self</span>.feedback.show_total_mark.to_rumbas(),
+            show_answer_state: <span class="self">self</span>.feedback.show_answer_state.to_rumbas(),
+            allow_reveal_answer: <span class="self">self</span>.feedback.allow_reveal_answer.to_rumbas(),
+            review,
+            advice: <span class="self">self</span>.feedback.advice.clone().unwrap_or_default().to_rumbas(),
+            intro: <span class="self">self</span>.feedback.intro.to_rumbas(),
+            feedback_messages: <span class="self">self</span>.feedback.feedback_messages.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;ReviewInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Review</span> {
-    <span class="doccomment">/// Whether to show score in result overview page</span>
-    <span class="kw">pub</span> <span class="ident">show_score</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Show feedback while reviewing</span>
-    <span class="kw">pub</span> <span class="ident">show_feedback</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Show expected answer while reviewing</span>
-    <span class="kw">pub</span> <span class="ident">show_expected_answer</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Show advice while reviewing</span>
-    <span class="kw">pub</span> <span class="ident">show_advice</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;ReviewInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Review {
+    <span class="doccomment">/// Whether to show score in result overview page
+    </span><span class="kw">pub </span>show_score: bool,
+    <span class="doccomment">/// Show feedback while reviewing
+    </span><span class="kw">pub </span>show_feedback: bool,
+    <span class="doccomment">/// Show expected answer while reviewing
+    </span><span class="kw">pub </span>show_expected_answer: bool,
+    <span class="doccomment">/// Show advice while reviewing
+    </span><span class="kw">pub </span>show_advice: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::Review</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Review</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::Review</span> {
-        <span class="ident">numbas::exam::feedback::Review</span> {
-            <span class="ident">show_score</span>: <span class="self">self</span>.<span class="ident">show_score</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_feedback</span>: <span class="self">self</span>.<span class="ident">show_feedback</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_expected_answer</span>: <span class="self">self</span>.<span class="ident">show_expected_answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_advice</span>: <span class="self">self</span>.<span class="ident">show_advice</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::feedback::Review&gt; <span class="kw">for </span>Review {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::feedback::Review {
+        numbas::exam::feedback::Review {
+            show_score: <span class="self">self</span>.show_score.to_numbas(locale),
+            show_feedback: <span class="self">self</span>.show_feedback.to_numbas(locale),
+            show_expected_answer: <span class="self">self</span>.show_expected_answer.to_numbas(locale),
+            show_advice: <span class="self">self</span>.show_advice.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Review</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::feedback::Review</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Review</span> {
-        <span class="ident">Review</span> {
-            <span class="ident">show_score</span>: <span class="self">self</span>.<span class="ident">show_score</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_feedback</span>: <span class="self">self</span>.<span class="ident">show_feedback</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_expected_answer</span>: <span class="self">self</span>.<span class="ident">show_expected_answer</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_advice</span>: <span class="self">self</span>.<span class="ident">show_advice</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;Review&gt; <span class="kw">for </span>numbas::exam::feedback::Review {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Review {
+        Review {
+            show_score: <span class="self">self</span>.show_score.to_rumbas(),
+            show_feedback: <span class="self">self</span>.show_feedback.to_rumbas(),
+            show_expected_answer: <span class="self">self</span>.show_expected_answer.to_rumbas(),
+            show_advice: <span class="self">self</span>.show_advice.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;FeedbackMessageInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FeedbackMessage</span> {
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">String</span>,   <span class="comment">//TODO: inputstring or filestring?</span>
-    <span class="kw">pub</span> <span class="ident">threshold</span>: <span class="ident">String</span>, <span class="comment">//TODO type</span>
-}
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;FeedbackMessageInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>FeedbackMessage {
+    <span class="kw">pub </span>message: String,   <span class="comment">//TODO: inputstring or filestring?
+    </span><span class="kw">pub </span>threshold: String, <span class="comment">//TODO type
+</span>}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::feedback::FeedbackMessage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FeedbackMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
-        <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">threshold</span>: <span class="self">self</span>.<span class="ident">threshold</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::feedback::FeedbackMessage&gt; <span class="kw">for </span>FeedbackMessage {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::feedback::FeedbackMessage {
+        numbas::exam::feedback::FeedbackMessage {
+            message: <span class="self">self</span>.message.to_numbas(locale),
+            threshold: <span class="self">self</span>.threshold.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">FeedbackMessage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::feedback::FeedbackMessage</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">FeedbackMessage</span> {
-        <span class="ident">FeedbackMessage</span> {
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="ident">message</span>.<span class="ident">clone</span>(),
-            <span class="ident">threshold</span>: <span class="self">self</span>.<span class="ident">threshold</span>.<span class="ident">clone</span>(),
+<span class="kw">impl </span>ToRumbas&lt;FeedbackMessage&gt; <span class="kw">for </span>numbas::exam::feedback::FeedbackMessage {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FeedbackMessage {
+        FeedbackMessage {
+            message: <span class="self">self</span>.message.clone(),
+            threshold: <span class="self">self</span>.threshold.clone(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

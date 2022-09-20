@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/normal.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>normal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/normal.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>normal.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -152,159 +152,159 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::feedback::Feedback</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::locale::Locale</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::locale::SupportedLocale</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::navigation::NormalNavigation</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::numbas_settings::NumbasSettings</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::question_group::QuestionGroup</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::question_group::QuestionPath</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::timing::Timing</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::custom_part_type::CustomPartTypeDefinitionPath</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::extension::Extensions</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::exam::feedback::Feedback;
+<span class="kw">use </span><span class="kw">crate</span>::exam::locale::Locale;
+<span class="kw">use </span><span class="kw">crate</span>::exam::locale::SupportedLocale;
+<span class="kw">use </span><span class="kw">crate</span>::exam::navigation::NormalNavigation;
+<span class="kw">use </span><span class="kw">crate</span>::exam::numbas_settings::NumbasSettings;
+<span class="kw">use </span><span class="kw">crate</span>::exam::question_group::QuestionGroup;
+<span class="kw">use </span><span class="kw">crate</span>::exam::question_group::QuestionPath;
+<span class="kw">use </span><span class="kw">crate</span>::exam::timing::Timing;
+<span class="kw">use </span><span class="kw">crate</span>::question::custom_part_type::CustomPartTypeDefinitionPath;
+<span class="kw">use </span><span class="kw">crate</span>::question::extension::Extensions;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="comment">// TODO: remove duplication of NormalExam &amp; Diagnostic Exam?</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;NormalExamInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="doccomment">/// An Exam</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NormalExam</span> {
-    <span class="doccomment">/// All locales for which the exam should be generated</span>
-    <span class="kw">pub</span> <span class="ident">locales</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Locale</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The name of the exam</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
-    <span class="doccomment">/// The navigation settings for this exam</span>
-    <span class="kw">pub</span> <span class="ident">navigation</span>: <span class="ident">NormalNavigation</span>,
-    <span class="doccomment">/// The timing settings for this exam</span>
-    <span class="kw">pub</span> <span class="ident">timing</span>: <span class="ident">Timing</span>,
-    <span class="doccomment">/// The feedback settings for this exam</span>
-    <span class="kw">pub</span> <span class="ident">feedback</span>: <span class="ident">Feedback</span>,
-    <span class="doccomment">/// The questions groups for this exam</span>
-    <span class="kw">pub</span> <span class="ident">question_groups</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionGroup</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The settings to set for numbas</span>
-    <span class="kw">pub</span> <span class="ident">numbas_settings</span>: <span class="ident">NumbasSettings</span>,
+<span class="comment">// TODO: remove duplication of NormalExam &amp; Diagnostic Exam?
+</span><span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;NormalExamInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="doccomment">/// An Exam
+</span><span class="kw">pub struct </span>NormalExam {
+    <span class="doccomment">/// All locales for which the exam should be generated
+    </span><span class="kw">pub </span>locales: Vec&lt;Locale&gt;,
+    <span class="doccomment">/// The name of the exam
+    </span><span class="kw">pub </span>name: TranslatableString,
+    <span class="doccomment">/// The navigation settings for this exam
+    </span><span class="kw">pub </span>navigation: NormalNavigation,
+    <span class="doccomment">/// The timing settings for this exam
+    </span><span class="kw">pub </span>timing: Timing,
+    <span class="doccomment">/// The feedback settings for this exam
+    </span><span class="kw">pub </span>feedback: Feedback,
+    <span class="doccomment">/// The questions groups for this exam
+    </span><span class="kw">pub </span>question_groups: Vec&lt;QuestionGroup&gt;,
+    <span class="doccomment">/// The settings to set for numbas
+    </span><span class="kw">pub </span>numbas_settings: NumbasSettings,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::Exam</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalExam</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::Exam</span> {
-        <span class="kw">let</span> <span class="ident">basic_settings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
-        <span class="kw">let</span> <span class="ident">navigation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::Exam&gt; <span class="kw">for </span>NormalExam {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::Exam {
+        <span class="kw">let </span>basic_settings = <span class="self">self</span>.to_numbas(locale);
+        <span class="kw">let </span>navigation = <span class="self">self</span>.navigation.to_numbas(locale);
 
-        <span class="kw">let</span> <span class="ident">timing</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">timing</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+        <span class="kw">let </span>timing = <span class="self">self</span>.timing.to_numbas(locale);
 
-        <span class="kw">let</span> <span class="ident">feedback</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+        <span class="kw">let </span>feedback = <span class="self">self</span>.feedback.to_numbas(locale);
 
-        <span class="kw">let</span> <span class="ident">question_groups</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::exam::question_group::QuestionGroup</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">question_groups</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+        <span class="kw">let </span>question_groups: Vec&lt;numbas::exam::question_group::QuestionGroup&gt; =
+            <span class="self">self</span>.question_groups.to_numbas(locale);
 
-        <span class="kw">let</span> <span class="ident">resources</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::resource::Resource</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">question_groups</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">qg</span><span class="op">|</span> {
-                <span class="ident">qg</span>.<span class="ident">clone</span>()
-                    .<span class="ident">questions</span>
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">data</span>.<span class="ident">resources</span>)
+        <span class="kw">let </span>resources: Vec&lt;numbas::question::resource::Resource&gt; = <span class="self">self
+            </span>.question_groups
+            .iter()
+            .flat_map(|qg| {
+                qg.clone()
+                    .questions
+                    .into_iter()
+                    .flat_map(|q| q.data.resources)
             })
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+            .collect::&lt;std::collections::HashSet&lt;<span class="kw">_</span>&gt;&gt;()
+            .into_iter()
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            .to_numbas(locale);
 
-        <span class="kw">let</span> <span class="ident">extensions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">question_groups</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">qg</span><span class="op">|</span> <span class="ident">qg</span>.<span class="ident">clone</span>().<span class="ident">questions</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">data</span>.<span class="ident">extensions</span>))
-            .<span class="ident">fold</span>(<span class="ident">Extensions::default</span>(), <span class="ident">Extensions::combine</span>)
-            .<span class="ident">to_paths</span>();
+        <span class="kw">let </span>extensions: Vec&lt;String&gt; = <span class="self">self
+            </span>.question_groups
+            .iter()
+            .flat_map(|qg| qg.clone().questions.into_iter().map(|q| q.data.extensions))
+            .fold(Extensions::default(), Extensions::combine)
+            .to_paths();
 
-        <span class="kw">let</span> <span class="ident">custom_part_types</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartType</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">question_groups</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">iter</span>()
-            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">qg</span><span class="op">|</span> {
-                <span class="ident">qg</span>.<span class="ident">clone</span>()
-                    .<span class="ident">questions</span>
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">q</span><span class="op">|</span> <span class="ident">q</span>.<span class="ident">data</span>.<span class="ident">custom_part_types</span>)
+        <span class="kw">let </span>custom_part_types: Vec&lt;numbas::question::custom_part_type::CustomPartType&gt; = <span class="self">self
+            </span>.question_groups
+            .clone()
+            .iter()
+            .flat_map(|qg| {
+                qg.clone()
+                    .questions
+                    .into_iter()
+                    .flat_map(|q| q.data.custom_part_types)
             })
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">to_numbas</span>(<span class="ident">locale</span>);
+            .collect::&lt;std::collections::HashSet&lt;<span class="kw">_</span>&gt;&gt;()
+            .into_iter()
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            .to_numbas(locale);
 
-        <span class="ident">numbas::exam::Exam</span> {
-            <span class="ident">basic_settings</span>,
-            <span class="ident">resources</span>,
-            <span class="ident">extensions</span>,
-            <span class="ident">custom_part_types</span>,
-            <span class="ident">navigation</span>,
-            <span class="ident">timing</span>,
-            <span class="ident">feedback</span>,
-            <span class="ident">question_groups</span>,
-            <span class="ident">diagnostic</span>: <span class="prelude-val">None</span>,
+        numbas::exam::Exam {
+            basic_settings,
+            resources,
+            extensions,
+            custom_part_types,
+            navigation,
+            timing,
+            feedback,
+            question_groups,
+            diagnostic: <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::BasicExamSettings</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalExam</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::BasicExamSettings</span> {
-        <span class="ident">numbas::exam::BasicExamSettings</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">duration_in_seconds</span>: <span class="self">self</span>
-                .<span class="ident">timing</span>
-                .<span class="ident">duration_in_seconds</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or</span>(<span class="number">0</span>),
-            <span class="ident">percentage_needed_to_pass</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">percentage_needed_to_pass</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_question_group_names</span>: <span class="self">self</span>
-                .<span class="ident">navigation</span>
-                .<span class="ident">to_shared_data</span>()
-                .<span class="ident">show_names_of_question_groups</span>,
-            <span class="ident">show_student_name</span>: <span class="self">self</span>.<span class="ident">feedback</span>.<span class="ident">show_name_of_student</span>,
-            <span class="ident">allow_printing</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_shared_data</span>().<span class="ident">allow_printing</span>,
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::BasicExamSettings&gt; <span class="kw">for </span>NormalExam {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::BasicExamSettings {
+        numbas::exam::BasicExamSettings {
+            name: <span class="self">self</span>.name.to_numbas(locale),
+            duration_in_seconds: <span class="self">self
+                </span>.timing
+                .duration_in_seconds
+                .to_numbas(locale)
+                .unwrap_or(<span class="number">0</span>),
+            percentage_needed_to_pass: <span class="self">self</span>.feedback.percentage_needed_to_pass.to_numbas(locale),
+            show_question_group_names: <span class="self">self
+                </span>.navigation
+                .to_shared_data()
+                .show_names_of_question_groups,
+            show_student_name: <span class="self">self</span>.feedback.show_name_of_student,
+            allow_printing: <span class="self">self</span>.navigation.to_shared_data().allow_printing,
         }
     }
 }
 
-<span class="doccomment">/// Converts a normal numbas exam to a NormalExam</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_normal_numbas_exam</span>(
-    <span class="ident">exam</span>: <span class="ident">numbas::exam::Exam</span>,
+<span class="doccomment">/// Converts a normal numbas exam to a NormalExam
+</span><span class="kw">pub fn </span>convert_normal_numbas_exam(
+    exam: numbas::exam::Exam,
 ) -&gt; (
-    <span class="ident">NormalExam</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPath</span><span class="op">&gt;</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeDefinitionPath</span><span class="op">&gt;</span>,
+    NormalExam,
+    Vec&lt;QuestionPath&gt;,
+    Vec&lt;CustomPartTypeDefinitionPath&gt;,
 ) {
-    <span class="kw">let</span> <span class="ident">question_groups</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">exam</span>.<span class="ident">question_groups</span>.<span class="ident">to_rumbas</span>();
-    <span class="kw">let</span> <span class="ident">custom_part_types</span> <span class="op">=</span> <span class="ident">exam</span>.<span class="ident">custom_part_types</span>.<span class="ident">to_rumbas</span>();
+    <span class="kw">let </span>question_groups: Vec&lt;<span class="kw">_</span>&gt; = exam.question_groups.to_rumbas();
+    <span class="kw">let </span>custom_part_types = exam.custom_part_types.to_rumbas();
     (
-        <span class="ident">NormalExam</span> {
-            <span class="ident">locales</span>: <span class="macro">vec!</span>[<span class="ident">Locale</span> {
-                <span class="ident">name</span>: <span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="ident">numbas_locale</span>: <span class="ident">SupportedLocale::EnGB</span>,
-            }], <span class="comment">// todo: argument?</span>
-            <span class="ident">name</span>: <span class="ident">exam</span>.<span class="ident">basic_settings</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">navigation</span>: <span class="ident">exam</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">timing</span>: <span class="ident">exam</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">feedback</span>: <span class="ident">exam</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">question_groups</span>: <span class="ident">question_groups</span>.<span class="ident">clone</span>(),
-            <span class="ident">numbas_settings</span>: <span class="ident">NumbasSettings</span> {
-                <span class="ident">theme</span>: <span class="string">&quot;default&quot;</span>.<span class="ident">to_string</span>(),
-            }, <span class="comment">// todo: argument?</span>
-        },
-        <span class="ident">question_groups</span>
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">qg</span><span class="op">|</span> <span class="ident">qg</span>.<span class="ident">questions</span>.<span class="ident">into_iter</span>())
-            .<span class="ident">collect</span>(),
-        <span class="ident">custom_part_types</span>,
+        NormalExam {
+            locales: <span class="macro">vec!</span>[Locale {
+                name: <span class="string">&quot;en&quot;</span>.to_string(),
+                numbas_locale: SupportedLocale::EnGB,
+            }], <span class="comment">// todo: argument?
+            </span>name: exam.basic_settings.name.to_rumbas(),
+            navigation: exam.to_rumbas(),
+            timing: exam.to_rumbas(),
+            feedback: exam.to_rumbas(),
+            question_groups: question_groups.clone(),
+            numbas_settings: NumbasSettings {
+                theme: <span class="string">&quot;default&quot;</span>.to_string(),
+            }, <span class="comment">// todo: argument?
+        </span>},
+        question_groups
+            .into_iter()
+            .flat_map(|qg| qg.questions.into_iter())
+            .collect(),
+        custom_part_types,
     )
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

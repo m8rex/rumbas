@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/serde_functions.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>serde_functions.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/serde_functions.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>serde_functions.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -79,86 +79,86 @@
 <span id="79">79</span>
 <span id="80">80</span>
 <span id="81">81</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::answer_simplification::AnswerSimplificationType</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
-<span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
-<span class="comment">//TODO: remove Exam from front of all types?</span>
-<span class="comment">//TODO: check what is optional etc</span>
-<span class="comment">//TODO: advicethreshold?</span>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::answer_simplification::AnswerSimplificationType;
+<span class="kw">use </span>std::convert::TryInto;
+<span class="kw">use </span>std::fmt::Display;
+<span class="kw">use </span>std::str::FromStr;
+<span class="comment">//TODO: remove Exam from front of all types?
+//TODO: check what is optional etc
+//TODO: advicethreshold?
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str_optional</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">Display</span>,
-    <span class="ident">D</span>: <span class="ident">serde::Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+</span><span class="kw">pub fn </span>from_str_optional&lt;<span class="lifetime">&#39;de</span>, T, D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;T&gt;, D::Error&gt;
+<span class="kw">where
+    </span>T: FromStr,
+    &lt;T <span class="kw">as </span>FromStr&gt;::Err: Display,
+    D: serde::Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
 {
-    <span class="kw">let</span> <span class="ident">deser_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">serde_json::Value</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde::Deserialize::deserialize</span>(<span class="ident">deserializer</span>);
-    <span class="kw">match</span> <span class="ident">deser_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">serde_json::Value::String</span>(<span class="ident">s</span>)) =&gt; <span class="ident">T::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
-            .<span class="ident">map_err</span>(<span class="ident">serde::de::Error::custom</span>)
-            .<span class="ident">map</span>(<span class="ident">Option::from</span>),
-        <span class="prelude-val">Ok</span>(<span class="ident">serde_json::Value::Number</span>(<span class="ident">n</span>)) =&gt; {
-            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">n</span>.<span class="ident">to_string</span>();
-            <span class="ident">T::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
-                .<span class="ident">map_err</span>(<span class="ident">serde::de::Error::custom</span>)
-                .<span class="ident">map</span>(<span class="ident">Option::from</span>)
+    <span class="kw">let </span>deser_res: <span class="prelude-ty">Result</span>&lt;serde_json::Value, <span class="kw">_</span>&gt; = serde::Deserialize::deserialize(deserializer);
+    <span class="kw">match </span>deser_res {
+        <span class="prelude-val">Ok</span>(serde_json::Value::String(s)) =&gt; T::from_str(<span class="kw-2">&amp;</span>s)
+            .map_err(serde::de::Error::custom)
+            .map(Option::from),
+        <span class="prelude-val">Ok</span>(serde_json::Value::Number(n)) =&gt; {
+            <span class="kw">let </span>s = n.to_string();
+            T::from_str(<span class="kw-2">&amp;</span>s)
+                .map_err(serde::de::Error::custom)
+                .map(Option::from)
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">v</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">serde::de::Error::custom</span>(<span class="macro">format!</span>(
+        <span class="prelude-val">Ok</span>(v) =&gt; <span class="prelude-val">Err</span>(serde::de::Error::custom(<span class="macro">format!</span>(
             <span class="string">&quot;string or number expected but found something else: {}&quot;</span>,
-            <span class="ident">v</span>
+            v
         ))),
         <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">answer_simplification_deserialize_string</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">D</span><span class="op">&gt;</span>(
-    <span class="ident">deserializer</span>: <span class="ident">D</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationType</span><span class="op">&gt;</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">serde::Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+<span class="kw">pub fn </span>answer_simplification_deserialize_string&lt;<span class="lifetime">&#39;de</span>, D&gt;(
+    deserializer: D,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;AnswerSimplificationType&gt;, D::Error&gt;
+<span class="kw">where
+    </span>D: serde::Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
 {
-    <span class="kw">let</span> <span class="ident">deser_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">serde_json::Value</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde::Deserialize::deserialize</span>(<span class="ident">deserializer</span>);
-    <span class="kw">match</span> <span class="ident">deser_res</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">serde_json::Value::String</span>(<span class="ident">s</span>)) =&gt; {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-            <span class="kw">for</span> <span class="ident">whole_item</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>) {
-                <span class="kw">let</span> <span class="ident">new_item</span> <span class="op">=</span> <span class="ident">whole_item</span>.<span class="ident">try_into</span>();
-                <span class="kw">match</span> <span class="ident">new_item</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">a</span>) =&gt; <span class="ident">r</span>.<span class="ident">push</span>(<span class="ident">a</span>),
-                    <span class="prelude-val">Err</span>(<span class="ident">m</span>) =&gt; {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">serde::de::Error::custom</span>(<span class="macro">format!</span>(
+    <span class="kw">let </span>deser_res: <span class="prelude-ty">Result</span>&lt;serde_json::Value, <span class="kw">_</span>&gt; = serde::Deserialize::deserialize(deserializer);
+    <span class="kw">match </span>deser_res {
+        <span class="prelude-val">Ok</span>(serde_json::Value::String(s)) =&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>r = Vec::new();
+            <span class="kw">for </span>whole_item <span class="kw">in </span>s.split(<span class="string">&#39;,&#39;</span>) {
+                <span class="kw">let </span>new_item = whole_item.try_into();
+                <span class="kw">match </span>new_item {
+                    <span class="prelude-val">Ok</span>(a) =&gt; r.push(a),
+                    <span class="prelude-val">Err</span>(m) =&gt; {
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(serde::de::Error::custom(<span class="macro">format!</span>(
                             <span class="string">&quot;unknown answer simplification type {}&quot;</span>,
-                            <span class="ident">m</span>
+                            m
                         )))
                     }
                 }
             }
-            <span class="prelude-val">Ok</span>(<span class="ident">r</span>)
+            <span class="prelude-val">Ok</span>(r)
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">v</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">serde::de::Error::custom</span>(<span class="macro">format!</span>(
+        <span class="prelude-val">Ok</span>(v) =&gt; <span class="prelude-val">Err</span>(serde::de::Error::custom(<span class="macro">format!</span>(
             <span class="string">&quot;string expected but found something else: {}&quot;</span>,
-            <span class="ident">v</span>
+            v
         ))),
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">serde::de::Error::custom</span>(
-            <span class="string">&quot;Invalid string expected for answer simplifcations&quot;</span>.<span class="ident">to_string</span>(),
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(serde::de::Error::custom(
+            <span class="string">&quot;Invalid string expected for answer simplifcations&quot;</span>.to_string(),
         )),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">answer_simplification_serialize_string</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(
-    <span class="ident">values</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationType</span><span class="op">&gt;</span>,
-    <span class="ident">s</span>: <span class="ident">S</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">S</span>: <span class="ident">serde::Serializer</span>,
+<span class="kw">pub fn </span>answer_simplification_serialize_string&lt;S&gt;(
+    values: <span class="kw-2">&amp;</span>Vec&lt;AnswerSimplificationType&gt;,
+    s: S,
+) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
+<span class="kw">where
+    </span>S: serde::Serializer,
 {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="kw">for</span> <span class="ident">value</span> <span class="kw">in</span> <span class="ident">values</span> {
-        <span class="kw">let</span> <span class="ident">new_item</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">to_string</span>();
-        <span class="ident">parts</span>.<span class="ident">push</span>(<span class="ident">new_item</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>parts: Vec&lt;String&gt; = Vec::new();
+    <span class="kw">for </span>value <span class="kw">in </span>values {
+        <span class="kw">let </span>new_item = value.to_string();
+        parts.push(new_item);
     }
-    <span class="ident">s</span>.<span class="ident">serialize_str</span>(<span class="kw-2">&amp;</span><span class="ident">parts</span>.<span class="ident">join</span>(<span class="string">&quot;,&quot;</span>)[..])
+    s.serialize_str(<span class="kw-2">&amp;</span>parts.join(<span class="string">&quot;,&quot;</span>)[..])
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

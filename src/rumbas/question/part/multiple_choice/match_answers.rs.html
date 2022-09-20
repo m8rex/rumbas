@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/multiple_choice/match_answers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>match_answers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../rumbas/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/multiple_choice/match_answers.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>match_answers.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../rumbas/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -420,427 +420,427 @@
 <span id="420">420</span>
 <span id="421">421</span>
 <span id="422">422</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::multiple_choice::MultipleChoiceMarkingMethod</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::QuestionPart</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::variable_valued::VariableValued</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::convert::Into</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::part::multiple_choice::MultipleChoiceMarkingMethod;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::JMENotes;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::VariableReplacementStrategy;
+<span class="kw">use </span><span class="kw">crate</span>::question::QuestionPart;
+<span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::variable_valued::VariableValued;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>numbas::jme::JMEString;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::convert::Into;
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="macro">question_part_type!</span> {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartMatchAnswersWithItemsInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartMatchAnswersWithItems</span> {
-        <span class="doccomment">/// Old name was `answers`</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;answers&quot;</span>)]</span>
-        <span class="ident">answer_data</span>: <span class="ident">MultipleChoiceMatchAnswerData</span>,
-        <span class="ident">shuffle_answers</span>: <span class="ident">bool</span>,
-        <span class="ident">shuffle_items</span>: <span class="ident">bool</span>,
-        <span class="ident">show_cell_answer_state</span>: <span class="ident">bool</span>,
-        <span class="ident">should_select_at_least</span>: <span class="ident">usize</span>,
-        <span class="ident">should_select_at_most</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">display</span>: <span class="ident">MatchAnswerWithItemsDisplay</span>,
-        <span class="ident">layout</span>: <span class="ident">MatchAnswersWithChoicesLayout</span>,
-        <span class="doccomment">/// What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)</span>
-        <span class="ident">wrong_nb_answers_warning_type</span>: <span class="ident">MultipleChoiceWarningType</span>,
-        <span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</span>
-        <span class="ident">minimal_achievable_marks</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</span>
-        <span class="ident">maximal_achievable_marks</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>
+<span class="macro">question_part_type! </span>{
+    <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[input(name = <span class="string">&quot;QuestionPartMatchAnswersWithItemsInput&quot;</span>)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+    </span><span class="kw">pub struct </span>QuestionPartMatchAnswersWithItems {
+        <span class="doccomment">/// Old name was `answers`
+        </span><span class="attribute">#[serde(alias = <span class="string">&quot;answers&quot;</span>)]
+        </span>answer_data: MultipleChoiceMatchAnswerData,
+        shuffle_answers: bool,
+        shuffle_items: bool,
+        show_cell_answer_state: bool,
+        should_select_at_least: usize,
+        should_select_at_most: Noneable&lt;usize&gt;,
+        display: MatchAnswerWithItemsDisplay,
+        layout: MatchAnswersWithChoicesLayout,
+        <span class="doccomment">/// What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)
+        </span>wrong_nb_answers_warning_type: MultipleChoiceWarningType,
+        <span class="doccomment">/// If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.
+        </span>minimal_achievable_marks: Noneable&lt;usize&gt;,
+        <span class="doccomment">/// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
+        </span>maximal_achievable_marks: Noneable&lt;usize&gt;
 
-        <span class="comment">//TODO other?</span>
-    }
+        <span class="comment">//TODO other?
+    </span>}
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">QuestionPartMatchAnswersWithItems</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices&gt;
+    <span class="kw">for </span>QuestionPartMatchAnswersWithItems
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices</span> {
-        <span class="kw">let</span> (<span class="ident">answers</span>, <span class="ident">choices</span>, <span class="ident">marking_matrix</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">answer_data</span> {
-            <span class="ident">MultipleChoiceMatchAnswerData::ItemBased</span>(<span class="ident">data</span>) =&gt; (
-                <span class="ident">VariableValued::Value</span>(<span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">clone</span>()).<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">VariableValued::Value</span>(
-                    <span class="ident">data</span>.<span class="ident">items</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">clone</span>().<span class="ident">statement</span>)
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
+        <span class="kw">let </span>(answers, choices, marking_matrix) = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.answer_data {
+            MultipleChoiceMatchAnswerData::ItemBased(data) =&gt; (
+                VariableValued::Value(data.answers.clone()).to_numbas(locale),
+                VariableValued::Value(
+                    data.items
+                        .iter()
+                        .map(|a| a.clone().statement)
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
                 )
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">VariableValued::Value</span>(
-                    <span class="ident">data</span>.<span class="ident">items</span>.<span class="ident">clone</span>(), <span class="comment">// TODO: better handling</span>
-                )
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
-                    <span class="ident">v</span>.<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> {
-                            <span class="ident">data</span>.<span class="ident">answers</span>
-                                .<span class="ident">iter</span>()
-                                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-                                    <span class="ident">i</span>.<span class="ident">answer_marks</span>
-                                        .<span class="ident">iter</span>()
-                                        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">am</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">am</span>.<span class="ident">answer</span> <span class="op">==</span> <span class="ident">a</span>)
-                                        .<span class="ident">map_or_else</span>(
-                                            <span class="op">|</span><span class="op">|</span> <span class="string">&quot;0&quot;</span>.<span class="ident">to_string</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-                                            <span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">marks</span>.<span class="ident">clone</span>(),
+                .to_numbas(locale),
+                VariableValued::Value(
+                    data.items.clone(), <span class="comment">// TODO: better handling
+                </span>)
+                .map(|v| {
+                    v.iter()
+                        .map(|i| {
+                            data.answers
+                                .iter()
+                                .map(|a| {
+                                    i.answer_marks
+                                        .iter()
+                                        .find(|am| <span class="kw-2">&amp;</span>am.answer == a)
+                                        .map_or_else(
+                                            || <span class="string">&quot;0&quot;</span>.to_string().try_into().unwrap(),
+                                            |v| v.marks.clone(),
                                         )
                                 })
-                                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
                 })
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+                .to_numbas(locale),
             ),
-            <span class="ident">MultipleChoiceMatchAnswerData::NumbasLike</span>(<span class="ident">data</span>) =&gt; (
-                <span class="ident">data</span>.<span class="ident">answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">data</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            MultipleChoiceMatchAnswerData::NumbasLike(data) =&gt; (
+                data.answers.to_numbas(locale),
+                data.choices.to_numbas(locale),
+                data.marks.to_numbas(locale),
             ),
         };
-        <span class="ident">numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices</span> {
-            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">min_answers</span>: <span class="self">self</span>.<span class="ident">should_select_at_least</span>.<span class="ident">into</span>(),
-            <span class="ident">max_answers</span>: <span class="self">self</span>
-                .<span class="ident">should_select_at_most</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">min_marks</span>: <span class="self">self</span>
-                .<span class="ident">minimal_achievable_marks</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">max_marks</span>: <span class="self">self</span>
-                .<span class="ident">maximal_achievable_marks</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">shuffle_choices</span>: <span class="self">self</span>.<span class="ident">shuffle_items</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">answers</span>,
-            <span class="ident">choices</span>,
-            <span class="ident">wrong_nb_answers_warning</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning_type</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">layout</span>: <span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">marking_matrix</span>,
-            <span class="ident">display_type</span>: <span class="self">self</span>.<span class="ident">display</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
+            part_data: <span class="self">self</span>.to_numbas(locale),
+            min_answers: <span class="self">self</span>.should_select_at_least.into(),
+            max_answers: <span class="self">self
+                </span>.should_select_at_most
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            min_marks: <span class="self">self
+                </span>.minimal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            max_marks: <span class="self">self
+                </span>.maximal_achievable_marks
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            shuffle_answers: <span class="self">self</span>.shuffle_answers.to_numbas(locale),
+            shuffle_choices: <span class="self">self</span>.shuffle_items.to_numbas(locale),
+            answers,
+            choices,
+            wrong_nb_answers_warning: <span class="self">self</span>.wrong_nb_answers_warning_type.to_numbas(locale),
+            layout: <span class="self">self</span>.layout.to_numbas(locale),
+            show_cell_answer_state: <span class="self">self</span>.show_cell_answer_state.to_numbas(locale),
+            marking_matrix,
+            display_type: <span class="self">self</span>.display.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartMatchAnswersWithItems</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices</span>
+<span class="kw">impl </span>ToRumbas&lt;QuestionPartMatchAnswersWithItems&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartMatchAnswersWithItems</span> {
-        <span class="macro">create_question_part!</span> {
-            <span class="ident">QuestionPartMatchAnswersWithItems</span> <span class="ident">with</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span> =&gt; {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPartMatchAnswersWithItems {
+        <span class="macro">create_question_part! </span>{
+            QuestionPartMatchAnswersWithItems with <span class="kw-2">&amp;</span><span class="self">self</span>.part_data =&gt; {
 
-                <span class="ident">answer_data</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">shuffle_answers</span>: <span class="self">self</span>.<span class="ident">shuffle_answers</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">shuffle_items</span>: <span class="self">self</span>.<span class="ident">shuffle_choices</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">show_cell_answer_state</span>: <span class="self">self</span>.<span class="ident">show_cell_answer_state</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">should_select_at_least</span>:
-                    <span class="self">self</span>.<span class="ident">min_answers</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">should_select_at_most</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">max_answers</span>.<span class="number">0</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                    <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">max_answers</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>())
-                } <span class="kw">else</span> {
-                    <span class="ident">Noneable::None</span>
+                answer_data: <span class="self">self</span>.to_rumbas(),
+                shuffle_answers: <span class="self">self</span>.shuffle_answers.to_rumbas(),
+                shuffle_items: <span class="self">self</span>.shuffle_choices.to_rumbas(),
+                show_cell_answer_state: <span class="self">self</span>.show_cell_answer_state.to_rumbas(),
+                should_select_at_least:
+                    <span class="self">self</span>.min_answers.<span class="number">0</span>.to_rumbas(),
+                should_select_at_most: <span class="kw">if </span><span class="self">self</span>.max_answers.<span class="number">0 </span>&gt; <span class="number">0 </span>{
+                    Noneable::NotNone(<span class="self">self</span>.max_answers.<span class="number">0</span>.to_rumbas())
+                } <span class="kw">else </span>{
+                    Noneable::None
                 },
-                <span class="ident">display</span>: <span class="self">self</span>.<span class="ident">display_type</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">layout</span>: <span class="self">self</span>.<span class="ident">layout</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">wrong_nb_answers_warning_type</span>: <span class="self">self</span>.<span class="ident">wrong_nb_answers_warning</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">minimal_achievable_marks</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">min_marks</span>.<span class="number">0</span> <span class="op">&gt;</span> <span class="number">0</span> { <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">min_marks</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>()) } <span class="kw">else</span> { <span class="ident">Noneable::None</span> },
-                <span class="ident">maximal_achievable_marks</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">max_marks</span>.<span class="number">0</span> <span class="op">&gt;</span> <span class="number">0</span> { <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">max_marks</span>.<span class="number">0</span>.<span class="ident">to_rumbas</span>()) } <span class="kw">else</span> { <span class="ident">Noneable::None</span> }
+                display: <span class="self">self</span>.display_type.to_rumbas(),
+                layout: <span class="self">self</span>.layout.to_rumbas(),
+                wrong_nb_answers_warning_type: <span class="self">self</span>.wrong_nb_answers_warning.to_rumbas(),
+                minimal_achievable_marks: <span class="kw">if </span><span class="self">self</span>.min_marks.<span class="number">0 </span>&gt; <span class="number">0 </span>{ Noneable::NotNone(<span class="self">self</span>.min_marks.<span class="number">0</span>.to_rumbas()) } <span class="kw">else </span>{ Noneable::None },
+                maximal_achievable_marks: <span class="kw">if </span><span class="self">self</span>.max_marks.<span class="number">0 </span>&gt; <span class="number">0 </span>{ Noneable::NotNone(<span class="self">self</span>.max_marks.<span class="number">0</span>.to_rumbas()) } <span class="kw">else </span>{ Noneable::None }
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MultipleChoiceMatchAnswerData</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices</span>
+<span class="kw">impl </span>ToRumbas&lt;MultipleChoiceMatchAnswerData&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MultipleChoiceMatchAnswerData</span> {
-        <span class="kw">if</span> <span class="kw">let</span> (
-            <span class="ident">numbas::support::primitive::VariableValued::Value</span>(<span class="ident">answer_options</span>),
-            <span class="ident">numbas::support::primitive::VariableValued::Value</span>(<span class="ident">choice_options</span>),
-            <span class="ident">numbas::support::primitive::VariableValued::Value</span>(<span class="ident">marking_matrix</span>),
-        ) <span class="op">=</span> (
-            <span class="self">self</span>.<span class="ident">answers</span>.<span class="ident">clone</span>(),
-            <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">clone</span>(),
-            <span class="self">self</span>.<span class="ident">marking_matrix</span>.<span class="ident">clone</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MultipleChoiceMatchAnswerData {
+        <span class="kw">if let </span>(
+            numbas::support::primitive::VariableValued::Value(answer_options),
+            numbas::support::primitive::VariableValued::Value(choice_options),
+            numbas::support::primitive::VariableValued::Value(marking_matrix),
+        ) = (
+            <span class="self">self</span>.answers.clone(),
+            <span class="self">self</span>.choices.clone(),
+            <span class="self">self</span>.marking_matrix.clone(),
         ) {
-            <span class="kw">let</span> <span class="ident">items_data</span> <span class="op">=</span> <span class="ident">choice_options</span>.<span class="ident">into_iter</span>().<span class="ident">zip</span>(<span class="ident">marking_matrix</span>.<span class="ident">into_iter</span>());
+            <span class="kw">let </span>items_data = choice_options.into_iter().zip(marking_matrix.into_iter());
 
-            <span class="ident">MultipleChoiceMatchAnswerData::ItemBased</span>({
-                <span class="kw">let</span> <span class="ident">answers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">answer_options</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">clone</span>().<span class="ident">into</span>()).<span class="ident">collect</span>();
-                <span class="ident">MultipleChoiceMatchAnswers</span> {
-                    <span class="ident">answers</span>: <span class="ident">answers</span>.<span class="ident">clone</span>(),
-                    <span class="ident">items</span>: <span class="ident">items_data</span>
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">statement</span>, <span class="ident">marks</span>)<span class="op">|</span> {
-                            <span class="ident">MatchAnswersItem</span> {
-                                <span class="comment">// TODO: extract to ToRumbas?</span>
-                                <span class="ident">statement</span>: <span class="ident">statement</span>.<span class="ident">into</span>(),
-                                <span class="ident">answer_marks</span>: <span class="ident">marks</span>
-                                    .<span class="ident">into_iter</span>()
-                                    .<span class="ident">enumerate</span>()
-                                    .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">marks</span>)<span class="op">|</span> <span class="ident">MatchAnswersItemMarks</span> {
-                                        <span class="ident">marks</span>,
-                                        <span class="ident">answer</span>: <span class="ident">answers</span>.<span class="ident">get</span>(<span class="ident">i</span>).<span class="ident">unwrap</span>().<span class="ident">clone</span>(),
+            MultipleChoiceMatchAnswerData::ItemBased({
+                <span class="kw">let </span>answers: Vec&lt;<span class="kw">_</span>&gt; = answer_options.iter().map(|a| a.clone().into()).collect();
+                MultipleChoiceMatchAnswers {
+                    answers: answers.clone(),
+                    items: items_data
+                        .into_iter()
+                        .map(|(statement, marks)| {
+                            MatchAnswersItem {
+                                <span class="comment">// TODO: extract to ToRumbas?
+                                </span>statement: statement.into(),
+                                answer_marks: marks
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(i, marks)| MatchAnswersItemMarks {
+                                        marks,
+                                        answer: answers.get(i).unwrap().clone(),
                                     })
-                                    .<span class="ident">collect</span>(),
+                                    .collect(),
                             }
                         })
-                        .<span class="ident">collect</span>(),
+                        .collect(),
                 }
             })
-        } <span class="kw">else</span> {
-            <span class="ident">MultipleChoiceMatchAnswerData::NumbasLike</span>(<span class="ident">Box::new</span>(
-                <span class="ident">MultipleChoiceMatchAnswerDataNumbasLike</span> {
-                    <span class="ident">answers</span>: <span class="self">self</span>.<span class="ident">answers</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">choices</span>: <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">to_rumbas</span>(),
+        } <span class="kw">else </span>{
+            MultipleChoiceMatchAnswerData::NumbasLike(Box::new(
+                MultipleChoiceMatchAnswerDataNumbasLike {
+                    answers: <span class="self">self</span>.answers.to_rumbas(),
+                    choices: <span class="self">self</span>.choices.to_rumbas(),
 
-                    <span class="ident">marks</span>: <span class="self">self</span>.<span class="ident">marking_matrix</span>.<span class="ident">to_rumbas</span>(),
+                    marks: <span class="self">self</span>.marking_matrix.to_rumbas(),
                 },
             ))
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswerWithItemsDisplayInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MatchAnswerWithItemsDisplay</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;radio&quot;</span>)]</span>
-    <span class="ident">Radio</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;check&quot;</span>)]</span>
-    <span class="ident">Check</span>(<span class="ident">MatchAnswersWithChoicesDisplayCheck</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswerWithItemsDisplayInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>MatchAnswerWithItemsDisplay {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;radio&quot;</span>)]
+    </span>Radio,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;check&quot;</span>)]
+    </span>Check(MatchAnswersWithChoicesDisplayCheck),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">MatchAnswerWithItemsDisplay</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType&gt;
+    <span class="kw">for </span>MatchAnswerWithItemsDisplay
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">MatchAnswerWithItemsDisplay::Check</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check</span>(
-                    <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType {
+        <span class="kw">match </span><span class="self">self </span>{
+            MatchAnswerWithItemsDisplay::Check(c) =&gt; {
+                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check(
+                    c.to_numbas(locale),
                 )
             }
-            <span class="ident">MatchAnswerWithItemsDisplay::Radio</span> =&gt; {
-                <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio</span>
+            MatchAnswerWithItemsDisplay::Radio =&gt; {
+                numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MatchAnswerWithItemsDisplay</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType</span>
+<span class="kw">impl </span>ToRumbas&lt;MatchAnswerWithItemsDisplay&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MatchAnswerWithItemsDisplay</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">MatchAnswerWithItemsDisplay::Check</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>())
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MatchAnswerWithItemsDisplay {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check(c) =&gt; {
+                MatchAnswerWithItemsDisplay::Check(c.to_rumbas())
             }
-            <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio</span> =&gt; {
-                <span class="ident">MatchAnswerWithItemsDisplay::Radio</span>
+            numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Radio =&gt; {
+                MatchAnswerWithItemsDisplay::Radio
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersWithChoicesDisplayCheckInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersWithChoicesDisplayCheck</span> {
-    <span class="ident">marking_method</span>: <span class="ident">MultipleChoiceMarkingMethod</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswersWithChoicesDisplayCheckInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MatchAnswersWithChoicesDisplayCheck {
+    marking_method: MultipleChoiceMarkingMethod,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesDisplayCheck</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck&gt;
+    <span class="kw">for </span>MatchAnswersWithChoicesDisplayCheck
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck</span> {
-        <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck</span> {
-            <span class="ident">marking_method</span>: <span class="self">self</span>.<span class="ident">marking_method</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
+        numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
+            marking_method: <span class="self">self</span>.marking_method.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MatchAnswersWithChoicesDisplayCheck</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck</span>
+<span class="kw">impl </span>ToRumbas&lt;MatchAnswersWithChoicesDisplayCheck&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MatchAnswersWithChoicesDisplayCheck</span> {
-        <span class="ident">MatchAnswersWithChoicesDisplayCheck</span> {
-            <span class="ident">marking_method</span>: <span class="self">self</span>.<span class="ident">marking_method</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MatchAnswersWithChoicesDisplayCheck {
+        MatchAnswersWithChoicesDisplayCheck {
+            marking_method: <span class="self">self</span>.marking_method.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MultipleChoiceMatchAnswerDataInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MultipleChoiceMatchAnswerData</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;item_based&quot;</span>)]</span>
-    <span class="ident">ItemBased</span>(<span class="ident">MultipleChoiceMatchAnswers</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;numbas_like&quot;</span>)]</span>
-    <span class="ident">NumbasLike</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">MultipleChoiceMatchAnswerDataNumbasLike</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MultipleChoiceMatchAnswerDataInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>MultipleChoiceMatchAnswerData {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;item_based&quot;</span>)]
+    </span>ItemBased(MultipleChoiceMatchAnswers),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;numbas_like&quot;</span>)]
+    </span>NumbasLike(Box&lt;MultipleChoiceMatchAnswerDataNumbasLike&gt;),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MultipleChoiceMatchAnswerDataNumbasLikeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceMatchAnswerDataNumbasLike</span> {
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">VariableValued</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMEString</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MultipleChoiceMatchAnswerDataNumbasLikeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MultipleChoiceMatchAnswerDataNumbasLike {
+    <span class="kw">pub </span>answers: VariableValued&lt;Vec&lt;ContentAreaTranslatableString&gt;&gt;,
+    <span class="kw">pub </span>choices: VariableValued&lt;Vec&lt;ContentAreaTranslatableString&gt;&gt;,
+    <span class="kw">pub </span>marks: VariableValued&lt;Vec&lt;Vec&lt;JMEString&gt;&gt;&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MultipleChoiceMatchAnswersInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultipleChoiceMatchAnswers</span> {
-    <span class="doccomment">/// Values of the answers</span>
-    <span class="kw">pub</span> <span class="ident">answers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAreaTranslatableString</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Items for which the answer can be selected</span>
-    <span class="kw">pub</span> <span class="ident">items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MatchAnswersItem</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MultipleChoiceMatchAnswersInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MultipleChoiceMatchAnswers {
+    <span class="doccomment">/// Values of the answers
+    </span><span class="kw">pub </span>answers: Vec&lt;ContentAreaTranslatableString&gt;,
+    <span class="doccomment">/// Items for which the answer can be selected
+    </span><span class="kw">pub </span>items: Vec&lt;MatchAnswersItem&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersItemInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersItem</span> {
-    <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">ContentAreaTranslatableString</span>,
-    <span class="doccomment">/// Map points to strings of answers ! use anchors in yaml</span>
-    <span class="kw">pub</span> <span class="ident">answer_marks</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MatchAnswersItemMarks</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswersItemInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MatchAnswersItem {
+    <span class="kw">pub </span>statement: ContentAreaTranslatableString,
+    <span class="doccomment">/// Map points to strings of answers ! use anchors in yaml
+    </span><span class="kw">pub </span>answer_marks: Vec&lt;MatchAnswersItemMarks&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersItemMarksInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersItemMarks</span> {
-    <span class="kw">pub</span> <span class="ident">marks</span>: <span class="ident">JMEString</span>,
-    <span class="kw">pub</span> <span class="ident">answer</span>: <span class="ident">ContentAreaTranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswersItemMarksInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MatchAnswersItemMarks {
+    <span class="kw">pub </span>marks: JMEString,
+    <span class="kw">pub </span>answer: ContentAreaTranslatableString,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MultipleChoiceWarningTypeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MultipleChoiceWarningType</span> {
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MultipleChoiceWarningTypeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>MultipleChoiceWarningType {
     <span class="prelude-val">None</span>,
-    <span class="ident">Prevent</span>,
+    Prevent,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">MultipleChoiceWarningType</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::MultipleChoiceWarningType&gt;
+    <span class="kw">for </span>MultipleChoiceWarningType
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::None</span> =&gt; <span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType::None</span>,
-            <span class="ident"><span class="self">Self</span>::Prevent</span> =&gt; {
-                <span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType::Prevent</span>
+        _locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::MultipleChoiceWarningType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::None =&gt; numbas::question::part::match_answers::MultipleChoiceWarningType::None,
+            <span class="self">Self</span>::Prevent =&gt; {
+                numbas::question::part::match_answers::MultipleChoiceWarningType::Prevent
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MultipleChoiceWarningType</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::MultipleChoiceWarningType</span>
+<span class="kw">impl </span>ToRumbas&lt;MultipleChoiceWarningType&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::MultipleChoiceWarningType
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MultipleChoiceWarningType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::None</span> =&gt; <span class="ident">MultipleChoiceWarningType::None</span>,
-            <span class="ident"><span class="self">Self</span>::Prevent</span> =&gt; <span class="ident">MultipleChoiceWarningType::Prevent</span>,
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MultipleChoiceWarningType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::None =&gt; MultipleChoiceWarningType::None,
+            <span class="self">Self</span>::Prevent =&gt; MultipleChoiceWarningType::Prevent,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersWithChoicesLayoutTypeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
-    <span class="ident">All</span>,
-    <span class="ident">LowerTriangle</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswersWithChoicesLayoutTypeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>MatchAnswersWithChoicesLayoutType {
+    All,
+    LowerTriangle,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayoutType</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType&gt;
+    <span class="kw">for </span>MatchAnswersWithChoicesLayoutType
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::All</span> =&gt; <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::All</span>,
-            <span class="ident"><span class="self">Self</span>::LowerTriangle</span> =&gt; {
-                <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::LowerTriangle</span>
+        _locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::All =&gt; numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::All,
+            <span class="self">Self</span>::LowerTriangle =&gt; {
+                numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::LowerTriangle
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MatchAnswersWithChoicesLayoutType</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType</span>
+<span class="kw">impl </span>ToRumbas&lt;MatchAnswersWithChoicesLayoutType&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MatchAnswersWithChoicesLayoutType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::All</span> =&gt; <span class="ident">MatchAnswersWithChoicesLayoutType::All</span>,
-            <span class="ident"><span class="self">Self</span>::LowerTriangle</span> =&gt; <span class="ident">MatchAnswersWithChoicesLayoutType::LowerTriangle</span>,
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MatchAnswersWithChoicesLayoutType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::All =&gt; MatchAnswersWithChoicesLayoutType::All,
+            <span class="self">Self</span>::LowerTriangle =&gt; MatchAnswersWithChoicesLayoutType::LowerTriangle,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MatchAnswersWithChoicesLayoutInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MatchAnswersWithChoicesLayout</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-    <span class="ident">layout_type</span>: <span class="ident">MatchAnswersWithChoicesLayoutType</span>, <span class="comment">// Renamed because of bug in Comparable</span>
-}
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MatchAnswersWithChoicesLayoutInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MatchAnswersWithChoicesLayout {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;type&quot;</span>)]
+    </span>layout_type: MatchAnswersWithChoicesLayoutType, <span class="comment">// Renamed because of bug in Comparable
+</span>}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayout</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">MatchAnswersWithChoicesLayout</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::match_answers::MatchAnswersWithChoicesLayout&gt;
+    <span class="kw">for </span>MatchAnswersWithChoicesLayout
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayout</span> {
-        <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayout</span> {
-            <span class="ident">r#type</span>: <span class="self">self</span>.<span class="ident">layout_type</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">expression</span>: <span class="ident">String::new</span>(),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
+        numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
+            r#type: <span class="self">self</span>.layout_type.to_numbas(locale),
+            expression: String::new(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">MatchAnswersWithChoicesLayout</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::part::match_answers::MatchAnswersWithChoicesLayout</span>
+<span class="kw">impl </span>ToRumbas&lt;MatchAnswersWithChoicesLayout&gt;
+    <span class="kw">for </span>numbas::question::part::match_answers::MatchAnswersWithChoicesLayout
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MatchAnswersWithChoicesLayout</span> {
-        <span class="ident">MatchAnswersWithChoicesLayout</span> {
-            <span class="ident">layout_type</span>: <span class="self">self</span>.<span class="ident">r#type</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MatchAnswersWithChoicesLayout {
+        MatchAnswersWithChoicesLayout {
+            layout_type: <span class="self">self</span>.r#type.to_rumbas(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

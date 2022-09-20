@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/question_part.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>question_part.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/part/question_part.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>question_part.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../rumbas/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -436,443 +436,443 @@
 <span id="436">436</span>
 <span id="437">437</span>
 <span id="438">438</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::extension::QuestionPartExtension</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::gapfill::QuestionPartGapFill</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::information::QuestionPartInformation</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::jme::QuestionPartJME</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::matrix::QuestionPartMatrix</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultiple</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::multiple_choice::choose_one::QuestionPartChooseOne</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::number_entry::QuestionPartNumberEntry</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::pattern_match::QuestionPartPatternMatch</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable</span>::{<span class="ident">ContentAreaTranslatableString</span>, <span class="ident">JMETranslatableString</span>};
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::part::extension::QuestionPartExtension;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::gapfill::QuestionPartGapFill;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::information::QuestionPartInformation;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::jme::QuestionPartJME;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::matrix::QuestionPartMatrix;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultiple;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::multiple_choice::choose_one::QuestionPartChooseOne;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::multiple_choice::match_answers::QuestionPartMatchAnswersWithItems;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::number_entry::QuestionPartNumberEntry;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::pattern_match::QuestionPartPatternMatch;
+<span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::{ContentAreaTranslatableString, JMETranslatableString};
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionPart</span> {
-    <span class="ident">Builtin</span>(<span class="ident">QuestionPartBuiltin</span>),
-    <span class="ident">Custom</span>(<span class="ident">QuestionPartCustom</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;QuestionPartInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>QuestionPart {
+    Builtin(QuestionPartBuiltin),
+    Custom(QuestionPartCustom),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::QuestionPart</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPart</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::QuestionPart</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPart::Builtin</span>(<span class="ident">b</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPart::Builtin</span>(<span class="ident">b</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::QuestionPart&gt; <span class="kw">for </span>QuestionPart {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::QuestionPart {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuestionPart::Builtin(b) =&gt; {
+                numbas::question::part::QuestionPart::Builtin(b.to_numbas(locale))
             }
-            <span class="ident">QuestionPart::Custom</span>(<span class="ident">b</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPart::Custom</span>(<span class="ident">b</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPart::Custom(b) =&gt; {
+                numbas::question::part::QuestionPart::Custom(b.to_numbas(locale))
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::QuestionPart</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPart</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::QuestionPart::Builtin</span>(<span class="ident">bqp</span>) =&gt; {
-                <span class="ident">QuestionPart::Builtin</span>(<span class="ident">bqp</span>.<span class="ident">to_rumbas</span>())
+<span class="kw">impl </span>ToRumbas&lt;QuestionPart&gt; <span class="kw">for </span>numbas::question::part::QuestionPart {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPart {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::QuestionPart::Builtin(bqp) =&gt; {
+                QuestionPart::Builtin(bqp.to_rumbas())
             }
-            <span class="ident">numbas::question::part::QuestionPart::Custom</span>(<span class="ident">cqp</span>) =&gt; {
-                <span class="ident">QuestionPart::Custom</span>(<span class="ident">cqp</span>.<span class="ident">to_rumbas</span>())
+            numbas::question::part::QuestionPart::Custom(cqp) =&gt; {
+                QuestionPart::Custom(cqp.to_rumbas())
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionPartInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_steps</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">QuestionPartInput</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartInput::Builtin</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartInput::Custom</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
+<span class="kw">impl </span>QuestionPartInput {
+    <span class="kw">pub fn </span>get_steps(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Value&lt;Vec&lt;ValueType&lt;QuestionPartInput&gt;&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuestionPartInput::Builtin(b) =&gt; b.get_steps(),
+            QuestionPartInput::Custom(b) =&gt; b.<span class="number">0</span>.get_steps(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartBuiltinInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionPartBuiltin</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;jme&quot;</span>)]</span>
-    <span class="comment">// Box due to much larger size than other variant (clippy warning)</span>
-    <span class="ident">JME</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">QuestionPartJME</span><span class="op">&gt;</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;gapfill&quot;</span>)]</span>
-    <span class="ident">GapFill</span>(<span class="ident">QuestionPartGapFill</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;choose_one&quot;</span>)]</span>
-    <span class="ident">ChooseOne</span>(<span class="ident">QuestionPartChooseOne</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;choose_multiple&quot;</span>)]</span>
-    <span class="ident">ChooseMultiple</span>(<span class="ident">QuestionPartChooseMultiple</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;match_answers&quot;</span>)]</span>
-    <span class="ident">MatchAnswersWithItems</span>(<span class="ident">QuestionPartMatchAnswersWithItems</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;number_entry&quot;</span>)]</span>
-    <span class="ident">NumberEntry</span>(<span class="ident">QuestionPartNumberEntry</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;pattern_match&quot;</span>)]</span>
-    <span class="ident">PatternMatch</span>(<span class="ident">QuestionPartPatternMatch</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;information&quot;</span>)]</span>
-    <span class="ident">Information</span>(<span class="ident">QuestionPartInformation</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;extension&quot;</span>)]</span>
-    <span class="ident">Extension</span>(<span class="ident">QuestionPartExtension</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;matrix&quot;</span>)]</span>
-    <span class="ident">Matrix</span>(<span class="ident">QuestionPartMatrix</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;QuestionPartBuiltinInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>QuestionPartBuiltin {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;jme&quot;</span>)]
+    </span><span class="comment">// Box due to much larger size than other variant (clippy warning)
+    </span>JME(Box&lt;QuestionPartJME&gt;),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;gapfill&quot;</span>)]
+    </span>GapFill(QuestionPartGapFill),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;choose_one&quot;</span>)]
+    </span>ChooseOne(QuestionPartChooseOne),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;choose_multiple&quot;</span>)]
+    </span>ChooseMultiple(QuestionPartChooseMultiple),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;match_answers&quot;</span>)]
+    </span>MatchAnswersWithItems(QuestionPartMatchAnswersWithItems),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;number_entry&quot;</span>)]
+    </span>NumberEntry(QuestionPartNumberEntry),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;pattern_match&quot;</span>)]
+    </span>PatternMatch(QuestionPartPatternMatch),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;information&quot;</span>)]
+    </span>Information(QuestionPartInformation),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;extension&quot;</span>)]
+    </span>Extension(QuestionPartExtension),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;matrix&quot;</span>)]
+    </span>Matrix(QuestionPartMatrix),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::QuestionPartBuiltin</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartBuiltin</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::QuestionPartBuiltin</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartBuiltin::JME</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::JME</span>((<span class="kw-2">*</span><span class="ident">d</span>).<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::QuestionPartBuiltin&gt; <span class="kw">for </span>QuestionPartBuiltin {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::QuestionPartBuiltin {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuestionPartBuiltin::JME(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::JME((<span class="kw-2">*</span>d).to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::GapFill</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::GapFill</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::GapFill(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::GapFill(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::ChooseOne</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::ChooseOne</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::ChooseOne(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::ChooseOne(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::ChooseMultiple</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::ChooseMultiple</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::ChooseMultiple(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::MatchAnswersWithItems</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices</span>(
-                    <span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            QuestionPartBuiltin::MatchAnswersWithItems(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(
+                    d.to_numbas(locale),
                 )
             }
-            <span class="ident">QuestionPartBuiltin::NumberEntry</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::NumberEntry</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::NumberEntry(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::NumberEntry(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::PatternMatch</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::PatternMatch</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::PatternMatch(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::PatternMatch(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::Information</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::Information</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::Information(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::Information(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::Extension</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::Extension</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            QuestionPartBuiltin::Extension(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::Extension(d.to_numbas(locale))
             }
-            <span class="ident">QuestionPartBuiltin::Matrix</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">numbas::question::part::QuestionPartBuiltin::Matrix</span>(<span class="ident">Box::new</span>(<span class="ident">d</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)))
-            }
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartBuiltin</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::QuestionPartBuiltin</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartBuiltin</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::JME</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::JME</span>(<span class="ident">Box::new</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>()))
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::NumberEntry</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::NumberEntry</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::Matrix</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::Matrix</span>((<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">p</span>).<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::PatternMatch</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::PatternMatch</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::ChooseOne</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::ChooseOne</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::ChooseMultiple</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::ChooseMultiple</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::MatchAnswersWithItems</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::GapFill</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::GapFill</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::Information</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::Information</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
-            }
-            <span class="ident">numbas::question::part::QuestionPartBuiltin::Extension</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">QuestionPartBuiltin::Extension</span>(<span class="ident">p</span>.<span class="ident">to_rumbas</span>())
+            QuestionPartBuiltin::Matrix(d) =&gt; {
+                numbas::question::part::QuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale)))
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionPartBuiltinInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_steps</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ValueType</span><span class="op">&lt;</span><span class="ident">QuestionPartInput</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">QuestionPartBuiltinInput::JME</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="ident">as_mut</span>().<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::GapFill</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::ChooseOne</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::ChooseMultiple</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::MatchAnswersWithItems</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::NumberEntry</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::PatternMatch</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::Information</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::Extension</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
-            <span class="ident">QuestionPartBuiltinInput::Matrix</span>(<span class="ident">d</span>) =&gt; <span class="ident">d</span>.<span class="number">0</span>.<span class="ident">get_steps</span>(),
+<span class="kw">impl </span>ToRumbas&lt;QuestionPartBuiltin&gt; <span class="kw">for </span>numbas::question::part::QuestionPartBuiltin {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPartBuiltin {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::QuestionPartBuiltin::JME(p) =&gt; {
+                QuestionPartBuiltin::JME(Box::new(p.to_rumbas()))
+            }
+            numbas::question::part::QuestionPartBuiltin::NumberEntry(p) =&gt; {
+                QuestionPartBuiltin::NumberEntry(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::Matrix(p) =&gt; {
+                QuestionPartBuiltin::Matrix((<span class="kw-2">**</span>p).to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::PatternMatch(p) =&gt; {
+                QuestionPartBuiltin::PatternMatch(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::ChooseOne(p) =&gt; {
+                QuestionPartBuiltin::ChooseOne(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::ChooseMultiple(p) =&gt; {
+                QuestionPartBuiltin::ChooseMultiple(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(p) =&gt; {
+                QuestionPartBuiltin::MatchAnswersWithItems(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::GapFill(p) =&gt; {
+                QuestionPartBuiltin::GapFill(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::Information(p) =&gt; {
+                QuestionPartBuiltin::Information(p.to_rumbas())
+            }
+            numbas::question::part::QuestionPartBuiltin::Extension(p) =&gt; {
+                QuestionPartBuiltin::Extension(p.to_rumbas())
+            }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMENotesInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Comparable</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Default</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMENotes</span>(<span class="kw">pub</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">JMENote</span><span class="op">&gt;</span>);
+<span class="kw">impl </span>QuestionPartBuiltinInput {
+    <span class="kw">pub fn </span>get_steps(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Value&lt;Vec&lt;ValueType&lt;QuestionPartInput&gt;&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            QuestionPartBuiltinInput::JME(d) =&gt; d.as_mut().<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::GapFill(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::ChooseOne(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::ChooseMultiple(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::MatchAnswersWithItems(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::NumberEntry(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::PatternMatch(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::Information(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::Extension(d) =&gt; d.<span class="number">0</span>.get_steps(),
+            QuestionPartBuiltinInput::Matrix(d) =&gt; d.<span class="number">0</span>.get_steps(),
+        }
+    }
+}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::jme::JMENotesString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMENotes</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::jme::JMENotesString</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Noneable::NotNone</span>(<span class="ident">d</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="ident">description</span> {
-                    <span class="macro">format!</span>(<span class="string">&quot;({})&quot;</span>, <span class="ident">d</span>)
-                } <span class="kw">else</span> {
-                    <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMENotesInput&quot;</span>)]
+#[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq, Eq, Default)]
+#[serde(transparent)]
+</span><span class="kw">pub struct </span>JMENotes(<span class="kw">pub </span>Vec&lt;JMENote&gt;);
+
+<span class="kw">impl </span>ToNumbas&lt;numbas::jme::JMENotesString&gt; <span class="kw">for </span>JMENotes {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::jme::JMENotesString {
+        <span class="self">self</span>.<span class="number">0
+            </span>.iter()
+            .map(|v| {
+                <span class="kw">let </span>description = <span class="kw">if let </span>Noneable::NotNone(d) = <span class="kw-2">&amp;</span>v.description {
+                    <span class="macro">format!</span>(<span class="string">&quot;({})&quot;</span>, d)
+                } <span class="kw">else </span>{
+                    <span class="string">&quot;&quot;</span>.to_string()
                 };
                 <span class="macro">format!</span>(
                     <span class="string">&quot;{}{}:{}&quot;</span>,
-                    <span class="ident">v</span>.<span class="ident">name</span>,
-                    <span class="ident">description</span>,
-                    <span class="ident">v</span>.<span class="ident">expression</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
+                    v.name,
+                    description,
+                    v.expression.to_numbas(locale)
                 )
             })
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-            .<span class="ident">join</span>(<span class="string">&quot;\n\n&quot;</span>)
-            .<span class="ident">try_into</span>()
-            .<span class="ident">unwrap</span>()
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+            .join(<span class="string">&quot;\n\n&quot;</span>)
+            .try_into()
+            .unwrap()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMENotes</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::jme::JMENotesString</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMENotes</span> {
-        <span class="ident">JMENotes</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">notes</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notes</span> {
-            <span class="ident">notes</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">JMENote</span> {
-                    <span class="ident">name</span>: <span class="ident">n</span>.<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">to_rumbas</span>(),
-                    <span class="ident">description</span>: <span class="ident">n</span>.<span class="ident">description</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">expression</span>: <span class="ident">n</span>.<span class="ident">expression_string</span>().<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;JMENotes&gt; <span class="kw">for </span>numbas::jme::JMENotesString {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMENotes {
+        JMENotes(<span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>notes) = <span class="self">self</span>.notes {
+            notes
+                .iter()
+                .map(|n| JMENote {
+                    name: n.name.to_string().to_rumbas(),
+                    description: n.description.to_rumbas(),
+                    expression: n.expression_string().to_rumbas(),
                 })
-                .<span class="ident">collect</span>()
-        } <span class="kw">else</span> {
+                .collect()
+        } <span class="kw">else </span>{
             <span class="macro">vec!</span>[]
         })
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;JMENoteInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JMENote</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">expression</span>: <span class="ident">JMETranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;JMENoteInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>JMENote {
+    <span class="kw">pub </span>name: String,
+    <span class="kw">pub </span>description: Noneable&lt;String&gt;,
+    <span class="kw">pub </span>expression: JMETranslatableString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartMarkingNote</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JMENote</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartMarkingNote</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartMarkingNote</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">expression</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartMarkingNote&gt; <span class="kw">for </span>JMENote {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::custom_part_type::CustomPartMarkingNote {
+        numbas::question::custom_part_type::CustomPartMarkingNote {
+            name: <span class="self">self</span>.name.to_numbas(locale),
+            definition: <span class="self">self</span>.expression.to_numbas(locale),
+            description: <span class="self">self</span>.description.unwrap_or(<span class="string">&quot;&quot;</span>.to_string()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">JMENote</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartMarkingNote</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">JMENote</span> {
-        <span class="ident">JMENote</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">expression</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">description</span>: <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">description</span>.<span class="ident">to_rumbas</span>()),
+<span class="kw">impl </span>ToRumbas&lt;JMENote&gt; <span class="kw">for </span>numbas::question::custom_part_type::CustomPartMarkingNote {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; JMENote {
+        JMENote {
+            name: <span class="self">self</span>.name.to_rumbas(),
+            expression: <span class="self">self</span>.definition.to_rumbas(),
+            description: Noneable::NotNone(<span class="self">self</span>.description.to_rumbas()),
         }
     }
 }
 
-<span class="comment">// TODO major refactor: add fields that are used to right ones</span>
-<span class="macro">macro_rules!</span> <span class="ident">question_part_type</span> {
+<span class="comment">// TODO major refactor: add fields that are used to right ones
+</span><span class="macro">macro_rules! </span>question_part_type {
     (
-        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span> {
+        $(<span class="attribute">#[<span class="macro-nonterminal">$outer</span>:meta]</span>)*
+        <span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident </span>{
             $($(
-                $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>
-             ),<span class="op">+</span>)<span class="question-mark">?</span>
-        }
+                $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>:meta]</span>)*
+                <span class="macro-nonterminal">$field</span>: ident: <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty
+             </span>),+)<span class="question-mark">?
+        </span>}
     )=&gt;
     {
-        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>]</span>)<span class="op">*</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-            <span class="kw">pub</span> <span class="macro-nonterminal">marks</span>: <span class="ident">numbas::support::primitive::Number</span>,
-            <span class="kw">pub</span> <span class="ident">prompt</span>: <span class="ident">ContentAreaTranslatableString</span>,
-            <span class="kw">pub</span> <span class="ident">use_custom_name</span>: <span class="ident">bool</span>,
-            <span class="kw">pub</span> <span class="ident">custom_name</span>: <span class="ident">String</span>, <span class="comment">//TODO Translatable?</span>
-            <span class="kw">pub</span> <span class="ident">steps_penalty</span>: <span class="ident">numbas::support::primitive::Number</span>,
-            <span class="kw">pub</span> <span class="ident">enable_minimum_marks</span>: <span class="ident">bool</span>,
-            <span class="kw">pub</span> <span class="ident">minimum_marks</span>: <span class="ident">usize</span>, <span class="comment">//TODO: separate?</span>
-            <span class="kw">pub</span> <span class="ident">show_correct_answer</span>: <span class="ident">bool</span>,
-            <span class="kw">pub</span> <span class="ident">show_feedback_icon</span>: <span class="ident">bool</span>,
-            <span class="kw">pub</span> <span class="ident">variable_replacement_strategy</span>: <span class="ident">VariableReplacementStrategy</span>,
-            <span class="kw">pub</span> <span class="ident">adaptive_marking_penalty</span>: <span class="ident">usize</span>,
-            <span class="kw">pub</span> <span class="ident">custom_marking_algorithm_notes</span>: <span class="ident">JMENotes</span>,
-            <span class="kw">pub</span> <span class="ident">extend_base_marking_algorithm</span>: <span class="ident">bool</span>,
-            <span class="attribute">#[<span class="ident">input</span>(<span class="ident">skip</span>)]</span>
-            <span class="kw">pub</span> <span class="ident">steps</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span>
+        $(<span class="attribute">#[<span class="macro-nonterminal">$outer</span>]</span>)*
+        <span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+            <span class="kw">pub </span><span class="macro-nonterminal">marks</span>: numbas::support::primitive::Number,
+            <span class="kw">pub </span>prompt: ContentAreaTranslatableString,
+            <span class="kw">pub </span>use_custom_name: bool,
+            <span class="kw">pub </span>custom_name: String, <span class="comment">//TODO Translatable?
+            </span><span class="kw">pub </span>steps_penalty: numbas::support::primitive::Number,
+            <span class="kw">pub </span>enable_minimum_marks: bool,
+            <span class="kw">pub </span>minimum_marks: usize, <span class="comment">//TODO: separate?
+            </span><span class="kw">pub </span>show_correct_answer: bool,
+            <span class="kw">pub </span>show_feedback_icon: bool,
+            <span class="kw">pub </span>variable_replacement_strategy: VariableReplacementStrategy,
+            <span class="kw">pub </span>adaptive_marking_penalty: usize,
+            <span class="kw">pub </span>custom_marking_algorithm_notes: JMENotes,
+            <span class="kw">pub </span>extend_base_marking_algorithm: bool,
+            <span class="attribute">#[input(skip)]
+            </span><span class="kw">pub </span>steps: Vec&lt;QuestionPart&gt;
             $(,
             $(
-                $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">inner</span>]</span>)<span class="op">*</span>
-                <span class="kw">pub</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>
-            ),<span class="op">+</span>
-            )<span class="question-mark">?</span>
-        }
-        <span class="kw">impl</span> <span class="macro-nonterminal">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::QuestionPartSharedData</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-            <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::QuestionPartSharedData</span> {
-                <span class="ident">numbas::question::part::QuestionPartSharedData</span> {
-                    <span class="ident">marks</span>: <span class="self">self</span>.<span class="ident">marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">prompt</span>: <span class="self">self</span>.<span class="ident">prompt</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">use_custom_name</span>: <span class="self">self</span>.<span class="ident">use_custom_name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">custom_name</span>: <span class="self">self</span>.<span class="ident">custom_name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">steps_penalty</span>: <span class="self">self</span>.<span class="ident">steps_penalty</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">enable_minimum_marks</span>: <span class="self">self</span>.<span class="ident">enable_minimum_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">minimum_marks</span>: <span class="self">self</span>.<span class="ident">minimum_marks</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">show_correct_answer</span>: <span class="self">self</span>.<span class="ident">show_correct_answer</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">show_feedback_icon</span>: <span class="self">self</span>.<span class="ident">show_feedback_icon</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">variable_replacement_strategy</span>: <span class="self">self</span>.<span class="ident">variable_replacement_strategy</span>.<span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="ident">locale</span>),
-                    <span class="ident">adaptive_marking_penalty</span>: <span class="self">self</span>.<span class="ident">adaptive_marking_penalty</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">custom_marking_algorithm</span>: <span class="self">self</span>.<span class="ident">custom_marking_algorithm_notes</span>.<span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="ident">locale</span>),
-                    <span class="ident">extend_base_marking_algorithm</span>: <span class="self">self</span>.<span class="ident">extend_base_marking_algorithm</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">steps</span>: <span class="self">self</span>.<span class="ident">steps</span>.<span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="ident">locale</span>),
+                $(<span class="attribute">#[<span class="macro-nonterminal">$inner</span>]</span>)*
+                <span class="kw">pub </span><span class="macro-nonterminal">$field</span>: <span class="macro-nonterminal">$</span><span class="kw">type
+            </span>),+
+            )<span class="question-mark">?
+        </span>}
+        <span class="kw">impl </span><span class="macro-nonterminal">ToNumbas</span>&lt;numbas::question::part::QuestionPartSharedData&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::QuestionPartSharedData {
+                numbas::question::part::QuestionPartSharedData {
+                    marks: <span class="self">self</span>.marks.to_numbas(locale),
+                    prompt: <span class="self">self</span>.prompt.to_numbas(locale),
+                    use_custom_name: <span class="self">self</span>.use_custom_name.to_numbas(locale),
+                    custom_name: <span class="self">self</span>.custom_name.to_numbas(locale),
+                    steps_penalty: <span class="self">self</span>.steps_penalty.to_numbas(locale),
+                    enable_minimum_marks: <span class="self">self</span>.enable_minimum_marks.to_numbas(locale),
+                    minimum_marks: <span class="self">self</span>.minimum_marks.to_numbas(locale),
+                    show_correct_answer: <span class="self">self</span>.show_correct_answer.to_numbas(locale),
+                    show_feedback_icon: <span class="self">self</span>.show_feedback_icon.to_numbas(locale),
+                    variable_replacement_strategy: <span class="self">self</span>.variable_replacement_strategy.to_numbas(<span class="kw-2">&amp;</span>locale),
+                    adaptive_marking_penalty: <span class="self">self</span>.adaptive_marking_penalty.to_numbas(locale),
+                    custom_marking_algorithm: <span class="self">self</span>.custom_marking_algorithm_notes.to_numbas(<span class="kw-2">&amp;</span>locale),
+                    extend_base_marking_algorithm: <span class="self">self</span>.extend_base_marking_algorithm.to_numbas(locale),
+                    steps: <span class="self">self</span>.steps.to_numbas(<span class="kw-2">&amp;</span>locale),
                 }
 
             }
         }
-        <span class="macro">paste::paste!</span> {
-            <span class="kw">impl</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_steps</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Value</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ValueType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::question::part::question_part::QuestionPart</span> <span class="kw">as</span> <span class="ident">InputInverse</span><span class="op">&gt;</span><span class="ident">::Input</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-                    <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">steps</span>
+        <span class="macro">paste::paste! </span>{
+            <span class="kw">impl </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">struct </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">pub fn </span>get_steps(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Value&lt;Vec&lt;ValueType&lt;&lt;<span class="kw">crate</span>::question::part::question_part::QuestionPart <span class="kw">as </span>InputInverse&gt;::Input&gt;&gt;&gt; {
+                    <span class="kw-2">&amp;mut </span><span class="self">self</span>.steps
                 }
             }
         }
     }
 }
 
-<span class="macro">question_part_type!</span> {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionPartCustomInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionPartCustom</span> {
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span><span class="op">=</span><span class="string">&quot;type&quot;</span>)]</span>
-        <span class="ident">type_name</span>: <span class="ident">String</span>, <span class="comment">// Renamed because of bug in Comparable</span>
-        <span class="ident">settings</span>: <span class="ident">std::collections::HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">CustomPartInputTypeValue</span><span class="op">&gt;</span>
+<span class="macro">question_part_type! </span>{
+    <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[input(name = <span class="string">&quot;QuestionPartCustomInput&quot;</span>)]
+    #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+    </span><span class="kw">pub struct </span>QuestionPartCustom {
+        <span class="attribute">#[serde(rename=<span class="string">&quot;type&quot;</span>)]
+        </span>type_name: String, <span class="comment">// Renamed because of bug in Comparable
+        </span>settings: std::collections::HashMap&lt;String, CustomPartInputTypeValue&gt;
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartInputTypeValueInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartInputTypeValue</span> {
-    <span class="ident">CheckBox</span>(<span class="ident">bool</span>),
-    <span class="ident">Code</span>(<span class="ident">String</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartInputTypeValueInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>CustomPartInputTypeValue {
+    CheckBox(bool),
+    Code(String),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::CustomPartInputTypeValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartInputTypeValue</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::CustomPartInputTypeValue</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CustomPartInputTypeValue::CheckBox</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">numbas::question::part::CustomPartInputTypeValue::CheckBox</span>(<span class="kw-2">*</span><span class="ident">v</span>)
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::CustomPartInputTypeValue&gt; <span class="kw">for </span>CustomPartInputTypeValue {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::CustomPartInputTypeValue {
+        <span class="kw">match </span><span class="self">self </span>{
+            CustomPartInputTypeValue::CheckBox(v) =&gt; {
+                numbas::question::part::CustomPartInputTypeValue::CheckBox(<span class="kw-2">*</span>v)
             }
-            <span class="ident">CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">numbas::question::part::CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>.<span class="ident">clone</span>())
-            }
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartInputTypeValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::CustomPartInputTypeValue</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartInputTypeValue</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::CustomPartInputTypeValue::CheckBox</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CustomPartInputTypeValue::CheckBox</span>(<span class="kw-2">*</span><span class="ident">v</span>)
-            }
-            <span class="ident">numbas::question::part::CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">CustomPartInputTypeValue::Code</span>(<span class="ident">v</span>.<span class="ident">to_string</span>())
+            CustomPartInputTypeValue::Code(v) =&gt; {
+                numbas::question::part::CustomPartInputTypeValue::Code(v.clone())
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::QuestionPartCustom</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionPartCustom</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::QuestionPartCustom</span> {
-        <span class="ident">numbas::question::part::QuestionPartCustom</span> {
-            <span class="ident">part_data</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">r#type</span>: <span class="self">self</span>.<span class="ident">type_name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToRumbas&lt;CustomPartInputTypeValue&gt; <span class="kw">for </span>numbas::question::part::CustomPartInputTypeValue {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartInputTypeValue {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::CustomPartInputTypeValue::CheckBox(v) =&gt; {
+                CustomPartInputTypeValue::CheckBox(<span class="kw-2">*</span>v)
+            }
+            numbas::question::part::CustomPartInputTypeValue::Code(v) =&gt; {
+                CustomPartInputTypeValue::Code(v.to_string())
+            }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionPartCustom</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::QuestionPartCustom</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionPartCustom</span> {
-        <span class="ident">QuestionPartCustom</span> {
-            <span class="comment">// Default section</span>
-            <span class="ident">marks</span>: <span class="ident">extract_part_common_marks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">prompt</span>: <span class="ident">extract_part_common_prompt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">use_custom_name</span>: <span class="ident">extract_part_common_use_custom_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">custom_name</span>: <span class="ident">extract_part_common_custom_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">steps_penalty</span>: <span class="ident">extract_part_common_steps_penalty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">enable_minimum_marks</span>: <span class="ident">extract_part_common_enable_minimum_marks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">minimum_marks</span>: <span class="ident">extract_part_common_minimum_marks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">show_correct_answer</span>: <span class="ident">extract_part_common_show_correct_answer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">show_feedback_icon</span>: <span class="ident">extract_part_common_show_feedback_icon</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">variable_replacement_strategy</span>: <span class="self">self</span>.<span class="ident">part_data</span>.<span class="ident">variable_replacement_strategy</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">adaptive_marking_penalty</span>: <span class="ident">extract_part_common_adaptive_marking_penalty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
-            <span class="ident">custom_marking_algorithm_notes</span>: <span class="self">self</span>.<span class="ident">part_data</span>.<span class="ident">custom_marking_algorithm</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">extend_base_marking_algorithm</span>: <span class="ident">extract_part_common_extend_base_marking_algorithm</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>,
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::QuestionPartCustom&gt; <span class="kw">for </span>QuestionPartCustom {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::QuestionPartCustom {
+        numbas::question::part::QuestionPartCustom {
+            part_data: <span class="self">self</span>.to_numbas(locale),
+            r#type: <span class="self">self</span>.type_name.to_numbas(locale),
+            settings: <span class="self">self</span>.settings.to_numbas(locale),
+        }
+    }
+}
+
+<span class="kw">impl </span>ToRumbas&lt;QuestionPartCustom&gt; <span class="kw">for </span>numbas::question::part::QuestionPartCustom {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionPartCustom {
+        QuestionPartCustom {
+            <span class="comment">// Default section
+            </span>marks: extract_part_common_marks(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            prompt: extract_part_common_prompt(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            use_custom_name: extract_part_common_use_custom_name(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            custom_name: extract_part_common_custom_name(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            steps_penalty: extract_part_common_steps_penalty(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            enable_minimum_marks: extract_part_common_enable_minimum_marks(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            minimum_marks: extract_part_common_minimum_marks(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            show_correct_answer: extract_part_common_show_correct_answer(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            show_feedback_icon: extract_part_common_show_feedback_icon(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            variable_replacement_strategy: <span class="self">self</span>.part_data.variable_replacement_strategy.to_rumbas(),
+            adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
+            custom_marking_algorithm_notes: <span class="self">self</span>.part_data.custom_marking_algorithm.to_rumbas(),
+            extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.part_data,
             ),
-            <span class="ident">steps</span>: <span class="ident">extract_part_common_steps</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">part_data</span>),
+            steps: extract_part_common_steps(<span class="kw-2">&amp;</span><span class="self">self</span>.part_data),
 
-            <span class="ident">type_name</span>: <span class="self">self</span>.<span class="ident">r#type</span>.<span class="ident">clone</span>(),
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">to_rumbas</span>(),
+            type_name: <span class="self">self</span>.r#type.clone(),
+            settings: <span class="self">self</span>.settings.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;VariableReplacementStrategyInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableReplacementStrategy</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;original_first&quot;</span>)]</span>
-    <span class="ident">OriginalFirst</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;VariableReplacementStrategyInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>VariableReplacementStrategy {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;original_first&quot;</span>)]
+    </span>OriginalFirst,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::part::VariableReplacementStrategy</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableReplacementStrategy</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::part::VariableReplacementStrategy</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableReplacementStrategy::OriginalFirst</span> =&gt; {
-                <span class="ident">numbas::question::part::VariableReplacementStrategy::OriginalFirst</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::part::VariableReplacementStrategy&gt; <span class="kw">for </span>VariableReplacementStrategy {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::part::VariableReplacementStrategy {
+        <span class="kw">match </span><span class="self">self </span>{
+            VariableReplacementStrategy::OriginalFirst =&gt; {
+                numbas::question::part::VariableReplacementStrategy::OriginalFirst
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariableReplacementStrategy</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::part::VariableReplacementStrategy</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariableReplacementStrategy</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::part::VariableReplacementStrategy::OriginalFirst</span> =&gt; {
-                <span class="ident">VariableReplacementStrategy::OriginalFirst</span>
+<span class="kw">impl </span>ToRumbas&lt;VariableReplacementStrategy&gt; <span class="kw">for </span>numbas::question::part::VariableReplacementStrategy {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; VariableReplacementStrategy {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::part::VariableReplacementStrategy::OriginalFirst =&gt; {
+                VariableReplacementStrategy::OriginalFirst
             }
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

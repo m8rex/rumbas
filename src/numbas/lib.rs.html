@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../numbas/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../numbas/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -49,56 +49,56 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">exam</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">question</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">support</span>;
+</pre><pre class="rust"><code><span class="kw">pub mod </span>exam;
+<span class="kw">pub mod </span>question;
+<span class="kw">pub mod </span>support;
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest</span>;
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest_derive</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">jme</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">util</span>;
+<span class="kw">extern crate </span>pest;
+<span class="attribute">#[macro_use]
+</span><span class="kw">extern crate </span>pest_derive;
+<span class="kw">pub mod </span>jme;
+<span class="kw">pub mod </span>util;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident">serde_json::Result</span>;
-    <span class="kw">use</span> <span class="ident">std::fs</span>;
-    <span class="kw">fn</span> <span class="ident">exam_from_file</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">exam::Exam</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">fs::read_to_string</span>(<span class="ident">file</span>).<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to read {}&quot;</span>, <span class="ident">file</span>)[..]);
-        <span class="ident">exam::Exam::from_exam_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span>serde_json::Result;
+    <span class="kw">use </span>std::fs;
+    <span class="kw">fn </span>exam_from_file(file: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;exam::Exam&gt; {
+        <span class="kw">let </span>s = fs::read_to_string(file).expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to read {}&quot;</span>, file)[..]);
+        exam::Exam::from_exam_str(<span class="kw-2">&amp;</span>s)
     }
-    <span class="kw">fn</span> <span class="ident">question_from_file</span>(<span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">question::Question</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">fs::read_to_string</span>(<span class="ident">file</span>).<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to read {}&quot;</span>, <span class="ident">file</span>)[..]);
-        <span class="ident">question::Question::from_question_exam_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
+    <span class="kw">fn </span>question_from_file(file: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;question::Question&gt; {
+        <span class="kw">let </span>s = fs::read_to_string(file).expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;Failed to read {}&quot;</span>, file)[..]);
+        question::Question::from_question_exam_str(<span class="kw-2">&amp;</span>s)
     }
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="attribute">#[<span class="ident">ignore</span>]</span>
-    <span class="kw">fn</span> <span class="ident">it_works</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">exam_from_file</span>(
+    <span class="attribute">#[test]
+    #[ignore]
+    </span><span class="kw">fn </span>it_works() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>r = exam_from_file(
             <span class="string">&quot;testfiles/exam-62579-ncm4-u1l1-practice-graphing-linear-functions.exam&quot;</span>,
         )<span class="question-mark">?</span>;
-        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">serde_json::to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">r</span>).<span class="ident">unwrap</span>());
+        <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, serde_json::to_string_pretty(<span class="kw-2">&amp;</span>r).unwrap());
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parsing_works</span>() {
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">simple_logger::init</span>();
-        <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parsing_works() {
+        <span class="kw">let _ </span>= simple_logger::init();
+        <span class="kw">let </span>files = <span class="macro">vec!</span>[
             <span class="string">&quot;question-132674-jesse-s-copy-of-numbas-demo-choose-one-from-a-list-part-type.exam&quot;</span>,
             <span class="string">&quot;question-132684-jesse-s-copy-of-numbas-demo-choose-several-from-a-list-part-type.exam&quot;</span>,
             <span class="string">&quot;question-132696-jesse-s-copy-of-numbas-demo-match-choices-with-answers-part-type.exam&quot;</span>,
             <span class="string">&quot;question-132698-jesse-s-copy-of-numbas-demo-match-text-pattern-part-type.exam&quot;</span>,
             <span class="string">&quot;question-132699-jesse-s-copy-of-numbas-demo-matrix-entry-part-type.exam&quot;</span>,
         ];
-        <span class="kw">for</span> <span class="ident">file</span> <span class="kw">in</span> <span class="ident">files</span>.<span class="ident">into_iter</span>() {
-            <span class="macro">println!</span>(<span class="string">&quot;Parsing {}&quot;</span>, <span class="ident">file</span>);
-            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">question_from_file</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;testfiles/{}&quot;</span>, <span class="ident">file</span>)[..]);
-            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">r</span>);
-            <span class="macro">assert!</span>(<span class="ident">r</span>.<span class="ident">is_ok</span>())
+        <span class="kw">for </span>file <span class="kw">in </span>files.into_iter() {
+            <span class="macro">println!</span>(<span class="string">&quot;Parsing {}&quot;</span>, file);
+            <span class="kw">let </span>r = question_from_file(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;testfiles/{}&quot;</span>, file)[..]);
+            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, r);
+            <span class="macro">assert!</span>(r.is_ok())
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

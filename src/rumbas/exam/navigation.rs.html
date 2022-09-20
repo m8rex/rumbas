@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/navigation.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>navigation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/navigation.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>navigation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -317,324 +317,324 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support</span>::{<span class="ident">file_reference::FileString</span>, <span class="ident">noneable::Noneable</span>};
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::{file_reference::FileString, noneable::Noneable};
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;NormalNavigationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;mode&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NormalNavigation</span> {
-    <span class="ident">Sequential</span>(<span class="ident">SequentialNavigation</span>),
-    <span class="ident">Menu</span>(<span class="ident">MenuNavigation</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;NormalNavigationInput&quot;</span>)]
+#[derive(Deserialize, Serialize, Comparable, JsonSchema, Clone, Debug, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+#[serde(tag = <span class="string">&quot;mode&quot;</span>)]
+</span><span class="kw">pub enum </span>NormalNavigation {
+    Sequential(SequentialNavigation),
+    Menu(MenuNavigation),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::Navigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalNavigation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::Navigation</span> {
-        <span class="ident">numbas::exam::navigation::Navigation</span> {
-            <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">can_regenerate</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allow_steps</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_steps</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">show_title_page</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">confirm_when_leaving</span>: <span class="self">self</span>.<span class="ident">to_shared_data</span>().<span class="ident">confirm_when_leaving</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">start_password</span>: <span class="self">self</span>
-                .<span class="ident">to_shared_data</span>()
-                .<span class="ident">start_password</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">navigation_mode</span>: <span class="self">self</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::Navigation&gt; <span class="kw">for </span>NormalNavigation {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::Navigation {
+        numbas::exam::navigation::Navigation {
+            allow_regenerate: <span class="self">self</span>.to_shared_data().can_regenerate.to_numbas(locale),
+            allow_steps: <span class="self">self</span>.to_shared_data().show_steps.to_numbas(locale),
+            show_frontpage: <span class="self">self</span>.to_shared_data().show_title_page.to_numbas(locale),
+            confirm_when_leaving: <span class="self">self</span>.to_shared_data().confirm_when_leaving.to_numbas(locale),
+            start_password: <span class="self">self
+                </span>.to_shared_data()
+                .start_password
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            navigation_mode: <span class="self">self</span>.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::NavigationMode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NormalNavigation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::NavigationMode</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NormalNavigation::Menu</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">NormalNavigation::Sequential</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::NavigationMode&gt; <span class="kw">for </span>NormalNavigation {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::NavigationMode {
+        <span class="kw">match </span><span class="self">self </span>{
+            NormalNavigation::Menu(n) =&gt; n.to_numbas(locale),
+            NormalNavigation::Sequential(n) =&gt; n.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">NormalNavigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">NormalNavigation</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">navigation_mode</span> {
-            <span class="ident">numbas::exam::navigation::NavigationMode::Sequential</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">NormalNavigation::Sequential</span>(<span class="ident">SequentialNavigation</span> {
-                    <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">can_move_to_previous</span>: <span class="ident">s</span>.<span class="ident">can_move_to_previous</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">browsing_enabled</span>: <span class="ident">s</span>.<span class="ident">browsing_enabled</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">show_results_page</span>: <span class="ident">s</span>.<span class="ident">show_results_page</span>.<span class="ident">to_rumbas</span>(),
-                    <span class="ident">on_leave</span>: <span class="ident">s</span>.<span class="ident">on_leave</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;NormalNavigation&gt; <span class="kw">for </span>numbas::exam::Exam {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NormalNavigation {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.navigation.navigation_mode {
+            numbas::exam::navigation::NavigationMode::Sequential(s) =&gt; {
+                NormalNavigation::Sequential(SequentialNavigation {
+                    shared_data: <span class="self">self</span>.to_rumbas(),
+                    can_move_to_previous: s.can_move_to_previous.to_rumbas(),
+                    browsing_enabled: s.browsing_enabled.to_rumbas(),
+                    show_results_page: s.show_results_page.to_rumbas(),
+                    on_leave: s.on_leave.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::exam::navigation::NavigationMode::Menu</span> =&gt; {
-                <span class="ident">NormalNavigation::Menu</span>(<span class="ident">MenuNavigation</span> {
-                    <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
+            numbas::exam::navigation::NavigationMode::Menu =&gt; {
+                NormalNavigation::Menu(MenuNavigation {
+                    shared_data: <span class="self">self</span>.to_rumbas(),
                 })
             }
-            <span class="ident">numbas::exam::navigation::NavigationMode::Diagnostic</span>(<span class="ident">_d</span>) =&gt; {
+            numbas::exam::navigation::NavigationMode::Diagnostic(_d) =&gt; {
                 <span class="macro">panic!</span>(
                     <span class="string">&quot;{}&quot;</span>,
-                    <span class="string">&quot;Bug in rumbas: can&#39; create normal exam from diagnostic one.&quot;</span>
-                )
+                    <span class="string">&quot;Bug in rumbas: can&#39; create normal exam from diagnostic one.&quot;
+                </span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">NormalNavigation</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_shared_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">NavigationSharedData</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">NormalNavigation::Menu</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>(),
-            <span class="ident">NormalNavigation::Sequential</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">shared_data</span>.<span class="ident">clone</span>(),
+<span class="kw">impl </span>NormalNavigation {
+    <span class="kw">pub fn </span>to_shared_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NavigationSharedData {
+        <span class="kw">match </span><span class="self">self </span>{
+            NormalNavigation::Menu(m) =&gt; m.shared_data.clone(),
+            NormalNavigation::Sequential(m) =&gt; m.shared_data.clone(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;SequentialNavigationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SequentialNavigation</span> {
-    <span class="doccomment">/// (flattened field) The data shared between all types of navigation</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">NavigationSharedData</span>,
-    <span class="doccomment">/// Whether the student can move back to previous question</span>
-    <span class="doccomment">/// Old name was `reverse`</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;reverse&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">can_move_to_previous</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the student can jump to any question.</span>
-    <span class="kw">pub</span> <span class="ident">browsing_enabled</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// When the results page should be shown</span>
-    <span class="kw">pub</span> <span class="ident">show_results_page</span>: <span class="ident">ShowResultsPage</span>,
-    <span class="doccomment">/// Action to execute when a student changes question or tries to end the exam.</span>
-    <span class="kw">pub</span> <span class="ident">on_leave</span>: <span class="ident">LeaveAction</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;SequentialNavigationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>SequentialNavigation {
+    <span class="doccomment">/// (flattened field) The data shared between all types of navigation
+    </span><span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: NavigationSharedData,
+    <span class="doccomment">/// Whether the student can move back to previous question
+    /// Old name was `reverse`
+    </span><span class="attribute">#[serde(alias = <span class="string">&quot;reverse&quot;</span>)]
+    </span><span class="kw">pub </span>can_move_to_previous: bool,
+    <span class="doccomment">/// Whether the student can jump to any question.
+    </span><span class="kw">pub </span>browsing_enabled: bool,
+    <span class="doccomment">/// When the results page should be shown
+    </span><span class="kw">pub </span>show_results_page: ShowResultsPage,
+    <span class="doccomment">/// Action to execute when a student changes question or tries to end the exam.
+    </span><span class="kw">pub </span>on_leave: LeaveAction,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::NavigationMode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SequentialNavigation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::NavigationMode</span> {
-        <span class="ident">numbas::exam::navigation::NavigationMode::Sequential</span>(
-            <span class="ident">numbas::exam::navigation::NavigationModeSequential</span> {
-                <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">show_results_page</span>: <span class="self">self</span>.<span class="ident">show_results_page</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">can_move_to_previous</span>: <span class="self">self</span>.<span class="ident">can_move_to_previous</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                <span class="ident">browsing_enabled</span>: <span class="self">self</span>.<span class="ident">browsing_enabled</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::NavigationMode&gt; <span class="kw">for </span>SequentialNavigation {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::NavigationMode {
+        numbas::exam::navigation::NavigationMode::Sequential(
+            numbas::exam::navigation::NavigationModeSequential {
+                on_leave: <span class="self">self</span>.on_leave.to_numbas(locale),
+                show_results_page: <span class="self">self</span>.show_results_page.to_numbas(locale),
+                can_move_to_previous: <span class="self">self</span>.can_move_to_previous.to_numbas(locale),
+                browsing_enabled: <span class="self">self</span>.browsing_enabled.to_numbas(locale),
             },
         )
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;MenuNavigationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MenuNavigation</span> {
-    <span class="doccomment">/// (flattened field) The data shared between all types of navigation</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">NavigationSharedData</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;MenuNavigationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>MenuNavigation {
+    <span class="doccomment">/// (flattened field) The data shared between all types of navigation
+    </span><span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: NavigationSharedData,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::NavigationMode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MenuNavigation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::NavigationMode</span> {
-        <span class="ident">numbas::exam::navigation::NavigationMode::Menu</span> <span class="comment">// TODO: sequential</span>
-    }
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::NavigationMode&gt; <span class="kw">for </span>MenuNavigation {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::NavigationMode {
+        numbas::exam::navigation::NavigationMode::Menu <span class="comment">// TODO: sequential
+    </span>}
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;DiagnosticNavigationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DiagnosticNavigation</span> {
-    <span class="doccomment">/// (flattened field) The data shared between all types of navigation</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">NavigationSharedData</span>,
-    <span class="doccomment">/// Action to execute when a student changes question or tries to end the exam.</span>
-    <span class="kw">pub</span> <span class="ident">on_leave</span>: <span class="ident">LeaveAction</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;DiagnosticNavigationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>DiagnosticNavigation {
+    <span class="doccomment">/// (flattened field) The data shared between all types of navigation
+    </span><span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: NavigationSharedData,
+    <span class="doccomment">/// Action to execute when a student changes question or tries to end the exam.
+    </span><span class="kw">pub </span>on_leave: LeaveAction,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::Navigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DiagnosticNavigation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::Navigation</span> {
-        <span class="ident">numbas::exam::navigation::Navigation</span> {
-            <span class="ident">allow_regenerate</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">can_regenerate</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allow_steps</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">show_steps</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">show_frontpage</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">show_title_page</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">confirm_when_leaving</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">confirm_when_leaving</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">start_password</span>: <span class="self">self</span>
-                .<span class="ident">shared_data</span>
-                .<span class="ident">start_password</span>
-                .<span class="ident">to_numbas</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">navigation_mode</span>: <span class="ident">numbas::exam::navigation::NavigationMode::Diagnostic</span>(
-                <span class="ident">numbas::exam::navigation::NavigationModeDiagnostic</span> {
-                    <span class="ident">on_leave</span>: <span class="self">self</span>.<span class="ident">on_leave</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::Navigation&gt; <span class="kw">for </span>DiagnosticNavigation {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::Navigation {
+        numbas::exam::navigation::Navigation {
+            allow_regenerate: <span class="self">self</span>.shared_data.can_regenerate.to_numbas(locale),
+            allow_steps: <span class="self">self</span>.shared_data.show_steps.to_numbas(locale),
+            show_frontpage: <span class="self">self</span>.shared_data.show_title_page.to_numbas(locale),
+            confirm_when_leaving: <span class="self">self</span>.shared_data.confirm_when_leaving.to_numbas(locale),
+            start_password: <span class="self">self
+                </span>.shared_data
+                .start_password
+                .to_numbas(locale)
+                .unwrap_or_default(),
+            navigation_mode: numbas::exam::navigation::NavigationMode::Diagnostic(
+                numbas::exam::navigation::NavigationModeDiagnostic {
+                    on_leave: <span class="self">self</span>.on_leave.clone().to_numbas(locale),
                 },
             ),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">DiagnosticNavigation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiagnosticNavigation</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">navigation_mode</span> {
-            <span class="ident">numbas::exam::navigation::NavigationMode::Sequential</span>(<span class="ident">_s</span>) =&gt; {
+<span class="kw">impl </span>ToRumbas&lt;DiagnosticNavigation&gt; <span class="kw">for </span>numbas::exam::Exam {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DiagnosticNavigation {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.navigation.navigation_mode {
+            numbas::exam::navigation::NavigationMode::Sequential(_s) =&gt; {
                 <span class="macro">panic!</span>(
                     <span class="string">&quot;{}&quot;</span>,
-                    <span class="string">&quot;Bug in rumbas: can&#39; create diagnostic exam from normal one.&quot;</span>
-                )
+                    <span class="string">&quot;Bug in rumbas: can&#39; create diagnostic exam from normal one.&quot;
+                </span>)
             }
-            <span class="ident">numbas::exam::navigation::NavigationMode::Menu</span> =&gt; {
+            numbas::exam::navigation::NavigationMode::Menu =&gt; {
                 <span class="macro">panic!</span>(
                     <span class="string">&quot;{}&quot;</span>,
-                    <span class="string">&quot;Bug in rumbas: can&#39; create diagnostic exam from normal one.&quot;</span>
-                )
+                    <span class="string">&quot;Bug in rumbas: can&#39; create diagnostic exam from normal one.&quot;
+                </span>)
             }
-            <span class="ident">numbas::exam::navigation::NavigationMode::Diagnostic</span>(<span class="ident">d</span>) =&gt; <span class="ident">DiagnosticNavigation</span> {
-                <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">to_rumbas</span>(),
-                <span class="ident">on_leave</span>: <span class="ident">d</span>.<span class="ident">on_leave</span>.<span class="ident">to_rumbas</span>(),
+            numbas::exam::navigation::NavigationMode::Diagnostic(d) =&gt; DiagnosticNavigation {
+                shared_data: <span class="self">self</span>.to_rumbas(),
+                on_leave: d.on_leave.to_rumbas(),
             },
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;ShowResultsPageInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ShowResultsPage</span> {
-    <span class="ident">OnCompletion</span>,
-    <span class="ident">Never</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;ShowResultsPageInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>ShowResultsPage {
+    OnCompletion,
+    Never,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::ShowResultsPage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShowResultsPage</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::ShowResultsPage</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ShowResultsPage::OnCompletion</span> =&gt; {
-                <span class="ident">numbas::exam::navigation::ShowResultsPage::OnCompletion</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::ShowResultsPage&gt; <span class="kw">for </span>ShowResultsPage {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::ShowResultsPage {
+        <span class="kw">match </span><span class="self">self </span>{
+            ShowResultsPage::OnCompletion =&gt; {
+                numbas::exam::navigation::ShowResultsPage::OnCompletion
             }
-            <span class="ident">ShowResultsPage::Never</span> =&gt; <span class="ident">numbas::exam::navigation::ShowResultsPage::Never</span>,
+            ShowResultsPage::Never =&gt; numbas::exam::navigation::ShowResultsPage::Never,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">ShowResultsPage</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::navigation::ShowResultsPage</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ShowResultsPage</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::exam::navigation::ShowResultsPage::Never</span> =&gt; <span class="ident">ShowResultsPage::Never</span>,
-            <span class="ident">numbas::exam::navigation::ShowResultsPage::OnCompletion</span> =&gt; {
-                <span class="ident">ShowResultsPage::OnCompletion</span>
+<span class="kw">impl </span>ToRumbas&lt;ShowResultsPage&gt; <span class="kw">for </span>numbas::exam::navigation::ShowResultsPage {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ShowResultsPage {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::exam::navigation::ShowResultsPage::Never =&gt; ShowResultsPage::Never,
+            numbas::exam::navigation::ShowResultsPage::OnCompletion =&gt; {
+                ShowResultsPage::OnCompletion
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;LeaveActionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;action&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LeaveAction</span> {
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;LeaveActionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+#[serde(tag = <span class="string">&quot;action&quot;</span>)]
+</span><span class="kw">pub enum </span>LeaveAction {
     <span class="prelude-val">None</span>,
-    <span class="ident">WarnIfNotAttempted</span>(<span class="ident">LeaveActionMessage</span>),
-    <span class="ident">PreventIfNotAttempted</span>(<span class="ident">LeaveActionMessage</span>),
+    WarnIfNotAttempted(LeaveActionMessage),
+    PreventIfNotAttempted(LeaveActionMessage),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::navigation::LeaveAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">LeaveAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::navigation::LeaveAction</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">LeaveAction::None</span> =&gt; <span class="ident">numbas::exam::navigation::LeaveAction::None</span> {
-                <span class="ident">message</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(), <span class="comment">// message doesn&#39;t mean anything</span>
-            },
-            <span class="ident">LeaveAction::WarnIfNotAttempted</span>(<span class="ident">m</span>) =&gt; {
-                <span class="ident">numbas::exam::navigation::LeaveAction::WarnIfNotAttempted</span> {
-                    <span class="ident">message</span>: <span class="ident">m</span>.<span class="ident">message</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::navigation::LeaveAction&gt; <span class="kw">for </span>LeaveAction {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::navigation::LeaveAction {
+        <span class="kw">match </span><span class="self">self </span>{
+            LeaveAction::None =&gt; numbas::exam::navigation::LeaveAction::None {
+                message: <span class="string">&quot;&quot;</span>.to_string(), <span class="comment">// message doesn&#39;t mean anything
+            </span>},
+            LeaveAction::WarnIfNotAttempted(m) =&gt; {
+                numbas::exam::navigation::LeaveAction::WarnIfNotAttempted {
+                    message: m.message.to_string(locale).unwrap(),
                 }
             }
-            <span class="ident">LeaveAction::PreventIfNotAttempted</span>(<span class="ident">m</span>) =&gt; {
-                <span class="ident">numbas::exam::navigation::LeaveAction::PreventIfNotAttempted</span> {
-                    <span class="ident">message</span>: <span class="ident">m</span>.<span class="ident">message</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+            LeaveAction::PreventIfNotAttempted(m) =&gt; {
+                numbas::exam::navigation::LeaveAction::PreventIfNotAttempted {
+                    message: m.message.to_string(locale).unwrap(),
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">LeaveAction</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::navigation::LeaveAction</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">LeaveAction</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::exam::navigation::LeaveAction::None</span> { <span class="ident">message</span>: <span class="kw">_</span> } =&gt; <span class="ident">LeaveAction::None</span>,
-            <span class="ident">numbas::exam::navigation::LeaveAction::WarnIfNotAttempted</span> { <span class="ident">message</span> } =&gt; {
-                <span class="ident">LeaveAction::WarnIfNotAttempted</span>(<span class="ident">LeaveActionMessage</span> {
-                    <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">clone</span>().<span class="ident">into</span>(),
+<span class="kw">impl </span>ToRumbas&lt;LeaveAction&gt; <span class="kw">for </span>numbas::exam::navigation::LeaveAction {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LeaveAction {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::exam::navigation::LeaveAction::None { message: <span class="kw">_ </span>} =&gt; LeaveAction::None,
+            numbas::exam::navigation::LeaveAction::WarnIfNotAttempted { message } =&gt; {
+                LeaveAction::WarnIfNotAttempted(LeaveActionMessage {
+                    message: message.clone().into(),
                 })
             }
-            <span class="ident">numbas::exam::navigation::LeaveAction::PreventIfNotAttempted</span> { <span class="ident">message</span> } =&gt; {
-                <span class="ident">LeaveAction::PreventIfNotAttempted</span>(<span class="ident">LeaveActionMessage</span> {
-                    <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">clone</span>().<span class="ident">into</span>(),
+            numbas::exam::navigation::LeaveAction::PreventIfNotAttempted { message } =&gt; {
+                LeaveAction::PreventIfNotAttempted(LeaveActionMessage {
+                    message: message.clone().into(),
                 })
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;LeaveActionMessageInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LeaveActionMessage</span> {
-    <span class="kw">pub</span> <span class="ident">message</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;LeaveActionMessageInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>LeaveActionMessage {
+    <span class="kw">pub </span>message: TranslatableString,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;NavigationSharedDataInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NavigationSharedData</span> {
-    <span class="doccomment">/// Password to begin the exam</span>
-    <span class="doccomment">/// none and &quot;&quot; are the same</span>
-    <span class="kw">pub</span> <span class="ident">start_password</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">FileString</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Whether the student can regenerate questions</span>
-    <span class="doccomment">/// Old name was `allow_regenerate`</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;allow_regenerate&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">can_regenerate</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions</span>
-    <span class="doccomment">/// Old name was `allow_steps`</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;allow_steps&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">show_steps</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the title page should be shown.</span>
-    <span class="doccomment">/// Old name was `show_frontpage`</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;show_frontpage&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">show_title_page</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the student will be asked to confirm when leaving the exam.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;prevent_leaving&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">confirm_when_leaving</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">show_names_of_question_groups</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the student is allowed to print the exam</span>
-    <span class="kw">pub</span> <span class="ident">allow_printing</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;NavigationSharedDataInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>NavigationSharedData {
+    <span class="doccomment">/// Password to begin the exam
+    /// none and &quot;&quot; are the same
+    </span><span class="kw">pub </span>start_password: Noneable&lt;FileString&gt;,
+    <span class="doccomment">/// Whether the student can regenerate questions
+    /// Old name was `allow_regenerate`
+    </span><span class="attribute">#[serde(alias = <span class="string">&quot;allow_regenerate&quot;</span>)]
+    </span><span class="kw">pub </span>can_regenerate: bool,
+    <span class="doccomment">/// If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions
+    /// Old name was `allow_steps`
+    </span><span class="attribute">#[serde(alias = <span class="string">&quot;allow_steps&quot;</span>)]
+    </span><span class="kw">pub </span>show_steps: bool,
+    <span class="doccomment">/// Whether the title page should be shown.
+    /// Old name was `show_frontpage`
+    </span><span class="attribute">#[serde(alias = <span class="string">&quot;show_frontpage&quot;</span>)]
+    </span><span class="kw">pub </span>show_title_page: bool,
+    <span class="doccomment">/// Whether the student will be asked to confirm when leaving the exam.
+    </span><span class="attribute">#[serde(alias = <span class="string">&quot;prevent_leaving&quot;</span>)]
+    </span><span class="kw">pub </span>confirm_when_leaving: bool,
+    <span class="kw">pub </span>show_names_of_question_groups: bool,
+    <span class="doccomment">/// Whether the student is allowed to print the exam
+    </span><span class="kw">pub </span>allow_printing: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">NavigationSharedData</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::Exam</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">NavigationSharedData</span> {
-        <span class="ident">NavigationSharedData</span> {
-            <span class="ident">start_password</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">start_password</span>.<span class="ident">is_empty</span>() {
-                <span class="prelude-val">None</span>
-            } <span class="kw">else</span> {
-                <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">start_password</span>.<span class="ident">clone</span>())
+<span class="kw">impl </span>ToRumbas&lt;NavigationSharedData&gt; <span class="kw">for </span>numbas::exam::Exam {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NavigationSharedData {
+        NavigationSharedData {
+            start_password: <span class="kw">if </span><span class="self">self</span>.navigation.start_password.is_empty() {
+                <span class="prelude-val">None
+            </span>} <span class="kw">else </span>{
+                <span class="prelude-val">Some</span>(<span class="self">self</span>.navigation.start_password.clone())
             }
-            .<span class="ident">to_rumbas</span>(),
-            <span class="ident">can_regenerate</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">allow_regenerate</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_steps</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">allow_steps</span>.<span class="ident">to_rumbas</span>(),
+            .to_rumbas(),
+            can_regenerate: <span class="self">self</span>.navigation.allow_regenerate.to_rumbas(),
+            show_steps: <span class="self">self</span>.navigation.allow_steps.to_rumbas(),
 
-            <span class="ident">show_title_page</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">show_frontpage</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">confirm_when_leaving</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">confirm_when_leaving</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">show_names_of_question_groups</span>: <span class="self">self</span>
-                .<span class="ident">basic_settings</span>
-                .<span class="ident">show_question_group_names</span>
-                .<span class="ident">to_rumbas</span>(),
-            <span class="ident">allow_printing</span>: <span class="self">self</span>.<span class="ident">basic_settings</span>.<span class="ident">allow_printing</span>.<span class="ident">to_rumbas</span>(),
+            show_title_page: <span class="self">self</span>.navigation.show_frontpage.to_rumbas(),
+            confirm_when_leaving: <span class="self">self</span>.navigation.confirm_when_leaving.to_rumbas(),
+            show_names_of_question_groups: <span class="self">self
+                </span>.basic_settings
+                .show_question_group_names
+                .to_rumbas(),
+            allow_printing: <span class="self">self</span>.basic_settings.allow_printing.to_rumbas(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

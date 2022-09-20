@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/custom_part_type.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>custom_part_type.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/custom_part_type.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>custom_part_type.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -203,210 +203,210 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::EmbracedJMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMENotesString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::answer_style::AnswerStyle</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::jme::EmbracedJMEString;
+<span class="kw">use </span><span class="kw">crate</span>::jme::JMENotesString;
+<span class="kw">use </span><span class="kw">crate</span>::jme::JMEString;
+<span class="kw">use </span><span class="kw">crate</span>::support::answer_style::AnswerStyle;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>serde_with::skip_serializing_none;
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartType</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">short_name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">settings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSetting</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">help_url</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">public_availability</span>: <span class="ident">CustomPartAvailability</span>,
-    <span class="kw">pub</span> <span class="ident">marking_script</span>: <span class="ident">JMENotesString</span>,
-    <span class="kw">pub</span> <span class="ident">can_be_gap</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">can_be_step</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">marking_notes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartMarkingNote</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">published</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">extensions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">input_widget</span>: <span class="ident">CustomPartInputWidget</span>,
-    <span class="comment">//TODO source</span>
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartType {
+    <span class="kw">pub </span>name: String,
+    <span class="kw">pub </span>short_name: String,
+    <span class="kw">pub </span>description: String,
+    <span class="kw">pub </span>settings: Vec&lt;CustomPartTypeSetting&gt;,
+    <span class="kw">pub </span>help_url: String,
+    <span class="kw">pub </span>public_availability: CustomPartAvailability,
+    <span class="kw">pub </span>marking_script: JMENotesString,
+    <span class="kw">pub </span>can_be_gap: bool,
+    <span class="kw">pub </span>can_be_step: bool,
+    <span class="kw">pub </span>marking_notes: Vec&lt;CustomPartMarkingNote&gt;,
+    <span class="kw">pub </span>published: bool,
+    <span class="kw">pub </span>extensions: Vec&lt;String&gt;,
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>input_widget: CustomPartInputWidget,
+    <span class="comment">//TODO source
+</span>}
+
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartMarkingNote {
+    <span class="kw">pub </span>name: String,
+    <span class="kw">pub </span>definition: JMEString,
+    <span class="kw">pub </span>description: String,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartMarkingNote</span> {
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">definition</span>: <span class="ident">JMEString</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::jme::ast::Note</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartMarkingNote</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">note</span>: <span class="ident"><span class="kw">crate</span>::jme::ast::Note</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">CustomPartMarkingNote</span> {
-            <span class="ident">name</span>: <span class="ident">note</span>.<span class="ident">name</span>.<span class="ident">to_string</span>(),
-            <span class="ident">definition</span>: <span class="ident">note</span>.<span class="ident">expression_string</span>(),
-            <span class="ident">description</span>: <span class="ident">note</span>.<span class="ident">description</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
+<span class="kw">impl </span>std::convert::From&lt;<span class="kw">crate</span>::jme::ast::Note&gt; <span class="kw">for </span>CustomPartMarkingNote {
+    <span class="kw">fn </span>from(note: <span class="kw">crate</span>::jme::ast::Note) -&gt; <span class="self">Self </span>{
+        CustomPartMarkingNote {
+            name: note.name.to_string(),
+            definition: note.expression_string(),
+            description: note.description.unwrap_or_else(|| <span class="string">&quot;&quot;</span>.to_string()),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;input_widget&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;input_options&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartInputWidget</span> {
-    <span class="comment">//TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;string&quot;</span>)]</span>
-    <span class="doccomment">/// The student enters a single line of text.</span>
-    <span class="ident">String</span>(<span class="ident">CustomPartStringInputOptions</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;number&quot;</span>)]</span>
-    <span class="doccomment">/// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.</span>
-    <span class="ident">Number</span>(<span class="ident">CustomPartNumberInputOptions</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;radios&quot;</span>)]</span>
-    <span class="doccomment">/// The student chooses one from a list of choices by selecting a radio button.</span>
-    <span class="ident">RadioButtons</span>(<span class="ident">CustomPartRadioButtonsInputOptions</span>),
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;input_widget&quot;</span>, content = <span class="string">&quot;input_options&quot;</span>)]
+</span><span class="kw">pub enum </span>CustomPartInputWidget {
+    <span class="comment">//TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;string&quot;</span>)]
+    </span><span class="doccomment">/// The student enters a single line of text.
+    </span>String(CustomPartStringInputOptions),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;number&quot;</span>)]
+    </span><span class="doccomment">/// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.
+    </span>Number(CustomPartNumberInputOptions),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;radios&quot;</span>)]
+    </span><span class="doccomment">/// The student chooses one from a list of choices by selecting a radio button.
+    </span>RadioButtons(CustomPartRadioButtonsInputOptions),
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">T</span>,
-    <span class="doccomment">/// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;static&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">is_static</span>: <span class="ident">bool</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartInputOptionValue&lt;T: Clone&gt; {
+    <span class="kw">pub </span>value: T,
+    <span class="doccomment">/// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;static&quot;</span>)]
+    </span><span class="kw">pub </span>is_static: bool,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartStringInputOptions</span> {
-    <span class="comment">//TODO? hint &amp; correctAnswer is shared for all..., macro?</span>
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;correctAnswer&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMEString</span>, <span class="comment">// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowEmpty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow_empty</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>, <span class="comment">// If false, the part will only be marked if their answer is non-empty.</span>
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartStringInputOptions {
+    <span class="comment">//TODO? hint &amp; correctAnswer is shared for all..., macro?
+    </span><span class="kw">pub </span>hint: CustomPartInputOptionValue&lt;String&gt;, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;correctAnswer&quot;</span>)]
+    </span><span class="kw">pub </span>correct_answer: JMEString, <span class="comment">// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;allowEmpty&quot;</span>)]
+    </span><span class="kw">pub </span>allow_empty: CustomPartInputOptionValue&lt;bool&gt;, <span class="comment">// If false, the part will only be marked if their answer is non-empty.
+</span>}
+
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartNumberInputOptions {
+    <span class="kw">pub </span>hint: CustomPartInputOptionValue&lt;String&gt;, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;correctAnswer&quot;</span>)]
+    </span><span class="kw">pub </span>correct_answer: JMEString, <span class="comment">// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;allowFractions&quot;</span>)]
+    </span><span class="kw">pub </span>allow_fractions: CustomPartInputOptionValue&lt;bool&gt;, <span class="comment">//Allow the student to enter their answer as a fraction?
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;allowedNotationStyles&quot;</span>)]
+    </span><span class="kw">pub </span>allowed_notation_styles: CustomPartInputOptionValue&lt;Vec&lt;AnswerStyle&gt;&gt;,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartNumberInputOptions</span> {
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;correctAnswer&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMEString</span>, <span class="comment">// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowFractions&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow_fractions</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>, <span class="comment">//Allow the student to enter their answer as a fraction?</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;allowedNotationStyles&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allowed_notation_styles</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerStyle</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartRadioButtonsInputOptions {
+    <span class="kw">pub </span>hint: CustomPartInputOptionValue&lt;String&gt;, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;correctAnswer&quot;</span>)]
+    </span><span class="kw">pub </span>correct_answer: JMEString, <span class="comment">// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="doccomment">/// The labels for the choices to offer to the student.
+    </span><span class="kw">pub </span>choices: CustomPartInputOptionValue&lt;Vec&lt;String&gt;&gt;,
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartRadioButtonsInputOptions</span> {
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;correctAnswer&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMEString</span>, <span class="comment">// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="doccomment">/// The labels for the choices to offer to the student.</span>
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>CustomPartAvailability {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;always&quot;</span>)]
+    </span>Always,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;restricted&quot;</span>)]
+    </span>Restricted,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartAvailability</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;always&quot;</span>)]</span>
-    <span class="ident">Always</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;restricted&quot;</span>)]</span>
-    <span class="ident">Restricted</span>,
+<span class="comment">// TODO: other
+// https://docs.numbas.org.uk/en/latest/custom-part-types/reference.html?highlight=Custom#setting-types
+</span><span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;input_type&quot;</span>)]
+</span><span class="kw">pub enum </span>CustomPartTypeSetting {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;checkbox&quot;</span>)]
+    </span>CheckBox(CustomPartTypeSettingCheckBox),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;code&quot;</span>)]
+    </span>Code(CustomPartTypeSettingCode),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;mathematical_expression&quot;</span>)]
+    </span>MathematicalExpression(CustomPartTypeSettingMathematicalExpression),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;string&quot;</span>)]
+    </span>String(CustomPartTypeSettingString),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;dropdown&quot;</span>)]
+    </span>DropDown(CustomPartTypeSettingDropDown),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;percent&quot;</span>)]
+    </span>Percentage(CustomPartTypeSettingPercentage),
+    <span class="comment">// TODO see https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html?highlight=content%20area#setting-types
+</span>}
+
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingSharedData {
+    <span class="doccomment">/// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting, but doesn’t need to be very descriptive - the label can do that.
+    </span><span class="kw">pub </span>name: String,
+    <span class="doccomment">/// The label shown next to the setting in the question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.
+    </span><span class="kw">pub </span>label: String,
+    <span class="doccomment">/// The address of documentation explaining this setting in further depth.
+    </span><span class="kw">pub </span>help_url: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.
+    </span><span class="kw">pub </span>hint: String,
 }
 
-<span class="comment">// TODO: other</span>
-<span class="comment">// https://docs.numbas.org.uk/en/latest/custom-part-types/reference.html?highlight=Custom#setting-types</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;input_type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartTypeSetting</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;checkbox&quot;</span>)]</span>
-    <span class="ident">CheckBox</span>(<span class="ident">CustomPartTypeSettingCheckBox</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;code&quot;</span>)]</span>
-    <span class="ident">Code</span>(<span class="ident">CustomPartTypeSettingCode</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;mathematical_expression&quot;</span>)]</span>
-    <span class="ident">MathematicalExpression</span>(<span class="ident">CustomPartTypeSettingMathematicalExpression</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;string&quot;</span>)]</span>
-    <span class="ident">String</span>(<span class="ident">CustomPartTypeSettingString</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;dropdown&quot;</span>)]</span>
-    <span class="ident">DropDown</span>(<span class="ident">CustomPartTypeSettingDropDown</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;percent&quot;</span>)]</span>
-    <span class="ident">Percentage</span>(<span class="ident">CustomPartTypeSettingPercentage</span>),
-    <span class="comment">// TODO see https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html?highlight=content%20area#setting-types</span>
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingString {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;subvars&quot;</span>)]
+    </span><span class="doccomment">/// If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.
+    </span><span class="kw">pub </span>evaluate_enclosed_expressions: bool,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: String,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingSharedData</span> {
-    <span class="doccomment">/// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting, but doesn’t need to be very descriptive - the label can do that.</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The label shown next to the setting in the question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</span>
-    <span class="kw">pub</span> <span class="ident">label</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The address of documentation explaining this setting in further depth.</span>
-    <span class="kw">pub</span> <span class="ident">help_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</span>
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingMathematicalExpression {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;subvars&quot;</span>)]
+    </span><span class="doccomment">///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.
+    </span><span class="kw">pub </span>evaluate_enclosed_expressions: bool,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: EmbracedJMEString,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingString</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;subvars&quot;</span>)]</span>
-    <span class="doccomment">/// If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.</span>
-    <span class="kw">pub</span> <span class="ident">evaluate_enclosed_expressions</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingCode {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: JMEString,
+    <span class="kw">pub </span>evaluate: bool,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingMathematicalExpression</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;subvars&quot;</span>)]</span>
-    <span class="doccomment">///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.</span>
-    <span class="kw">pub</span> <span class="ident">evaluate_enclosed_expressions</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">EmbracedJMEString</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingCheckBox {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: bool,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingCode</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">JMEString</span>,
-    <span class="kw">pub</span> <span class="ident">evaluate</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingDropDown {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: String,
+    <span class="kw">pub </span>choices: Vec&lt;CustomPartTypeSettingDropDownChoice&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingCheckBox</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingDropDownChoice {
+    <span class="kw">pub </span>value: String,
+    <span class="kw">pub </span>label: String,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingDropDown</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingDropDownChoice</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingDropDownChoice</span> {
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">label</span>: <span class="ident">String</span>,
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingPercentage</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.</span>
-    <span class="kw">pub</span> <span class="ident">default_value</span>: <span class="ident">String</span>,
+<span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingPercentage {
+    <span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, leave this blank.
+    </span><span class="kw">pub </span>default_value: String,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

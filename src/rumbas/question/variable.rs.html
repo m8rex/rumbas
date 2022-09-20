@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/variable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>variable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/variable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>variable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -458,465 +458,465 @@
 <span id="458">458</span>
 <span id="459">459</span>
 <span id="460">460</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FileString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FILE_PREFIX</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident">regex::Regex</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FileString;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FILE_PREFIX;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>numbas::jme::JMEString;
+<span class="kw">use </span>regex::Regex;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">UNGROUPED_GROUP</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Ungrouped variables&quot;</span>;
+<span class="kw">pub const </span>UNGROUPED_GROUP: <span class="kw-2">&amp;</span>str = <span class="string">&quot;Ungrouped variables&quot;</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;VariableRepresentationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableRepresentation</span> {
-    <span class="comment">//ListOfNumbers(Vec&lt;f64&gt;), not used for now, impossible to find difference with ListOfStrings</span>
-    <span class="comment">//because of templating and invalid: TODO</span>
-    <span class="ident">ListOfStrings</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>),
-    <span class="ident">Number</span>(<span class="ident">f64</span>),
-    <span class="ident">Other</span>(<span class="ident">VariableStringRepresentation</span>),
-    <span class="ident">TranslatableString</span>(<span class="ident">TranslatableString</span>),
-    <span class="ident">Long</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Variable</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;VariableRepresentationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>VariableRepresentation {
+    <span class="comment">//ListOfNumbers(Vec&lt;f64&gt;), not used for now, impossible to find difference with ListOfStrings
+    //because of templating and invalid: TODO
+    </span>ListOfStrings(Vec&lt;String&gt;),
+    Number(f64),
+    Other(VariableStringRepresentation),
+    TranslatableString(TranslatableString),
+    Long(Box&lt;Variable&gt;),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::variable::Variable</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableRepresentation</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::variable::Variable&gt; <span class="kw">for </span>VariableRepresentation {
+    <span class="kw">fn </span>to_numbas_with_name(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">name</span>: <span class="ident">String</span>,
-    ) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
-        <span class="self">self</span>.<span class="ident">to_variable</span>(<span class="ident">locale</span>).<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="ident">name</span>)
+        locale: <span class="kw-2">&amp;</span>str,
+        name: String,
+    ) -&gt; numbas::question::variable::Variable {
+        <span class="self">self</span>.to_variable(locale).to_numbas_with_name(locale, name)
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::variable::Variable {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
-            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.to_string(),
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariableRepresentation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::variable::Variable</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariableRepresentation</span> {
-        <span class="ident">VariableRepresentation::Long</span>(<span class="ident">Box::new</span>(<span class="ident">Variable</span> {
-            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">template_type</span>: <span class="self">self</span>.<span class="ident">template_type</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">group</span>: <span class="self">self</span>.<span class="ident">group</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;VariableRepresentation&gt; <span class="kw">for </span>numbas::question::variable::Variable {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; VariableRepresentation {
+        VariableRepresentation::Long(Box::new(Variable {
+            definition: <span class="self">self</span>.definition.to_rumbas(),
+            description: <span class="self">self</span>.description.to_rumbas(),
+            template_type: <span class="self">self</span>.template_type.to_rumbas(),
+            group: <span class="self">self</span>.group.to_rumbas(),
         }))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">VariableRepresentation</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_variable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Variable</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableRepresentation::ListOfStrings</span>(<span class="ident">l</span>) =&gt; <span class="ident">Variable::ungrouped</span>(
-                <span class="ident">VariableTemplateType::ListOfStrings</span>,
-                <span class="kw-2">&amp;</span><span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>).<span class="ident">unwrap</span>(),
+<span class="kw">impl </span>VariableRepresentation {
+    <span class="kw">pub fn </span>to_variable(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; Variable {
+        <span class="kw">match </span><span class="self">self </span>{
+            VariableRepresentation::ListOfStrings(l) =&gt; Variable::ungrouped(
+                VariableTemplateType::ListOfStrings,
+                <span class="kw-2">&amp;</span>serde_json::to_string(<span class="kw-2">&amp;</span>l).unwrap(),
             ),
             <span class="comment">/*VariableRepresentation::ListOfNumbers(l) =&gt; Variable::ungrouped(
                 VariableTemplateType::ListOfNumbers,
                 &amp;serde_json::to_string(&amp;l).unwrap(),
-            ),*/</span>
-            <span class="ident">VariableRepresentation::Long</span>(<span class="ident">v</span>) =&gt; <span class="kw-2">*</span>(<span class="ident">v</span>.<span class="ident">clone</span>()),
-            <span class="ident">VariableRepresentation::Number</span>(<span class="ident">n</span>) =&gt; {
-                <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Number</span>, <span class="kw-2">&amp;</span><span class="ident">n</span>.<span class="ident">to_string</span>())
+            ),*/
+            </span>VariableRepresentation::Long(v) =&gt; <span class="kw-2">*</span>(v.clone()),
+            VariableRepresentation::Number(n) =&gt; {
+                Variable::ungrouped(VariableTemplateType::Number, <span class="kw-2">&amp;</span>n.to_string())
             }
-            <span class="ident">VariableRepresentation::Other</span>(<span class="ident">o</span>) =&gt; <span class="kw">match</span> <span class="ident">o</span> {
-                <span class="ident">VariableStringRepresentation::Anything</span>(<span class="ident">s</span>) =&gt; {
-                    <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Anything</span>, <span class="kw-2">&amp;</span><span class="ident">s</span>.<span class="ident">to_string</span>())
+            VariableRepresentation::Other(o) =&gt; <span class="kw">match </span>o {
+                VariableStringRepresentation::Anything(s) =&gt; {
+                    Variable::ungrouped(VariableTemplateType::Anything, <span class="kw-2">&amp;</span>s.to_string())
                 }
-                <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>) =&gt; {
-                    <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::Range</span>, <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">as_range</span>())
+                VariableStringRepresentation::Range(r) =&gt; {
+                    Variable::ungrouped(VariableTemplateType::Range, <span class="kw-2">&amp;</span>r.as_range())
                 }
-                <span class="ident">VariableStringRepresentation::RandomRange</span>(<span class="ident">r</span>) =&gt; {
-                    <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType::RandomRange</span>, <span class="kw-2">&amp;</span><span class="ident">r</span>.<span class="ident">as_random_range</span>())
+                VariableStringRepresentation::RandomRange(r) =&gt; {
+                    Variable::ungrouped(VariableTemplateType::RandomRange, <span class="kw-2">&amp;</span>r.as_random_range())
                 }
-                <span class="ident">VariableStringRepresentation</span>::<span class="ident">r#String</span>(<span class="ident">s</span>) =&gt; {
-                    <span class="ident">Variable::ungrouped</span>(<span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span>, <span class="ident">s</span>)
+                VariableStringRepresentation::r#String(s) =&gt; {
+                    Variable::ungrouped(VariableTemplateType::r#String, s)
                 }
             },
-            <span class="ident">VariableRepresentation::TranslatableString</span>(<span class="ident">l</span>) =&gt; <span class="ident">Variable::ungrouped</span>(
-                <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span>,
-                <span class="kw-2">&amp;</span><span class="ident">l</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
+            VariableRepresentation::TranslatableString(l) =&gt; Variable::ungrouped(
+                VariableTemplateType::r#String,
+                <span class="kw-2">&amp;</span>l.to_string(locale).unwrap(),
             ),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">JsonSchema</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;VariableStringRepresentationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">try_from</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;String&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableStringRepresentation</span> {
-    <span class="ident">Anything</span>(<span class="ident">JMEString</span>),
-    <span class="ident">r#String</span>(<span class="ident">String</span>),
-    <span class="ident">Range</span>(<span class="ident">RangeData</span>),
-    <span class="ident">RandomRange</span>(<span class="ident">RangeData</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
+#[input(name = <span class="string">&quot;VariableStringRepresentationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
+#[serde(try_from = <span class="string">&quot;String&quot;</span>)]
+#[serde(into = <span class="string">&quot;String&quot;</span>)]
+</span><span class="kw">pub enum </span>VariableStringRepresentation {
+    Anything(JMEString),
+    r#String(String),
+    Range(RangeData),
+    RandomRange(RangeData),
 }
 
-<span class="kw">impl</span> <span class="ident">JsonSchema</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentationInput</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="ident">String</span> {
-        <span class="string">&quot;VariableStringRepresentationInput&quot;</span>.<span class="ident">to_owned</span>()
+<span class="kw">impl </span>JsonSchema <span class="kw">for </span>VariableStringRepresentationInput {
+    <span class="kw">fn </span>schema_name() -&gt; String {
+        <span class="string">&quot;VariableStringRepresentationInput&quot;</span>.to_owned()
     }
 
-    <span class="kw">fn</span> <span class="ident">json_schema</span>(<span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">schemars::gen::SchemaGenerator</span>) -&gt; <span class="ident">schemars::schema::Schema</span> {
-        <span class="ident">schemars::schema::SchemaObject</span> {
-            <span class="ident">instance_type</span>: <span class="prelude-val">Some</span>(<span class="ident">schemars::schema::InstanceType::String</span>.<span class="ident">into</span>()),
-            ..<span class="ident">Default::default</span>()
+    <span class="kw">fn </span>json_schema(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>schemars::gen::SchemaGenerator) -&gt; schemars::schema::Schema {
+        schemars::schema::SchemaObject {
+            instance_type: <span class="prelude-val">Some</span>(schemars::schema::InstanceType::String.into()),
+            ..Default::default()
         }
-        .<span class="ident">into</span>()
+        .into()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentation</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}:&quot;</span>, <span class="ident">FILE_PREFIX</span>)[..]) {
+<span class="kw">impl </span>std::convert::TryFrom&lt;String&gt; <span class="kw">for </span>VariableStringRepresentation {
+    <span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+    <span class="kw">fn </span>try_from(s: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">if </span>s.starts_with(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}:&quot;</span>, FILE_PREFIX)[..]) {
             <span class="prelude-val">Err</span>(<span class="string">&quot;can&#39;t start with file:&quot;</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
-                <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>)
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>) {
-                <span class="ident">VariableStringRepresentation::RandomRange</span>(<span class="ident">r</span>)
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">JMEString::try_from</span>(<span class="ident">s</span>.<span class="ident">clone</span>()) {
-                <span class="ident">VariableStringRepresentation::Anything</span>(<span class="ident">r</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">VariableStringRepresentation::String</span>(<span class="ident">s</span>)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Ok</span>(<span class="kw">if let </span><span class="prelude-val">Some</span>(r) = RangeData::try_from_range(<span class="kw-2">&amp;</span>s) {
+                VariableStringRepresentation::Range(r)
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(r) = RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s) {
+                VariableStringRepresentation::RandomRange(r)
+            } <span class="kw">else if let </span><span class="prelude-val">Ok</span>(r) = JMEString::try_from(s.clone()) {
+                VariableStringRepresentation::Anything(r)
+            } <span class="kw">else </span>{
+                VariableStringRepresentation::String(s)
             })
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableStringRepresentationInput</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="ident">VariableStringRepresentation::try_from</span>(<span class="ident">s</span>).<span class="ident">map</span>(<span class="ident"><span class="self">Self</span>::from_normal</span>)
+<span class="kw">impl </span>std::convert::TryFrom&lt;String&gt; <span class="kw">for </span>VariableStringRepresentationInput {
+    <span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+    <span class="kw">fn </span>try_from(s: String) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        VariableStringRepresentation::try_from(s).map(<span class="self">Self</span>::from_normal)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">VariableStringRepresentation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">VariableStringRepresentation</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">v</span> {
-            <span class="ident">VariableStringRepresentation::Anything</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">to_string</span>(),
-            <span class="ident">VariableStringRepresentation::Range</span>(<span class="ident">r</span>) =&gt; <span class="ident">r</span>.<span class="ident">as_range</span>(),
-            <span class="ident">VariableStringRepresentation::RandomRange</span>(<span class="ident">r</span>) =&gt; <span class="ident">r</span>.<span class="ident">as_random_range</span>(),
-            <span class="ident">VariableStringRepresentation</span>::<span class="ident">r#String</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>,
+<span class="kw">impl </span>std::convert::From&lt;VariableStringRepresentation&gt; <span class="kw">for </span>String {
+    <span class="kw">fn </span>from(v: VariableStringRepresentation) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>v {
+            VariableStringRepresentation::Anything(s) =&gt; s.to_string(),
+            VariableStringRepresentation::Range(r) =&gt; r.as_range(),
+            VariableStringRepresentation::RandomRange(r) =&gt; r.as_random_range(),
+            VariableStringRepresentation::r#String(s) =&gt; s,
         }
     }
 }
-<span class="comment">// TODO a StringInput derive that creates a struct which equals it&#39;s Input and reads and writes to</span>
-<span class="comment">// string</span>
-<span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="ident">VariableStringRepresentationInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">VariableStringRepresentationInput</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">v</span>.<span class="ident">to_normal</span>().<span class="ident">into</span>()
+<span class="comment">// TODO a StringInput derive that creates a struct which equals it&#39;s Input and reads and writes to
+// string
+</span><span class="kw">impl </span>std::convert::From&lt;VariableStringRepresentationInput&gt; <span class="kw">for </span>String {
+    <span class="kw">fn </span>from(v: VariableStringRepresentationInput) -&gt; <span class="self">Self </span>{
+        v.to_normal().into()
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;RangeDataInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RangeData</span> {
-    <span class="kw">pub</span> <span class="ident">from</span>: <span class="ident">f64</span>,
-    <span class="kw">pub</span> <span class="ident">to</span>: <span class="ident">f64</span>,
-    <span class="kw">pub</span> <span class="ident">step</span>: <span class="ident">f64</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = <span class="string">&quot;RangeDataInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>RangeData {
+    <span class="kw">pub </span>from: f64,
+    <span class="kw">pub </span>to: f64,
+    <span class="kw">pub </span>step: f64,
 }
 
-<span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">RangeDataInputEnum</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">RangeDataInput::examples</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="ident">RangeDataInputEnum</span>)
-            .<span class="ident">collect</span>()
+<span class="kw">impl </span>Examples <span class="kw">for </span>RangeDataInputEnum {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        RangeDataInput::examples()
+            .into_iter()
+            .map(RangeDataInputEnum)
+            .collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">RangeDataInput</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>Examples <span class="kw">for </span>RangeDataInput {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
         <span class="macro">vec!</span>[
-            <span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">0.0</span>,
-                <span class="ident">to</span>: <span class="number">1.0</span>,
-                <span class="ident">step</span>: <span class="number">0.1</span>,
+            RangeData {
+                from: <span class="number">0.0</span>,
+                to: <span class="number">1.0</span>,
+                step: <span class="number">0.1</span>,
             },
-            <span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">1.0</span>,
-                <span class="ident">to</span>: <span class="number">1.0</span>,
-                <span class="ident">step</span>: <span class="op">-</span><span class="number">0.1</span>,
+            RangeData {
+                from: <span class="number">1.0</span>,
+                to: <span class="number">1.0</span>,
+                step: -<span class="number">0.1</span>,
             },
-            <span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">10.0</span>,
-                <span class="ident">to</span>: <span class="number">1.0</span>,
-                <span class="ident">step</span>: <span class="number">5.0</span>,
+            RangeData {
+                from: <span class="number">10.0</span>,
+                to: <span class="number">1.0</span>,
+                step: <span class="number">5.0</span>,
             },
-            <span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="op">-</span><span class="number">10.0</span>,
-                <span class="ident">to</span>: <span class="number">1.0</span>,
-                <span class="ident">step</span>: <span class="number">0.1</span>,
+            RangeData {
+                from: -<span class="number">10.0</span>,
+                to: <span class="number">1.0</span>,
+                step: <span class="number">0.1</span>,
             },
         ]
-        .<span class="ident">into_iter</span>()
-        .<span class="ident">map</span>(<span class="ident"><span class="self">Self</span>::from_normal</span>)
-        .<span class="ident">collect</span>()
+        .into_iter()
+        .map(<span class="self">Self</span>::from_normal)
+        .collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">RangeData</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">re</span> <span class="op">=</span> <span class="ident">Regex::new</span>(
+<span class="kw">impl </span>RangeData {
+    <span class="kw">pub fn </span>try_from_range(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;RangeData&gt; {
+        <span class="kw">let </span>re = Regex::new(
             <span class="string">r&quot;^((-)?\d+(?:\.\d*)?)\s*\.\.\s*((-)?\d+(?:\.\d*)?)(\#((-)?\d+(?:\.\d*)?))?$&quot;</span>,
         )
-        .<span class="ident">expect</span>(<span class="string">&quot;It to be a valid regex&quot;</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">re</span>.<span class="ident">captures</span>(<span class="ident">s</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">to</span>: <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">3</span>).<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-                <span class="ident">step</span>: <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">6</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">as_str</span>()).<span class="ident">unwrap_or</span>(<span class="string">&quot;1&quot;</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
+        .expect(<span class="string">&quot;It to be a valid regex&quot;</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(c) = re.captures(s) {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(RangeData {
+                from: c.get(<span class="number">1</span>).unwrap().as_str().parse().unwrap(),
+                to: c.get(<span class="number">3</span>).unwrap().as_str().parse().unwrap(),
+                step: c.get(<span class="number">6</span>).map(|m| m.as_str()).unwrap_or(<span class="string">&quot;1&quot;</span>).parse().unwrap(),
             });
         }
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">None
+    </span>}
+    <span class="kw">pub fn </span>as_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="macro">format!</span>(<span class="string">&quot;{} .. {}#{}&quot;</span>, <span class="self">self</span>.from, <span class="self">self</span>.to, <span class="self">self</span>.step)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="string">&quot;{} .. {}#{}&quot;</span>, <span class="self">self</span>.<span class="ident">from</span>, <span class="self">self</span>.<span class="ident">to</span>, <span class="self">self</span>.<span class="ident">step</span>)
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_random_range</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RangeData</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&quot;random(&quot;</span>) <span class="op">&amp;&amp;</span> <span class="ident">s</span>.<span class="ident">ends_with</span>(<span class="string">&#39;)&#39;</span>) {
-            <span class="kw">return</span> <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="number">7</span>..<span class="ident">s</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>]);
+    <span class="kw">pub fn </span>try_from_random_range(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;RangeData&gt; {
+        <span class="kw">if </span>s.starts_with(<span class="string">&quot;random(&quot;</span>) &amp;&amp; s.ends_with(<span class="string">&#39;)&#39;</span>) {
+            <span class="kw">return </span>RangeData::try_from_range(<span class="kw-2">&amp;</span>s[<span class="number">7</span>..s.len() - <span class="number">1</span>]);
         }
-        <span class="prelude-val">None</span>
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_random_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="string">&quot;random({})&quot;</span>, <span class="self">self</span>.<span class="ident">as_range</span>())
+        <span class="prelude-val">None
+    </span>}
+    <span class="kw">pub fn </span>as_random_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="macro">format!</span>(<span class="string">&quot;random({})&quot;</span>, <span class="self">self</span>.as_range())
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="macro">macro_rules!</span> <span class="ident">i</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expr</span>: <span class="ident">expr</span>) =&gt; {
-            <span class="ident">RangeDataInput::from_normal</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expr</span>)
+    <span class="macro">macro_rules! </span>i {
+        (<span class="macro-nonterminal">$expr</span>: expr) =&gt; {
+            RangeDataInput::from_normal(<span class="macro-nonterminal">$expr</span>)
         };
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">range_back_and_forth</span>() {
-        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">RangeDataInput::examples</span>().<span class="ident">into_iter</span>() {
-            <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">to_normal</span>();
-            <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_range</span>();
-            <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">clone</span>()), <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">range</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_back_and_forth() {
+        <span class="kw">for </span>input <span class="kw">in </span>RangeDataInput::examples().into_iter() {
+            <span class="kw">let </span>data = input.to_normal();
+            <span class="kw">let </span>range = data.as_range();
+            <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(data.clone()), RangeData::try_from_range(<span class="kw-2">&amp;</span>range));
 
-            <span class="kw">let</span> <span class="ident">random_range</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_random_range</span>();
+            <span class="kw">let </span>random_range = data.as_random_range();
             <span class="macro">assert_eq!</span>(
-                <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">clone</span>()),
-                <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">random_range</span>)
+                <span class="prelude-val">Some</span>(data.clone()),
+                RangeData::try_from_random_range(<span class="kw-2">&amp;</span>random_range)
             );
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">range_ints</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;2 .. 10#1&quot;</span>.<span class="ident">to_string</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_ints() {
+        <span class="kw">let </span>s = <span class="string">&quot;2 .. 10#1&quot;</span>.to_string();
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">2.0</span>,
-                <span class="ident">to</span>: <span class="number">10.0</span>,
-                <span class="ident">step</span>: <span class="number">1.0</span>
-            })),
-            <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>))
+            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(RangeData {
+                from: <span class="number">2.0</span>,
+                to: <span class="number">10.0</span>,
+                step: <span class="number">1.0
+            </span>})),
+            RangeData::try_from_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a))
         );
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>)));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a)));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">random_range_ints</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;random(2 .. 10#2)&quot;</span>.<span class="ident">to_string</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>random_range_ints() {
+        <span class="kw">let </span>s = <span class="string">&quot;random(2 .. 10#2)&quot;</span>.to_string();
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">2.0</span>,
-                <span class="ident">to</span>: <span class="number">10.0</span>,
-                <span class="ident">step</span>: <span class="number">2.0</span>
-            })),
-            <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>))
+            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(RangeData {
+                from: <span class="number">2.0</span>,
+                to: <span class="number">10.0</span>,
+                step: <span class="number">2.0
+            </span>})),
+            RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a))
         );
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>)));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, RangeData::try_from_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a)));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">random_range_ints_without_step</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;random(2..10)&quot;</span>.<span class="ident">to_string</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>random_range_ints_without_step() {
+        <span class="kw">let </span>s = <span class="string">&quot;random(2..10)&quot;</span>.to_string();
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">2.0</span>,
-                <span class="ident">to</span>: <span class="number">10.0</span>,
-                <span class="ident">step</span>: <span class="number">1.0</span>
-            })),
-            <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>))
+            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(RangeData {
+                from: <span class="number">2.0</span>,
+                to: <span class="number">10.0</span>,
+                step: <span class="number">1.0
+            </span>})),
+            RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a))
         );
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>)));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, RangeData::try_from_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a)));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">range_floats</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;2.1 .. 10.5#1.99&quot;</span>.<span class="ident">to_string</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_floats() {
+        <span class="kw">let </span>s = <span class="string">&quot;2.1 .. 10.5#1.99&quot;</span>.to_string();
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">2.1</span>,
-                <span class="ident">to</span>: <span class="number">10.5</span>,
-                <span class="ident">step</span>: <span class="number">1.99</span>
-            })),
-            <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>))
+            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(RangeData {
+                from: <span class="number">2.1</span>,
+                to: <span class="number">10.5</span>,
+                step: <span class="number">1.99
+            </span>})),
+            RangeData::try_from_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a))
         );
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>)));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a)));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">random_range_floats</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;random(20.222 .. 100.0#19.57)&quot;</span>.<span class="ident">to_string</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>random_range_floats() {
+        <span class="kw">let </span>s = <span class="string">&quot;random(20.222 .. 100.0#19.57)&quot;</span>.to_string();
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(<span class="ident">RangeData</span> {
-                <span class="ident">from</span>: <span class="number">20.222</span>,
-                <span class="ident">to</span>: <span class="number">100.0</span>,
-                <span class="ident">step</span>: <span class="number">19.57</span>
-            })),
-            <span class="ident">RangeData::try_from_random_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>))
+            <span class="prelude-val">Some</span>(<span class="macro">i!</span>(RangeData {
+                from: <span class="number">20.222</span>,
+                to: <span class="number">100.0</span>,
+                step: <span class="number">19.57
+            </span>})),
+            RangeData::try_from_random_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a))
         );
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">RangeData::try_from_range</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">i!</span>(<span class="ident">a</span>)));
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, RangeData::try_from_range(<span class="kw-2">&amp;</span>s).map(|a| <span class="macro">i!</span>(a)));
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;VariableInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Variable</span> {
-    <span class="kw">pub</span> <span class="ident">definition</span>: <span class="ident">FileString</span>, <span class="comment">//TODO: definition dependant of template type, for random_range: start, end and step instead</span>
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">template_type</span>: <span class="ident">VariableTemplateType</span>,
-    <span class="kw">pub</span> <span class="ident">group</span>: <span class="ident">String</span>, <span class="comment">//TODO &quot;Ungrouped variables&quot; -&gt; real optional? if not -&gt; ungrouped?</span>
-}
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;VariableInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Variable {
+    <span class="kw">pub </span>definition: FileString, <span class="comment">//TODO: definition dependant of template type, for random_range: start, end and step instead
+    </span><span class="kw">pub </span>description: String,
+    <span class="kw">pub </span>template_type: VariableTemplateType,
+    <span class="kw">pub </span>group: String, <span class="comment">//TODO &quot;Ungrouped variables&quot; -&gt; real optional? if not -&gt; ungrouped?
+</span>}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::variable::Variable</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Variable</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::variable::Variable&gt; <span class="kw">for </span>Variable {
+    <span class="kw">fn </span>to_numbas_with_name(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">name</span>: <span class="ident">String</span>,
-    ) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
-        <span class="ident">numbas::question::variable::Variable</span> {
-            <span class="ident">name</span>,
-            <span class="ident">definition</span>: <span class="self">self</span>.<span class="ident">definition</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">template_type</span>: <span class="self">self</span>.<span class="ident">template_type</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">group</span>: <span class="self">self</span>.<span class="ident">group</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">can_override</span>: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)</span>
-        }
+        locale: <span class="kw-2">&amp;</span>str,
+        name: String,
+    ) -&gt; numbas::question::variable::Variable {
+        numbas::question::variable::Variable {
+            name,
+            definition: <span class="self">self</span>.definition.to_numbas(locale),
+            description: <span class="self">self</span>.description.to_numbas(locale),
+            template_type: <span class="self">self</span>.template_type.to_numbas(locale),
+            group: <span class="self">self</span>.group.to_numbas(locale),
+            can_override: <span class="bool-val">false</span>, <span class="comment">// Don&#39;t support overriding variables (yet?)
+        </span>}
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::Variable</span> {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::variable::Variable {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
-            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.to_string(),
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Variable</span> {
-    <span class="kw">fn</span> <span class="ident">ungrouped</span>(<span class="ident">template_type</span>: <span class="ident">VariableTemplateType</span>, <span class="ident">definition</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Variable</span> {
-        <span class="ident">Variable</span> {
-            <span class="ident">template_type</span>,
-            <span class="ident">definition</span>: <span class="ident">definition</span>.<span class="ident">to_string</span>().<span class="ident">to_rumbas</span>(),
-            <span class="ident">description</span>: <span class="ident">String::new</span>().<span class="ident">to_rumbas</span>(),
-            <span class="ident">group</span>: <span class="ident">UNGROUPED_GROUP</span>.<span class="ident">to_string</span>().<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>Variable {
+    <span class="kw">fn </span>ungrouped(template_type: VariableTemplateType, definition: <span class="kw-2">&amp;</span>str) -&gt; Variable {
+        Variable {
+            template_type,
+            definition: definition.to_string().to_rumbas(),
+            description: String::new().to_rumbas(),
+            group: UNGROUPED_GROUP.to_string().to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;VariableTemplateTypeInput&quot;</span>)]</span>
-<span class="doccomment">/// The different template_types for a variable</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariableTemplateType</span> {
-    <span class="doccomment">/// Not specified</span>
-    <span class="ident">Anything</span>, <span class="comment">// TODO: allow this?</span>
-    <span class="doccomment">/// A list of numbers</span>
-    <span class="ident">ListOfNumbers</span>,
-    <span class="doccomment">/// A list of strings</span>
-    <span class="ident">ListOfStrings</span>,
-    <span class="doccomment">/// A long string</span>
-    <span class="ident">LongString</span>,
-    <span class="doccomment">/// A number</span>
-    <span class="ident">Number</span>,
-    <span class="doccomment">/// A random number from a range</span>
-    <span class="ident">RandomRange</span>,
-    <span class="doccomment">/// A range</span>
-    <span class="ident">Range</span>,
-    <span class="doccomment">/// A string</span>
-    <span class="ident">r#String</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;VariableTemplateTypeInput&quot;</span>)]
+</span><span class="doccomment">/// The different template_types for a variable
+</span><span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>VariableTemplateType {
+    <span class="doccomment">/// Not specified
+    </span>Anything, <span class="comment">// TODO: allow this?
+    </span><span class="doccomment">/// A list of numbers
+    </span>ListOfNumbers,
+    <span class="doccomment">/// A list of strings
+    </span>ListOfStrings,
+    <span class="doccomment">/// A long string
+    </span>LongString,
+    <span class="doccomment">/// A number
+    </span>Number,
+    <span class="doccomment">/// A random number from a range
+    </span>RandomRange,
+    <span class="doccomment">/// A range
+    </span>Range,
+    <span class="doccomment">/// A string
+    </span>r#String,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::variable::VariableTemplateType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VariableTemplateType</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::variable::VariableTemplateType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">VariableTemplateType::Anything</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::Anything</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::variable::VariableTemplateType&gt; <span class="kw">for </span>VariableTemplateType {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::variable::VariableTemplateType {
+        <span class="kw">match </span><span class="self">self </span>{
+            VariableTemplateType::Anything =&gt; {
+                numbas::question::variable::VariableTemplateType::Anything
             }
-            <span class="ident">VariableTemplateType::ListOfNumbers</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::ListOfNumbers</span>
+            VariableTemplateType::ListOfNumbers =&gt; {
+                numbas::question::variable::VariableTemplateType::ListOfNumbers
             }
-            <span class="ident">VariableTemplateType::ListOfStrings</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::ListOfStrings</span>
+            VariableTemplateType::ListOfStrings =&gt; {
+                numbas::question::variable::VariableTemplateType::ListOfStrings
             }
-            <span class="ident">VariableTemplateType::LongString</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::LongString</span>
+            VariableTemplateType::LongString =&gt; {
+                numbas::question::variable::VariableTemplateType::LongString
             }
-            <span class="ident">VariableTemplateType::Number</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::Number</span>
+            VariableTemplateType::Number =&gt; {
+                numbas::question::variable::VariableTemplateType::Number
             }
-            <span class="ident">VariableTemplateType::Range</span> =&gt; <span class="ident">numbas::question::variable::VariableTemplateType::Range</span>,
-            <span class="ident">VariableTemplateType::RandomRange</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType::RandomRange</span>
+            VariableTemplateType::Range =&gt; numbas::question::variable::VariableTemplateType::Range,
+            VariableTemplateType::RandomRange =&gt; {
+                numbas::question::variable::VariableTemplateType::RandomRange
             }
-            <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span> =&gt; {
-                <span class="ident">numbas::question::variable::VariableTemplateType</span>::<span class="ident">r#String</span>
+            VariableTemplateType::r#String =&gt; {
+                numbas::question::variable::VariableTemplateType::r#String
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">VariableTemplateType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::variable::VariableTemplateType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">VariableTemplateType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::variable::VariableTemplateType::Anything</span> =&gt; {
-                <span class="ident">VariableTemplateType::Anything</span>
+<span class="kw">impl </span>ToRumbas&lt;VariableTemplateType&gt; <span class="kw">for </span>numbas::question::variable::VariableTemplateType {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; VariableTemplateType {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::variable::VariableTemplateType::Anything =&gt; {
+                VariableTemplateType::Anything
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfNumbers</span> =&gt; {
-                <span class="ident">VariableTemplateType::ListOfNumbers</span>
+            numbas::question::variable::VariableTemplateType::ListOfNumbers =&gt; {
+                VariableTemplateType::ListOfNumbers
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::ListOfStrings</span> =&gt; {
-                <span class="ident">VariableTemplateType::ListOfStrings</span>
+            numbas::question::variable::VariableTemplateType::ListOfStrings =&gt; {
+                VariableTemplateType::ListOfStrings
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::LongString</span> =&gt; {
-                <span class="ident">VariableTemplateType::LongString</span>
+            numbas::question::variable::VariableTemplateType::LongString =&gt; {
+                VariableTemplateType::LongString
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::Number</span> =&gt; {
-                <span class="ident">VariableTemplateType::Number</span>
+            numbas::question::variable::VariableTemplateType::Number =&gt; {
+                VariableTemplateType::Number
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::RandomRange</span> =&gt; {
-                <span class="ident">VariableTemplateType::RandomRange</span>
+            numbas::question::variable::VariableTemplateType::RandomRange =&gt; {
+                VariableTemplateType::RandomRange
             }
-            <span class="ident">numbas::question::variable::VariableTemplateType::Range</span> =&gt; <span class="ident">VariableTemplateType::Range</span>,
-            <span class="ident">numbas::question::variable::VariableTemplateType</span>::<span class="ident">r#String</span> =&gt; {
-                <span class="ident">VariableTemplateType</span>::<span class="ident">r#String</span>
+            numbas::question::variable::VariableTemplateType::Range =&gt; VariableTemplateType::Range,
+            numbas::question::variable::VariableTemplateType::r#String =&gt; {
+                VariableTemplateType::r#String
             }
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/answer_style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>answer_style.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/support/answer_style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>answer_style.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -38,45 +38,45 @@
 <span id="38">38</span>
 <span id="39">39</span>
 <span id="40">40</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="comment">// See https://github.com/numbas/Numbas/blob/26e5c25be75f5bb1a7d6b625bc8ed0c6a59224e5/runtime/scripts/util.js#L1259</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnswerStyle</span> {
-    <span class="doccomment">/// English style - commas separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;en&quot;</span>)]</span>
-    <span class="ident">English</span>,
-    <span class="doccomment">/// Plain English style - no thousands separator, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;plain&quot;</span>)]</span>
-    <span class="ident">EnglishPlain</span>,
-    <span class="doccomment">/// English SI style - spaces separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;si-en&quot;</span>)]</span>
-    <span class="ident">EnglishSI</span>,
-    <span class="doccomment">/// Continental European style - dots separate thousands, comma for decimal poin</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;eu&quot;</span>)]</span>
-    <span class="ident">European</span>,
-    <span class="doccomment">/// Plain French style - no thousands separator, comma for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;plain-eu&quot;</span>)]</span>
-    <span class="ident">EuropeanPlain</span>,
-    <span class="doccomment">/// French SI style - spaces separate thousands, comma for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;si-fr&quot;</span>)]</span>
-    <span class="ident">FrenchSI</span>,
-    <span class="doccomment">/// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;in&quot;</span>)]</span>
-    <span class="ident">Indian</span>,
-    <span class="doccomment">/// Significand-exponent (&quot;scientific&quot;) style</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;scientific&quot;</span>)]</span>
-    <span class="ident">Scientific</span>,
-    <span class="doccomment">/// Swiss style - apostrophes separate thousands, dot for decimal point</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;ch&quot;</span>)]</span>
-    <span class="ident">Swiss</span>,
+<span class="comment">// See https://github.com/numbas/Numbas/blob/26e5c25be75f5bb1a7d6b625bc8ed0c6a59224e5/runtime/scripts/util.js#L1259
+</span><span class="attribute">#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>AnswerStyle {
+    <span class="doccomment">/// English style - commas separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;en&quot;</span>)]
+    </span>English,
+    <span class="doccomment">/// Plain English style - no thousands separator, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;plain&quot;</span>)]
+    </span>EnglishPlain,
+    <span class="doccomment">/// English SI style - spaces separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;si-en&quot;</span>)]
+    </span>EnglishSI,
+    <span class="doccomment">/// Continental European style - dots separate thousands, comma for decimal poin
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;eu&quot;</span>)]
+    </span>European,
+    <span class="doccomment">/// Plain French style - no thousands separator, comma for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;plain-eu&quot;</span>)]
+    </span>EuropeanPlain,
+    <span class="doccomment">/// French SI style - spaces separate thousands, comma for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;si-fr&quot;</span>)]
+    </span>FrenchSI,
+    <span class="doccomment">/// Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;in&quot;</span>)]
+    </span>Indian,
+    <span class="doccomment">/// Significand-exponent (&quot;scientific&quot;) style
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;scientific&quot;</span>)]
+    </span>Scientific,
+    <span class="doccomment">/// Swiss style - apostrophes separate thousands, dot for decimal point
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;ch&quot;</span>)]
+    </span>Swiss,
 }
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">AnswerStyle</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::EnglishPlain</span>
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>AnswerStyle {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::EnglishPlain
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

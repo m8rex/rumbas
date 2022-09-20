@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support_derive/src/overwrite.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>overwrite.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support_derive/src/overwrite.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>overwrite.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support_derive/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support_derive/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -245,252 +245,252 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::input</span>::{<span class="ident">InputFieldReceiver</span>, <span class="ident">InputVariantReceiver</span>};
-<span class="kw">use</span> <span class="ident">darling::ast</span>;
-<span class="kw">use</span> <span class="ident">darling::FromDeriveInput</span>;
-<span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">ToTokens</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::input::{InputFieldReceiver, InputVariantReceiver};
+<span class="kw">use </span>darling::ast;
+<span class="kw">use </span>darling::FromDeriveInput;
+<span class="kw">use </span>quote::{quote, ToTokens};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">FromDeriveInput</span>, <span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">attributes</span>(<span class="ident">input</span>))]</span>
-<span class="attribute">#[<span class="ident">darling</span>(<span class="ident">forward_attrs</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OverwriteReceiver</span> {
-    <span class="ident">ident</span>: <span class="ident">syn::Ident</span>,
+<span class="attribute">#[derive(FromDeriveInput, Debug)]
+#[darling(attributes(input))]
+#[darling(forward_attrs)]
+</span><span class="kw">pub struct </span>OverwriteReceiver {
+    ident: syn::Ident,
 
-    <span class="doccomment">/// The type&#39;s generics. You&#39;ll need these any time your trait is expected</span>
-    <span class="doccomment">/// to work with types that declare generics.</span>
-    <span class="ident">generics</span>: <span class="ident">syn::Generics</span>,
+    <span class="doccomment">/// The type&#39;s generics. You&#39;ll need these any time your trait is expected
+    /// to work with types that declare generics.
+    </span>generics: syn::Generics,
 
-    <span class="ident">data</span>: <span class="ident">ast::Data</span><span class="op">&lt;</span><span class="ident">InputVariantReceiver</span>, <span class="ident">InputFieldReceiver</span><span class="op">&gt;</span>,
+    data: ast::Data&lt;InputVariantReceiver, InputFieldReceiver&gt;,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;name&quot;</span>)]</span>
-    <span class="ident">input_name</span>: <span class="ident">String</span>,
+    <span class="attribute">#[darling(rename = <span class="string">&quot;name&quot;</span>)]
+    </span>input_name: String,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">test</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">no_examples</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[darling(default)]
+    </span>test: bool,
+    <span class="attribute">#[darling(default)]
+    </span>no_examples: bool,
+    <span class="attribute">#[darling(default)]
+    </span>from: <span class="prelude-ty">Option</span>&lt;String&gt;,
 
-    <span class="attribute">#[<span class="ident">darling</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">into</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[darling(default)]
+    </span>into: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
-<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">OverwriteReceiver</span> {
-    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>) {
-        <span class="kw">let</span> <span class="ident">OverwriteReceiver</span> {
-            <span class="kw-2">ref</span> <span class="ident">ident</span>,
-            <span class="kw-2">ref</span> <span class="ident">generics</span>,
-            <span class="kw-2">ref</span> <span class="ident">data</span>,
-            <span class="kw-2">ref</span> <span class="ident">input_name</span>,
-            <span class="ident">test</span>: <span class="kw">_</span>,
-            <span class="ident">no_examples</span>: <span class="kw">_</span>,
-            <span class="ident">from</span>: <span class="kw">_</span>,
-            <span class="ident">into</span>: <span class="kw">_</span>,
-        } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+<span class="kw">impl </span>ToTokens <span class="kw">for </span>OverwriteReceiver {
+    <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream) {
+        <span class="kw">let </span>OverwriteReceiver {
+            <span class="kw-2">ref </span>ident,
+            <span class="kw-2">ref </span>generics,
+            <span class="kw-2">ref </span>data,
+            <span class="kw-2">ref </span>input_name,
+            test: <span class="kw">_</span>,
+            no_examples: <span class="kw">_</span>,
+            from: <span class="kw">_</span>,
+            into: <span class="kw">_</span>,
+        } = <span class="kw-2">*</span><span class="self">self</span>;
 
-        <span class="kw">let</span> <span class="ident">input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="ident">input_name</span>, <span class="ident">ident</span>.<span class="ident">span</span>());
+        <span class="kw">let </span>input_ident = syn::Ident::new(input_name, ident.span());
 
-        <span class="kw">match</span> <span class="ident">data</span> {
-            <span class="ident">ast::Data::Enum</span>(<span class="ident">v</span>) =&gt; <span class="ident">overwrite_handle_enum</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-            <span class="ident">ast::Data::Struct</span>(<span class="ident">fields</span>) =&gt; {
-                <span class="ident">overwrite_handle_struct</span>(<span class="ident">fields</span>, <span class="kw-2">&amp;</span><span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>)
+        <span class="kw">match </span>data {
+            ast::Data::Enum(v) =&gt; overwrite_handle_enum(v, <span class="kw-2">&amp;</span>input_ident, generics, tokens),
+            ast::Data::Struct(fields) =&gt; {
+                overwrite_handle_struct(fields, <span class="kw-2">&amp;</span>input_ident, generics, tokens)
             }
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_unit_struct</span>(
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>overwrite_handle_unit_struct(
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-                <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>){
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
+    tokens.extend(<span class="macro">quote! </span>{
+            <span class="attribute">#[automatically_derived]
+            </span><span class="kw">impl </span>#imp Overwrite&lt;#input_ident #ty&gt; <span class="kw">for </span>#input_ident #ty #wher {
+                <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="self">Self</span>){
 
                 }
             }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_tuple_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">InputFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>overwrite_handle_tuple_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;InputFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
-    <span class="kw">let</span> <span class="ident">field_indexes</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">_f</span>)<span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">syn::Index::from</span>(<span class="ident">i</span>);
-            <span class="macro">quote!</span>(#<span class="ident">i</span>)
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
+    <span class="kw">let </span>field_indexes = fields
+        .iter()
+        .enumerate()
+        .map(|(i, _f)| {
+            <span class="kw">let </span>i = syn::Index::from(i);
+            <span class="macro">quote!</span>(#i)
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-            <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-                <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>){
-                    #(<span class="self">self</span>.#<span class="ident">field_indexes</span>.<span class="ident">overwrite</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.#<span class="ident">field_indexes</span>);)<span class="op">*</span>
+    tokens.extend(<span class="macro">quote! </span>{
+            <span class="attribute">#[automatically_derived]
+            </span><span class="kw">impl </span>#imp Overwrite&lt;#input_ident #ty&gt; <span class="kw">for </span>#input_ident #ty #wher {
+                <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>){
+                    #(<span class="self">self</span>.#field_indexes.overwrite(<span class="kw-2">&amp;</span>other.#field_indexes);)*
                 }
             }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_struct_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">InputFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>overwrite_handle_struct_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;InputFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
-    <span class="kw">let</span> <span class="ident">field_names</span> <span class="op">=</span> <span class="ident">fields</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="macro">quote!</span>(#<span class="ident">v</span>)).<span class="ident">unwrap</span>())
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
+    <span class="kw">let </span>field_names = fields
+        .iter()
+        .map(|f| f.ident.as_ref().map(|v| <span class="macro">quote!</span>(#v)).unwrap())
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="kw">let</span> <span class="ident">enum_input_ident</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, <span class="ident">input_ident</span>)[..], <span class="ident">input_ident</span>.<span class="ident">span</span>());
+    <span class="kw">let </span>enum_input_ident = syn::Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}Enum&quot;</span>, input_ident)[..], input_ident.span());
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>){
-                #(<span class="self">self</span>.#<span class="ident">field_names</span>.<span class="ident">overwrite</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.#<span class="ident">field_names</span>);)<span class="op">*</span>
+    tokens.extend(<span class="macro">quote! </span>{
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Overwrite&lt;#input_ident #ty&gt; <span class="kw">for </span>#input_ident #ty #wher {
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>){
+                #(<span class="self">self</span>.#field_names.overwrite(<span class="kw-2">&amp;</span>other.#field_names);)*
             }
         }
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">enum_input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span>#<span class="ident">enum_input_ident</span>){
-               <span class="self">self</span>.<span class="ident">overwrite</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="number">0</span>)
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Overwrite&lt;#enum_input_ident #ty&gt; <span class="kw">for </span>#input_ident #ty #wher {
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>#enum_input_ident){
+               <span class="self">self</span>.overwrite(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
             }
         }
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">enum_input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span>#<span class="ident">input_ident</span>){
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">overwrite</span>(<span class="ident">other</span>)
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Overwrite&lt;#input_ident #ty&gt; <span class="kw">for </span>#enum_input_ident #ty #wher {
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>#input_ident){
+                <span class="self">self</span>.<span class="number">0</span>.overwrite(other)
             }
         }
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">enum_input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">enum_input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>){
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">overwrite</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="number">0</span>)
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Overwrite&lt;#enum_input_ident #ty&gt; <span class="kw">for </span>#enum_input_ident #ty #wher {
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>){
+                <span class="self">self</span>.<span class="number">0</span>.overwrite(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
             }
         }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_struct</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">ast::Fields</span><span class="op">&lt;</span><span class="ident">InputFieldReceiver</span><span class="op">&gt;</span>,
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>overwrite_handle_struct(
+    fields: <span class="kw-2">&amp;</span>ast::Fields&lt;InputFieldReceiver&gt;,
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">match</span> <span class="ident">fields</span>.<span class="ident">style</span> {
-        <span class="ident">ast::Style::Struct</span> =&gt; <span class="ident">overwrite_handle_struct_struct</span>(<span class="ident">fields</span>, <span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-        <span class="ident">ast::Style::Tuple</span> =&gt; <span class="ident">overwrite_handle_tuple_struct</span>(<span class="ident">fields</span>, <span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
-        <span class="ident">ast::Style::Unit</span> =&gt; <span class="ident">overwrite_handle_unit_struct</span>(<span class="ident">input_ident</span>, <span class="ident">generics</span>, <span class="ident">tokens</span>),
+    <span class="kw">match </span>fields.style {
+        ast::Style::Struct =&gt; overwrite_handle_struct_struct(fields, input_ident, generics, tokens),
+        ast::Style::Tuple =&gt; overwrite_handle_tuple_struct(fields, input_ident, generics, tokens),
+        ast::Style::Unit =&gt; overwrite_handle_unit_struct(input_ident, generics, tokens),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_enum</span>(
-    <span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">InputVariantReceiver</span>],
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-    <span class="ident">generics</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Generics</span>,
-    <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">proc_macro2::TokenStream</span>,
+<span class="kw">fn </span>overwrite_handle_enum(
+    v: <span class="kw-2">&amp;</span>[InputVariantReceiver],
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+    generics: <span class="kw-2">&amp;</span>syn::Generics,
+    tokens: <span class="kw-2">&amp;mut </span>proc_macro2::TokenStream,
 ) {
-    <span class="kw">let</span> (<span class="ident">imp</span>, <span class="ident">ty</span>, <span class="ident">wher</span>) <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">split_for_impl</span>();
+    <span class="kw">let </span>(imp, ty, wher) = generics.split_for_impl();
 
-    <span class="kw">let</span> <span class="ident">overwrite_variants</span> <span class="op">=</span> <span class="ident">overwrite_handle_enum_variants</span>(<span class="ident">v</span>, <span class="ident">input_ident</span>);
+    <span class="kw">let </span>overwrite_variants = overwrite_handle_enum_variants(v, input_ident);
 
-    <span class="ident">tokens</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-        <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-        <span class="kw">impl</span> #<span class="ident">imp</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>#<span class="ident">input_ident</span> #<span class="ident">ty</span><span class="op">&gt;</span> <span class="kw">for</span> #<span class="ident">input_ident</span> #<span class="ident">ty</span> #<span class="ident">wher</span> {
-            <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>){
-                <span class="kw">match</span> (<span class="self">self</span>, <span class="ident">other</span>) {
-                    #(#<span class="ident">overwrite_variants</span>,)<span class="op">*</span>
-                    <span class="kw">_</span> =&gt; ()
+    tokens.extend(<span class="macro">quote! </span>{
+        <span class="attribute">#[automatically_derived]
+        </span><span class="kw">impl </span>#imp Overwrite&lt;#input_ident #ty&gt; <span class="kw">for </span>#input_ident #ty #wher {
+            <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>){
+                <span class="kw">match </span>(<span class="self">self</span>, other) {
+                    #(#overwrite_variants,)*
+                    <span class="kw">_ </span>=&gt; ()
                 }
             }
         }
     });
 }
 
-<span class="kw">fn</span> <span class="ident">overwrite_handle_enum_variants</span>(
-    <span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">InputVariantReceiver</span>],
-    <span class="ident">input_ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
-) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">proc_macro2::TokenStream</span><span class="op">&gt;</span> {
-    <span class="ident">v</span>.<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">variant</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">variant_ident</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">ident</span>;
-            <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">style</span> {
-                <span class="ident">ast::Style::Unit</span> =&gt; {
-                    <span class="macro">quote!</span> {
-                        (#<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>, #<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>) =&gt; ()
+<span class="kw">fn </span>overwrite_handle_enum_variants(
+    v: <span class="kw-2">&amp;</span>[InputVariantReceiver],
+    input_ident: <span class="kw-2">&amp;</span>syn::Ident,
+) -&gt; Vec&lt;proc_macro2::TokenStream&gt; {
+    v.iter()
+        .map(|variant| {
+            <span class="kw">let </span>variant_ident = <span class="kw-2">&amp;</span>variant.ident;
+            <span class="kw">match </span>variant.fields.style {
+                ast::Style::Unit =&gt; {
+                    <span class="macro">quote! </span>{
+                        (#input_ident::#variant_ident, #input_ident::#variant_ident) =&gt; ()
                     }
                 }
-                <span class="ident">ast::Style::Tuple</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">variant</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">enumerate</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="kw">_</span>)<span class="op">|</span> {
-                            <span class="ident">syn::Ident::new</span>(
-                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;elem{}&quot;</span>, <span class="ident">i</span>)[..],
-                                <span class="ident">proc_macro2::Span::call_site</span>(),
+                ast::Style::Tuple =&gt; {
+                    <span class="kw">let </span>items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, <span class="kw">_</span>)| {
+                            syn::Ident::new(
+                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;elem{}&quot;</span>, i)[..],
+                                proc_macro2::Span::call_site(),
                             )
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="kw">let</span> <span class="ident">items2</span> <span class="op">=</span> <span class="ident">variant</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">enumerate</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="kw">_</span>)<span class="op">|</span> {
-                            <span class="ident">syn::Ident::new</span>(
-                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;other_elem{}&quot;</span>, <span class="ident">i</span>)[..],
-                                <span class="ident">proc_macro2::Span::call_site</span>(),
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="kw">let </span>items2 = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, <span class="kw">_</span>)| {
+                            syn::Ident::new(
+                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;other_elem{}&quot;</span>, i)[..],
+                                proc_macro2::Span::call_site(),
                             )
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="macro">quote!</span> {
-                        (#<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>(#(#<span class="ident">items</span>),<span class="kw-2">*</span>), #<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span>(#(#<span class="ident">items2</span>),<span class="kw-2">*</span>), ) =&gt; {
-                            #(#<span class="ident">items</span>.<span class="ident">overwrite</span>(#<span class="ident">items2</span>));<span class="op">*</span>
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="macro">quote! </span>{
+                        (#input_ident::#variant_ident(#(#items),<span class="kw-2">*</span>), #input_ident::#variant_ident(#(#items2),<span class="kw-2">*</span>), ) =&gt; {
+                            #(#items.overwrite(#items2));*
                         }
                     }
                 }
-                <span class="ident">ast::Style::Struct</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">variant</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">ident</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="macro">quote!</span>(#<span class="ident">a</span>)).<span class="ident">unwrap</span>())
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="kw">let</span> <span class="ident">items2</span> <span class="op">=</span> <span class="ident">variant</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">fields</span>
-                        .<span class="ident">iter</span>()
-                        .<span class="ident">enumerate</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="kw">_</span>)<span class="op">|</span> {
-                            <span class="ident">syn::Ident::new</span>(
-                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;other_elem{}&quot;</span>, <span class="ident">i</span>)[..],
-                                <span class="ident">proc_macro2::Span::call_site</span>(),
+                ast::Style::Struct =&gt; {
+                    <span class="kw">let </span>items = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .map(|f| f.ident.as_ref().map(|a| <span class="macro">quote!</span>(#a)).unwrap())
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="kw">let </span>items2 = variant
+                        .fields
+                        .fields
+                        .iter()
+                        .enumerate()
+                        .map(|(i, <span class="kw">_</span>)| {
+                            syn::Ident::new(
+                                <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;other_elem{}&quot;</span>, i)[..],
+                                proc_macro2::Span::call_site(),
                             )
                         })
-                        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-                    <span class="macro">quote!</span> {
-                        (#<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span> { #(#<span class="ident">items</span>),<span class="op">*</span> }, #<span class="ident">input_ident</span>::#<span class="ident">variant_ident</span> { #(#<span class="ident">items</span>:#<span class="ident">items2</span>),<span class="op">*</span> }) =&gt; {
-                            #(#<span class="ident">items</span>.<span class="ident">overwrite</span>(#<span class="ident">items2</span>));<span class="op">*</span>
+                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                    <span class="macro">quote! </span>{
+                        (#input_ident::#variant_ident { #(#items),* }, #input_ident::#variant_ident { #(#items:#items2),* }) =&gt; {
+                            #(#items.overwrite(#items2));*
                         }
                     }
                 }
             }
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

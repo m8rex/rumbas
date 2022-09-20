@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/translatable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>translatable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/translatable.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>translatable.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -552,559 +552,559 @@
 <span id="552">552</span>
 <span id="553">553</span>
 <span id="554">554</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::AnyString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FileString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FileStringInput</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">numbas::jme</span>::{<span class="ident">ContentAreaString</span>, <span class="ident">EmbracedJMEString</span>, <span class="ident">JMENotesString</span>, <span class="ident">JMEString</span>};
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::convert::From</span>;
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::file_reference::AnyString;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FileString;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FileStringInput;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>numbas::jme::{ContentAreaString, EmbracedJMEString, JMENotesString, JMEString};
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::convert::From;
+<span class="kw">use </span>std::convert::TryInto;
 
-<span class="macro">translatable_type!</span> {
-    <span class="doccomment">/// A translatable string</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In yaml it should be specified as either</span>
-    <span class="doccomment">/// - a simple string: &quot;this is a string&quot;</span>
-    <span class="doccomment">/// - a file string: file:&lt;path&gt;</span>
-    <span class="doccomment">/// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.</span>
-    <span class="kw">type</span> <span class="ident">TranslatableString</span>,
-    <span class="ident">subtype</span> <span class="ident">String</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">_e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::empty</span>() <span class="comment">// never happens</span>
+<span class="macro">translatable_type! </span>{
+    <span class="doccomment">/// A translatable string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: &quot;this is a string&quot;
+    /// - a file string: file:&lt;path&gt;
+    /// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.
+    </span><span class="kw">type </span>TranslatableString,
+    subtype String,
+    rumbas_check |_e| RumbasCheckResult::empty() <span class="comment">// never happens
+
+</span>}
+
+<span class="macro">translatable_type! </span>{
+    <span class="doccomment">/// A translatable JME string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: &quot;this is a string&quot;
+    /// - a file string: file:&lt;path&gt;
+    /// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.
+    </span><span class="kw">type </span>JMETranslatableString,
+    subtype JMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
+}
+
+<span class="macro">translatable_type! </span>{
+    <span class="doccomment">/// A translatable embraced JME string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: &quot;this is a string&quot;
+    /// - a file string: file:&lt;path&gt;
+    /// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.
+    </span><span class="kw">type </span>EmbracedJMETranslatableString,
+    subtype EmbracedJMEString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 
 }
 
-<span class="macro">translatable_type!</span> {
-    <span class="doccomment">/// A translatable JME string</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In yaml it should be specified as either</span>
-    <span class="doccomment">/// - a simple string: &quot;this is a string&quot;</span>
-    <span class="doccomment">/// - a file string: file:&lt;path&gt;</span>
-    <span class="doccomment">/// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.</span>
-    <span class="kw">type</span> <span class="ident">JMETranslatableString</span>,
-    <span class="ident">subtype</span> <span class="ident">JMEString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
-}
-
-<span class="macro">translatable_type!</span> {
-    <span class="doccomment">/// A translatable embraced JME string</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In yaml it should be specified as either</span>
-    <span class="doccomment">/// - a simple string: &quot;this is a string&quot;</span>
-    <span class="doccomment">/// - a file string: file:&lt;path&gt;</span>
-    <span class="doccomment">/// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.</span>
-    <span class="kw">type</span> <span class="ident">EmbracedJMETranslatableString</span>,
-    <span class="ident">subtype</span> <span class="ident">EmbracedJMEString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
+<span class="macro">translatable_type! </span>{
+    <span class="doccomment">/// A translatable JME Notes string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: &quot;this is a string&quot;
+    /// - a file string: file:&lt;path&gt;
+    /// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.
+    </span><span class="kw">type </span>JMENotesTranslatableString,
+    subtype JMENotesString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 
 }
-
-<span class="macro">translatable_type!</span> {
-    <span class="doccomment">/// A translatable JME Notes string</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In yaml it should be specified as either</span>
-    <span class="doccomment">/// - a simple string: &quot;this is a string&quot;</span>
-    <span class="doccomment">/// - a file string: file:&lt;path&gt;</span>
-    <span class="doccomment">/// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.</span>
-    <span class="kw">type</span> <span class="ident">JMENotesTranslatableString</span>,
-    <span class="ident">subtype</span> <span class="ident">JMENotesString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
-
-}
-<span class="macro">translatable_type!</span> {
-    <span class="doccomment">/// A translatable ContentArea string</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In yaml it should be specified as either</span>
-    <span class="doccomment">/// - a simple string: &quot;&lt;p&gt;The value is {value}&lt;/p&gt;&quot;</span>
-    <span class="doccomment">/// - a file string: file:&lt;path&gt;</span>
-    <span class="doccomment">/// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.</span>
-    <span class="kw">type</span> <span class="ident">ContentAreaTranslatableString</span>,
-    <span class="ident">subtype</span> <span class="ident">ContentAreaString</span>,
-    <span class="ident">rumbas_check</span> <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">RumbasCheckResult::from_invalid_jme</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
+<span class="macro">translatable_type! </span>{
+    <span class="doccomment">/// A translatable ContentArea string
+    ///
+    /// In yaml it should be specified as either
+    /// - a simple string: &quot;&lt;p&gt;The value is {value}&lt;/p&gt;&quot;
+    /// - a file string: file:&lt;path&gt;
+    /// - A map that maps locales on formattables strings and parts like &quot;{func}&quot; (between {}) to values.
+    </span><span class="kw">type </span>ContentAreaTranslatableString,
+    subtype ContentAreaString,
+    rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FileString</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FileString;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">no_translation</span>() {
-        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="string">&quot;some string&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">t</span>: <span class="ident">Translation</span> <span class="op">=</span> <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>).<span class="ident">into</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;any locale&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>no_translation() {
+        <span class="kw">let </span>val = <span class="string">&quot;some string&quot;</span>.to_string();
+        <span class="kw">let </span>t: Translation = FileString::s(<span class="kw-2">&amp;</span>val).into();
+        <span class="macro">assert_eq!</span>(t.to_string(<span class="string">&quot;any locale&quot;</span>), <span class="prelude-val">Some</span>(val));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">simple_translation</span>() {
-        <span class="kw">let</span> <span class="ident">val_nl</span> <span class="op">=</span> <span class="string">&quot;een string&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">val_en</span> <span class="op">=</span> <span class="string">&quot;some string&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_nl</span>));
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_en</span>));
-        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Translation</span> {
-            <span class="ident">content</span>: <span class="ident">TranslationContent::Locales</span>(<span class="ident">m</span>),
-            <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>simple_translation() {
+        <span class="kw">let </span>val_nl = <span class="string">&quot;een string&quot;</span>.to_string();
+        <span class="kw">let </span>val_en = <span class="string">&quot;some string&quot;</span>.to_string();
+        <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
+        m.insert(<span class="string">&quot;nl&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_nl));
+        m.insert(<span class="string">&quot;en&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_en));
+        <span class="kw">let </span>t = Translation {
+            content: TranslationContent::Locales(m),
+            placeholders: HashMap::new(),
         };
-        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;nl&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val_nl</span>));
-        <span class="macro">assert_eq!</span>(<span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;en&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val_en</span>));
+        <span class="macro">assert_eq!</span>(t.to_string(<span class="string">&quot;nl&quot;</span>), <span class="prelude-val">Some</span>(val_nl));
+        <span class="macro">assert_eq!</span>(t.to_string(<span class="string">&quot;en&quot;</span>), <span class="prelude-val">Some</span>(val_en));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">substitution_translation</span>() {
-        <span class="kw">let</span> <span class="ident">val_nl</span> <span class="op">=</span> <span class="string">&quot;een string met functie {func} en {0}&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">val_en</span> <span class="op">=</span> <span class="string">&quot;some string with function {func} and {0}&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">placeholders</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_nl</span>));
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_en</span>));
-        <span class="kw">let</span> <span class="ident">val1</span> <span class="op">=</span> <span class="string">&quot;x^2&quot;</span>;
-        <span class="kw">let</span> <span class="ident">val2</span> <span class="op">=</span> <span class="string">&quot;e^x&quot;</span>;
-        <span class="ident">placeholders</span>.<span class="ident">insert</span>(
-            <span class="string">&quot;0&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">Translation</span> {
-                <span class="ident">content</span>: <span class="ident">TranslationContent::Content</span>(<span class="ident">FileString::s</span>(<span class="ident">val1</span>)),
-                <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>substitution_translation() {
+        <span class="kw">let </span>val_nl = <span class="string">&quot;een string met functie {func} en {0}&quot;</span>.to_string();
+        <span class="kw">let </span>val_en = <span class="string">&quot;some string with function {func} and {0}&quot;</span>.to_string();
+        <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>placeholders = HashMap::new();
+        m.insert(<span class="string">&quot;nl&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_nl));
+        m.insert(<span class="string">&quot;en&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_en));
+        <span class="kw">let </span>val1 = <span class="string">&quot;x^2&quot;</span>;
+        <span class="kw">let </span>val2 = <span class="string">&quot;e^x&quot;</span>;
+        placeholders.insert(
+            <span class="string">&quot;0&quot;</span>.to_string(),
+            Translation {
+                content: TranslationContent::Content(FileString::s(val1)),
+                placeholders: HashMap::new(),
             },
         );
-        <span class="ident">placeholders</span>.<span class="ident">insert</span>(
-            <span class="string">&quot;func&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">Translation</span> {
-                <span class="ident">content</span>: <span class="ident">TranslationContent::Content</span>(<span class="ident">FileString::s</span>(<span class="ident">val2</span>)),
-                <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+        placeholders.insert(
+            <span class="string">&quot;func&quot;</span>.to_string(),
+            Translation {
+                content: TranslationContent::Content(FileString::s(val2)),
+                placeholders: HashMap::new(),
             },
         );
-        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Translation</span> {
-            <span class="ident">content</span>: <span class="ident">TranslationContent::Locales</span>(<span class="ident">m</span>),
-            <span class="ident">placeholders</span>,
+        <span class="kw">let </span>t = Translation {
+            content: TranslationContent::Locales(m),
+            placeholders,
         };
         <span class="macro">assert_eq!</span>(
-            <span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;nl&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;een string met functie {} en {}&quot;</span>, <span class="ident">val2</span>, <span class="ident">val1</span>))
+            t.to_string(<span class="string">&quot;nl&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;een string met functie {} en {}&quot;</span>, val2, val1))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;en&quot;</span>),
-            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;some string with function {} and {}&quot;</span>, <span class="ident">val2</span>, <span class="ident">val1</span>))
+            t.to_string(<span class="string">&quot;en&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;some string with function {} and {}&quot;</span>, val2, val1))
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">substitution_translation_recusive</span>() {
-        <span class="kw">let</span> <span class="ident">val_nl</span> <span class="op">=</span> <span class="string">&quot;een string met functie {func} en {0}&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="ident">val_en</span> <span class="op">=</span> <span class="string">&quot;some string with function {func} and {0}&quot;</span>.<span class="ident">to_string</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">placeholders</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_nl</span>));
-        <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">val_en</span>));
-        <span class="kw">let</span> <span class="ident">val1</span> <span class="op">=</span> <span class="string">&quot;x^2&quot;</span>;
-        <span class="kw">let</span> <span class="ident">val2</span> <span class="op">=</span> <span class="string">&quot;e^x ({cond})&quot;</span>;
-        <span class="ident">placeholders</span>.<span class="ident">insert</span>(
-            <span class="string">&quot;0&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">Translation</span> {
-                <span class="ident">content</span>: <span class="ident">TranslationContent::Content</span>(<span class="ident">FileString::s</span>(<span class="ident">val1</span>)),
-                <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>substitution_translation_recusive() {
+        <span class="kw">let </span>val_nl = <span class="string">&quot;een string met functie {func} en {0}&quot;</span>.to_string();
+        <span class="kw">let </span>val_en = <span class="string">&quot;some string with function {func} and {0}&quot;</span>.to_string();
+        <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>placeholders = HashMap::new();
+        m.insert(<span class="string">&quot;nl&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_nl));
+        m.insert(<span class="string">&quot;en&quot;</span>.to_string(), FileString::s(<span class="kw-2">&amp;</span>val_en));
+        <span class="kw">let </span>val1 = <span class="string">&quot;x^2&quot;</span>;
+        <span class="kw">let </span>val2 = <span class="string">&quot;e^x ({cond})&quot;</span>;
+        placeholders.insert(
+            <span class="string">&quot;0&quot;</span>.to_string(),
+            Translation {
+                content: TranslationContent::Content(FileString::s(val1)),
+                placeholders: HashMap::new(),
             },
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">placeholders2</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>placeholders2 = HashMap::new();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m3</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-        <span class="ident">m3</span>.<span class="ident">insert</span>(<span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="string">&quot;met x groter dan 0&quot;</span>));
-        <span class="ident">m3</span>.<span class="ident">insert</span>(<span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">FileString::s</span>(<span class="string">&quot;with x larger than 0&quot;</span>));
-        <span class="ident">placeholders2</span>.<span class="ident">insert</span>(
-            <span class="string">&quot;cond&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">Translation</span> {
-                <span class="ident">content</span>: <span class="ident">TranslationContent::Locales</span>(<span class="ident">m3</span>),
-                <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+        <span class="kw">let </span><span class="kw-2">mut </span>m3 = HashMap::new();
+        m3.insert(<span class="string">&quot;nl&quot;</span>.to_string(), FileString::s(<span class="string">&quot;met x groter dan 0&quot;</span>));
+        m3.insert(<span class="string">&quot;en&quot;</span>.to_string(), FileString::s(<span class="string">&quot;with x larger than 0&quot;</span>));
+        placeholders2.insert(
+            <span class="string">&quot;cond&quot;</span>.to_string(),
+            Translation {
+                content: TranslationContent::Locales(m3),
+                placeholders: HashMap::new(),
             },
         );
 
-        <span class="ident">placeholders</span>.<span class="ident">insert</span>(
-            <span class="string">&quot;func&quot;</span>.<span class="ident">to_string</span>(),
-            <span class="ident">Translation</span> {
-                <span class="ident">content</span>: <span class="ident">TranslationContent::Content</span>(<span class="ident">FileString::s</span>(<span class="ident">val2</span>)),
-                <span class="ident">placeholders</span>: <span class="ident">placeholders2</span>,
+        placeholders.insert(
+            <span class="string">&quot;func&quot;</span>.to_string(),
+            Translation {
+                content: TranslationContent::Content(FileString::s(val2)),
+                placeholders: placeholders2,
             },
         );
-        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Translation</span> {
-            <span class="ident">content</span>: <span class="ident">TranslationContent::Locales</span>(<span class="ident">m</span>),
-            <span class="ident">placeholders</span>,
+        <span class="kw">let </span>t = Translation {
+            content: TranslationContent::Locales(m),
+            placeholders,
         };
         <span class="macro">assert_eq!</span>(
-            <span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;nl&quot;</span>),
+            t.to_string(<span class="string">&quot;nl&quot;</span>),
             <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
                 <span class="string">&quot;een string met functie e^x (met x groter dan 0) en {}&quot;</span>,
-                <span class="ident">val1</span>
+                val1
             ))
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">t</span>.<span class="ident">to_string</span>(<span class="string">&quot;en&quot;</span>),
+            t.to_string(<span class="string">&quot;en&quot;</span>),
             <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
                 <span class="string">&quot;some string with function e^x (with x larger than 0) and {}&quot;</span>,
-                <span class="ident">val1</span>
+                val1
             ))
         );
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TranslationContentInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TranslationContent</span> {
-    <span class="ident">Locales</span>(<span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">FileString</span><span class="op">&gt;</span>),
-    <span class="ident">Content</span>(<span class="ident">FileString</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;TranslationContentInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>TranslationContent {
+    Locales(HashMap&lt;String, FileString&gt;),
+    Content(FileString),
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileStringInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TranslationContentInput</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">FileStringInput</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Content</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>From&lt;FileStringInput&gt; <span class="kw">for </span>TranslationContentInput {
+    <span class="kw">fn </span>from(f: FileStringInput) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Content(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TranslationContent</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">FileString</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Content</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>From&lt;FileString&gt; <span class="kw">for </span>TranslationContent {
+    <span class="kw">fn </span>from(f: FileString) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Content(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TranslationContent</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">FileString</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Content</span>(<span class="ident">c</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">c</span>),
-            <span class="ident"><span class="self">Self</span>::Locales</span>(<span class="ident">m</span>) =&gt; <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>TranslationContent {
+    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>FileString&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Content(c) =&gt; <span class="prelude-val">Some</span>(c),
+            <span class="self">Self</span>::Locales(m) =&gt; m.get(locale),
         }
     }
 }
 
-<span class="kw">mod</span> <span class="ident">helpers</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">TranslationContent</span>, <span class="ident">TranslationContentInput</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_reference::FileString</span>;
-    <span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-    <span class="kw">use</span> <span class="ident">std::convert::From</span>;
+<span class="kw">mod </span>helpers {
+    <span class="kw">use super</span>::{TranslationContent, TranslationContentInput};
+    <span class="kw">use </span><span class="kw">crate</span>::support::file_reference::FileString;
+    <span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+    <span class="kw">use </span>serde::{Deserialize, Serialize};
+    <span class="kw">use </span>std::collections::HashMap;
+    <span class="kw">use </span>std::convert::From;
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TranslationInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span> <span class="comment">// TODO: custom visitor?</span>
-    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Translation</span> {
-        <span class="ident">Normal</span>(<span class="ident">TranslationStruct</span>),
-        <span class="ident">Short</span>(<span class="ident">FileString</span>),
+    <span class="attribute">#[derive(Input)]
+    #[input(name = <span class="string">&quot;TranslationInput&quot;</span>)]
+    #[derive(Clone, Serialize, Deserialize)]
+    #[serde(untagged)] </span><span class="comment">// TODO: custom visitor?
+    </span><span class="kw">pub enum </span>Translation {
+        Normal(TranslationStruct),
+        Short(FileString),
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>)]</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TranslationStructInput&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TranslationStruct</span> {
-        <span class="ident">content</span>: <span class="ident">TranslationContent</span>,
-        <span class="ident">placeholders</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Translation</span><span class="op">&gt;</span>,
+    <span class="attribute">#[derive(Input)]
+    #[input(name = <span class="string">&quot;TranslationStructInput&quot;</span>)]
+    #[derive(Clone, Serialize, Deserialize)]
+    </span><span class="kw">pub struct </span>TranslationStruct {
+        content: TranslationContent,
+        placeholders: HashMap&lt;String, Translation&gt;,
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TranslationStructInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident"><span class="kw">super</span>::TranslationInput</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">t</span>: <span class="ident">TranslationStructInput</span>) -&gt; <span class="self">Self</span> {
-            <span class="self">Self</span> {
-                <span class="ident">content</span>: <span class="ident">t</span>.<span class="ident">content</span>,
-                <span class="ident">placeholders</span>: <span class="ident">t</span>.<span class="ident">placeholders</span>.<span class="ident">real_map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-                    <span class="ident">p</span>.<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">real_map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>())))
-                        .<span class="ident">collect</span>()
+    <span class="kw">impl </span>From&lt;TranslationStructInput&gt; <span class="kw">for </span><span class="kw">super</span>::TranslationInput {
+        <span class="kw">fn </span>from(t: TranslationStructInput) -&gt; <span class="self">Self </span>{
+            <span class="self">Self </span>{
+                content: t.content,
+                placeholders: t.placeholders.real_map(|p| {
+                    p.into_iter()
+                        .map(|(k, v)| (k, v.real_map(|v| v.into())))
+                        .collect()
                 }),
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TranslationInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident"><span class="kw">super</span>::TranslationInput</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">t</span>: <span class="ident">TranslationInput</span>) -&gt; <span class="self">Self</span> {
-            <span class="kw">match</span> <span class="ident">t</span> {
-                <span class="ident">TranslationInput::Normal</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>.<span class="number">0</span>.<span class="ident">into</span>(),
-                <span class="ident">TranslationInput::Short</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>.<span class="ident">into</span>(),
+    <span class="kw">impl </span>From&lt;TranslationInput&gt; <span class="kw">for </span><span class="kw">super</span>::TranslationInput {
+        <span class="kw">fn </span>from(t: TranslationInput) -&gt; <span class="self">Self </span>{
+            <span class="kw">match </span>t {
+                TranslationInput::Normal(c) =&gt; c.<span class="number">0</span>.into(),
+                TranslationInput::Short(c) =&gt; c.into(),
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::TranslationInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TranslationInput</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident"><span class="kw">super</span>::TranslationInput</span>) -&gt; <span class="self">Self</span> {
-            <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">placeholders</span>.<span class="ident">clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">len</span>()) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="number">0</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ValueType::Normal</span>(<span class="ident">TranslationContentInput::Content</span>(<span class="ident">f</span>))) <span class="op">=</span> <span class="ident">s</span>.<span class="ident">content</span>.<span class="number">0</span> {
-                    <span class="kw">return</span> <span class="ident"><span class="self">Self</span>::Short</span>(<span class="ident">f</span>);
+    <span class="kw">impl </span>From&lt;<span class="kw">super</span>::TranslationInput&gt; <span class="kw">for </span>TranslationInput {
+        <span class="kw">fn </span>from(s: <span class="kw">super</span>::TranslationInput) -&gt; <span class="self">Self </span>{
+            <span class="kw">if </span>s.placeholders.clone().map(|p| p.len()) == <span class="prelude-val">Some</span>(<span class="number">0</span>) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(ValueType::Normal(TranslationContentInput::Content(f))) = s.content.<span class="number">0 </span>{
+                    <span class="kw">return </span><span class="self">Self</span>::Short(f);
                 }
             }
-            <span class="ident"><span class="self">Self</span>::Normal</span>(<span class="ident">TranslationStructInputEnum</span>(<span class="ident">TranslationStructInput</span> {
-                <span class="ident">content</span>: <span class="ident">s</span>.<span class="ident">content</span>,
-                <span class="ident">placeholders</span>: <span class="ident">s</span>.<span class="ident">placeholders</span>.<span class="ident">real_map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-                    <span class="ident">p</span>.<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">real_map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">into</span>())))
-                        .<span class="ident">collect</span>()
+            <span class="self">Self</span>::Normal(TranslationStructInputEnum(TranslationStructInput {
+                content: s.content,
+                placeholders: s.placeholders.real_map(|p| {
+                    p.into_iter()
+                        .map(|(k, v)| (k, v.real_map(|v| v.into())))
+                        .collect()
                 }),
             }))
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;TranslationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;helpers::TranslationInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;helpers::TranslationInput&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Translation</span> {
-    <span class="ident">content</span>: <span class="ident">TranslationContent</span>,
-    <span class="ident">placeholders</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Translation</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck)]
+#[input(name = <span class="string">&quot;TranslationInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[input(from = <span class="string">&quot;helpers::TranslationInput&quot;</span>)]
+#[input(into = <span class="string">&quot;helpers::TranslationInput&quot;</span>)]
+</span><span class="kw">pub struct </span>Translation {
+    content: TranslationContent,
+    placeholders: HashMap&lt;String, Translation&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileStringInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TranslationInput</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">FileStringInput</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">content</span>: <span class="ident">Value::Normal</span>(<span class="ident">f</span>.<span class="ident">into</span>()),
-            <span class="ident">placeholders</span>: <span class="ident">Value::Normal</span>(<span class="ident">HashMap::new</span>()),
+<span class="kw">impl </span>From&lt;FileStringInput&gt; <span class="kw">for </span>TranslationInput {
+    <span class="kw">fn </span>from(f: FileStringInput) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            content: Value::Normal(f.into()),
+            placeholders: Value::Normal(HashMap::new()),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileStringInput</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TranslationInputEnum</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">FileStringInput</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">f</span>.<span class="ident">into</span>())
+<span class="kw">impl </span>From&lt;FileStringInput&gt; <span class="kw">for </span>TranslationInputEnum {
+    <span class="kw">fn </span>from(f: FileStringInput) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(f.into())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FileString</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Translation</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">f</span>: <span class="ident">FileString</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">content</span>: <span class="ident">f</span>.<span class="ident">into</span>(),
-            <span class="ident">placeholders</span>: <span class="ident">HashMap::new</span>(),
+<span class="kw">impl </span>From&lt;FileString&gt; <span class="kw">for </span>Translation {
+    <span class="kw">fn </span>from(f: FileString) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            content: f.into(),
+            placeholders: HashMap::new(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">TranslationInputEnum</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">TranslationInput::examples</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="ident">TranslationInputEnum</span>)
-            .<span class="ident">collect</span>()
+<span class="kw">impl </span>Examples <span class="kw">for </span>TranslationInputEnum {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        TranslationInput::examples()
+            .into_iter()
+            .map(TranslationInputEnum)
+            .collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> <span class="ident">TranslationInput</span> {
-    <span class="kw">fn</span> <span class="ident">examples</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">TranslationContentInput::examples</span>();
-        <span class="kw">let</span> <span class="ident">placeholder_keys</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="string">&quot;placeholder1&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;placeholder2&quot;</span>.<span class="ident">to_string</span>()];
-        <span class="kw">let</span> <span class="ident">placeholder_values</span> <span class="op">=</span> <span class="macro">vec!</span>[
-            <span class="ident">ValueType::Normal</span>(<span class="ident">TranslationInput</span> {
-                <span class="ident">content</span>: <span class="ident">Value::Normal</span>(<span class="ident">TranslationContentInput::Locales</span>(
+<span class="kw">impl </span>Examples <span class="kw">for </span>TranslationInput {
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>contents = TranslationContentInput::examples();
+        <span class="kw">let </span>placeholder_keys = <span class="macro">vec!</span>[<span class="string">&quot;placeholder1&quot;</span>.to_string(), <span class="string">&quot;placeholder2&quot;</span>.to_string()];
+        <span class="kw">let </span>placeholder_values = <span class="macro">vec!</span>[
+            ValueType::Normal(TranslationInput {
+                content: Value::Normal(TranslationContentInput::Locales(
                     <span class="macro">vec!</span>[
                         (
-                            <span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">ValueType::Normal</span>(<span class="ident">FileStringInput::from</span>(<span class="ident">AnyString::from</span>(
+                            <span class="string">&quot;nl&quot;</span>.to_string(),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
                                 <span class="string">&quot;nl value of placeholder1&quot;</span>,
                             ))),
                         ),
                         (
-                            <span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">ValueType::Normal</span>(<span class="ident">FileStringInput::from</span>(<span class="ident">AnyString::from</span>(
+                            <span class="string">&quot;en&quot;</span>.to_string(),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
                                 <span class="string">&quot;en value of placeholder1&quot;</span>,
                             ))),
                         ),
                     ]
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">collect</span>(),
+                    .into_iter()
+                    .collect(),
                 )),
-                <span class="ident">placeholders</span>: <span class="ident">Value::Normal</span>(<span class="ident">HashMap::new</span>()),
+                placeholders: Value::Normal(HashMap::new()),
             }),
-            <span class="ident">ValueType::Normal</span>(<span class="ident">TranslationInput</span> {
-                <span class="ident">content</span>: <span class="ident">Value::Normal</span>(<span class="ident">TranslationContentInput::Locales</span>(
+            ValueType::Normal(TranslationInput {
+                content: Value::Normal(TranslationContentInput::Locales(
                     <span class="macro">vec!</span>[
                         (
-                            <span class="string">&quot;nl&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">ValueType::Normal</span>(<span class="ident">FileStringInput::from</span>(<span class="ident">AnyString::from</span>(
+                            <span class="string">&quot;nl&quot;</span>.to_string(),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
                                 <span class="string">&quot;nl version of placeholder2&quot;</span>,
                             ))),
                         ),
                         (
-                            <span class="string">&quot;en&quot;</span>.<span class="ident">to_string</span>(),
-                            <span class="ident">ValueType::Normal</span>(<span class="ident">FileStringInput::from</span>(<span class="ident">AnyString::from</span>(
+                            <span class="string">&quot;en&quot;</span>.to_string(),
+                            ValueType::Normal(FileStringInput::from(AnyString::from(
                                 <span class="string">&quot;en version of placeholder2&quot;</span>,
                             ))),
                         ),
                     ]
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">collect</span>(),
+                    .into_iter()
+                    .collect(),
                 )),
-                <span class="ident">placeholders</span>: <span class="ident">Value::Normal</span>(<span class="ident">HashMap::new</span>()),
+                placeholders: Value::Normal(HashMap::new()),
             }),
         ];
-        <span class="kw">let</span> <span class="ident">placeholders</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">placeholder_keys</span>
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">zip</span>(<span class="ident">placeholder_values</span>.<span class="ident">into_iter</span>())
-            .<span class="ident">collect</span>();
-        <span class="ident">contents</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">TranslationInput</span> {
-                <span class="ident">content</span>: <span class="ident">Value::Normal</span>(<span class="ident">c</span>),
-                <span class="ident">placeholders</span>: <span class="ident">Value::Normal</span>(<span class="ident">placeholders</span>.<span class="ident">clone</span>()),
+        <span class="kw">let </span>placeholders: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = placeholder_keys
+            .into_iter()
+            .zip(placeholder_values.into_iter())
+            .collect();
+        contents
+            .clone()
+            .into_iter()
+            .map(|c| TranslationInput {
+                content: Value::Normal(c),
+                placeholders: Value::Normal(placeholders.clone()),
             })
-            .<span class="ident">chain</span>(<span class="ident">contents</span>.<span class="ident">into_iter</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">c</span> {
-                <span class="ident">TranslationContentInput::Content</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">TranslationInput</span> {
-                    <span class="ident">content</span>: <span class="ident">Value::Normal</span>(<span class="ident">c</span>),
-                    <span class="ident">placeholders</span>: <span class="ident">Value::Normal</span>(<span class="ident">Default::default</span>()),
+            .chain(contents.into_iter().filter_map(|c| <span class="kw">match </span>c {
+                TranslationContentInput::Content(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(TranslationInput {
+                    content: Value::Normal(c),
+                    placeholders: Value::Normal(Default::default()),
                 }),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             }))
-            .<span class="ident">collect</span>()
+            .collect()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Translation</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="comment">//TODO: check for infinite loops / recursion? -&gt; don&#39;t substitute something that is already</span>
-        <span class="comment">//substituted</span>
-        <span class="kw">fn</span> <span class="ident">substitute</span>(
-            <span class="ident">pattern</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            <span class="ident">translation</span>: <span class="kw-2">&amp;</span><span class="ident">Translation</span>,
-        ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-            <span class="ident">pattern</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">pattern</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">pattern</span>.<span class="ident">to_string</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">substituted</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="kw">for</span> (<span class="ident">placeholder</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="ident">translation</span>.<span class="ident">placeholders</span>.<span class="ident">iter</span>() {
-                    <span class="kw">let</span> <span class="ident">before</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">clone</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span> <span class="ident">val</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>) {
-                        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{{{}}}&quot;</span>, <span class="ident">placeholder</span>);
-                        <span class="ident">result</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="kw-2">&amp;</span><span class="ident">v</span>);
-                        <span class="ident">substituted</span> <span class="op">=</span> <span class="ident">substituted</span> <span class="op">|</span><span class="op">|</span> <span class="ident">before</span> <span class="op">!</span><span class="op">=</span> <span class="ident">result</span>;
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">None</span>;
+<span class="kw">impl </span>Translation {
+    <span class="kw">pub fn </span>to_string(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="comment">//TODO: check for infinite loops / recursion? -&gt; don&#39;t substitute something that is already
+        //substituted
+        </span><span class="kw">fn </span>substitute(
+            pattern: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;String&gt;,
+            locale: <span class="kw-2">&amp;</span>str,
+            translation: <span class="kw-2">&amp;</span>Translation,
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+            pattern.as_ref().and_then(|pattern| {
+                <span class="kw">let </span><span class="kw-2">mut </span>result = pattern.to_string();
+                <span class="kw">let </span><span class="kw-2">mut </span>substituted = <span class="bool-val">false</span>;
+                <span class="kw">for </span>(placeholder, val) <span class="kw">in </span>translation.placeholders.iter() {
+                    <span class="kw">let </span>before = result.clone();
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(v) = val.to_string(locale) {
+                        <span class="kw">let </span>key = <span class="macro">format!</span>(<span class="string">&quot;{{{}}}&quot;</span>, placeholder);
+                        result = result.replace(<span class="kw-2">&amp;</span>key[..], <span class="kw-2">&amp;</span>v);
+                        substituted = substituted || before != result;
+                    } <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">None</span>;
                     }
                 }
-                <span class="kw">if</span> <span class="ident">substituted</span> {
-                    <span class="ident">substitute</span>(<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">result</span>), <span class="ident">locale</span>, <span class="ident">translation</span>)
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">result</span>)
+                <span class="kw">if </span>substituted {
+                    substitute(<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(result), locale, translation)
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">Some</span>(result)
                 }
             })
         }
-        <span class="self">self</span>.<span class="ident">content</span>
-            .<span class="ident">get</span>(<span class="ident">locale</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">substitute</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>.<span class="ident">get_content</span>(<span class="ident">locale</span>), <span class="ident">locale</span>, <span class="self">self</span>))
+        <span class="self">self</span>.content
+            .get(locale)
+            .and_then(|s| substitute(<span class="kw-2">&amp;</span>s.get_content(locale), locale, <span class="self">self</span>))
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">translatable_type</span> {
+<span class="macro">macro_rules! </span>translatable_type {
     (
-        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">outer</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
-        <span class="kw">type</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
-        <span class="ident">subtype</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>: <span class="ident">ty</span>,
-        <span class="ident">rumbas_check</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>: <span class="ident">expr</span>
+        $(<span class="attribute">#[<span class="macro-nonterminal">$outer</span>:meta]</span>)*
+        <span class="kw">type </span><span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>,
+        subtype <span class="macro-nonterminal">$subtype</span>: ty,
+        rumbas_check <span class="macro-nonterminal">$check_expr</span>: expr
     ) =&gt; {
-        <span class="macro">paste::paste!</span> {
+        <span class="macro">paste::paste! </span>{
 
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-            <span class="kw">pub</span> <span class="kw">struct</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>](<span class="ident">TranslationInputEnum</span>);
+            <span class="attribute">#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+            </span><span class="kw">pub struct </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;](TranslationInputEnum);
 
-            <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span><span class="op">&gt;</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">sub</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>) -&gt; <span class="self">Self</span> {
-                    <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">sub</span>.<span class="ident">into</span>();
-                    [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>](<span class="ident">FileStringInput::s</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">into</span>())
+            <span class="kw">impl </span>std::convert::From&lt;<span class="macro-nonterminal">$subtype</span>&gt; <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>from(sub: <span class="macro-nonterminal">$subtype</span>) -&gt; <span class="self">Self </span>{
+                    <span class="kw">let </span>s: String = sub.into();
+                    [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;](FileStringInput::s(<span class="kw-2">&amp;</span>s).into())
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">std::convert::From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">from</span>(<span class="ident">sub</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>) -&gt; <span class="self">Self</span> {
-                    <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">sub</span>.<span class="ident">into</span>();
-                    <span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">FileString::s</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">into</span>())
+            <span class="kw">impl </span>std::convert::From&lt;<span class="macro-nonterminal">$subtype</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">from</span>(sub: <span class="macro-nonterminal">$subtype</span>) -&gt; <span class="self">Self </span>{
+                    <span class="kw">let </span>s: String = sub.into();
+                    <span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">FileString::s</span>(<span class="kw-2">&amp;</span>s).into())
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">RumbasCheck</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">RumbasCheckResult</span> {
-                    <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>);
-                    <span class="kw">match</span> <span class="ident">content</span> {
-                        <span class="prelude-val">Some</span>(<span class="ident">c</span>) =&gt; {
-                            <span class="kw">let</span> <span class="ident">conversion_res</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">try_into</span>();
-                            <span class="kw">match</span> <span class="ident">conversion_res</span> {
-                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="ident">RumbasCheckResult::empty</span>(),
-                                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">check_expr</span>(<span class="ident">e</span>),
+            <span class="kw">impl </span>RumbasCheck <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">check</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+                    <span class="kw">let </span>content = <span class="self">self</span>.to_string(locale);
+                    <span class="kw">match </span>content {
+                        <span class="prelude-val">Some</span>(c) =&gt; {
+                            <span class="kw">let </span>conversion_res: <span class="prelude-ty">Result</span>&lt;<span class="macro-nonterminal">$subtype</span>, <span class="kw">_</span>&gt; = c.try_into();
+                            <span class="kw">match </span>conversion_res {
+                                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; RumbasCheckResult::empty(),
+                                <span class="prelude-val">Err</span>(e) =&gt; <span class="macro-nonterminal">$check_expr</span>(e),
                             }
                         }
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">RumbasCheckResult::from_missing_translation</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>.<span class="ident">to_owned</span>())),
+                        <span class="prelude-val">None </span>=&gt; RumbasCheckResult::from_missing_translation(<span class="prelude-val">Some</span>(locale.to_owned())),
                     }
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">subtype</span> {
-                    <span class="self">self</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>()
+            <span class="kw">impl </span>ToNumbas&lt;<span class="macro-nonterminal">$subtype</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="macro-nonterminal">$subtype </span>{
+                    <span class="self">self</span>.to_string(locale).unwrap().try_into().unwrap()
                 }
             }
 
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Eq</span>)]</span>
-            <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">Translation</span>);
+            <span class="attribute">#[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable, Eq)]
+            </span><span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">Translation</span>);
 
-            <span class="kw">impl</span> <span class="ident">Input</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">type</span> <span class="ident">Normal</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>;
-                <span class="kw">fn</span> <span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span> {
-                    <span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">self</span>.<span class="number">0</span>.<span class="ident">to_normal</span>())
+            <span class="kw">impl </span>Input <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">type </span>Normal = <span class="macro-nonterminal">$</span><span class="kw">type</span>;
+                <span class="kw">fn </span><span class="macro-nonterminal">to_normal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; &lt;<span class="self">Self </span><span class="kw">as </span>Input&gt;::Normal {
+                    <span class="macro-nonterminal">$</span><span class="kw">type</span>(<span class="macro-nonterminal">self</span>.<span class="number">0</span>.to_normal())
                 }
-                <span class="kw">fn</span> <span class="ident">from_normal</span>(<span class="ident">normal</span>: <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Input</span><span class="op">&gt;</span><span class="ident">::Normal</span>) -&gt; <span class="self">Self</span> {
-                       [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>](<span class="ident">TranslationInputEnum::from_normal</span>(<span class="ident">normal</span>.<span class="number">0</span>))
+                <span class="kw">fn </span>from_normal(normal: &lt;<span class="self">Self </span><span class="kw">as </span>Input&gt;::Normal) -&gt; <span class="self">Self </span>{
+                       [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;](TranslationInputEnum::from_normal(normal.<span class="number">0</span>))
 
                 }
-                <span class="kw">fn</span> <span class="ident">find_missing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InputCheckResult</span> {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">find_missing</span>()
+                <span class="kw">fn </span>find_missing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; InputCheckResult {
+                    <span class="self">self</span>.<span class="number">0</span>.find_missing()
                 }
-                <span class="kw">fn</span> <span class="ident">insert_template_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">val</span>: <span class="kw-2">&amp;</span><span class="ident">serde_yaml::Value</span>) {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">insert_template_value</span>(<span class="ident">key</span>, <span class="ident">val</span>)
-                }
-
-                <span class="kw">fn</span> <span class="ident">files_to_load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">FileToLoad</span><span class="op">&gt;</span> {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">files_to_load</span>()
+                <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value) {
+                    <span class="self">self</span>.<span class="number">0</span>.insert_template_value(key, val)
                 }
 
-                <span class="kw">fn</span> <span class="ident">insert_loaded_files</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">FileToLoad</span>, <span class="ident">LoadedFile</span><span class="op">&gt;</span>) {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">insert_loaded_files</span>(<span class="ident">files</span>)
+                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+                    <span class="self">self</span>.<span class="number">0</span>.files_to_load()
                 }
 
-                <span class="kw">fn</span> <span class="ident">dependencies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">std::collections::HashSet</span><span class="op">&lt;</span><span class="ident">std::path::PathBuf</span><span class="op">&gt;</span> {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">dependencies</span>()
+                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                    <span class="self">self</span>.<span class="number">0</span>.insert_loaded_files(files)
                 }
-            }
 
-            <span class="kw">impl</span> <span class="ident">InputInverse</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">type</span> <span class="macro-nonterminal">Input</span> <span class="op">=</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>];
-                <span class="kw">type</span> <span class="ident">EnumInput</span> <span class="op">=</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>];
-            }
-
-            <span class="kw">impl</span> <span class="ident">Overwrite</span><span class="op">&lt;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">overwrite</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_other</span>: <span class="kw-2">&amp;</span>[<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>]) {
-                    <span class="comment">//TODO: Maybe add languages of other that are missing in self?</span>
-                    <span class="comment">// These default values should be read before language is interpreted</span>
+                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+                    <span class="self">self</span>.<span class="number">0</span>.dependencies()
                 }
             }
 
-            <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
-                <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>)
+            <span class="kw">impl </span>InputInverse <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">type </span><span class="macro-nonterminal">Input </span>= [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;];
+                <span class="kw">type </span>EnumInput = [&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;];
+            }
+
+            <span class="kw">impl </span>Overwrite&lt;[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]&gt; <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>overwrite(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;]) {
+                    <span class="comment">//TODO: Maybe add languages of other that are missing in self?
+                    // These default values should be read before language is interpreted
+                </span>}
+            }
+
+            <span class="kw">impl </span><span class="macro-nonterminal">$</span><span class="kw">type </span>{
+                <span class="kw">pub fn </span><span class="macro-nonterminal">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+                    <span class="self">self</span>.<span class="number">0</span>.to_string(locale)
                 }
             }
 
-            <span class="kw">impl</span> <span class="ident">Examples</span> <span class="kw">for</span> [<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">type</span> <span class="macro-nonterminal">Input</span><span class="op">&gt;</span>] {
-                <span class="kw">fn</span> <span class="ident">examples</span>() -&gt;  <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">translations</span> <span class="op">=</span> <span class="ident">TranslationInputEnum::examples</span>();
-                    <span class="ident">translations</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="self">Self</span>).<span class="ident">collect</span>()
+            <span class="kw">impl </span>Examples <span class="kw">for </span>[&lt;<span class="macro-nonterminal">$</span><span class="kw">type </span><span class="macro-nonterminal">Input</span>&gt;] {
+                <span class="kw">fn </span>examples() -&gt;  Vec&lt;<span class="self">Self</span>&gt; {
+                    <span class="kw">let </span>translations = TranslationInputEnum::examples();
+                    translations.into_iter().map(<span class="self">Self</span>).collect()
                 }
             }
         }
     };
 }
 
-<span class="kw">use</span> <span class="ident">translatable_type</span>;
+<span class="kw">use </span>translatable_type;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

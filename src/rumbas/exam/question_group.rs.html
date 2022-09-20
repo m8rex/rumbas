@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/question_group.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>question_group.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/exam/question_group.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>question_group.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -115,122 +115,122 @@
 <span id="115">115</span>
 <span id="116">116</span>
 <span id="117">117</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::Question</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::QuestionInput</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::default::combine_question_with_default_files</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_manager</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::sanitize::sanitize</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::convert::Into</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::Question;
+<span class="kw">use </span><span class="kw">crate</span>::question::QuestionInput;
+<span class="kw">use </span><span class="kw">crate</span>::support::default::combine_question_with_default_files;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_manager::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::sanitize::sanitize;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::convert::Into;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionGroupInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionGroup</span> {
-    <span class="doccomment">/// The name</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
-    <span class="doccomment">/// The strategy to use to pick the questions to show</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">picking_strategy</span>: <span class="ident">PickingStrategy</span>,
-    <span class="doccomment">/// The questions</span>
-    <span class="kw">pub</span> <span class="ident">questions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPath</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;QuestionGroupInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>QuestionGroup {
+    <span class="doccomment">/// The name
+    </span><span class="kw">pub </span>name: TranslatableString,
+    <span class="doccomment">/// The strategy to use to pick the questions to show
+    </span><span class="attribute">#[serde(flatten)]
+    </span><span class="kw">pub </span>picking_strategy: PickingStrategy,
+    <span class="doccomment">/// The questions
+    </span><span class="kw">pub </span>questions: Vec&lt;QuestionPath&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::question_group::QuestionGroup</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">QuestionGroup</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
-        <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">picking_strategy</span>: <span class="self">self</span>.<span class="ident">picking_strategy</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">questions</span>: <span class="self">self</span>.<span class="ident">questions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::question_group::QuestionGroup&gt; <span class="kw">for </span>QuestionGroup {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::exam::question_group::QuestionGroup {
+        numbas::exam::question_group::QuestionGroup {
+            name: <span class="self">self</span>.name.to_numbas(locale),
+            picking_strategy: <span class="self">self</span>.picking_strategy.to_numbas(locale),
+            questions: <span class="self">self</span>.questions.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">QuestionGroup</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::question_group::QuestionGroup</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">QuestionGroup</span> {
-        <span class="ident">QuestionGroup</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">picking_strategy</span>: <span class="self">self</span>.<span class="ident">picking_strategy</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">questions</span>: <span class="self">self</span>.<span class="ident">questions</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;QuestionGroup&gt; <span class="kw">for </span>numbas::exam::question_group::QuestionGroup {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; QuestionGroup {
+        QuestionGroup {
+            name: <span class="self">self</span>.name.to_rumbas(),
+            picking_strategy: <span class="self">self</span>.picking_strategy.to_rumbas(),
+            questions: <span class="self">self</span>.questions.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;PickingStrategyInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;picking_strategy&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PickingStrategy</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;all_ordered&quot;</span>)]</span>
-    <span class="ident">AllOrdered</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;all_shuffled&quot;</span>)]</span>
-    <span class="ident">AllShuffled</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;random_subset&quot;</span>)]</span>
-    <span class="ident">RandomSubset</span>(<span class="ident">PickingStrategyRandomSubset</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;PickingStrategyInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;picking_strategy&quot;</span>)]
+</span><span class="kw">pub enum </span>PickingStrategy {
+    <span class="attribute">#[serde(rename = <span class="string">&quot;all_ordered&quot;</span>)]
+    </span>AllOrdered,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;all_shuffled&quot;</span>)]
+    </span>AllShuffled,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;random_subset&quot;</span>)]
+    </span>RandomSubset(PickingStrategyRandomSubset),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PickingStrategy</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+<span class="kw">impl </span>ToNumbas&lt;numbas::exam::question_group::QuestionGroupPickingStrategy&gt; <span class="kw">for </span>PickingStrategy {
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">PickingStrategy::AllOrdered</span> =&gt; {
-                <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered</span>
+        _locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::exam::question_group::QuestionGroupPickingStrategy {
+        <span class="kw">match </span><span class="self">self </span>{
+            PickingStrategy::AllOrdered =&gt; {
+                numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered
             }
-            <span class="ident">PickingStrategy::AllShuffled</span> =&gt; {
-                <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled</span>
+            PickingStrategy::AllShuffled =&gt; {
+                numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled
             }
-            <span class="ident">PickingStrategy::RandomSubset</span>(<span class="ident">p</span>) =&gt; {
-                <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset</span> {
-                    <span class="ident">pick_questions</span>: <span class="ident">p</span>.<span class="ident">pick_questions</span>,
+            PickingStrategy::RandomSubset(p) =&gt; {
+                numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
+                    pick_questions: p.pick_questions,
                 }
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">PickingStrategy</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PickingStrategy</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered</span> =&gt; {
-                <span class="ident">PickingStrategy::AllOrdered</span>
+<span class="kw">impl </span>ToRumbas&lt;PickingStrategy&gt; <span class="kw">for </span>numbas::exam::question_group::QuestionGroupPickingStrategy {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PickingStrategy {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::exam::question_group::QuestionGroupPickingStrategy::AllOrdered =&gt; {
+                PickingStrategy::AllOrdered
             }
-            <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled</span> =&gt; {
-                <span class="ident">PickingStrategy::AllShuffled</span>
+            numbas::exam::question_group::QuestionGroupPickingStrategy::AllShuffled =&gt; {
+                PickingStrategy::AllShuffled
             }
-            <span class="ident">numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset</span> {
-                <span class="ident">pick_questions</span>,
-            } =&gt; <span class="ident">PickingStrategy::RandomSubset</span>(<span class="ident">PickingStrategyRandomSubset</span> {
-                <span class="ident">pick_questions</span>: <span class="kw-2">*</span><span class="ident">pick_questions</span>,
+            numbas::exam::question_group::QuestionGroupPickingStrategy::RandomSubset {
+                pick_questions,
+            } =&gt; PickingStrategy::RandomSubset(PickingStrategyRandomSubset {
+                pick_questions: <span class="kw-2">*</span>pick_questions,
             }),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;PickingStrategyRandomSubsetInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PickingStrategyRandomSubset</span> {
-    <span class="kw">pub</span> <span class="ident">pick_questions</span>: <span class="ident">usize</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;PickingStrategyRandomSubsetInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>PickingStrategyRandomSubset {
+    <span class="kw">pub </span>pick_questions: usize,
 }
 
 <span class="macro">crate::support::file_manager::create_from_string_type!</span>(
-    <span class="ident">QuestionPath</span>,
-    <span class="ident">QuestionPathInput</span>,
-    <span class="ident">Question</span>,
-    <span class="ident">QuestionInput</span>,
-    <span class="ident">QuestionFileToRead</span>,
-    <span class="ident">numbas::question::Question</span>,
+    QuestionPath,
+    QuestionPathInput,
+    Question,
+    QuestionInput,
+    QuestionFileToRead,
+    numbas::question::Question,
     <span class="string">&quot;QuestionPath&quot;</span>,
-    <span class="ident">combine_question_with_default_files</span>,
-    <span class="ident">name</span>
+    combine_question_with_default_files,
+    name
 );
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -209,216 +209,216 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Contains all the data types</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Contains all the data types
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">constants</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">custom_part_type</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">extension</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">function</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">navigation</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">part</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">preamble</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">resource</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">variable</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">variable_test</span>;
+</span><span class="kw">pub mod </span>constants;
+<span class="kw">pub mod </span>custom_part_type;
+<span class="kw">pub mod </span>extension;
+<span class="kw">pub mod </span>function;
+<span class="kw">pub mod </span>navigation;
+<span class="kw">pub mod </span>part;
+<span class="kw">pub mod </span>preamble;
+<span class="kw">pub mod </span>resource;
+<span class="kw">pub mod </span>variable;
+<span class="kw">pub mod </span>variable_test;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam</span>::{<span class="ident">FileReadError</span>, <span class="ident">ParseError</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::custom_part_type::CustomPartTypeDefinitionPath</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::jme::JMERulesetItem</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::QuestionPart</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_manager::CACHE</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::template::TemplateFile</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::yaml::YamlError</span>;
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">constants::BuiltinConstants</span>;
-<span class="kw">use</span> <span class="ident">constants::CustomConstant</span>;
-<span class="kw">use</span> <span class="ident">extension::Extensions</span>;
-<span class="kw">use</span> <span class="ident">function::Function</span>;
-<span class="kw">use</span> <span class="ident">navigation::QuestionNavigation</span>;
-<span class="kw">use</span> <span class="ident">preamble::Preamble</span>;
-<span class="kw">use</span> <span class="ident">resource::ResourcePath</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
-<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
-<span class="kw">use</span> <span class="ident">variable::VariableRepresentation</span>;
-<span class="kw">use</span> <span class="ident">variable::UNGROUPED_GROUP</span>;
-<span class="kw">use</span> <span class="ident">variable_test::VariablesTest</span>;
+<span class="kw">use </span><span class="kw">crate</span>::exam::{FileReadError, ParseError};
+<span class="kw">use </span><span class="kw">crate</span>::question::custom_part_type::CustomPartTypeDefinitionPath;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::jme::JMERulesetItem;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::QuestionPart;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_manager::CACHE;
+<span class="kw">use </span><span class="kw">crate</span>::support::template::TemplateFile;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::ContentAreaTranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::yaml::YamlError;
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>constants::BuiltinConstants;
+<span class="kw">use </span>constants::CustomConstant;
+<span class="kw">use </span>extension::Extensions;
+<span class="kw">use </span>function::Function;
+<span class="kw">use </span>navigation::QuestionNavigation;
+<span class="kw">use </span>preamble::Preamble;
+<span class="kw">use </span>resource::ResourcePath;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::path::Path;
+<span class="kw">use </span>std::path::PathBuf;
+<span class="kw">use </span>variable::VariableRepresentation;
+<span class="kw">use </span>variable::UNGROUPED_GROUP;
+<span class="kw">use </span>variable_test::VariablesTest;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">test</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Question</span> {
-    <span class="doccomment">/// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</span>
-    <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">ContentAreaTranslatableString</span>,
-    <span class="doccomment">/// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.</span>
-    <span class="doccomment">/// The advice area is normally used to present a worked solution to the question.</span>
-    <span class="kw">pub</span> <span class="ident">advice</span>: <span class="ident">ContentAreaTranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">builtin_constants</span>: <span class="ident">BuiltinConstants</span>,
-    <span class="kw">pub</span> <span class="ident">custom_constants</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomConstant</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">variables</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">VariableRepresentation</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">variables_test</span>: <span class="ident">VariablesTest</span>,
-    <span class="kw">pub</span> <span class="ident">functions</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Function</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">preamble</span>: <span class="ident">Preamble</span>,
-    <span class="kw">pub</span> <span class="ident">navigation</span>: <span class="ident">QuestionNavigation</span>,
-    <span class="kw">pub</span> <span class="ident">extensions</span>: <span class="ident">Extensions</span>,
-    <span class="doccomment">/// The names of the topics used in diagnostic exams that this question belongs to</span>
-    <span class="kw">pub</span> <span class="ident">diagnostic_topic_names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>, <span class="comment">// TODO: validate? / warnings?</span>
-    <span class="kw">pub</span> <span class="ident">resources</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ResourcePath</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The custom part types used in this exam</span>
-    <span class="attribute">#[<span class="ident">input</span>(<span class="ident">skip</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">custom_part_types</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeDefinitionPath</span><span class="op">&gt;</span>, <span class="comment">//TODO a lot of options</span>
-    <span class="doccomment">/// The rulesets defined in this question</span>
-    <span class="kw">pub</span> <span class="ident">rulesets</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">JMERulesetItem</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;QuestionInput&quot;</span>)]
+#[input(test)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>Question {
+    <span class="doccomment">/// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
+    </span><span class="kw">pub </span>statement: ContentAreaTranslatableString,
+    <span class="doccomment">/// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
+    /// The advice area is normally used to present a worked solution to the question.
+    </span><span class="kw">pub </span>advice: ContentAreaTranslatableString,
+    <span class="kw">pub </span>parts: Vec&lt;QuestionPart&gt;,
+    <span class="kw">pub </span>builtin_constants: BuiltinConstants,
+    <span class="kw">pub </span>custom_constants: Vec&lt;CustomConstant&gt;,
+    <span class="kw">pub </span>variables: HashMap&lt;String, VariableRepresentation&gt;,
+    <span class="kw">pub </span>variables_test: VariablesTest,
+    <span class="kw">pub </span>functions: HashMap&lt;String, Function&gt;,
+    <span class="kw">pub </span>preamble: Preamble,
+    <span class="kw">pub </span>navigation: QuestionNavigation,
+    <span class="kw">pub </span>extensions: Extensions,
+    <span class="doccomment">/// The names of the topics used in diagnostic exams that this question belongs to
+    </span><span class="kw">pub </span>diagnostic_topic_names: Vec&lt;TranslatableString&gt;, <span class="comment">// TODO: validate? / warnings?
+    </span><span class="kw">pub </span>resources: Vec&lt;ResourcePath&gt;,
+    <span class="doccomment">/// The custom part types used in this exam
+    </span><span class="attribute">#[input(skip)]
+    </span><span class="kw">pub </span>custom_part_types: Vec&lt;CustomPartTypeDefinitionPath&gt;, <span class="comment">//TODO a lot of options
+    </span><span class="doccomment">/// The rulesets defined in this question
+    </span><span class="kw">pub </span>rulesets: HashMap&lt;String, JMERulesetItem&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::Question</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Question</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::Question</span> {
-        <span class="comment">//TODO?</span>
-        <span class="macro">panic!</span>(
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::Question&gt; <span class="kw">for </span>Question {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::Question {
+        <span class="comment">//TODO?
+        </span><span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
-            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.to_string(),
         )
     }
-    <span class="comment">//TODO: add to_numbas on Option&#39;s to reduce burden?</span>
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="ident">numbas::question::Question</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">variables</span>.<span class="ident">contains_key</span>(<span class="string">&quot;e&quot;</span>) {
-            <span class="macro">panic!</span>(<span class="string">&quot;e is not allowed as a variable name&quot;</span>); <span class="comment">//TODO is this still the case?</span>
-        }
-        <span class="ident">numbas::question::Question</span> {
-            <span class="ident">name</span>,
-            <span class="ident">statement</span>: <span class="self">self</span>.<span class="ident">statement</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">advice</span>: <span class="self">self</span>.<span class="ident">advice</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">parts</span>: <span class="self">self</span>.<span class="ident">parts</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">builtin_constants</span>: <span class="ident">numbas::question::constants::BuiltinConstants</span>(
-                <span class="self">self</span>.<span class="ident">builtin_constants</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+    <span class="comment">//TODO: add to_numbas on Option&#39;s to reduce burden?
+    </span><span class="kw">fn </span>to_numbas_with_name(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str, name: String) -&gt; numbas::question::Question {
+        <span class="kw">if </span><span class="self">self</span>.variables.contains_key(<span class="string">&quot;e&quot;</span>) {
+            <span class="macro">panic!</span>(<span class="string">&quot;e is not allowed as a variable name&quot;</span>); <span class="comment">//TODO is this still the case?
+        </span>}
+        numbas::question::Question {
+            name,
+            statement: <span class="self">self</span>.statement.to_numbas(locale),
+            advice: <span class="self">self</span>.advice.to_numbas(locale),
+            parts: <span class="self">self</span>.parts.to_numbas(locale),
+            builtin_constants: numbas::question::constants::BuiltinConstants(
+                <span class="self">self</span>.builtin_constants.clone().to_numbas(locale),
             ),
-            <span class="ident">constants</span>: <span class="self">self</span>.<span class="ident">custom_constants</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">variables</span>: <span class="self">self</span>
-                .<span class="ident">variables</span>
-                .<span class="ident">clone</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">v</span>.<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="ident">k</span>)))
-                .<span class="ident">collect</span>(),
-            <span class="ident">variables_test</span>: <span class="self">self</span>.<span class="ident">variables_test</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">functions</span>: <span class="self">self</span>.<span class="ident">functions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">ungrouped_variables</span>: <span class="self">self</span>
-                .<span class="ident">variables</span>
-                .<span class="ident">clone</span>()
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">filter</span>(<span class="op">|</span>(<span class="ident">_k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="ident">to_variable</span>(<span class="ident">locale</span>).<span class="ident">group</span>[..] <span class="op">==</span> <span class="ident">UNGROUPED_GROUP</span>)
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">k</span>)
-                .<span class="ident">collect</span>(),
-            <span class="ident">variable_groups</span>: <span class="ident">Vec::new</span>(), <span class="comment">// Don&#39;t add variable groups</span>
-            <span class="ident">preamble</span>: <span class="self">self</span>.<span class="ident">preamble</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">rulesets</span>: <span class="self">self</span>.<span class="ident">rulesets</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">navigation</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">extensions</span>: <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">tags</span>: <span class="self">self</span>
-                .<span class="ident">diagnostic_topic_names</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;skill: {}&quot;</span>, <span class="ident">t</span>.<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>()))
-                .<span class="ident">collect</span>(),
-            <span class="ident">resources</span>: <span class="self">self</span>.<span class="ident">resources</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">custom_part_types</span>: <span class="self">self</span>
-                .<span class="ident">custom_part_types</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">data</span>.<span class="ident">to_numbas_with_name</span>(<span class="ident">locale</span>, <span class="ident">c</span>.<span class="ident">file_name</span>.<span class="ident">to_owned</span>()))
-                .<span class="ident">collect</span>(),
+            constants: <span class="self">self</span>.custom_constants.to_numbas(locale),
+            variables: <span class="self">self
+                </span>.variables
+                .clone()
+                .into_iter()
+                .map(|(k, v)| (k.clone(), v.to_numbas_with_name(locale, k)))
+                .collect(),
+            variables_test: <span class="self">self</span>.variables_test.clone().to_numbas(locale),
+            functions: <span class="self">self</span>.functions.to_numbas(locale),
+            ungrouped_variables: <span class="self">self
+                </span>.variables
+                .clone()
+                .into_iter()
+                .filter(|(_k, v)| <span class="kw-2">&amp;</span>v.to_variable(locale).group[..] == UNGROUPED_GROUP)
+                .map(|(k, <span class="kw">_</span>)| k)
+                .collect(),
+            variable_groups: Vec::new(), <span class="comment">// Don&#39;t add variable groups
+            </span>preamble: <span class="self">self</span>.preamble.to_numbas(locale),
+            rulesets: <span class="self">self</span>.rulesets.to_numbas(locale),
+            navigation: <span class="self">self</span>.navigation.to_numbas(locale),
+            extensions: <span class="self">self</span>.extensions.to_numbas(locale),
+            tags: <span class="self">self
+                </span>.diagnostic_topic_names
+                .iter()
+                .map(|t| <span class="macro">format!</span>(<span class="string">&quot;skill: {}&quot;</span>, t.to_string(locale).unwrap()))
+                .collect(),
+            resources: <span class="self">self</span>.resources.to_numbas(locale),
+            custom_part_types: <span class="self">self
+                </span>.custom_part_types
+                .iter()
+                .map(|c| c.data.to_numbas_with_name(locale, c.file_name.to_owned()))
+                .collect(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">Question</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::Question</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Question</span> {
-        <span class="ident">Question</span> {
-            <span class="ident">statement</span>: <span class="self">self</span>.<span class="ident">statement</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">advice</span>: <span class="self">self</span>.<span class="ident">advice</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">parts</span>: <span class="self">self</span>.<span class="ident">parts</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">builtin_constants</span>: <span class="self">self</span>.<span class="ident">builtin_constants</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">custom_constants</span>: <span class="self">self</span>.<span class="ident">constants</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">variables</span>: <span class="self">self</span>.<span class="ident">variables</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">variables_test</span>: <span class="self">self</span>.<span class="ident">variables_test</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">functions</span>: <span class="self">self</span>.<span class="ident">functions</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">preamble</span>: <span class="self">self</span>.<span class="ident">preamble</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">navigation</span>: <span class="self">self</span>.<span class="ident">navigation</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">extensions</span>: <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">diagnostic_topic_names</span>: <span class="self">self</span>
-                .<span class="ident">tags</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">starts_with</span>(<span class="string">&quot;skill: &quot;</span>))
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">splitn</span>(<span class="number">2</span>, <span class="string">&quot;: &quot;</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()[<span class="number">1</span>].<span class="ident">to_string</span>().<span class="ident">into</span>())
-                .<span class="ident">collect</span>(),
-            <span class="ident">resources</span>: <span class="self">self</span>.<span class="ident">resources</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">custom_part_types</span>: <span class="self">self</span>.<span class="ident">custom_part_types</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">rulesets</span>: <span class="self">self</span>.<span class="ident">rulesets</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;Question&gt; <span class="kw">for </span>numbas::question::Question {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Question {
+        Question {
+            statement: <span class="self">self</span>.statement.to_rumbas(),
+            advice: <span class="self">self</span>.advice.to_rumbas(),
+            parts: <span class="self">self</span>.parts.to_rumbas(),
+            builtin_constants: <span class="self">self</span>.builtin_constants.to_rumbas(),
+            custom_constants: <span class="self">self</span>.constants.to_rumbas(),
+            variables: <span class="self">self</span>.variables.to_rumbas(),
+            variables_test: <span class="self">self</span>.variables_test.to_rumbas(),
+            functions: <span class="self">self</span>.functions.to_rumbas(),
+            preamble: <span class="self">self</span>.preamble.to_rumbas(),
+            navigation: <span class="self">self</span>.navigation.to_rumbas(),
+            extensions: <span class="self">self</span>.extensions.to_rumbas(),
+            diagnostic_topic_names: <span class="self">self
+                </span>.tags
+                .iter()
+                .filter(|t| t.starts_with(<span class="string">&quot;skill: &quot;</span>))
+                .map(|t| t.splitn(<span class="number">2</span>, <span class="string">&quot;: &quot;</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()[<span class="number">1</span>].to_string().into())
+                .collect(),
+            resources: <span class="self">self</span>.resources.to_rumbas(),
+            custom_part_types: <span class="self">self</span>.custom_part_types.to_rumbas(),
+            rulesets: <span class="self">self</span>.rulesets.to_rumbas(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">yaml</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">file</span>: <span class="ident">PathBuf</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QuestionInput</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">QuestionFileTypeInput</span>::<span class="kw-2">*</span>;
-        <span class="kw">let</span> <span class="ident">input</span>: <span class="ident">QuestionFileTypeInput</span> <span class="op">=</span> <span class="ident">serde_yaml::from_str</span>(<span class="ident">yaml</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">ParseError::YamlError</span>(<span class="ident">YamlError::from</span>(<span class="ident">e</span>, <span class="ident">file</span>.<span class="ident">to_path_buf</span>())))<span class="question-mark">?</span>;
-        <span class="kw">match</span> <span class="ident">input</span> {
-            <span class="ident">Normal</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="kw-2">*</span><span class="ident">e</span>).<span class="number">0</span>),
-            <span class="ident">Template</span>(<span class="ident">t_res</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">t_res</span>.<span class="ident">to_normal</span>(); <span class="comment">// TODO?</span>
-                <span class="kw">let</span> <span class="ident">template_file</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="ident"><span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER</span>)
-                    .<span class="ident">join</span>(<span class="macro">format!</span>(<span class="string">&quot;{}.yaml&quot;</span>, <span class="ident">t</span>.<span class="ident">relative_template_path</span>));
+<span class="kw">impl </span>QuestionInput {
+    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: PathBuf) -&gt; <span class="prelude-ty">Result</span>&lt;QuestionInput, ParseError&gt; {
+        <span class="kw">use </span>QuestionFileTypeInput::<span class="kw-2">*</span>;
+        <span class="kw">let </span>input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
+            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))<span class="question-mark">?</span>;
+        <span class="kw">match </span>input {
+            Normal(e) =&gt; <span class="prelude-val">Ok</span>((<span class="kw-2">*</span>e).<span class="number">0</span>),
+            Template(t_res) =&gt; {
+                <span class="kw">let </span>t = t_res.to_normal(); <span class="comment">// TODO?
+                </span><span class="kw">let </span>template_file = Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER)
+                    .join(<span class="macro">format!</span>(<span class="string">&quot;{}.yaml&quot;</span>, t.relative_template_path));
 
-                <span class="kw">let</span> <span class="ident">template_yaml</span> <span class="op">=</span> <span class="ident">CACHE</span>
-                    .<span class="ident">read_file</span>(<span class="ident">FileToLoad</span> {
-                        <span class="ident">file_path</span>: <span class="ident">template_file</span>.<span class="ident">clone</span>(),
-                        <span class="ident">locale_dependant</span>: <span class="bool-val">false</span>,
+                <span class="kw">let </span>template_yaml = CACHE
+                    .read_file(FileToLoad {
+                        file_path: template_file.clone(),
+                        locale_dependant: <span class="bool-val">false</span>,
                     })
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">lf</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">lf</span> {
-                        <span class="ident">LoadedFile::Normal</span>(<span class="ident">n</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">n</span>.<span class="ident">content</span>),
-                        <span class="ident">LoadedFile::Localized</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+                    .and_then(|lf| <span class="kw">match </span>lf {
+                        LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n.content),
+                        LoadedFile::Localized(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     })
-                    .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                        <span class="ident">ParseError::FileReadError</span>(<span class="ident">FileReadError</span>(<span class="ident">template_file</span>.<span class="ident">to_path_buf</span>()))
+                    .ok_or_else(|| {
+                        ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
                     })<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">question</span>: <span class="ident">QuestionInput</span> <span class="op">=</span> <span class="ident">serde_yaml::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">template_yaml</span>)
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">ParseError::YamlError</span>(<span class="ident">YamlError::from</span>(<span class="ident">e</span>, <span class="ident">file</span>.<span class="ident">to_path_buf</span>())))<span class="question-mark">?</span>;
-                <span class="ident">t</span>.<span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> {
-                    <span class="ident">question</span>.<span class="ident">insert_template_value</span>(<span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>.<span class="number">0</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>question: QuestionInput = serde_yaml::from_str(<span class="kw-2">&amp;</span>template_yaml)
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))<span class="question-mark">?</span>;
+                t.data.iter().for_each(|(k, v)| {
+                    question.insert_template_value(k, <span class="kw-2">&amp;</span>v.<span class="number">0</span>);
                 });
-                <span class="prelude-val">Ok</span>(<span class="ident">question</span>)
+                <span class="prelude-val">Ok</span>(question)
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;QuestionFileTypeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">QuestionFileType</span> {
-    <span class="ident">Template</span>(<span class="ident">TemplateFile</span>),
-    <span class="ident">Normal</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Question</span><span class="op">&gt;</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;QuestionFileTypeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>QuestionFileType {
+    Template(TemplateFile),
+    Normal(Box&lt;Question&gt;),
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionFileType</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="ident">serde_yaml::to_string</span>(<span class="self">self</span>)
+<span class="kw">impl </span>QuestionFileType {
+    <span class="kw">pub fn </span>to_yaml(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; serde_yaml::Result&lt;String&gt; {
+        serde_yaml::to_string(<span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">QuestionFileTypeInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="ident">serde_yaml::to_string</span>(<span class="self">self</span>)
+<span class="kw">impl </span>QuestionFileTypeInput {
+    <span class="kw">pub fn </span>to_yaml(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; serde_yaml::Result&lt;String&gt; {
+        serde_yaml::to_string(<span class="self">self</span>)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

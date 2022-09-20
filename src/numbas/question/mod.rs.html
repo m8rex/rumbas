@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `numbas/src/question/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../numbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../numbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -133,140 +133,140 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">answer_simplification</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">constants</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">custom_part_type</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">function</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">navigation</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">part</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">preamble</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">resource</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">variable</span>;
+</pre><pre class="rust"><code><span class="kw">pub mod </span>answer_simplification;
+<span class="kw">pub mod </span>constants;
+<span class="kw">pub mod </span>custom_part_type;
+<span class="kw">pub mod </span>function;
+<span class="kw">pub mod </span>navigation;
+<span class="kw">pub mod </span>part;
+<span class="kw">pub mod </span>preamble;
+<span class="kw">pub mod </span>resource;
+<span class="kw">pub mod </span>variable;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exam::hacky_fix_exam</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::ContentAreaString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::jme::JMEString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::primitive::SafeNatural</span>;
-<span class="kw">use</span> <span class="ident">answer_simplification::AnswerSimplificationType</span>;
-<span class="kw">use</span> <span class="ident">constants::BuiltinConstants</span>;
-<span class="kw">use</span> <span class="ident">constants::QuestionConstant</span>;
-<span class="kw">use</span> <span class="ident">custom_part_type::CustomPartType</span>;
-<span class="kw">use</span> <span class="ident">function::Function</span>;
-<span class="kw">use</span> <span class="ident">navigation::Navigation</span> <span class="kw">as</span> <span class="ident">QuestionNavigation</span>;
-<span class="kw">use</span> <span class="ident">part::QuestionPart</span>;
-<span class="kw">use</span> <span class="ident">preamble::Preamble</span>;
-<span class="kw">use</span> <span class="ident">resource::Resource</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde::Deserialize</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">serde_with::skip_serializing_none</span>;
-<span class="kw">use</span> <span class="ident">std::collections::BTreeMap</span>;
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">variable::Variable</span>;
-<span class="kw">use</span> <span class="ident">variable::VariableGroup</span>;
+<span class="kw">use </span><span class="kw">crate</span>::exam::hacky_fix_exam;
+<span class="kw">use </span><span class="kw">crate</span>::jme::ContentAreaString;
+<span class="kw">use </span><span class="kw">crate</span>::jme::JMEString;
+<span class="kw">use </span><span class="kw">crate</span>::support::primitive::SafeNatural;
+<span class="kw">use </span>answer_simplification::AnswerSimplificationType;
+<span class="kw">use </span>constants::BuiltinConstants;
+<span class="kw">use </span>constants::QuestionConstant;
+<span class="kw">use </span>custom_part_type::CustomPartType;
+<span class="kw">use </span>function::Function;
+<span class="kw">use </span>navigation::Navigation <span class="kw">as </span>QuestionNavigation;
+<span class="kw">use </span>part::QuestionPart;
+<span class="kw">use </span>preamble::Preamble;
+<span class="kw">use </span>resource::Resource;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::Deserialize;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>serde_with::skip_serializing_none;
+<span class="kw">use </span>std::collections::BTreeMap;
+<span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>variable::Variable;
+<span class="kw">use </span>variable::VariableGroup;
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Question</span> {
-    <span class="comment">//TODO</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</span>
-    <span class="kw">pub</span> <span class="ident">statement</span>: <span class="ident">ContentAreaString</span>,
-    <span class="doccomment">/// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.</span>
-    <span class="doccomment">/// The advice area is normally used to present a worked solution to the question.</span>
-    <span class="kw">pub</span> <span class="ident">advice</span>: <span class="ident">ContentAreaString</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">parts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionPart</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">builtin_constants</span>: <span class="ident">BuiltinConstants</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">constants</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">QuestionConstant</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">variables</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Variable</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;variablesTest&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">variables_test</span>: <span class="ident">QuestionVariablesTest</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">functions</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Function</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">ungrouped_variables</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">variable_groups</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">VariableGroup</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">rulesets</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AnswerSimplificationType</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">preamble</span>: <span class="ident">Preamble</span>,
-    <span class="comment">//contributors TODO</span>
-    <span class="kw">pub</span> <span class="ident">navigation</span>: <span class="ident">QuestionNavigation</span>,
-    <span class="comment">//custom part types TODO</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">extensions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// todo: enum</span>
-    <span class="comment">//metadata TODO</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">resources</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Resource</span><span class="op">&gt;</span>,
-    <span class="comment">//TODO type: question?</span>
-    <span class="doccomment">/// Tags starting with &#39;skill: &#39; are used in diagnostic mode to specify a topic</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">tags</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">custom_part_types</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartType</span><span class="op">&gt;</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>Question {
+    <span class="comment">//TODO
+    </span><span class="kw">pub </span>name: String,
+    <span class="doccomment">/// The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.
+    </span><span class="kw">pub </span>statement: ContentAreaString,
+    <span class="doccomment">/// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
+    /// The advice area is normally used to present a worked solution to the question.
+    </span><span class="kw">pub </span>advice: ContentAreaString,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>parts: Vec&lt;QuestionPart&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>builtin_constants: BuiltinConstants,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>constants: Vec&lt;QuestionConstant&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>variables: HashMap&lt;String, Variable&gt;,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;variablesTest&quot;</span>, default)]
+    </span><span class="kw">pub </span>variables_test: QuestionVariablesTest,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>functions: HashMap&lt;String, Function&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>ungrouped_variables: Vec&lt;String&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>variable_groups: Vec&lt;VariableGroup&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>rulesets: HashMap&lt;String, Vec&lt;AnswerSimplificationType&gt;&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>preamble: Preamble,
+    <span class="comment">//contributors TODO
+    </span><span class="kw">pub </span>navigation: QuestionNavigation,
+    <span class="comment">//custom part types TODO
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>extensions: Vec&lt;String&gt;, <span class="comment">// todo: enum
+    //metadata TODO
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>resources: Vec&lt;Resource&gt;,
+    <span class="comment">//TODO type: question?
+    </span><span class="doccomment">/// Tags starting with &#39;skill: &#39; are used in diagnostic mode to specify a topic
+    </span><span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>tags: Vec&lt;String&gt;,
+    <span class="attribute">#[serde(default)]
+    </span><span class="kw">pub </span>custom_part_types: Vec&lt;CustomPartType&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="kw">struct</span> <span class="ident">QuestionInput</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
-    <span class="ident">question_groups</span>: [<span class="ident">QuestionInputQuestionGroups</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>; <span class="number">1</span>],
+<span class="attribute">#[derive(Debug, Deserialize)]
+</span><span class="kw">struct </span>QuestionInput&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[serde(borrow)]
+    </span>question_groups: [QuestionInputQuestionGroups&lt;<span class="lifetime">&#39;a</span>&gt;; <span class="number">1</span>],
 }
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="kw">struct</span> <span class="ident">QuestionInputQuestionGroups</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
-    <span class="ident">questions</span>: [<span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">serde_json::Value</span><span class="op">&gt;</span>; <span class="number">1</span>],
+<span class="attribute">#[derive(Debug, Deserialize)]
+</span><span class="kw">struct </span>QuestionInputQuestionGroups&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[serde(borrow)]
+    </span>questions: [BTreeMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, serde_json::Value&gt;; <span class="number">1</span>],
 }
-<span class="kw">impl</span> <span class="ident">Question</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_question_exam_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">serde_json::Result</span><span class="op">&lt;</span><span class="ident">Question</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&quot;// Numbas version: exam_results_page_options&quot;</span>) {
-            <span class="ident">s</span>.<span class="ident">splitn</span>(<span class="number">2</span>, <span class="string">&#39;\n&#39;</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()[<span class="number">1</span>]
-        } <span class="kw">else</span> {
-            <span class="ident">s</span>
+<span class="kw">impl </span>Question {
+    <span class="kw">pub fn </span>from_question_exam_str(s: <span class="kw-2">&amp;</span>str) -&gt; serde_json::Result&lt;Question&gt; {
+        <span class="kw">let </span>json = <span class="kw">if </span>s.starts_with(<span class="string">&quot;// Numbas version: exam_results_page_options&quot;</span>) {
+            s.splitn(<span class="number">2</span>, <span class="string">&#39;\n&#39;</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()[<span class="number">1</span>]
+        } <span class="kw">else </span>{
+            s
         };
-        <span class="kw">let</span> <span class="ident">exam</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json::Value</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">json</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">question_input</span>: <span class="ident">QuestionInput</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">json</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">question</span> <span class="op">=</span> <span class="ident">question_input</span>.<span class="ident">question_groups</span>[<span class="number">0</span>].<span class="ident">questions</span>[<span class="number">0</span>].<span class="ident">clone</span>();
-        <span class="kw">for</span> <span class="ident">key</span> <span class="kw">in</span> [<span class="string">&quot;resources&quot;</span>, <span class="string">&quot;extensions&quot;</span>, <span class="string">&quot;custom_part_types&quot;</span>, <span class="string">&quot;navigation&quot;</span>] {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">exam</span>.<span class="ident">get</span>(<span class="ident">key</span>) {
-                <span class="ident">question</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">value</span>.<span class="ident">to_owned</span>());
+        <span class="kw">let </span>exam: HashMap&lt;String, serde_json::Value&gt; = serde_json::from_str(json)<span class="question-mark">?</span>;
+        <span class="kw">let </span>question_input: QuestionInput = serde_json::from_str(json)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>question = question_input.question_groups[<span class="number">0</span>].questions[<span class="number">0</span>].clone();
+        <span class="kw">for </span>key <span class="kw">in </span>[<span class="string">&quot;resources&quot;</span>, <span class="string">&quot;extensions&quot;</span>, <span class="string">&quot;custom_part_types&quot;</span>, <span class="string">&quot;navigation&quot;</span>] {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = exam.get(key) {
+                question.insert(key, value.to_owned());
             }
         }
-        <span class="kw">let</span> <span class="ident">new_json</span> <span class="op">=</span> <span class="ident">serde_json::to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">question</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">new_json</span> <span class="op">=</span> <span class="ident">hacky_fix_exam</span>(<span class="kw-2">&amp;</span><span class="ident">new_json</span>[..]);
+        <span class="kw">let </span>new_json = serde_json::to_string_pretty(<span class="kw-2">&amp;</span>question).unwrap();
+        <span class="kw">let </span>new_json = hacky_fix_exam(<span class="kw-2">&amp;</span>new_json[..]);
         <span class="macro">log::debug!</span>(<span class="string">&quot;Question loaded as following exam&quot;</span>);
         <span class="macro">log::debug!</span>(
             <span class="string">&quot;{}&quot;</span>,
-            <span class="ident">new_json</span>
-                .<span class="ident">split</span>(<span class="string">&#39;\n&#39;</span>)
-                .<span class="ident">enumerate</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">s</span>)<span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{} {}&quot;</span>, <span class="ident">i</span>, <span class="ident">s</span>))
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-                .<span class="ident">join</span>(<span class="string">&quot;\n&quot;</span>)
+            new_json
+                .split(<span class="string">&#39;\n&#39;</span>)
+                .enumerate()
+                .map(|(i, s)| <span class="macro">format!</span>(<span class="string">&quot;{} {}&quot;</span>, i, s))
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+                .join(<span class="string">&quot;\n&quot;</span>)
         );
-        <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">new_json</span>)
+        serde_json::from_str(<span class="kw-2">&amp;</span>new_json)
     }
 }
 
-<span class="attribute">#[<span class="ident">skip_serializing_none</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">QuestionVariablesTest</span> {
-    <span class="kw">pub</span> <span class="ident">condition</span>: <span class="ident">JMEString</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;maxRuns&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">max_runs</span>: <span class="ident">SafeNatural</span>,
+<span class="attribute">#[skip_serializing_none]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>QuestionVariablesTest {
+    <span class="kw">pub </span>condition: JMEString,
+    <span class="attribute">#[serde(rename = <span class="string">&quot;maxRuns&quot;</span>)]
+    </span><span class="kw">pub </span>max_runs: SafeNatural,
 }
 
-<span class="kw">impl</span> <span class="ident">std::default::Default</span> <span class="kw">for</span> <span class="ident">QuestionVariablesTest</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">condition</span>: <span class="ident">JMEString::default</span>(),
-            <span class="ident">max_runs</span>: <span class="number">10</span>.<span class="ident">into</span>(),
+<span class="kw">impl </span>std::default::Default <span class="kw">for </span>QuestionVariablesTest {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            condition: JMEString::default(),
+            max_runs: <span class="number">10</span>.into(),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/custom_part_type.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>custom_part_type.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/question/custom_part_type.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>custom_part_type.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -759,531 +759,531 @@
 <span id="759">759</span>
 <span id="760">760</span>
 <span id="761">761</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::extension::Extensions</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::question::part::question_part::JMENotes</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::file_manager</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::noneable::Noneable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::sanitize::sanitize</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_numbas::ToNumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::to_rumbas::ToRumbas</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::EmbracedJMETranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::JMETranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::translatable::TranslatableString</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::support::yaml</span>::{<span class="ident">YamlError</span>, <span class="ident">YamlResult</span>};
-<span class="kw">use</span> <span class="ident">comparable::Comparable</span>;
-<span class="kw">use</span> <span class="ident">rumbas_support::preamble</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::convert</span>::{<span class="ident">Into</span>, <span class="ident">TryInto</span>};
-<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::extension::Extensions;
+<span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::JMENotes;
+<span class="kw">use </span><span class="kw">crate</span>::support::file_manager::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::sanitize::sanitize;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::EmbracedJMETranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::JMETranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
+<span class="kw">use </span><span class="kw">crate</span>::support::yaml::{YamlError, YamlResult};
+<span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
+<span class="kw">use </span>schemars::JsonSchema;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::convert::{Into, TryInto};
+<span class="kw">use </span>std::path::PathBuf;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeDefinitionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">test</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeDefinition</span> {
-    <span class="kw">pub</span> <span class="ident">type_name</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">settings</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSetting</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">can_be_gap</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">can_be_step</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">marking_notes</span>: <span class="ident">JMENotes</span>,
-    <span class="kw">pub</span> <span class="ident">help_url</span>: <span class="ident">TranslatableString</span>,
-    <span class="kw">pub</span> <span class="ident">published</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">extensions</span>: <span class="ident">Extensions</span>,
-    <span class="kw">pub</span> <span class="ident">input_widget</span>: <span class="ident">CustomPartInputWidget</span>, <span class="comment">//TODO source</span>
-}
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeDefinitionInput&quot;</span>)]
+#[input(test)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
+</span><span class="kw">pub struct </span>CustomPartTypeDefinition {
+    <span class="kw">pub </span>type_name: TranslatableString,
+    <span class="kw">pub </span>description: TranslatableString,
+    <span class="kw">pub </span>settings: Vec&lt;CustomPartTypeSetting&gt;,
+    <span class="kw">pub </span>can_be_gap: bool,
+    <span class="kw">pub </span>can_be_step: bool,
+    <span class="kw">pub </span>marking_notes: JMENotes,
+    <span class="kw">pub </span>help_url: TranslatableString,
+    <span class="kw">pub </span>published: bool,
+    <span class="kw">pub </span>extensions: Extensions,
+    <span class="kw">pub </span>input_widget: CustomPartInputWidget, <span class="comment">//TODO source
+</span>}
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartTypeDefinition</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartType</span> {
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartType&gt; <span class="kw">for </span>CustomPartTypeDefinition {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, _locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::custom_part_type::CustomPartType {
         <span class="macro">panic!</span>(
             <span class="string">&quot;{}&quot;</span>,
-            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="string">&quot;Should not happen, don&#39;t call this method Missing name&quot;</span>.to_string(),
         )
     }
-    <span class="kw">fn</span> <span class="ident">to_numbas_with_name</span>(
+    <span class="kw">fn </span>to_numbas_with_name(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">name</span>: <span class="ident">String</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartType</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartType</span> {
-            <span class="ident">short_name</span>: <span class="ident">name</span>,
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">type_name</span>.<span class="ident">clone</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">clone</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">help_url</span>: <span class="self">self</span>.<span class="ident">help_url</span>.<span class="ident">clone</span>().<span class="ident">to_string</span>(<span class="ident">locale</span>).<span class="ident">unwrap</span>(),
-            <span class="ident">public_availability</span>: <span class="ident">numbas::question::custom_part_type::CustomPartAvailability::Always</span>,
-            <span class="ident">marking_script</span>: <span class="self">self</span>.<span class="ident">marking_notes</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">can_be_gap</span>: <span class="self">self</span>.<span class="ident">can_be_gap</span>,
-            <span class="ident">can_be_step</span>: <span class="self">self</span>.<span class="ident">can_be_step</span>,
-            <span class="ident">marking_notes</span>: <span class="self">self</span>.<span class="ident">marking_notes</span>.<span class="number">0</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">published</span>: <span class="self">self</span>.<span class="ident">published</span>,
-            <span class="ident">extensions</span>: <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">input_widget</span>: <span class="self">self</span>.<span class="ident">input_widget</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+        name: String,
+    ) -&gt; numbas::question::custom_part_type::CustomPartType {
+        numbas::question::custom_part_type::CustomPartType {
+            short_name: name,
+            name: <span class="self">self</span>.type_name.clone().to_string(locale).unwrap(),
+            description: <span class="self">self</span>.description.clone().to_string(locale).unwrap(),
+            settings: <span class="self">self</span>.settings.to_numbas(locale),
+            help_url: <span class="self">self</span>.help_url.clone().to_string(locale).unwrap(),
+            public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,
+            marking_script: <span class="self">self</span>.marking_notes.to_numbas(locale),
+            can_be_gap: <span class="self">self</span>.can_be_gap,
+            can_be_step: <span class="self">self</span>.can_be_step,
+            marking_notes: <span class="self">self</span>.marking_notes.<span class="number">0</span>.to_numbas(locale),
+            published: <span class="self">self</span>.published,
+            extensions: <span class="self">self</span>.extensions.to_numbas(locale),
+            input_widget: <span class="self">self</span>.input_widget.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeDefinition</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartType</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeDefinition</span> {
-        <span class="ident">CustomPartTypeDefinition</span> {
-            <span class="ident">type_name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">settings</span>: <span class="self">self</span>.<span class="ident">settings</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">help_url</span>: <span class="self">self</span>.<span class="ident">help_url</span>.<span class="ident">to_rumbas</span>(),
-            <span class="comment">// public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,</span>
-            <span class="ident">can_be_gap</span>: <span class="self">self</span>.<span class="ident">can_be_gap</span>,
-            <span class="ident">can_be_step</span>: <span class="self">self</span>.<span class="ident">can_be_step</span>,
-            <span class="ident">marking_notes</span>: <span class="ident">JMENotes</span>(<span class="self">self</span>.<span class="ident">marking_notes</span>.<span class="ident">clone</span>().<span class="ident">to_rumbas</span>()),
-            <span class="ident">published</span>: <span class="self">self</span>.<span class="ident">published</span>,
-            <span class="ident">extensions</span>: <span class="ident">Extensions::from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">extensions</span>),
-            <span class="ident">input_widget</span>: <span class="self">self</span>.<span class="ident">input_widget</span>.<span class="ident">to_rumbas</span>(),
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeDefinition&gt; <span class="kw">for </span>numbas::question::custom_part_type::CustomPartType {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeDefinition {
+        CustomPartTypeDefinition {
+            type_name: <span class="self">self</span>.name.to_rumbas(),
+            description: <span class="self">self</span>.description.to_rumbas(),
+            settings: <span class="self">self</span>.settings.to_rumbas(),
+            help_url: <span class="self">self</span>.help_url.to_rumbas(),
+            <span class="comment">// public_availability: numbas::question::custom_part_type::CustomPartAvailability::Always,
+            </span>can_be_gap: <span class="self">self</span>.can_be_gap,
+            can_be_step: <span class="self">self</span>.can_be_step,
+            marking_notes: JMENotes(<span class="self">self</span>.marking_notes.clone().to_rumbas()),
+            published: <span class="self">self</span>.published,
+            extensions: Extensions::from(<span class="kw-2">&amp;</span><span class="self">self</span>.extensions),
+            input_widget: <span class="self">self</span>.input_widget.to_rumbas(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">CustomPartTypeDefinitionInput</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">yaml</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">file</span>: <span class="ident">PathBuf</span>) -&gt; <span class="ident">YamlResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">serde_yaml::from_str</span>(<span class="ident">yaml</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">YamlError::from</span>(<span class="ident">e</span>, <span class="ident">file</span>))
+<span class="kw">impl </span>CustomPartTypeDefinitionInput {
+    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: PathBuf) -&gt; YamlResult&lt;<span class="self">Self</span>&gt; {
+        serde_yaml::from_str(yaml).map_err(|e| YamlError::from(e, file))
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="ident">serde_yaml::to_string</span>(<span class="self">self</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">CustomPartTypeDefinition</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_yaml</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">serde_yaml::Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="ident">CustomPartTypeDefinitionInput::from_normal</span>(<span class="self">self</span>.<span class="ident">to_owned</span>()).<span class="ident">to_yaml</span>()
+    <span class="kw">pub fn </span>to_yaml(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; serde_yaml::Result&lt;String&gt; {
+        serde_yaml::to_string(<span class="self">self</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;input_type&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartTypeSetting</span> {
-    <span class="ident">CheckBox</span>(<span class="ident">CustomPartTypeSettingCheckBox</span>),
-    <span class="ident">Code</span>(<span class="ident">CustomPartTypeSettingCode</span>),
-    <span class="ident">MathematicalExpression</span>(<span class="ident">CustomPartTypeSettingMathematicalExpression</span>),
-    <span class="ident">String</span>(<span class="ident">CustomPartTypeSettingString</span>),
-    <span class="ident">DropDown</span>(<span class="ident">CustomPartTypeSettingDropDown</span>),
-    <span class="ident">Percentage</span>(<span class="ident">CustomPartTypeSettingPercentage</span>),
+<span class="kw">impl </span>CustomPartTypeDefinition {
+    <span class="kw">pub fn </span>to_yaml(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; serde_yaml::Result&lt;String&gt; {
+        CustomPartTypeDefinitionInput::from_normal(<span class="self">self</span>.to_owned()).to_yaml()
+    }
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartTypeSetting</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::CheckBox</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::CheckBox</span>(
-                    <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[serde(tag = <span class="string">&quot;input_type&quot;</span>)]
+#[serde(rename_all = <span class="string">&quot;snake_case&quot;</span>)]
+</span><span class="kw">pub enum </span>CustomPartTypeSetting {
+    CheckBox(CustomPartTypeSettingCheckBox),
+    Code(CustomPartTypeSettingCode),
+    MathematicalExpression(CustomPartTypeSettingMathematicalExpression),
+    String(CustomPartTypeSettingString),
+    DropDown(CustomPartTypeSettingDropDown),
+    Percentage(CustomPartTypeSettingPercentage),
+}
+
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSetting&gt; <span class="kw">for </span>CustomPartTypeSetting {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::custom_part_type::CustomPartTypeSetting {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::CheckBox(c) =&gt; {
+                numbas::question::custom_part_type::CustomPartTypeSetting::CheckBox(
+                    c.to_numbas(locale),
                 )
             }
-            <span class="ident"><span class="self">Self</span>::Code</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::Code</span>(<span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>))
+            <span class="self">Self</span>::Code(c) =&gt; {
+                numbas::question::custom_part_type::CustomPartTypeSetting::Code(c.to_numbas(locale))
             }
-            <span class="ident"><span class="self">Self</span>::MathematicalExpression</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::MathematicalExpression</span>(
-                    <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="self">Self</span>::MathematicalExpression(c) =&gt; {
+                numbas::question::custom_part_type::CustomPartTypeSetting::MathematicalExpression(
+                    c.to_numbas(locale),
                 )
             }
-            <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">c</span>) =&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::String</span>(
-                <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="self">Self</span>::String(c) =&gt; numbas::question::custom_part_type::CustomPartTypeSetting::String(
+                c.to_numbas(locale),
             ),
-            <span class="ident"><span class="self">Self</span>::DropDown</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::DropDown</span>(
-                    <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="self">Self</span>::DropDown(c) =&gt; {
+                numbas::question::custom_part_type::CustomPartTypeSetting::DropDown(
+                    c.to_numbas(locale),
                 )
             }
-            <span class="ident"><span class="self">Self</span>::Percentage</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting::Percentage</span>(
-                    <span class="ident">c</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            <span class="self">Self</span>::Percentage(c) =&gt; {
+                numbas::question::custom_part_type::CustomPartTypeSetting::Percentage(
+                    c.to_numbas(locale),
                 )
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSetting</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSetting</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSetting</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::CheckBox</span>(<span class="ident">c</span>) =&gt; <span class="ident">CustomPartTypeSetting::CheckBox</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>()),
-            <span class="ident"><span class="self">Self</span>::Code</span>(<span class="ident">c</span>) =&gt; <span class="ident">CustomPartTypeSetting::Code</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>()),
-            <span class="ident"><span class="self">Self</span>::MathematicalExpression</span>(<span class="ident">c</span>) =&gt; {
-                <span class="ident">CustomPartTypeSetting::MathematicalExpression</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>())
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSetting&gt; <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSetting {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSetting {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::CheckBox(c) =&gt; CustomPartTypeSetting::CheckBox(c.to_rumbas()),
+            <span class="self">Self</span>::Code(c) =&gt; CustomPartTypeSetting::Code(c.to_rumbas()),
+            <span class="self">Self</span>::MathematicalExpression(c) =&gt; {
+                CustomPartTypeSetting::MathematicalExpression(c.to_rumbas())
             }
-            <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">c</span>) =&gt; <span class="ident">CustomPartTypeSetting::String</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>()),
-            <span class="ident"><span class="self">Self</span>::DropDown</span>(<span class="ident">c</span>) =&gt; <span class="ident">CustomPartTypeSetting::DropDown</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>()),
-            <span class="ident"><span class="self">Self</span>::Percentage</span>(<span class="ident">c</span>) =&gt; <span class="ident">CustomPartTypeSetting::Percentage</span>(<span class="ident">c</span>.<span class="ident">to_rumbas</span>()),
+            <span class="self">Self</span>::String(c) =&gt; CustomPartTypeSetting::String(c.to_rumbas()),
+            <span class="self">Self</span>::DropDown(c) =&gt; CustomPartTypeSetting::DropDown(c.to_rumbas()),
+            <span class="self">Self</span>::Percentage(c) =&gt; CustomPartTypeSetting::Percentage(c.to_rumbas()),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingSharedDataInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingSharedData</span> {
-    <span class="doccomment">/// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</span>
-    <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
-    <span class="doccomment">/// The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</span>
-    <span class="ident">numbas_label</span>: <span class="ident">TranslatableString</span>,
-    <span class="doccomment">/// The address of documentation explaining this setting in further depth.</span>
-    <span class="ident">documentation_url</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</span>
-    <span class="ident">numbas_hint</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingSharedDataInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingSharedData {
+    <span class="doccomment">/// A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.
+    </span>name: TranslatableString,
+    <span class="doccomment">/// The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.
+    </span>numbas_label: TranslatableString,
+    <span class="doccomment">/// The address of documentation explaining this setting in further depth.
+    </span>documentation_url: Noneable&lt;TranslatableString&gt;,
+    <span class="doccomment">/// Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.
+    </span>numbas_hint: TranslatableString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingSharedData</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingSharedData</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingSharedData&gt;
+    <span class="kw">for </span>CustomPartTypeSettingSharedData
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingSharedData</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingSharedData</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">label</span>: <span class="self">self</span>.<span class="ident">numbas_label</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">numbas_hint</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">help_url</span>: <span class="self">self</span>.<span class="ident">documentation_url</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingSharedData {
+        numbas::question::custom_part_type::CustomPartTypeSettingSharedData {
+            name: <span class="self">self</span>.name.to_numbas(locale),
+            label: <span class="self">self</span>.numbas_label.to_numbas(locale),
+            hint: <span class="self">self</span>.numbas_hint.to_numbas(locale),
+            help_url: <span class="self">self</span>.documentation_url.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingSharedData</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingSharedData</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingSharedData&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingSharedData
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingSharedData</span> {
-        <span class="ident">CustomPartTypeSettingSharedData</span> {
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">numbas_label</span>: <span class="self">self</span>.<span class="ident">label</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">numbas_hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">documentation_url</span>: <span class="self">self</span>.<span class="ident">help_url</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingSharedData {
+        CustomPartTypeSettingSharedData {
+            name: <span class="self">self</span>.name.to_rumbas(),
+            numbas_label: <span class="self">self</span>.label.to_rumbas(),
+            numbas_hint: <span class="self">self</span>.hint.to_rumbas(),
+            documentation_url: <span class="self">self</span>.help_url.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingStringInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingString</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.</span>
-    <span class="ident">evaluate_enclosed_expressions</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</span>
-    <span class="ident">default_value</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingStringInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingString {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.
+    </span>evaluate_enclosed_expressions: bool,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.
+    </span>default_value: Noneable&lt;String&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingString</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingString</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingString&gt;
+    <span class="kw">for </span>CustomPartTypeSettingString
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingString</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingString</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">evaluate_enclosed_expressions</span>: <span class="self">self</span>.<span class="ident">evaluate_enclosed_expressions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(), <span class="comment">// TODO implement String to Noneable&lt;String&gt; where it is None if string is empty</span>
-        }
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingString {
+        numbas::question::custom_part_type::CustomPartTypeSettingString {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            evaluate_enclosed_expressions: <span class="self">self</span>.evaluate_enclosed_expressions.to_numbas(locale),
+            default_value: <span class="self">self</span>.default_value.to_numbas(locale).unwrap_or_default(), <span class="comment">// TODO implement String to Noneable&lt;String&gt; where it is None if string is empty
+        </span>}
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingString</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingString</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingString&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingString
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingString</span> {
-        <span class="ident">CustomPartTypeSettingString</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">evaluate_enclosed_expressions</span>: <span class="self">self</span>.<span class="ident">evaluate_enclosed_expressions</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">Noneable::None</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_rumbas</span>())
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingString {
+        CustomPartTypeSettingString {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            evaluate_enclosed_expressions: <span class="self">self</span>.evaluate_enclosed_expressions.to_rumbas(),
+            default_value: <span class="kw">if </span><span class="self">self</span>.default_value.is_empty() {
+                Noneable::None
+            } <span class="kw">else </span>{
+                Noneable::NotNone(<span class="self">self</span>.default_value.to_rumbas())
             },
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingMathematicalExpressionInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingMathematicalExpression</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.</span>
-    <span class="ident">evaluate_enclosed_expressions</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</span>
-    <span class="ident">default_value</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">EmbracedJMETranslatableString</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingMathematicalExpressionInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingMathematicalExpression {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">///  If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.
+    </span>evaluate_enclosed_expressions: bool,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.
+    </span>default_value: Noneable&lt;EmbracedJMETranslatableString&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingMathematicalExpression</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression&gt;
+    <span class="kw">for </span>CustomPartTypeSettingMathematicalExpression
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">evaluate_enclosed_expressions</span>: <span class="self">self</span>.<span class="ident">evaluate_enclosed_expressions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression {
+        numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            evaluate_enclosed_expressions: <span class="self">self</span>.evaluate_enclosed_expressions.to_numbas(locale),
+            default_value: <span class="self">self</span>.default_value.to_numbas(locale).unwrap_or_default(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingMathematicalExpression</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingMathematicalExpression&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingMathematicalExpression</span> {
-        <span class="ident">CustomPartTypeSettingMathematicalExpression</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">evaluate_enclosed_expressions</span>: <span class="self">self</span>.<span class="ident">evaluate_enclosed_expressions</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">Noneable::None</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_rumbas</span>())
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingMathematicalExpression {
+        CustomPartTypeSettingMathematicalExpression {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            evaluate_enclosed_expressions: <span class="self">self</span>.evaluate_enclosed_expressions.to_rumbas(),
+            default_value: <span class="kw">if </span><span class="self">self</span>.default_value.is_empty() {
+                Noneable::None
+            } <span class="kw">else </span>{
+                Noneable::NotNone(<span class="self">self</span>.default_value.to_rumbas())
             },
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingCodeInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingCode</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</span>
-    <span class="ident">default_value</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">JMETranslatableString</span><span class="op">&gt;</span>,
-    <span class="ident">evaluate</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingCodeInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingCode {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.
+    </span>default_value: Noneable&lt;JMETranslatableString&gt;,
+    evaluate: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCode</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingCode</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingCode&gt;
+    <span class="kw">for </span>CustomPartTypeSettingCode
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCode</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCode</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">evaluate</span>: <span class="self">self</span>.<span class="ident">evaluate</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingCode {
+        numbas::question::custom_part_type::CustomPartTypeSettingCode {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            evaluate: <span class="self">self</span>.evaluate.to_numbas(locale),
+            default_value: <span class="self">self</span>.default_value.to_numbas(locale).unwrap_or_default(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingCode</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCode</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingCode&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingCode
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingCode</span> {
-        <span class="ident">CustomPartTypeSettingCode</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">evaluate</span>: <span class="self">self</span>.<span class="ident">evaluate</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">Noneable::None</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_rumbas</span>())
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingCode {
+        CustomPartTypeSettingCode {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            evaluate: <span class="self">self</span>.evaluate.to_rumbas(),
+            default_value: <span class="kw">if </span><span class="self">self</span>.default_value.is_empty() {
+                Noneable::None
+            } <span class="kw">else </span>{
+                Noneable::NotNone(<span class="self">self</span>.default_value.to_rumbas())
             },
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingCheckBoxInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingCheckBox</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor.</span>
-    <span class="ident">default_value</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingCheckBoxInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingCheckBox {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor.
+    </span>default_value: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCheckBox</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingCheckBox</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingCheckBox&gt;
+    <span class="kw">for </span>CustomPartTypeSettingCheckBox
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCheckBox</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCheckBox</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingCheckBox {
+        numbas::question::custom_part_type::CustomPartTypeSettingCheckBox {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            default_value: <span class="self">self</span>.default_value.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingCheckBox</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingCheckBox</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingCheckBox&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingCheckBox
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingCheckBox</span> {
-        <span class="ident">CustomPartTypeSettingCheckBox</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingCheckBox {
+        CustomPartTypeSettingCheckBox {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            default_value: <span class="self">self</span>.default_value.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingDropDownInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingDropDown</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</span>
-    <span class="ident">default_value</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
-    <span class="ident">choices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingDropDownChoice</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingDropDownInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingDropDown {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.
+    </span>default_value: Noneable&lt;TranslatableString&gt;,
+    choices: Vec&lt;CustomPartTypeSettingDropDownChoice&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDown</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingDropDown</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingDropDown&gt;
+    <span class="kw">for </span>CustomPartTypeSettingDropDown
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDown</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDown</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>).<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">choices</span>: <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
+        numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            default_value: <span class="self">self</span>.default_value.to_numbas(locale).unwrap_or_default(),
+            choices: <span class="self">self</span>.choices.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingDropDown</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDown</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingDropDown&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingDropDown
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingDropDown</span> {
-        <span class="ident">CustomPartTypeSettingDropDown</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_string</span>().<span class="ident">is_empty</span>() {
-                <span class="ident">Noneable::None</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Noneable::NotNone</span>(<span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">to_string</span>().<span class="ident">to_rumbas</span>())
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingDropDown {
+        CustomPartTypeSettingDropDown {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            default_value: <span class="kw">if </span><span class="self">self</span>.default_value.to_string().is_empty() {
+                Noneable::None
+            } <span class="kw">else </span>{
+                Noneable::NotNone(<span class="self">self</span>.default_value.to_string().to_rumbas())
             },
-            <span class="ident">choices</span>: <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">to_rumbas</span>(),
+            choices: <span class="self">self</span>.choices.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingDropDownChoiceInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingDropDownChoice</span> {
-    <span class="ident">value</span>: <span class="ident">TranslatableString</span>,
-    <span class="ident">label</span>: <span class="ident">TranslatableString</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingDropDownChoiceInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingDropDownChoice {
+    value: TranslatableString,
+    label: TranslatableString,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingDropDownChoice</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice&gt;
+    <span class="kw">for </span>CustomPartTypeSettingDropDownChoice
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice</span> {
-            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">label</span>: <span class="self">self</span>.<span class="ident">label</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice {
+        numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice {
+            value: <span class="self">self</span>.value.to_numbas(locale),
+            label: <span class="self">self</span>.label.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingDropDownChoice</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingDropDownChoice&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingDropDownChoice
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingDropDownChoice</span> {
-        <span class="ident">CustomPartTypeSettingDropDownChoice</span> {
-            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
-            <span class="ident">label</span>: <span class="self">self</span>.<span class="ident">label</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingDropDownChoice {
+        CustomPartTypeSettingDropDownChoice {
+            value: <span class="self">self</span>.value.to_string().into(),
+            label: <span class="self">self</span>.label.to_string().into(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartTypeSettingPercentageInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartTypeSettingPercentage</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">flatten</span>)]</span>
-    <span class="ident">shared_data</span>: <span class="ident">CustomPartTypeSettingSharedData</span>,
-    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</span>
-    <span class="ident">default_value</span>: <span class="ident">Noneable</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartTypeSettingPercentageInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>CustomPartTypeSettingPercentage {
+    <span class="attribute">#[serde(flatten)]
+    </span>shared_data: CustomPartTypeSettingSharedData,
+    <span class="doccomment">/// The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.
+    </span>default_value: Noneable&lt;f64&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingPercentage</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartTypeSettingPercentage</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartTypeSettingPercentage&gt;
+    <span class="kw">for </span>CustomPartTypeSettingPercentage
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingPercentage</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingPercentage</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">default_value</span>: <span class="self">self</span>
-                .<span class="ident">default_value</span>
-                .<span class="ident">clone</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">to_string</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="ident">String::new</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartTypeSettingPercentage {
+        numbas::question::custom_part_type::CustomPartTypeSettingPercentage {
+            shared_data: <span class="self">self</span>.shared_data.to_numbas(locale),
+            default_value: <span class="self">self
+                </span>.default_value
+                .clone()
+                .map(|n| n.to_string())
+                .unwrap_or_else(String::new),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartTypeSettingPercentage</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartTypeSettingPercentage</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartTypeSettingPercentage&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartTypeSettingPercentage
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartTypeSettingPercentage</span> {
-        <span class="ident">CustomPartTypeSettingPercentage</span> {
-            <span class="ident">shared_data</span>: <span class="self">self</span>.<span class="ident">shared_data</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">default_value</span>: <span class="kw">if</span> <span class="self">self</span>.<span class="ident">default_value</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">Noneable::None</span>
-            } <span class="kw">else</span> {
-                <span class="ident">Noneable::NotNone</span>(
-                    <span class="self">self</span>.<span class="ident">default_value</span>
-                        .<span class="ident">parse</span>()
-                        .<span class="ident">expect</span>(<span class="string">&quot;Floating point percentage in custom part type&quot;</span>),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartTypeSettingPercentage {
+        CustomPartTypeSettingPercentage {
+            shared_data: <span class="self">self</span>.shared_data.to_rumbas(),
+            default_value: <span class="kw">if </span><span class="self">self</span>.default_value.is_empty() {
+                Noneable::None
+            } <span class="kw">else </span>{
+                Noneable::NotNone(
+                    <span class="self">self</span>.default_value
+                        .parse()
+                        .expect(<span class="string">&quot;Floating point percentage in custom part type&quot;</span>),
                 )
             },
         }
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">create_input_option_value</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>: <span class="ident">literal</span>, <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_subtype</span>: <span class="ident">ty</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-        <span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>)]</span>
-        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-            <span class="doccomment">/// The value</span>
-            <span class="kw">pub</span> <span class="macro-nonterminal">value</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>,
-            <span class="doccomment">/// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</span>
-            <span class="attribute">#[<span class="macro-nonterminal">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;static&quot;</span>)]</span>
-            <span class="kw">pub</span> <span class="ident">is_static</span>: <span class="ident">bool</span>,
+<span class="macro">macro_rules! </span>create_input_option_value {
+    (<span class="macro-nonterminal">$</span><span class="kw">struct</span>: <span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$input</span>: literal, <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ty</span>, <span class="macro-nonterminal">$numbas_subtype</span>: ty) =&gt; {
+        <span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[input(name = <span class="macro-nonterminal">$input</span>)]
+        #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+            <span class="doccomment">/// The value
+            </span><span class="kw">pub </span><span class="macro-nonterminal">value</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>,
+            <span class="doccomment">/// A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.
+            </span><span class="attribute">#[<span class="macro-nonterminal">serde</span>(rename = <span class="string">&quot;static&quot;</span>)]
+            </span><span class="kw">pub </span>is_static: bool,
         }
 
-        <span class="kw">impl</span>
-            <span class="ident">ToNumbas</span><span class="op">&lt;</span>
-                <span class="ident">numbas::question::custom_part_type::CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_subtype</span><span class="op">&gt;</span>,
-            <span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">struct</span>
-        {
-            <span class="kw">fn</span> <span class="macro-nonterminal">to_numbas</span>(
+        <span class="kw">impl
+            </span>ToNumbas&lt;
+                numbas::question::custom_part_type::CustomPartInputOptionValue&lt;<span class="macro-nonterminal">$numbas_subtype</span>&gt;,
+            &gt; <span class="kw">for </span><span class="macro-nonterminal">$</span><span class="kw">struct
+        </span>{
+            <span class="kw">fn </span><span class="macro-nonterminal">to_numbas</span>(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-            ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_subtype</span><span class="op">&gt;</span>
+                locale: <span class="kw-2">&amp;</span>str,
+            ) -&gt; numbas::question::custom_part_type::CustomPartInputOptionValue&lt;<span class="macro-nonterminal">$numbas_subtype</span>&gt;
             {
-                <span class="ident">numbas::question::custom_part_type::CustomPartInputOptionValue</span> {
-                    <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">clone</span>().<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-                    <span class="ident">is_static</span>: <span class="self">self</span>.<span class="ident">is_static</span>,
+                numbas::question::custom_part_type::CustomPartInputOptionValue {
+                    value: <span class="self">self</span>.value.clone().to_numbas(locale),
+                    is_static: <span class="self">self</span>.is_static,
                 }
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="kw">struct</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="macro-nonterminal">numbas::question::custom_part_type::CustomPartInputOptionValue</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">numbas_subtype</span><span class="op">&gt;</span>
+        <span class="kw">impl </span>ToRumbas&lt;<span class="macro-nonterminal">$</span><span class="kw">struct</span>&gt;
+            <span class="kw">for </span><span class="macro-nonterminal">numbas::question::custom_part_type::CustomPartInputOptionValue</span>&lt;<span class="macro-nonterminal">$numbas_subtype</span>&gt;
         {
-            <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-                <span class="macro-nonterminal">$</span><span class="kw">struct</span> {
-                    <span class="macro-nonterminal">value</span>: <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">clone</span>().<span class="ident">to_rumbas</span>(),
-                    <span class="ident">is_static</span>: <span class="self">self</span>.<span class="ident">is_static</span>,
+            <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+                <span class="macro-nonterminal">$</span><span class="kw">struct </span>{
+                    <span class="macro-nonterminal">value</span>: <span class="self">self</span>.value.clone().to_rumbas(),
+                    is_static: <span class="self">self</span>.is_static,
                 }
             }
         }
@@ -1291,234 +1291,234 @@
 }
 
 <span class="macro">create_input_option_value!</span>(
-    <span class="ident">CustomPartInputOptionValueBool</span>,
+    CustomPartInputOptionValueBool,
     <span class="string">&quot;CustomPartInputOptionValueBoolInput&quot;</span>,
-    <span class="ident">bool</span>,
-    <span class="ident">bool</span>
+    bool,
+    bool
 );
 
 <span class="macro">create_input_option_value!</span>(
-    <span class="ident">CustomPartInputOptionValueTranslatableString</span>,
+    CustomPartInputOptionValueTranslatableString,
     <span class="string">&quot;CustomPartInputOptionValueTranslatableStringInput&quot;</span>,
-    <span class="ident">TranslatableString</span>,
-    <span class="ident">String</span>
+    TranslatableString,
+    String
 );
 
 <span class="macro">create_input_option_value!</span>(
-    <span class="ident">CustomPartInputOptionValueTranslatableStrings</span>,
+    CustomPartInputOptionValueTranslatableStrings,
     <span class="string">&quot;CustomPartInputOptionValueTranslatableStringsInput&quot;</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+    Vec&lt;TranslatableString&gt;,
+    Vec&lt;String&gt;
 );
 
 <span class="macro">create_input_option_value!</span>(
-    <span class="ident">CustomPartInputOptionValueAnswerStyles</span>,
+    CustomPartInputOptionValueAnswerStyles,
     <span class="string">&quot;CustomPartInputOptionValueAnswerStylesInput&quot;</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::question::part::number_entry::AnswerStyle</span><span class="op">&gt;</span>,
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">numbas::support::answer_style::AnswerStyle</span><span class="op">&gt;</span>
+    Vec&lt;<span class="kw">crate</span>::question::part::number_entry::AnswerStyle&gt;,
+    Vec&lt;numbas::support::answer_style::AnswerStyle&gt;
 );
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartInputWidgetInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CustomPartInputWidget</span> {
-    <span class="comment">//TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;string&quot;</span>)]</span>
-    <span class="doccomment">/// The student enters a single line of text.</span>
-    <span class="ident">String</span>(<span class="ident">CustomPartStringInputOptions</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;number&quot;</span>)]</span>
-    <span class="doccomment">/// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.</span>
-    <span class="ident">Number</span>(<span class="ident">CustomPartNumberInputOptions</span>),
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;radiogroup&quot;</span>)]</span>
-    <span class="doccomment">/// The student chooses one from a list of choices by selecting a radio button.</span>
-    <span class="ident">RadioGroup</span>(<span class="ident">CustomPartRadioGroupInputOptions</span>),
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartInputWidgetInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(tag = <span class="string">&quot;type&quot;</span>)]
+</span><span class="kw">pub enum </span>CustomPartInputWidget {
+    <span class="comment">//TODO other types: https://numbas-editor.readthedocs.io/en/latest/custom-part-types/reference.html
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;string&quot;</span>)]
+    </span><span class="doccomment">/// The student enters a single line of text.
+    </span>String(CustomPartStringInputOptions),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;number&quot;</span>)]
+    </span><span class="doccomment">/// The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.
+    </span>Number(CustomPartNumberInputOptions),
+    <span class="attribute">#[serde(rename = <span class="string">&quot;radiogroup&quot;</span>)]
+    </span><span class="doccomment">/// The student chooses one from a list of choices by selecting a radio button.
+    </span>RadioGroup(CustomPartRadioGroupInputOptions),
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartInputWidget</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CustomPartInputWidget</span> {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CustomPartInputWidget::String</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::String</span>(
-                    <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartInputWidget&gt; <span class="kw">for </span>CustomPartInputWidget {
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; numbas::question::custom_part_type::CustomPartInputWidget {
+        <span class="kw">match </span><span class="self">self </span>{
+            CustomPartInputWidget::String(s) =&gt; {
+                numbas::question::custom_part_type::CustomPartInputWidget::String(
+                    s.to_numbas(locale),
                 )
             }
-            <span class="ident">CustomPartInputWidget::Number</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::Number</span>(
-                    <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            CustomPartInputWidget::Number(s) =&gt; {
+                numbas::question::custom_part_type::CustomPartInputWidget::Number(
+                    s.to_numbas(locale),
                 )
             }
-            <span class="ident">CustomPartInputWidget::RadioGroup</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::RadioButtons</span>(
-                    <span class="ident">s</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+            CustomPartInputWidget::RadioGroup(s) =&gt; {
+                numbas::question::custom_part_type::CustomPartInputWidget::RadioButtons(
+                    s.to_numbas(locale),
                 )
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartInputWidget</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget</span> {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartInputWidget</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::String</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">CustomPartInputWidget::String</span>(<span class="ident">s</span>.<span class="ident">to_rumbas</span>())
+<span class="kw">impl </span>ToRumbas&lt;CustomPartInputWidget&gt; <span class="kw">for </span>numbas::question::custom_part_type::CustomPartInputWidget {
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartInputWidget {
+        <span class="kw">match </span><span class="self">self </span>{
+            numbas::question::custom_part_type::CustomPartInputWidget::String(s) =&gt; {
+                CustomPartInputWidget::String(s.to_rumbas())
             }
-            <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::Number</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">CustomPartInputWidget::Number</span>(<span class="ident">s</span>.<span class="ident">to_rumbas</span>())
+            numbas::question::custom_part_type::CustomPartInputWidget::Number(s) =&gt; {
+                CustomPartInputWidget::Number(s.to_rumbas())
             }
-            <span class="ident">numbas::question::custom_part_type::CustomPartInputWidget::RadioButtons</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">CustomPartInputWidget::RadioGroup</span>(<span class="ident">s</span>.<span class="ident">to_rumbas</span>())
+            numbas::question::custom_part_type::CustomPartInputWidget::RadioButtons(s) =&gt; {
+                CustomPartInputWidget::RadioGroup(s.to_rumbas())
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartStringInputOptionsInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartStringInputOptions</span> {
-    <span class="comment">//TODO? hint &amp; correctAnswer is shared for all..., use macro?</span>
-    <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValueTranslatableString</span>,
-    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMETranslatableString</span>,
-    <span class="doccomment">/// If false, the part will only be marked if their answer is non-empty.</span>
-    <span class="kw">pub</span> <span class="ident">allow_empty</span>: <span class="ident">CustomPartInputOptionValueBool</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartStringInputOptionsInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartStringInputOptions {
+    <span class="comment">//TODO? hint &amp; correctAnswer is shared for all..., use macro?
+    </span><span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="kw">pub </span>hint: CustomPartInputOptionValueTranslatableString,
+    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="kw">pub </span>correct_answer: JMETranslatableString,
+    <span class="doccomment">/// If false, the part will only be marked if their answer is non-empty.
+    </span><span class="kw">pub </span>allow_empty: CustomPartInputOptionValueBool,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartStringInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartStringInputOptions</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartStringInputOptions&gt;
+    <span class="kw">for </span>CustomPartStringInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartStringInputOptions</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartStringInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>
-                .<span class="ident">correct_answer</span>
-                .<span class="ident">to_string</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">try_into</span>()
-                .<span class="ident">unwrap</span>(),
-            <span class="ident">allow_empty</span>: <span class="self">self</span>.<span class="ident">allow_empty</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartStringInputOptions {
+        numbas::question::custom_part_type::CustomPartStringInputOptions {
+            hint: <span class="self">self</span>.hint.to_numbas(locale),
+            correct_answer: <span class="self">self
+                </span>.correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            allow_empty: <span class="self">self</span>.allow_empty.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartStringInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartStringInputOptions</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartStringInputOptions&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartStringInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartStringInputOptions</span> {
-        <span class="ident">CustomPartStringInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>.<span class="ident">correct_answer</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">allow_empty</span>: <span class="self">self</span>.<span class="ident">allow_empty</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartStringInputOptions {
+        CustomPartStringInputOptions {
+            hint: <span class="self">self</span>.hint.to_rumbas(),
+            correct_answer: <span class="self">self</span>.correct_answer.to_rumbas(),
+            allow_empty: <span class="self">self</span>.allow_empty.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartNumberInputOptionsInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartNumberInputOptions</span> {
-    <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValueTranslatableString</span>,
-    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMETranslatableString</span>,
-    <span class="doccomment">///Allow the student to enter their answer as a fraction?</span>
-    <span class="kw">pub</span> <span class="ident">allow_fractions</span>: <span class="ident">CustomPartInputOptionValueBool</span>,
-    <span class="kw">pub</span> <span class="ident">allowed_notation_styles</span>: <span class="ident">CustomPartInputOptionValueAnswerStyles</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartNumberInputOptionsInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartNumberInputOptions {
+    <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="kw">pub </span>hint: CustomPartInputOptionValueTranslatableString,
+    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="kw">pub </span>correct_answer: JMETranslatableString,
+    <span class="doccomment">///Allow the student to enter their answer as a fraction?
+    </span><span class="kw">pub </span>allow_fractions: CustomPartInputOptionValueBool,
+    <span class="kw">pub </span>allowed_notation_styles: CustomPartInputOptionValueAnswerStyles,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartNumberInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartNumberInputOptions</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartNumberInputOptions&gt;
+    <span class="kw">for </span>CustomPartNumberInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartNumberInputOptions</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartNumberInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>
-                .<span class="ident">correct_answer</span>
-                .<span class="ident">to_string</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">try_into</span>()
-                .<span class="ident">unwrap</span>(),
-            <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">allowed_notation_styles</span>: <span class="self">self</span>.<span class="ident">allowed_notation_styles</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartNumberInputOptions {
+        numbas::question::custom_part_type::CustomPartNumberInputOptions {
+            hint: <span class="self">self</span>.hint.to_numbas(locale),
+            correct_answer: <span class="self">self
+                </span>.correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            allow_fractions: <span class="self">self</span>.allow_fractions.to_numbas(locale),
+            allowed_notation_styles: <span class="self">self</span>.allowed_notation_styles.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartNumberInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartNumberInputOptions</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartNumberInputOptions&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartNumberInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartNumberInputOptions</span> {
-        <span class="ident">CustomPartNumberInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>.<span class="ident">correct_answer</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">allow_fractions</span>: <span class="self">self</span>.<span class="ident">allow_fractions</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">allowed_notation_styles</span>: <span class="self">self</span>.<span class="ident">allowed_notation_styles</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartNumberInputOptions {
+        CustomPartNumberInputOptions {
+            hint: <span class="self">self</span>.hint.to_rumbas(),
+            correct_answer: <span class="self">self</span>.correct_answer.to_rumbas(),
+            allow_fractions: <span class="self">self</span>.allow_fractions.to_rumbas(),
+            allowed_notation_styles: <span class="self">self</span>.allowed_notation_styles.to_rumbas(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Input</span>, <span class="ident">Overwrite</span>, <span class="ident">RumbasCheck</span>, <span class="ident">Examples</span>)]</span>
-<span class="attribute">#[<span class="ident">input</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;CustomPartRadioGroupInputOptionsInput&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Comparable</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">JsonSchema</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomPartRadioGroupInputOptions</span> {
-    <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.</span>
-    <span class="kw">pub</span> <span class="ident">hint</span>: <span class="ident">CustomPartInputOptionValueTranslatableString</span>,
-    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.</span>
-    <span class="kw">pub</span> <span class="ident">correct_answer</span>: <span class="ident">JMETranslatableString</span>,
-    <span class="doccomment">/// The labels for the choices to offer to the student.</span>
-    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">CustomPartInputOptionValueTranslatableStrings</span>,
+<span class="attribute">#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = <span class="string">&quot;CustomPartRadioGroupInputOptionsInput&quot;</span>)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CustomPartRadioGroupInputOptions {
+    <span class="doccomment">/// A string displayed next to the input field, giving any necessary information about how to enter their answer.
+    </span><span class="kw">pub </span>hint: CustomPartInputOptionValueTranslatableString,
+    <span class="doccomment">/// A JME expression which evaluates to the expected answer to the part.
+    </span><span class="kw">pub </span>correct_answer: JMETranslatableString,
+    <span class="doccomment">/// The labels for the choices to offer to the student.
+    </span><span class="kw">pub </span>choices: CustomPartInputOptionValueTranslatableStrings,
 }
 
-<span class="kw">impl</span> <span class="ident">ToNumbas</span><span class="op">&lt;</span><span class="ident">numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">CustomPartRadioGroupInputOptions</span>
+<span class="kw">impl </span>ToNumbas&lt;numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions&gt;
+    <span class="kw">for </span>CustomPartRadioGroupInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_numbas</span>(
+    <span class="kw">fn </span>to_numbas(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="ident">numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions</span> {
-        <span class="ident">numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>
-                .<span class="ident">correct_answer</span>
-                .<span class="ident">to_string</span>(<span class="ident">locale</span>)
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">try_into</span>()
-                .<span class="ident">unwrap</span>(),
-            <span class="ident">choices</span>: <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">to_numbas</span>(<span class="ident">locale</span>),
+        locale: <span class="kw-2">&amp;</span>str,
+    ) -&gt; numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions {
+        numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions {
+            hint: <span class="self">self</span>.hint.to_numbas(locale),
+            correct_answer: <span class="self">self
+                </span>.correct_answer
+                .to_string(locale)
+                .unwrap()
+                .try_into()
+                .unwrap(),
+            choices: <span class="self">self</span>.choices.to_numbas(locale),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToRumbas</span><span class="op">&lt;</span><span class="ident">CustomPartRadioGroupInputOptions</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions</span>
+<span class="kw">impl </span>ToRumbas&lt;CustomPartRadioGroupInputOptions&gt;
+    <span class="kw">for </span>numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions
 {
-    <span class="kw">fn</span> <span class="ident">to_rumbas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">CustomPartRadioGroupInputOptions</span> {
-        <span class="ident">CustomPartRadioGroupInputOptions</span> {
-            <span class="ident">hint</span>: <span class="self">self</span>.<span class="ident">hint</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">correct_answer</span>: <span class="self">self</span>.<span class="ident">correct_answer</span>.<span class="ident">to_rumbas</span>(),
-            <span class="ident">choices</span>: <span class="self">self</span>.<span class="ident">choices</span>.<span class="ident">to_rumbas</span>(),
+    <span class="kw">fn </span>to_rumbas(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CustomPartRadioGroupInputOptions {
+        CustomPartRadioGroupInputOptions {
+            hint: <span class="self">self</span>.hint.to_rumbas(),
+            correct_answer: <span class="self">self</span>.correct_answer.to_rumbas(),
+            choices: <span class="self">self</span>.choices.to_rumbas(),
         }
     }
 }
 
 <span class="macro">crate::support::file_manager::create_from_string_type!</span>(
-    <span class="ident">CustomPartTypeDefinitionPath</span>,
-    <span class="ident">CustomPartTypeDefinitionPathInput</span>,
-    <span class="ident">CustomPartTypeDefinition</span>,
-    <span class="ident">CustomPartTypeDefinitionInput</span>,
-    <span class="ident">CustomPartTypeFileToRead</span>,
-    <span class="ident">numbas::question::custom_part_type::CustomPartType</span>,
+    CustomPartTypeDefinitionPath,
+    CustomPartTypeDefinitionPathInput,
+    CustomPartTypeDefinition,
+    CustomPartTypeDefinitionInput,
+    CustomPartTypeFileToRead,
+    numbas::question::custom_part_type::CustomPartType,
     <span class="string">&quot;CustomPartTypeDefinitionPath&quot;</span>,
-    <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> (),
-    <span class="ident">short_name</span>
+    |<span class="kw">_</span>, <span class="kw">_</span>| (),
+    short_name
 );
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f03ce3096 2022-08-08)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>
