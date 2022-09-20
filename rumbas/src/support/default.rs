@@ -78,8 +78,9 @@ pub fn combine_question_with_default_files(path: &Path, question: &mut QuestionI
 
 /// Returns a vector of paths to default files for the given path
 fn default_file_paths(path: &Path) -> Vec<PathBuf> {
-    let mut result = HashSet::new(); //Use set to remove duplicates (only happens for the 'defaults' folder in root
-                                     //TODO: write tests and maybe use .take(count()-1) instead of hashset
+    let mut used = HashSet::new(); //Use set to remove duplicates (only happens for the 'defaults' folder in root
+                                   //TODO: write tests and maybe use .take(count()-1) instead of hashset
+    let mut result = Vec::new();
     let ancestors = path.ancestors();
     for a in ancestors {
         let defaults_path = a.with_file_name(crate::DEFAULTS_FOLDER);
@@ -91,11 +92,14 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
                 _ => None,
             })
         {
-            result.insert(entry); //TODO: order files from the folder
+            if !used.contains(&entry) {
+                result.push(entry.clone());
+                used.insert(entry);
+            }
         }
     }
 
-    result.into_iter().collect::<Vec<PathBuf>>()
+    result
 }
 
 // Create the needed enum for exams by specifying which files contain which data
