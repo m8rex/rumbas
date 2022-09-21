@@ -1,6 +1,6 @@
 use crate::input::Input;
 use crate::value::{Value, ValueType};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 pub trait Overwrite<Item>: Clone + Input {
     fn overwrite(&mut self, other: &Item);
@@ -12,6 +12,10 @@ impl<O: Overwrite<O>> Overwrite<Vec<O>> for Vec<O> {
 
 impl<T: Overwrite<T>> Overwrite<HashMap<String, T>> for HashMap<String, T> {
     fn overwrite(&mut self, _other: &HashMap<String, T>) {}
+}
+
+impl<T: Overwrite<T>> Overwrite<BTreeMap<String, T>> for BTreeMap<String, T> {
+    fn overwrite(&mut self, _other: &BTreeMap<String, T>) {}
 }
 
 impl<T: Overwrite<T>> Overwrite<Box<T>> for Box<T> {

@@ -26,7 +26,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use std::collections::BTreeMap;
-use std::collections::HashMap;
 use variable::Variable;
 use variable::VariableGroup;
 
@@ -47,17 +46,17 @@ pub struct Question {
     #[serde(default)]
     pub constants: Vec<QuestionConstant>,
     #[serde(default)]
-    pub variables: HashMap<String, Variable>,
+    pub variables: BTreeMap<String, Variable>,
     #[serde(rename = "variablesTest", default)]
     pub variables_test: QuestionVariablesTest,
     #[serde(default)]
-    pub functions: HashMap<String, Function>,
+    pub functions: BTreeMap<String, Function>,
     #[serde(default)]
     pub ungrouped_variables: Vec<String>,
     #[serde(default)]
     pub variable_groups: Vec<VariableGroup>,
     #[serde(default)]
-    pub rulesets: HashMap<String, Vec<AnswerSimplificationType>>,
+    pub rulesets: BTreeMap<String, Vec<AnswerSimplificationType>>,
     #[serde(default)]
     pub preamble: Preamble,
     //contributors TODO
@@ -93,7 +92,7 @@ impl Question {
         } else {
             s
         };
-        let exam: HashMap<String, serde_json::Value> = serde_json::from_str(json)?;
+        let exam: BTreeMap<String, serde_json::Value> = serde_json::from_str(json)?;
         let question_input: QuestionInput = serde_json::from_str(json)?;
         let mut question = question_input.question_groups[0].questions[0].clone();
         for key in ["resources", "extensions", "custom_part_types", "navigation"] {

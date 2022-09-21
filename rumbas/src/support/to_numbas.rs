@@ -48,6 +48,18 @@ where
     }
 }
 
+impl<K: Clone + std::cmp::Ord, S, O: ToNumbas<S>> ToNumbas<std::collections::BTreeMap<K, S>>
+    for std::collections::BTreeMap<K, O>
+where
+    std::collections::BTreeMap<K, O>: RumbasCheck,
+{
+    fn to_numbas(&self, locale: &str) -> std::collections::BTreeMap<K, S> {
+        self.iter()
+            .map(|(k, v)| (k.to_owned(), v.to_numbas(locale)))
+            .collect()
+    }
+}
+
 impl<AA, A: ToNumbas<AA>, BB, B: ToNumbas<BB>> ToNumbas<(AA, BB)> for (A, B)
 where
     (A, B): RumbasCheck,
