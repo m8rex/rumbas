@@ -91,6 +91,18 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
 </pre><pre class="rust"><code><span class="kw">use </span>rumbas_support::rumbas_check::{RumbasCheck, RumbasCheckResult};
 
 <span class="kw">pub type </span>NumbasResult&lt;T&gt; = <span class="prelude-ty">Result</span>&lt;T, RumbasCheckResult&gt;;
@@ -141,6 +153,18 @@
     }
 }
 
+<span class="kw">impl</span>&lt;K: Clone + std::cmp::Ord, S, O: ToNumbas&lt;S&gt;&gt; ToNumbas&lt;std::collections::BTreeMap&lt;K, S&gt;&gt;
+    <span class="kw">for </span>std::collections::BTreeMap&lt;K, O&gt;
+<span class="kw">where
+    </span>std::collections::BTreeMap&lt;K, O&gt;: RumbasCheck,
+{
+    <span class="kw">fn </span>to_numbas(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; std::collections::BTreeMap&lt;K, S&gt; {
+        <span class="self">self</span>.iter()
+            .map(|(k, v)| (k.to_owned(), v.to_numbas(locale)))
+            .collect()
+    }
+}
+
 <span class="kw">impl</span>&lt;AA, A: ToNumbas&lt;AA&gt;, BB, B: ToNumbas&lt;BB&gt;&gt; ToNumbas&lt;(AA, BB)&gt; <span class="kw">for </span>(A, B)
 <span class="kw">where
     </span>(A, B): RumbasCheck,
@@ -185,4 +209,4 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>impl_to_numbas;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>

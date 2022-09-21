@@ -220,7 +220,20 @@
 <span id="220">220</span>
 <span id="221">221</span>
 <span id="222">222</span>
-</pre><pre class="rust"><code><span class="kw">use </span>std::collections::HashMap;
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+</pre><pre class="rust"><code><span class="kw">use </span>std::collections::{BTreeMap, HashMap};
 
 <span class="kw">pub trait </span>RumbasCheck {
     <span class="doccomment">/// Check the read rumbas data
@@ -240,6 +253,19 @@
 }
 
 <span class="kw">impl</span>&lt;T: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>HashMap&lt;String, T&gt; {
+    <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>result = RumbasCheckResult::empty();
+        <span class="comment">// Key is not displayable, so show an index, just to differentiate
+        </span><span class="kw">for </span>(i, (_key, item)) <span class="kw">in </span><span class="self">self</span>.iter().enumerate() {
+            <span class="kw">let </span><span class="kw-2">mut </span>previous_result = item.check(locale);
+            previous_result.extend_path(i.to_string());
+            result.union(<span class="kw-2">&amp;</span>previous_result)
+        }
+        result
+    }
+}
+
+<span class="kw">impl</span>&lt;T: RumbasCheck&gt; RumbasCheck <span class="kw">for </span>BTreeMap&lt;String, T&gt; {
     <span class="kw">fn </span>check(<span class="kw-2">&amp;</span><span class="self">self</span>, locale: <span class="kw-2">&amp;</span>str) -&gt; RumbasCheckResult {
         <span class="kw">let </span><span class="kw-2">mut </span>result = RumbasCheckResult::empty();
         <span class="comment">// Key is not displayable, so show an index, just to differentiate
@@ -443,4 +469,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>

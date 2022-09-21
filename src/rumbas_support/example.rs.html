@@ -490,6 +490,41 @@
 <span id="490">490</span>
 <span id="491">491</span>
 <span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::value::{Value, ValueType};
 <span class="kw">use </span>std::convert::Into;
 <span class="kw">use </span>std::convert::TryInto;
@@ -858,6 +893,41 @@
     }
 }
 
+<span class="kw">impl</span>&lt;A: Examples + std::cmp::Ord + Clone, B: Examples&gt; Examples
+    <span class="kw">for </span>std::collections::BTreeMap&lt;A, B&gt;
+{
+    <span class="kw">fn </span>examples() -&gt; Vec&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>examples_a = A::examples();
+        <span class="kw">let </span>examples_b = B::examples();
+
+        <span class="kw">if </span>examples_a.len() &gt;= examples_b.len() {
+            <span class="comment">// We have enough keys
+            </span><span class="macro">vec!</span>[&lt;(A, B)&gt;::examples().into_iter().collect()]
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>nb_maps: usize = <span class="kw">if </span>examples_b.len() % examples_a.len() == <span class="number">0 </span>{
+                examples_b.len() / examples_a.len()
+            } <span class="kw">else </span>{
+                examples_b.len() / examples_a.len() + <span class="number">1
+            </span>};
+            <span class="kw">let </span><span class="kw-2">mut </span>b = examples_b.into_iter();
+            <span class="kw">let </span><span class="kw-2">mut </span>maps = Vec::new();
+            <span class="kw">for _ in </span><span class="number">0</span>..nb_maps {
+                <span class="kw">let </span><span class="kw-2">mut </span>map = std::collections::BTreeMap::new();
+                <span class="kw">let </span>examples_a = A::examples();
+                <span class="kw">for </span>example_a <span class="kw">in </span>examples_a.into_iter() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = b.next() {
+                        map.insert(example_a, value);
+                    } <span class="kw">else </span>{
+                        <span class="kw">break</span>;
+                    }
+                }
+                maps.push(map);
+            }
+            maps
+        }
+    }
+}
+
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>hashmap_test {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -983,4 +1053,4 @@
 <span class="macro">impl_examples!</span>(numbas::jme::JMEString: <span class="macro">vec!</span>[<span class="string">&quot;x^5&quot;</span>.to_string().try_into().unwrap()]);
 <span class="macro">impl_examples!</span>(numbas::support::primitive::Number: <span class="macro">vec!</span>[<span class="number">1usize</span>.into(), <span class="number">1.5</span>.into()]);
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>

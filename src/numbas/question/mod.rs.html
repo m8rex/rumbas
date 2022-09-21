@@ -132,7 +132,6 @@
 <span id="132">132</span>
 <span id="133">133</span>
 <span id="134">134</span>
-<span id="135">135</span>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>answer_simplification;
 <span class="kw">pub mod </span>constants;
 <span class="kw">pub mod </span>custom_part_type;
@@ -161,7 +160,6 @@
 <span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>serde_with::skip_serializing_none;
 <span class="kw">use </span>std::collections::BTreeMap;
-<span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>variable::Variable;
 <span class="kw">use </span>variable::VariableGroup;
 
@@ -182,17 +180,17 @@
     <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>constants: Vec&lt;QuestionConstant&gt;,
     <span class="attribute">#[serde(default)]
-    </span><span class="kw">pub </span>variables: HashMap&lt;String, Variable&gt;,
+    </span><span class="kw">pub </span>variables: BTreeMap&lt;String, Variable&gt;,
     <span class="attribute">#[serde(rename = <span class="string">&quot;variablesTest&quot;</span>, default)]
     </span><span class="kw">pub </span>variables_test: QuestionVariablesTest,
     <span class="attribute">#[serde(default)]
-    </span><span class="kw">pub </span>functions: HashMap&lt;String, Function&gt;,
+    </span><span class="kw">pub </span>functions: BTreeMap&lt;String, Function&gt;,
     <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>ungrouped_variables: Vec&lt;String&gt;,
     <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>variable_groups: Vec&lt;VariableGroup&gt;,
     <span class="attribute">#[serde(default)]
-    </span><span class="kw">pub </span>rulesets: HashMap&lt;String, Vec&lt;AnswerSimplificationType&gt;&gt;,
+    </span><span class="kw">pub </span>rulesets: BTreeMap&lt;String, Vec&lt;AnswerSimplificationType&gt;&gt;,
     <span class="attribute">#[serde(default)]
     </span><span class="kw">pub </span>preamble: Preamble,
     <span class="comment">//contributors TODO
@@ -228,7 +226,7 @@
         } <span class="kw">else </span>{
             s
         };
-        <span class="kw">let </span>exam: HashMap&lt;String, serde_json::Value&gt; = serde_json::from_str(json)<span class="question-mark">?</span>;
+        <span class="kw">let </span>exam: BTreeMap&lt;String, serde_json::Value&gt; = serde_json::from_str(json)<span class="question-mark">?</span>;
         <span class="kw">let </span>question_input: QuestionInput = serde_json::from_str(json)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>question = question_input.question_groups[<span class="number">0</span>].questions[<span class="number">0</span>].clone();
         <span class="kw">for </span>key <span class="kw">in </span>[<span class="string">&quot;resources&quot;</span>, <span class="string">&quot;extensions&quot;</span>, <span class="string">&quot;custom_part_types&quot;</span>, <span class="string">&quot;navigation&quot;</span>] {
@@ -269,4 +267,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (2019147c5 2022-09-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>
