@@ -366,6 +366,41 @@ impl<A: Examples + std::hash::Hash + std::cmp::Eq + Clone, B: Examples> Examples
     }
 }
 
+impl<A: Examples + std::cmp::Ord + Clone, B: Examples> Examples
+    for std::collections::BTreeMap<A, B>
+{
+    fn examples() -> Vec<Self> {
+        let examples_a = A::examples();
+        let examples_b = B::examples();
+
+        if examples_a.len() >= examples_b.len() {
+            // We have enough keys
+            vec![<(A, B)>::examples().into_iter().collect()]
+        } else {
+            let nb_maps: usize = if examples_b.len() % examples_a.len() == 0 {
+                examples_b.len() / examples_a.len()
+            } else {
+                examples_b.len() / examples_a.len() + 1
+            };
+            let mut b = examples_b.into_iter();
+            let mut maps = Vec::new();
+            for _ in 0..nb_maps {
+                let mut map = std::collections::BTreeMap::new();
+                let examples_a = A::examples();
+                for example_a in examples_a.into_iter() {
+                    if let Some(value) = b.next() {
+                        map.insert(example_a, value);
+                    } else {
+                        break;
+                    }
+                }
+                maps.push(map);
+            }
+            maps
+        }
+    }
+}
+
 #[cfg(test)]
 mod hashmap_test {
     use super::*;

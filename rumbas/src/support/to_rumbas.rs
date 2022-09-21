@@ -23,6 +23,16 @@ impl<T, O: ToRumbas<T>> ToRumbas<Vec<T>> for Vec<O> {
     }
 }
 
+impl<K: Clone + std::cmp::Ord, S, O: ToRumbas<S>> ToRumbas<std::collections::BTreeMap<K, S>>
+    for std::collections::BTreeMap<K, O>
+{
+    fn to_rumbas(&self) -> std::collections::BTreeMap<K, S> {
+        self.iter()
+            .map(|(k, v)| (k.to_owned(), v.to_rumbas()))
+            .collect()
+    }
+}
+
 impl<K: Clone + std::hash::Hash + std::cmp::Eq, S, O: ToRumbas<S>>
     ToRumbas<std::collections::HashMap<K, S>> for std::collections::HashMap<K, O>
 {

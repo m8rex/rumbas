@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 pub trait RumbasCheck {
     /// Check the read rumbas data
@@ -18,6 +18,19 @@ impl<O: RumbasCheck> RumbasCheck for Vec<O> {
 }
 
 impl<T: RumbasCheck> RumbasCheck for HashMap<String, T> {
+    fn check(&self, locale: &str) -> RumbasCheckResult {
+        let mut result = RumbasCheckResult::empty();
+        // Key is not displayable, so show an index, just to differentiate
+        for (i, (_key, item)) in self.iter().enumerate() {
+            let mut previous_result = item.check(locale);
+            previous_result.extend_path(i.to_string());
+            result.union(&previous_result)
+        }
+        result
+    }
+}
+
+impl<T: RumbasCheck> RumbasCheck for BTreeMap<String, T> {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         let mut result = RumbasCheckResult::empty();
         // Key is not displayable, so show an index, just to differentiate

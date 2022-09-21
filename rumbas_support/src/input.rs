@@ -1,6 +1,6 @@
 use crate::value::Value;
 use crate::value::ValueType;
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
@@ -115,6 +115,56 @@ impl<O: InputInverse> InputInverse for HashMap<String, O> {
 }
 impl<O: Input> Input for HashMap<String, O> {
     type Normal = HashMap<String, <O as Input>::Normal>;
+
+    fn to_normal(&self) -> <Self as Input>::Normal {
+        self.iter()
+            .map(|(s, a)| (s.to_owned(), a.to_normal()))
+            .collect()
+    }
+    fn from_normal(normal: <Self as Input>::Normal) -> Self {
+        normal
+            .into_iter()
+            .map(|(s, a)| (s, <O as Input>::from_normal(a)))
+            .collect()
+    }
+
+    fn find_missing(&self) -> InputCheckResult {
+        let mut result = InputCheckResult::empty();
+        for (key, item) in self.iter() {
+            let mut previous_result = item.find_missing();
+            previous_result.extend_path(key.to_owned());
+            result.union(&previous_result)
+        }
+        result
+    }
+
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        for (_key, item) in self.iter_mut() {
+            item.insert_template_value(key, val);
+        }
+    }
+
+    fn files_to_load(&self) -> Vec<FileToLoad> {
+        self.iter().flat_map(|(_k, f)| f.files_to_load()).collect()
+    }
+
+    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+        for (_key, item) in self.iter_mut() {
+            item.insert_loaded_files(files);
+        }
+    }
+
+    fn dependencies(&self) -> HashSet<PathBuf> {
+        self.iter().flat_map(|(_k, v)| v.dependencies()).collect()
+    }
+}
+
+impl<O: InputInverse> InputInverse for BTreeMap<String, O> {
+    type Input = BTreeMap<String, ValueType<<O as InputInverse>::Input>>;
+    type EnumInput = Self::Input;
+}
+impl<O: Input> Input for BTreeMap<String, O> {
+    type Normal = BTreeMap<String, <O as Input>::Normal>;
 
     fn to_normal(&self) -> <Self as Input>::Normal {
         self.iter()

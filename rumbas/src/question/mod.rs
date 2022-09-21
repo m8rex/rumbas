@@ -33,7 +33,7 @@ use resource::ResourcePath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::path::Path;
 use std::path::PathBuf;
 use variable::VariableRepresentation;
@@ -53,9 +53,9 @@ pub struct Question {
     pub parts: Vec<QuestionPart>,
     pub builtin_constants: BuiltinConstants,
     pub custom_constants: Vec<CustomConstant>,
-    pub variables: HashMap<String, VariableRepresentation>,
+    pub variables: BTreeMap<String, VariableRepresentation>,
     pub variables_test: VariablesTest,
-    pub functions: HashMap<String, Function>,
+    pub functions: BTreeMap<String, Function>,
     pub preamble: Preamble,
     pub navigation: QuestionNavigation,
     pub extensions: Extensions,
@@ -66,7 +66,7 @@ pub struct Question {
     #[input(skip)]
     pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options
     /// The rulesets defined in this question
-    pub rulesets: HashMap<String, JMERulesetItem>,
+    pub rulesets: BTreeMap<String, JMERulesetItem>,
 }
 
 impl ToNumbas<numbas::question::Question> for Question {
