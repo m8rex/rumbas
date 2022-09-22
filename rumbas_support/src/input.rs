@@ -1,3 +1,4 @@
+use crate::path::RumbasPath;
 use crate::value::Value;
 use crate::value::ValueType;
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -5,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct FileToLoad {
-    pub file_path: PathBuf,
+    pub file_path: RumbasPath,
     pub locale_dependant: bool,
 }
 
@@ -17,13 +18,13 @@ pub enum LoadedFile {
 
 #[derive(Debug, Clone)]
 pub struct LoadedNormalFile {
-    pub file_path: PathBuf,
+    pub file_path: RumbasPath,
     pub content: String,
 }
 
 #[derive(Debug, Clone)]
 pub struct LoadedLocalizedFile {
-    pub file_path: PathBuf,
+    pub file_path: RumbasPath,
     pub content: Option<String>,
     pub localized_content: HashMap<String, String>,
 }
@@ -51,12 +52,16 @@ pub trait Input: Clone {
 
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value);
 
-    fn files_to_load(&self) -> Vec<FileToLoad>;
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad>;
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>);
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    );
 
     // On which files is this input dependant?
-    fn dependencies(&self) -> HashSet<PathBuf>;
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath>;
 }
 
 pub trait InputInverse {
@@ -94,18 +99,26 @@ impl<O: Input> Input for Vec<O> {
         }
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
-        self.iter().flat_map(|f| f.files_to_load()).collect()
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+        self.iter()
+            .flat_map(|f| f.files_to_load(main_file_path))
+            .collect()
     }
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
         for item in self.iter_mut() {
-            item.insert_loaded_files(files);
+            item.insert_loaded_files(main_file_path, files);
         }
     }
 
-    fn dependencies(&self) -> HashSet<PathBuf> {
-        self.iter().flat_map(|a| a.dependencies()).collect()
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
+        self.iter()
+            .flat_map(|a| a.dependencies(main_file_path))
+            .collect()
     }
 }
 
@@ -144,18 +157,26 @@ impl<O: Input> Input for HashMap<String, O> {
         }
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
-        self.iter().flat_map(|(_k, f)| f.files_to_load()).collect()
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+        self.iter()
+            .flat_map(|(_k, f)| f.files_to_load(main_file_path))
+            .collect()
     }
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
         for (_key, item) in self.iter_mut() {
-            item.insert_loaded_files(files);
+            item.insert_loaded_files(main_file_path, files);
         }
     }
 
-    fn dependencies(&self) -> HashSet<PathBuf> {
-        self.iter().flat_map(|(_k, v)| v.dependencies()).collect()
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
+        self.iter()
+            .flat_map(|(_k, v)| v.dependencies(main_file_path))
+            .collect()
     }
 }
 
@@ -194,18 +215,26 @@ impl<O: Input> Input for BTreeMap<String, O> {
         }
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
-        self.iter().flat_map(|(_k, f)| f.files_to_load()).collect()
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+        self.iter()
+            .flat_map(|(_k, f)| f.files_to_load(main_file_path))
+            .collect()
     }
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
         for (_key, item) in self.iter_mut() {
-            item.insert_loaded_files(files);
+            item.insert_loaded_files(main_file_path, files);
         }
     }
 
-    fn dependencies(&self) -> HashSet<PathBuf> {
-        self.iter().flat_map(|(_k, v)| v.dependencies()).collect()
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
+        self.iter()
+            .flat_map(|(_k, v)| v.dependencies(main_file_path))
+            .collect()
     }
 }
 
@@ -232,16 +261,20 @@ impl<O: Input> Input for Box<O> {
         (**self).insert_template_value(key, val)
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
-        (**self).files_to_load()
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+        (**self).files_to_load(main_file_path)
     }
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
-        (**self).insert_loaded_files(files)
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
+        (**self).insert_loaded_files(main_file_path, files)
     }
 
-    fn dependencies(&self) -> HashSet<PathBuf> {
-        (**self).dependencies()
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
+        (**self).dependencies(main_file_path)
     }
 }
 
@@ -283,24 +316,28 @@ impl<A: Input, B: Input> Input for (A, B) {
         self.1.insert_template_value(key, val);
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
         self.0
-            .files_to_load()
+            .files_to_load(main_file_path)
             .into_iter()
-            .chain(self.1.files_to_load().into_iter())
+            .chain(self.1.files_to_load(main_file_path).into_iter())
             .collect()
     }
 
-    fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
-        self.0.insert_loaded_files(files);
-        self.1.insert_loaded_files(files);
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
+        self.0.insert_loaded_files(main_file_path, files);
+        self.1.insert_loaded_files(main_file_path, files);
     }
 
-    fn dependencies(&self) -> HashSet<PathBuf> {
+    fn dependencies(&self, main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
         let mut result = HashSet::new();
-        let previous_result = self.0.dependencies();
+        let previous_result = self.0.dependencies(main_file_path);
         result.extend(previous_result);
-        let previous_result = self.1.dependencies();
+        let previous_result = self.1.dependencies(main_file_path);
         result.extend(previous_result);
         result
     }
@@ -332,11 +369,11 @@ macro_rules! impl_input {
 
             }
 
-            fn files_to_load(&self) -> Vec<FileToLoad> { Vec::new() }
+            fn files_to_load(&self, _main_file_path: &RumbasPath) -> Vec<FileToLoad> { Vec::new() }
 
-            fn insert_loaded_files(&mut self, _files: &HashMap<FileToLoad, LoadedFile>) {}
+            fn insert_loaded_files(&mut self, _main_file_path: &RumbasPath, _files: &HashMap<FileToLoad, LoadedFile>) {}
 
-            fn dependencies(&self) -> HashSet<PathBuf> {
+            fn dependencies(&self, _main_file_path: &RumbasPath) -> HashSet<RumbasPath> {
                 HashSet::new()
             }
         }
@@ -421,7 +458,7 @@ impl InputCheckResult {
 }
 
 impl InputCheckResult {
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         let missing_fields = self.missing_fields();
         let invalid_yaml_fields = self.invalid_yaml_fields();
         log::error!("Error when processing {}.", path.display());

@@ -106,26 +106,33 @@ where
         }
     }
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &crate::path::RumbasPath) -> Vec<FileToLoad> {
         match &self {
-            ValueType::Normal(val) => val.files_to_load(),
-            ValueType::Template(ts) => ts.files_to_load(),
+            ValueType::Normal(val) => val.files_to_load(main_file_path),
+            ValueType::Template(ts) => ts.files_to_load(main_file_path),
             ValueType::Invalid(_) => vec![],
         }
     }
 
-    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &crate::path::RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
         match self {
-            ValueType::Normal(ref mut val) => val.insert_loaded_files(files),
-            ValueType::Template(ref mut ts) => ts.insert_loaded_files(files),
+            ValueType::Normal(ref mut val) => val.insert_loaded_files(main_file_path, files),
+            ValueType::Template(ref mut ts) => ts.insert_loaded_files(main_file_path, files),
             ValueType::Invalid(_v) => (),
         }
     }
 
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        main_file_path: &crate::path::RumbasPath,
+    ) -> std::collections::HashSet<crate::path::RumbasPath> {
         match &self {
-            ValueType::Normal(val) => val.dependencies(),
-            ValueType::Template(ts) => ts.dependencies(),
+            ValueType::Normal(val) => val.dependencies(main_file_path),
+            ValueType::Template(ts) => ts.dependencies(main_file_path),
             ValueType::Invalid(_) => std::collections::HashSet::new(),
         }
     }
@@ -244,21 +251,28 @@ where
             v.insert_template_value(key, val);
         }
     }
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &crate::path::RumbasPath) -> Vec<FileToLoad> {
         match &self.0 {
-            Some(v) => v.files_to_load(),
+            Some(v) => v.files_to_load(main_file_path),
             None => vec![],
         }
     }
-    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &crate::path::RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
         if let Some(ref mut v) = self.0 {
-            v.insert_loaded_files(files);
+            v.insert_loaded_files(main_file_path, files);
         }
     }
 
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        main_file_path: &crate::path::RumbasPath,
+    ) -> std::collections::HashSet<crate::path::RumbasPath> {
         match &self.0 {
-            Some(v) => v.dependencies(),
+            Some(v) => v.dependencies(main_file_path),
             None => std::collections::HashSet::new(),
         }
     }
@@ -372,13 +386,21 @@ impl Input for TemplateString {
     }
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, _main_file_path: &crate::path::RumbasPath) -> Vec<FileToLoad> {
         Vec::new()
     }
 
-    fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {}
+    fn insert_loaded_files(
+        &mut self,
+        _main_file_path: &crate::path::RumbasPath,
+        _files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
+    }
 
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        _main_file_path: &crate::path::RumbasPath,
+    ) -> std::collections::HashSet<crate::path::RumbasPath> {
         std::collections::HashSet::new()
     }
 }

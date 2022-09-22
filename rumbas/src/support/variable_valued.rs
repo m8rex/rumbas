@@ -96,22 +96,29 @@ impl<T: Input> Input for VariableValued<T> {
             VariableValued::Value(ref mut v) => v.insert_template_value(key, val),
         };
     }
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
         match self {
-            VariableValued::Variable(s) => s.files_to_load(),
-            VariableValued::Value(v) => v.files_to_load(),
+            VariableValued::Variable(s) => s.files_to_load(main_file_path),
+            VariableValued::Value(v) => v.files_to_load(main_file_path),
         }
     }
-    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
         match *self {
-            VariableValued::Variable(ref mut s) => s.insert_loaded_files(files),
-            VariableValued::Value(ref mut v) => v.insert_loaded_files(files),
+            VariableValued::Variable(ref mut s) => s.insert_loaded_files(main_file_path, files),
+            VariableValued::Value(ref mut v) => v.insert_loaded_files(main_file_path, files),
         };
     }
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        main_file_path: &RumbasPath,
+    ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
         match self {
-            VariableValued::Variable(s) => s.dependencies(),
-            VariableValued::Value(v) => v.dependencies(),
+            VariableValued::Variable(s) => s.dependencies(main_file_path),
+            VariableValued::Value(v) => v.dependencies(main_file_path),
         }
     }
 }
@@ -253,22 +260,29 @@ impl<T: Input> Input for ReverseVariableValued<T> {
             Self::Value(ref mut v) => v.insert_template_value(key, val),
         };
     }
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
         match self {
-            Self::Variable(s) => s.files_to_load(),
-            Self::Value(v) => v.files_to_load(),
+            Self::Variable(s) => s.files_to_load(main_file_path),
+            Self::Value(v) => v.files_to_load(main_file_path),
         }
     }
-    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
         match *self {
-            Self::Variable(ref mut s) => s.insert_loaded_files(files),
-            Self::Value(ref mut v) => v.insert_loaded_files(files),
+            Self::Variable(ref mut s) => s.insert_loaded_files(main_file_path, files),
+            Self::Value(ref mut v) => v.insert_loaded_files(main_file_path, files),
         };
     }
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        main_file_path: &RumbasPath,
+    ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
         match self {
-            Self::Variable(s) => s.dependencies(),
-            Self::Value(v) => v.dependencies(),
+            Self::Variable(s) => s.dependencies(main_file_path),
+            Self::Value(v) => v.dependencies(main_file_path),
         }
     }
 }

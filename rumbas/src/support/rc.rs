@@ -1,4 +1,5 @@
 use crate::RC_FILE_NAME;
+use rumbas_support::path::RumbasPath;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -37,8 +38,8 @@ impl RC {
 /// Reads the [RC_FILE_NAME] file
 /// Returns None if the file does not exist
 /// Returns Some(val) where val is the parsing result if the file does exist
-pub fn read() -> Result<RC, serde_yaml::Error> {
-    let root_opt = find_root();
+pub fn read(p: &Path) -> Result<RC, serde_yaml::Error> {
+    let root_opt = find_root(p);
     if let Some(root) = root_opt {
         let f = std::fs::read_to_string(root.join(RC_FILE_NAME));
         if let Ok(f) = f {
@@ -54,18 +55,27 @@ pub fn read() -> Result<RC, serde_yaml::Error> {
 /// Reads the [RC_FILE_NAME] file
 /// Returns None if the file does not exist
 /// Returns Some(val) where val is the parsing result if the file does exist
-pub fn find_root() -> Option<PathBuf> {
-    let start = Path::new(".").canonicalize().unwrap();
+pub fn find_root(p: &Path) -> Option<PathBuf> {
+    log::debug!("Looking for root for {:?}", p);
+    let start = p.canonicalize().unwrap();
 
     let mut current = Some(start.as_path());
 
     while let Some(f) = current {
         let possible_file = f.join(RC_FILE_NAME);
         if possible_file.exists() {
+            log::debug!("Found root for {:?}", f);
             return Some(f.to_owned());
         }
 
         current = f.parent();
     }
     None
+}
+
+/// Find the relative path within the rumbas repo
+pub fn within_repo(path: &Path) -> Option<RumbasPath> {
+    find_root(&path)
+        .map(|root| RumbasPath::create(path, root.as_path()))
+        .flatten()
 }

@@ -6,6 +6,7 @@ extern crate clap;
 use clap::crate_version;
 use clap::{Parser, Subcommand};
 use semver::Version;
+use std::path::Path;
 
 mod cli;
 
@@ -30,7 +31,7 @@ fn main() {
     cli::logger::setup(log_level).expect("Working logger");
 
     // Check rc file
-    let rc_res = rumbas::support::rc::read();
+    let rc_res = rumbas::support::rc::read(&Path::new("."));
     match rc_res {
         Ok(rc) => {
             let rc_version = rc.version();

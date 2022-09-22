@@ -30,6 +30,7 @@ use function::Function;
 use navigation::QuestionNavigation;
 use preamble::Preamble;
 use resource::ResourcePath;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -154,16 +155,19 @@ impl ToRumbas<Question> for numbas::question::Question {
 }
 
 impl QuestionInput {
-    pub fn from_str(yaml: &str, file: PathBuf) -> Result<QuestionInput, ParseError> {
+    pub fn from_str(yaml: &str, file: RumbasPath) -> Result<QuestionInput, ParseError> {
         use QuestionFileTypeInput::*;
         let input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
-            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
+            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
         match input {
             Normal(e) => Ok((*e).0),
             Template(t_res) => {
                 let t = t_res.to_normal(); // TODO?
-                let template_file = Path::new(crate::QUESTION_TEMPLATES_FOLDER)
-                    .join(format!("{}.yaml", t.relative_template_path));
+                let template_file = file.keep_root(
+                    Path::new(crate::QUESTION_TEMPLATES_FOLDER)
+                        .join(format!("{}.yaml", t.relative_template_path))
+                        .as_path(),
+                );
 
                 let template_yaml = CACHE
                     .read_file(FileToLoad {
@@ -175,10 +179,10 @@ impl QuestionInput {
                         LoadedFile::Localized(_) => None,
                     })
                     .ok_or_else(|| {
-                        ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
+                        ParseError::FileReadError(FileReadError(template_file.clone()))
                     })?;
                 let mut question: QuestionInput = serde_yaml::from_str(&template_yaml)
-                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))?;
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
                 t.data.iter().for_each(|(k, v)| {
                     question.insert_template_value(k, &v.0);
                 });

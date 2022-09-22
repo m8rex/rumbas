@@ -1,5 +1,7 @@
 use crate::cli::check::CheckResult;
 use rayon::prelude::*;
+use rumbas::support::rc::within_repo;
+use rumbas_support::path::RumbasPath;
 use std::collections::HashSet;
 use std::env;
 use std::path::Path;
@@ -43,20 +45,26 @@ pub fn compile_internal(
     context: CompilationContext,
     file_context: FileCompilationContext,
 ) -> InternalCompilationResult {
-    let mut files: HashSet<PathBuf> = HashSet::new();
+    let mut files: HashSet<_> = HashSet::new();
     for exam_question_path in context.compile_paths.iter() {
         let path = Path::new(&exam_question_path);
         log::info!("Compiling {:?}", path.display());
-        if path.is_absolute() {
-            log::error!("Absolute path's are not supported");
+        let path = within_repo(&path);
+        log::debug!("Found path within rumbas project {:?}", path);
+        if let Some(path) = path {
+            files.extend(crate::cli::check::find_all_files(path).into_iter());
+        } else {
+            log::error!(
+                "{:?} doesn't seem to belong to a rumbas project.",
+                exam_question_path
+            );
             return InternalCompilationResult {
                 has_failures: true,
                 created_outputs: vec![],
             };
         }
-        files.extend(crate::cli::check::find_all_files(path).into_iter());
     }
-    let compile_results: Vec<(CompileResult, PathBuf)> = files
+    let compile_results: Vec<(CompileResult, _)> = files
         .into_par_iter()
         .map(|file| (compile_file(&file_context, &file), file))
         .collect();
@@ -121,7 +129,7 @@ impl RumbasCompileData {
     pub fn created_outputs(&self) -> Vec<PassedRumbasCompileData> {
         self.passed.clone()
     }
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         for (locale, check_result) in self.failed_check.iter() {
             log::error!(
                 "Error when processing locale {} for {}.",
@@ -151,7 +159,7 @@ impl RumbasCompileData {
 }
 
 impl CompileResult {
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         match self {
             Self::FailedParsing(e) => log::error!("{}", e),
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
@@ -169,7 +177,7 @@ pub struct FileCompilationContext {
     pub output_folder: PathBuf,
 }
 
-pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileResult {
+pub fn compile_file(context: &FileCompilationContext, path: &RumbasPath) -> CompileResult {
     let check_result = crate::cli::check::check_file(path);
     match check_result {
         CheckResult::FailedParsing(f) => CompileResult::FailedParsing(f),
@@ -183,7 +191,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
                 let compiler = NumbasCompiler {
                     use_scorm: context.use_scorm,
                     as_zip: context.as_zip,
-                    exam_path: path.to_path_buf(),
+                    exam_path: path.project().to_path_buf(),
                     numbas_locale: numbas_locale.to_str().to_string(),
                     locale: locale.clone(),
                     theme,
@@ -195,7 +203,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &Path) -> CompileRes
                     passed_compilations.push(PassedRumbasCompileData {
                         locale,
                         generated_path: compiler.output_path(),
-                        exam_path: path.to_path_buf(),
+                        exam_path: path.project().to_path_buf(),
                         exam_name,
                     })
                 } else {

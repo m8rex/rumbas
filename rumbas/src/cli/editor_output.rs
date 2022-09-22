@@ -79,7 +79,7 @@ fn find_git_url() -> Option<String> {
 }
 
 pub fn create_editor_output_internal(context: EditorOutputContext) -> Result<(), &'static str> {
-    let root = find_root();
+    let root = find_root(&Path::new("."));
     let root = root.ok_or("Missing rc file")?;
     println!("{:?}", root);
 

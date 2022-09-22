@@ -1,9 +1,12 @@
 use crate::support::default::{DefaultFile, DefaultQuestionFileType};
 use crate::support::file_manager::CACHE;
 use crate::support::noneable::Noneable;
+use crate::support::rc::within_repo;
 use crate::support::to_rumbas::ToRumbas;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use std::convert::TryFrom;
+use std::path::Path;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 macro_rules! update_hash {
@@ -41,379 +44,402 @@ macro_rules! update_hash {
 
 /// Update from version 0.4.0 to 0.5.0
 pub fn update() -> semver::Version {
-    // TODO: extract code to read questions and exams
-    let question_files = CACHE
-        .read_all_questions()
-        .into_iter()
-        .chain(CACHE.read_all_question_templates().into_iter())
-        .filter_map(|lf| match lf {
-            rumbas_support::input::LoadedFile::Normal(n) => Some(n),
-            _ => None,
-        });
+    if let Some(root) = within_repo(Path::new(".")) {
+        // TODO: extract code to read questions and exams
+        let question_files = CACHE
+            .read_all_questions(&root)
+            .into_iter()
+            .chain(CACHE.read_all_question_templates(&root).into_iter())
+            .filter_map(|lf| match lf {
+                rumbas_support::input::LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            });
 
-    let exam_files = CACHE
-        .read_all_exams()
-        .into_iter()
-        .chain(CACHE.read_all_exam_templates().into_iter())
-        .filter_map(|lf| match lf {
-            rumbas_support::input::LoadedFile::Normal(n) => Some(n),
-            _ => None,
-        });
+        let exam_files = CACHE
+            .read_all_exams(&root)
+            .into_iter()
+            .chain(CACHE.read_all_exam_templates(&root).into_iter())
+            .filter_map(|lf| match lf {
+                rumbas_support::input::LoadedFile::Normal(n) => Some(n),
+                _ => None,
+            });
 
-    let mut questions: Vec<_> = question_files
-        .filter_map(|lf| {
-            YamlLoader::load_from_str(&lf.content[..])
-                .ok()
-                .map(|a| (lf, a[0].clone()))
-        })
-        .collect();
+        let mut questions: Vec<_> = question_files
+            .filter_map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .ok()
+                    .map(|a| (lf, a[0].clone()))
+            })
+            .collect();
 
-    let mut exams: Vec<_> = exam_files
-        .filter_map(|lf| {
-            YamlLoader::load_from_str(&lf.content[..])
-                .map(|a| (lf, a[0].clone()))
-                .ok()
-        })
-        .collect();
+        let mut exams: Vec<_> = exam_files
+            .filter_map(|lf| {
+                YamlLoader::load_from_str(&lf.content[..])
+                    .map(|a| (lf, a[0].clone()))
+                    .ok()
+            })
+            .collect();
 
-    for question in &mut questions {
-        log::info!("Updating {}", question.0.file_path.display());
-        let new_question = update_hash!(question.1.clone() =>
-            vec!["advice", "statement"], update_translatable_string => :
-            vec!["diagnostic_topic_names"], update_translatable_string_vector => :
-            vec!["functions"], update_functions => :
-            vec!["variables"], update_translatable_string_vector => :
-            vec!["parts"], update_parts =>
-        );
-        question.1 = new_question;
-    }
-
-    for (file, question) in questions.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&question).unwrap(); // dump the YAML object to a String
+        for question in &mut questions {
+            log::info!("Updating {}", question.0.file_path.display());
+            let new_question = update_hash!(question.1.clone() =>
+                vec!["advice", "statement"], update_translatable_string => :
+                vec!["diagnostic_topic_names"], update_translatable_string_vector => :
+                vec!["functions"], update_functions => :
+                vec!["variables"], update_translatable_string_vector => :
+                vec!["parts"], update_parts =>
+            );
+            question.1 = new_question;
         }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
 
-    for exam in &mut exams {
-        log::info!("Updating {}", exam.0.file_path.display());
-        let new_exam = update_hash!(exam.1.clone() =>
-            vec!["name"], update_translatable_string => :
-            vec!["timing"], update_timing => :
-            vec!["feedback"], update_feedback => :
-            vec!["question_groups"], update_question_groups =>
-        );
-        exam.1 = if new_exam["type"] == Yaml::String("diagnostic".to_string()) {
-            update_hash!(new_exam =>
-                vec!["diagnostic"], update_diagnostic =>
-            )
-        } else {
-            new_exam
-        };
-    }
-
-    for (file, exam) in exams.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&exam).unwrap(); // dump the YAML object to a String
+        for (file, question) in questions.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&question).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
         }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
 
-    let default_files = crate::support::file_manager::CACHE
-        .find_default_folders()
-        .into_iter()
-        .flat_map(|folder| crate::support::file_manager::CACHE.read_folder(&folder.path()))
-        .filter_map(|entry| match entry {
-            crate::support::file_manager::RumbasRepoEntry::Folder(_) => None,
-            crate::support::file_manager::RumbasRepoEntry::File(f) => Some(f),
-        })
-        .collect::<Vec<_>>();
+        for exam in &mut exams {
+            log::info!("Updating {}", exam.0.file_path.display());
+            let new_exam = update_hash!(exam.1.clone() =>
+                vec!["name"], update_translatable_string => :
+                vec!["timing"], update_timing => :
+                vec!["feedback"], update_feedback => :
+                vec!["question_groups"], update_question_groups =>
+            );
+            exam.1 = if new_exam["type"] == Yaml::String("diagnostic".to_string()) {
+                update_hash!(new_exam =>
+                    vec!["diagnostic"], update_diagnostic =>
+                )
+            } else {
+                new_exam
+            };
+        }
 
-    let default_question_files: Vec<_> = default_files
-        .iter()
-        .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
-        .collect();
-    let mut default_questions: Vec<_> = default_question_files
-        .iter()
-        .filter_map(|d| match d.get_type() {
-            DefaultQuestionFileType::Question => {
-                let lf_opt = CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: false,
-                });
-                lf_opt
-                    .and_then(|lf| match lf {
-                        LoadedFile::Normal(n) => Some(n),
-                        _ => None,
+        for (file, exam) in exams.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&exam).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
+        }
+
+        let default_files = crate::support::file_manager::CACHE
+            .find_default_folders(&root)
+            .into_iter()
+            .flat_map(|folder| crate::support::file_manager::CACHE.read_folder(&folder.path()))
+            .filter_map(|entry| match entry {
+                crate::support::file_manager::RumbasRepoEntry::Folder(_) => None,
+                crate::support::file_manager::RumbasRepoEntry::File(f) => Some(f),
+            })
+            .collect::<Vec<_>>();
+
+        let default_question_files: Vec<_> = default_files
+            .iter()
+            .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
+            .collect();
+        let mut default_questions: Vec<_> = default_question_files
+            .iter()
+            .filter_map(|d| match d.get_type() {
+                DefaultQuestionFileType::Question => {
+                    let lf_opt = CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: false,
+                    });
+                    lf_opt
+                        .and_then(|lf| match lf {
+                            LoadedFile::Normal(n) => Some(n),
+                            _ => None,
+                        })
+                        .and_then(|lf| {
+                            YamlLoader::load_from_str(&lf.content[..])
+                                .ok()
+                                .map(|a| (lf.clone(), a[0].clone()))
+                        })
+                }
+                _ => None,
+            })
+            .collect();
+
+        for default_question in &mut default_questions {
+            log::info!("Updating {}", default_question.0.file_path.display());
+            let new_question = update_hash!(default_question.1.clone() =>
+                vec!["advice", "statement"], update_translatable_string => :
+                vec!["diagnostic_topic_names"], update_translatable_string_vector => :
+                vec!["functions"], update_functions => :
+                vec!["variables"], update_translatable_string_vector => :
+                vec!["parts"], update_parts =>
+            );
+            default_question.1 = if default_question.0.file_path.in_main_folder("./defaults") {
+                // TODO
+                log::info!(
+                    "Updating main default file {}",
+                    default_question.0.file_path.display()
+                );
+                update_hash!(new_question =>
+                vec!["extensions"], update_extensions =>
+                )
+            } else {
+                new_question
+            };
+        }
+
+        for (file, default_question) in default_questions.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
+        }
+
+        let mut default_question_parts: Vec<_> = default_question_files
+            .iter()
+            .filter_map(|d| match d.get_type() {
+                DefaultQuestionFileType::QuestionPartJME
+                | DefaultQuestionFileType::QuestionPartGapFill
+                | DefaultQuestionFileType::QuestionPartChooseOne
+                | DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartNumberEntry
+                | DefaultQuestionFileType::QuestionPartPatternMatch
+                | DefaultQuestionFileType::QuestionPartInformation
+                | DefaultQuestionFileType::QuestionPartExtension
+                | DefaultQuestionFileType::QuestionPartGapFillGapJME
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseOne
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartGapFillGapNumberEntry
+                | DefaultQuestionFileType::QuestionPartGapFillGapPatternMatch
+                | DefaultQuestionFileType::QuestionPartGapFillGapInformation
+                | DefaultQuestionFileType::QuestionPartGapFillGapExtension => {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: false,
                     })
-                    .and_then(|lf| {
-                        YamlLoader::load_from_str(&lf.content[..])
-                            .ok()
-                            .map(|a| (lf.clone(), a[0].clone()))
+                }
+                DefaultQuestionFileType::Question => None,
+            })
+            .filter_map(|lf| {
+                match lf {
+                    LoadedFile::Normal(n) => Some(n),
+                    _ => None,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(&lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[0].clone()))
+                })
+            })
+            .collect();
+
+        for default_question_part in &mut default_question_parts {
+            log::info!("Updating {}", default_question_part.0.file_path.display());
+            let new_question_part = update_part(default_question_part.1.clone());
+            default_question_part.1 = if default_question_part
+                .0
+                .file_path
+                .in_main_folder("./defaults")
+            {
+                // TODO
+                log::info!(
+                    "Updating main default file {}",
+                    default_question_part.0.file_path.display()
+                );
+                //add_default_answer_display(new_question_part)
+                new_question_part
+                // TODO?
+            } else {
+                new_question_part
+            };
+        }
+
+        for (file, default_question_part) in default_question_parts.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
+        }
+
+        let mut default_question_parts: Vec<_> = default_question_files
+            .iter()
+            .filter_map(|d| match d.get_type() {
+                DefaultQuestionFileType::QuestionPartJME
+                | DefaultQuestionFileType::QuestionPartGapFillGapJME => {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: false,
                     })
-            }
-            _ => None,
-        })
-        .collect();
-
-    for default_question in &mut default_questions {
-        log::info!("Updating {}", default_question.0.file_path.display());
-        let new_question = update_hash!(default_question.1.clone() =>
-            vec!["advice", "statement"], update_translatable_string => :
-            vec!["diagnostic_topic_names"], update_translatable_string_vector => :
-            vec!["functions"], update_functions => :
-            vec!["variables"], update_translatable_string_vector => :
-            vec!["parts"], update_parts =>
-        );
-        default_question.1 = if default_question.0.file_path.starts_with("./defaults") {
-            // TODO
-            log::info!(
-                "Updating main default file {}",
-                default_question.0.file_path.display()
-            );
-            update_hash!(new_question =>
-            vec!["extensions"], update_extensions =>
-            )
-        } else {
-            new_question
-        };
-    }
-
-    for (file, default_question) in default_questions.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
-        }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
-
-    let mut default_question_parts: Vec<_> = default_question_files
-        .iter()
-        .filter_map(|d| match d.get_type() {
-            DefaultQuestionFileType::QuestionPartJME
-            | DefaultQuestionFileType::QuestionPartGapFill
-            | DefaultQuestionFileType::QuestionPartChooseOne
-            | DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartNumberEntry
-            | DefaultQuestionFileType::QuestionPartPatternMatch
-            | DefaultQuestionFileType::QuestionPartInformation
-            | DefaultQuestionFileType::QuestionPartExtension
-            | DefaultQuestionFileType::QuestionPartGapFillGapJME
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseOne
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartGapFillGapNumberEntry
-            | DefaultQuestionFileType::QuestionPartGapFillGapPatternMatch
-            | DefaultQuestionFileType::QuestionPartGapFillGapInformation
-            | DefaultQuestionFileType::QuestionPartGapFillGapExtension => {
-                CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: false,
+                }
+                _ => None,
+            })
+            .filter_map(|lf| {
+                match lf {
+                    LoadedFile::Normal(n) => Some(n),
+                    _ => None,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(&lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[0].clone()))
                 })
-            }
-            DefaultQuestionFileType::Question => None,
-        })
-        .filter_map(|lf| {
-            match lf {
-                LoadedFile::Normal(n) => Some(n),
-                _ => None,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(&lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[0].clone()))
             })
-        })
-        .collect();
+            .collect();
 
-    for default_question_part in &mut default_question_parts {
-        log::info!("Updating {}", default_question_part.0.file_path.display());
-        let new_question_part = update_part(default_question_part.1.clone());
-        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
-            // TODO
-            log::info!(
-                "Updating main default file {}",
-                default_question_part.0.file_path.display()
-            );
-            //add_default_answer_display(new_question_part)
-            new_question_part
-            // TODO?
-        } else {
-            new_question_part
-        };
-    }
-
-    for (file, default_question_part) in default_question_parts.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+        for default_question_part in &mut default_question_parts {
+            log::info!("Updating {}", default_question_part.0.file_path.display());
+            let new_question_part = update_part(default_question_part.1.clone());
+            default_question_part.1 = if default_question_part
+                .0
+                .file_path
+                .in_main_folder("./defaults")
+            {
+                // TODO
+                log::info!(
+                    "Updating main default file {}",
+                    default_question_part.0.file_path.display()
+                );
+                add_default_answer_display(new_question_part)
+            } else {
+                new_question_part
+            };
         }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
 
-    let mut default_question_parts: Vec<_> = default_question_files
-        .iter()
-        .filter_map(|d| match d.get_type() {
-            DefaultQuestionFileType::QuestionPartJME
-            | DefaultQuestionFileType::QuestionPartGapFillGapJME => CACHE.read_file(FileToLoad {
-                file_path: d.get_path(),
-                locale_dependant: false,
-            }),
-            _ => None,
-        })
-        .filter_map(|lf| {
-            match lf {
-                LoadedFile::Normal(n) => Some(n),
-                _ => None,
+        for (file, default_question_part) in default_question_parts.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
             }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(&lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[0].clone()))
-            })
-        })
-        .collect();
-
-    for default_question_part in &mut default_question_parts {
-        log::info!("Updating {}", default_question_part.0.file_path.display());
-        let new_question_part = update_part(default_question_part.1.clone());
-        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
-            // TODO
-            log::info!(
-                "Updating main default file {}",
-                default_question_part.0.file_path.display()
-            );
-            add_default_answer_display(new_question_part)
-        } else {
-            new_question_part
-        };
-    }
-
-    for (file, default_question_part) in default_question_parts.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
         }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
 
-    let mut default_question_parts: Vec<_> = default_question_files
-        .iter()
-        .filter_map(|d| match d.get_type() {
-            DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems => CACHE
-                .read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: false,
-                }),
-            _ => None,
-        })
-        .filter_map(|lf| {
-            match lf {
-                LoadedFile::Normal(n) => Some(n),
+        let mut default_question_parts: Vec<_> = default_question_files
+            .iter()
+            .filter_map(|d| match d.get_type() {
+                DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems => CACHE
+                    .read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: false,
+                    }),
                 _ => None,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(&lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[0].clone()))
             })
-        })
-        .collect();
-
-    for default_question_part in &mut default_question_parts {
-        log::info!("Updating {}", default_question_part.0.file_path.display());
-        let new_question_part = update_part(default_question_part.1.clone());
-        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
-            // TODO
-            log::info!(
-                "Updating main default file {}",
-                default_question_part.0.file_path.display()
-            );
-            add_default_achievables(new_question_part)
-        } else {
-            new_question_part
-        };
-    }
-
-    for (file, default_question_part) in default_question_parts.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
-        }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
-    }
-
-    let mut default_question_parts: Vec<_> = default_question_files
-        .iter()
-        .filter_map(|d| match d.get_type() {
-            DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple => {
-                CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: false,
+            .filter_map(|lf| {
+                match lf {
+                    LoadedFile::Normal(n) => Some(n),
+                    _ => None,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(&lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[0].clone()))
                 })
-            }
-            _ => None,
-        })
-        .filter_map(|lf| {
-            match lf {
-                LoadedFile::Normal(n) => Some(n),
-                _ => None,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(&lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[0].clone()))
             })
-        })
-        .collect();
+            .collect();
 
-    for default_question_part in &mut default_question_parts {
-        log::info!("Updating {}", default_question_part.0.file_path.display());
-        let new_question_part = update_part(default_question_part.1.clone());
-        default_question_part.1 = if default_question_part.0.file_path.starts_with("./defaults") {
-            // TODO
-            log::info!(
-                "Updating main default file {}",
-                default_question_part.0.file_path.display()
-            );
-            add_default_marking_method(new_question_part)
-        } else {
-            new_question_part
-        };
-    }
-
-    for (file, default_question_part) in default_question_parts.into_iter() {
-        let mut out_str = String::new();
-        {
-            let mut emitter = YamlEmitter::new(&mut out_str);
-            emitter.multiline_strings(true);
-            emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+        for default_question_part in &mut default_question_parts {
+            log::info!("Updating {}", default_question_part.0.file_path.display());
+            let new_question_part = update_part(default_question_part.1.clone());
+            default_question_part.1 = if default_question_part
+                .0
+                .file_path
+                .in_main_folder("./defaults")
+            {
+                // TODO
+                log::info!(
+                    "Updating main default file {}",
+                    default_question_part.0.file_path.display()
+                );
+                add_default_achievables(new_question_part)
+            } else {
+                new_question_part
+            };
         }
-        std::fs::write(file.file_path, out_str).expect("Failed writing file");
+
+        for (file, default_question_part) in default_question_parts.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
+        }
+
+        let mut default_question_parts: Vec<_> = default_question_files
+            .iter()
+            .filter_map(|d| match d.get_type() {
+                DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple => {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: false,
+                    })
+                }
+                _ => None,
+            })
+            .filter_map(|lf| {
+                match lf {
+                    LoadedFile::Normal(n) => Some(n),
+                    _ => None,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(&lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[0].clone()))
+                })
+            })
+            .collect();
+
+        for default_question_part in &mut default_question_parts {
+            log::info!("Updating {}", default_question_part.0.file_path.display());
+            let new_question_part = update_part(default_question_part.1.clone());
+            default_question_part.1 = if default_question_part
+                .0
+                .file_path
+                .in_main_folder("./defaults")
+            {
+                // TODO
+                log::info!(
+                    "Updating main default file {}",
+                    default_question_part.0.file_path.display()
+                );
+                add_default_marking_method(new_question_part)
+            } else {
+                new_question_part
+            };
+        }
+
+        for (file, default_question_part) in default_question_parts.into_iter() {
+            let mut out_str = String::new();
+            {
+                let mut emitter = YamlEmitter::new(&mut out_str);
+                emitter.multiline_strings(true);
+                emitter.dump(&default_question_part).unwrap(); // dump the YAML object to a String
+            }
+            std::fs::write(file.file_path, out_str).expect("Failed writing file");
+        }
+
+        log::error!("Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.");
+
+        semver::Version::new(0, 5, 0)
+    } else {
+        log::error!("Are you in a rumbas repo?");
+        panic!("Can't find the rumbas repo");
     }
-
-    log::error!("Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.");
-
-    semver::Version::new(0, 5, 0)
 }
 
 fn update_translatable_string(yaml: Yaml) -> Yaml {

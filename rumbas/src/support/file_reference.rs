@@ -248,9 +248,9 @@ macro_rules! file_type {
                         error_message: None,
                     }
                 }
-                pub fn file_to_read(&self) -> Option<FileToRead> {
+                pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
                     self.file_name.as_ref().map(|file_name| {
-                        TextFileToRead::with_file_name(file_name.clone()).into()
+                        TextFileToRead::with_file_name(file_name.clone(), main_file_path).into()
                     })
                 }
             }
@@ -281,16 +281,16 @@ macro_rules! file_type {
 
                 fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 
-                fn files_to_load(&self) -> Vec<FileToLoad> {
-                    let file = self.file_to_read();
+                fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+                    let file = self.file_to_read(main_file_path);
                     if let Some(f) = file {
                         vec![f.into()]
                     }
                     else { vec![] }
                 }
 
-                fn insert_loaded_files(&mut self, files: &HashMap<FileToLoad, LoadedFile>) {
-                    let file = self.file_to_read();
+                fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &HashMap<FileToLoad, LoadedFile>) {
+                    let file = self.file_to_read(main_file_path);
                     if let Some(f) = file {
                         let file : FileToLoad = f.into();
                         let file = files.get(&file);
@@ -307,9 +307,9 @@ macro_rules! file_type {
                     }
                 }
 
-                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
-                    self.file_to_read().map(|a| {
-                        let p : std::path::PathBuf = a.into();
+                fn dependencies(&self, main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
+                    self.file_to_read(main_file_path).map(|a| {
+                        let p : rumbas_support::path::RumbasPath = a.into();
                         vec![p].into_iter().collect()
                     }).unwrap_or_else(std::collections::HashSet::new)
                 }

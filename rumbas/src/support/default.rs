@@ -30,6 +30,7 @@ use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPar
 use crate::question::QuestionInput;
 use crate::support::file_manager::RumbasRepoEntry;
 use rumbas_support::input::{FileToLoad, LoadedFile};
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
@@ -39,7 +40,7 @@ use std::path::{Path, PathBuf};
 //
 
 /// Combine an exam with all data from the default files
-pub fn combine_exam_with_default_files(path: &Path, exam: &mut ExamInput) {
+pub fn combine_exam_with_default_files(path: RumbasPath, exam: &mut ExamInput) {
     let default_files = <DefaultFile<DefaultExamFileType>>::files(path);
     if let ExamInput::Normal(ref mut e) = exam {
         handle_exam!(
@@ -71,19 +72,20 @@ pub fn combine_exam_with_default_files(path: &Path, exam: &mut ExamInput) {
 }
 
 /// Combine a question with all data from the default files
-pub fn combine_question_with_default_files(path: &Path, question: &mut QuestionInput) {
+pub fn combine_question_with_default_files(path: RumbasPath, question: &mut QuestionInput) {
     let default_files = <DefaultFile<DefaultQuestionFileType>>::files(path);
     handle_question!(default_files, question);
 }
 
 /// Returns a vector of paths to default files for the given path
-fn default_file_paths(path: &Path) -> Vec<PathBuf> {
+fn default_file_paths(path: RumbasPath) -> Vec<RumbasPath> {
     let mut used = HashSet::new(); //Use set to remove duplicates (only happens for the 'defaults' folder in root
                                    //TODO: write tests and maybe use .take(count()-1) instead of hashset
     let mut result = Vec::new();
-    let ancestors = path.ancestors();
+    let ancestors = path.project().ancestors();
     for a in ancestors {
         let defaults_path = a.with_file_name(crate::DEFAULTS_FOLDER);
+        let defaults_path = path.keep_root(defaults_path.as_path());
         for entry in crate::support::file_manager::CACHE
             .read_folder(&defaults_path)
             .into_iter()
@@ -92,9 +94,10 @@ fn default_file_paths(path: &Path) -> Vec<PathBuf> {
                 _ => None,
             })
         {
-            if !used.contains(&entry) {
+            let absolute = entry.absolute().to_path_buf();
+            if !used.contains(&absolute) {
+                used.insert(absolute);
                 result.push(entry.clone());
-                used.insert(entry);
             }
         }
     }
@@ -138,25 +141,25 @@ create_default_file_type_enums!(
 
 pub trait DefaultFileTypeMethods: Sized {
     type Data;
-    fn from_path(path: &Path) -> Option<Self>;
-    fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data>;
+    fn from_path(path: &RumbasPath) -> Option<Self>;
+    fn read_as_data(&self, path: &RumbasPath) -> serde_yaml::Result<Self::Data>;
 }
 
 #[derive(Debug, Clone)]
 /// Struct used to overwrite values with defaults
 pub struct DefaultFile<T: Clone> {
     r#type: T,
-    path: PathBuf,
+    path: RumbasPath,
 }
 
 impl<T: DefaultFileTypeMethods + Clone> DefaultFile<T> {
     /// Create a DefaultFile from the file_name of the given path, returns None if invalid path
-    pub fn from_path(path: &Path) -> Option<Self> {
+    pub fn from_path(path: &RumbasPath) -> Option<Self> {
         let default_type: Option<T> = T::from_path(path);
         if let Some(t) = default_type {
             return Some(DefaultFile {
                 r#type: t,
-                path: path.to_path_buf(),
+                path: path.clone(),
             });
         }
         None
@@ -168,7 +171,7 @@ impl<T: DefaultFileTypeMethods + Clone> DefaultFile<T> {
     }
 
     /// Returns a vector with all DefaultExamFiles that are found for the given path
-    fn files(path: &Path) -> Vec<Self> {
+    fn files(path: RumbasPath) -> Vec<Self> {
         let paths = default_file_paths(path);
         let usefull_paths = paths
             .into_iter()
@@ -180,7 +183,7 @@ impl<T: DefaultFileTypeMethods + Clone> DefaultFile<T> {
 
 impl<T: Clone> DefaultFile<T> {
     /// Get the path of this DefaultFile
-    pub fn get_path(&self) -> PathBuf {
+    pub fn get_path(&self) -> RumbasPath {
         self.path.clone()
     }
 
@@ -193,7 +196,7 @@ impl<T: Clone> DefaultFile<T> {
 #[derive(Debug, Clone)]
 pub struct DefaultFileData<T> {
     data: T,
-    path: std::path::PathBuf,
+    path: RumbasPath,
 }
 
 /// Create the DefaultFileType and DefaultQuestionData enums and their methods to read data
@@ -216,8 +219,8 @@ macro_rules! create_default_file_type_enums {
         impl DefaultFileTypeMethods for $type_name {
             type Data = $data_name;
             /// Creates a DefaultFileType based on the filename, returns None if unknown
-            fn from_path(path: &Path) -> Option<Self> {
-                let file_name = path.file_stem();
+            fn from_path(path: &RumbasPath) -> Option<Self> {
+                let file_name = path.project().file_stem();
                 match file_name {
                     Some(f) => match f.to_str() {
                         $(
@@ -230,15 +233,15 @@ macro_rules! create_default_file_type_enums {
             }
 
             /// Read the given path as the data needed for this DefaultFileType
-            fn read_as_data(&self, path: &Path) -> serde_yaml::Result<Self::Data> {
-                let file = FileToLoad { file_path: path.to_path_buf(), locale_dependant: false };
+            fn read_as_data(&self, path: &RumbasPath) -> serde_yaml::Result<Self::Data> {
+                let file = FileToLoad { file_path: path.clone(), locale_dependant: false };
                 let loaded_file = crate::support::file_manager::CACHE.read_file(file);
                 if let Some(LoadedFile::Normal(l)) = loaded_file {
                     match self {
                         $(
                         Self::$file_type => {
                             let n: $data_type = serde_yaml::from_str(&l.content)?;
-                            Ok($data_name::$file_type( DefaultFileData { data: n, path: path.to_path_buf() }))
+                            Ok($data_name::$file_type( DefaultFileData { data: n, path: path.clone() }))
                         }
                         )*
                     }

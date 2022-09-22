@@ -1,23 +1,25 @@
 use rayon::prelude::*;
 use rumbas::support::dependency_manager::DEPENDENCIES;
 use rumbas::support::file_manager::CACHE;
+use rumbas::support::rc::within_repo;
 use rumbas::support::to_numbas::ToNumbas;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::Input;
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-pub fn find_all_files(path: &Path) -> Vec<PathBuf> {
+pub fn find_all_files(path: RumbasPath) -> Vec<RumbasPath> {
     if path.is_file() {
-        vec![path.to_path_buf()]
+        vec![path]
     } else if path.is_dir() {
-        if path.starts_with("questions") {
-            CACHE.find_all_questions_in_folder(path.to_path_buf())
-        } else if path.starts_with("question_templates") {
-            CACHE.find_all_question_templates_in_folder(path.to_path_buf())
-        } else if path.starts_with("exam_templates") {
-            CACHE.find_all_exam_templates_in_folder(path.to_path_buf())
+        if path.in_main_folder(rumbas::QUESTIONS_FOLDER) {
+            CACHE.find_all_questions_in_folder(path)
+        } else if path.in_main_folder(rumbas::QUESTION_TEMPLATES_FOLDER) {
+            CACHE.find_all_question_templates_in_folder(path)
+        } else if path.in_main_folder(rumbas::EXAM_TEMPLATES_FOLDER) {
+            CACHE.find_all_exam_templates_in_folder(path)
         } else {
-            CACHE.find_all_exams_in_folder(path.to_path_buf())
+            CACHE.find_all_exams_in_folder(path)
         }
         .into_iter()
         .map(|f| f.file_path)
@@ -36,17 +38,23 @@ pub fn check(exam_question_paths: Vec<String>) {
 }
 
 pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
-    let mut files: HashSet<PathBuf> = HashSet::new();
+    let mut files: HashSet<_> = HashSet::new();
     for exam_question_path in exam_question_paths.iter() {
         let path = Path::new(exam_question_path);
         log::info!("Checking {:?}", path.display());
-        if path.is_absolute() {
-            log::error!("Absolute path's are not supported");
+        let path = within_repo(&path);
+        log::debug!("Found path within rumbas project {:?}", path);
+        if let Some(path) = path {
+            files.extend(find_all_files(path).into_iter());
+        } else {
+            log::error!(
+                "{:?} doesn't seem to belong to a rumbas project.",
+                exam_question_path
+            );
             return Err(());
         }
-        files.extend(find_all_files(path).into_iter());
     }
-    let check_results: Vec<(CheckResult, PathBuf)> = files
+    let check_results: Vec<(CheckResult, _)> = files
         .into_par_iter()
         .map(|file| (check_file(&file), file))
         .collect();
@@ -89,7 +97,7 @@ pub struct RumbasCheckData {
 }
 
 impl RumbasCheckData {
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         for (locale, check_result) in self.failed.iter() {
             log::error!(
                 "Error when processing locale {} for {}.",
@@ -116,7 +124,7 @@ impl RumbasCheckData {
 }
 
 impl CheckResult {
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         match self {
             Self::FailedParsing(e) => log::error!("{}", e),
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
@@ -127,15 +135,15 @@ impl CheckResult {
 }
 
 /// Return true if parsing is ok
-pub fn check_file(path: &Path) -> CheckResult {
+pub fn check_file(path: &RumbasPath) -> CheckResult {
     log::info!("Checking {:?}", path.display());
     let exam_input_result = rumbas::exam::ExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
             exam_input.combine_with_defaults(path);
-            exam_input.load_files();
+            exam_input.load_files(path);
 
-            DEPENDENCIES.add_dependencies(path.to_path_buf(), exam_input.dependencies());
+            DEPENDENCIES.add_dependencies(path.clone(), exam_input.dependencies(path));
 
             let exam_result = exam_input.to_normal_safe();
             match exam_result {

@@ -81,20 +81,27 @@ impl<T: Input> Input for Noneable<T> {
             item.insert_template_value(key, val);
         }
     }
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
         match self {
-            Noneable::NotNone(val) => val.files_to_load(),
+            Noneable::NotNone(val) => val.files_to_load(main_file_path),
             _ => Vec::new(),
         }
     }
-    fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
         if let Noneable::NotNone(ref mut item) = self {
-            item.insert_loaded_files(files);
+            item.insert_loaded_files(main_file_path, files);
         }
     }
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn dependencies(
+        &self,
+        main_file_path: &RumbasPath,
+    ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
         match self {
-            Noneable::NotNone(val) => val.dependencies(),
+            Noneable::NotNone(val) => val.dependencies(main_file_path),
             _ => std::collections::HashSet::new(),
         }
     }
