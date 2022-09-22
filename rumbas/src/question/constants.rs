@@ -26,9 +26,9 @@ macro_rules! builtin_constants {
                 pub $field: $type
             ),*
         }
-        impl ToNumbas<std::collections::HashMap<String, bool>> for $struct {
-            fn to_numbas(&self, _locale: &str) -> std::collections::HashMap<String, bool> {
-                let mut builtin = std::collections::HashMap::new();
+        impl ToNumbas<std::collections::BTreeMap<String, bool>> for $struct {
+            fn to_numbas(&self, _locale: &str) -> std::collections::BTreeMap<String, bool> {
+                let mut builtin = std::collections::BTreeMap::new();
                 $(
                     builtin.insert($name.to_string(), self.$field);
                 )*
