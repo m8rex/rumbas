@@ -165,7 +165,7 @@ pub struct QuestionPartCustom {
     #[serde(flatten)]
     pub part_data: QuestionPartSharedData,
     #[serde(default)]
-    pub settings: std::collections::HashMap<String, CustomPartInputTypeValue>,
+    pub settings: std::collections::BTreeMap<String, CustomPartInputTypeValue>,
 }
 
 // TODO: other types

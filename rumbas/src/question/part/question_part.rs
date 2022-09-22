@@ -333,7 +333,7 @@ question_part_type! {
     pub struct QuestionPartCustom {
         #[serde(rename="type")]
         type_name: String, // Renamed because of bug in Comparable
-        settings: std::collections::HashMap<String, CustomPartInputTypeValue>
+        settings: std::collections::BTreeMap<String, CustomPartInputTypeValue>
     }
 }
 
