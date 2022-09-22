@@ -1,9 +1,11 @@
 use super::check;
 use rayon::prelude::*;
 use rumbas::support::file_manager::CACHE;
+use rumbas::support::rc::within_repo;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::FileToLoad;
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 pub fn fmt(exam_question_paths: Vec<String>) {
@@ -14,17 +16,23 @@ pub fn fmt(exam_question_paths: Vec<String>) {
 }
 
 pub fn fmt_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
-    let mut files: HashSet<PathBuf> = HashSet::new();
+    let mut files: HashSet<_> = HashSet::new();
     for exam_question_path in exam_question_paths.iter() {
         let path = Path::new(exam_question_path);
         log::info!("Formatting {:?}", path.display());
-        if path.is_absolute() {
-            log::error!("Absolute path's are not supported");
+        let path = within_repo(&path);
+        log::debug!("Found path within rumbas project {:?}", path);
+        if let Some(path) = path {
+            files.extend(check::find_all_files(path).into_iter());
+        } else {
+            log::error!(
+                "{:?} doesn't seem to belong to a rumbas project.",
+                exam_question_path
+            );
             return Err(());
         }
-        files.extend(check::find_all_files(path).into_iter());
     }
-    let check_results: Vec<(RumbasFormatResult, PathBuf)> = files
+    let check_results: Vec<(RumbasFormatResult, _)> = files
         .into_par_iter()
         .map(|file| (format_file(&file), file))
         .collect();
@@ -57,7 +65,7 @@ pub enum RumbasFormatResult {
 }
 
 impl RumbasFormatResult {
-    pub fn log(&self, path: &Path) {
+    pub fn log(&self, path: &RumbasPath) {
         log::error!("Error when processing {}.", path.display());
         match self {
             Self::FailedReadingFile => log::error!("Can't read the file."),
@@ -73,10 +81,10 @@ impl RumbasFormatResult {
     }
 }
 
-pub fn format_file(path: &Path) -> RumbasFormatResult {
+pub fn format_file(path: &RumbasPath) -> RumbasFormatResult {
     log::info!("Formatting {:?}", path.display());
     match CACHE.read_file(FileToLoad {
-        file_path: path.to_path_buf(),
+        file_path: path.clone(),
         locale_dependant: false,
     }) {
         Some(a) => match a {

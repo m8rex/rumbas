@@ -1,6 +1,6 @@
+use rumbas_support::path::RumbasPath;
 use std::collections::HashMap;
 use std::collections::HashSet;
-use std::path::PathBuf;
 use std::sync::Mutex;
 use std::sync::RwLock;
 
@@ -10,7 +10,7 @@ lazy_static! {
 
 #[derive(Debug)]
 pub struct DependencyManager {
-    depended_on_by: RwLock<HashMap<PathBuf, Mutex<HashSet<PathBuf>>>>,
+    depended_on_by: RwLock<HashMap<RumbasPath, Mutex<HashSet<RumbasPath>>>>,
 }
 
 impl Default for DependencyManager {
@@ -22,7 +22,7 @@ impl Default for DependencyManager {
 }
 
 impl DependencyManager {
-    pub fn add_dependencies(&self, path: PathBuf, dependencies: HashSet<PathBuf>) {
+    pub fn add_dependencies(&self, path: RumbasPath, dependencies: HashSet<RumbasPath>) {
         for dependency in dependencies.iter().chain(vec![path.clone()].iter()) {
             log::debug!("Reading depended on by map.");
             let map = self
@@ -54,7 +54,7 @@ impl DependencyManager {
         }
     }
 
-    pub fn get_dependants(&self, path: PathBuf) -> HashSet<PathBuf> {
+    pub fn get_dependants(&self, path: RumbasPath) -> HashSet<RumbasPath> {
         log::debug!("Reading depended on by map.");
         let map = self
             .depended_on_by

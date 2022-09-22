@@ -10,6 +10,7 @@ pub use rumbas_support_derive::*;
 pub mod example;
 pub mod input;
 pub mod overwrite;
+pub mod path;
 pub mod preamble;
 pub mod rumbas_check;
 pub mod value;

@@ -150,12 +150,12 @@ fn input_handle_unit_struct(
                 }
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 }
-                fn files_to_load(&self) -> Vec<FileToLoad> {
+                fn files_to_load(&self, _main_file_path: &RumbasPath) -> Vec<FileToLoad> {
                     Vec::new()
                 }
-                fn insert_loaded_files(&mut self, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                fn insert_loaded_files(&mut self, _main_file_path: &RumbasPath, _files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 }
-                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                fn dependencies(&self, _main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
                     std::collections::HashSet::new()
                 }
             }
@@ -215,21 +215,21 @@ fn input_handle_tuple_struct(
                 fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                     #(self.#field_indexes.insert_template_value(key, val);)*
                 }
-                fn files_to_load(&self) -> Vec<FileToLoad> {
+                fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
                     let mut result = Vec::new();
                     #(
-                        let previous_result = self.#field_indexes.files_to_load();
+                        let previous_result = self.#field_indexes.files_to_load(main_file_path);
                         result.extend(previous_result);
                     )*
                     result
                 }
-                fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
-                    #(self.#field_indexes.insert_loaded_files(files);)*
+                fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                    #(self.#field_indexes.insert_loaded_files(main_file_path, files);)*
                 }
-                fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+                fn dependencies(&self, main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
                     let mut result = std::collections::HashSet::new();
                     #(
-                        let previous_result = self.#field_indexes.dependencies();
+                        let previous_result = self.#field_indexes.dependencies(main_file_path);
                         result.extend(previous_result);
                     )*
                     result
@@ -384,22 +384,22 @@ fn input_handle_struct_struct(
             fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 #(self.#field_names.insert_template_value(key, val);)*
             }
-            fn files_to_load(&self) -> Vec<FileToLoad> {
+            fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
                 let mut result = Vec::new();
                 #(
-                    let previous_result = self.#field_names.files_to_load();
+                    let previous_result = self.#field_names.files_to_load(main_file_path);
                     result.extend(previous_result);
                 )*
                 result
             }
 
-            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
-                #(self.#field_names.insert_loaded_files(files);)*
+            fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                #(self.#field_names.insert_loaded_files(main_file_path, files);)*
             }
-            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+            fn dependencies(&self, main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
                 let mut result = std::collections::HashSet::new();
                 #(
-                    let previous_result = self.#field_names.dependencies();
+                    let previous_result = self.#field_names.dependencies(main_file_path);
                     result.extend(previous_result);
                 )*
                 result
@@ -423,15 +423,15 @@ fn input_handle_struct_struct(
             fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value){
                 self.0.insert_template_value(key, val)
             }
-            fn files_to_load(&self) -> Vec<FileToLoad> {
-                self.0.files_to_load()
+            fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+                self.0.files_to_load(main_file_path)
             }
 
-            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
-                self.0.insert_loaded_files(files);
+            fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+                self.0.insert_loaded_files(main_file_path, files);
             }
-            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
-                self.0.dependencies()
+            fn dependencies(&self, main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
+                self.0.dependencies(main_file_path)
             }
         }
     });
@@ -800,7 +800,7 @@ fn input_handle_enum_files_to_load_variants(
                         #input_ident::#variant_ident(#(#items),*) => {
                             let mut result = Vec::new();
                             #(
-                                let previous_result = #items.files_to_load();
+                                let previous_result = #items.files_to_load(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -818,7 +818,7 @@ fn input_handle_enum_files_to_load_variants(
                         #input_ident::#variant_ident { #(#items),* } => {
                             let mut result = Vec::new();
                             #(
-                                let previous_result = #items.files_to_load();
+                                let previous_result = #items.files_to_load(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -859,7 +859,7 @@ fn input_handle_enum_insert_loaded_files_variants(
                         .collect::<Vec<_>>();
                     quote! {
                         #input_ident::#variant_ident(#(#items),*) => {
-                            #(#items.insert_loaded_files(files);)*
+                            #(#items.insert_loaded_files(main_file_path, files);)*
                         }
                     }
                 }
@@ -872,7 +872,7 @@ fn input_handle_enum_insert_loaded_files_variants(
                         .collect::<Vec<_>>();
                     quote! {
                         #input_ident::#variant_ident { #(#items),* } => {
-                            #(#items.insert_loaded_files(files));*
+                            #(#items.insert_loaded_files(main_file_path, files));*
                         }
                     }
                 }
@@ -912,7 +912,7 @@ fn input_handle_enum_dependencies_variants(
                         #input_ident::#variant_ident(#(#items),*) => {
                             let mut result = std::collections::HashSet::new();
                             #(
-                                let previous_result = #items.dependencies();
+                                let previous_result = #items.dependencies(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -930,7 +930,7 @@ fn input_handle_enum_dependencies_variants(
                         #input_ident::#variant_ident { #(#items),* } => {
                             let mut result = std::collections::HashSet::new();
                             #(
-                                let previous_result = #items.dependencies();
+                                let previous_result = #items.dependencies(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -1001,19 +1001,19 @@ fn input_handle_enum(
                     #(#insert_template_value_variants),*
                 }
             }
-            fn files_to_load(&self) -> Vec<FileToLoad> {
+            fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
                 match self {
                     #(#files_to_load_variants),*
                 }
             }
 
-            fn insert_loaded_files(&mut self, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
+            fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &std::collections::HashMap<FileToLoad, LoadedFile>) {
                 match self {
                     #(#insert_loaded_files_variants),*
                 }
             }
 
-            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+            fn dependencies(&self, main_file_path: &RumbasPath) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
                 match self {
                     #(#dependencies_variants),*
                 }

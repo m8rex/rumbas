@@ -3,7 +3,9 @@ use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
 use rumbas::support::dependency_manager::DEPENDENCIES;
 use rumbas::support::file_manager::RumbasRepoFileData;
 use rumbas::support::file_manager::CACHE;
+use rumbas::support::rc::within_repo;
 use rumbas_support::input::FileToLoad;
+use rumbas_support::path::RumbasPath;
 use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
@@ -65,29 +67,23 @@ fn watch_internal(context: WatchContext) {
     }
 }
 
-fn to_relative_path(path: &Path) -> std::path::PathBuf {
-    path.strip_prefix(std::env::current_dir().unwrap())
-        .unwrap()
-        .to_owned()
-}
-
 fn handle_if_needed(path: &Path, handler: &dyn WatchHandler) {
-    let relative_path = to_relative_path(path);
-    if relative_path.starts_with(crate::cli::compile::CACHE_FOLDER)
-        || relative_path.starts_with(crate::cli::compile::OUTPUT_FOLDER)
-    {
-        // do nothing
-    } else {
-        handler.recompile_dependant(path)
+    if let Some(path) = within_repo(&path) {
+        if path.in_main_folder(crate::cli::compile::CACHE_FOLDER)
+            || path.in_main_folder(crate::cli::compile::OUTPUT_FOLDER)
+        {
+            // do nothing
+        } else {
+            handler.recompile_dependant(path)
+        }
     }
 }
 
 trait WatchHandler {
     fn handle_setup(&self, path: &str);
-    fn handle_file(&self, path: &Path);
-    fn recompile_dependant(&self, path: &Path) {
-        let relative_path = to_relative_path(path);
-        let file_data = RumbasRepoFileData::from(&relative_path);
+    fn handle_file(&self, path: &RumbasPath);
+    fn recompile_dependant(&self, path: RumbasPath) {
+        let file_data = RumbasRepoFileData::from(path.clone());
         let relative_path = file_data.dependency_path();
 
         let file_to_remove: FileToLoad = file_data.into();
@@ -95,7 +91,7 @@ trait WatchHandler {
 
         DEPENDENCIES.log_debug();
 
-        let dependants = DEPENDENCIES.get_dependants(relative_path);
+        let dependants = DEPENDENCIES.get_dependants(path);
         for dependant in dependants.iter() {
             self.handle_file(dependant);
         }
@@ -108,8 +104,8 @@ impl WatchHandler for WatchChecker {
         // TODO
         crate::cli::check::check_internal(vec![path.to_string()]);
     }
-    fn handle_file(&self, path: &Path) {
-        crate::cli::check::check_file(path);
+    fn handle_file(&self, path: &RumbasPath) {
+        crate::cli::check::check_file(&path);
     }
 }
 
@@ -134,7 +130,7 @@ impl WatchHandler for WatchCompiler {
             Self::file_context(),
         );
     }
-    fn handle_file(&self, path: &Path) {
-        crate::cli::compile::compile_file(&Self::file_context(), path);
+    fn handle_file(&self, path: &RumbasPath) {
+        crate::cli::compile::compile_file(&Self::file_context(), &path);
     }
 }

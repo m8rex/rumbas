@@ -1,15 +1,15 @@
-use std::path::PathBuf;
+use rumbas_support::path::RumbasPath;
 
 pub type YamlResult<T> = Result<T, YamlError>;
 
 #[derive(Debug)]
 pub struct YamlError {
     error: serde_yaml::Error,
-    file: PathBuf,
+    file: RumbasPath,
 }
 
 impl YamlError {
-    pub fn from(error: serde_yaml::Error, file: PathBuf) -> YamlError {
+    pub fn from(error: serde_yaml::Error, file: RumbasPath) -> YamlError {
         YamlError { error, file }
     }
 }

@@ -22,6 +22,7 @@ use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::yaml::YamlError;
 use comparable::Comparable;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -65,29 +66,30 @@ impl Exam {
     }
 }
 impl ExamInput {
-    pub fn from_file(file: &Path) -> Result<ExamInput, ParseError> {
+    pub fn from_file(file: &RumbasPath) -> Result<ExamInput, ParseError> {
         use ExamFileTypeInput::*;
         let input: std::result::Result<ExamFileTypeInput, _> =
-            if file.starts_with(crate::EXAMS_FOLDER) {
+            if file.in_main_folder(crate::EXAMS_FOLDER) {
                 let yaml = CACHE
                     .read_file(FileToLoad {
-                        file_path: file.to_path_buf(),
+                        file_path: file.clone(),
                         locale_dependant: false,
                     })
                     .and_then(|lf| match lf {
                         LoadedFile::Normal(n) => Some(n.content),
                         LoadedFile::Localized(_) => None,
                     })
-                    .ok_or_else(|| ParseError::FileReadError(FileReadError(file.to_path_buf())))?;
+                    .ok_or_else(|| ParseError::FileReadError(FileReadError(file.clone())))?;
 
                 serde_yaml::from_str(&yaml)
-                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))
-            } else if file.starts_with(crate::QUESTIONS_FOLDER) {
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))
+            } else if file.in_main_folder(crate::QUESTIONS_FOLDER) {
                 let mut data = HashMap::new();
                 data.insert(
                     "question".to_string(),
                     serde_yaml::Value::String(
-                        file.with_extension("")
+                        file.project()
+                            .with_extension("")
                             .strip_prefix(crate::QUESTIONS_FOLDER)
                             .unwrap()
                             .to_string_lossy()
@@ -101,9 +103,7 @@ impl ExamInput {
                 };
                 Ok(Template(TemplateFileInputEnum::from_normal(t)))
             } else {
-                Err(ParseError::InvalidPath(InvalidExamPathError(
-                    file.to_path_buf(),
-                )))
+                Err(ParseError::InvalidPath(InvalidExamPathError(file.clone())))
             };
         input
             .map(|e| match e {
@@ -111,8 +111,11 @@ impl ExamInput {
                 Diagnostic(e) => Ok(ExamInput::Diagnostic(e)),
                 Template(t_val) => {
                     let t = t_val.to_normal();
-                    let template_file = Path::new(crate::EXAM_TEMPLATES_FOLDER)
-                        .join(format!("{}.yaml", t.relative_template_path)); // TODO: check for missing fields.....
+                    let template_file = file.keep_root(
+                        Path::new(crate::EXAM_TEMPLATES_FOLDER)
+                            .join(format!("{}.yaml", t.relative_template_path))
+                            .as_path(),
+                    ); // TODO: check for missing fields.....
 
                     let template_yaml = CACHE
                         .read_file(FileToLoad {
@@ -124,13 +127,11 @@ impl ExamInput {
                             LoadedFile::Localized(_) => None,
                         })
                         .ok_or_else(|| {
-                            ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
+                            ParseError::FileReadError(FileReadError(template_file.clone()))
                         })?;
 
-                    let mut exam: ExamInput =
-                        serde_yaml::from_str(&template_yaml).map_err(|e| {
-                            ParseError::YamlError(YamlError::from(e, file.to_path_buf()))
-                        })?;
+                    let mut exam: ExamInput = serde_yaml::from_str(&template_yaml)
+                        .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
                     t.data.iter().for_each(|(k, v)| {
                         exam.insert_template_value(k, &v.0);
                     });
@@ -140,13 +141,13 @@ impl ExamInput {
             .and_then(std::convert::identity) //flatten result is currently only possible in nightly
     }
 
-    pub fn combine_with_defaults(&mut self, path: &Path) {
-        combine_exam_with_default_files(path, self);
+    pub fn combine_with_defaults(&mut self, path: &RumbasPath) {
+        combine_exam_with_default_files(path.clone(), self);
     }
-    pub fn load_files(&mut self) {
-        let files_to_load = self.files_to_load();
+    pub fn load_files(&mut self, path: &RumbasPath) {
+        let files_to_load = self.files_to_load(path);
         let loaded_files = CACHE.read_files(files_to_load);
-        self.insert_loaded_files(&loaded_files);
+        self.insert_loaded_files(path, &loaded_files);
     }
 }
 
@@ -158,7 +159,7 @@ pub enum ParseError {
 }
 
 #[derive(Debug)]
-pub struct InvalidExamPathError(std::path::PathBuf);
+pub struct InvalidExamPathError(RumbasPath);
 
 impl Display for InvalidExamPathError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -173,7 +174,7 @@ impl Display for InvalidExamPathError {
 }
 
 #[derive(Debug)]
-pub struct FileReadError(pub std::path::PathBuf);
+pub struct FileReadError(pub RumbasPath);
 
 impl Display for FileReadError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

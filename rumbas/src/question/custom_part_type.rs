@@ -10,6 +10,7 @@ use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
 use crate::support::yaml::{YamlError, YamlResult};
 use comparable::Comparable;
+use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -82,7 +83,7 @@ impl ToRumbas<CustomPartTypeDefinition> for numbas::question::custom_part_type::
 }
 
 impl CustomPartTypeDefinitionInput {
-    pub fn from_str(yaml: &str, file: PathBuf) -> YamlResult<Self> {
+    pub fn from_str(yaml: &str, file: RumbasPath) -> YamlResult<Self> {
         serde_yaml::from_str(yaml).map_err(|e| YamlError::from(e, file))
     }
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {

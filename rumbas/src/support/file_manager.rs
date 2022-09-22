@@ -1,5 +1,7 @@
+use crate::support::rc::within_repo;
 use rayon::prelude::*;
 use rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
+use rumbas_support::path::RumbasPath;
 use std::path::Path;
 use std::path::PathBuf;
 use std::{
@@ -40,7 +42,7 @@ impl FileManager {
                 true => self
                     .read_localized_file(&file.file_path)
                     .map(rumbas_support::input::LoadedFile::Localized),
-                false => Self::read_normal_file(&file.file_path)
+                false => Self::read_normal_file(file.file_path.clone())
                     .map(rumbas_support::input::LoadedFile::Normal),
             };
             match res {
@@ -65,13 +67,10 @@ impl FileManager {
         result
     }
 
-    fn read_normal_file(file_path: &Path) -> Result<LoadedNormalFile, ()> {
+    fn read_normal_file(file_path: RumbasPath) -> Result<LoadedNormalFile, ()> {
         log::debug!("Reading normal file {}.", file_path.display());
-        match std::fs::read_to_string(&file_path) {
-            Ok(content) => Ok(LoadedNormalFile {
-                content,
-                file_path: file_path.to_path_buf(),
-            }),
+        match std::fs::read_to_string(file_path.absolute()) {
+            Ok(content) => Ok(LoadedNormalFile { content, file_path }),
             Err(e) => {
                 log::error!(
                     "Failed read content of {} with error {}",
@@ -83,15 +82,15 @@ impl FileManager {
         }
     }
 
-    fn read_localized_file(&self, file_path: &Path) -> Result<LoadedLocalizedFile, ()> {
+    fn read_localized_file(&self, file_path: &RumbasPath) -> Result<LoadedLocalizedFile, ()> {
         log::debug!("Reading localized file {}.", file_path.display());
-        let file_name = file_path.file_name().unwrap().to_str().unwrap(); //TODO
-        let file_dir = file_path.parent().ok_or(())?;
+        let file_name = file_path.project().file_name().unwrap().to_str().unwrap(); //TODO
+        let file_dir = file_path.keep_root(file_path.project().parent().ok_or(())?);
         log::debug!("Looking for localized files in {}.", file_dir.display());
         //Look for translation dirs
         let mut translated_content = HashMap::new();
         for (path, locale) in self
-            .read_folder(file_dir)
+            .read_folder(&file_dir)
             .into_iter()
             .filter_map(|e| match e {
                 RumbasRepoEntry::File(_f) => None,
@@ -101,7 +100,7 @@ impl FileManager {
                 },
             })
         {
-            let locale_file_path = path.join(file_name);
+            let locale_file_path = path.absolute().join(file_name);
             if locale_file_path.exists() {
                 if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
                     log::debug!("Found localized file {}.", locale_file_path.display());
@@ -112,7 +111,7 @@ impl FileManager {
             }
         }
 
-        let content = match std::fs::read_to_string(&file_path) {
+        let content = match std::fs::read_to_string(file_path.absolute()) {
             Ok(s) => Some(s),
             Err(e) => {
                 log::debug!(
@@ -124,7 +123,7 @@ impl FileManager {
             }
         };
         Ok(LoadedLocalizedFile {
-            file_path: file_path.to_path_buf(),
+            file_path: file_path.clone(),
             content,
             localized_content: translated_content,
         })
@@ -132,11 +131,11 @@ impl FileManager {
 }
 
 impl FileManager {
-    pub fn read_folder(&self, path: &Path) -> Vec<RumbasRepoEntry> {
+    pub fn read_folder(&self, path: &RumbasPath) -> Vec<RumbasRepoEntry> {
         // TODO: handle symlinks...
         let map = self.dir_cache.read().expect("Can read dir cache map");
         log::debug!("Checking if {} is in the dir_cache.", path.display());
-        if let Some(val) = map.get(path) {
+        if let Some(val) = map.get(path.absolute()) {
             log::debug!("Found {} in the dir_cache.", path.display());
             val.lock()
                 .expect("unlock loaded file mutex")
@@ -146,14 +145,20 @@ impl FileManager {
             std::mem::drop(map); // remove the read lock
             let mut entries = Vec::new();
             if path.is_dir() {
-                for entry in path.read_dir().expect("read_dir call failed").flatten()
+                for entry in path
+                    .absolute()
+                    .read_dir()
+                    .expect("read_dir call failed")
+                    .flatten()
                 // We only care about the ones that are 'Ok'
                 {
-                    entries.push(RumbasRepoEntry::from(&entry.path()));
+                    if let Some(rumbas_path) = path.in_root(&entry.path()) {
+                        entries.push(RumbasRepoEntry::from(rumbas_path));
+                    }
                 }
                 let mut map = self.dir_cache.write().expect("Can write dir_cache map");
                 map.insert(
-                    path.to_path_buf(),
+                    path.absolute().to_path_buf(),
                     Mutex::new(RumbasRepoFolderEntries {
                         r#type: RumbasRepoFolderType::from(path),
                         entries: entries.clone(),
@@ -165,7 +170,7 @@ impl FileManager {
             }
         }
     }
-    fn read_all_folders(&self, path: &Path) -> Vec<RumbasRepoFolderData> {
+    fn read_all_folders(&self, path: &RumbasPath) -> Vec<RumbasRepoFolderData> {
         self.read_folder(path)
             .into_iter()
             .filter_map(|e| match e {
@@ -180,9 +185,8 @@ impl FileManager {
             .flatten()
             .collect()
     }
-    pub fn find_default_folders(&self) -> Vec<RumbasRepoFolderData> {
-        // TODO find repo base
-        self.read_all_folders(std::path::Path::new("."))
+    pub fn find_default_folders(&self, path: &RumbasPath) -> Vec<RumbasRepoFolderData> {
+        self.read_all_folders(&path.keep_root(path.root()))
             .into_iter()
             .filter(|f| f.r#type == RumbasRepoFolderType::DefaultFolder)
             .collect()
@@ -192,7 +196,7 @@ impl FileManager {
 impl FileManager {
     fn find_all_yaml_files(
         &self,
-        path: PathBuf,
+        path: RumbasPath,
         wanted_file_type: RumbasRepoFileType,
     ) -> Vec<FileToLoad> {
         let mut files = Vec::new();
@@ -216,42 +220,48 @@ impl FileManager {
         }
         files
     }
-    pub fn find_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+    pub fn find_all_questions_in_folder(&self, folder_path: RumbasPath) -> Vec<FileToLoad> {
         self.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
     }
-    pub fn read_all_questions_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
+    pub fn read_all_questions_in_folder(&self, folder_path: RumbasPath) -> Vec<LoadedFile> {
         let files = self.find_all_questions_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
-    pub fn read_all_questions(&self) -> Vec<LoadedFile> {
-        self.read_all_questions_in_folder(
-            std::path::Path::new(crate::QUESTIONS_FOLDER).to_path_buf(),
-        ) // TODO, find root of rumbas repo by looking for rc file
+    pub fn read_all_questions(&self, path: &RumbasPath) -> Vec<LoadedFile> {
+        let folder_path = std::path::Path::new(crate::QUESTIONS_FOLDER).to_path_buf();
+        let folder_path = path.keep_root(&folder_path);
+        self.read_all_questions_in_folder(folder_path)
     }
-    pub fn find_all_question_templates_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+    pub fn find_all_question_templates_in_folder(
+        &self,
+        folder_path: RumbasPath,
+    ) -> Vec<FileToLoad> {
         self.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
     }
-    pub fn read_all_question_templates(&self) -> Vec<LoadedFile> {
-        let folder_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER).to_path_buf(); // TODO, find root of rumbas repo by looking for rc file
+    pub fn read_all_question_templates(&self, path: &RumbasPath) -> Vec<LoadedFile> {
+        let folder_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER).to_path_buf();
+        let folder_path = path.keep_root(&folder_path);
         let files = self.find_all_question_templates_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
-    pub fn find_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+    pub fn find_all_exams_in_folder(&self, folder_path: RumbasPath) -> Vec<FileToLoad> {
         self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
-    pub fn read_all_exams_in_folder(&self, folder_path: PathBuf) -> Vec<LoadedFile> {
+    pub fn read_all_exams_in_folder(&self, folder_path: RumbasPath) -> Vec<LoadedFile> {
         let files = self.find_all_exams_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
-    pub fn read_all_exams(&self) -> Vec<LoadedFile> {
-        self.read_all_exams_in_folder(std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf())
-        // TODO, find root of rumbas repo by looking for rc file
+    pub fn read_all_exams(&self, path: &RumbasPath) -> Vec<LoadedFile> {
+        let folder_path = std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf();
+        let folder_path = path.keep_root(&folder_path);
+        self.read_all_exams_in_folder(folder_path)
     }
-    pub fn find_all_exam_templates_in_folder(&self, folder_path: PathBuf) -> Vec<FileToLoad> {
+    pub fn find_all_exam_templates_in_folder(&self, folder_path: RumbasPath) -> Vec<FileToLoad> {
         self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
     }
-    pub fn read_all_exam_templates(&self) -> Vec<LoadedFile> {
-        let folder_path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER).to_path_buf(); // TODO, find root of rumbas repo by looking for rc file
+    pub fn read_all_exam_templates(&self, path: &RumbasPath) -> Vec<LoadedFile> {
+        let folder_path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER).to_path_buf();
+        let folder_path = path.keep_root(&folder_path);
         let files = self.find_all_exam_templates_in_folder(folder_path);
         self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
@@ -286,7 +296,7 @@ impl std::convert::From<FileToRead> for rumbas_support::input::FileToLoad {
     }
 }
 
-impl std::convert::From<FileToRead> for PathBuf {
+impl std::convert::From<FileToRead> for RumbasPath {
     fn from(s: FileToRead) -> Self {
         match s {
             FileToRead::Text(t) => t.into(),
@@ -299,12 +309,13 @@ impl std::convert::From<FileToRead> for PathBuf {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct TextFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 impl TextFileToRead {
-    pub fn with_file_name(file_name: String) -> Self {
+    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
         let file_path = std::path::Path::new(crate::QUESTIONS_FOLDER).join(file_name);
+        let file_path = main_file_path.keep_root(file_path.as_path());
         Self { file_path }
     }
 }
@@ -324,7 +335,7 @@ impl std::convert::From<TextFileToRead> for rumbas_support::input::FileToLoad {
     }
 }
 
-impl std::convert::From<TextFileToRead> for PathBuf {
+impl std::convert::From<TextFileToRead> for RumbasPath {
     fn from(s: TextFileToRead) -> Self {
         s.file_path
     }
@@ -332,14 +343,15 @@ impl std::convert::From<TextFileToRead> for PathBuf {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct CustomPartTypeFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 impl CustomPartTypeFileToRead {
-    pub fn with_file_name(file_name: String) -> Self {
+    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
         let file_path = std::path::Path::new(crate::CUSTOM_PART_TYPES_FOLDER)
             .join(file_name)
             .with_extension("yaml");
+        let file_path = main_file_path.keep_root(file_path.as_path());
         Self { file_path }
     }
 }
@@ -359,7 +371,7 @@ impl std::convert::From<CustomPartTypeFileToRead> for rumbas_support::input::Fil
     }
 }
 
-impl std::convert::From<CustomPartTypeFileToRead> for PathBuf {
+impl std::convert::From<CustomPartTypeFileToRead> for RumbasPath {
     fn from(s: CustomPartTypeFileToRead) -> Self {
         s.file_path
     }
@@ -367,14 +379,15 @@ impl std::convert::From<CustomPartTypeFileToRead> for PathBuf {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct QuestionFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 impl QuestionFileToRead {
-    pub fn with_file_name(file_name: String) -> Self {
+    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
         let file_path = std::path::Path::new(crate::QUESTIONS_FOLDER)
             .join(file_name)
             .with_extension("yaml");
+        let file_path = main_file_path.keep_root(file_path.as_path());
         Self { file_path }
     }
 }
@@ -394,7 +407,7 @@ impl std::convert::From<QuestionFileToRead> for rumbas_support::input::FileToLoa
     }
 }
 
-impl std::convert::From<QuestionFileToRead> for PathBuf {
+impl std::convert::From<QuestionFileToRead> for RumbasPath {
     fn from(s: QuestionFileToRead) -> Self {
         s.file_path
     }
@@ -402,7 +415,7 @@ impl std::convert::From<QuestionFileToRead> for PathBuf {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct ExamFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 impl std::convert::From<ExamFileToRead> for FileToRead {
@@ -420,7 +433,7 @@ impl std::convert::From<ExamFileToRead> for rumbas_support::input::FileToLoad {
     }
 }
 
-impl std::convert::From<ExamFileToRead> for PathBuf {
+impl std::convert::From<ExamFileToRead> for RumbasPath {
     fn from(s: ExamFileToRead) -> Self {
         s.file_path
     }
@@ -432,7 +445,7 @@ pub enum RumbasRepoEntry {
     Folder(RumbasRepoFolderData),
 }
 impl RumbasRepoEntry {
-    pub fn from(p: &Path) -> Self {
+    pub fn from(p: RumbasPath) -> Self {
         if p.is_dir() {
             Self::Folder(RumbasRepoFolderData::from(p))
         } else {
@@ -444,16 +457,16 @@ impl RumbasRepoEntry {
 #[derive(Debug, Clone)]
 pub struct RumbasRepoFileData {
     r#type: RumbasRepoFileType,
-    path: PathBuf,
+    path: RumbasPath,
 }
 
 impl RumbasRepoFileData {
-    pub fn path(&self) -> PathBuf {
+    pub fn path(&self) -> RumbasPath {
         self.path.clone()
     }
-    pub fn dependency_path(&self) -> PathBuf {
+    pub fn dependency_path(&self) -> RumbasPath {
         match self.r#type.clone() {
-            RumbasRepoFileType::LocaleFile(_, p) => p,
+            RumbasRepoFileType::LocaleFile(_, p) => p.clone(),
             _ => self.path(),
         }
     }
@@ -475,10 +488,10 @@ impl std::convert::From<RumbasRepoFileData> for FileToLoad {
 }
 
 impl RumbasRepoFileData {
-    pub fn from(p: &Path) -> Self {
+    pub fn from(path: RumbasPath) -> Self {
         Self {
-            r#type: RumbasRepoFileType::from(p),
-            path: p.to_owned(),
+            r#type: RumbasRepoFileType::from(&path),
+            path,
         }
     }
 }
@@ -491,37 +504,40 @@ pub enum RumbasRepoFileType {
     ExamTemplateFile,
     CustomPartTypeFile,
     DefaultFile,
-    LocaleFile(String, PathBuf),
+    LocaleFile(String, RumbasPath),
     File,
 }
 impl RumbasRepoFileType {
-    pub fn from(p: &Path) -> Self {
-        let folder_type = RumbasRepoFolderType::from(p.parent().unwrap());
+    pub fn from(p: &RumbasPath) -> Self {
+        let folder_type = RumbasRepoFolderType::from(p);
 
         if let RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
-            let resource_path = p
-                .parent()
-                .unwrap()
-                .parent()
-                .unwrap()
-                .join(p.file_name().unwrap());
+            let resource_path = p.keep_root(
+                p.project()
+                    .parent()
+                    .unwrap()
+                    .parent()
+                    .unwrap()
+                    .join(p.project().file_name().unwrap())
+                    .as_path(),
+            );
 
             Self::LocaleFile(locale, resource_path)
         } else if let RumbasRepoFolderType::DefaultFolder = folder_type {
             Self::DefaultFile // TODO: fix DefaultFile
         } else if let Some(ext) = p.extension() {
             if ext == "yaml" {
-                if p.starts_with(crate::DEFAULTS_FOLDER) {
+                if p.in_main_folder(crate::DEFAULTS_FOLDER) {
                     Self::DefaultFile
-                } else if p.starts_with(crate::QUESTIONS_FOLDER) {
+                } else if p.in_main_folder(crate::QUESTIONS_FOLDER) {
                     Self::QuestionFile
-                } else if p.starts_with(crate::QUESTION_TEMPLATES_FOLDER) {
+                } else if p.in_main_folder(crate::QUESTION_TEMPLATES_FOLDER) {
                     Self::QuestionTemplateFile
-                } else if p.starts_with(crate::EXAMS_FOLDER) {
+                } else if p.in_main_folder(crate::EXAMS_FOLDER) {
                     Self::ExamFile
-                } else if p.starts_with(crate::EXAM_TEMPLATES_FOLDER) {
+                } else if p.in_main_folder(crate::EXAM_TEMPLATES_FOLDER) {
                     Self::ExamTemplateFile
-                } else if p.starts_with(crate::CUSTOM_PART_TYPES_FOLDER) {
+                } else if p.in_main_folder(crate::CUSTOM_PART_TYPES_FOLDER) {
                     Self::CustomPartTypeFile
                 } else {
                     Self::File
@@ -594,20 +610,20 @@ mod test {
 #[derive(Debug, Clone)]
 pub struct RumbasRepoFolderData {
     r#type: RumbasRepoFolderType,
-    path: PathBuf,
+    path: RumbasPath,
 }
 
 impl RumbasRepoFolderData {
-    pub fn path(&self) -> PathBuf {
+    pub fn path(&self) -> RumbasPath {
         self.path.clone()
     }
 }
 
 impl RumbasRepoFolderData {
-    pub fn from(p: &Path) -> Self {
+    pub fn from(path: RumbasPath) -> Self {
         Self {
-            r#type: RumbasRepoFolderType::from(p),
-            path: p.to_owned(),
+            r#type: RumbasRepoFolderType::from(&path),
+            path,
         }
     }
 }
@@ -626,8 +642,8 @@ pub enum RumbasRepoFolderType {
 }
 
 impl RumbasRepoFolderType {
-    pub fn from(p: &Path) -> Self {
-        if let Some(stem) = p.file_stem() {
+    pub fn from(p: &RumbasPath) -> Self {
+        if let Some(stem) = p.project().file_stem() {
             if stem == crate::DEFAULTS_FOLDER {
                 Self::DefaultFolder
             } else if stem
@@ -648,7 +664,7 @@ impl RumbasRepoFolderType {
                 Self::Folder
             }
         } else {
-            log::debug!(
+            log::warn!(
                 "Unkown file_stem for {}, assuming it is just a folder",
                 p.display()
             );
@@ -690,15 +706,15 @@ macro_rules! create_from_string_type {
             }
         }
         impl $ti {
-            fn dependency(&self) -> FileToRead {
-                <$read_type>::with_file_name(self.file_name.clone()).into()
+            fn dependency(&self, main_file_path: &RumbasPath) -> FileToRead {
+                <$read_type>::with_file_name(self.file_name.clone(), main_file_path).into()
             }
 
-            pub fn file_to_read(&self) -> Option<FileToRead> {
+            pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
                 if let Some(_) = &self.data {
                     None
                 } else {
-                    Some(self.dependency().into())
+                    Some(self.dependency(main_file_path).into())
                 }
             }
         }
@@ -732,22 +748,25 @@ macro_rules! create_from_string_type {
                     q.insert_template_value(key, val);
                 }
             }
-            fn files_to_load(&self) -> Vec<FileToLoad> {
-                if let Some(file) = self.file_to_read() {
+            fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+                if let Some(file) = self.file_to_read(main_file_path) {
                     vec![file.into()]
                 } else if let Some(ref q) = self.data {
                     // TODO: is this used like this?
-                    q.files_to_load()
+                    q.files_to_load(main_file_path)
                 } else {
                     unreachable!();
                 }
             }
-            fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
-                let path: std::path::PathBuf = self.dependency().into();
+            fn dependencies(
+                &self,
+                main_file_path: &RumbasPath,
+            ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
+                let path: rumbas_support::path::RumbasPath = self.dependency(main_file_path).into();
                 let deps: std::collections::HashSet<_> = vec![path].into_iter().collect();
 
                 let deps = if let Some(ref data) = self.data {
-                    data.dependencies()
+                    data.dependencies(main_file_path)
                         .into_iter()
                         .chain(deps.into_iter())
                         .collect()
@@ -759,12 +778,13 @@ macro_rules! create_from_string_type {
             }
             fn insert_loaded_files(
                 &mut self,
+                main_file_path: &RumbasPath,
                 files: &std::collections::HashMap<FileToLoad, LoadedFile>,
             ) {
                 if let Some(ref mut q) = self.data {
-                    q.insert_loaded_files(files);
+                    q.insert_loaded_files(main_file_path, files);
                 } else {
-                    let file = self.file_to_read();
+                    let file = self.file_to_read(main_file_path);
                     if let Some(f) = file {
                         let file_to_load: FileToLoad = f.into();
                         let file = files.get(&file_to_load);
@@ -777,11 +797,11 @@ macro_rules! create_from_string_type {
                                 match data_res {
                                     Ok(q) => {
                                         let mut input = q.clone();
-                                        $combine(&file_to_load.file_path, &mut input);
-                                        let files_to_load = input.files_to_load();
+                                        $combine(file_to_load.file_path, &mut input);
+                                        let files_to_load = input.files_to_load(main_file_path);
                                         let loaded_files = crate::support::file_manager::CACHE
                                             .read_files(files_to_load);
-                                        input.insert_loaded_files(&loaded_files);
+                                        input.insert_loaded_files(main_file_path, &loaded_files);
 
                                         self.data = Some(input)
                                     }

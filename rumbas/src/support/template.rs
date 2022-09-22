@@ -87,11 +87,19 @@ impl Input for MyYamlValue {
         InputCheckResult::empty()
     }
     fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
-    fn files_to_load(&self) -> Vec<FileToLoad> {
+    fn files_to_load(&self, _main_file_path: &RumbasPath) -> Vec<FileToLoad> {
         vec![]
     }
-    fn insert_loaded_files(&mut self, _files: &HashMap<FileToLoad, LoadedFile>) {}
-    fn dependencies(&self) -> std::collections::HashSet<std::path::PathBuf> {
+    fn insert_loaded_files(
+        &mut self,
+        _main_file_path: &RumbasPath,
+        _files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
+    }
+    fn dependencies(
+        &self,
+        _main_file_path: &RumbasPath,
+    ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
         std::collections::HashSet::new()
     }
 }
