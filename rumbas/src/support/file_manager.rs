@@ -509,7 +509,7 @@ pub enum RumbasRepoFileType {
 }
 impl RumbasRepoFileType {
     pub fn from(p: &RumbasPath) -> Self {
-        let folder_type = RumbasRepoFolderType::from(p);
+        let folder_type = RumbasRepoFolderType::from(&p.parent().unwrap());
 
         if let RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
             let resource_path = p.keep_root(
@@ -556,53 +556,51 @@ mod test {
     use super::RumbasRepoFileType;
     use std::path::Path;
 
+    fn rumbas_path(s: &str) -> rumbas_support::path::RumbasPath {
+        rumbas_support::path::RumbasPath::test_make(&Path::new(s), &Path::new("."))
+    }
+
     #[test]
     fn rumbas_repo_file_type() {
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new("defaults/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("defaults/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::QuestionFile,
-            RumbasRepoFileType::from(Path::new("questions/something/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("questions/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new("questions/defaults/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("questions/defaults/file.yaml"))
         );
         assert_eq!(
-            RumbasRepoFileType::LocaleFile(
-                "a".to_string(),
-                Path::new("questions/file.yaml").to_path_buf()
-            ),
-            RumbasRepoFileType::from(Path::new("questions/locale-a/file.yaml"))
+            RumbasRepoFileType::LocaleFile("a".to_string(), rumbas_path("questions/file.yaml")),
+            RumbasRepoFileType::from(&rumbas_path("questions/locale-a/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::ExamFile,
-            RumbasRepoFileType::from(Path::new("exams/something/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("exams/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new("exams/defaults/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("exams/defaults/file.yaml"))
         );
         assert_eq!(
-            RumbasRepoFileType::LocaleFile(
-                "e".to_string(),
-                Path::new("exams/file.yaml").to_path_buf()
-            ),
-            RumbasRepoFileType::from(Path::new("exams/locale-e/file.yaml"))
+            RumbasRepoFileType::LocaleFile("e".to_string(), rumbas_path("exams/file.yaml")),
+            RumbasRepoFileType::from(&rumbas_path("exams/locale-e/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::QuestionTemplateFile,
-            RumbasRepoFileType::from(Path::new("question_templates/something/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("question_templates/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::ExamTemplateFile,
-            RumbasRepoFileType::from(Path::new("exam_templates/something/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("exam_templates/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::CustomPartTypeFile,
-            RumbasRepoFileType::from(Path::new("custom_part_types/something/file.yaml"))
+            RumbasRepoFileType::from(&rumbas_path("custom_part_types/something/file.yaml"))
         );
     }
 }
