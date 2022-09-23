@@ -53,6 +53,21 @@ impl RumbasPath {
     pub fn extension(&self) -> Option<&std::ffi::OsStr> {
         self.project_path.extension()
     }
+    pub fn parent(&self) -> Option<RumbasPath> {
+        if let Some(abs) = self.absolute_path.parent() {
+            if let Ok(project) = abs.strip_prefix(&self.root_path) {
+                Some(RumbasPath {
+                    absolute_path: abs.to_path_buf(),
+                    project_path: project.to_path_buf(),
+                    root_path: self.root_path.clone(),
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
     pub fn keep_root(&self, p: &Path) -> Self {
         let absolute_path = self.root_path.join(p);
         Self {
@@ -72,5 +87,15 @@ impl RumbasPath {
             project_path: r.to_path_buf(),
             absolute_path: path.to_path_buf(),
         })
+    }
+}
+
+impl RumbasPath {
+    pub fn test_make(path: &Path, root: &Path) -> Self {
+        RumbasPath {
+            root_path: root.to_path_buf(),
+            project_path: path.to_path_buf(),
+            absolute_path: root.join(path),
+        }
     }
 }
