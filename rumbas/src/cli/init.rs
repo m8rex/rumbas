@@ -1,5 +1,5 @@
 pub fn init() {
-    let repo_path = std::path::Path::new("*");
+    let repo_path = std::path::Path::new(".");
     let repo_path = rumbas::support::rc::within_repo(&repo_path);
     if let Some(repo_path) = repo_path {
         log::error!("Aborting, it seems we already are within a rumbas project",);
