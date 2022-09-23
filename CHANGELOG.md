@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.3] - 2022-09-23
+
+### Added
+- The `editor_output` command
+
+### Changed
+- Order of keys in a map are now sorted in numbas exam outputs
+
+### Fixed
+- Order of default file application. It used to be random due to the usage of a HashMap which removed the ordering.
+
 ## [0.6.2] - 2022-08-08
 
 ### Fixed

@@ -1,6 +1,6 @@
 [package]
 name = "rumbas"
-version = "0.6.2"
+version = "0.6.3"
 authors = ["Jesse Hoobergs <jesse@hoobergs.be>"]
 description = "Make online exercises great again!"
 edition = "2021"
