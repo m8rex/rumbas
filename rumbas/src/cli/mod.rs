@@ -5,6 +5,7 @@ mod fmt;
 mod import;
 mod init;
 pub mod logger;
+mod rc;
 mod schema;
 mod update_repo;
 mod watch;

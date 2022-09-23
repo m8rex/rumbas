@@ -49,45 +49,58 @@ macro_rules! read_question {
 }
 
 pub fn import(path: String, is_question: bool) {
-    let path = std::path::Path::new(&path);
-    if is_question {
-        let question_res = read_question!(path);
-        match question_res {
-            Ok(question) => {
-                let rumbas_question: QuestionPath = question.to_rumbas();
-                for cpt in rumbas_question.data.custom_part_types.iter() {
-                    create_custom_part_type(cpt.to_owned());
+    let repo_path = std::path::Path::new("*");
+    let repo_path = rumbas::support::rc::within_repo(&repo_path);
+    if let Some(repo_path) = repo_path {
+        if !crate::cli::rc::check_rc(&repo_path, false) {
+            std::process::exit(1);
+        }
+        let path = std::path::Path::new(&path);
+        if is_question {
+            let question_res = read_question!(path);
+            match question_res {
+                Ok(question) => {
+                    let rumbas_question: QuestionPath = question.to_rumbas();
+                    for cpt in rumbas_question.data.custom_part_types.iter() {
+                        create_custom_part_type(cpt.to_owned());
+                    }
+                    create_question(rumbas_question);
                 }
-                create_question(rumbas_question);
+                Err(e) => {
+                    log::error!("{:?}", e);
+                    std::process::exit(1)
+                }
             }
-            Err(e) => {
-                log::error!("{:?}", e);
-                std::process::exit(1)
+        } else {
+            let exam_res = read_exam!(path);
+            match exam_res {
+                Ok(exam) => {
+                    //println!("{:?}", exam);
+                    let (name, rumbas_exam, qs, cpts) = convert_numbas_exam(exam);
+                    // TODO this will be done automatically on deserialization now?
+                    for qp in qs.into_iter() {
+                        create_question(qp)
+                    }
+                    for cpt in cpts.into_iter() {
+                        create_custom_part_type(cpt);
+                    }
+                    let exam_yaml = rumbas_exam.to_yaml().unwrap();
+                    std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml)
+                        .unwrap();
+                    //fix handle result
+                }
+                Err(e) => {
+                    log::error!("{:?}", e);
+                    std::process::exit(1)
+                }
             }
         }
     } else {
-        let exam_res = read_exam!(path);
-        match exam_res {
-            Ok(exam) => {
-                //println!("{:?}", exam);
-                let (name, rumbas_exam, qs, cpts) = convert_numbas_exam(exam);
-                // TODO this will be done automatically on deserialization now?
-                for qp in qs.into_iter() {
-                    create_question(qp)
-                }
-                for cpt in cpts.into_iter() {
-                    create_custom_part_type(cpt);
-                }
-                let exam_yaml = rumbas_exam.to_yaml().unwrap();
-                std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml)
-                    .unwrap();
-                //fix handle result
-            }
-            Err(e) => {
-                log::error!("{:?}", e);
-                std::process::exit(1)
-            }
-        }
+        log::error!(
+            "{:?} doesn't seem to belong to a rumbas project.",
+            repo_path
+        );
+        std::process::exit(1);
     }
 }
 

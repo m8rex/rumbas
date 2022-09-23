@@ -17,8 +17,6 @@ mod cli;
 /// See `rumbas help` for usage info
 fn main() {
     let args = Cli::parse();
-    let rumbas_version = crate_version!();
-    let rumbas_version = Version::parse(rumbas_version).unwrap();
 
     let log_level = match (args.quiet, args.verbose) {
         (true, _) => log::LevelFilter::Off,
@@ -29,27 +27,6 @@ fn main() {
     };
 
     cli::logger::setup(log_level).expect("Working logger");
-
-    // Check rc file
-    let rc_res = rumbas::support::rc::read(&Path::new("."));
-    match rc_res {
-        Ok(rc) => {
-            let rc_version = rc.version();
-            if rc_version < rumbas_version && !args.command.can_execute_in_old_version() {
-                log::error!("This repository uses an older rumbas version than the one that is compiling it ({} vs {}).", rc_version, rumbas_version);
-                log::error!("Please execute `rumbas update-repo`.");
-                std::process::exit(1)
-            } else if rc_version > rumbas_version {
-                log::error!("This repository uses a newer rumbas version than the one you are using ({} vs {}).", rc_version, rumbas_version);
-                log::error!("Please update your rumbas version.");
-                std::process::exit(1)
-            }
-        }
-        Err(e) => {
-            log::error!("Could not parse rc file: {}", e);
-            std::process::exit(1)
-        }
-    }
 
     match args.command {
         Command::Import {
@@ -77,14 +54,6 @@ fn main() {
             url_prefix,
         } => cli::create_editor_output(output_path, url_prefix),
     }
-
-    /* else if let Some(matches) = matches.subcommand_matches("watch") {
-        cli::watch(matches)
-    } else if let Some(matches) = matches.subcommand_matches("fmt") {
-        cli::fmt(matches)
-    } else if let Some(matches) = matches.subcommand_matches("editor_output") {
-        cli::create_editor_output(matches)
-    }*/
 }
 
 /// The rumbas cli

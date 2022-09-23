@@ -33,6 +33,9 @@ impl RC {
     pub fn version(&self) -> Version {
         self.version.clone()
     }
+    pub fn from_path(r: &RumbasPath) -> Result<RC, serde_yaml::Error> {
+        read(r.root())
+    }
 }
 
 /// Reads the [RC_FILE_NAME] file
