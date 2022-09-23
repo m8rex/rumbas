@@ -771,7 +771,7 @@
     </span><span class="kw">pub struct </span>QuestionPartCustom {
         <span class="attribute">#[serde(rename=<span class="string">&quot;type&quot;</span>)]
         </span>type_name: String, <span class="comment">// Renamed because of bug in Comparable
-        </span>settings: std::collections::HashMap&lt;String, CustomPartInputTypeValue&gt;
+        </span>settings: std::collections::BTreeMap&lt;String, CustomPartInputTypeValue&gt;
     }
 }
 
@@ -875,4 +875,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>

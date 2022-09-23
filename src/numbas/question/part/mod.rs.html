@@ -367,7 +367,7 @@
     <span class="attribute">#[serde(flatten)]
     </span><span class="kw">pub </span>part_data: QuestionPartSharedData,
     <span class="attribute">#[serde(default)]
-    </span><span class="kw">pub </span>settings: std::collections::HashMap&lt;String, CustomPartInputTypeValue&gt;,
+    </span><span class="kw">pub </span>settings: std::collections::BTreeMap&lt;String, CustomPartInputTypeValue&gt;,
 }
 
 <span class="comment">// TODO: other types
@@ -403,4 +403,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (432abd86f 2022-09-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="numbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
