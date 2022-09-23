@@ -13,8 +13,11 @@ pub fn update(current_rc: RC) -> Option<RC> {
         .matches(&current_version)
     {
         Some(zero_five::update())
-    } else if current_version == Version::new(0, 6, 0) || current_version == Version::new(0, 6, 1) {
-        Some(Version::new(0, 6, 2))
+    } else if current_version == Version::new(0, 6, 0)
+        || current_version == Version::new(0, 6, 1)
+        || current_version == Version::new(0, 6, 2)
+    {
+        Some(Version::new(0, 6, 3))
     } else {
         None
     };
