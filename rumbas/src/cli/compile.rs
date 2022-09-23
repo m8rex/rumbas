@@ -52,7 +52,14 @@ pub fn compile_internal(
         let path = within_repo(&path);
         log::debug!("Found path within rumbas project {:?}", path);
         if let Some(path) = path {
-            files.extend(crate::cli::check::find_all_files(path).into_iter());
+            if crate::cli::rc::check_rc(&path, false) {
+                files.extend(crate::cli::check::find_all_files(path).into_iter());
+            } else {
+                return InternalCompilationResult {
+                    has_failures: true,
+                    created_outputs: vec![],
+                };
+            }
         } else {
             log::error!(
                 "{:?} doesn't seem to belong to a rumbas project.",
@@ -191,13 +198,13 @@ pub fn compile_file(context: &FileCompilationContext, path: &RumbasPath) -> Comp
                 let compiler = NumbasCompiler {
                     use_scorm: context.use_scorm,
                     as_zip: context.as_zip,
-                    exam_path: path.project().to_path_buf(),
+                    exam_path: path.clone(),
                     numbas_locale: numbas_locale.to_str().to_string(),
                     locale: locale.clone(),
                     theme,
                     exam: numbas_exam,
                     minify: context.minify,
-                    output_folder: context.output_folder.clone(),
+                    output_folder: path.keep_root(context.output_folder.as_path()),
                 };
                 if compiler.compile() {
                     passed_compilations.push(PassedRumbasCompileData {
@@ -222,36 +229,37 @@ pub fn compile_file(context: &FileCompilationContext, path: &RumbasPath) -> Comp
 pub struct NumbasCompiler {
     use_scorm: bool,
     as_zip: bool,
-    exam_path: PathBuf,
+    exam_path: RumbasPath,
     locale: String,
     numbas_locale: String,
     theme: String,
     minify: bool,
     exam: numbas::exam::Exam,
-    output_folder: PathBuf,
+    output_folder: RumbasPath,
 }
 
 impl NumbasCompiler {
     /// Return the locale folder within the cache folder
-    fn numbas_exam_folder(&self) -> PathBuf {
-        Path::new(CACHE_FOLDER).join(&self.locale) //TODO, in filename?
+    fn numbas_exam_folder(&self) -> RumbasPath {
+        self.exam_path
+            .keep_root(Path::new(CACHE_FOLDER).join(&self.locale).as_path())
     }
     /// Returns the path where the numbas exam should be saved
     fn numbas_exam_path(&self) -> PathBuf {
-        let numbas_exam_name = self.exam_path.with_extension("exam");
-        self.numbas_exam_folder().join(&numbas_exam_name)
+        let numbas_exam_name = self.exam_path.project().with_extension("exam");
+        self.numbas_exam_folder().absolute().join(&numbas_exam_name)
     }
     /// Returns the locale folder within the output folder
     fn locale_output_folder(&self) -> PathBuf {
-        self.output_folder.join(&self.locale)
+        self.output_folder.absolute().join(&self.locale)
     }
     /// Creates the output path for the generated html
     pub fn output_path(&self) -> PathBuf {
-        let output_file = self.exam_path.with_extension(self.output_extension());
-        self.locale_output_folder()
-            .canonicalize()
-            .unwrap()
-            .join(output_file)
+        let output_file = self
+            .exam_path
+            .project()
+            .with_extension(self.output_extension());
+        self.locale_output_folder().join(output_file)
     }
     /// Return the extension of the output
     fn output_extension(&self) -> &'static str {

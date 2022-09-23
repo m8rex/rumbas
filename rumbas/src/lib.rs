@@ -10,6 +10,11 @@ pub mod question;
 pub mod support;
 pub mod updates;
 
+lazy_static! {
+    pub static ref RUMBAS_VERSION: semver::Version =
+        semver::Version::parse(clap::crate_version!()).unwrap();
+}
+
 pub const QUESTIONS_FOLDER: &str = "questions";
 pub const EXAMS_FOLDER: &str = "exams";
 pub const QUESTION_TEMPLATES_FOLDER: &str = "question_templates";

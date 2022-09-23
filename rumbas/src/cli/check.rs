@@ -45,7 +45,11 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
         let path = within_repo(&path);
         log::debug!("Found path within rumbas project {:?}", path);
         if let Some(path) = path {
-            files.extend(find_all_files(path).into_iter());
+            if crate::cli::rc::check_rc(&path, false) {
+                files.extend(find_all_files(path).into_iter());
+            } else {
+                return Err(());
+            }
         } else {
             log::error!(
                 "{:?} doesn't seem to belong to a rumbas project.",
