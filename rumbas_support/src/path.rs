@@ -80,13 +80,29 @@ impl RumbasPath {
         Self::create(p, self.root_path.as_path())
     }
     pub fn create(path: &Path, root: &Path) -> Option<Self> {
-        let absolute = path.canonicalize().unwrap();
+        let absolute = canonicalize_keep_symlink(path);
         log::debug!("Stripping {:?} from {:?}", root, absolute);
         absolute.strip_prefix(root).ok().map(|r| RumbasPath {
             root_path: root.to_path_buf(),
             project_path: r.to_path_buf(),
-            absolute_path: path.to_path_buf(),
+            absolute_path: absolute.to_path_buf(),
         })
+    }
+}
+
+fn canonicalize_keep_symlink(path: &Path) -> PathBuf {
+    if let Some(p) = path.parent() {
+        if p != Path::new("") {
+            return p.canonicalize().unwrap().join(path.file_name().unwrap());
+        }
+    }
+    if path.is_relative() {
+        Path::new(".")
+            .canonicalize()
+            .unwrap()
+            .join(path.file_name().unwrap())
+    } else {
+        unimplemented!()
     }
 }
 
