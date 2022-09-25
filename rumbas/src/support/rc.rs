@@ -67,7 +67,7 @@ pub fn find_root(p: &Path) -> Option<PathBuf> {
     while let Some(f) = current {
         let possible_file = f.join(RC_FILE_NAME);
         if possible_file.exists() {
-            log::debug!("Found root for {:?}", f);
+            log::debug!("Found root for {:?}", p);
             return Some(f.to_owned());
         }
 
