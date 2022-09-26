@@ -49,7 +49,7 @@ macro_rules! read_question {
 }
 
 pub fn import(path: String, is_question: bool) {
-    let repo_path = std::path::Path::new("*");
+    let repo_path = std::path::Path::new(".");
     let repo_path = rumbas::support::rc::within_repo(&repo_path);
     if let Some(repo_path) = repo_path {
         if !crate::cli::rc::check_rc(&repo_path, false) {
