@@ -116,6 +116,14 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
 </pre><pre class="rust"><code><span class="kw">use </span>comparable::Comparable;
 <span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
 <span class="kw">use </span>schemars::JsonSchema;
@@ -205,11 +213,19 @@
         InputCheckResult::empty()
     }
     <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>str, _val: <span class="kw-2">&amp;</span>serde_yaml::Value) {}
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, _main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="macro">vec!</span>[]
     }
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;) {}
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        _main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+        _files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
+    }
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        _main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
         std::collections::HashSet::new()
     }
 }
@@ -235,4 +251,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

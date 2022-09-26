@@ -1221,12 +1221,12 @@
                 }
                 <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value){
                 }
-                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, _main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
                     Vec::new()
                 }
-                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _main_file_path: <span class="kw-2">&amp;</span>RumbasPath, _files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
                 }
-                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, _main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
                     std::collections::HashSet::new()
                 }
             }
@@ -1286,21 +1286,21 @@
                 <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value){
                     #(<span class="self">self</span>.#field_indexes.insert_template_value(key, val);)*
                 }
-                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
                     <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
                     #(
-                        <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_indexes.files_to_load();
+                        <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_indexes.files_to_load(main_file_path);
                         result.extend(previous_result);
                     )*
                     result
                 }
-                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
-                    #(<span class="self">self</span>.#field_indexes.insert_loaded_files(files);)*
+                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                    #(<span class="self">self</span>.#field_indexes.insert_loaded_files(main_file_path, files);)*
                 }
-                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
                     <span class="kw">let </span><span class="kw-2">mut </span>result = std::collections::HashSet::new();
                     #(
-                        <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_indexes.dependencies();
+                        <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_indexes.dependencies(main_file_path);
                         result.extend(previous_result);
                     )*
                     result
@@ -1455,22 +1455,22 @@
             <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value){
                 #(<span class="self">self</span>.#field_names.insert_template_value(key, val);)*
             }
-            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
                 #(
-                    <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_names.files_to_load();
+                    <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_names.files_to_load(main_file_path);
                     result.extend(previous_result);
                 )*
                 result
             }
 
-            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
-                #(<span class="self">self</span>.#field_names.insert_loaded_files(files);)*
+            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                #(<span class="self">self</span>.#field_names.insert_loaded_files(main_file_path, files);)*
             }
-            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>result = std::collections::HashSet::new();
                 #(
-                    <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_names.dependencies();
+                    <span class="kw">let </span>previous_result = <span class="self">self</span>.#field_names.dependencies(main_file_path);
                     result.extend(previous_result);
                 )*
                 result
@@ -1494,15 +1494,15 @@
             <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value){
                 <span class="self">self</span>.<span class="number">0</span>.insert_template_value(key, val)
             }
-            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
-                <span class="self">self</span>.<span class="number">0</span>.files_to_load()
+            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
+                <span class="self">self</span>.<span class="number">0</span>.files_to_load(main_file_path)
             }
 
-            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
-                <span class="self">self</span>.<span class="number">0</span>.insert_loaded_files(files);
+            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                <span class="self">self</span>.<span class="number">0</span>.insert_loaded_files(main_file_path, files);
             }
-            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
-                <span class="self">self</span>.<span class="number">0</span>.dependencies()
+            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
+                <span class="self">self</span>.<span class="number">0</span>.dependencies(main_file_path)
             }
         }
     });
@@ -1871,7 +1871,7 @@
                         #input_ident::#variant_ident(#(#items),<span class="kw-2">*</span>) =&gt; {
                             <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
                             #(
-                                <span class="kw">let </span>previous_result = #items.files_to_load();
+                                <span class="kw">let </span>previous_result = #items.files_to_load(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -1889,7 +1889,7 @@
                         #input_ident::#variant_ident { #(#items),* } =&gt; {
                             <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::new();
                             #(
-                                <span class="kw">let </span>previous_result = #items.files_to_load();
+                                <span class="kw">let </span>previous_result = #items.files_to_load(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -1930,7 +1930,7 @@
                         .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
                     <span class="macro">quote! </span>{
                         #input_ident::#variant_ident(#(#items),<span class="kw-2">*</span>) =&gt; {
-                            #(#items.insert_loaded_files(files);)*
+                            #(#items.insert_loaded_files(main_file_path, files);)*
                         }
                     }
                 }
@@ -1943,7 +1943,7 @@
                         .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
                     <span class="macro">quote! </span>{
                         #input_ident::#variant_ident { #(#items),* } =&gt; {
-                            #(#items.insert_loaded_files(files));*
+                            #(#items.insert_loaded_files(main_file_path, files));*
                         }
                     }
                 }
@@ -1983,7 +1983,7 @@
                         #input_ident::#variant_ident(#(#items),<span class="kw-2">*</span>) =&gt; {
                             <span class="kw">let </span><span class="kw-2">mut </span>result = std::collections::HashSet::new();
                             #(
-                                <span class="kw">let </span>previous_result = #items.dependencies();
+                                <span class="kw">let </span>previous_result = #items.dependencies(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -2001,7 +2001,7 @@
                         #input_ident::#variant_ident { #(#items),* } =&gt; {
                             <span class="kw">let </span><span class="kw-2">mut </span>result = std::collections::HashSet::new();
                             #(
-                                <span class="kw">let </span>previous_result = #items.dependencies();
+                                <span class="kw">let </span>previous_result = #items.dependencies(main_file_path);
                                 result.extend(previous_result);
                             )*
                             result
@@ -2072,19 +2072,19 @@
                     #(#insert_template_value_variants),*
                 }
             }
-            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
                 <span class="kw">match </span><span class="self">self </span>{
                     #(#files_to_load_variants),*
                 }
             }
 
-            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+            <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
                 <span class="kw">match </span><span class="self">self </span>{
                     #(#insert_loaded_files_variants),*
                 }
             }
 
-            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
                 <span class="kw">match </span><span class="self">self </span>{
                     #(#dependencies_variants),*
                 }
@@ -2141,4 +2141,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

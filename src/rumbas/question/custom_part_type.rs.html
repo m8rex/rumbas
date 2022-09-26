@@ -759,6 +759,7 @@
 <span id="759">759</span>
 <span id="760">760</span>
 <span id="761">761</span>
+<span id="762">762</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::question::extension::Extensions;
 <span class="kw">use </span><span class="kw">crate</span>::question::part::question_part::JMENotes;
 <span class="kw">use </span><span class="kw">crate</span>::support::file_manager::<span class="kw-2">*</span>;
@@ -771,6 +772,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::support::translatable::TranslatableString;
 <span class="kw">use </span><span class="kw">crate</span>::support::yaml::{YamlError, YamlResult};
 <span class="kw">use </span>comparable::Comparable;
+<span class="kw">use </span>rumbas_support::path::RumbasPath;
 <span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
 <span class="kw">use </span>schemars::JsonSchema;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
@@ -843,7 +845,7 @@
 }
 
 <span class="kw">impl </span>CustomPartTypeDefinitionInput {
-    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: PathBuf) -&gt; YamlResult&lt;<span class="self">Self</span>&gt; {
+    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: RumbasPath) -&gt; YamlResult&lt;<span class="self">Self</span>&gt; {
         serde_yaml::from_str(yaml).map_err(|e| YamlError::from(e, file))
     }
     <span class="kw">pub fn </span>to_yaml(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; serde_yaml::Result&lt;String&gt; {
@@ -1521,4 +1523,4 @@
     short_name
 );
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

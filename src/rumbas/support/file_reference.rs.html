@@ -607,9 +607,9 @@
                         error_message: <span class="prelude-val">None</span>,
                     }
                 }
-                <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
+                <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
                     <span class="self">self</span>.file_name.as_ref().map(|file_name| {
-                        TextFileToRead::with_file_name(file_name.clone()).into()
+                        TextFileToRead::with_file_name(file_name.clone(), main_file_path).into()
                     })
                 }
             }
@@ -640,16 +640,16 @@
 
                 <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>str, _val: <span class="kw-2">&amp;</span>serde_yaml::Value) {}
 
-                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
-                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read(main_file_path);
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
                         <span class="macro">vec!</span>[f.into()]
                     }
                     <span class="kw">else </span>{ <span class="macro">vec!</span>[] }
                 }
 
-                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;) {
-                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath, files: <span class="kw-2">&amp;</span>HashMap&lt;FileToLoad, LoadedFile&gt;) {
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read(main_file_path);
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
                         <span class="kw">let </span>file : FileToLoad = f.into();
                         <span class="kw">let </span>file = files.get(<span class="kw-2">&amp;</span>file);
@@ -666,9 +666,9 @@
                     }
                 }
 
-                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
-                    <span class="self">self</span>.file_to_read().map(|a| {
-                        <span class="kw">let </span>p : std::path::PathBuf = a.into();
+                <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
+                    <span class="self">self</span>.file_to_read(main_file_path).map(|a| {
+                        <span class="kw">let </span>p : rumbas_support::path::RumbasPath = a.into();
                         <span class="macro">vec!</span>[p].into_iter().collect()
                     }).unwrap_or_else(std::collections::HashSet::new)
                 }
@@ -717,4 +717,4 @@
     rumbas_check |e| RumbasCheckResult::from_invalid_jme(<span class="kw-2">&amp;</span>e)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

@@ -439,6 +439,28 @@
 <span id="439">439</span>
 <span id="440">440</span>
 <span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::input::<span class="kw-2">*</span>;
 <span class="kw">use </span>comparable::Comparable;
 <span class="kw">use </span>schemars::JsonSchema;
@@ -547,26 +569,33 @@
         }
     }
 
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
-            ValueType::Normal(val) =&gt; val.files_to_load(),
-            ValueType::Template(ts) =&gt; ts.files_to_load(),
+            ValueType::Normal(val) =&gt; val.files_to_load(main_file_path),
+            ValueType::Template(ts) =&gt; ts.files_to_load(main_file_path),
             ValueType::Invalid(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
         }
     }
 
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
         <span class="kw">match </span><span class="self">self </span>{
-            ValueType::Normal(<span class="kw-2">ref mut </span>val) =&gt; val.insert_loaded_files(files),
-            ValueType::Template(<span class="kw-2">ref mut </span>ts) =&gt; ts.insert_loaded_files(files),
+            ValueType::Normal(<span class="kw-2">ref mut </span>val) =&gt; val.insert_loaded_files(main_file_path, files),
+            ValueType::Template(<span class="kw-2">ref mut </span>ts) =&gt; ts.insert_loaded_files(main_file_path, files),
             ValueType::Invalid(_v) =&gt; (),
         }
     }
 
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;<span class="kw">crate</span>::path::RumbasPath&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
-            ValueType::Normal(val) =&gt; val.dependencies(),
-            ValueType::Template(ts) =&gt; ts.dependencies(),
+            ValueType::Normal(val) =&gt; val.dependencies(main_file_path),
+            ValueType::Template(ts) =&gt; ts.dependencies(main_file_path),
             ValueType::Invalid(<span class="kw">_</span>) =&gt; std::collections::HashSet::new(),
         }
     }
@@ -685,21 +714,28 @@
             v.insert_template_value(key, val);
         }
     }
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
-            <span class="prelude-val">Some</span>(v) =&gt; v.files_to_load(),
+            <span class="prelude-val">Some</span>(v) =&gt; v.files_to_load(main_file_path),
             <span class="prelude-val">None </span>=&gt; <span class="macro">vec!</span>[],
         }
     }
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>v) = <span class="self">self</span>.<span class="number">0 </span>{
-            v.insert_loaded_files(files);
+            v.insert_loaded_files(main_file_path, files);
         }
     }
 
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;<span class="kw">crate</span>::path::RumbasPath&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
-            <span class="prelude-val">Some</span>(v) =&gt; v.dependencies(),
+            <span class="prelude-val">Some</span>(v) =&gt; v.dependencies(main_file_path),
             <span class="prelude-val">None </span>=&gt; std::collections::HashSet::new(),
         }
     }
@@ -813,13 +849,21 @@
     }
     <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>str, _val: <span class="kw-2">&amp;</span>serde_yaml::Value) {}
 
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, _main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         Vec::new()
     }
 
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {}
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        _main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+        _files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
+    }
 
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        _main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;<span class="kw">crate</span>::path::RumbasPath&gt; {
         std::collections::HashSet::new()
     }
 }
@@ -881,4 +925,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

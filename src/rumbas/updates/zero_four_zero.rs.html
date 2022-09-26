@@ -900,12 +900,41 @@
 <span id="900">900</span>
 <span id="901">901</span>
 <span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::default::{DefaultFile, DefaultQuestionFileType};
 <span class="kw">use </span><span class="kw">crate</span>::support::file_manager::CACHE;
 <span class="kw">use </span><span class="kw">crate</span>::support::noneable::Noneable;
+<span class="kw">use </span><span class="kw">crate</span>::support::rc::within_repo;
 <span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
+<span class="kw">use </span>rumbas_support::path::RumbasPath;
 <span class="kw">use </span>rumbas_support::preamble::{FileToLoad, LoadedFile};
 <span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 <span class="macro">macro_rules! </span>update_hash {
@@ -943,379 +972,402 @@
 
 <span class="doccomment">/// Update from version 0.4.0 to 0.5.0
 </span><span class="kw">pub fn </span>update() -&gt; semver::Version {
-    <span class="comment">// TODO: extract code to read questions and exams
-    </span><span class="kw">let </span>question_files = CACHE
-        .read_all_questions()
-        .into_iter()
-        .chain(CACHE.read_all_question_templates().into_iter())
-        .filter_map(|lf| <span class="kw">match </span>lf {
-            rumbas_support::input::LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        });
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = within_repo(Path::new(<span class="string">&quot;.&quot;</span>)) {
+        <span class="comment">// TODO: extract code to read questions and exams
+        </span><span class="kw">let </span>question_files = CACHE
+            .read_all_questions(<span class="kw-2">&amp;</span>root)
+            .into_iter()
+            .chain(CACHE.read_all_question_templates(<span class="kw-2">&amp;</span>root).into_iter())
+            .filter_map(|lf| <span class="kw">match </span>lf {
+                rumbas_support::input::LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            });
 
-    <span class="kw">let </span>exam_files = CACHE
-        .read_all_exams()
-        .into_iter()
-        .chain(CACHE.read_all_exam_templates().into_iter())
-        .filter_map(|lf| <span class="kw">match </span>lf {
-            rumbas_support::input::LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        });
+        <span class="kw">let </span>exam_files = CACHE
+            .read_all_exams(<span class="kw-2">&amp;</span>root)
+            .into_iter()
+            .chain(CACHE.read_all_exam_templates(<span class="kw-2">&amp;</span>root).into_iter())
+            .filter_map(|lf| <span class="kw">match </span>lf {
+                rumbas_support::input::LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            });
 
-    <span class="kw">let </span><span class="kw-2">mut </span>questions: Vec&lt;<span class="kw">_</span>&gt; = question_files
-        .filter_map(|lf| {
-            YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                .ok()
-                .map(|a| (lf, a[<span class="number">0</span>].clone()))
-        })
-        .collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>questions: Vec&lt;<span class="kw">_</span>&gt; = question_files
+            .filter_map(|lf| {
+                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                    .ok()
+                    .map(|a| (lf, a[<span class="number">0</span>].clone()))
+            })
+            .collect();
 
-    <span class="kw">let </span><span class="kw-2">mut </span>exams: Vec&lt;<span class="kw">_</span>&gt; = exam_files
-        .filter_map(|lf| {
-            YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                .map(|a| (lf, a[<span class="number">0</span>].clone()))
-                .ok()
-        })
-        .collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>exams: Vec&lt;<span class="kw">_</span>&gt; = exam_files
+            .filter_map(|lf| {
+                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                    .map(|a| (lf, a[<span class="number">0</span>].clone()))
+                    .ok()
+            })
+            .collect();
 
-    <span class="kw">for </span>question <span class="kw">in </span><span class="kw-2">&amp;mut </span>questions {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, question.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question = <span class="macro">update_hash!</span>(question.<span class="number">1</span>.clone() =&gt;
-            <span class="macro">vec!</span>[<span class="string">&quot;advice&quot;</span>, <span class="string">&quot;statement&quot;</span>], update_translatable_string =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;diagnostic_topic_names&quot;</span>], update_translatable_string_vector =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;functions&quot;</span>], update_functions =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;variables&quot;</span>], update_translatable_string_vector =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;parts&quot;</span>], update_parts =&gt;
-        );
-        question.<span class="number">1 </span>= new_question;
-    }
+        <span class="kw">for </span>question <span class="kw">in </span><span class="kw-2">&amp;mut </span>questions {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, question.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question = <span class="macro">update_hash!</span>(question.<span class="number">1</span>.clone() =&gt;
+                <span class="macro">vec!</span>[<span class="string">&quot;advice&quot;</span>, <span class="string">&quot;statement&quot;</span>], update_translatable_string =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;diagnostic_topic_names&quot;</span>], update_translatable_string_vector =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;functions&quot;</span>], update_functions =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;variables&quot;</span>], update_translatable_string_vector =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;parts&quot;</span>], update_parts =&gt;
+            );
+            question.<span class="number">1 </span>= new_question;
+        }
 
-    <span class="kw">for </span>(file, question) <span class="kw">in </span>questions.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>question).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
+        <span class="kw">for </span>(file, question) <span class="kw">in </span>questions.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>question).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
 
-    <span class="kw">for </span>exam <span class="kw">in </span><span class="kw-2">&amp;mut </span>exams {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, exam.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_exam = <span class="macro">update_hash!</span>(exam.<span class="number">1</span>.clone() =&gt;
-            <span class="macro">vec!</span>[<span class="string">&quot;name&quot;</span>], update_translatable_string =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;timing&quot;</span>], update_timing =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;feedback&quot;</span>], update_feedback =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;question_groups&quot;</span>], update_question_groups =&gt;
-        );
-        exam.<span class="number">1 </span>= <span class="kw">if </span>new_exam[<span class="string">&quot;type&quot;</span>] == Yaml::String(<span class="string">&quot;diagnostic&quot;</span>.to_string()) {
-            <span class="macro">update_hash!</span>(new_exam =&gt;
-                <span class="macro">vec!</span>[<span class="string">&quot;diagnostic&quot;</span>], update_diagnostic =&gt;
-            )
-        } <span class="kw">else </span>{
-            new_exam
-        };
-    }
+        <span class="kw">for </span>exam <span class="kw">in </span><span class="kw-2">&amp;mut </span>exams {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, exam.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_exam = <span class="macro">update_hash!</span>(exam.<span class="number">1</span>.clone() =&gt;
+                <span class="macro">vec!</span>[<span class="string">&quot;name&quot;</span>], update_translatable_string =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;timing&quot;</span>], update_timing =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;feedback&quot;</span>], update_feedback =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;question_groups&quot;</span>], update_question_groups =&gt;
+            );
+            exam.<span class="number">1 </span>= <span class="kw">if </span>new_exam[<span class="string">&quot;type&quot;</span>] == Yaml::String(<span class="string">&quot;diagnostic&quot;</span>.to_string()) {
+                <span class="macro">update_hash!</span>(new_exam =&gt;
+                    <span class="macro">vec!</span>[<span class="string">&quot;diagnostic&quot;</span>], update_diagnostic =&gt;
+                )
+            } <span class="kw">else </span>{
+                new_exam
+            };
+        }
 
-    <span class="kw">for </span>(file, exam) <span class="kw">in </span>exams.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>exam).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
+        <span class="kw">for </span>(file, exam) <span class="kw">in </span>exams.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>exam).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
 
-    <span class="kw">let </span>default_files = <span class="kw">crate</span>::support::file_manager::CACHE
-        .find_default_folders()
-        .into_iter()
-        .flat_map(|folder| <span class="kw">crate</span>::support::file_manager::CACHE.read_folder(<span class="kw-2">&amp;</span>folder.path()))
-        .filter_map(|entry| <span class="kw">match </span>entry {
-            <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::Folder(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
-            <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::File(f) =&gt; <span class="prelude-val">Some</span>(f),
-        })
-        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>default_files = <span class="kw">crate</span>::support::file_manager::CACHE
+            .find_default_folders(<span class="kw-2">&amp;</span>root)
+            .into_iter()
+            .flat_map(|folder| <span class="kw">crate</span>::support::file_manager::CACHE.read_folder(<span class="kw-2">&amp;</span>folder.path()))
+            .filter_map(|entry| <span class="kw">match </span>entry {
+                <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::Folder(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::File(f) =&gt; <span class="prelude-val">Some</span>(f),
+            })
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="kw">let </span>default_question_files: Vec&lt;<span class="kw">_</span>&gt; = default_files
-        .iter()
-        .filter_map(|file| &lt;DefaultFile&lt;DefaultQuestionFileType&gt;&gt;::from_path(<span class="kw-2">&amp;</span>file.path()))
-        .collect();
-    <span class="kw">let </span><span class="kw-2">mut </span>default_questions: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::Question =&gt; {
-                <span class="kw">let </span>lf_opt = CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: <span class="bool-val">false</span>,
-                });
-                lf_opt
-                    .and_then(|lf| <span class="kw">match </span>lf {
-                        LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-                        <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        <span class="kw">let </span>default_question_files: Vec&lt;<span class="kw">_</span>&gt; = default_files
+            .iter()
+            .filter_map(|file| &lt;DefaultFile&lt;DefaultQuestionFileType&gt;&gt;::from_path(<span class="kw-2">&amp;</span>file.path()))
+            .collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>default_questions: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::Question =&gt; {
+                    <span class="kw">let </span>lf_opt = CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
+                    });
+                    lf_opt
+                        .and_then(|lf| <span class="kw">match </span>lf {
+                            LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                        })
+                        .and_then(|lf| {
+                            YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                                .ok()
+                                .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
+                        })
+                }
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            })
+            .collect();
+
+        <span class="kw">for </span>default_question <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_questions {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question = <span class="macro">update_hash!</span>(default_question.<span class="number">1</span>.clone() =&gt;
+                <span class="macro">vec!</span>[<span class="string">&quot;advice&quot;</span>, <span class="string">&quot;statement&quot;</span>], update_translatable_string =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;diagnostic_topic_names&quot;</span>], update_translatable_string_vector =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;functions&quot;</span>], update_functions =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;variables&quot;</span>], update_translatable_string_vector =&gt; :
+                <span class="macro">vec!</span>[<span class="string">&quot;parts&quot;</span>], update_parts =&gt;
+            );
+            default_question.<span class="number">1 </span>= <span class="kw">if </span>default_question.<span class="number">0</span>.file_path.in_main_folder(<span class="string">&quot;./defaults&quot;</span>) {
+                <span class="comment">// TODO
+                </span><span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question.<span class="number">0</span>.file_path.display()
+                );
+                <span class="macro">update_hash!</span>(new_question =&gt;
+                <span class="macro">vec!</span>[<span class="string">&quot;extensions&quot;</span>], update_extensions =&gt;
+                )
+            } <span class="kw">else </span>{
+                new_question
+            };
+        }
+
+        <span class="kw">for </span>(file, default_question) <span class="kw">in </span>default_questions.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
+
+        <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::QuestionPartJME
+                | DefaultQuestionFileType::QuestionPartGapFill
+                | DefaultQuestionFileType::QuestionPartChooseOne
+                | DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartNumberEntry
+                | DefaultQuestionFileType::QuestionPartPatternMatch
+                | DefaultQuestionFileType::QuestionPartInformation
+                | DefaultQuestionFileType::QuestionPartExtension
+                | DefaultQuestionFileType::QuestionPartGapFillGapJME
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseOne
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartGapFillGapNumberEntry
+                | DefaultQuestionFileType::QuestionPartGapFillGapPatternMatch
+                | DefaultQuestionFileType::QuestionPartGapFillGapInformation
+                | DefaultQuestionFileType::QuestionPartGapFillGapExtension =&gt; {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
                     })
-                    .and_then(|lf| {
-                        YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                            .ok()
-                            .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
+                }
+                DefaultQuestionFileType::Question =&gt; <span class="prelude-val">None</span>,
+            })
+            .filter_map(|lf| {
+                <span class="kw">match </span>lf {
+                    LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
+                })
+            })
+            .collect();
+
+        <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
+            default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part
+                .<span class="number">0
+                </span>.file_path
+                .in_main_folder(<span class="string">&quot;./defaults&quot;</span>)
+            {
+                <span class="comment">// TODO
+                </span><span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question_part.<span class="number">0</span>.file_path.display()
+                );
+                <span class="comment">//add_default_answer_display(new_question_part)
+                </span>new_question_part
+                <span class="comment">// TODO?
+            </span>} <span class="kw">else </span>{
+                new_question_part
+            };
+        }
+
+        <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
+
+        <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::QuestionPartJME
+                | DefaultQuestionFileType::QuestionPartGapFillGapJME =&gt; {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
                     })
-            }
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        })
-        .collect();
-
-    <span class="kw">for </span>default_question <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_questions {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question = <span class="macro">update_hash!</span>(default_question.<span class="number">1</span>.clone() =&gt;
-            <span class="macro">vec!</span>[<span class="string">&quot;advice&quot;</span>, <span class="string">&quot;statement&quot;</span>], update_translatable_string =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;diagnostic_topic_names&quot;</span>], update_translatable_string_vector =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;functions&quot;</span>], update_functions =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;variables&quot;</span>], update_translatable_string_vector =&gt; :
-            <span class="macro">vec!</span>[<span class="string">&quot;parts&quot;</span>], update_parts =&gt;
-        );
-        default_question.<span class="number">1 </span>= <span class="kw">if </span>default_question.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="comment">// TODO
-            </span><span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question.<span class="number">0</span>.file_path.display()
-            );
-            <span class="macro">update_hash!</span>(new_question =&gt;
-            <span class="macro">vec!</span>[<span class="string">&quot;extensions&quot;</span>], update_extensions =&gt;
-            )
-        } <span class="kw">else </span>{
-            new_question
-        };
-    }
-
-    <span class="kw">for </span>(file, default_question) <span class="kw">in </span>default_questions.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
-
-    <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::QuestionPartJME
-            | DefaultQuestionFileType::QuestionPartGapFill
-            | DefaultQuestionFileType::QuestionPartChooseOne
-            | DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartNumberEntry
-            | DefaultQuestionFileType::QuestionPartPatternMatch
-            | DefaultQuestionFileType::QuestionPartInformation
-            | DefaultQuestionFileType::QuestionPartExtension
-            | DefaultQuestionFileType::QuestionPartGapFillGapJME
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseOne
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartGapFillGapNumberEntry
-            | DefaultQuestionFileType::QuestionPartGapFillGapPatternMatch
-            | DefaultQuestionFileType::QuestionPartGapFillGapInformation
-            | DefaultQuestionFileType::QuestionPartGapFillGapExtension =&gt; {
-                CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: <span class="bool-val">false</span>,
+                }
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            })
+            .filter_map(|lf| {
+                <span class="kw">match </span>lf {
+                    LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
                 })
-            }
-            DefaultQuestionFileType::Question =&gt; <span class="prelude-val">None</span>,
-        })
-        .filter_map(|lf| {
-            <span class="kw">match </span>lf {
-                LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
             })
-        })
-        .collect();
+            .collect();
 
-    <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
-        default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="comment">// TODO
-            </span><span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question_part.<span class="number">0</span>.file_path.display()
-            );
-            <span class="comment">//add_default_answer_display(new_question_part)
-            </span>new_question_part
-            <span class="comment">// TODO?
-        </span>} <span class="kw">else </span>{
-            new_question_part
-        };
-    }
+        <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
+            default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part
+                .<span class="number">0
+                </span>.file_path
+                .in_main_folder(<span class="string">&quot;./defaults&quot;</span>)
+            {
+                <span class="comment">// TODO
+                </span><span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question_part.<span class="number">0</span>.file_path.display()
+                );
+                add_default_answer_display(new_question_part)
+            } <span class="kw">else </span>{
+                new_question_part
+            };
+        }
 
-    <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
+        <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
 
-    <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::QuestionPartJME
-            | DefaultQuestionFileType::QuestionPartGapFillGapJME =&gt; CACHE.read_file(FileToLoad {
-                file_path: d.get_path(),
-                locale_dependant: <span class="bool-val">false</span>,
-            }),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        })
-        .filter_map(|lf| {
-            <span class="kw">match </span>lf {
-                LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+        <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems =&gt; CACHE
+                    .read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
+                    }),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
             })
-        })
-        .collect();
-
-    <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
-        default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="comment">// TODO
-            </span><span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question_part.<span class="number">0</span>.file_path.display()
-            );
-            add_default_answer_display(new_question_part)
-        } <span class="kw">else </span>{
-            new_question_part
-        };
-    }
-
-    <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
-
-    <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartMatchAnswersWithItems
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapMatchAnswersWithItems =&gt; CACHE
-                .read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: <span class="bool-val">false</span>,
-                }),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        })
-        .filter_map(|lf| {
-            <span class="kw">match </span>lf {
-                LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
-            })
-        })
-        .collect();
-
-    <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
-        default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="comment">// TODO
-            </span><span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question_part.<span class="number">0</span>.file_path.display()
-            );
-            add_default_achievables(new_question_part)
-        } <span class="kw">else </span>{
-            new_question_part
-        };
-    }
-
-    <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
-
-    <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::QuestionPartChooseMultiple
-            | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple =&gt; {
-                CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: <span class="bool-val">false</span>,
+            .filter_map(|lf| {
+                <span class="kw">match </span>lf {
+                    LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
                 })
-            }
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        })
-        .filter_map(|lf| {
-            <span class="kw">match </span>lf {
-                LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-            }
-            .and_then(|lf| {
-                YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                    .ok()
-                    .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
             })
-        })
-        .collect();
+            .collect();
 
-    <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
-        <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
-        default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="comment">// TODO
-            </span><span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question_part.<span class="number">0</span>.file_path.display()
-            );
-            add_default_marking_method(new_question_part)
-        } <span class="kw">else </span>{
-            new_question_part
-        };
+        <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
+            default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part
+                .<span class="number">0
+                </span>.file_path
+                .in_main_folder(<span class="string">&quot;./defaults&quot;</span>)
+            {
+                <span class="comment">// TODO
+                </span><span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question_part.<span class="number">0</span>.file_path.display()
+                );
+                add_default_achievables(new_question_part)
+            } <span class="kw">else </span>{
+                new_question_part
+            };
+        }
+
+        <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
+
+        <span class="kw">let </span><span class="kw-2">mut </span>default_question_parts: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::QuestionPartChooseMultiple
+                | DefaultQuestionFileType::QuestionPartGapFillGapChooseMultiple =&gt; {
+                    CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
+                    })
+                }
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            })
+            .filter_map(|lf| {
+                <span class="kw">match </span>lf {
+                    LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                }
+                .and_then(|lf| {
+                    YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                        .ok()
+                        .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
+                })
+            })
+            .collect();
+
+        <span class="kw">for </span>default_question_part <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_question_parts {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question_part.<span class="number">0</span>.file_path.display());
+            <span class="kw">let </span>new_question_part = update_part(default_question_part.<span class="number">1</span>.clone());
+            default_question_part.<span class="number">1 </span>= <span class="kw">if </span>default_question_part
+                .<span class="number">0
+                </span>.file_path
+                .in_main_folder(<span class="string">&quot;./defaults&quot;</span>)
+            {
+                <span class="comment">// TODO
+                </span><span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question_part.<span class="number">0</span>.file_path.display()
+                );
+                add_default_marking_method(new_question_part)
+            } <span class="kw">else </span>{
+                new_question_part
+            };
+        }
+
+        <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
+
+        <span class="macro">log::error!</span>(<span class="string">&quot;Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.&quot;</span>);
+
+        semver::Version::new(<span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>)
+    } <span class="kw">else </span>{
+        <span class="macro">log::error!</span>(<span class="string">&quot;Are you in a rumbas repo?&quot;</span>);
+        <span class="macro">panic!</span>(<span class="string">&quot;Can&#39;t find the rumbas repo&quot;</span>);
     }
-
-    <span class="kw">for </span>(file, default_question_part) <span class="kw">in </span>default_question_parts.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question_part).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
-
-    <span class="macro">log::error!</span>(<span class="string">&quot;Updating to 0.5.0 worked, but some placeholders in translatablestrings might need to be moved. This cannot be fixed automatically.&quot;</span>);
-
-    semver::Version::new(<span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>)
 }
 
 <span class="kw">fn </span>update_translatable_string(yaml: Yaml) -&gt; Yaml {
@@ -1803,4 +1855,4 @@
     chars.as_str()
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

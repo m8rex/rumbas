@@ -78,85 +78,99 @@
 <span id="78">78</span>
 <span id="79">79</span>
 <span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::default::{DefaultFile, DefaultQuestionFileType};
 <span class="kw">use </span><span class="kw">crate</span>::support::file_manager::CACHE;
+<span class="kw">use </span><span class="kw">crate</span>::support::rc::within_repo;
 <span class="kw">use </span>rumbas_support::preamble::{FileToLoad, LoadedFile};
+<span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
 
 <span class="doccomment">/// Update from version 0.5.* to 0.6.0
 </span><span class="kw">pub fn </span>update() -&gt; semver::Version {
-    <span class="comment">// Add rulesets field in default question file
-    </span><span class="kw">let </span>default_files = <span class="kw">crate</span>::support::file_manager::CACHE
-        .find_default_folders()
-        .into_iter()
-        .flat_map(|folder| <span class="kw">crate</span>::support::file_manager::CACHE.read_folder(<span class="kw-2">&amp;</span>folder.path()))
-        .filter_map(|entry| <span class="kw">match </span>entry {
-            <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::Folder(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
-            <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::File(f) =&gt; <span class="prelude-val">Some</span>(f),
-        })
-        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = within_repo(Path::new(<span class="string">&quot;.&quot;</span>)) {
+        <span class="comment">// Add rulesets field in default question file
+        </span><span class="kw">let </span>default_files = <span class="kw">crate</span>::support::file_manager::CACHE
+            .find_default_folders(<span class="kw-2">&amp;</span>root)
+            .into_iter()
+            .flat_map(|folder| <span class="kw">crate</span>::support::file_manager::CACHE.read_folder(<span class="kw-2">&amp;</span>folder.path()))
+            .filter_map(|entry| <span class="kw">match </span>entry {
+                <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::Folder(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+                <span class="kw">crate</span>::support::file_manager::RumbasRepoEntry::File(f) =&gt; <span class="prelude-val">Some</span>(f),
+            })
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-    <span class="kw">let </span>default_question_files: Vec&lt;<span class="kw">_</span>&gt; = default_files
-        .iter()
-        .filter_map(|file| &lt;DefaultFile&lt;DefaultQuestionFileType&gt;&gt;::from_path(<span class="kw-2">&amp;</span>file.path()))
-        .collect();
-    <span class="kw">let </span><span class="kw-2">mut </span>default_questions: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
-        .iter()
-        .filter_map(|d| <span class="kw">match </span>d.get_type() {
-            DefaultQuestionFileType::Question =&gt; {
-                <span class="kw">let </span>lf_opt = CACHE.read_file(FileToLoad {
-                    file_path: d.get_path(),
-                    locale_dependant: <span class="bool-val">false</span>,
-                });
-                lf_opt
-                    .and_then(|lf| <span class="kw">match </span>lf {
-                        LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
-                        <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-                    })
-                    .and_then(|lf| {
-                        YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
-                            .ok()
-                            .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
-                    })
+        <span class="kw">let </span>default_question_files: Vec&lt;<span class="kw">_</span>&gt; = default_files
+            .iter()
+            .filter_map(|file| &lt;DefaultFile&lt;DefaultQuestionFileType&gt;&gt;::from_path(<span class="kw-2">&amp;</span>file.path()))
+            .collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>default_questions: Vec&lt;<span class="kw">_</span>&gt; = default_question_files
+            .iter()
+            .filter_map(|d| <span class="kw">match </span>d.get_type() {
+                DefaultQuestionFileType::Question =&gt; {
+                    <span class="kw">let </span>lf_opt = CACHE.read_file(FileToLoad {
+                        file_path: d.get_path(),
+                        locale_dependant: <span class="bool-val">false</span>,
+                    });
+                    lf_opt
+                        .and_then(|lf| <span class="kw">match </span>lf {
+                            LoadedFile::Normal(n) =&gt; <span class="prelude-val">Some</span>(n),
+                            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                        })
+                        .and_then(|lf| {
+                            YamlLoader::load_from_str(<span class="kw-2">&amp;</span>lf.content[..])
+                                .ok()
+                                .map(|a| (lf.clone(), a[<span class="number">0</span>].clone()))
+                        })
+                }
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+            })
+            .collect();
+
+        <span class="kw">for </span>default_question <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_questions {
+            <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question.<span class="number">0</span>.file_path.display());
+            <span class="kw">if </span>default_question.<span class="number">0</span>.file_path.in_main_folder(<span class="string">&quot;./defaults&quot;</span>) {
+                <span class="macro">log::info!</span>(
+                    <span class="string">&quot;Updating main default file {}&quot;</span>,
+                    default_question.<span class="number">0</span>.file_path.display()
+                );
+                <span class="kw">if let </span>Yaml::Hash(h) = default_question.<span class="number">1</span>.clone() {
+                    default_question.<span class="number">1 </span>= Yaml::Hash(
+                        h.into_iter()
+                            .chain(
+                                <span class="macro">vec!</span>[(
+                                    Yaml::String(<span class="string">&quot;rulesets&quot;</span>.to_string()),
+                                    Yaml::Hash(Vec::new().into_iter().collect()),
+                                )]
+                                .into_iter(),
+                            )
+                            .collect(),
+                    )
+                };
             }
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        })
-        .collect();
-
-    <span class="kw">for </span>default_question <span class="kw">in </span><span class="kw-2">&amp;mut </span>default_questions {
-        <span class="macro">log::info!</span>(<span class="string">&quot;Updating {}&quot;</span>, default_question.<span class="number">0</span>.file_path.display());
-        <span class="kw">if </span>default_question.<span class="number">0</span>.file_path.starts_with(<span class="string">&quot;./defaults&quot;</span>) {
-            <span class="macro">log::info!</span>(
-                <span class="string">&quot;Updating main default file {}&quot;</span>,
-                default_question.<span class="number">0</span>.file_path.display()
-            );
-            <span class="kw">if let </span>Yaml::Hash(h) = default_question.<span class="number">1</span>.clone() {
-                default_question.<span class="number">1 </span>= Yaml::Hash(
-                    h.into_iter()
-                        .chain(
-                            <span class="macro">vec!</span>[(
-                                Yaml::String(<span class="string">&quot;rulesets&quot;</span>.to_string()),
-                                Yaml::Hash(Vec::new().into_iter().collect()),
-                            )]
-                            .into_iter(),
-                        )
-                        .collect(),
-                )
-            };
         }
-    }
 
-    <span class="kw">for </span>(file, default_question) <span class="kw">in </span>default_questions.into_iter() {
-        <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
-        {
-            <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
-            emitter.multiline_strings(<span class="bool-val">true</span>);
-            emitter.dump(<span class="kw-2">&amp;</span>default_question).unwrap(); <span class="comment">// dump the YAML object to a String
-        </span>}
-        std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
-    }
+        <span class="kw">for </span>(file, default_question) <span class="kw">in </span>default_questions.into_iter() {
+            <span class="kw">let </span><span class="kw-2">mut </span>out_str = String::new();
+            {
+                <span class="kw">let </span><span class="kw-2">mut </span>emitter = YamlEmitter::new(<span class="kw-2">&amp;mut </span>out_str);
+                emitter.multiline_strings(<span class="bool-val">true</span>);
+                emitter.dump(<span class="kw-2">&amp;</span>default_question).unwrap(); <span class="comment">// dump the YAML object to a String
+            </span>}
+            std::fs::write(file.file_path, out_str).expect(<span class="string">&quot;Failed writing file&quot;</span>);
+        }
 
-    semver::Version::new(<span class="number">0</span>, <span class="number">6</span>, <span class="number">2</span>)
+        semver::Version::new(<span class="number">0</span>, <span class="number">6</span>, <span class="number">2</span>)
+    } <span class="kw">else </span>{
+        <span class="macro">log::error!</span>(<span class="string">&quot;Are you in a rumbas repo?&quot;</span>);
+        <span class="macro">panic!</span>(<span class="string">&quot;Can&#39;t find the rumbas repo&quot;</span>);
+    }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

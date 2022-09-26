@@ -260,6 +260,13 @@
 <span id="260">260</span>
 <span id="261">261</span>
 <span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
 <span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
 <span class="kw">use </span>comparable::Comparable;
@@ -343,20 +350,27 @@
             item.insert_template_value(key, val);
         }
     }
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            Noneable::NotNone(val) =&gt; val.files_to_load(),
+            Noneable::NotNone(val) =&gt; val.files_to_load(main_file_path),
             <span class="kw">_ </span>=&gt; Vec::new(),
         }
     }
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
         <span class="kw">if let </span>Noneable::NotNone(<span class="kw-2">ref mut </span>item) = <span class="self">self </span>{
-            item.insert_loaded_files(files);
+            item.insert_loaded_files(main_file_path, files);
         }
     }
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            Noneable::NotNone(val) =&gt; val.dependencies(),
+            Noneable::NotNone(val) =&gt; val.dependencies(main_file_path),
             <span class="kw">_ </span>=&gt; std::collections::HashSet::new(),
         }
     }
@@ -523,4 +537,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

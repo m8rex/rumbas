@@ -883,8 +883,26 @@
 <span id="883">883</span>
 <span id="884">884</span>
 <span id="885">885</span>
-</pre><pre class="rust"><code><span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::rc::within_repo;
+<span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
+<span class="kw">use </span>rumbas_support::path::RumbasPath;
 <span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>std::path::PathBuf;
 <span class="kw">use </span>std::{
@@ -925,7 +943,7 @@
                 <span class="bool-val">true </span>=&gt; <span class="self">self
                     </span>.read_localized_file(<span class="kw-2">&amp;</span>file.file_path)
                     .map(rumbas_support::input::LoadedFile::Localized),
-                <span class="bool-val">false </span>=&gt; <span class="self">Self</span>::read_normal_file(<span class="kw-2">&amp;</span>file.file_path)
+                <span class="bool-val">false </span>=&gt; <span class="self">Self</span>::read_normal_file(file.file_path.clone())
                     .map(rumbas_support::input::LoadedFile::Normal),
             };
             <span class="kw">match </span>res {
@@ -950,13 +968,10 @@
         result
     }
 
-    <span class="kw">fn </span>read_normal_file(file_path: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedNormalFile, ()&gt; {
+    <span class="kw">fn </span>read_normal_file(file_path: RumbasPath) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedNormalFile, ()&gt; {
         <span class="macro">log::debug!</span>(<span class="string">&quot;Reading normal file {}.&quot;</span>, file_path.display());
-        <span class="kw">match </span>std::fs::read_to_string(<span class="kw-2">&amp;</span>file_path) {
-            <span class="prelude-val">Ok</span>(content) =&gt; <span class="prelude-val">Ok</span>(LoadedNormalFile {
-                content,
-                file_path: file_path.to_path_buf(),
-            }),
+        <span class="kw">match </span>std::fs::read_to_string(file_path.absolute()) {
+            <span class="prelude-val">Ok</span>(content) =&gt; <span class="prelude-val">Ok</span>(LoadedNormalFile { content, file_path }),
             <span class="prelude-val">Err</span>(e) =&gt; {
                 <span class="macro">log::error!</span>(
                     <span class="string">&quot;Failed read content of {} with error {}&quot;</span>,
@@ -968,15 +983,15 @@
         }
     }
 
-    <span class="kw">fn </span>read_localized_file(<span class="kw-2">&amp;</span><span class="self">self</span>, file_path: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedLocalizedFile, ()&gt; {
+    <span class="kw">fn </span>read_localized_file(<span class="kw-2">&amp;</span><span class="self">self</span>, file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="prelude-ty">Result</span>&lt;LoadedLocalizedFile, ()&gt; {
         <span class="macro">log::debug!</span>(<span class="string">&quot;Reading localized file {}.&quot;</span>, file_path.display());
-        <span class="kw">let </span>file_name = file_path.file_name().unwrap().to_str().unwrap(); <span class="comment">//TODO
-        </span><span class="kw">let </span>file_dir = file_path.parent().ok_or(())<span class="question-mark">?</span>;
+        <span class="kw">let </span>file_name = file_path.project().file_name().unwrap().to_str().unwrap(); <span class="comment">//TODO
+        </span><span class="kw">let </span>file_dir = file_path.keep_root(file_path.project().parent().ok_or(())<span class="question-mark">?</span>);
         <span class="macro">log::debug!</span>(<span class="string">&quot;Looking for localized files in {}.&quot;</span>, file_dir.display());
         <span class="comment">//Look for translation dirs
         </span><span class="kw">let </span><span class="kw-2">mut </span>translated_content = HashMap::new();
         <span class="kw">for </span>(path, locale) <span class="kw">in </span><span class="self">self
-            </span>.read_folder(file_dir)
+            </span>.read_folder(<span class="kw-2">&amp;</span>file_dir)
             .into_iter()
             .filter_map(|e| <span class="kw">match </span>e {
                 RumbasRepoEntry::File(_f) =&gt; <span class="prelude-val">None</span>,
@@ -986,7 +1001,7 @@
                 },
             })
         {
-            <span class="kw">let </span>locale_file_path = path.join(file_name);
+            <span class="kw">let </span>locale_file_path = path.absolute().join(file_name);
             <span class="kw">if </span>locale_file_path.exists() {
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(s) = std::fs::read_to_string(<span class="kw-2">&amp;</span>locale_file_path) {
                     <span class="macro">log::debug!</span>(<span class="string">&quot;Found localized file {}.&quot;</span>, locale_file_path.display());
@@ -997,7 +1012,7 @@
             }
         }
 
-        <span class="kw">let </span>content = <span class="kw">match </span>std::fs::read_to_string(<span class="kw-2">&amp;</span>file_path) {
+        <span class="kw">let </span>content = <span class="kw">match </span>std::fs::read_to_string(file_path.absolute()) {
             <span class="prelude-val">Ok</span>(s) =&gt; <span class="prelude-val">Some</span>(s),
             <span class="prelude-val">Err</span>(e) =&gt; {
                 <span class="macro">log::debug!</span>(
@@ -1009,7 +1024,7 @@
             </span>}
         };
         <span class="prelude-val">Ok</span>(LoadedLocalizedFile {
-            file_path: file_path.to_path_buf(),
+            file_path: file_path.clone(),
             content,
             localized_content: translated_content,
         })
@@ -1017,11 +1032,10 @@
 }
 
 <span class="kw">impl </span>FileManager {
-    <span class="kw">pub fn </span>read_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; Vec&lt;RumbasRepoEntry&gt; {
-        <span class="comment">// TODO: handle symlinks...
-        </span><span class="kw">let </span>map = <span class="self">self</span>.dir_cache.read().expect(<span class="string">&quot;Can read dir cache map&quot;</span>);
+    <span class="kw">pub fn </span>read_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;RumbasRepoEntry&gt; {
+        <span class="kw">let </span>map = <span class="self">self</span>.dir_cache.read().expect(<span class="string">&quot;Can read dir cache map&quot;</span>);
         <span class="macro">log::debug!</span>(<span class="string">&quot;Checking if {} is in the dir_cache.&quot;</span>, path.display());
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = map.get(path) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = map.get(path.absolute()) {
             <span class="macro">log::debug!</span>(<span class="string">&quot;Found {} in the dir_cache.&quot;</span>, path.display());
             val.lock()
                 .expect(<span class="string">&quot;unlock loaded file mutex&quot;</span>)
@@ -1031,14 +1045,20 @@
             std::mem::drop(map); <span class="comment">// remove the read lock
             </span><span class="kw">let </span><span class="kw-2">mut </span>entries = Vec::new();
             <span class="kw">if </span>path.is_dir() {
-                <span class="kw">for </span>entry <span class="kw">in </span>path.read_dir().expect(<span class="string">&quot;read_dir call failed&quot;</span>).flatten()
+                <span class="kw">for </span>entry <span class="kw">in </span>path
+                    .absolute()
+                    .read_dir()
+                    .expect(<span class="string">&quot;read_dir call failed&quot;</span>)
+                    .flatten()
                 <span class="comment">// We only care about the ones that are &#39;Ok&#39;
                 </span>{
-                    entries.push(RumbasRepoEntry::from(<span class="kw-2">&amp;</span>entry.path()));
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(rumbas_path) = path.in_root(<span class="kw-2">&amp;</span>entry.path()) {
+                        entries.push(RumbasRepoEntry::from(rumbas_path));
+                    }
                 }
                 <span class="kw">let </span><span class="kw-2">mut </span>map = <span class="self">self</span>.dir_cache.write().expect(<span class="string">&quot;Can write dir_cache map&quot;</span>);
                 map.insert(
-                    path.to_path_buf(),
+                    path.absolute().to_path_buf(),
                     Mutex::new(RumbasRepoFolderEntries {
                         r#type: RumbasRepoFolderType::from(path),
                         entries: entries.clone(),
@@ -1050,7 +1070,7 @@
             }
         }
     }
-    <span class="kw">fn </span>read_all_folders(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
+    <span class="kw">fn </span>read_all_folders(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
         <span class="self">self</span>.read_folder(path)
             .into_iter()
             .filter_map(|e| <span class="kw">match </span>e {
@@ -1065,9 +1085,8 @@
             .flatten()
             .collect()
     }
-    <span class="kw">pub fn </span>find_default_folders(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
-        <span class="comment">// TODO find repo base
-        </span><span class="self">self</span>.read_all_folders(std::path::Path::new(<span class="string">&quot;.&quot;</span>))
+    <span class="kw">pub fn </span>find_default_folders(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;RumbasRepoFolderData&gt; {
+        <span class="self">self</span>.read_all_folders(<span class="kw-2">&amp;</span>path.keep_root(path.root()))
             .into_iter()
             .filter(|f| f.r#type == RumbasRepoFolderType::DefaultFolder)
             .collect()
@@ -1077,7 +1096,7 @@
 <span class="kw">impl </span>FileManager {
     <span class="kw">fn </span>find_all_yaml_files(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        path: PathBuf,
+        path: RumbasPath,
         wanted_file_type: RumbasRepoFileType,
     ) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>files = Vec::new();
@@ -1101,43 +1120,49 @@
         }
         files
     }
-    <span class="kw">pub fn </span>find_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">pub fn </span>find_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionFile)
     }
-    <span class="kw">pub fn </span>read_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;LoadedFile&gt; {
+    <span class="kw">pub fn </span>read_all_questions_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
         <span class="kw">let </span>files = <span class="self">self</span>.find_all_questions_in_folder(folder_path);
         <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub fn </span>read_all_questions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="self">self</span>.read_all_questions_in_folder(
-            std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER).to_path_buf(),
-        ) <span class="comment">// TODO, find root of rumbas repo by looking for rc file
-    </span>}
-    <span class="kw">pub fn </span>find_all_question_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">pub fn </span>read_all_questions(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER).to_path_buf();
+        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
+        <span class="self">self</span>.read_all_questions_in_folder(folder_path)
+    }
+    <span class="kw">pub fn </span>find_all_question_templates_in_folder(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        folder_path: RumbasPath,
+    ) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
     }
-    <span class="kw">pub fn </span>read_all_question_templates(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER).to_path_buf(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file
-        </span><span class="kw">let </span>files = <span class="self">self</span>.find_all_question_templates_in_folder(folder_path);
+    <span class="kw">pub fn </span>read_all_question_templates(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER).to_path_buf();
+        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
+        <span class="kw">let </span>files = <span class="self">self</span>.find_all_question_templates_in_folder(folder_path);
         <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub fn </span>find_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">pub fn </span>find_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
-    <span class="kw">pub fn </span>read_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;LoadedFile&gt; {
+    <span class="kw">pub fn </span>read_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
         <span class="kw">let </span>files = <span class="self">self</span>.find_all_exams_in_folder(folder_path);
         <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
-    <span class="kw">pub fn </span>read_all_exams(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="self">self</span>.read_all_exams_in_folder(std::path::Path::new(<span class="kw">crate</span>::EXAMS_FOLDER).to_path_buf())
-        <span class="comment">// TODO, find root of rumbas repo by looking for rc file
-    </span>}
-    <span class="kw">pub fn </span>find_all_exam_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: PathBuf) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">pub fn </span>read_all_exams(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAMS_FOLDER).to_path_buf();
+        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
+        <span class="self">self</span>.read_all_exams_in_folder(folder_path)
+    }
+    <span class="kw">pub fn </span>find_all_exam_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
     }
-    <span class="kw">pub fn </span>read_all_exam_templates(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER).to_path_buf(); <span class="comment">// TODO, find root of rumbas repo by looking for rc file
-        </span><span class="kw">let </span>files = <span class="self">self</span>.find_all_exam_templates_in_folder(folder_path);
+    <span class="kw">pub fn </span>read_all_exam_templates(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
+        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER).to_path_buf();
+        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
+        <span class="kw">let </span>files = <span class="self">self</span>.find_all_exam_templates_in_folder(folder_path);
         <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
 }
@@ -1171,7 +1196,7 @@
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;FileToRead&gt; <span class="kw">for </span>PathBuf {
+<span class="kw">impl </span>std::convert::From&lt;FileToRead&gt; <span class="kw">for </span>RumbasPath {
     <span class="kw">fn </span>from(s: FileToRead) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>s {
             FileToRead::Text(t) =&gt; t.into(),
@@ -1184,12 +1209,13 @@
 
 <span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 </span><span class="kw">pub struct </span>TextFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 <span class="kw">impl </span>TextFileToRead {
-    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>with_file_name(file_name: String, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER).join(file_name);
+        <span class="kw">let </span>file_path = main_file_path.keep_root(file_path.as_path());
         <span class="self">Self </span>{ file_path }
     }
 }
@@ -1209,7 +1235,7 @@
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;TextFileToRead&gt; <span class="kw">for </span>PathBuf {
+<span class="kw">impl </span>std::convert::From&lt;TextFileToRead&gt; <span class="kw">for </span>RumbasPath {
     <span class="kw">fn </span>from(s: TextFileToRead) -&gt; <span class="self">Self </span>{
         s.file_path
     }
@@ -1217,14 +1243,15 @@
 
 <span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 </span><span class="kw">pub struct </span>CustomPartTypeFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 <span class="kw">impl </span>CustomPartTypeFileToRead {
-    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>with_file_name(file_name: String, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER)
             .join(file_name)
             .with_extension(<span class="string">&quot;yaml&quot;</span>);
+        <span class="kw">let </span>file_path = main_file_path.keep_root(file_path.as_path());
         <span class="self">Self </span>{ file_path }
     }
 }
@@ -1244,7 +1271,7 @@
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;CustomPartTypeFileToRead&gt; <span class="kw">for </span>PathBuf {
+<span class="kw">impl </span>std::convert::From&lt;CustomPartTypeFileToRead&gt; <span class="kw">for </span>RumbasPath {
     <span class="kw">fn </span>from(s: CustomPartTypeFileToRead) -&gt; <span class="self">Self </span>{
         s.file_path
     }
@@ -1252,14 +1279,15 @@
 
 <span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 </span><span class="kw">pub struct </span>QuestionFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 <span class="kw">impl </span>QuestionFileToRead {
-    <span class="kw">pub fn </span>with_file_name(file_name: String) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>with_file_name(file_name: String, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::QUESTIONS_FOLDER)
             .join(file_name)
             .with_extension(<span class="string">&quot;yaml&quot;</span>);
+        <span class="kw">let </span>file_path = main_file_path.keep_root(file_path.as_path());
         <span class="self">Self </span>{ file_path }
     }
 }
@@ -1279,7 +1307,7 @@
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;QuestionFileToRead&gt; <span class="kw">for </span>PathBuf {
+<span class="kw">impl </span>std::convert::From&lt;QuestionFileToRead&gt; <span class="kw">for </span>RumbasPath {
     <span class="kw">fn </span>from(s: QuestionFileToRead) -&gt; <span class="self">Self </span>{
         s.file_path
     }
@@ -1287,7 +1315,7 @@
 
 <span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 </span><span class="kw">pub struct </span>ExamFileToRead {
-    file_path: PathBuf,
+    file_path: RumbasPath,
 }
 
 <span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>FileToRead {
@@ -1305,7 +1333,7 @@
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>PathBuf {
+<span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>RumbasPath {
     <span class="kw">fn </span>from(s: ExamFileToRead) -&gt; <span class="self">Self </span>{
         s.file_path
     }
@@ -1317,28 +1345,27 @@
     Folder(RumbasRepoFolderData),
 }
 <span class="kw">impl </span>RumbasRepoEntry {
-    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>from(p: RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>p.is_dir() {
             <span class="self">Self</span>::Folder(RumbasRepoFolderData::from(p))
         } <span class="kw">else </span>{
-            <span class="comment">// if p.is_file() { TODO: symlink?
-            </span><span class="self">Self</span>::File(RumbasRepoFileData::from(p))
+            <span class="self">Self</span>::File(RumbasRepoFileData::from(p))
         }
     }
 }
 <span class="attribute">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>RumbasRepoFileData {
     r#type: RumbasRepoFileType,
-    path: PathBuf,
+    path: RumbasPath,
 }
 
 <span class="kw">impl </span>RumbasRepoFileData {
-    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RumbasPath {
         <span class="self">self</span>.path.clone()
     }
-    <span class="kw">pub fn </span>dependency_path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+    <span class="kw">pub fn </span>dependency_path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RumbasPath {
         <span class="kw">match </span><span class="self">self</span>.r#type.clone() {
-            RumbasRepoFileType::LocaleFile(<span class="kw">_</span>, p) =&gt; p,
+            RumbasRepoFileType::LocaleFile(<span class="kw">_</span>, p) =&gt; p.clone(),
             <span class="kw">_ </span>=&gt; <span class="self">self</span>.path(),
         }
     }
@@ -1360,10 +1387,10 @@
 }
 
 <span class="kw">impl </span>RumbasRepoFileData {
-    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>from(path: RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            r#type: RumbasRepoFileType::from(p),
-            path: p.to_owned(),
+            r#type: RumbasRepoFileType::from(<span class="kw-2">&amp;</span>path),
+            path,
         }
     }
 }
@@ -1376,37 +1403,40 @@
     ExamTemplateFile,
     CustomPartTypeFile,
     DefaultFile,
-    LocaleFile(String, PathBuf),
+    LocaleFile(String, RumbasPath),
     File,
 }
 <span class="kw">impl </span>RumbasRepoFileType {
-    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>folder_type = RumbasRepoFolderType::from(p.parent().unwrap());
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>folder_type = RumbasRepoFolderType::from(<span class="kw-2">&amp;</span>p.parent().unwrap());
 
         <span class="kw">if let </span>RumbasRepoFolderType::LocalizedFolder { locale } = folder_type {
-            <span class="kw">let </span>resource_path = p
-                .parent()
-                .unwrap()
-                .parent()
-                .unwrap()
-                .join(p.file_name().unwrap());
+            <span class="kw">let </span>resource_path = p.keep_root(
+                p.project()
+                    .parent()
+                    .unwrap()
+                    .parent()
+                    .unwrap()
+                    .join(p.project().file_name().unwrap())
+                    .as_path(),
+            );
 
             <span class="self">Self</span>::LocaleFile(locale, resource_path)
         } <span class="kw">else if let </span>RumbasRepoFolderType::DefaultFolder = folder_type {
             <span class="self">Self</span>::DefaultFile <span class="comment">// TODO: fix DefaultFile
         </span>} <span class="kw">else if let </span><span class="prelude-val">Some</span>(ext) = p.extension() {
             <span class="kw">if </span>ext == <span class="string">&quot;yaml&quot; </span>{
-                <span class="kw">if </span>p.starts_with(<span class="kw">crate</span>::DEFAULTS_FOLDER) {
+                <span class="kw">if </span>p.in_main_folder(<span class="kw">crate</span>::DEFAULTS_FOLDER) {
                     <span class="self">Self</span>::DefaultFile
-                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::QUESTIONS_FOLDER) {
+                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::QUESTIONS_FOLDER) {
                     <span class="self">Self</span>::QuestionFile
-                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER) {
+                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER) {
                     <span class="self">Self</span>::QuestionTemplateFile
-                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::EXAMS_FOLDER) {
+                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::EXAMS_FOLDER) {
                     <span class="self">Self</span>::ExamFile
-                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER) {
+                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER) {
                     <span class="self">Self</span>::ExamTemplateFile
-                } <span class="kw">else if </span>p.starts_with(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER) {
+                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER) {
                     <span class="self">Self</span>::CustomPartTypeFile
                 } <span class="kw">else </span>{
                     <span class="self">Self</span>::File
@@ -1425,53 +1455,51 @@
     <span class="kw">use </span><span class="kw">super</span>::RumbasRepoFileType;
     <span class="kw">use </span>std::path::Path;
 
+    <span class="kw">fn </span>rumbas_path(s: <span class="kw-2">&amp;</span>str) -&gt; rumbas_support::path::RumbasPath {
+        rumbas_support::path::RumbasPath::test_make(<span class="kw-2">&amp;</span>Path::new(s), <span class="kw-2">&amp;</span>Path::new(<span class="string">&quot;.&quot;</span>))
+    }
+
     <span class="attribute">#[test]
     </span><span class="kw">fn </span>rumbas_repo_file_type() {
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::QuestionFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;questions/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;questions/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            RumbasRepoFileType::LocaleFile(
-                <span class="string">&quot;a&quot;</span>.to_string(),
-                Path::new(<span class="string">&quot;questions/file.yaml&quot;</span>).to_path_buf()
-            ),
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
+            RumbasRepoFileType::LocaleFile(<span class="string">&quot;a&quot;</span>.to_string(), rumbas_path(<span class="string">&quot;questions/file.yaml&quot;</span>)),
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;questions/locale-a/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::ExamFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exams/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::DefaultFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exams/defaults/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            RumbasRepoFileType::LocaleFile(
-                <span class="string">&quot;e&quot;</span>.to_string(),
-                Path::new(<span class="string">&quot;exams/file.yaml&quot;</span>).to_path_buf()
-            ),
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
+            RumbasRepoFileType::LocaleFile(<span class="string">&quot;e&quot;</span>.to_string(), rumbas_path(<span class="string">&quot;exams/file.yaml&quot;</span>)),
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::QuestionTemplateFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::ExamTemplateFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::CustomPartTypeFile,
-            RumbasRepoFileType::from(Path::new(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;custom_part_types/something/file.yaml&quot;</span>))
         );
     }
 }
@@ -1479,20 +1507,20 @@
 <span class="attribute">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>RumbasRepoFolderData {
     r#type: RumbasRepoFolderType,
-    path: PathBuf,
+    path: RumbasPath,
 }
 
 <span class="kw">impl </span>RumbasRepoFolderData {
-    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PathBuf {
+    <span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RumbasPath {
         <span class="self">self</span>.path.clone()
     }
 }
 
 <span class="kw">impl </span>RumbasRepoFolderData {
-    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>from(path: RumbasPath) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            r#type: RumbasRepoFolderType::from(p),
-            path: p.to_owned(),
+            r#type: RumbasRepoFolderType::from(<span class="kw-2">&amp;</span>path),
+            path,
         }
     }
 }
@@ -1511,8 +1539,8 @@
 }
 
 <span class="kw">impl </span>RumbasRepoFolderType {
-    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>Path) -&gt; <span class="self">Self </span>{
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(stem) = p.file_stem() {
+    <span class="kw">pub fn </span>from(p: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(stem) = p.project().file_stem() {
             <span class="kw">if </span>stem == <span class="kw">crate</span>::DEFAULTS_FOLDER {
                 <span class="self">Self</span>::DefaultFolder
             } <span class="kw">else if </span>stem
@@ -1533,7 +1561,7 @@
                 <span class="self">Self</span>::Folder
             }
         } <span class="kw">else </span>{
-            <span class="macro">log::debug!</span>(
+            <span class="macro">log::warn!</span>(
                 <span class="string">&quot;Unkown file_stem for {}, assuming it is just a folder&quot;</span>,
                 p.display()
             );
@@ -1575,15 +1603,15 @@
             }
         }
         <span class="kw">impl </span><span class="macro-nonterminal">$ti </span>{
-            <span class="kw">fn </span>dependency(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FileToRead {
-                &lt;<span class="macro-nonterminal">$read_type</span>&gt;::with_file_name(<span class="self">self</span>.file_name.clone()).into()
+            <span class="kw">fn </span>dependency(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; FileToRead {
+                &lt;<span class="macro-nonterminal">$read_type</span>&gt;::with_file_name(<span class="self">self</span>.file_name.clone(), main_file_path).into()
             }
 
-            <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
+            <span class="kw">pub fn </span>file_to_read(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="prelude-ty">Option</span>&lt;FileToRead&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw">_</span>) = <span class="kw-2">&amp;</span><span class="self">self</span>.data {
                     <span class="prelude-val">None
                 </span>} <span class="kw">else </span>{
-                    <span class="prelude-val">Some</span>(<span class="self">self</span>.dependency().into())
+                    <span class="prelude-val">Some</span>(<span class="self">self</span>.dependency(main_file_path).into())
                 }
             }
         }
@@ -1617,22 +1645,25 @@
                     q.insert_template_value(key, val);
                 }
             }
-            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(file) = <span class="self">self</span>.file_to_read() {
+            <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(file) = <span class="self">self</span>.file_to_read(main_file_path) {
                     <span class="macro">vec!</span>[file.into()]
                 } <span class="kw">else if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>q) = <span class="self">self</span>.data {
                     <span class="comment">// TODO: is this used like this?
-                    </span>q.files_to_load()
+                    </span>q.files_to_load(main_file_path)
                 } <span class="kw">else </span>{
                     <span class="macro">unreachable!</span>();
                 }
             }
-            <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
-                <span class="kw">let </span>path: std::path::PathBuf = <span class="self">self</span>.dependency().into();
+            <span class="kw">fn </span>dependencies(
+                <span class="kw-2">&amp;</span><span class="self">self</span>,
+                main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+            ) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
+                <span class="kw">let </span>path: rumbas_support::path::RumbasPath = <span class="self">self</span>.dependency(main_file_path).into();
                 <span class="kw">let </span>deps: std::collections::HashSet&lt;<span class="kw">_</span>&gt; = <span class="macro">vec!</span>[path].into_iter().collect();
 
                 <span class="kw">let </span>deps = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>data) = <span class="self">self</span>.data {
-                    data.dependencies()
+                    data.dependencies(main_file_path)
                         .into_iter()
                         .chain(deps.into_iter())
                         .collect()
@@ -1644,12 +1675,13 @@
             }
             <span class="kw">fn </span>insert_loaded_files(
                 <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+                main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
                 files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
             ) {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>q) = <span class="self">self</span>.data {
-                    q.insert_loaded_files(files);
+                    q.insert_loaded_files(main_file_path, files);
                 } <span class="kw">else </span>{
-                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read();
+                    <span class="kw">let </span>file = <span class="self">self</span>.file_to_read(main_file_path);
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = file {
                         <span class="kw">let </span>file_to_load: FileToLoad = f.into();
                         <span class="kw">let </span>file = files.get(<span class="kw-2">&amp;</span>file_to_load);
@@ -1662,11 +1694,11 @@
                                 <span class="kw">match </span>data_res {
                                     <span class="prelude-val">Ok</span>(q) =&gt; {
                                         <span class="kw">let </span><span class="kw-2">mut </span>input = q.clone();
-                                        <span class="macro-nonterminal">$combine</span>(<span class="kw-2">&amp;</span>file_to_load.file_path, <span class="kw-2">&amp;mut </span>input);
-                                        <span class="kw">let </span>files_to_load = input.files_to_load();
+                                        <span class="macro-nonterminal">$combine</span>(file_to_load.file_path, <span class="kw-2">&amp;mut </span>input);
+                                        <span class="kw">let </span>files_to_load = input.files_to_load(main_file_path);
                                         <span class="kw">let </span>loaded_files = <span class="kw">crate</span>::support::file_manager::CACHE
                                             .read_files(files_to_load);
-                                        input.insert_loaded_files(<span class="kw-2">&amp;</span>loaded_files);
+                                        input.insert_loaded_files(main_file_path, <span class="kw-2">&amp;</span>loaded_files);
 
                                         <span class="self">self</span>.data = <span class="prelude-val">Some</span>(input)
                                     }
@@ -1769,4 +1801,4 @@
 }
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>create_from_string_type;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

@@ -209,6 +209,10 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains all the data types
 
 </span><span class="kw">pub mod </span>constants;
@@ -241,6 +245,7 @@
 <span class="kw">use </span>navigation::QuestionNavigation;
 <span class="kw">use </span>preamble::Preamble;
 <span class="kw">use </span>resource::ResourcePath;
+<span class="kw">use </span>rumbas_support::path::RumbasPath;
 <span class="kw">use </span>rumbas_support::preamble::<span class="kw-2">*</span>;
 <span class="kw">use </span>schemars::JsonSchema;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
@@ -365,16 +370,19 @@
 }
 
 <span class="kw">impl </span>QuestionInput {
-    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: PathBuf) -&gt; <span class="prelude-ty">Result</span>&lt;QuestionInput, ParseError&gt; {
+    <span class="kw">pub fn </span>from_str(yaml: <span class="kw-2">&amp;</span>str, file: RumbasPath) -&gt; <span class="prelude-ty">Result</span>&lt;QuestionInput, ParseError&gt; {
         <span class="kw">use </span>QuestionFileTypeInput::<span class="kw-2">*</span>;
         <span class="kw">let </span>input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
-            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))<span class="question-mark">?</span>;
+            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))<span class="question-mark">?</span>;
         <span class="kw">match </span>input {
             Normal(e) =&gt; <span class="prelude-val">Ok</span>((<span class="kw-2">*</span>e).<span class="number">0</span>),
             Template(t_res) =&gt; {
                 <span class="kw">let </span>t = t_res.to_normal(); <span class="comment">// TODO?
-                </span><span class="kw">let </span>template_file = Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER)
-                    .join(<span class="macro">format!</span>(<span class="string">&quot;{}.yaml&quot;</span>, t.relative_template_path));
+                </span><span class="kw">let </span>template_file = file.keep_root(
+                    Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER)
+                        .join(<span class="macro">format!</span>(<span class="string">&quot;{}.yaml&quot;</span>, t.relative_template_path))
+                        .as_path(),
+                );
 
                 <span class="kw">let </span>template_yaml = CACHE
                     .read_file(FileToLoad {
@@ -386,10 +394,10 @@
                         LoadedFile::Localized(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
                     })
                     .ok_or_else(|| {
-                        ParseError::FileReadError(FileReadError(template_file.to_path_buf()))
+                        ParseError::FileReadError(FileReadError(template_file.clone()))
                     })<span class="question-mark">?</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>question: QuestionInput = serde_yaml::from_str(<span class="kw-2">&amp;</span>template_yaml)
-                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.to_path_buf())))<span class="question-mark">?</span>;
+                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))<span class="question-mark">?</span>;
                 t.data.iter().for_each(|(k, v)| {
                     question.insert_template_value(k, <span class="kw-2">&amp;</span>v.<span class="number">0</span>);
                 });
@@ -421,4 +429,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>

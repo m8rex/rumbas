@@ -332,6 +332,20 @@
 <span id="332">332</span>
 <span id="333">333</span>
 <span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::to_numbas::ToNumbas;
 <span class="kw">use </span><span class="kw">crate</span>::support::to_rumbas::ToRumbas;
 <span class="kw">use </span>comparable::Comparable;
@@ -430,22 +444,29 @@
             VariableValued::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_template_value(key, val),
         };
     }
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            VariableValued::Variable(s) =&gt; s.files_to_load(),
-            VariableValued::Value(v) =&gt; v.files_to_load(),
+            VariableValued::Variable(s) =&gt; s.files_to_load(main_file_path),
+            VariableValued::Value(v) =&gt; v.files_to_load(main_file_path),
         }
     }
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
-            VariableValued::Variable(<span class="kw-2">ref mut </span>s) =&gt; s.insert_loaded_files(files),
-            VariableValued::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_loaded_files(files),
+            VariableValued::Variable(<span class="kw-2">ref mut </span>s) =&gt; s.insert_loaded_files(main_file_path, files),
+            VariableValued::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_loaded_files(main_file_path, files),
         };
     }
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            VariableValued::Variable(s) =&gt; s.dependencies(),
-            VariableValued::Value(v) =&gt; v.dependencies(),
+            VariableValued::Variable(s) =&gt; s.dependencies(main_file_path),
+            VariableValued::Value(v) =&gt; v.dependencies(main_file_path),
         }
     }
 }
@@ -587,22 +608,29 @@
             <span class="self">Self</span>::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_template_value(key, val),
         };
     }
-    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;FileToLoad&gt; {
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Variable(s) =&gt; s.files_to_load(),
-            <span class="self">Self</span>::Value(v) =&gt; v.files_to_load(),
+            <span class="self">Self</span>::Variable(s) =&gt; s.files_to_load(main_file_path),
+            <span class="self">Self</span>::Value(v) =&gt; v.files_to_load(main_file_path),
         }
     }
-    <span class="kw">fn </span>insert_loaded_files(<span class="kw-2">&amp;mut </span><span class="self">self</span>, files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;) {
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
-            <span class="self">Self</span>::Variable(<span class="kw-2">ref mut </span>s) =&gt; s.insert_loaded_files(files),
-            <span class="self">Self</span>::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_loaded_files(files),
+            <span class="self">Self</span>::Variable(<span class="kw-2">ref mut </span>s) =&gt; s.insert_loaded_files(main_file_path, files),
+            <span class="self">Self</span>::Value(<span class="kw-2">ref mut </span>v) =&gt; v.insert_loaded_files(main_file_path, files),
         };
     }
-    <span class="kw">fn </span>dependencies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; std::collections::HashSet&lt;std::path::PathBuf&gt; {
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span>RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;rumbas_support::path::RumbasPath&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Variable(s) =&gt; s.dependencies(),
-            <span class="self">Self</span>::Value(v) =&gt; v.dependencies(),
+            <span class="self">Self</span>::Variable(s) =&gt; s.dependencies(main_file_path),
+            <span class="self">Self</span>::Value(v) =&gt; v.dependencies(main_file_path),
         }
     }
 }
@@ -667,4 +695,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (e7119a030 2022-09-22)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>
