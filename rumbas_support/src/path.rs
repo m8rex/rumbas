@@ -97,10 +97,11 @@ fn canonicalize_keep_symlink(path: &Path) -> PathBuf {
         }
     }
     if path.is_relative() {
-        Path::new(".")
-            .canonicalize()
-            .unwrap()
-            .join(path.file_name().unwrap())
+        if let Some(file_name) = path.file_name() {
+            Path::new(".").canonicalize().unwrap().join(file_name)
+        } else {
+            Path::new(".").canonicalize().unwrap()
+        }
     } else {
         unimplemented!()
     }
