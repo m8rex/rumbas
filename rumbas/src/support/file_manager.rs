@@ -132,7 +132,6 @@ impl FileManager {
 
 impl FileManager {
     pub fn read_folder(&self, path: &RumbasPath) -> Vec<RumbasRepoEntry> {
-        // TODO: handle symlinks...
         let map = self.dir_cache.read().expect("Can read dir cache map");
         log::debug!("Checking if {} is in the dir_cache.", path.display());
         if let Some(val) = map.get(path.absolute()) {
@@ -449,7 +448,6 @@ impl RumbasRepoEntry {
         if p.is_dir() {
             Self::Folder(RumbasRepoFolderData::from(p))
         } else {
-            // if p.is_file() { TODO: symlink?
             Self::File(RumbasRepoFileData::from(p))
         }
     }

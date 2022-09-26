@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Rumbas execution with absolute paths.
+- Rumbas execution within project subfolder.
+- Support for symlinks
+
 ## [0.6.3] - 2022-09-23
 
 ### Added
