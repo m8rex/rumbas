@@ -88,10 +88,15 @@ pub fn compile_internal(
             log::error!("Compilation for {} failed:", path.display());
             check_result.log(path);
         }
-        log::error!("{} files failed.", failures.len());
+        let successfull = compile_results.len() - failures.len();
+        log::error!(
+            "{} files successfully compiled and {} files failed.",
+            successfull,
+            failures.len()
+        );
         true
     } else {
-        log::info!("All compilations passed.");
+        log::info!("All {} compilations passed.", compile_results.len());
         false
     };
     let created_outputs = compile_results
@@ -348,7 +353,11 @@ impl NumbasCompiler {
                 return false;
             }
             numbas::exam::WriteResult::Ok => {
-                log::info!("Generated and saved exam file for locale {}.", self.locale);
+                log::info!(
+                    "Generated and saved exam file for exam {} with locale {}.",
+                    self.exam_path.project().display(),
+                    self.locale
+                );
 
                 let output = self.execute_numbas();
                 if !output.stdout.is_empty() {
