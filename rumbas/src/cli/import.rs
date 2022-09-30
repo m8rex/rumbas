@@ -1,6 +1,6 @@
 use numbas::exam::Exam as NExam;
 use rumbas::exam::convert_numbas_exam;
-use rumbas::exam::question_group::QuestionPath;
+use rumbas::exam::question_group::{QuestionOrTemplate, QuestionPath};
 use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::question::QuestionFileType;
 use rumbas::support::to_rumbas::ToRumbas;
@@ -60,8 +60,9 @@ pub fn import(path: String, is_question: bool) {
             let question_res = read_question!(path);
             match question_res {
                 Ok(question) => {
-                    let rumbas_question: QuestionPath = question.to_rumbas();
-                    for cpt in rumbas_question.data.custom_part_types.iter() {
+                    let rumbas_question: QuestionOrTemplate = question.to_rumbas();
+                    let data = rumbas_question.clone().data();
+                    for cpt in data.custom_part_types.iter() {
                         create_custom_part_type(cpt.to_owned());
                     }
                     create_question(rumbas_question);
@@ -104,14 +105,19 @@ pub fn import(path: String, is_question: bool) {
     }
 }
 
-fn create_question(qp: QuestionPath) {
-    let q_name = qp.file_name.clone();
-    let q_yaml = QuestionFileType::Normal(Box::new(qp.data))
-        .to_yaml()
-        .unwrap();
-    let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
-    log::info!("Writing to {}", file);
-    std::fs::write(file, q_yaml).unwrap(); //fix handle result
+fn create_question(qf: QuestionOrTemplate) {
+    match qf {
+        QuestionOrTemplate::Normal(qp) => {
+            let q_name = qp.file_name.clone();
+            let q_yaml = QuestionFileType::Normal(Box::new(qp.data))
+                .to_yaml()
+                .unwrap();
+            let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
+            log::info!("Writing to {}", file);
+            std::fs::write(file, q_yaml).unwrap(); //fix handle result
+        }
+        _ => unimplemented!(),
+    }
 }
 
 fn create_custom_part_type(cpt: CustomPartTypeDefinitionPath) {

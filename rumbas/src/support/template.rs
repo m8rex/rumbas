@@ -2,11 +2,11 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, Hash)]
 #[input(name = "TemplateFileInput")]
 #[input(no_examples)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
@@ -15,7 +15,7 @@ pub struct TemplateFile {
     pub relative_template_path: String,
     #[serde(flatten)]
     #[comparable_ignore]
-    pub data: HashMap<String, MyYamlValue>,
+    pub data: BTreeMap<String, MyYamlValue>,
 }
 
 impl Examples for TemplateFileInput {
@@ -62,7 +62,7 @@ impl PartialEq for TemplateFileInputEnum {
 }
 impl Eq for TemplateFileInputEnum {}
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash)]
 pub struct MyYamlValue(pub serde_yaml::Value);
 
 impl Overwrite<MyYamlValue> for MyYamlValue {

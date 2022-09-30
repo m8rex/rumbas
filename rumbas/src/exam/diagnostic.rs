@@ -4,7 +4,7 @@ use crate::exam::locale::SupportedLocale;
 use crate::exam::navigation::DiagnosticNavigation;
 use crate::exam::numbas_settings::NumbasSettings;
 use crate::exam::question_group::QuestionGroup;
-use crate::exam::question_group::QuestionPath;
+use crate::exam::question_group::{QuestionOrTemplate, QuestionPath};
 use crate::exam::timing::Timing;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::extension::Extensions;
@@ -60,7 +60,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
                 qg.clone()
                     .questions
                     .into_iter()
-                    .flat_map(|q| q.data.resources)
+                    .flat_map(|q| q.data().resources)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -71,7 +71,10 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .question_groups
             .iter()
             .flat_map(|qg| {
-                qg.clone().questions.into_iter().map(|q| q.data.extensions) // todo: extract?
+                qg.clone()
+                    .questions
+                    .into_iter()
+                    .map(|q| q.data().extensions) // todo: extract?
             })
             .fold(Extensions::default(), Extensions::combine)
             .to_paths();
@@ -83,7 +86,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
                 qg.clone()
                     .questions
                     .into_iter()
-                    .flat_map(|q| q.data.custom_part_types)
+                    .flat_map(|q| q.data().custom_part_types)
             })
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -286,7 +289,7 @@ pub fn convert_diagnostic_numbas_exam(
     exam: numbas::exam::Exam,
 ) -> (
     DiagnosticExam,
-    Vec<QuestionPath>,
+    Vec<QuestionOrTemplate>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
     let question_groups: Vec<_> = exam.question_groups.to_rumbas();
