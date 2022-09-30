@@ -14,7 +14,7 @@ use crate::exam::diagnostic::DiagnosticExam;
 use crate::exam::locale::Locale;
 use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
-use crate::exam::question_group::QuestionPath;
+use crate::exam::question_group::{QuestionOrTemplate, QuestionPath};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::support::default::combine_exam_with_default_files;
 use crate::support::file_manager::CACHE;
@@ -26,7 +26,7 @@ use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::Display;
 use std::path::Path;
 
@@ -84,7 +84,7 @@ impl ExamInput {
                 serde_yaml::from_str(&yaml)
                     .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))
             } else if file.in_main_folder(crate::QUESTIONS_FOLDER) {
-                let mut data = HashMap::new();
+                let mut data = BTreeMap::new();
                 data.insert(
                     "question".to_string(),
                     serde_yaml::Value::String(
@@ -213,7 +213,7 @@ pub fn convert_numbas_exam(
 ) -> (
     String,
     ExamFileType,
-    Vec<QuestionPath>,
+    Vec<QuestionOrTemplate>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
     let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {

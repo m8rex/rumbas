@@ -281,6 +281,7 @@ pub enum FileToRead {
     Text(TextFileToRead),
     CustomPartType(CustomPartTypeFileToRead),
     Question(QuestionFileToRead),
+    QuestionTemplate(QuestionTemplateFileToRead),
     Exam(ExamFileToRead),
 }
 
@@ -290,6 +291,7 @@ impl std::convert::From<FileToRead> for rumbas_support::input::FileToLoad {
             FileToRead::Text(t) => t.into(),
             FileToRead::CustomPartType(t) => t.into(),
             FileToRead::Question(t) => t.into(),
+            FileToRead::QuestionTemplate(t) => t.into(),
             FileToRead::Exam(t) => t.into(),
         }
     }
@@ -301,6 +303,7 @@ impl std::convert::From<FileToRead> for RumbasPath {
             FileToRead::Text(t) => t.into(),
             FileToRead::CustomPartType(t) => t.into(),
             FileToRead::Question(t) => t.into(),
+            FileToRead::QuestionTemplate(t) => t.into(),
             FileToRead::Exam(t) => t.into(),
         }
     }
@@ -408,6 +411,42 @@ impl std::convert::From<QuestionFileToRead> for rumbas_support::input::FileToLoa
 
 impl std::convert::From<QuestionFileToRead> for RumbasPath {
     fn from(s: QuestionFileToRead) -> Self {
+        s.file_path
+    }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub struct QuestionTemplateFileToRead {
+    file_path: RumbasPath,
+}
+
+impl QuestionTemplateFileToRead {
+    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
+        let file_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER)
+            .join(file_name)
+            .with_extension("yaml");
+        let file_path = main_file_path.keep_root(file_path.as_path());
+        Self { file_path }
+    }
+}
+
+impl std::convert::From<QuestionTemplateFileToRead> for FileToRead {
+    fn from(s: QuestionTemplateFileToRead) -> Self {
+        FileToRead::QuestionTemplate(s)
+    }
+}
+
+impl std::convert::From<QuestionTemplateFileToRead> for rumbas_support::input::FileToLoad {
+    fn from(s: QuestionTemplateFileToRead) -> Self {
+        Self {
+            file_path: s.file_path,
+            locale_dependant: false,
+        }
+    }
+}
+
+impl std::convert::From<QuestionTemplateFileToRead> for RumbasPath {
+    fn from(s: QuestionTemplateFileToRead) -> Self {
         s.file_path
     }
 }
