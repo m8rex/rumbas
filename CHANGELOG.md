@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rumbas execution with absolute paths.
 - Rumbas execution within project subfolder.
 - Support for symlinks
+- Default value support for templated values
+- Load templated questions directly from exam files
 
 ## [0.6.3] - 2022-09-23
 
