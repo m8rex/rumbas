@@ -9,6 +9,7 @@ pub const TEMPLATE_PREFIX: &str = "template";
 #[serde(untagged)]
 pub enum ValueType<T> {
     Template(TemplateString),
+    TemplateWithDefault(TemplateWithDefault<T>),
     Normal(T),
     Invalid(serde_yaml::Value),
 }
@@ -16,6 +17,7 @@ pub enum ValueType<T> {
 #[derive(PartialEq, Debug)]
 pub enum ValueTypeDesc<T: Comparable + PartialEq + std::fmt::Debug> {
     Template(<TemplateString as Comparable>::Desc),
+    TemplateWithDefault(<TemplateWithDefault<T> as Comparable>::Desc),
     Normal(<T as Comparable>::Desc),
     Invalid,
 }
@@ -23,6 +25,7 @@ pub enum ValueTypeDesc<T: Comparable + PartialEq + std::fmt::Debug> {
 #[derive(PartialEq, Debug)]
 pub enum ValueTypeChange<T: Comparable + PartialEq + std::fmt::Debug> {
     BothTemplate(<TemplateString as comparable::Comparable>::Change),
+    BothTemplateWithDefault(<TemplateWithDefault<T> as comparable::Comparable>::Change),
     BothNormal(<T as comparable::Comparable>::Change),
     BothInvalid,
     Different(
@@ -36,6 +39,9 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Val
     fn describe(&self) -> Self::Desc {
         match self {
             ValueType::Template(var0) => ValueTypeDesc::Template(var0.describe()),
+            ValueType::TemplateWithDefault(var0) => {
+                ValueTypeDesc::TemplateWithDefault(var0.describe())
+            }
             ValueType::Normal(var0) => ValueTypeDesc::Normal(var0.describe()),
             ValueType::Invalid(_var0) => ValueTypeDesc::Invalid,
         }
@@ -46,6 +52,13 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable for Val
             (ValueType::Template(self_var0), ValueType::Template(other_var0)) => {
                 let changes_var0 = self_var0.comparison(other_var0);
                 changes_var0.map(ValueTypeChange::BothTemplate)
+            }
+            (
+                ValueType::TemplateWithDefault(self_var0),
+                ValueType::TemplateWithDefault(other_var0),
+            ) => {
+                let changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(ValueTypeChange::BothTemplateWithDefault)
             }
             (ValueType::Normal(self_var0), ValueType::Normal(other_var0)) => {
                 let changes_var0 = self_var0.comparison(other_var0);
@@ -86,6 +99,7 @@ where
         match &self {
             ValueType::Normal(val) => val.find_missing(),
             ValueType::Template(ts) => InputCheckResult::from_missing(Some(ts.yaml())),
+            ValueType::TemplateWithDefault(ts) => ts.find_missing(),
             ValueType::Invalid(v) => {
                 let parsing: Result<T, _> = serde_yaml::from_value(v.clone());
                 InputCheckResult::from_invalid(v, parsing.err())
@@ -101,6 +115,14 @@ where
                     *self = ValueType::Invalid(val.clone());
                 }
             }
+        } else if let ValueType::TemplateWithDefault(ts) = &self {
+            if ts.template_key == key.to_string() {
+                if let Ok(v) = serde_yaml::from_value(val.clone()) {
+                    *self = ValueType::Normal(v);
+                } else {
+                    *self = ValueType::Invalid(val.clone());
+                }
+            }
         } else if let ValueType::Normal(ref mut v) = self {
             v.insert_template_value(key, val);
         }
@@ -110,6 +132,7 @@ where
         match &self {
             ValueType::Normal(val) => val.files_to_load(main_file_path),
             ValueType::Template(ts) => ts.files_to_load(main_file_path),
+            ValueType::TemplateWithDefault(ts) => ts.files_to_load(main_file_path),
             ValueType::Invalid(_) => vec![],
         }
     }
@@ -122,6 +145,9 @@ where
         match self {
             ValueType::Normal(ref mut val) => val.insert_loaded_files(main_file_path, files),
             ValueType::Template(ref mut ts) => ts.insert_loaded_files(main_file_path, files),
+            ValueType::TemplateWithDefault(ref mut ts) => {
+                ts.insert_loaded_files(main_file_path, files)
+            }
             ValueType::Invalid(_v) => (),
         }
     }
@@ -133,6 +159,7 @@ where
         match &self {
             ValueType::Normal(val) => val.dependencies(main_file_path),
             ValueType::Template(ts) => ts.dependencies(main_file_path),
+            ValueType::TemplateWithDefault(ts) => ts.dependencies(main_file_path),
             ValueType::Invalid(_) => std::collections::HashSet::new(),
         }
     }
@@ -145,6 +172,13 @@ impl<T: std::clone::Clone> ValueType<T> {
             ValueType::Normal(val) => val.to_owned(),
             ValueType::Template(ts) => {
                 panic!("missing value for template key {}", ts.clone().key.unwrap())
+            }
+            ValueType::TemplateWithDefault(ts) => {
+                if let Some(d) = ts.default_value.as_ref() {
+                    d.to_owned()
+                } else {
+                    panic!("missing value for template key {}", ts.clone().template_key)
+                }
             }
             ValueType::Invalid(v) => match serde_yaml::to_string(v) {
                 Ok(s) => panic!("invalid yaml in part {}", s),
@@ -160,6 +194,9 @@ impl<T: std::clone::Clone> ValueType<T> {
         match self {
             ValueType::Normal(val) => Some(f(val)),
             ValueType::Template(ts) => panic!("missing value for template key {}", ts.key.unwrap()),
+            ValueType::TemplateWithDefault(ts) => {
+                panic!("missing value for template key {}", ts.template_key)
+            }
             ValueType::Invalid(v) => match serde_yaml::to_string(&v) {
                 Ok(s) => panic!("invalid yaml in part {}", s),
                 _ => panic!("invalid yaml"),
@@ -174,6 +211,12 @@ impl<T: std::clone::Clone> ValueType<T> {
         match self {
             ValueType::Normal(val) => ValueType::Normal(f(val)),
             ValueType::Template(ts) => ValueType::Template(ts),
+            ValueType::TemplateWithDefault(ts) => {
+                ValueType::TemplateWithDefault(TemplateWithDefault {
+                    template_key: ts.template_key.clone(),
+                    default_value: ts.default_value.clone().map(f),
+                })
+            }
             ValueType::Invalid(v) => ValueType::Invalid(v),
         }
     }
@@ -459,5 +502,113 @@ impl std::convert::TryFrom<String> for TemplateString {
 impl std::convert::From<TemplateString> for String {
     fn from(ts: TemplateString) -> Self {
         ts.yaml()
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
+pub struct TemplateWithDefault<T> {
+    template_key: String,
+    default_value: Option<T>,
+}
+
+impl<T> TemplateWithDefault<T> {
+    fn name(&self) -> String {
+        format!("template:{}", self.template_key)
+    }
+}
+
+impl<T> InputInverse for TemplateWithDefault<T> {
+    type Input = TemplateWithDefault<T>;
+    type EnumInput = Self::Input;
+}
+impl<T: Clone + Input> Input for TemplateWithDefault<T> {
+    type Normal = TemplateWithDefault<T>;
+    fn to_normal(&self) -> Self::Normal {
+        self.to_owned()
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        normal.to_owned()
+    }
+    fn find_missing(&self) -> InputCheckResult {
+        if let Some(v) = self.default_value.as_ref() {
+            v.find_missing()
+        } else {
+            InputCheckResult::from_missing(Some(self.name()))
+        }
+    }
+    fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
+        if let Some(ref mut t) = self.default_value {
+            t.insert_template_value(key, val)
+        }
+    }
+
+    fn files_to_load(&self, main_file_path: &crate::path::RumbasPath) -> Vec<FileToLoad> {
+        self.default_value
+            .as_ref()
+            .map(|d| d.files_to_load(main_file_path))
+            .unwrap_or_default()
+    }
+
+    fn insert_loaded_files(
+        &mut self,
+        main_file_path: &crate::path::RumbasPath,
+        files: &std::collections::HashMap<FileToLoad, LoadedFile>,
+    ) {
+        if let Some(ref mut t) = self.default_value {
+            t.insert_loaded_files(main_file_path, files)
+        }
+    }
+
+    fn dependencies(
+        &self,
+        main_file_path: &crate::path::RumbasPath,
+    ) -> std::collections::HashSet<crate::path::RumbasPath> {
+        self.default_value
+            .as_ref()
+            .map(|d| d.dependencies(main_file_path))
+            .unwrap_or_default()
+    }
+}
+
+#[derive(PartialEq, Debug)]
+pub struct TemplateWithDefaultDesc<T: Comparable + PartialEq + std::fmt::Debug> {
+    template_key: <String as comparable::Comparable>::Desc,
+    default_value: <Option<T> as comparable::Comparable>::Desc,
+}
+
+#[derive(PartialEq, Debug)]
+pub enum TemplateWithDefaultChange<T: Comparable + PartialEq + std::fmt::Debug> {
+    TemplateKey(<String as comparable::Comparable>::Change),
+    DefaultValue(<Option<T> as comparable::Comparable>::Change),
+}
+
+impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable
+    for TemplateWithDefault<T>
+{
+    type Desc = TemplateWithDefaultDesc<T>;
+    fn describe(&self) -> Self::Desc {
+        Self::Desc {
+            template_key: self.template_key.describe(),
+            default_value: self.default_value.describe(),
+        }
+    }
+    type Change = Vec<TemplateWithDefaultChange<T>>;
+    fn comparison(&self, other: &Self) -> comparable::Changed<Self::Change> {
+        let changes: Self::Change = vec![
+            self.template_key
+                .comparison(&other.template_key)
+                .map(TemplateWithDefaultChange::TemplateKey),
+            self.default_value
+                .comparison(&other.default_value)
+                .map(TemplateWithDefaultChange::DefaultValue),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        if changes.is_empty() {
+            comparable::Changed::Unchanged
+        } else {
+            comparable::Changed::Changed(changes)
+        }
     }
 }
