@@ -31,47 +31,58 @@ advice:
         nl: nl version of placeholder2
       placeholders: {}
 parts: "template:template_key"
-builtin_constants:
-  e: false
-  pi: false
-  i: false
+builtin_constants: "template:template_key"
 custom_constants: "template:template_key"
 variables:
   nonjmetext§:
     definition: "file:path/to/file"
     description: nonjmetext§
-    template_type: ~
+    template_type: "template:template_key"
     group: nonjmetext§
-variables_test:
-  condition: x^5
-  max_runs: 2
+variables_test: "template:template_key"
 functions:
   nonjmetext§:
-    definition: "file:path/to/file"
+    definition:
+      content:
+        nonjmetext§: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
     language: jme
-    output_type: expression
+    output_type: boolean
     parameters:
       - - nonjmetext§
         - boolean
       - - "template:template_key"
         - decimal
-      - - ~
+      - - template_key: template_key
+          default_value: ~
         - dictionary
-      - - nonjmetext§
+      - - ~
         - expression
-      - - "template:template_key"
+      - - nonjmetext§
         - html
-      - - ~
+      - - "template:template_key"
         - integer
-      - - nonjmetext§
+      - - template_key: template_key
+          default_value: ~
         - key_pair
-      - - "template:template_key"
-        - list
       - - ~
-        - matrix
+        - list
       - - nonjmetext§
-        - nothing
+        - matrix
       - - "template:template_key"
+        - nothing
+      - - template_key: template_key
+          default_value: ~
         - number
       - - ~
         - range
@@ -79,45 +90,39 @@ functions:
         - rational
       - - "template:template_key"
         - set
-      - - ~
+      - - template_key: template_key
+          default_value: ~
         - string
-      - - nonjmetext§
-        - vector
-      - - "template:template_key"
-        - extension_geogebra_applet
       - - ~
-        - "template:template_key"
+        - vector
       - - nonjmetext§
+        - extension_geogebra_applet
+      - - "template:template_key"
+        - "template:template_key"
+      - - template_key: template_key
+          default_value: ~
+        - template_key: template_key
+          default_value: ~
+      - - ~
         - ~
       - "template:template_key"
-preamble:
-  js: "file:path/to/file"
-  css: "file:path/to/file"
-navigation:
-  can_regenerate: false
-  show_title_page: false
-  confirm_when_leaving: false
-extensions:
-  chemistry: false
-  download_text_file: false
-  eukleides: false
-  geogebra: false
-  graphs: false
-  jsx_graph: false
-  linear_algebra: false
-  linear_codes: false
-  optimisation: false
-  permutations: false
-  polynomials: false
-  quantities: false
-  random_person: false
-  stats: false
-  sqlite: false
-  text: false
-  written_number: false
+      - template_key: template_key
+        default_value: ~
+preamble: "template:template_key"
+navigation: "template:template_key"
+extensions: "template:template_key"
 diagnostic_topic_names: "template:template_key"
 resources: "template:template_key"
 custom_part_types: ~
 rulesets:
-  nonjmetext§: "template:template_key"
+  nonjmetext§:
+    type: Display
+    rules:
+      broken_as_fractions: false
+      mixed_fractions: false
+      flat_fractions: false
+      vector_as_row: false
+      always_show_multiplication_sign: false
+      use_dot_as_multiplication_sign: false
+      matrices_without_parentheses: false
 

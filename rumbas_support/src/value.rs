@@ -505,10 +505,26 @@ impl std::convert::From<TemplateString> for String {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
+#[derive(Serialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
 pub struct TemplateWithDefault<T> {
-    template_key: String,
-    default_value: Option<T>,
+    pub template_key: String,
+    pub default_value: Option<T>,
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn parsing_strange_list_doesnt_work() {
+        let yaml = r#"---
+- nonjmetext§
+- "template:test"
+"#;
+
+        let parsed: Result<TemplateWithDefault<String>, _> = serde_yaml::from_str(yaml);
+        println!("{:?}", parsed);
+        assert!(parsed.is_err())
+    }
 }
 
 impl<T> TemplateWithDefault<T> {
@@ -610,5 +626,46 @@ impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable
         } else {
             comparable::Changed::Changed(changes)
         }
+    }
+}
+
+mod serde_templatewithdefault {
+    use super::TemplateWithDefault;
+    use serde::Deserialize;
+
+    impl<'de, T> Deserialize<'de> for TemplateWithDefault<T>
+    where
+        T: serde::Deserialize<'de>,
+    {
+        fn deserialize<D>(deserializer: D) -> Result<TemplateWithDefault<T>, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            let deser_res: Result<TemplateWithDefaultDeserialize<T>, _> =
+                serde::Deserialize::deserialize(deserializer);
+
+            match deser_res {
+                Ok(TemplateWithDefaultDeserialize::Vec(_v)) => Err(serde::de::Error::custom(
+                    "Template with default can't be parsed from vec.",
+                )),
+                Ok(TemplateWithDefaultDeserialize::Normal(v)) => Ok(TemplateWithDefault {
+                    template_key: v.template_key.clone(),
+                    default_value: v.default_value,
+                }),
+                Err(e) => Err(e),
+            }
+        }
+    }
+
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum TemplateWithDefaultDeserialize<T> {
+        Vec(Vec<serde_yaml::Value>),
+        Normal(LocalTemplateWithDefault<T>),
+    }
+    #[derive(Deserialize)]
+    pub struct LocalTemplateWithDefault<T> {
+        template_key: String,
+        default_value: Option<T>,
     }
 }

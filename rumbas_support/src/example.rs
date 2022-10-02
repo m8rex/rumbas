@@ -1,3 +1,4 @@
+use crate::value::TemplateWithDefault;
 use crate::value::{Value, ValueType};
 use std::convert::Into;
 use std::convert::TryInto;
@@ -36,9 +37,13 @@ impl<T: Examples> Examples for ValueType<T> {
             .into_iter()
             .map(ValueType::Normal)
             .chain(
-                vec![ValueType::Template(
-                    "template:template_key".to_string().try_into().unwrap(),
-                )]
+                vec![
+                    ValueType::Template("template:template_key".to_string().try_into().unwrap()),
+                    ValueType::TemplateWithDefault(TemplateWithDefault {
+                        template_key: "template_key".to_string(),
+                        default_value: None, //TODO T::examples().get(0)
+                    }),
+                ]
                 .into_iter(),
             )
             .collect()
@@ -65,7 +70,11 @@ mod valuetype_test {
             vec![
                 ValueType::Normal(examples[0]),
                 ValueType::Normal(examples[1]),
-                ValueType::Template("template:template_key".to_string().try_into().unwrap())
+                ValueType::Template("template:template_key".to_string().try_into().unwrap()),
+                ValueType::TemplateWithDefault(TemplateWithDefault {
+                    template_key: "template_key".to_string(),
+                    default_value: None
+                })
             ]
         )
     }
@@ -103,6 +112,7 @@ mod value_test {
                 Value(Some(valuetype_examples[2].clone())),
                 Value(Some(valuetype_examples[3].clone())),
                 Value(Some(valuetype_examples[4].clone())),
+                Value(Some(valuetype_examples[5].clone())),
                 Value(None)
             ]
         )

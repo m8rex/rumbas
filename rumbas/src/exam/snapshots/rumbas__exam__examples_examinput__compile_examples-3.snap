@@ -3,9 +3,14 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: ~
+locales:
+  template_key: template_key
+  default_value: ~
 name:
-  content: "file:path/to/file"
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
   placeholders:
     placeholder1:
       content:
@@ -18,11 +23,21 @@ name:
         nl: nl version of placeholder2
       placeholders: {}
 navigation:
-  allow_printing: ~
-  browsing_enabled: ~
-  can_move_to_previous: ~
-  can_regenerate: ~
-  confirm_when_leaving: ~
+  allow_printing:
+    template_key: template_key
+    default_value: ~
+  browsing_enabled:
+    template_key: template_key
+    default_value: ~
+  can_move_to_previous:
+    template_key: template_key
+    default_value: ~
+  can_regenerate:
+    template_key: template_key
+    default_value: ~
+  confirm_when_leaving:
+    template_key: template_key
+    default_value: ~
   mode: sequential
   on_leave:
     action: warn_if_not_attempted
@@ -40,14 +55,22 @@ navigation:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  show_names_of_question_groups: ~
+  show_names_of_question_groups:
+    template_key: template_key
+    default_value: ~
   show_results_page: "template:template_key"
-  show_steps: ~
-  show_title_page: ~
+  show_steps:
+    template_key: template_key
+    default_value: ~
+  show_title_page:
+    template_key: template_key
+    default_value: ~
   start_password: "template:template_key"
 timing:
   duration_in_seconds: "template:template_key"
-  allow_pause: ~
+  allow_pause:
+    template_key: template_key
+    default_value: ~
   on_timeout:
     action: warn
     message:
@@ -82,18 +105,39 @@ timing:
           placeholders: {}
 feedback:
   percentage_needed_to_pass: "template:template_key"
-  show_name_of_student: ~
-  show_current_marks: ~
-  show_maximum_marks: ~
-  show_answer_state: ~
-  allow_reveal_answer: ~
+  show_name_of_student:
+    template_key: template_key
+    default_value: ~
+  show_current_marks:
+    template_key: template_key
+    default_value: ~
+  show_maximum_marks:
+    template_key: template_key
+    default_value: ~
+  show_answer_state:
+    template_key: template_key
+    default_value: ~
+  allow_reveal_answer:
+    template_key: template_key
+    default_value: ~
   review:
-    show_score: ~
-    show_feedback: ~
-    show_expected_answer: ~
-    show_advice: ~
+    show_score:
+      template_key: template_key
+      default_value: ~
+    show_feedback:
+      template_key: template_key
+      default_value: ~
+    show_expected_answer:
+      template_key: template_key
+      default_value: ~
+    show_advice:
+      template_key: template_key
+      default_value: ~
   advice:
-    content: "file:path/to/file"
+    content:
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
     placeholders:
       placeholder1:
         content:
@@ -106,7 +150,10 @@ feedback:
           nl: nl version of placeholder2
         placeholders: {}
   intro:
-    content: "file:path/to/file"
+    content:
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
     placeholders:
       placeholder1:
         content:
@@ -118,8 +165,14 @@ feedback:
           en: en version of placeholder2
           nl: nl version of placeholder2
         placeholders: {}
-  feedback_messages: ~
-question_groups: ~
+  feedback_messages:
+    template_key: template_key
+    default_value: ~
+question_groups:
+  template_key: template_key
+  default_value: ~
 numbas_settings:
-  theme: ~
+  theme:
+    template_key: template_key
+    default_value: ~
 

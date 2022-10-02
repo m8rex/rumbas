@@ -1,0 +1,60 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+---
+statement: ~
+advice: ~
+parts: ~
+builtin_constants:
+  e: ~
+  pi: ~
+  i: ~
+custom_constants: ~
+variables:
+  template_key: template_key
+  default_value: ~
+variables_test:
+  condition: ~
+  max_runs: ~
+functions:
+  nonjmetext§:
+    definition:
+      template_key: template_key
+      default_value: ~
+    language: jme
+    output_type: key_pair
+    parameters:
+      template_key: template_key
+      default_value: ~
+preamble:
+  js: ~
+  css: ~
+navigation:
+  can_regenerate: ~
+  show_title_page: ~
+  confirm_when_leaving: ~
+extensions:
+  chemistry: ~
+  download_text_file: ~
+  eukleides: ~
+  geogebra: ~
+  graphs: ~
+  jsx_graph: ~
+  linear_algebra: ~
+  linear_codes: ~
+  optimisation: ~
+  permutations: ~
+  polynomials: ~
+  quantities: ~
+  random_person: ~
+  stats: ~
+  sqlite: ~
+  text: ~
+  written_number: ~
+diagnostic_topic_names: ~
+resources: ~
+custom_part_types: ~
+rulesets:
+  template_key: template_key
+  default_value: ~
+

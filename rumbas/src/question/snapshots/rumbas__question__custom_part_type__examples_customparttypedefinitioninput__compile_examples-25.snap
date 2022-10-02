@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/custom_part_type.rs
 expression: "&example"
-
 ---
 type_name:
   content:
@@ -148,6 +147,74 @@ settings:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
+  - default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    input_type: check_box
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
   - default_value: ~
     documentation_url:
       content: "file:path/to/file"
@@ -214,8 +281,24 @@ settings:
     name: "template:template_key"
     numbas_hint: "template:template_key"
     numbas_label: "template:template_key"
-  - default_value: ~
+  - default_value:
+      template_key: template_key
+      default_value: ~
     documentation_url: "template:template_key"
+    input_type: check_box
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - default_value: ~
+    documentation_url:
+      template_key: template_key
+      default_value: ~
     input_type: check_box
     name: ~
     numbas_hint: ~
@@ -410,6 +493,90 @@ settings:
             nl: nl version of placeholder2
           placeholders: {}
   - default_value:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    evaluate:
+      template_key: template_key
+      default_value: ~
+    input_type: code
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  - default_value:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -492,6 +659,25 @@ settings:
     numbas_label: "template:template_key"
   - default_value: "template:template_key"
     documentation_url: "template:template_key"
+    evaluate:
+      template_key: template_key
+      default_value: ~
+    input_type: code
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
+      template_key: template_key
+      default_value: ~
     evaluate: ~
     input_type: code
     name: ~
@@ -688,6 +874,90 @@ settings:
             nl: nl version of placeholder2
           placeholders: {}
   - default_value:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    evaluate_enclosed_expressions:
+      template_key: template_key
+      default_value: ~
+    input_type: mathematical_expression
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  - default_value:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -770,6 +1040,25 @@ settings:
     numbas_label: "template:template_key"
   - default_value: "template:template_key"
     documentation_url: "template:template_key"
+    evaluate_enclosed_expressions:
+      template_key: template_key
+      default_value: ~
+    input_type: mathematical_expression
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
+      template_key: template_key
+      default_value: ~
     evaluate_enclosed_expressions: ~
     input_type: mathematical_expression
     name: ~
@@ -941,6 +1230,77 @@ settings:
           placeholders: {}
   - default_value: "template:template_key"
     documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    evaluate_enclosed_expressions:
+      template_key: template_key
+      default_value: ~
+    input_type: string
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  - default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -1010,12 +1370,31 @@ settings:
     numbas_label: "template:template_key"
   - default_value: none
     documentation_url: "template:template_key"
+    evaluate_enclosed_expressions:
+      template_key: template_key
+      default_value: ~
+    input_type: string
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - default_value: "template:template_key"
+    documentation_url:
+      template_key: template_key
+      default_value: ~
     evaluate_enclosed_expressions: ~
     input_type: string
     name: ~
     numbas_hint: ~
     numbas_label: ~
-  - default_value: "template:template_key"
+  - default_value:
+      template_key: template_key
+      default_value: ~
     documentation_url: ~
     evaluate_enclosed_expressions: false
     input_type: string
@@ -1119,6 +1498,38 @@ settings:
                 nl: nl version of placeholder2
               placeholders: {}
       - value:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        label:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - value:
           content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -1148,9 +1559,17 @@ settings:
         label: "file:path/to/file"
       - value: "template:template_key"
         label: "template:template_key"
+      - value:
+          template_key: template_key
+          default_value: ~
+        label:
+          template_key: template_key
+          default_value: ~
       - value: ~
         label: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     default_value:
       content:
         nonjmetext§: "file:path/to/file"
@@ -1294,6 +1713,90 @@ settings:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
+  - choices:
+      template_key: template_key
+      default_value: ~
+    default_value:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    input_type: drop_down
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
   - choices: ~
     default_value:
       content: "file:path/to/file"
@@ -1419,6 +1922,38 @@ settings:
                 nl: nl version of placeholder2
               placeholders: {}
       - value:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        label:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - value:
           content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -1448,9 +1983,17 @@ settings:
         label: "file:path/to/file"
       - value: "template:template_key"
         label: "template:template_key"
+      - value:
+          template_key: template_key
+          default_value: ~
+        label:
+          template_key: template_key
+          default_value: ~
       - value: ~
         label: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     default_value: "file:path/to/file"
     documentation_url: "file:path/to/file"
     input_type: drop_down
@@ -1464,9 +2007,28 @@ settings:
     name: "template:template_key"
     numbas_hint: "template:template_key"
     numbas_label: "template:template_key"
-  - choices: ~
+  - choices:
+      template_key: template_key
+      default_value: ~
     default_value: "template:template_key"
     documentation_url: "template:template_key"
+    input_type: drop_down
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - choices: ~
+    default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
+      template_key: template_key
+      default_value: ~
     input_type: drop_down
     name: ~
     numbas_hint: ~
@@ -1529,6 +2091,38 @@ settings:
                 nl: nl version of placeholder2
               placeholders: {}
       - value:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        label:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - value:
           content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -1558,9 +2152,17 @@ settings:
         label: "file:path/to/file"
       - value: "template:template_key"
         label: "template:template_key"
+      - value:
+          template_key: template_key
+          default_value: ~
+        label:
+          template_key: template_key
+          default_value: ~
       - value: ~
         label: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     default_value: ~
     documentation_url: ~
     input_type: drop_down
@@ -1724,6 +2326,74 @@ settings:
           placeholders: {}
   - default_value: "template:template_key"
     documentation_url:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    input_type: percentage
+    name:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_hint:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    numbas_label:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  - default_value:
+      template_key: template_key
+      default_value: ~
+    documentation_url:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -1791,10 +2461,26 @@ settings:
   - default_value: none
     documentation_url: "template:template_key"
     input_type: percentage
+    name:
+      template_key: template_key
+      default_value: ~
+    numbas_hint:
+      template_key: template_key
+      default_value: ~
+    numbas_label:
+      template_key: template_key
+      default_value: ~
+  - default_value: "template:template_key"
+    documentation_url:
+      template_key: template_key
+      default_value: ~
+    input_type: percentage
     name: ~
     numbas_hint: ~
     numbas_label: ~
-  - default_value: "template:template_key"
+  - default_value:
+      template_key: template_key
+      default_value: ~
     documentation_url: ~
     input_type: percentage
     name:
@@ -1840,6 +2526,8 @@ settings:
             nl: nl version of placeholder2
           placeholders: {}
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 can_be_gap: false
 can_be_step: false
 marking_notes:
@@ -1875,8 +2563,30 @@ marking_notes:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  - name: ~
+  - name:
+      template_key: template_key
+      default_value: ~
     description: "template:template_key"
+    expression:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  - name: ~
+    description:
+      template_key: template_key
+      default_value: ~
     expression:
       content: "file:path/to/file"
       placeholders:
@@ -1896,10 +2606,19 @@ marking_notes:
   - name: "template:template_key"
     description: nonjmetext§
     expression: "template:template_key"
-  - name: ~
+  - name:
+      template_key: template_key
+      default_value: ~
     description: none
+    expression:
+      template_key: template_key
+      default_value: ~
+  - name: ~
+    description: "template:template_key"
     expression: ~
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 help_url:
   content:
     nonjmetext§: "file:path/to/file"
@@ -1915,6 +2634,67 @@ help_url:
         nl: nl version of placeholder2
       placeholders: {}
 published: false
-extensions: ~
-input_widget: "template:template_key"
+extensions:
+  chemistry: ~
+  download_text_file: ~
+  eukleides: ~
+  geogebra: ~
+  graphs: ~
+  jsx_graph: ~
+  linear_algebra: ~
+  linear_codes: ~
+  optimisation: ~
+  permutations: ~
+  polynomials: ~
+  quantities: ~
+  random_person: ~
+  stats: ~
+  sqlite: ~
+  text: ~
+  written_number: ~
+input_widget:
+  type: radiogroup
+  hint:
+    value:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    static:
+      template_key: template_key
+      default_value: ~
+  correct_answer:
+    content:
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  choices:
+    value:
+      template_key: template_key
+      default_value: ~
+    static:
+      template_key: template_key
+      default_value: ~
 

@@ -1,0 +1,7 @@
+---
+source: rumbas_support_derive/tests/normal_struct.rs
+expression: "&example"
+---
+field1: ~
+field2: ~
+

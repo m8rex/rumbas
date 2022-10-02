@@ -1,7 +1,6 @@
 ---
 source: rumbas_support_derive/tests/mixed_enum.rs
 expression: "&example"
-
 ---
 field1:
   - Unit
@@ -29,6 +28,16 @@ field1:
       - nonjmetext§
   - Tuple:
       - Struct:
+          field1:
+            template_key: template_key
+            default_value: ~
+          field2:
+            template_key: template_key
+            default_value: ~
+      - false
+      - nonjmetext§
+  - Tuple:
+      - Struct:
           field1: ~
           field2: ~
       - false
@@ -37,6 +46,10 @@ field1:
       a: 1.2
   - Struct:
       a: "template:template_key"
+  - Struct:
+      a:
+        template_key: template_key
+        default_value: ~
   - Struct:
       a: ~
   - TupleOne: Unit
@@ -54,8 +67,18 @@ field1:
         field2: "template:template_key"
   - TupleOne:
       Struct:
+        field1:
+          template_key: template_key
+          default_value: ~
+        field2:
+          template_key: template_key
+          default_value: ~
+  - TupleOne:
+      Struct:
         field1: ~
         field2: ~
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 field2: 1.2
 

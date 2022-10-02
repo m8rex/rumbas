@@ -1,53 +1,96 @@
 ---
 source: rumbas/src/question/custom_part_type.rs
 expression: "&example"
-
 ---
-type_name: "template:template_key"
-description: "template:template_key"
-settings: "template:template_key"
-can_be_gap: "template:template_key"
-can_be_step: "template:template_key"
-marking_notes: "template:template_key"
-help_url: "template:template_key"
-published: "template:template_key"
+type_name:
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+description:
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+settings:
+  template_key: template_key
+  default_value: ~
+can_be_gap:
+  template_key: template_key
+  default_value: ~
+can_be_step:
+  template_key: template_key
+  default_value: ~
+marking_notes:
+  template_key: template_key
+  default_value: ~
+help_url:
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+published:
+  template_key: template_key
+  default_value: ~
 extensions:
-  chemistry: false
-  download_text_file: false
-  eukleides: false
-  geogebra: false
-  graphs: false
-  jsx_graph: false
-  linear_algebra: false
-  linear_codes: false
-  optimisation: false
-  permutations: false
-  polynomials: false
-  quantities: false
-  random_person: false
-  stats: false
-  sqlite: false
-  text: false
-  written_number: false
+  chemistry: ~
+  download_text_file: ~
+  eukleides: ~
+  geogebra: ~
+  graphs: ~
+  jsx_graph: ~
+  linear_algebra: ~
+  linear_codes: ~
+  optimisation: ~
+  permutations: ~
+  polynomials: ~
+  quantities: ~
+  random_person: ~
+  stats: ~
+  sqlite: ~
+  text: ~
+  written_number: ~
 input_widget:
-  type: number
-  hint:
-    value:
-      content: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    static: ~
+  type: string
+  hint: ~
   correct_answer:
-    content: "file:path/to/file"
+    content:
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
     placeholders:
       placeholder1:
         content:
@@ -59,10 +102,7 @@ input_widget:
           en: en version of placeholder2
           nl: nl version of placeholder2
         placeholders: {}
-  allow_fractions:
-    value: ~
-    static: ~
-  allowed_notation_styles:
+  allow_empty:
     value: ~
     static: ~
 

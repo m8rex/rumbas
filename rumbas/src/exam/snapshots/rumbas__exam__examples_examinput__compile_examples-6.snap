@@ -3,48 +3,47 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: ~
-name: ~
+locales: "template:template_key"
+name: "template:template_key"
 navigation:
-  allow_printing: "template:template_key"
-  browsing_enabled: ~
-  can_move_to_previous: ~
-  can_regenerate: "template:template_key"
-  confirm_when_leaving: "template:template_key"
+  allow_printing: false
+  browsing_enabled: "template:template_key"
+  can_move_to_previous: "template:template_key"
+  can_regenerate: false
+  confirm_when_leaving: false
   mode: sequential
   on_leave:
     action: warn_if_not_attempted
-    message: "template:template_key"
-  show_names_of_question_groups: "template:template_key"
-  show_results_page: never
-  show_steps: "template:template_key"
-  show_title_page: "template:template_key"
-  start_password: none
+    message: "file:path/to/file"
+  show_names_of_question_groups: false
+  show_results_page: on_completion
+  show_steps: false
+  show_title_page: false
+  start_password: "file:path/to/file"
 timing:
-  duration_in_seconds: none
-  allow_pause: ~
+  duration_in_seconds: 2
+  allow_pause: "template:template_key"
   on_timeout:
     action: warn
-    message: "template:template_key"
+    message: "file:path/to/file"
   timed_warning:
     action: warn
-    message: "template:template_key"
+    message: "file:path/to/file"
 feedback:
-  percentage_needed_to_pass: none
-  show_name_of_student: ~
-  show_current_marks: ~
-  show_maximum_marks: ~
-  show_answer_state: ~
-  allow_reveal_answer: ~
+  percentage_needed_to_pass: 1.2
+  show_name_of_student: "template:template_key"
+  show_current_marks: "template:template_key"
+  show_maximum_marks: "template:template_key"
+  show_answer_state: "template:template_key"
+  allow_reveal_answer: "template:template_key"
   review:
-    show_score: false
-    show_feedback: false
-    show_expected_answer: false
-    show_advice: false
-  advice: ~
-  intro: ~
-  feedback_messages: ~
-question_groups: ~
+    template_key: template_key
+    default_value: ~
+  advice: "template:template_key"
+  intro: "template:template_key"
+  feedback_messages: "template:template_key"
+question_groups: "template:template_key"
 numbas_settings:
-  theme: nonjmetext§
+  template_key: template_key
+  default_value: ~
 
