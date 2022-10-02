@@ -223,7 +223,7 @@ impl<T: std::clone::Clone> ValueType<T> {
 }
 
 mod value_type_schema {
-    use super::{TemplateString, TemplateWithDefault, ValueType};
+    use super::{TemplateString, ValueType};
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
 
@@ -231,7 +231,6 @@ mod value_type_schema {
     #[serde(untagged)]
     enum ValidValueType<T> {
         Template(TemplateString),
-        TemplateWithDefault(TemplateWithDefault<T>),
         Normal(T),
     }
 
@@ -508,24 +507,8 @@ impl std::convert::From<TemplateString> for String {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
 pub struct TemplateWithDefault<T> {
-    pub template_key: String,
-    pub default_value: Option<T>,
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    #[test]
-    fn parsing_strange_list_doesnt_work() {
-        let yaml = r#"---
-- nonjmetext§
-- "template:test"
-"#;
-
-        let parsed: Result<TemplateWithDefault<String>, _> = serde_yaml::from_str(yaml);
-        println!("{:?}", parsed);
-        assert!(parsed.is_err())
-    }
+    template_key: String,
+    default_value: Option<T>,
 }
 
 impl<T> TemplateWithDefault<T> {

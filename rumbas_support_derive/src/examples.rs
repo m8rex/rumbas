@@ -379,7 +379,6 @@ impl ToTokens for ExamplesReceiver {
                     #[test]
                     fn compile_examples() {
                         for example in <#input_ident>::examples().into_iter() {
-                            println!("{:#?}", example);
                             let item = serde_yaml::to_string(&example);
                             if let Err(ref e) = item {
                                 println!("Examples {:#?}", example);
@@ -389,7 +388,6 @@ impl ToTokens for ExamplesReceiver {
                             }
                             assert!(item.is_ok());
                             let item = item.unwrap();
-                            println!("aaaaa {}", item);
                             let parsed: Result<#input_ident, _> = serde_yaml::from_str(&item[..]);
                             if let Err(ref e) = parsed {
                                 if "No field is set to a not-none value." == &e.to_string()[..] {
@@ -400,7 +398,6 @@ impl ToTokens for ExamplesReceiver {
                             }
                             assert!(parsed.is_ok());
                             let parsed = parsed.unwrap();
-                            println!("{:#?}", parsed);
                             comparable::assert_changes!(&example, &parsed, comparable::Changed::Unchanged);
                             // Should not fail anymore
                             assert_eq!(example, parsed);

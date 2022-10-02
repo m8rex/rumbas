@@ -124,7 +124,7 @@ impl Eq for ResourcePathInputEnum {}
 
 impl ResourcePath {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
-        serde_yaml::to_string(self).map(|d| format!("---\n{}", d))
+        serde_yaml::to_string(self)
     }
 }
 
@@ -149,11 +149,6 @@ test
             resource_name: Value::Normal("test".to_string()),
             resource_path: Value::Normal(Path::new("tmp").to_path_buf()),
         });
-        assert_eq!(
-            r.to_yaml().unwrap(),
-            serde_yaml::to_string(&rid)
-                .map(|d| format!("---\n{}", d))
-                .unwrap()
-        );
+        assert_eq!(r.to_yaml().unwrap(), serde_yaml::to_string(&rid).unwrap());
     }
 }
