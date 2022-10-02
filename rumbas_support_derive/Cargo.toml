@@ -17,5 +17,5 @@ syn = "1.0.75"
 rumbas_support = { path = "../rumbas_support" }
 serde = { version="1.0.110", features=["derive"]}
 serde_yaml = "0.8.13"
-insta = "1.8.0"
+insta = { version ="1.21.0", features=["yaml"] }
 comparable = { version = "0.5.2", features = ["derive"] }

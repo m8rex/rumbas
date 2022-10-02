@@ -55,7 +55,7 @@ git2 = "0.15.0"
 openssl-sys = "*"
 
 [dev-dependencies]
-insta = "1.8.0"
+insta = { version ="1.21.0", features=["yaml"] }
 
 [features]
 # Force openssl-sys to staticly link in the openssl library. Necessary when
