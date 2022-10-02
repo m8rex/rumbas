@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 serde = {version="1.0.110", features=["derive"]}                                
-serde_yaml = "0.8.13"
+serde_yaml = "0.9.13"
 comparable = { version = "0.5.2", features = ["derive"] }
 numbas = { path = "../numbas" }
 rumbas_support_derive = { path = "../rumbas_support_derive" }

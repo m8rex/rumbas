@@ -11,8 +11,9 @@ use serde::Serialize;
 #[derive(Input, RumbasCheck, Examples)]
 #[input(name = "TestInput")]
 #[derive(Clone, Debug, Deserialize, Serialize, Comparable, PartialEq)]
+#[serde(untagged)]
 pub enum Test {
-    Unit,
+    Unit(Unit),
     Tuple(TestOverwrite, bool, String),
     Struct { a: f64 },
     TupleOne(TestOverwrite),
@@ -33,16 +34,24 @@ pub struct Test2 {
 #[input(name = "TestOverwriteInput")]
 #[derive(Debug, Clone, Deserialize, Serialize, Comparable, PartialEq)]
 ///  Hi there
+#[serde(untagged)]
 pub enum TestOverwrite {
-    Unit,
+    Unit(Unit),
     Tuple(bool, f64),
     Struct { field1: bool, field2: f64 },
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "UnitInput")]
+#[derive(Debug, Clone, Deserialize, Serialize, Comparable, PartialEq)]
+pub enum Unit {
+    Unit,
 }
 
 #[test]
 fn create_test2() {
     let _test2 = Test2 {
-        field1: vec![Test::Unit],
+        field1: vec![Test::Unit(Unit::Unit)],
         field2: 65.0,
     };
 
@@ -56,7 +65,7 @@ fn create_test2() {
 
 #[test]
 fn find_missing() {
-    assert_no_missing!(TestInput::Unit);
+    assert_no_missing!(TestInput::Unit(UnitInput::Unit));
 
     assert_no_missing!(TestInput::Tuple(
         TestOverwriteInput::Struct {
