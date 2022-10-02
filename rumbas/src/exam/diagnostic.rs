@@ -172,18 +172,42 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
 #[input(name = "DiagnosticScriptInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
+#[serde(untagged)]
 pub enum DiagnosticScript {
+    Builtin(BuiltinDiagnosticScript),
+    Custom(JMENotesTranslatableString),
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[input(name = "BuiltinDiagnosticScriptInput")]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum BuiltinDiagnosticScript {
     Mastery,
     Diagnosys,
-    Custom(JMENotesTranslatableString),
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn serialize_mastery() {
+        let s = DiagnosticScript::Builtin(BuiltinDiagnosticScript::Mastery);
+        let yaml = serde_yaml::to_string(&s);
+        assert_eq!("mastery\n".to_string(), yaml.unwrap());
+    }
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
     fn to_numbas(&self, _locale: &str) -> numbas::exam::diagnostic::DiagnosticScript {
         match self {
-            DiagnosticScript::Mastery => numbas::exam::diagnostic::DiagnosticScript::Mastery,
+            DiagnosticScript::Builtin(BuiltinDiagnosticScript::Mastery) => {
+                numbas::exam::diagnostic::DiagnosticScript::Mastery
+            }
+            DiagnosticScript::Builtin(BuiltinDiagnosticScript::Diagnosys) => {
+                numbas::exam::diagnostic::DiagnosticScript::Diagnosys
+            }
             DiagnosticScript::Custom(_) => numbas::exam::diagnostic::DiagnosticScript::Custom,
-            DiagnosticScript::Diagnosys => numbas::exam::diagnostic::DiagnosticScript::Diagnosys,
         }
     }
 }
@@ -192,8 +216,7 @@ impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
     fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
         match self {
             DiagnosticScript::Custom(s) => s.to_numbas(locale),
-            DiagnosticScript::Diagnosys => Default::default(),
-            DiagnosticScript::Mastery => Default::default(),
+            DiagnosticScript::Builtin(_) => Default::default(),
         }
     }
 }
@@ -201,8 +224,12 @@ impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
 impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
     fn to_rumbas(&self) -> DiagnosticScript {
         match self.script {
-            numbas::exam::diagnostic::DiagnosticScript::Mastery => DiagnosticScript::Mastery,
-            numbas::exam::diagnostic::DiagnosticScript::Diagnosys => DiagnosticScript::Diagnosys,
+            numbas::exam::diagnostic::DiagnosticScript::Mastery => {
+                DiagnosticScript::Builtin(BuiltinDiagnosticScript::Mastery)
+            }
+            numbas::exam::diagnostic::DiagnosticScript::Diagnosys => {
+                DiagnosticScript::Builtin(BuiltinDiagnosticScript::Diagnosys)
+            }
             numbas::exam::diagnostic::DiagnosticScript::Custom => {
                 DiagnosticScript::Custom(self.custom_script.clone().into())
             }

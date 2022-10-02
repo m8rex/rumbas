@@ -96,6 +96,7 @@ impl QuestionPartMatrixDimensions {
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[serde(untagged)]
 pub enum QuestionPartMatrixDimension {
     Fixed(ReverseVariableValued<usize>),
     Resizable(Box<QuestionPartMatrixRangedDimension>),

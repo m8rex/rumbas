@@ -36,9 +36,13 @@ impl<T: Examples> Examples for ValueType<T> {
             .into_iter()
             .map(ValueType::Normal)
             .chain(
-                vec![ValueType::Template(
-                    "template:template_key".to_string().try_into().unwrap(),
-                )]
+                vec![
+                    ValueType::Template("template:template_key".to_string().try_into().unwrap()),
+                    /*ValueType::TemplateWithDefault(crate::value::TemplateWithDefault {
+                        template_key: "template_key".to_string(),
+                        default_value: None, // TODO T::examples().get(0).map(|k| k.to_owned()),
+                    }),*/
+                ]
                 .into_iter(),
             )
             .collect()
