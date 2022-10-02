@@ -3,56 +3,115 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: ~
-name: ~
-navigation: "template:template_key"
+locales: "template:template_key"
+name:
+  content:
+    nonjmetext§: "template:template_key"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+navigation:
+  allow_printing:
+    template_key: template_key
+    default_value: ~
+  browsing_enabled: "template:template_key"
+  can_move_to_previous: "template:template_key"
+  can_regenerate:
+    template_key: template_key
+    default_value: ~
+  confirm_when_leaving:
+    template_key: template_key
+    default_value: ~
+  mode: sequential
+  on_leave: ~
+  show_names_of_question_groups:
+    template_key: template_key
+    default_value: ~
+  show_results_page: "template:template_key"
+  show_steps:
+    template_key: template_key
+    default_value: ~
+  show_title_page:
+    template_key: template_key
+    default_value: ~
+  start_password: "template:template_key"
 timing:
-  duration_in_seconds: ~
-  allow_pause: "template:template_key"
-  on_timeout: ~
-  timed_warning: ~
+  duration_in_seconds:
+    template_key: template_key
+    default_value: ~
+  allow_pause: ~
+  on_timeout:
+    action: warn
+    message:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+  timed_warning:
+    action: warn
+    message:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
 feedback:
   percentage_needed_to_pass: none
-  show_name_of_student: "template:template_key"
-  show_current_marks: "template:template_key"
-  show_maximum_marks: "template:template_key"
-  show_answer_state: "template:template_key"
-  allow_reveal_answer: "template:template_key"
-  review:
-    show_score: "template:template_key"
-    show_feedback: "template:template_key"
-    show_expected_answer: "template:template_key"
-    show_advice: "template:template_key"
+  show_name_of_student:
+    template_key: template_key
+    default_value: ~
+  show_current_marks:
+    template_key: template_key
+    default_value: ~
+  show_maximum_marks:
+    template_key: template_key
+    default_value: ~
+  show_answer_state:
+    template_key: template_key
+    default_value: ~
+  allow_reveal_answer:
+    template_key: template_key
+    default_value: ~
+  review: ~
   advice:
-    content:
-      nonjmetext§: "template:template_key"
-    placeholders:
-      placeholder1:
-        content:
-          en: en value of placeholder1
-          nl: nl value of placeholder1
-        placeholders: {}
-      placeholder2:
-        content:
-          en: en version of placeholder2
-          nl: nl version of placeholder2
-        placeholders: {}
+    template_key: template_key
+    default_value: ~
   intro:
-    content:
-      nonjmetext§: "template:template_key"
-    placeholders:
-      placeholder1:
-        content:
-          en: en value of placeholder1
-          nl: nl value of placeholder1
-        placeholders: {}
-      placeholder2:
-        content:
-          en: en version of placeholder2
-          nl: nl version of placeholder2
-        placeholders: {}
-  feedback_messages: "template:template_key"
-question_groups: ~
+    template_key: template_key
+    default_value: ~
+  feedback_messages:
+    template_key: template_key
+    default_value: ~
+question_groups: "template:template_key"
 numbas_settings:
   theme: ~
 

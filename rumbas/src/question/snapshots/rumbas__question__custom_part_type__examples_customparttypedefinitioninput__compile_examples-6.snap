@@ -1,41 +1,25 @@
 ---
 source: rumbas/src/question/custom_part_type.rs
 expression: "&example"
-
 ---
-type_name: ~
-description: ~
-settings: ~
-can_be_gap: ~
-can_be_step: ~
-marking_notes: ~
-help_url: ~
-published: ~
+type_name: "template:template_key"
+description: "template:template_key"
+settings: "template:template_key"
+can_be_gap: "template:template_key"
+can_be_step: "template:template_key"
+marking_notes: "template:template_key"
+help_url: "template:template_key"
+published: "template:template_key"
 extensions:
-  chemistry: false
-  download_text_file: false
-  eukleides: false
-  geogebra: false
-  graphs: false
-  jsx_graph: false
-  linear_algebra: false
-  linear_codes: false
-  optimisation: false
-  permutations: false
-  polynomials: false
-  quantities: false
-  random_person: false
-  stats: false
-  sqlite: false
-  text: false
-  written_number: false
+  template_key: template_key
+  default_value: ~
 input_widget:
   type: string
   hint:
-    value: ~
-    static: ~
-  correct_answer: ~
+    value: "template:template_key"
+    static: "template:template_key"
+  correct_answer: "template:template_key"
   allow_empty:
-    value: false
-    static: false
+    template_key: template_key
+    default_value: ~
 

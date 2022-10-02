@@ -3,60 +3,34 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales:
-  - name: nonjmetext§
-    numbas_locale: ar-SA
-  - name: "template:template_key"
-    numbas_locale: de-DE
-  - name: ~
-    numbas_locale: en-GB
-  - name: nonjmetext§
-    numbas_locale: es-ES
-  - name: "template:template_key"
-    numbas_locale: fr-FR
-  - name: ~
-    numbas_locale: he-IL
-  - name: nonjmetext§
-    numbas_locale: it-IT
-  - name: "template:template_key"
-    numbas_locale: ja-JP
-  - name: ~
-    numbas_locale: ko-KR
-  - name: nonjmetext§
-    numbas_locale: nb-NO
-  - name: "template:template_key"
-    numbas_locale: nl-NL
-  - name: ~
-    numbas_locale: pl-PL
-  - name: nonjmetext§
-    numbas_locale: pt-BR
-  - name: "template:template_key"
-    numbas_locale: sq-AL
-  - name: ~
-    numbas_locale: sv-SE
-  - name: nonjmetext§
-    numbas_locale: tr-TR
-  - name: "template:template_key"
-    numbas_locale: vi-VN
-  - name: ~
-    numbas_locale: zg-CN
-  - name: nonjmetext§
-    numbas_locale: "template:template_key"
-  - name: "template:template_key"
-    numbas_locale: ~
-  - "template:template_key"
-name: "file:path/to/file"
+locales: ~
+name:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
 navigation:
-  allow_printing: false
-  browsing_enabled: false
-  can_move_to_previous: false
-  can_regenerate: false
-  confirm_when_leaving: false
+  allow_printing: ~
+  browsing_enabled: ~
+  can_move_to_previous: ~
+  can_regenerate: ~
+  confirm_when_leaving: ~
   mode: sequential
   on_leave:
     action: warn_if_not_attempted
     message:
-      content: "file:path/to/file"
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
       placeholders:
         placeholder1:
           content:
@@ -68,18 +42,27 @@ navigation:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-  show_names_of_question_groups: false
-  show_results_page: ~
-  show_steps: false
-  show_title_page: false
-  start_password: ~
+  show_names_of_question_groups: ~
+  show_results_page:
+    template_key: template_key
+    default_value: ~
+  show_steps: ~
+  show_title_page: ~
+  start_password:
+    template_key: template_key
+    default_value: ~
 timing:
-  duration_in_seconds: ~
-  allow_pause: false
+  duration_in_seconds:
+    template_key: template_key
+    default_value: ~
+  allow_pause: ~
   on_timeout:
     action: warn
     message:
-      content: "file:path/to/file"
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
       placeholders:
         placeholder1:
           content:
@@ -94,7 +77,10 @@ timing:
   timed_warning:
     action: warn
     message:
-      content: "file:path/to/file"
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
       placeholders:
         placeholder1:
           content:
@@ -107,86 +93,47 @@ timing:
             nl: nl version of placeholder2
           placeholders: {}
 feedback:
-  percentage_needed_to_pass: ~
-  show_name_of_student: false
-  show_current_marks: false
-  show_maximum_marks: false
-  show_answer_state: false
-  allow_reveal_answer: false
-  review: "template:template_key"
-  advice: "file:path/to/file"
-  intro: "file:path/to/file"
-  feedback_messages:
-    - message: nonjmetext§
-      threshold: nonjmetext§
-    - message: "template:template_key"
-      threshold: "template:template_key"
-    - message: ~
-      threshold: ~
-    - "template:template_key"
-question_groups:
-  - name:
-      content:
-        nonjmetext§: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    picking_strategy: all_ordered
-    questions:
-      - path
-      - "template:template_key"
-  - name:
-      content:
-        nonjmetext§: "template:template_key"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    picking_strategy: all_shuffled
-    questions: "template:template_key"
-  - name:
-      content: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    pick_questions: 2
-    picking_strategy: random_subset
-    questions: ~
-  - name: "file:path/to/file"
-    pick_questions: "template:template_key"
-    picking_strategy: random_subset
-    questions:
-      - path
-      - "template:template_key"
-  - name: "template:template_key"
-    picking_strategy: all_ordered
-    questions: "template:template_key"
-  - name: ~
-    picking_strategy: all_shuffled
-    questions: ~
-  - "template:template_key"
-numbas_settings: "template:template_key"
+  percentage_needed_to_pass:
+    template_key: template_key
+    default_value: ~
+  show_name_of_student: ~
+  show_current_marks: ~
+  show_maximum_marks: ~
+  show_answer_state: ~
+  allow_reveal_answer: ~
+  review:
+    show_score: ~
+    show_feedback: ~
+    show_expected_answer: ~
+    show_advice: ~
+  advice:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  intro:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  feedback_messages: ~
+question_groups: ~
+numbas_settings:
+  theme: ~
 

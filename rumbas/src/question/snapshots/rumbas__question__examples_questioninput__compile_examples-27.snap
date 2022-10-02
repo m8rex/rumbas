@@ -3,7 +3,10 @@ source: rumbas/src/question/mod.rs
 expression: "&example"
 ---
 statement:
-  content: "file:path/to/file"
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
   placeholders:
     placeholder1:
       content:
@@ -16,7 +19,10 @@ statement:
         nl: nl version of placeholder2
       placeholders: {}
 advice:
-  content: "file:path/to/file"
+  content:
+    nonjmetext§:
+      template_key: template_key
+      default_value: ~
   placeholders:
     placeholder1:
       content:
@@ -28,50 +34,70 @@ advice:
         en: en version of placeholder2
         nl: nl version of placeholder2
       placeholders: {}
-parts: ~
+parts:
+  template_key: template_key
+  default_value: ~
 builtin_constants:
-  e: "template:template_key"
-  pi: "template:template_key"
-  i: "template:template_key"
-custom_constants: ~
+  template_key: template_key
+  default_value: ~
+custom_constants:
+  template_key: template_key
+  default_value: ~
 variables:
-  nonjmetext§: "template:template_key"
-variables_test:
-  condition: "template:template_key"
-  max_runs: "template:template_key"
-functions:
   nonjmetext§:
     definition: "template:template_key"
+    description: "template:template_key"
+    template_type:
+      template_key: template_key
+      default_value: ~
+    group: "template:template_key"
+variables_test:
+  template_key: template_key
+  default_value: ~
+functions:
+  nonjmetext§:
+    definition:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
     language: jme
-    output_type: html
+    output_type: decimal
     parameters: "template:template_key"
 preamble:
-  js: "template:template_key"
-  css: "template:template_key"
+  template_key: template_key
+  default_value: ~
 navigation:
-  can_regenerate: "template:template_key"
-  show_title_page: "template:template_key"
-  confirm_when_leaving: "template:template_key"
+  template_key: template_key
+  default_value: ~
 extensions:
-  chemistry: "template:template_key"
-  download_text_file: "template:template_key"
-  eukleides: "template:template_key"
-  geogebra: "template:template_key"
-  graphs: "template:template_key"
-  jsx_graph: "template:template_key"
-  linear_algebra: "template:template_key"
-  linear_codes: "template:template_key"
-  optimisation: "template:template_key"
-  permutations: "template:template_key"
-  polynomials: "template:template_key"
-  quantities: "template:template_key"
-  random_person: "template:template_key"
-  stats: "template:template_key"
-  sqlite: "template:template_key"
-  text: "template:template_key"
-  written_number: "template:template_key"
-diagnostic_topic_names: ~
-resources: ~
+  template_key: template_key
+  default_value: ~
+diagnostic_topic_names:
+  template_key: template_key
+  default_value: ~
+resources:
+  template_key: template_key
+  default_value: ~
 custom_part_types: ~
-rulesets: "template:template_key"
+rulesets:
+  nonjmetext§:
+    type: Display
+    rules:
+      broken_as_fractions: "template:template_key"
+      mixed_fractions: "template:template_key"
+      flat_fractions: "template:template_key"
+      vector_as_row: "template:template_key"
+      always_show_multiplication_sign: "template:template_key"
+      use_dot_as_multiplication_sign: "template:template_key"
+      matrices_without_parentheses: "template:template_key"
 

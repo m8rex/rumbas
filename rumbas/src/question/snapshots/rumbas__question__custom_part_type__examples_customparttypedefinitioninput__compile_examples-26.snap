@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/custom_part_type.rs
 expression: "&example"
-
 ---
 type_name:
   content:
@@ -50,23 +49,38 @@ help_url:
         nl: nl version of placeholder2
       placeholders: {}
 published: "template:template_key"
-extensions:
-  chemistry: false
-  download_text_file: false
-  eukleides: false
-  geogebra: false
-  graphs: false
-  jsx_graph: false
-  linear_algebra: false
-  linear_codes: false
-  optimisation: false
-  permutations: false
-  polynomials: false
-  quantities: false
-  random_person: false
-  stats: false
-  sqlite: false
-  text: false
-  written_number: false
-input_widget: ~
+extensions: "template:template_key"
+input_widget:
+  type: radiogroup
+  hint:
+    value:
+      content: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    static: ~
+  correct_answer:
+    content: "file:path/to/file"
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
+  choices:
+    value: ~
+    static: ~
 

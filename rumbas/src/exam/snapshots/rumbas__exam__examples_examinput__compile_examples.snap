@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/exam/mod.rs
 expression: "&example"
-
 ---
 type: normal
 locales:
@@ -9,23 +8,29 @@ locales:
     numbas_locale: ar-SA
   - name: "template:template_key"
     numbas_locale: de-DE
-  - name: ~
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: en-GB
-  - name: nonjmetext§
+  - name: ~
     numbas_locale: es-ES
-  - name: "template:template_key"
+  - name: nonjmetext§
     numbas_locale: fr-FR
-  - name: ~
+  - name: "template:template_key"
     numbas_locale: he-IL
-  - name: nonjmetext§
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: it-IT
-  - name: "template:template_key"
-    numbas_locale: ja-JP
   - name: ~
-    numbas_locale: ko-KR
+    numbas_locale: ja-JP
   - name: nonjmetext§
-    numbas_locale: nb-NO
+    numbas_locale: ko-KR
   - name: "template:template_key"
+    numbas_locale: nb-NO
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: nl-NL
   - name: ~
     numbas_locale: pl-PL
@@ -33,19 +38,29 @@ locales:
     numbas_locale: pt-BR
   - name: "template:template_key"
     numbas_locale: sq-AL
-  - name: ~
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: sv-SE
-  - name: nonjmetext§
-    numbas_locale: tr-TR
-  - name: "template:template_key"
-    numbas_locale: vi-VN
   - name: ~
-    numbas_locale: zg-CN
+    numbas_locale: tr-TR
   - name: nonjmetext§
-    numbas_locale: "template:template_key"
+    numbas_locale: vi-VN
   - name: "template:template_key"
+    numbas_locale: zg-CN
+  - name:
+      template_key: template_key
+      default_value: ~
+    numbas_locale: "template:template_key"
+  - name: ~
+    numbas_locale:
+      template_key: template_key
+      default_value: ~
+  - name: nonjmetext§
     numbas_locale: ~
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 name:
   content:
     nonjmetext§: "file:path/to/file"
@@ -126,9 +141,17 @@ feedback:
       threshold: nonjmetext§
     - message: "template:template_key"
       threshold: "template:template_key"
+    - message:
+        template_key: template_key
+        default_value: ~
+      threshold:
+        template_key: template_key
+        default_value: ~
     - message: ~
       threshold: ~
     - "template:template_key"
+    - template_key: template_key
+      default_value: ~
 question_groups:
   - name:
       content:
@@ -148,6 +171,8 @@ question_groups:
     questions:
       - path
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
   - name:
       content:
         nonjmetext§: "template:template_key"
@@ -165,7 +190,10 @@ question_groups:
     picking_strategy: all_shuffled
     questions: "template:template_key"
   - name:
-      content: "file:path/to/file"
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
       placeholders:
         placeholder1:
           content:
@@ -179,20 +207,52 @@ question_groups:
           placeholders: {}
     pick_questions: 2
     picking_strategy: random_subset
+    questions:
+      template_key: template_key
+      default_value: ~
+  - name:
+      content: "file:path/to/file"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    pick_questions: "template:template_key"
+    picking_strategy: random_subset
     questions: ~
   - name: "file:path/to/file"
-    pick_questions: "template:template_key"
+    pick_questions:
+      template_key: template_key
+      default_value: ~
     picking_strategy: random_subset
     questions:
       - path
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
   - name: "template:template_key"
     picking_strategy: all_ordered
     questions: "template:template_key"
-  - name: ~
+  - name:
+      template_key: template_key
+      default_value: ~
     picking_strategy: all_shuffled
+    questions:
+      template_key: template_key
+      default_value: ~
+  - name: ~
+    pick_questions: 2
+    picking_strategy: random_subset
     questions: ~
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 numbas_settings:
   theme: nonjmetext§
 

@@ -3,8 +3,7 @@ source: rumbas/src/question/mod.rs
 expression: "&example"
 ---
 statement:
-  content:
-    nonjmetext§: "template:template_key"
+  content: "file:path/to/file"
   placeholders:
     placeholder1:
       content:
@@ -17,8 +16,7 @@ statement:
         nl: nl version of placeholder2
       placeholders: {}
 advice:
-  content:
-    nonjmetext§: "template:template_key"
+  content: "file:path/to/file"
   placeholders:
     placeholder1:
       content:
@@ -30,23 +28,43 @@ advice:
         en: en version of placeholder2
         nl: nl version of placeholder2
       placeholders: {}
-parts: "template:template_key"
-builtin_constants: ~
-custom_constants: "template:template_key"
+parts: ~
+builtin_constants:
+  template_key: template_key
+  default_value: ~
+custom_constants: ~
 variables:
   nonjmetext§:
-    definition: "file:path/to/file"
-    description: nonjmetext§
-    template_type: long_string
-    group: nonjmetext§
-variables_test: ~
+    definition:
+      template_key: template_key
+      default_value: ~
+    description:
+      template_key: template_key
+      default_value: ~
+    template_type: list_of_strings
+    group:
+      template_key: template_key
+      default_value: ~
+variables_test:
+  template_key: template_key
+  default_value: ~
 functions:
-  nonjmetext§: "template:template_key"
-preamble: ~
-navigation: ~
-extensions: ~
-diagnostic_topic_names: "template:template_key"
-resources: "template:template_key"
+  nonjmetext§:
+    definition: "template:template_key"
+    language: jme
+    output_type: ~
+    parameters: ~
+preamble:
+  template_key: template_key
+  default_value: ~
+navigation:
+  template_key: template_key
+  default_value: ~
+extensions:
+  template_key: template_key
+  default_value: ~
+diagnostic_topic_names: ~
+resources: ~
 custom_part_types: ~
 rulesets: "template:template_key"
 

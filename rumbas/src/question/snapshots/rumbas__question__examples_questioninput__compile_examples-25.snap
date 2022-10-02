@@ -89,8 +89,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -110,10 +132,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer:
@@ -252,6 +283,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -266,6 +312,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     may_not_have:
       message:
         content:
@@ -310,6 +358,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -324,6 +387,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     must_match_pattern:
       partial_credit: 1.2
       message:
@@ -347,9 +412,17 @@ parts:
         value: "file:path/to/file"
       - name: "template:template_key"
         value: "template:template_key"
+      - name:
+          template_key: template_key
+          default_value: ~
+        value:
+          template_key: template_key
+          default_value: ~
       - name: ~
         value: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
   - type: jme
     marks: 1.5
     prompt:
@@ -526,6 +599,317 @@ parts:
   - type: jme
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    answer_simplification:
+      simplify_basic:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_factors:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_denominators:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_factors:
+        template_key: template_key
+        default_value: ~
+      omit_zero_terms:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_powers_with_base_zero:
+        template_key: template_key
+        default_value: ~
+      collect_numbers:
+        template_key: template_key
+        default_value: ~
+      constants_first:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_products:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_divisions:
+        template_key: template_key
+        default_value: ~
+      cancel_sqrt_square:
+        template_key: template_key
+        default_value: ~
+      evaluate_powers_of_numbers:
+        template_key: template_key
+        default_value: ~
+      rewrite_to_no_leading_minus:
+        template_key: template_key
+        default_value: ~
+      simplify_fractions:
+        template_key: template_key
+        default_value: ~
+      simplify_trigonometric:
+        template_key: template_key
+        default_value: ~
+      collect_terms:
+        template_key: template_key
+        default_value: ~
+      collect_powers_of_common_factors:
+        template_key: template_key
+        default_value: ~
+      collect_like_fractions:
+        template_key: template_key
+        default_value: ~
+      order_canonical:
+        template_key: template_key
+        default_value: ~
+      expand_brackets:
+        template_key: template_key
+        default_value: ~
+    answer_display:
+      broken_as_fractions:
+        template_key: template_key
+        default_value: ~
+      mixed_fractions:
+        template_key: template_key
+        default_value: ~
+      flat_fractions:
+        template_key: template_key
+        default_value: ~
+      vector_as_row:
+        template_key: template_key
+        default_value: ~
+      always_show_multiplication_sign:
+        template_key: template_key
+        default_value: ~
+      use_dot_as_multiplication_sign:
+        template_key: template_key
+        default_value: ~
+      matrices_without_parentheses:
+        template_key: template_key
+        default_value: ~
+    show_preview:
+      template_key: template_key
+      default_value: ~
+    answer_check:
+      type: relative_difference
+      max_difference:
+        template_key: template_key
+        default_value: ~
+    failure_rate:
+      template_key: template_key
+      default_value: ~
+    vset_range:
+      template_key: template_key
+      default_value: ~
+    vset_range_points:
+      template_key: template_key
+      default_value: ~
+    check_variable_names:
+      template_key: template_key
+      default_value: ~
+    single_letter_variables:
+      template_key: template_key
+      default_value: ~
+    allow_unknown_functions:
+      template_key: template_key
+      default_value: ~
+    implicit_function_composition:
+      template_key: template_key
+      default_value: ~
+    max_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    min_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    must_have:
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    may_not_have:
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    must_match_pattern:
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      pattern:
+        template_key: template_key
+        default_value: ~
+      name_to_compare:
+        template_key: template_key
+        default_value: ~
+    value_generators: "template:template_key"
+  - type: jme
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -540,7 +924,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -688,7 +1074,9 @@ parts:
             placeholders: {}
       pattern: ~
       name_to_compare: ~
-    value_generators: "template:template_key"
+    value_generators:
+      template_key: template_key
+      default_value: ~
   - type: jme
     marks: ~
     prompt: "file:path/to/file"
@@ -734,8 +1122,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -755,10 +1165,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer: "file:path/to/file"
@@ -816,6 +1235,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -830,6 +1264,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     may_not_have:
       message: "file:path/to/file"
       partial_credit: 1.2
@@ -861,6 +1297,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -875,6 +1326,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     must_match_pattern:
       partial_credit: 1.2
       message: "file:path/to/file"
@@ -897,12 +1350,18 @@ parts:
     extend_base_marking_algorithm: "template:template_key"
     steps: ~
     answer: "template:template_key"
-    answer_simplification: ~
-    answer_display: ~
+    answer_simplification:
+      template_key: template_key
+      default_value: ~
+    answer_display:
+      template_key: template_key
+      default_value: ~
     show_preview: "template:template_key"
     answer_check:
-      type: decimal_places
-      amount: 2
+      type: absolute_difference
+      max_difference:
+        template_key: template_key
+        default_value: ~
     failure_rate: "template:template_key"
     vset_range: "template:template_key"
     vset_range_points: "template:template_key"
@@ -938,15 +1397,152 @@ parts:
         value: "file:path/to/file"
       - name: "template:template_key"
         value: "template:template_key"
+      - name:
+          template_key: template_key
+          default_value: ~
+        value:
+          template_key: template_key
+          default_value: ~
       - name: ~
         value: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
   - type: jme
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      template_key: template_key
+      default_value: ~
+    answer_simplification: ~
+    answer_display: ~
+    show_preview:
+      template_key: template_key
+      default_value: ~
+    answer_check:
+      type: decimal_places
+      amount: 2
+    failure_rate:
+      template_key: template_key
+      default_value: ~
+    vset_range:
+      template_key: template_key
+      default_value: ~
+    vset_range_points:
+      template_key: template_key
+      default_value: ~
+    check_variable_names:
+      template_key: template_key
+      default_value: ~
+    single_letter_variables:
+      template_key: template_key
+      default_value: ~
+    allow_unknown_functions:
+      template_key: template_key
+      default_value: ~
+    implicit_function_composition:
+      template_key: template_key
+      default_value: ~
+    max_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        template_key: template_key
+        default_value: ~
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    min_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        template_key: template_key
+        default_value: ~
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    must_have:
+      message:
+        template_key: template_key
+        default_value: ~
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    may_not_have:
+      message:
+        template_key: template_key
+        default_value: ~
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    must_match_pattern:
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      message:
+        template_key: template_key
+        default_value: ~
+      pattern:
+        template_key: template_key
+        default_value: ~
+      name_to_compare:
+        template_key: template_key
+        default_value: ~
+    value_generators: none
+  - type: jme
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1022,9 +1618,11 @@ parts:
       message: ~
       pattern: ~
       name_to_compare: ~
-    value_generators: none
+    value_generators: "template:template_key"
   - type: jme
-    marks: "template:template_key"
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content:
         nonjmetext§: "file:path/to/file"
@@ -1041,7 +1639,9 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1081,8 +1681,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -1102,10 +1724,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer:
@@ -1155,8 +1786,10 @@ parts:
       matrices_without_parentheses: "template:template_key"
     show_preview: false
     answer_check:
-      type: significant_figures
-      amount: 2
+      type: decimal_places
+      amount:
+        template_key: template_key
+        default_value: ~
     failure_rate: 1.2
     vset_range:
       - 1.2
@@ -1171,7 +1804,9 @@ parts:
     must_have: none
     may_not_have: none
     must_match_pattern: none
-    value_generators: "template:template_key"
+    value_generators:
+      template_key: template_key
+      default_value: ~
   - type: jme
     marks: ~
     prompt:
@@ -1215,6 +1850,178 @@ parts:
             nl: nl version of placeholder2
           placeholders: {}
     answer_simplification:
+      simplify_basic:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_factors:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_denominators:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_factors:
+        template_key: template_key
+        default_value: ~
+      omit_zero_terms:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_powers_with_base_zero:
+        template_key: template_key
+        default_value: ~
+      collect_numbers:
+        template_key: template_key
+        default_value: ~
+      constants_first:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_products:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_divisions:
+        template_key: template_key
+        default_value: ~
+      cancel_sqrt_square:
+        template_key: template_key
+        default_value: ~
+      evaluate_powers_of_numbers:
+        template_key: template_key
+        default_value: ~
+      rewrite_to_no_leading_minus:
+        template_key: template_key
+        default_value: ~
+      simplify_fractions:
+        template_key: template_key
+        default_value: ~
+      simplify_trigonometric:
+        template_key: template_key
+        default_value: ~
+      collect_terms:
+        template_key: template_key
+        default_value: ~
+      collect_powers_of_common_factors:
+        template_key: template_key
+        default_value: ~
+      collect_like_fractions:
+        template_key: template_key
+        default_value: ~
+      order_canonical:
+        template_key: template_key
+        default_value: ~
+      expand_brackets:
+        template_key: template_key
+        default_value: ~
+    answer_display:
+      broken_as_fractions:
+        template_key: template_key
+        default_value: ~
+      mixed_fractions:
+        template_key: template_key
+        default_value: ~
+      flat_fractions:
+        template_key: template_key
+        default_value: ~
+      vector_as_row:
+        template_key: template_key
+        default_value: ~
+      always_show_multiplication_sign:
+        template_key: template_key
+        default_value: ~
+      use_dot_as_multiplication_sign:
+        template_key: template_key
+        default_value: ~
+      matrices_without_parentheses:
+        template_key: template_key
+        default_value: ~
+    show_preview: "template:template_key"
+    answer_check:
+      type: significant_figures
+      amount: 2
+    failure_rate: "template:template_key"
+    vset_range: "template:template_key"
+    vset_range_points: "template:template_key"
+    check_variable_names: "template:template_key"
+    single_letter_variables: "template:template_key"
+    allow_unknown_functions: "template:template_key"
+    implicit_function_composition: "template:template_key"
+    max_length: "template:template_key"
+    min_length: "template:template_key"
+    must_have: "template:template_key"
+    may_not_have: "template:template_key"
+    must_match_pattern: "template:template_key"
+    value_generators: ~
+  - type: jme
+    marks: 1
+    prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    answer_simplification:
       simplify_basic: ~
       cancel_unit_factors: ~
       cancel_unit_powers: ~
@@ -1245,25 +2052,66 @@ parts:
       always_show_multiplication_sign: ~
       use_dot_as_multiplication_sign: ~
       matrices_without_parentheses: ~
-    show_preview: "template:template_key"
+    show_preview:
+      template_key: template_key
+      default_value: ~
     answer_check:
       type: significant_figures
       amount: "template:template_key"
-    failure_rate: "template:template_key"
-    vset_range: "template:template_key"
-    vset_range_points: "template:template_key"
-    check_variable_names: "template:template_key"
-    single_letter_variables: "template:template_key"
-    allow_unknown_functions: "template:template_key"
-    implicit_function_composition: "template:template_key"
-    max_length: "template:template_key"
-    min_length: "template:template_key"
-    must_have: "template:template_key"
-    may_not_have: "template:template_key"
-    must_match_pattern: "template:template_key"
-    value_generators: ~
+    failure_rate:
+      template_key: template_key
+      default_value: ~
+    vset_range:
+      template_key: template_key
+      default_value: ~
+    vset_range_points:
+      template_key: template_key
+      default_value: ~
+    check_variable_names:
+      template_key: template_key
+      default_value: ~
+    single_letter_variables:
+      template_key: template_key
+      default_value: ~
+    allow_unknown_functions:
+      template_key: template_key
+      default_value: ~
+    implicit_function_composition:
+      template_key: template_key
+      default_value: ~
+    max_length:
+      template_key: template_key
+      default_value: ~
+    min_length:
+      template_key: template_key
+      default_value: ~
+    must_have:
+      template_key: template_key
+      default_value: ~
+    may_not_have:
+      template_key: template_key
+      default_value: ~
+    must_match_pattern:
+      template_key: template_key
+      default_value: ~
+    value_generators:
+      - name: "file:path/to/file"
+        value: "file:path/to/file"
+      - name: "template:template_key"
+        value: "template:template_key"
+      - name:
+          template_key: template_key
+          default_value: ~
+        value:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        value: ~
+      - "template:template_key"
+      - template_key: template_key
+        default_value: ~
   - type: jme
-    marks: 1
+    marks: 1.5
     prompt:
       content: "file:path/to/file"
       placeholders:
@@ -1279,7 +2127,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1305,7 +2153,11 @@ parts:
     answer_simplification: "template:template_key"
     answer_display: "template:template_key"
     show_preview: ~
-    answer_check: "template:template_key"
+    answer_check:
+      type: significant_figures
+      amount:
+        template_key: template_key
+        default_value: ~
     failure_rate: ~
     vset_range: ~
     vset_range_points: ~
@@ -1318,20 +2170,13 @@ parts:
     must_have: ~
     may_not_have: ~
     must_match_pattern: ~
-    value_generators:
-      - name: "file:path/to/file"
-        value: "file:path/to/file"
-      - name: "template:template_key"
-        value: "template:template_key"
-      - name: ~
-        value: ~
-      - "template:template_key"
+    value_generators: none
   - type: jme
-    marks: 1.5
+    marks: "template:template_key"
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -1371,8 +2216,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -1392,17 +2259,30 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer: "file:path/to/file"
-    answer_simplification: ~
-    answer_display: ~
+    answer_simplification:
+      template_key: template_key
+      default_value: ~
+    answer_display:
+      template_key: template_key
+      default_value: ~
     show_preview: false
-    answer_check: ~
+    answer_check: "template:template_key"
     failure_rate: 1.2
     vset_range:
       - 1.2
@@ -1490,6 +2370,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -1504,6 +2399,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     may_not_have:
       message:
         content:
@@ -1548,6 +2445,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -1562,6 +2474,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     must_match_pattern:
       partial_credit: 1.2
       message:
@@ -1580,7 +2494,352 @@ parts:
             placeholders: {}
       pattern: nonjmetext§
       name_to_compare: nonjmetext§
-    value_generators: none
+    value_generators: "template:template_key"
+  - type: jme
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt: "template:template_key"
+    use_custom_name: "template:template_key"
+    custom_name: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
+    enable_minimum_marks: "template:template_key"
+    minimum_marks: "template:template_key"
+    show_correct_answer: "template:template_key"
+    show_feedback_icon: "template:template_key"
+    variable_replacement_strategy: "template:template_key"
+    adaptive_marking_penalty: "template:template_key"
+    custom_marking_algorithm_notes: "template:template_key"
+    extend_base_marking_algorithm: "template:template_key"
+    steps: ~
+    answer: "template:template_key"
+    answer_simplification: ~
+    answer_display: ~
+    show_preview: "template:template_key"
+    answer_check:
+      template_key: template_key
+      default_value: ~
+    failure_rate: "template:template_key"
+    vset_range: "template:template_key"
+    vset_range_points: "template:template_key"
+    check_variable_names: "template:template_key"
+    single_letter_variables: "template:template_key"
+    allow_unknown_functions: "template:template_key"
+    implicit_function_composition: "template:template_key"
+    max_length:
+      length: "template:template_key"
+      message:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit: "template:template_key"
+    min_length:
+      length: "template:template_key"
+      message:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit: "template:template_key"
+    must_have:
+      message:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit: "template:template_key"
+      show_strings: "template:template_key"
+      strings: "template:template_key"
+    may_not_have:
+      message:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit: "template:template_key"
+      show_strings: "template:template_key"
+      strings: "template:template_key"
+    must_match_pattern:
+      partial_credit: "template:template_key"
+      message:
+        content:
+          nonjmetext§: "template:template_key"
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      pattern: "template:template_key"
+      name_to_compare: "template:template_key"
+    value_generators:
+      template_key: template_key
+      default_value: ~
+  - type: jme
+    marks: ~
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: ~
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      template_key: template_key
+      default_value: ~
+    answer_simplification:
+      simplify_basic: false
+      cancel_unit_factors: false
+      cancel_unit_powers: false
+      cancel_unit_denominators: false
+      cancel_zero_factors: false
+      omit_zero_terms: false
+      cancel_zero_powers: false
+      cancel_powers_with_base_zero: false
+      collect_numbers: false
+      constants_first: false
+      collect_sqrt_products: false
+      collect_sqrt_divisions: false
+      cancel_sqrt_square: false
+      evaluate_powers_of_numbers: false
+      rewrite_to_no_leading_minus: false
+      simplify_fractions: false
+      simplify_trigonometric: false
+      collect_terms: false
+      collect_powers_of_common_factors: false
+      collect_like_fractions: false
+      order_canonical: false
+      expand_brackets: false
+    answer_display:
+      broken_as_fractions: false
+      mixed_fractions: false
+      flat_fractions: false
+      vector_as_row: false
+      always_show_multiplication_sign: false
+      use_dot_as_multiplication_sign: false
+      matrices_without_parentheses: false
+    show_preview:
+      template_key: template_key
+      default_value: ~
+    answer_check: ~
+    failure_rate:
+      template_key: template_key
+      default_value: ~
+    vset_range:
+      template_key: template_key
+      default_value: ~
+    vset_range_points:
+      template_key: template_key
+      default_value: ~
+    check_variable_names:
+      template_key: template_key
+      default_value: ~
+    single_letter_variables:
+      template_key: template_key
+      default_value: ~
+    allow_unknown_functions:
+      template_key: template_key
+      default_value: ~
+    implicit_function_composition:
+      template_key: template_key
+      default_value: ~
+    max_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    min_length:
+      length:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+    must_have:
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    may_not_have:
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      show_strings:
+        template_key: template_key
+        default_value: ~
+      strings:
+        template_key: template_key
+        default_value: ~
+    must_match_pattern:
+      partial_credit:
+        template_key: template_key
+        default_value: ~
+      message:
+        content:
+          nonjmetext§:
+            template_key: template_key
+            default_value: ~
+        placeholders:
+          placeholder1:
+            content:
+              en: en value of placeholder1
+              nl: nl value of placeholder1
+            placeholders: {}
+          placeholder2:
+            content:
+              en: en version of placeholder2
+              nl: nl version of placeholder2
+            placeholders: {}
+      pattern:
+        template_key: template_key
+        default_value: ~
+      name_to_compare:
+        template_key: template_key
+        default_value: ~
+    value_generators: ~
   - type: gapfill
     marks: 1
     prompt:
@@ -1639,8 +2898,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -1660,10 +2941,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     sort_answers: false
@@ -1701,6 +2991,62 @@ parts:
   - type: gapfill
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    sort_answers:
+      template_key: template_key
+      default_value: ~
+    gaps: ~
+  - type: gapfill
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -1715,7 +3061,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1772,8 +3120,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -1793,10 +3163,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     sort_answers: false
@@ -1820,10 +3199,51 @@ parts:
     gaps: ~
   - type: gapfill
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    sort_answers:
+      template_key: template_key
+      default_value: ~
+    gaps: ~
+  - type: gapfill
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -1893,8 +3313,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -1914,10 +3356,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
@@ -2006,6 +3457,54 @@ parts:
                 nl: nl version of placeholder2
               placeholders: {}
       - statement:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        feedback:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        marks:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - statement:
           content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2050,10 +3549,21 @@ parts:
       - statement: "template:template_key"
         feedback: "template:template_key"
         marks: "template:template_key"
+      - statement:
+          template_key: template_key
+          default_value: ~
+        feedback:
+          template_key: template_key
+          default_value: ~
+        marks:
+          template_key: template_key
+          default_value: ~
       - statement: ~
         feedback: ~
         marks: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     shuffle_answers: false
     show_cell_answer_state: false
     display:
@@ -2114,6 +3624,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2128,6 +3653,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       marks:
         - content:
             nonjmetext§: "file:path/to/file"
@@ -2155,6 +3682,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2169,6 +3711,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       feedback:
         - content:
             nonjmetext§: "file:path/to/file"
@@ -2196,6 +3740,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2210,6 +3769,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     shuffle_answers: "template:template_key"
     show_cell_answer_state: "template:template_key"
     display:
@@ -2217,6 +3778,71 @@ parts:
       columns: 2
   - type: choose_one
     marks: "template:template_key"
+    prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      answers: x^5
+      marks: x^5
+      feedback: none
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    display:
+      type: radio
+      columns: "template:template_key"
+  - type: choose_one
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content: "file:path/to/file"
       placeholders:
@@ -2232,7 +3858,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2243,14 +3871,16 @@ parts:
     extend_base_marking_algorithm: ~
     steps: ~
     answer_data:
-      answers: x^5
-      marks: x^5
-      feedback: none
+      answers: "template:template_key"
+      marks: "template:template_key"
+      feedback: "template:template_key"
     shuffle_answers: ~
     show_cell_answer_state: ~
     display:
       type: radio
-      columns: "template:template_key"
+      columns:
+        template_key: template_key
+        default_value: ~
   - type: choose_one
     marks: ~
     prompt: "file:path/to/file"
@@ -2296,8 +3926,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -2317,16 +3969,31 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
-      answers: "template:template_key"
-      marks: "template:template_key"
-      feedback: "template:template_key"
+      answers:
+        template_key: template_key
+        default_value: ~
+      marks:
+        template_key: template_key
+        default_value: ~
+      feedback:
+        template_key: template_key
+        default_value: ~
     shuffle_answers: false
     show_cell_answer_state: false
     display:
@@ -2353,10 +4020,59 @@ parts:
     display: "template:template_key"
   - type: choose_one
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      template_key: template_key
+      default_value: ~
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    display:
+      template_key: template_key
+      default_value: ~
+  - type: choose_one
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2428,8 +4144,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -2449,10 +4187,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
@@ -2541,6 +4288,54 @@ parts:
                 nl: nl version of placeholder2
               placeholders: {}
       - statement:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        feedback:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+        marks:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - statement:
           content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2585,10 +4380,21 @@ parts:
       - statement: "template:template_key"
         feedback: "template:template_key"
         marks: "template:template_key"
+      - statement:
+          template_key: template_key
+          default_value: ~
+        feedback:
+          template_key: template_key
+          default_value: ~
+        marks:
+          template_key: template_key
+          default_value: ~
       - statement: ~
         feedback: ~
         marks: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     shuffle_answers: false
     show_cell_answer_state: false
     should_select_at_least: 2
@@ -2654,6 +4460,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2668,6 +4489,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       marks:
         - content:
             nonjmetext§: "file:path/to/file"
@@ -2695,6 +4518,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2709,6 +4547,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       feedback:
         - content:
             nonjmetext§: "file:path/to/file"
@@ -2736,6 +4576,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -2750,6 +4605,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     shuffle_answers: "template:template_key"
     show_cell_answer_state: "template:template_key"
     should_select_at_least: "template:template_key"
@@ -2761,6 +4618,79 @@ parts:
     marking_method: score_per_matched_cell
   - type: choose_multiple
     marks: "template:template_key"
+    prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      answers: x^5
+      marks: x^5
+      feedback: none
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    should_select_at_least:
+      template_key: template_key
+      default_value: ~
+    should_select_at_most: "template:template_key"
+    columns:
+      template_key: template_key
+      default_value: ~
+    wrong_nb_answers_warning_type: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
+    marking_method: all_or_nothing
+  - type: choose_multiple
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content: "file:path/to/file"
       placeholders:
@@ -2776,7 +4706,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2787,18 +4719,26 @@ parts:
     extend_base_marking_algorithm: ~
     steps: ~
     answer_data:
-      answers: x^5
-      marks: x^5
-      feedback: none
+      answers: "template:template_key"
+      marks: "template:template_key"
+      feedback: "template:template_key"
     shuffle_answers: ~
     show_cell_answer_state: ~
     should_select_at_least: ~
-    should_select_at_most: "template:template_key"
+    should_select_at_most:
+      template_key: template_key
+      default_value: ~
     columns: ~
-    wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achievable_marks: "template:template_key"
-    maximal_achievable_marks: "template:template_key"
-    marking_method: all_or_nothing
+    wrong_nb_answers_warning_type:
+      template_key: template_key
+      default_value: ~
+    minimal_achievable_marks:
+      template_key: template_key
+      default_value: ~
+    maximal_achievable_marks:
+      template_key: template_key
+      default_value: ~
+    marking_method: "template:template_key"
   - type: choose_multiple
     marks: ~
     prompt: "file:path/to/file"
@@ -2844,8 +4784,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -2865,16 +4827,31 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
-      answers: "template:template_key"
-      marks: "template:template_key"
-      feedback: "template:template_key"
+      answers:
+        template_key: template_key
+        default_value: ~
+      marks:
+        template_key: template_key
+        default_value: ~
+      feedback:
+        template_key: template_key
+        default_value: ~
     shuffle_answers: false
     show_cell_answer_state: false
     should_select_at_least: 2
@@ -2883,7 +4860,9 @@ parts:
     wrong_nb_answers_warning_type: ~
     minimal_achievable_marks: ~
     maximal_achievable_marks: ~
-    marking_method: "template:template_key"
+    marking_method:
+      template_key: template_key
+      default_value: ~
   - type: choose_multiple
     marks: 1
     prompt: "template:template_key"
@@ -2911,10 +4890,67 @@ parts:
     marking_method: ~
   - type: choose_multiple
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      template_key: template_key
+      default_value: ~
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    should_select_at_least:
+      template_key: template_key
+      default_value: ~
+    should_select_at_most: none
+    columns:
+      template_key: template_key
+      default_value: ~
+    wrong_nb_answers_warning_type: prevent
+    minimal_achievable_marks: none
+    maximal_achievable_marks: none
+    marking_method: sum_ticked_cells
+  - type: choose_multiple
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -2928,12 +4964,12 @@ parts:
     shuffle_answers: ~
     show_cell_answer_state: ~
     should_select_at_least: ~
-    should_select_at_most: none
+    should_select_at_most: "template:template_key"
     columns: ~
-    wrong_nb_answers_warning_type: prevent
-    minimal_achievable_marks: none
-    maximal_achievable_marks: none
-    marking_method: sum_ticked_cells
+    wrong_nb_answers_warning_type: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
+    marking_method: score_per_matched_cell
   - type: match_answers
     marks: 1
     prompt:
@@ -2992,8 +5028,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -3013,10 +5071,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
@@ -3048,6 +5115,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -3062,6 +5144,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       items:
         - statement:
             content:
@@ -3108,6 +5192,25 @@ parts:
                       en: en version of placeholder2
                       nl: nl version of placeholder2
                     placeholders: {}
+            - marks:
+                template_key: template_key
+                default_value: ~
+              answer:
+                content:
+                  nonjmetext§:
+                    template_key: template_key
+                    default_value: ~
+                placeholders:
+                  placeholder1:
+                    content:
+                      en: en value of placeholder1
+                      nl: nl value of placeholder1
+                    placeholders: {}
+                  placeholder2:
+                    content:
+                      en: en version of placeholder2
+                      nl: nl version of placeholder2
+                    placeholders: {}
             - marks: ~
               answer:
                 content: "file:path/to/file"
@@ -3126,9 +5229,17 @@ parts:
               answer: "file:path/to/file"
             - marks: "template:template_key"
               answer: "template:template_key"
+            - marks:
+                template_key: template_key
+                default_value: ~
+              answer:
+                template_key: template_key
+                default_value: ~
             - marks: ~
               answer: ~
             - "template:template_key"
+            - template_key: template_key
+              default_value: ~
         - statement:
             content:
               nonjmetext§: "template:template_key"
@@ -3144,6 +5255,25 @@ parts:
                   nl: nl version of placeholder2
                 placeholders: {}
           answer_marks: "template:template_key"
+        - statement:
+            content:
+              nonjmetext§:
+                template_key: template_key
+                default_value: ~
+            placeholders:
+              placeholder1:
+                content:
+                  en: en value of placeholder1
+                  nl: nl value of placeholder1
+                placeholders: {}
+              placeholder2:
+                content:
+                  en: en version of placeholder2
+                  nl: nl version of placeholder2
+                placeholders: {}
+          answer_marks:
+            template_key: template_key
+            default_value: ~
         - statement:
             content: "file:path/to/file"
             placeholders:
@@ -3190,6 +5320,25 @@ parts:
                       en: en version of placeholder2
                       nl: nl version of placeholder2
                     placeholders: {}
+            - marks:
+                template_key: template_key
+                default_value: ~
+              answer:
+                content:
+                  nonjmetext§:
+                    template_key: template_key
+                    default_value: ~
+                placeholders:
+                  placeholder1:
+                    content:
+                      en: en value of placeholder1
+                      nl: nl value of placeholder1
+                    placeholders: {}
+                  placeholder2:
+                    content:
+                      en: en version of placeholder2
+                      nl: nl version of placeholder2
+                    placeholders: {}
             - marks: ~
               answer:
                 content: "file:path/to/file"
@@ -3208,14 +5357,30 @@ parts:
               answer: "file:path/to/file"
             - marks: "template:template_key"
               answer: "template:template_key"
+            - marks:
+                template_key: template_key
+                default_value: ~
+              answer:
+                template_key: template_key
+                default_value: ~
             - marks: ~
               answer: ~
             - "template:template_key"
+            - template_key: template_key
+              default_value: ~
         - statement: "template:template_key"
           answer_marks: "template:template_key"
+        - statement:
+            template_key: template_key
+            default_value: ~
+          answer_marks:
+            template_key: template_key
+            default_value: ~
         - statement: ~
           answer_marks: ~
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     shuffle_answers: false
     shuffle_items: false
     show_cell_answer_state: false
@@ -3276,6 +5441,87 @@ parts:
   - type: match_answers
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      type: item_based
+      answers:
+        template_key: template_key
+        default_value: ~
+      items:
+        template_key: template_key
+        default_value: ~
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    shuffle_items:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    should_select_at_least:
+      template_key: template_key
+      default_value: ~
+    should_select_at_most: "template:template_key"
+    display:
+      type: check
+      marking_method: score_per_matched_cell
+    layout:
+      type: "template:template_key"
+    wrong_nb_answers_warning_type: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
+  - type: match_answers
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -3290,7 +5536,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3329,6 +5577,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -3343,6 +5606,8 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       choices:
         - content:
             nonjmetext§: "file:path/to/file"
@@ -3370,6 +5635,21 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
+        - content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
         - content: "file:path/to/file"
           placeholders:
             placeholder1:
@@ -3384,23 +5664,39 @@ parts:
               placeholders: {}
         - "file:path/to/file"
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
       marks:
         - - x^5
           - "template:template_key"
+          - template_key: template_key
+            default_value: ~
         - "template:template_key"
+        - template_key: template_key
+          default_value: ~
     shuffle_answers: ~
     shuffle_items: ~
     show_cell_answer_state: ~
     should_select_at_least: ~
-    should_select_at_most: "template:template_key"
+    should_select_at_most:
+      template_key: template_key
+      default_value: ~
     display:
       type: check
-      marking_method: score_per_matched_cell
+      marking_method: all_or_nothing
     layout:
-      type: "template:template_key"
-    wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achievable_marks: "template:template_key"
-    maximal_achievable_marks: "template:template_key"
+      type:
+        template_key: template_key
+        default_value: ~
+    wrong_nb_answers_warning_type:
+      template_key: template_key
+      default_value: ~
+    minimal_achievable_marks:
+      template_key: template_key
+      default_value: ~
+    maximal_achievable_marks:
+      template_key: template_key
+      default_value: ~
   - type: match_answers
     marks: ~
     prompt: "file:path/to/file"
@@ -3446,8 +5742,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -3467,10 +5785,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer_data:
@@ -3485,7 +5812,7 @@ parts:
     should_select_at_most: ~
     display:
       type: check
-      marking_method: all_or_nothing
+      marking_method: "template:template_key"
     layout:
       type: ~
     wrong_nb_answers_warning_type: ~
@@ -3518,17 +5845,87 @@ parts:
     should_select_at_most: 2
     display:
       type: check
-      marking_method: "template:template_key"
+      marking_method:
+        template_key: template_key
+        default_value: ~
     layout: "template:template_key"
     wrong_nb_answers_warning_type: none
     minimal_achievable_marks: 2
     maximal_achievable_marks: 2
   - type: match_answers
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer_data:
+      type: numbas_like
+      answers:
+        template_key: template_key
+        default_value: ~
+      choices:
+        template_key: template_key
+        default_value: ~
+      marks:
+        template_key: template_key
+        default_value: ~
+    shuffle_answers:
+      template_key: template_key
+      default_value: ~
+    shuffle_items:
+      template_key: template_key
+      default_value: ~
+    show_cell_answer_state:
+      template_key: template_key
+      default_value: ~
+    should_select_at_least:
+      template_key: template_key
+      default_value: ~
+    should_select_at_most: none
+    display: "template:template_key"
+    layout:
+      template_key: template_key
+      default_value: ~
+    wrong_nb_answers_warning_type: prevent
+    minimal_achievable_marks: none
+    maximal_achievable_marks: none
+  - type: match_answers
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3543,14 +5940,18 @@ parts:
     shuffle_items: ~
     show_cell_answer_state: ~
     should_select_at_least: ~
-    should_select_at_most: none
-    display: "template:template_key"
+    should_select_at_most: "template:template_key"
+    display:
+      template_key: template_key
+      default_value: ~
     layout: ~
-    wrong_nb_answers_warning_type: prevent
-    minimal_achievable_marks: none
-    maximal_achievable_marks: none
+    wrong_nb_answers_warning_type: "template:template_key"
+    minimal_achievable_marks: "template:template_key"
+    maximal_achievable_marks: "template:template_key"
   - type: match_answers
-    marks: "template:template_key"
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content:
         nonjmetext§: "file:path/to/file"
@@ -3567,7 +5968,9 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -3607,8 +6010,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -3628,24 +6053,84 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
-    answer_data: ~
+    answer_data:
+      template_key: template_key
+      default_value: ~
     shuffle_answers: false
     shuffle_items: false
     show_cell_answer_state: false
     should_select_at_least: 2
-    should_select_at_most: "template:template_key"
+    should_select_at_most:
+      template_key: template_key
+      default_value: ~
     display: ~
     layout:
       type: all
-    wrong_nb_answers_warning_type: "template:template_key"
-    minimal_achievable_marks: "template:template_key"
-    maximal_achievable_marks: "template:template_key"
+    wrong_nb_answers_warning_type:
+      template_key: template_key
+      default_value: ~
+    minimal_achievable_marks:
+      template_key: template_key
+      default_value: ~
+    maximal_achievable_marks:
+      template_key: template_key
+      default_value: ~
+  - type: match_answers
+    marks: ~
+    prompt:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name: "template:template_key"
+    custom_name: "template:template_key"
+    steps_penalty: ~
+    enable_minimum_marks: "template:template_key"
+    minimum_marks: "template:template_key"
+    show_correct_answer: "template:template_key"
+    show_feedback_icon: "template:template_key"
+    variable_replacement_strategy: "template:template_key"
+    adaptive_marking_penalty: "template:template_key"
+    custom_marking_algorithm_notes: "template:template_key"
+    extend_base_marking_algorithm: "template:template_key"
+    steps: ~
+    answer_data: ~
+    shuffle_answers: "template:template_key"
+    shuffle_items: "template:template_key"
+    show_cell_answer_state: "template:template_key"
+    should_select_at_least: "template:template_key"
+    should_select_at_most: ~
+    display:
+      type: radio
+    layout:
+      type: lower_triangle
+    wrong_nb_answers_warning_type: ~
+    minimal_achievable_marks: ~
+    maximal_achievable_marks: ~
   - type: number_entry
     marks: 1
     prompt:
@@ -3704,8 +6189,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -3725,10 +6232,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer: x^5
@@ -3745,6 +6261,8 @@ parts:
       - scientific
       - swiss
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     display_correct_in_style: english
     fractions_must_be_reduced: false
     partial_credit_if_fraction_not_reduced: 1
@@ -3790,6 +6308,78 @@ parts:
   - type: number_entry
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      from: "template:template_key"
+      to: "template:template_key"
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+    allowed_notation_styles:
+      template_key: template_key
+      default_value: ~
+    display_correct_in_style: english-si
+    fractions_must_be_reduced:
+      template_key: template_key
+      default_value: ~
+    partial_credit_if_fraction_not_reduced: "template:template_key"
+    hint_fraction:
+      template_key: template_key
+      default_value: ~
+  - type: number_entry
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -3804,7 +6394,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3815,14 +6407,20 @@ parts:
     extend_base_marking_algorithm: ~
     steps: ~
     answer:
-      from: "template:template_key"
-      to: "template:template_key"
+      from:
+        template_key: template_key
+        default_value: ~
+      to:
+        template_key: template_key
+        default_value: ~
     display_correct_as_fraction: ~
     allow_fractions: ~
     allowed_notation_styles: ~
-    display_correct_in_style: english-si
+    display_correct_in_style: european
     fractions_must_be_reduced: ~
-    partial_credit_if_fraction_not_reduced: "template:template_key"
+    partial_credit_if_fraction_not_reduced:
+      template_key: template_key
+      default_value: ~
     hint_fraction: ~
   - type: number_entry
     marks: ~
@@ -3869,8 +6467,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -3890,10 +6510,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer: "template:template_key"
@@ -3910,7 +6539,9 @@ parts:
       - scientific
       - swiss
       - "template:template_key"
-    display_correct_in_style: european
+      - template_key: template_key
+        default_value: ~
+    display_correct_in_style: european-plain
     fractions_must_be_reduced: false
     partial_credit_if_fraction_not_reduced: ~
     hint_fraction: false
@@ -3929,20 +6560,77 @@ parts:
     custom_marking_algorithm_notes: "template:template_key"
     extend_base_marking_algorithm: "template:template_key"
     steps: ~
-    answer: ~
+    answer:
+      template_key: template_key
+      default_value: ~
     display_correct_as_fraction: "template:template_key"
     allow_fractions: "template:template_key"
     allowed_notation_styles: "template:template_key"
-    display_correct_in_style: european-plain
+    display_correct_in_style: french-si
     fractions_must_be_reduced: "template:template_key"
     partial_credit_if_fraction_not_reduced: 1
     hint_fraction: "template:template_key"
   - type: number_entry
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer: ~
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+    allowed_notation_styles:
+      template_key: template_key
+      default_value: ~
+    display_correct_in_style: indian
+    fractions_must_be_reduced:
+      template_key: template_key
+      default_value: ~
+    partial_credit_if_fraction_not_reduced: 1.5
+    hint_fraction:
+      template_key: template_key
+      default_value: ~
+  - type: number_entry
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -3956,12 +6644,14 @@ parts:
     display_correct_as_fraction: ~
     allow_fractions: ~
     allowed_notation_styles: ~
-    display_correct_in_style: french-si
+    display_correct_in_style: scientific
     fractions_must_be_reduced: ~
-    partial_credit_if_fraction_not_reduced: 1.5
+    partial_credit_if_fraction_not_reduced: "template:template_key"
     hint_fraction: ~
   - type: number_entry
-    marks: "template:template_key"
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content:
         nonjmetext§: "file:path/to/file"
@@ -3978,7 +6668,9 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -4018,8 +6710,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4039,10 +6753,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     answer:
@@ -4061,9 +6784,13 @@ parts:
       - scientific
       - swiss
       - "template:template_key"
-    display_correct_in_style: indian
+      - template_key: template_key
+        default_value: ~
+    display_correct_in_style: swiss
     fractions_must_be_reduced: false
-    partial_credit_if_fraction_not_reduced: "template:template_key"
+    partial_credit_if_fraction_not_reduced:
+      template_key: template_key
+      default_value: ~
     hint_fraction: false
   - type: number_entry
     marks: ~
@@ -4099,12 +6826,88 @@ parts:
     display_correct_as_fraction: "template:template_key"
     allow_fractions: "template:template_key"
     allowed_notation_styles: "template:template_key"
-    display_correct_in_style: scientific
+    display_correct_in_style: "template:template_key"
     fractions_must_be_reduced: "template:template_key"
     partial_credit_if_fraction_not_reduced: ~
     hint_fraction: "template:template_key"
   - type: number_entry
     marks: 1
+    prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    answer:
+      from:
+        template_key: template_key
+        default_value: ~
+      to:
+        template_key: template_key
+        default_value: ~
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+    allowed_notation_styles:
+      template_key: template_key
+      default_value: ~
+    display_correct_in_style:
+      template_key: template_key
+      default_value: ~
+    fractions_must_be_reduced:
+      template_key: template_key
+      default_value: ~
+    partial_credit_if_fraction_not_reduced: 1
+    hint_fraction:
+      template_key: template_key
+      default_value: ~
+  - type: number_entry
+    marks: 1.5
     prompt:
       content: "file:path/to/file"
       placeholders:
@@ -4120,7 +6923,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4134,123 +6937,10 @@ parts:
     display_correct_as_fraction: ~
     allow_fractions: ~
     allowed_notation_styles: ~
-    display_correct_in_style: swiss
-    fractions_must_be_reduced: ~
-    partial_credit_if_fraction_not_reduced: 1
-    hint_fraction: ~
-  - type: number_entry
-    marks: 1.5
-    prompt: "file:path/to/file"
-    use_custom_name: false
-    custom_name: nonjmetext§
-    steps_penalty: 1.5
-    enable_minimum_marks: false
-    minimum_marks: 2
-    show_correct_answer: false
-    show_feedback_icon: false
-    variable_replacement_strategy: original_first
-    adaptive_marking_penalty: 2
-    custom_marking_algorithm_notes:
-      - name: nonjmetext§
-        description: nonjmetext§
-        expression:
-          content:
-            nonjmetext§: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: "template:template_key"
-        description: none
-        expression:
-          content:
-            nonjmetext§: "template:template_key"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: ~
-        description: "template:template_key"
-        expression:
-          content: "file:path/to/file"
-          placeholders:
-            placeholder1:
-              content:
-                en: en value of placeholder1
-                nl: nl value of placeholder1
-              placeholders: {}
-            placeholder2:
-              content:
-                en: en version of placeholder2
-                nl: nl version of placeholder2
-              placeholders: {}
-      - name: nonjmetext§
-        description: ~
-        expression: "file:path/to/file"
-      - name: "template:template_key"
-        description: nonjmetext§
-        expression: "template:template_key"
-      - name: ~
-        description: none
-        expression: ~
-      - "template:template_key"
-    extend_base_marking_algorithm: false
-    steps: ~
-    answer: ~
-    display_correct_as_fraction: false
-    allow_fractions: false
-    allowed_notation_styles:
-      - english
-      - english-plain
-      - english-si
-      - european
-      - european-plain
-      - french-si
-      - indian
-      - scientific
-      - swiss
-      - "template:template_key"
-    display_correct_in_style: "template:template_key"
-    fractions_must_be_reduced: false
-    partial_credit_if_fraction_not_reduced: 1.5
-    hint_fraction: false
-  - type: number_entry
-    marks: "template:template_key"
-    prompt: "template:template_key"
-    use_custom_name: "template:template_key"
-    custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
-    enable_minimum_marks: "template:template_key"
-    minimum_marks: "template:template_key"
-    show_correct_answer: "template:template_key"
-    show_feedback_icon: "template:template_key"
-    variable_replacement_strategy: "template:template_key"
-    adaptive_marking_penalty: "template:template_key"
-    custom_marking_algorithm_notes: "template:template_key"
-    extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    answer: x^5
-    display_correct_as_fraction: "template:template_key"
-    allow_fractions: "template:template_key"
-    allowed_notation_styles: "template:template_key"
     display_correct_in_style: ~
-    fractions_must_be_reduced: "template:template_key"
-    partial_credit_if_fraction_not_reduced: "template:template_key"
-    hint_fraction: "template:template_key"
+    fractions_must_be_reduced: ~
+    partial_credit_if_fraction_not_reduced: 1.5
+    hint_fraction: ~
   - type: pattern_match
     marks: 1
     prompt:
@@ -4309,8 +6999,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4330,10 +7042,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     case_sensitive: false
@@ -4429,6 +7150,97 @@ parts:
   - type: pattern_match
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    case_sensitive:
+      template_key: template_key
+      default_value: ~
+    partial_credit:
+      template_key: template_key
+      default_value: ~
+    pattern:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    display_answer:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    match_mode: "template:template_key"
+  - type: pattern_match
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -4443,7 +7255,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4481,7 +7295,9 @@ parts:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    match_mode: "template:template_key"
+    match_mode:
+      template_key: template_key
+      default_value: ~
   - type: pattern_match
     marks: ~
     prompt: "file:path/to/file"
@@ -4527,8 +7343,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4548,10 +7386,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     case_sensitive: false
@@ -4581,10 +7428,60 @@ parts:
     match_mode: regex
   - type: pattern_match
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    case_sensitive:
+      template_key: template_key
+      default_value: ~
+    partial_credit:
+      template_key: template_key
+      default_value: ~
+    pattern:
+      template_key: template_key
+      default_value: ~
+    display_answer:
+      template_key: template_key
+      default_value: ~
+    match_mode: exact
+  - type: pattern_match
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4598,7 +7495,7 @@ parts:
     partial_credit: ~
     pattern: ~
     display_answer: ~
-    match_mode: exact
+    match_mode: "template:template_key"
   - type: information
     marks: 1
     prompt:
@@ -4657,8 +7554,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4678,10 +7597,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
   - type: information
@@ -4715,6 +7643,58 @@ parts:
   - type: information
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+  - type: information
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -4729,7 +7709,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4784,8 +7766,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4805,10 +7809,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
   - type: information
@@ -4828,10 +7841,47 @@ parts:
     steps: ~
   - type: information
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+  - type: information
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -4899,8 +7949,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -4920,10 +7992,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
   - type: extension
@@ -4957,6 +8038,58 @@ parts:
   - type: extension
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+  - type: extension
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -4971,7 +8104,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5026,8 +8161,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5047,10 +8204,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
   - type: extension
@@ -5070,10 +8236,47 @@ parts:
     steps: ~
   - type: extension
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+  - type: extension
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5141,8 +8344,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5162,10 +8387,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     correct_answer: x^5
@@ -5219,6 +8453,84 @@ parts:
   - type: matrix
     marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    correct_answer:
+      template_key: template_key
+      default_value: ~
+    dimensions:
+      rows:
+        Resizable:
+          default: 2
+          min: 2
+          max: 2
+      columns:
+        Resizable:
+          default: 2
+          min: 2
+          max: 2
+    max_absolute_deviation:
+      template_key: template_key
+      default_value: ~
+    mark_partial_by_cells:
+      template_key: template_key
+      default_value: ~
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+  - type: matrix
+    marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -5233,7 +8545,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5247,14 +8561,14 @@ parts:
     dimensions:
       rows:
         Resizable:
-          default: 2
-          min: 2
-          max: 2
+          default: x^5
+          min: x^5
+          max: x^5
       columns:
         Resizable:
-          default: 2
-          min: 2
-          max: 2
+          default: x^5
+          min: x^5
+          max: x^5
     max_absolute_deviation: ~
     mark_partial_by_cells: ~
     display_correct_as_fraction: ~
@@ -5304,8 +8618,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5325,24 +8661,33 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     correct_answer: x^5
     dimensions:
       rows:
         Resizable:
-          default: x^5
-          min: x^5
-          max: x^5
+          default: "template:template_key"
+          min: "template:template_key"
+          max: none
       columns:
         Resizable:
-          default: x^5
-          min: x^5
-          max: x^5
+          default: "template:template_key"
+          min: "template:template_key"
+          max: none
     max_absolute_deviation: 1.2
     mark_partial_by_cells: false
     display_correct_as_fraction: false
@@ -5366,24 +8711,99 @@ parts:
     dimensions:
       rows:
         Resizable:
-          default: "template:template_key"
-          min: "template:template_key"
-          max: none
+          default:
+            template_key: template_key
+            default_value: ~
+          min:
+            template_key: template_key
+            default_value: ~
+          max: "template:template_key"
       columns:
         Resizable:
-          default: "template:template_key"
-          min: "template:template_key"
-          max: none
+          default:
+            template_key: template_key
+            default_value: ~
+          min:
+            template_key: template_key
+            default_value: ~
+          max: "template:template_key"
     max_absolute_deviation: "template:template_key"
     mark_partial_by_cells: "template:template_key"
     display_correct_as_fraction: "template:template_key"
     allow_fractions: "template:template_key"
   - type: matrix
     marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    correct_answer:
+      template_key: template_key
+      default_value: ~
+    dimensions:
+      rows:
+        Resizable:
+          default: ~
+          min: ~
+          max:
+            template_key: template_key
+            default_value: ~
+      columns:
+        Resizable:
+          default: ~
+          min: ~
+          max:
+            template_key: template_key
+            default_value: ~
+    max_absolute_deviation:
+      template_key: template_key
+      default_value: ~
+    mark_partial_by_cells:
+      template_key: template_key
+      default_value: ~
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+  - type: matrix
+    marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5397,20 +8817,22 @@ parts:
     dimensions:
       rows:
         Resizable:
-          default: ~
-          min: ~
-          max: "template:template_key"
+          default: 2
+          min: 2
+          max: ~
       columns:
         Resizable:
-          default: ~
-          min: ~
-          max: "template:template_key"
+          default: 2
+          min: 2
+          max: ~
     max_absolute_deviation: ~
     mark_partial_by_cells: ~
     display_correct_as_fraction: ~
     allow_fractions: ~
   - type: matrix
-    marks: "template:template_key"
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt:
       content:
         nonjmetext§: "file:path/to/file"
@@ -5427,7 +8849,9 @@ parts:
           placeholders: {}
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5467,8 +8891,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5488,66 +8934,139 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     correct_answer: x^5
-    dimensions:
-      rows:
-        Resizable:
-          default: 2
-          min: 2
-          max: ~
-      columns:
-        Resizable:
-          default: 2
-          min: 2
-          max: ~
-    max_absolute_deviation: 1.2
-    mark_partial_by_cells: false
-    display_correct_as_fraction: false
-    allow_fractions: false
-  - type: matrix
-    marks: ~
-    prompt:
-      content:
-        nonjmetext§: "template:template_key"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    use_custom_name: "template:template_key"
-    custom_name: "template:template_key"
-    steps_penalty: ~
-    enable_minimum_marks: "template:template_key"
-    minimum_marks: "template:template_key"
-    show_correct_answer: "template:template_key"
-    show_feedback_icon: "template:template_key"
-    variable_replacement_strategy: "template:template_key"
-    adaptive_marking_penalty: "template:template_key"
-    custom_marking_algorithm_notes: "template:template_key"
-    extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    correct_answer: "template:template_key"
     dimensions:
       rows: "template:template_key"
       columns: "template:template_key"
+    max_absolute_deviation: 1.2
+    mark_partial_by_cells: false
+    display_correct_as_fraction: false
+    allow_fractions: false
+  - type: matrix
+    marks: ~
+    prompt:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name: "template:template_key"
+    custom_name: "template:template_key"
+    steps_penalty: ~
+    enable_minimum_marks: "template:template_key"
+    minimum_marks: "template:template_key"
+    show_correct_answer: "template:template_key"
+    show_feedback_icon: "template:template_key"
+    variable_replacement_strategy: "template:template_key"
+    adaptive_marking_penalty: "template:template_key"
+    custom_marking_algorithm_notes: "template:template_key"
+    extend_base_marking_algorithm: "template:template_key"
+    steps: ~
+    correct_answer: "template:template_key"
+    dimensions:
+      rows:
+        template_key: template_key
+        default_value: ~
+      columns:
+        template_key: template_key
+        default_value: ~
     max_absolute_deviation: "template:template_key"
     mark_partial_by_cells: "template:template_key"
     display_correct_as_fraction: "template:template_key"
     allow_fractions: "template:template_key"
   - type: matrix
     marks: 1
+    prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    correct_answer:
+      template_key: template_key
+      default_value: ~
+    dimensions:
+      rows: ~
+      columns: ~
+    max_absolute_deviation:
+      template_key: template_key
+      default_value: ~
+    mark_partial_by_cells:
+      template_key: template_key
+      default_value: ~
+    display_correct_as_fraction:
+      template_key: template_key
+      default_value: ~
+    allow_fractions:
+      template_key: template_key
+      default_value: ~
+  - type: matrix
+    marks: 1.5
     prompt:
       content: "file:path/to/file"
       placeholders:
@@ -5563,7 +9082,7 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1
+    steps_penalty: 1.5
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5574,19 +9093,17 @@ parts:
     extend_base_marking_algorithm: ~
     steps: ~
     correct_answer: ~
-    dimensions:
-      rows: ~
-      columns: ~
+    dimensions: "template:template_key"
     max_absolute_deviation: ~
     mark_partial_by_cells: ~
     display_correct_as_fraction: ~
     allow_fractions: ~
   - type: matrix
-    marks: 1.5
+    marks: "template:template_key"
     prompt: "file:path/to/file"
     use_custom_name: false
     custom_name: nonjmetext§
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: false
     minimum_marks: 2
     show_correct_answer: false
@@ -5626,8 +9143,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5647,24 +9186,39 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     correct_answer: x^5
-    dimensions: "template:template_key"
+    dimensions:
+      template_key: template_key
+      default_value: ~
     max_absolute_deviation: 1.2
     mark_partial_by_cells: false
     display_correct_as_fraction: false
     allow_fractions: false
   - type: matrix
-    marks: "template:template_key"
+    marks:
+      template_key: template_key
+      default_value: ~
     prompt: "template:template_key"
     use_custom_name: "template:template_key"
     custom_name: "template:template_key"
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: "template:template_key"
     minimum_marks: "template:template_key"
     show_correct_answer: "template:template_key"
@@ -5737,8 +9291,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5758,10 +9334,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     type: nonjmetext§
@@ -5799,6 +9384,62 @@ parts:
       nonjmetext§: nonjmetext§
   - marks: "template:template_key"
     prompt:
+      content:
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: "template:template_key"
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    type:
+      template_key: template_key
+      default_value: ~
+    settings:
+      nonjmetext§: "template:template_key"
+  - marks:
+      template_key: template_key
+      default_value: ~
+    prompt:
       content: "file:path/to/file"
       placeholders:
         placeholder1:
@@ -5813,7 +9454,9 @@ parts:
           placeholders: {}
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: "template:template_key"
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5825,7 +9468,9 @@ parts:
     steps: ~
     type: ~
     settings:
-      nonjmetext§: "template:template_key"
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
   - marks: ~
     prompt: "file:path/to/file"
     use_custom_name: false
@@ -5870,8 +9515,30 @@ parts:
                 en: en version of placeholder2
                 nl: nl version of placeholder2
               placeholders: {}
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: "template:template_key"
+        expression:
+          content:
+            nonjmetext§:
+              template_key: template_key
+              default_value: ~
+          placeholders:
+            placeholder1:
+              content:
+                en: en value of placeholder1
+                nl: nl value of placeholder1
+              placeholders: {}
+            placeholder2:
+              content:
+                en: en version of placeholder2
+                nl: nl version of placeholder2
+              placeholders: {}
+      - name: ~
+        description:
+          template_key: template_key
+          default_value: ~
         expression:
           content: "file:path/to/file"
           placeholders:
@@ -5891,10 +9558,19 @@ parts:
       - name: "template:template_key"
         description: nonjmetext§
         expression: "template:template_key"
-      - name: ~
+      - name:
+          template_key: template_key
+          default_value: ~
         description: none
+        expression:
+          template_key: template_key
+          default_value: ~
+      - name: ~
+        description: "template:template_key"
         expression: ~
       - "template:template_key"
+      - template_key: template_key
+        default_value: ~
     extend_base_marking_algorithm: false
     steps: ~
     type: nonjmetext§
@@ -5914,12 +9590,54 @@ parts:
     extend_base_marking_algorithm: "template:template_key"
     steps: ~
     type: "template:template_key"
-    settings: ~
+    settings:
+      template_key: template_key
+      default_value: ~
   - marks: 1.5
+    prompt:
+      template_key: template_key
+      default_value: ~
+    use_custom_name:
+      template_key: template_key
+      default_value: ~
+    custom_name:
+      template_key: template_key
+      default_value: ~
+    steps_penalty: 1.5
+    enable_minimum_marks:
+      template_key: template_key
+      default_value: ~
+    minimum_marks:
+      template_key: template_key
+      default_value: ~
+    show_correct_answer:
+      template_key: template_key
+      default_value: ~
+    show_feedback_icon:
+      template_key: template_key
+      default_value: ~
+    variable_replacement_strategy:
+      template_key: template_key
+      default_value: ~
+    adaptive_marking_penalty:
+      template_key: template_key
+      default_value: ~
+    custom_marking_algorithm_notes:
+      template_key: template_key
+      default_value: ~
+    extend_base_marking_algorithm:
+      template_key: template_key
+      default_value: ~
+    steps: ~
+    type:
+      template_key: template_key
+      default_value: ~
+    settings: ~
+  - marks: "template:template_key"
     prompt: ~
     use_custom_name: ~
     custom_name: ~
-    steps_penalty: 1.5
+    steps_penalty: "template:template_key"
     enable_minimum_marks: ~
     minimum_marks: ~
     show_correct_answer: ~
@@ -5933,7 +9651,12 @@ parts:
     settings:
       nonjmetext§: false
   - "template:template_key"
-builtin_constants: ~
+  - template_key: template_key
+    default_value: ~
+builtin_constants:
+  e: ~
+  pi: ~
+  i: ~
 custom_constants:
   - name: nonjmetext§
     value: x^5
@@ -5941,38 +9664,56 @@ custom_constants:
   - name: "template:template_key"
     value: "template:template_key"
     tex: "template:template_key"
+  - name:
+      template_key: template_key
+      default_value: ~
+    value:
+      template_key: template_key
+      default_value: ~
+    tex:
+      template_key: template_key
+      default_value: ~
   - name: ~
     value: ~
     tex: ~
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 variables:
   nonjmetext§:
     definition: ~
     description: ~
-    template_type: "template:template_key"
+    template_type: string
     group: ~
-variables_test: ~
-functions:
-  nonjmetext§:
-    definition:
-      content: "file:path/to/file"
-      placeholders:
-        placeholder1:
-          content:
-            en: en value of placeholder1
-            nl: nl value of placeholder1
-          placeholders: {}
-        placeholder2:
-          content:
-            en: en version of placeholder2
-            nl: nl version of placeholder2
-          placeholders: {}
-    language: jme
-    output_type: dictionary
-    parameters: ~
-preamble: ~
-navigation: ~
-extensions: ~
+variables_test:
+  condition: ~
+  max_runs: ~
+functions: ~
+preamble:
+  js: ~
+  css: ~
+navigation:
+  can_regenerate: ~
+  show_title_page: ~
+  confirm_when_leaving: ~
+extensions:
+  chemistry: ~
+  download_text_file: ~
+  eukleides: ~
+  geogebra: ~
+  graphs: ~
+  jsx_graph: ~
+  linear_algebra: ~
+  linear_codes: ~
+  optimisation: ~
+  permutations: ~
+  polynomials: ~
+  quantities: ~
+  random_person: ~
+  stats: ~
+  sqlite: ~
+  text: ~
+  written_number: ~
 diagnostic_topic_names:
   - content:
       nonjmetext§: "file:path/to/file"
@@ -6000,6 +9741,21 @@ diagnostic_topic_names:
           en: en version of placeholder2
           nl: nl version of placeholder2
         placeholders: {}
+  - content:
+      nonjmetext§:
+        template_key: template_key
+        default_value: ~
+    placeholders:
+      placeholder1:
+        content:
+          en: en value of placeholder1
+          nl: nl value of placeholder1
+        placeholders: {}
+      placeholder2:
+        content:
+          en: en version of placeholder2
+          nl: nl version of placeholder2
+        placeholders: {}
   - content: "file:path/to/file"
     placeholders:
       placeholder1:
@@ -6014,18 +9770,81 @@ diagnostic_topic_names:
         placeholders: {}
   - "file:path/to/file"
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 resources:
   - "template:template_key"
+  - template_key: template_key
+    default_value: ~
 custom_part_types: ~
 rulesets:
   nonjmetext§:
-    type: Display
+    type: Simplification
     rules:
-      broken_as_fractions: "template:template_key"
-      mixed_fractions: "template:template_key"
-      flat_fractions: "template:template_key"
-      vector_as_row: "template:template_key"
-      always_show_multiplication_sign: "template:template_key"
-      use_dot_as_multiplication_sign: "template:template_key"
-      matrices_without_parentheses: "template:template_key"
+      simplify_basic:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_factors:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_unit_denominators:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_factors:
+        template_key: template_key
+        default_value: ~
+      omit_zero_terms:
+        template_key: template_key
+        default_value: ~
+      cancel_zero_powers:
+        template_key: template_key
+        default_value: ~
+      cancel_powers_with_base_zero:
+        template_key: template_key
+        default_value: ~
+      collect_numbers:
+        template_key: template_key
+        default_value: ~
+      constants_first:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_products:
+        template_key: template_key
+        default_value: ~
+      collect_sqrt_divisions:
+        template_key: template_key
+        default_value: ~
+      cancel_sqrt_square:
+        template_key: template_key
+        default_value: ~
+      evaluate_powers_of_numbers:
+        template_key: template_key
+        default_value: ~
+      rewrite_to_no_leading_minus:
+        template_key: template_key
+        default_value: ~
+      simplify_fractions:
+        template_key: template_key
+        default_value: ~
+      simplify_trigonometric:
+        template_key: template_key
+        default_value: ~
+      collect_terms:
+        template_key: template_key
+        default_value: ~
+      collect_powers_of_common_factors:
+        template_key: template_key
+        default_value: ~
+      collect_like_fractions:
+        template_key: template_key
+        default_value: ~
+      order_canonical:
+        template_key: template_key
+        default_value: ~
+      expand_brackets:
+        template_key: template_key
+        default_value: ~
 

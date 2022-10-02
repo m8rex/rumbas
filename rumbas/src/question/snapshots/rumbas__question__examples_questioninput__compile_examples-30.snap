@@ -1,0 +1,107 @@
+---
+source: rumbas/src/question/mod.rs
+expression: "&example"
+---
+statement: "template:template_key"
+advice: "template:template_key"
+parts: "template:template_key"
+builtin_constants:
+  e: "template:template_key"
+  pi: "template:template_key"
+  i: "template:template_key"
+custom_constants: "template:template_key"
+variables:
+  nonjmetext§:
+    template_key: template_key
+    default_value: ~
+variables_test:
+  condition: "template:template_key"
+  max_runs: "template:template_key"
+functions:
+  nonjmetext§:
+    definition: "file:path/to/file"
+    language: jme
+    output_type: html
+    parameters:
+      - - nonjmetext§
+        - boolean
+      - - "template:template_key"
+        - decimal
+      - - template_key: template_key
+          default_value: ~
+        - dictionary
+      - - ~
+        - expression
+      - - nonjmetext§
+        - html
+      - - "template:template_key"
+        - integer
+      - - template_key: template_key
+          default_value: ~
+        - key_pair
+      - - ~
+        - list
+      - - nonjmetext§
+        - matrix
+      - - "template:template_key"
+        - nothing
+      - - template_key: template_key
+          default_value: ~
+        - number
+      - - ~
+        - range
+      - - nonjmetext§
+        - rational
+      - - "template:template_key"
+        - set
+      - - template_key: template_key
+          default_value: ~
+        - string
+      - - ~
+        - vector
+      - - nonjmetext§
+        - extension_geogebra_applet
+      - - "template:template_key"
+        - "template:template_key"
+      - - template_key: template_key
+          default_value: ~
+        - template_key: template_key
+          default_value: ~
+      - - ~
+        - ~
+      - "template:template_key"
+      - template_key: template_key
+        default_value: ~
+preamble:
+  js: "template:template_key"
+  css: "template:template_key"
+navigation:
+  can_regenerate: "template:template_key"
+  show_title_page: "template:template_key"
+  confirm_when_leaving: "template:template_key"
+extensions:
+  chemistry: "template:template_key"
+  download_text_file: "template:template_key"
+  eukleides: "template:template_key"
+  geogebra: "template:template_key"
+  graphs: "template:template_key"
+  jsx_graph: "template:template_key"
+  linear_algebra: "template:template_key"
+  linear_codes: "template:template_key"
+  optimisation: "template:template_key"
+  permutations: "template:template_key"
+  polynomials: "template:template_key"
+  quantities: "template:template_key"
+  random_person: "template:template_key"
+  stats: "template:template_key"
+  sqlite: "template:template_key"
+  text: "template:template_key"
+  written_number: "template:template_key"
+diagnostic_topic_names: "template:template_key"
+resources: "template:template_key"
+custom_part_types: ~
+rulesets:
+  nonjmetext§:
+    template_key: template_key
+    default_value: ~
+

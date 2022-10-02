@@ -1,7 +1,6 @@
 ---
 source: rumbas/src/question/custom_part_type.rs
 expression: "&example"
-
 ---
 type_name: ~
 description: ~
@@ -11,10 +10,76 @@ can_be_step: ~
 marking_notes: ~
 help_url: ~
 published: ~
-extensions: "template:template_key"
+extensions:
+  chemistry:
+    template_key: template_key
+    default_value: ~
+  download_text_file:
+    template_key: template_key
+    default_value: ~
+  eukleides:
+    template_key: template_key
+    default_value: ~
+  geogebra:
+    template_key: template_key
+    default_value: ~
+  graphs:
+    template_key: template_key
+    default_value: ~
+  jsx_graph:
+    template_key: template_key
+    default_value: ~
+  linear_algebra:
+    template_key: template_key
+    default_value: ~
+  linear_codes:
+    template_key: template_key
+    default_value: ~
+  optimisation:
+    template_key: template_key
+    default_value: ~
+  permutations:
+    template_key: template_key
+    default_value: ~
+  polynomials:
+    template_key: template_key
+    default_value: ~
+  quantities:
+    template_key: template_key
+    default_value: ~
+  random_person:
+    template_key: template_key
+    default_value: ~
+  stats:
+    template_key: template_key
+    default_value: ~
+  sqlite:
+    template_key: template_key
+    default_value: ~
+  text:
+    template_key: template_key
+    default_value: ~
+  written_number:
+    template_key: template_key
+    default_value: ~
 input_widget:
   type: radiogroup
-  hint: ~
+  hint:
+    value:
+      content:
+        nonjmetext§: "template:template_key"
+      placeholders:
+        placeholder1:
+          content:
+            en: en value of placeholder1
+            nl: nl value of placeholder1
+          placeholders: {}
+        placeholder2:
+          content:
+            en: en version of placeholder2
+            nl: nl version of placeholder2
+          placeholders: {}
+    static: "template:template_key"
   correct_answer:
     content:
       nonjmetext§: "template:template_key"
@@ -30,6 +95,6 @@ input_widget:
           nl: nl version of placeholder2
         placeholders: {}
   choices:
-    value: ~
-    static: ~
+    value: "template:template_key"
+    static: "template:template_key"
 

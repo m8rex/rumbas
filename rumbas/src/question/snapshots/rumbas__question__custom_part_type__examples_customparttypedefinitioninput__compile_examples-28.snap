@@ -1,0 +1,59 @@
+---
+source: rumbas/src/question/custom_part_type.rs
+expression: "&example"
+---
+type_name:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+description:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+settings: ~
+can_be_gap: ~
+can_be_step: ~
+marking_notes: ~
+help_url:
+  content: "file:path/to/file"
+  placeholders:
+    placeholder1:
+      content:
+        en: en value of placeholder1
+        nl: nl value of placeholder1
+      placeholders: {}
+    placeholder2:
+      content:
+        en: en version of placeholder2
+        nl: nl version of placeholder2
+      placeholders: {}
+published: ~
+extensions: ~
+input_widget:
+  type: radiogroup
+  hint:
+    value: "template:template_key"
+    static: "template:template_key"
+  correct_answer: "template:template_key"
+  choices:
+    template_key: template_key
+    default_value: ~
+
