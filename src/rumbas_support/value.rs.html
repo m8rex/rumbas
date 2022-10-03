@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/value.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>value.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/value.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>value.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -461,6 +461,214 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::input::<span class="kw-2">*</span>;
 <span class="kw">use </span>comparable::Comparable;
 <span class="kw">use </span>schemars::JsonSchema;
@@ -472,6 +680,7 @@
 #[serde(untagged)]
 </span><span class="kw">pub enum </span>ValueType&lt;T&gt; {
     Template(TemplateString),
+    TemplateWithDefault(TemplateWithDefault&lt;T&gt;),
     Normal(T),
     Invalid(serde_yaml::Value),
 }
@@ -479,6 +688,7 @@
 <span class="attribute">#[derive(PartialEq, Debug)]
 </span><span class="kw">pub enum </span>ValueTypeDesc&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
     Template(&lt;TemplateString <span class="kw">as </span>Comparable&gt;::Desc),
+    TemplateWithDefault(&lt;TemplateWithDefault&lt;T&gt; <span class="kw">as </span>Comparable&gt;::Desc),
     Normal(&lt;T <span class="kw">as </span>Comparable&gt;::Desc),
     Invalid,
 }
@@ -486,6 +696,7 @@
 <span class="attribute">#[derive(PartialEq, Debug)]
 </span><span class="kw">pub enum </span>ValueTypeChange&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
     BothTemplate(&lt;TemplateString <span class="kw">as </span>comparable::Comparable&gt;::Change),
+    BothTemplateWithDefault(&lt;TemplateWithDefault&lt;T&gt; <span class="kw">as </span>comparable::Comparable&gt;::Change),
     BothNormal(&lt;T <span class="kw">as </span>comparable::Comparable&gt;::Change),
     BothInvalid,
     Different(
@@ -499,6 +710,9 @@
     <span class="kw">fn </span>describe(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Desc {
         <span class="kw">match </span><span class="self">self </span>{
             ValueType::Template(var0) =&gt; ValueTypeDesc::Template(var0.describe()),
+            ValueType::TemplateWithDefault(var0) =&gt; {
+                ValueTypeDesc::TemplateWithDefault(var0.describe())
+            }
             ValueType::Normal(var0) =&gt; ValueTypeDesc::Normal(var0.describe()),
             ValueType::Invalid(_var0) =&gt; ValueTypeDesc::Invalid,
         }
@@ -509,6 +723,13 @@
             (ValueType::Template(self_var0), ValueType::Template(other_var0)) =&gt; {
                 <span class="kw">let </span>changes_var0 = self_var0.comparison(other_var0);
                 changes_var0.map(ValueTypeChange::BothTemplate)
+            }
+            (
+                ValueType::TemplateWithDefault(self_var0),
+                ValueType::TemplateWithDefault(other_var0),
+            ) =&gt; {
+                <span class="kw">let </span>changes_var0 = self_var0.comparison(other_var0);
+                changes_var0.map(ValueTypeChange::BothTemplateWithDefault)
             }
             (ValueType::Normal(self_var0), ValueType::Normal(other_var0)) =&gt; {
                 <span class="kw">let </span>changes_var0 = self_var0.comparison(other_var0);
@@ -549,6 +770,7 @@
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
             ValueType::Normal(val) =&gt; val.find_missing(),
             ValueType::Template(ts) =&gt; InputCheckResult::from_missing(<span class="prelude-val">Some</span>(ts.yaml())),
+            ValueType::TemplateWithDefault(ts) =&gt; ts.find_missing(),
             ValueType::Invalid(v) =&gt; {
                 <span class="kw">let </span>parsing: <span class="prelude-ty">Result</span>&lt;T, <span class="kw">_</span>&gt; = serde_yaml::from_value(v.clone());
                 InputCheckResult::from_invalid(v, parsing.err())
@@ -564,6 +786,14 @@
                     <span class="kw-2">*</span><span class="self">self </span>= ValueType::Invalid(val.clone());
                 }
             }
+        } <span class="kw">else if let </span>ValueType::TemplateWithDefault(ts) = <span class="kw-2">&amp;</span><span class="self">self </span>{
+            <span class="kw">if </span>ts.template_key == key.to_string() {
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(v) = serde_yaml::from_value(val.clone()) {
+                    <span class="kw-2">*</span><span class="self">self </span>= ValueType::Normal(v);
+                } <span class="kw">else </span>{
+                    <span class="kw-2">*</span><span class="self">self </span>= ValueType::Invalid(val.clone());
+                }
+            }
         } <span class="kw">else if let </span>ValueType::Normal(<span class="kw-2">ref mut </span>v) = <span class="self">self </span>{
             v.insert_template_value(key, val);
         }
@@ -573,6 +803,7 @@
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
             ValueType::Normal(val) =&gt; val.files_to_load(main_file_path),
             ValueType::Template(ts) =&gt; ts.files_to_load(main_file_path),
+            ValueType::TemplateWithDefault(ts) =&gt; ts.files_to_load(main_file_path),
             ValueType::Invalid(<span class="kw">_</span>) =&gt; <span class="macro">vec!</span>[],
         }
     }
@@ -585,6 +816,9 @@
         <span class="kw">match </span><span class="self">self </span>{
             ValueType::Normal(<span class="kw-2">ref mut </span>val) =&gt; val.insert_loaded_files(main_file_path, files),
             ValueType::Template(<span class="kw-2">ref mut </span>ts) =&gt; ts.insert_loaded_files(main_file_path, files),
+            ValueType::TemplateWithDefault(<span class="kw-2">ref mut </span>ts) =&gt; {
+                ts.insert_loaded_files(main_file_path, files)
+            }
             ValueType::Invalid(_v) =&gt; (),
         }
     }
@@ -596,6 +830,7 @@
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
             ValueType::Normal(val) =&gt; val.dependencies(main_file_path),
             ValueType::Template(ts) =&gt; ts.dependencies(main_file_path),
+            ValueType::TemplateWithDefault(ts) =&gt; ts.dependencies(main_file_path),
             ValueType::Invalid(<span class="kw">_</span>) =&gt; std::collections::HashSet::new(),
         }
     }
@@ -608,6 +843,13 @@
             ValueType::Normal(val) =&gt; val.to_owned(),
             ValueType::Template(ts) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, ts.clone().key.unwrap())
+            }
+            ValueType::TemplateWithDefault(ts) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(d) = ts.default_value.as_ref() {
+                    d.to_owned()
+                } <span class="kw">else </span>{
+                    <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, ts.clone().template_key)
+                }
             }
             ValueType::Invalid(v) =&gt; <span class="kw">match </span>serde_yaml::to_string(v) {
                 <span class="prelude-val">Ok</span>(s) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, s),
@@ -623,6 +865,9 @@
         <span class="kw">match </span><span class="self">self </span>{
             ValueType::Normal(val) =&gt; <span class="prelude-val">Some</span>(f(val)),
             ValueType::Template(ts) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, ts.key.unwrap()),
+            ValueType::TemplateWithDefault(ts) =&gt; {
+                <span class="macro">panic!</span>(<span class="string">&quot;missing value for template key {}&quot;</span>, ts.template_key)
+            }
             ValueType::Invalid(v) =&gt; <span class="kw">match </span>serde_yaml::to_string(<span class="kw-2">&amp;</span>v) {
                 <span class="prelude-val">Ok</span>(s) =&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml in part {}&quot;</span>, s),
                 <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;invalid yaml&quot;</span>),
@@ -637,6 +882,12 @@
         <span class="kw">match </span><span class="self">self </span>{
             ValueType::Normal(val) =&gt; ValueType::Normal(f(val)),
             ValueType::Template(ts) =&gt; ValueType::Template(ts),
+            ValueType::TemplateWithDefault(ts) =&gt; {
+                ValueType::TemplateWithDefault(TemplateWithDefault {
+                    template_key: ts.template_key.clone(),
+                    default_value: ts.default_value.clone().map(f),
+                })
+            }
             ValueType::Invalid(v) =&gt; ValueType::Invalid(v),
         }
     }
@@ -924,5 +1175,170 @@
         ts.yaml()
     }
 }
+
+<span class="attribute">#[derive(Serialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
+</span><span class="kw">pub struct </span>TemplateWithDefault&lt;T&gt; {
+    <span class="kw">pub </span>template_key: String,
+    <span class="kw">pub </span>default_value: <span class="prelude-ty">Option</span>&lt;T&gt;,
+}
+
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parsing_strange_list_doesnt_work() {
+        <span class="kw">let </span>yaml = <span class="string">r#&quot;---
+- nonjmetext§
+- &quot;template:test&quot;
+&quot;#</span>;
+
+        <span class="kw">let </span>parsed: <span class="prelude-ty">Result</span>&lt;TemplateWithDefault&lt;String&gt;, <span class="kw">_</span>&gt; = serde_yaml::from_str(yaml);
+        <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, parsed);
+        <span class="macro">assert!</span>(parsed.is_err())
+    }
+}
+
+<span class="kw">impl</span>&lt;T&gt; TemplateWithDefault&lt;T&gt; {
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+        <span class="macro">format!</span>(<span class="string">&quot;template:{}&quot;</span>, <span class="self">self</span>.template_key)
+    }
+}
+
+<span class="kw">impl</span>&lt;T&gt; InputInverse <span class="kw">for </span>TemplateWithDefault&lt;T&gt; {
+    <span class="kw">type </span>Input = TemplateWithDefault&lt;T&gt;;
+    <span class="kw">type </span>EnumInput = <span class="self">Self</span>::Input;
+}
+<span class="kw">impl</span>&lt;T: Clone + Input&gt; Input <span class="kw">for </span>TemplateWithDefault&lt;T&gt; {
+    <span class="kw">type </span>Normal = TemplateWithDefault&lt;T&gt;;
+    <span class="kw">fn </span>to_normal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Normal {
+        <span class="self">self</span>.to_owned()
+    }
+    <span class="kw">fn </span>from_normal(normal: <span class="self">Self</span>::Normal) -&gt; <span class="self">Self </span>{
+        normal.to_owned()
+    }
+    <span class="kw">fn </span>find_missing(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; InputCheckResult {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(v) = <span class="self">self</span>.default_value.as_ref() {
+            v.find_missing()
+        } <span class="kw">else </span>{
+            InputCheckResult::from_missing(<span class="prelude-val">Some</span>(<span class="self">self</span>.name()))
+        }
+    }
+    <span class="kw">fn </span>insert_template_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str, val: <span class="kw-2">&amp;</span>serde_yaml::Value) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>t) = <span class="self">self</span>.default_value {
+            t.insert_template_value(key, val)
+        }
+    }
+
+    <span class="kw">fn </span>files_to_load(<span class="kw-2">&amp;</span><span class="self">self</span>, main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
+        <span class="self">self</span>.default_value
+            .as_ref()
+            .map(|d| d.files_to_load(main_file_path))
+            .unwrap_or_default()
+    }
+
+    <span class="kw">fn </span>insert_loaded_files(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+        files: <span class="kw-2">&amp;</span>std::collections::HashMap&lt;FileToLoad, LoadedFile&gt;,
+    ) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>t) = <span class="self">self</span>.default_value {
+            t.insert_loaded_files(main_file_path, files)
+        }
+    }
+
+    <span class="kw">fn </span>dependencies(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        main_file_path: <span class="kw-2">&amp;</span><span class="kw">crate</span>::path::RumbasPath,
+    ) -&gt; std::collections::HashSet&lt;<span class="kw">crate</span>::path::RumbasPath&gt; {
+        <span class="self">self</span>.default_value
+            .as_ref()
+            .map(|d| d.dependencies(main_file_path))
+            .unwrap_or_default()
+    }
+}
+
+<span class="attribute">#[derive(PartialEq, Debug)]
+</span><span class="kw">pub struct </span>TemplateWithDefaultDesc&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
+    template_key: &lt;String <span class="kw">as </span>comparable::Comparable&gt;::Desc,
+    default_value: &lt;<span class="prelude-ty">Option</span>&lt;T&gt; <span class="kw">as </span>comparable::Comparable&gt;::Desc,
+}
+
+<span class="attribute">#[derive(PartialEq, Debug)]
+</span><span class="kw">pub enum </span>TemplateWithDefaultChange&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; {
+    TemplateKey(&lt;String <span class="kw">as </span>comparable::Comparable&gt;::Change),
+    DefaultValue(&lt;<span class="prelude-ty">Option</span>&lt;T&gt; <span class="kw">as </span>comparable::Comparable&gt;::Change),
+}
+
+<span class="kw">impl</span>&lt;T: Comparable + PartialEq + std::fmt::Debug&gt; comparable::Comparable
+    <span class="kw">for </span>TemplateWithDefault&lt;T&gt;
+{
+    <span class="kw">type </span>Desc = TemplateWithDefaultDesc&lt;T&gt;;
+    <span class="kw">fn </span>describe(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Desc {
+        <span class="self">Self</span>::Desc {
+            template_key: <span class="self">self</span>.template_key.describe(),
+            default_value: <span class="self">self</span>.default_value.describe(),
+        }
+    }
+    <span class="kw">type </span>Change = Vec&lt;TemplateWithDefaultChange&lt;T&gt;&gt;;
+    <span class="kw">fn </span>comparison(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; comparable::Changed&lt;<span class="self">Self</span>::Change&gt; {
+        <span class="kw">let </span>changes: <span class="self">Self</span>::Change = <span class="macro">vec!</span>[
+            <span class="self">self</span>.template_key
+                .comparison(<span class="kw-2">&amp;</span>other.template_key)
+                .map(TemplateWithDefaultChange::TemplateKey),
+            <span class="self">self</span>.default_value
+                .comparison(<span class="kw-2">&amp;</span>other.default_value)
+                .map(TemplateWithDefaultChange::DefaultValue),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        <span class="kw">if </span>changes.is_empty() {
+            comparable::Changed::Unchanged
+        } <span class="kw">else </span>{
+            comparable::Changed::Changed(changes)
+        }
+    }
+}
+
+<span class="kw">mod </span>serde_templatewithdefault {
+    <span class="kw">use </span><span class="kw">super</span>::TemplateWithDefault;
+    <span class="kw">use </span>serde::Deserialize;
+
+    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, T&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>TemplateWithDefault&lt;T&gt;
+    <span class="kw">where
+        </span>T: serde::Deserialize&lt;<span class="lifetime">&#39;de</span>&gt;,
+    {
+        <span class="kw">fn </span>deserialize&lt;D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;TemplateWithDefault&lt;T&gt;, D::Error&gt;
+        <span class="kw">where
+            </span>D: serde::Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
+        {
+            <span class="kw">let </span>deser_res: <span class="prelude-ty">Result</span>&lt;TemplateWithDefaultDeserialize&lt;T&gt;, <span class="kw">_</span>&gt; =
+                serde::Deserialize::deserialize(deserializer);
+
+            <span class="kw">match </span>deser_res {
+                <span class="prelude-val">Ok</span>(TemplateWithDefaultDeserialize::Vec(_v)) =&gt; <span class="prelude-val">Err</span>(serde::de::Error::custom(
+                    <span class="string">&quot;Template with default can&#39;t be parsed from vec.&quot;</span>,
+                )),
+                <span class="prelude-val">Ok</span>(TemplateWithDefaultDeserialize::Normal(v)) =&gt; <span class="prelude-val">Ok</span>(TemplateWithDefault {
+                    template_key: v.template_key.clone(),
+                    default_value: v.default_value,
+                }),
+                <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e),
+            }
+        }
+    }
+
+    <span class="attribute">#[derive(Deserialize)]
+    #[serde(untagged)]
+    </span><span class="kw">enum </span>TemplateWithDefaultDeserialize&lt;T&gt; {
+        Vec(Vec&lt;serde_yaml::Value&gt;),
+        Normal(LocalTemplateWithDefault&lt;T&gt;),
+    }
+    <span class="attribute">#[derive(Deserialize)]
+    </span><span class="kw">pub struct </span>LocalTemplateWithDefault&lt;T&gt; {
+        template_key: String,
+        default_value: <span class="prelude-ty">Option</span>&lt;T&gt;,
+    }
+}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (f5193a9fc 2022-09-25)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (57f097ea2 2022-10-01)" ></div></body></html>
