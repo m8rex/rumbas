@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default value support for templated values
 - Load templated questions directly from exam files
 
+### Changed
+- *BREAKING*: template files should now placed in the normal folders (`exams` and `questions`) instead of specific ones (`question_templates` and `exam_templates`) 
+
+### Removed
+- Support to update from version 0.4.0
+
 ## [0.6.3] - 2022-09-23
 
 ### Added

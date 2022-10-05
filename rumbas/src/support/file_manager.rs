@@ -231,18 +231,6 @@ impl FileManager {
         let folder_path = path.keep_root(&folder_path);
         self.read_all_questions_in_folder(folder_path)
     }
-    pub fn find_all_question_templates_in_folder(
-        &self,
-        folder_path: RumbasPath,
-    ) -> Vec<FileToLoad> {
-        self.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
-    }
-    pub fn read_all_question_templates(&self, path: &RumbasPath) -> Vec<LoadedFile> {
-        let folder_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER).to_path_buf();
-        let folder_path = path.keep_root(&folder_path);
-        let files = self.find_all_question_templates_in_folder(folder_path);
-        self.read_files(files).into_iter().map(|(_, l)| l).collect()
-    }
     pub fn find_all_exams_in_folder(&self, folder_path: RumbasPath) -> Vec<FileToLoad> {
         self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
@@ -254,15 +242,6 @@ impl FileManager {
         let folder_path = std::path::Path::new(crate::EXAMS_FOLDER).to_path_buf();
         let folder_path = path.keep_root(&folder_path);
         self.read_all_exams_in_folder(folder_path)
-    }
-    pub fn find_all_exam_templates_in_folder(&self, folder_path: RumbasPath) -> Vec<FileToLoad> {
-        self.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
-    }
-    pub fn read_all_exam_templates(&self, path: &RumbasPath) -> Vec<LoadedFile> {
-        let folder_path = std::path::Path::new(crate::EXAM_TEMPLATES_FOLDER).to_path_buf();
-        let folder_path = path.keep_root(&folder_path);
-        let files = self.find_all_exam_templates_in_folder(folder_path);
-        self.read_files(files).into_iter().map(|(_, l)| l).collect()
     }
 }
 
@@ -281,7 +260,6 @@ pub enum FileToRead {
     Text(TextFileToRead),
     CustomPartType(CustomPartTypeFileToRead),
     Question(QuestionFileToRead),
-    QuestionTemplate(QuestionTemplateFileToRead),
     Exam(ExamFileToRead),
 }
 
@@ -291,7 +269,6 @@ impl std::convert::From<FileToRead> for rumbas_support::input::FileToLoad {
             FileToRead::Text(t) => t.into(),
             FileToRead::CustomPartType(t) => t.into(),
             FileToRead::Question(t) => t.into(),
-            FileToRead::QuestionTemplate(t) => t.into(),
             FileToRead::Exam(t) => t.into(),
         }
     }
@@ -303,7 +280,6 @@ impl std::convert::From<FileToRead> for RumbasPath {
             FileToRead::Text(t) => t.into(),
             FileToRead::CustomPartType(t) => t.into(),
             FileToRead::Question(t) => t.into(),
-            FileToRead::QuestionTemplate(t) => t.into(),
             FileToRead::Exam(t) => t.into(),
         }
     }
@@ -416,42 +392,6 @@ impl std::convert::From<QuestionFileToRead> for RumbasPath {
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
-pub struct QuestionTemplateFileToRead {
-    file_path: RumbasPath,
-}
-
-impl QuestionTemplateFileToRead {
-    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
-        let file_path = std::path::Path::new(crate::QUESTION_TEMPLATES_FOLDER)
-            .join(file_name)
-            .with_extension("yaml");
-        let file_path = main_file_path.keep_root(file_path.as_path());
-        Self { file_path }
-    }
-}
-
-impl std::convert::From<QuestionTemplateFileToRead> for FileToRead {
-    fn from(s: QuestionTemplateFileToRead) -> Self {
-        FileToRead::QuestionTemplate(s)
-    }
-}
-
-impl std::convert::From<QuestionTemplateFileToRead> for rumbas_support::input::FileToLoad {
-    fn from(s: QuestionTemplateFileToRead) -> Self {
-        Self {
-            file_path: s.file_path,
-            locale_dependant: false,
-        }
-    }
-}
-
-impl std::convert::From<QuestionTemplateFileToRead> for RumbasPath {
-    fn from(s: QuestionTemplateFileToRead) -> Self {
-        s.file_path
-    }
-}
-
-#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct ExamFileToRead {
     file_path: RumbasPath,
 }
@@ -536,9 +476,7 @@ impl RumbasRepoFileData {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RumbasRepoFileType {
     QuestionFile,
-    QuestionTemplateFile,
     ExamFile,
-    ExamTemplateFile,
     CustomPartTypeFile,
     DefaultFile,
     LocaleFile(String, RumbasPath),
@@ -568,12 +506,8 @@ impl RumbasRepoFileType {
                     Self::DefaultFile
                 } else if p.in_main_folder(crate::QUESTIONS_FOLDER) {
                     Self::QuestionFile
-                } else if p.in_main_folder(crate::QUESTION_TEMPLATES_FOLDER) {
-                    Self::QuestionTemplateFile
                 } else if p.in_main_folder(crate::EXAMS_FOLDER) {
                     Self::ExamFile
-                } else if p.in_main_folder(crate::EXAM_TEMPLATES_FOLDER) {
-                    Self::ExamTemplateFile
                 } else if p.in_main_folder(crate::CUSTOM_PART_TYPES_FOLDER) {
                     Self::CustomPartTypeFile
                 } else {
@@ -628,12 +562,12 @@ mod test {
             RumbasRepoFileType::from(&rumbas_path("exams/locale-e/file.yaml"))
         );
         assert_eq!(
-            RumbasRepoFileType::QuestionTemplateFile,
-            RumbasRepoFileType::from(&rumbas_path("question_templates/something/file.yaml"))
+            RumbasRepoFileType::QuestionFile,
+            RumbasRepoFileType::from(&rumbas_path("questions/templates/something/file.yaml"))
         );
         assert_eq!(
-            RumbasRepoFileType::ExamTemplateFile,
-            RumbasRepoFileType::from(&rumbas_path("exam_templates/something/file.yaml"))
+            RumbasRepoFileType::ExamFile,
+            RumbasRepoFileType::from(&rumbas_path("exams/templates/something/file.yaml"))
         );
         assert_eq!(
             RumbasRepoFileType::CustomPartTypeFile,

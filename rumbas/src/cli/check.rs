@@ -14,10 +14,6 @@ pub fn find_all_files(path: RumbasPath) -> Vec<RumbasPath> {
     } else if path.is_dir() {
         if path.in_main_folder(rumbas::QUESTIONS_FOLDER) {
             CACHE.find_all_questions_in_folder(path)
-        } else if path.in_main_folder(rumbas::QUESTION_TEMPLATES_FOLDER) {
-            CACHE.find_all_question_templates_in_folder(path)
-        } else if path.in_main_folder(rumbas::EXAM_TEMPLATES_FOLDER) {
-            CACHE.find_all_exam_templates_in_folder(path)
         } else {
             CACHE.find_all_exams_in_folder(path)
         }

@@ -164,7 +164,7 @@ impl QuestionInput {
             Template(t_res) => {
                 let t = t_res.to_normal(); // TODO?
                 let template_file = file.keep_root(
-                    Path::new(crate::QUESTION_TEMPLATES_FOLDER)
+                    Path::new(crate::QUESTIONS_FOLDER)
                         .join(format!("{}.yaml", t.relative_template_path))
                         .as_path(),
                 );

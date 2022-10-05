@@ -8,8 +8,6 @@ pub fn init() {
         let folders = [
             rumbas::QUESTIONS_FOLDER,
             rumbas::EXAMS_FOLDER,
-            rumbas::QUESTION_TEMPLATES_FOLDER,
-            rumbas::EXAM_TEMPLATES_FOLDER,
             rumbas::RESOURCES_FOLDER,
             rumbas::DEFAULTS_FOLDER,
             rumbas::THEMES_FOLDER,
