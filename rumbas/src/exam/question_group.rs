@@ -191,7 +191,7 @@ impl Examples for QuestionFromTemplateInput {
 }
 impl QuestionFromTemplateInput {
     fn dependency(&self, main_file_path: &RumbasPath) -> FileToRead {
-        crate::support::file_manager::QuestionTemplateFileToRead::with_file_name(
+        crate::support::file_manager::QuestionFileToRead::with_file_name(
             self.content.relative_template_path.clone(),
             main_file_path,
         )

@@ -112,7 +112,7 @@ impl ExamInput {
                 Template(t_val) => {
                     let t = t_val.to_normal();
                     let template_file = file.keep_root(
-                        Path::new(crate::EXAM_TEMPLATES_FOLDER)
+                        Path::new(crate::EXAMS_FOLDER)
                             .join(format!("{}.yaml", t.relative_template_path))
                             .as_path(),
                     ); // TODO: check for missing fields.....

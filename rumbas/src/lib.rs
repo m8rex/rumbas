@@ -19,8 +19,8 @@ lazy_static! {
 
 pub const QUESTIONS_FOLDER: &str = "questions";
 pub const EXAMS_FOLDER: &str = "exams";
-pub const QUESTION_TEMPLATES_FOLDER: &str = "question_templates";
-pub const EXAM_TEMPLATES_FOLDER: &str = "exam_templates";
+pub const OLD_QUESTION_TEMPLATES_FOLDER: &str = "question_templates";
+pub const OLD_EXAM_TEMPLATES_FOLDER: &str = "exam_templates";
 pub const RESOURCES_FOLDER: &str = "resources";
 pub const DEFAULTS_FOLDER: &str = "defaults";
 pub const THEMES_FOLDER: &str = "themes";
