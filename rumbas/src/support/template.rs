@@ -6,25 +6,69 @@ use std::collections::{BTreeMap, HashMap};
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Input, Overwrite, RumbasCheck, Examples, Hash)]
-#[input(name = "TemplateFileInput")]
-#[input(no_examples)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
-    pub relative_template_path: String,
+    pub relative_template_path: String, // TODO: templateable
     #[serde(flatten)]
     #[comparable_ignore]
     pub data: BTreeMap<String, MyYamlValue>,
 }
 
-impl Examples for TemplateFileInput {
+pub type TemplateFileInput = TemplateFile;
+pub type TemplateFileInputEnum = TemplateFileInput;
+
+impl Overwrite<TemplateFile> for TemplateFile {
+    fn overwrite(&mut self, _other: &Self) {}
+}
+
+impl RumbasCheck for TemplateFile {
+    fn check(&self, _locale: &str) -> RumbasCheckResult {
+        RumbasCheckResult::empty()
+    }
+}
+
+impl Input for TemplateFileInput {
+    type Normal = TemplateFile;
+    fn to_normal(&self) -> Self::Normal {
+        self.to_owned()
+    }
+    fn from_normal(normal: Self::Normal) -> Self {
+        normal
+    }
+    fn find_missing(&self) -> InputCheckResult {
+        InputCheckResult::empty()
+    }
+    fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
+    fn files_to_load(&self, _main_file_path: &RumbasPath) -> Vec<FileToLoad> {
+        vec![]
+    }
+    fn insert_loaded_files(
+        &mut self,
+        _main_file_path: &RumbasPath,
+        _files: &HashMap<FileToLoad, LoadedFile>,
+    ) {
+    }
+    fn dependencies(
+        &self,
+        _main_file_path: &RumbasPath,
+    ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
+        std::collections::HashSet::new()
+    }
+}
+
+impl InputInverse for TemplateFile {
+    type Input = TemplateFileInput;
+    type EnumInput = TemplateFileInputEnum;
+}
+
+impl Examples for TemplateFile {
     fn examples() -> Vec<Self> {
         vec![Self {
-            relative_template_path: Value::Normal("templatefile".to_string()),
+            relative_template_path: "template_file".to_string(), //Value::Normal("templatefile".to_string()),
             data: vec![(
                 "key".to_string(),
-                ValueType::Normal(MyYamlValue(serde_yaml::Value::String("value".to_string()))),
+                MyYamlValue(serde_yaml::Value::String("value".to_string())),
             )]
             .into_iter()
             .collect(),
@@ -32,22 +76,18 @@ impl Examples for TemplateFileInput {
     }
 }
 
-impl Examples for TemplateFileInputEnum {
-    fn examples() -> Vec<Self> {
-        TemplateFileInput::examples()
-            .into_iter()
-            .map(Self)
-            .collect()
+impl std::hash::Hash for TemplateFile {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.relative_template_path.hash(state);
     }
 }
-
 impl PartialEq for TemplateFile {
     fn eq(&self, other: &Self) -> bool {
         self.relative_template_path == other.relative_template_path
     }
 }
 impl Eq for TemplateFile {}
-
+/* TODO
 impl PartialEq for TemplateFileInput {
     fn eq(&self, other: &Self) -> bool {
         self.relative_template_path == other.relative_template_path
@@ -60,7 +100,7 @@ impl PartialEq for TemplateFileInputEnum {
         self.0 == other.0
     }
 }
-impl Eq for TemplateFileInputEnum {}
+impl Eq for TemplateFileInputEnum {}*/
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash)]
 pub struct MyYamlValue(pub serde_yaml::Value);

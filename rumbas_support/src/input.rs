@@ -406,6 +406,7 @@ pub struct InputCheckResult {
     // When adding a field, do also add it to is_empty
     missing_values: Vec<InputCheckMissingData>,
     invalid_yaml_values: Vec<InputCheckInvalidYamlData>,
+    error_messages: Vec<String>,
 }
 
 impl InputCheckResult {
@@ -415,6 +416,7 @@ impl InputCheckResult {
                 path: InputCheckPath::with_last(os),
             }],
             invalid_yaml_values: vec![],
+            error_messages: Vec::new(),
         }
     }
     pub fn from_invalid(v: &serde_yaml::Value, e: Option<serde_yaml::Error>) -> InputCheckResult {
@@ -425,16 +427,27 @@ impl InputCheckResult {
                 data: v.clone(),
                 error: e.map(|e| e.to_string()),
             }],
+            error_messages: Vec::new(),
+        }
+    }
+    pub fn from_error_message(s: String) -> Self {
+        Self {
+            missing_values: Vec::new(),
+            invalid_yaml_values: Vec::new(),
+            error_messages: vec![s],
         }
     }
     pub fn empty() -> InputCheckResult {
         InputCheckResult {
             missing_values: vec![],
             invalid_yaml_values: vec![],
+            error_messages: Vec::new(),
         }
     }
     pub fn is_empty(&self) -> bool {
-        self.missing_values.len() == 0 && self.invalid_yaml_values.len() == 0
+        self.missing_values.is_empty()
+            && self.invalid_yaml_values.is_empty()
+            && self.error_messages.is_empty()
     }
     pub fn extend_path(&mut self, s: String) {
         for missing_value in self.missing_values.iter_mut() {
@@ -448,6 +461,8 @@ impl InputCheckResult {
         self.missing_values.extend(other.missing_values.clone());
         self.invalid_yaml_values
             .extend(other.invalid_yaml_values.clone());
+
+        self.error_messages.extend(other.error_messages.clone());
     }
     pub fn missing_fields(&self) -> Vec<InputCheckMissingData> {
         self.missing_values.clone()
@@ -455,23 +470,30 @@ impl InputCheckResult {
     pub fn invalid_yaml_fields(&self) -> Vec<InputCheckInvalidYamlData> {
         self.invalid_yaml_values.clone()
     }
+    pub fn error_messages(&self) -> Vec<String> {
+        self.error_messages.clone()
+    }
 }
 
 impl InputCheckResult {
     pub fn log(&self, path: &RumbasPath) {
-        let missing_fields = self.missing_fields();
-        let invalid_yaml_fields = self.invalid_yaml_fields();
         log::error!("Error when processing {}.", path.display());
-        if !missing_fields.is_empty() {
-            log::error!("Found {} missing fields:", missing_fields.len());
-            for (idx, error) in missing_fields.iter().enumerate() {
+        if !self.missing_values.is_empty() {
+            log::error!("Found {} missing fields:", self.missing_values.len());
+            for (idx, error) in self.missing_values.iter().enumerate() {
                 log::error!("{}\t{}", idx + 1, error.to_string());
             }
         }
-        if !invalid_yaml_fields.is_empty() {
-            log::error!("Found {} invalid fields:", invalid_yaml_fields.len());
-            for (idx, error) in invalid_yaml_fields.iter().enumerate() {
+        if !self.invalid_yaml_values.is_empty() {
+            log::error!("Found {} invalid fields:", self.invalid_yaml_values.len());
+            for (idx, error) in self.invalid_yaml_values.iter().enumerate() {
                 log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
+        if !self.error_messages.is_empty() {
+            log::error!("Found {} error messages:", self.error_messages.len());
+            for (idx, error) in self.error_messages.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error);
             }
         }
     }

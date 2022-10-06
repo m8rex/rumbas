@@ -708,6 +708,8 @@ macro_rules! create_from_string_type {
                     let mut previous_result = q.find_missing();
                     previous_result.extend_path(self.file_name.clone());
                     previous_result
+                } else if let Some(e) = self.error_message.as_ref() {
+                    InputCheckResult::from_error_message(e.clone())
                 } else {
                     InputCheckResult::from_missing(Some(self.file_name.clone()))
                 }

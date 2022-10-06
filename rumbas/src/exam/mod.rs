@@ -14,7 +14,7 @@ use crate::exam::diagnostic::DiagnosticExam;
 use crate::exam::locale::Locale;
 use crate::exam::normal::convert_normal_numbas_exam;
 use crate::exam::normal::NormalExam;
-use crate::exam::question_group::{QuestionOrTemplate, QuestionPath};
+use crate::exam::question_group::QuestionFromTemplate;
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::support::default::combine_exam_with_default_files;
 use crate::support::file_manager::CACHE;
@@ -145,9 +145,14 @@ impl ExamInput {
         combine_exam_with_default_files(path.clone(), self);
     }
     pub fn load_files(&mut self, path: &RumbasPath) {
-        let files_to_load = self.files_to_load(path);
-        let loaded_files = CACHE.read_files(files_to_load);
-        self.insert_loaded_files(path, &loaded_files);
+        loop {
+            let files_to_load = self.files_to_load(path);
+            if files_to_load.is_empty() {
+                break;
+            }
+            let loaded_files = CACHE.read_files(files_to_load);
+            self.insert_loaded_files(path, &loaded_files);
+        }
     }
 }
 
@@ -156,6 +161,21 @@ pub enum ParseError {
     YamlError(YamlError),
     FileReadError(FileReadError),
     InvalidPath(InvalidExamPathError),
+    RecursiveTemplates(RecursiveTemplatesError),
+}
+
+#[derive(Debug)]
+pub struct RecursiveTemplatesError(pub RumbasPath, pub Vec<RumbasPath>);
+
+impl Display for RecursiveTemplatesError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Invalid templates setup: the template recursion contains a loop: {} has already been loaded in {}",
+            self.0.display(),
+            self.1.iter().map(|e| e.display().to_string()).collect::<Vec<_>>().join(" "),
+        )
+    }
 }
 
 #[derive(Debug)]
@@ -213,7 +233,7 @@ pub fn convert_numbas_exam(
 ) -> (
     String,
     ExamFileType,
-    Vec<QuestionOrTemplate>,
+    Vec<QuestionFromTemplate>,
     Vec<CustomPartTypeDefinitionPath>,
 ) {
     let (name, exam, qgs, cpts) = match exam.navigation.navigation_mode {
