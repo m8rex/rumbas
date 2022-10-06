@@ -84,6 +84,27 @@ impl<T: Input> InputInverse for ValueType<T> {
     type EnumInput = Self::Input;
 }
 
+impl<T: Input> ValueType<T>
+where
+    T: serde::de::DeserializeOwned,
+{
+    fn set_template_value(&mut self, val: &serde_yaml::Value) {
+        let as_value: Result<ValueType<T>, _> = serde_yaml::from_value(val.clone());
+        match as_value {
+            Ok(ValueType::Template(_)) | Ok(ValueType::TemplateWithDefault(_)) => {
+                *self = as_value.unwrap()
+            }
+            _ => {
+                if let Ok(v) = serde_yaml::from_value(val.clone()) {
+                    *self = ValueType::Normal(v);
+                } else {
+                    *self = ValueType::Invalid(val.clone());
+                }
+            }
+        }
+    }
+}
+
 impl<T: Input> Input for ValueType<T>
 where
     T: serde::de::DeserializeOwned,
@@ -109,19 +130,11 @@ where
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         if let ValueType::Template(ts) = &self {
             if ts.key == Some(key.to_string()) {
-                if let Ok(v) = serde_yaml::from_value(val.clone()) {
-                    *self = ValueType::Normal(v);
-                } else {
-                    *self = ValueType::Invalid(val.clone());
-                }
+                self.set_template_value(val)
             }
         } else if let ValueType::TemplateWithDefault(ts) = &self {
             if ts.template_key == key.to_string() {
-                if let Ok(v) = serde_yaml::from_value(val.clone()) {
-                    *self = ValueType::Normal(v);
-                } else {
-                    *self = ValueType::Invalid(val.clone());
-                }
+                self.set_template_value(val)
             }
         } else if let ValueType::Normal(ref mut v) = self {
             v.insert_template_value(key, val);

@@ -249,9 +249,12 @@ macro_rules! file_type {
                     }
                 }
                 pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
+                    if self.content.is_some() || !self.translated_content.is_empty() {
+        None } else {
                     self.file_name.as_ref().map(|file_name| {
                         TextFileToRead::with_file_name(file_name.clone(), main_file_path).into()
                     })
+    }
                 }
             }
             impl Input for [<$type Input>] {

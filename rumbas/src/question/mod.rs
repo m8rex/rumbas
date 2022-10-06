@@ -11,7 +11,7 @@ pub mod resource;
 pub mod variable;
 pub mod variable_test;
 
-use crate::exam::{FileReadError, ParseError};
+use crate::exam::{FileReadError, ParseError, RecursiveTemplatesError};
 use crate::question::custom_part_type::CustomPartTypeDefinitionPath;
 use crate::question::part::jme::JMERulesetItem;
 use crate::question::part::question_part::QuestionPart;
@@ -150,44 +150,6 @@ impl ToRumbas<Question> for numbas::question::Question {
             resources: self.resources.to_rumbas(),
             custom_part_types: self.custom_part_types.to_rumbas(),
             rulesets: self.rulesets.to_rumbas(),
-        }
-    }
-}
-
-impl QuestionInput {
-    pub fn from_str(yaml: &str, file: RumbasPath) -> Result<QuestionInput, ParseError> {
-        use QuestionFileTypeInput::*;
-        let input: QuestionFileTypeInput = serde_yaml::from_str(yaml)
-            .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
-        match input {
-            Normal(e) => Ok((*e).0),
-            Template(t_res) => {
-                let t = t_res.to_normal(); // TODO?
-                let template_file = file.keep_root(
-                    Path::new(crate::QUESTIONS_FOLDER)
-                        .join(format!("{}.yaml", t.relative_template_path))
-                        .as_path(),
-                );
-
-                let template_yaml = CACHE
-                    .read_file(FileToLoad {
-                        file_path: template_file.clone(),
-                        locale_dependant: false,
-                    })
-                    .and_then(|lf| match lf {
-                        LoadedFile::Normal(n) => Some(n.content),
-                        LoadedFile::Localized(_) => None,
-                    })
-                    .ok_or_else(|| {
-                        ParseError::FileReadError(FileReadError(template_file.clone()))
-                    })?;
-                let mut question: QuestionInput = serde_yaml::from_str(&template_yaml)
-                    .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
-                t.data.iter().for_each(|(k, v)| {
-                    question.insert_template_value(k, &v.0);
-                });
-                Ok(question)
-            }
         }
     }
 }

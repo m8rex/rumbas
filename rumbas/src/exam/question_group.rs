@@ -1,5 +1,6 @@
+use crate::exam::ParseError;
 use crate::question::Question;
-use crate::question::QuestionInput;
+use crate::question::{QuestionFileTypeInput, QuestionInput};
 use crate::support::default::combine_question_with_default_files;
 use crate::support::file_manager::*;
 use crate::support::sanitize::sanitize;
@@ -7,6 +8,7 @@ use crate::support::template::TemplateFile;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
+use crate::support::yaml::YamlError;
 use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
@@ -23,7 +25,7 @@ pub struct QuestionGroup {
     #[serde(flatten)]
     pub picking_strategy: PickingStrategy,
     /// The questions
-    pub questions: Vec<QuestionOrTemplate>,
+    pub questions: Vec<QuestionFromTemplate>,
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
@@ -105,69 +107,48 @@ pub struct PickingStrategyRandomSubset {
     pub pick_questions: usize,
 }
 
-crate::support::file_manager::create_from_string_type!(
-    QuestionPath,
-    QuestionPathInput,
-    Question,
-    QuestionInput,
-    QuestionFileToRead,
-    numbas::question::Question,
-    "QuestionPath",
-    combine_question_with_default_files,
-    name
-);
-
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
-#[input(name = "QuestionOrTemplateInput")]
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 #[serde(untagged)]
-pub enum QuestionOrTemplate {
-    Template(QuestionFromTemplate),
-    Normal(QuestionPath),
-}
-
-impl QuestionOrTemplate {
-    pub fn data(self) -> Question {
-        match self {
-            Self::Template(q) => q.data,
-            Self::Normal(q) => q.data,
-        }
-    }
-}
-
-impl ToRumbas<QuestionOrTemplate> for numbas::question::Question {
-    fn to_rumbas(&self) -> QuestionOrTemplate {
-        QuestionOrTemplate::Normal(self.to_rumbas())
-    }
-}
-
-impl ToNumbas<numbas::question::Question> for QuestionOrTemplate {
-    fn to_numbas(&self, locale: &str) -> numbas::question::Question {
-        match self {
-            Self::Template(t) => t.to_numbas(locale),
-            Self::Normal(t) => t.to_numbas(locale),
-        }
-    }
+pub enum QuestionPathOrTemplate {
+    QuestionPath(String),
+    Template(TemplateFile),
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 pub struct QuestionFromTemplate {
-    pub content: TemplateFile,
+    pub template_data: Vec<TemplateFile>,
+    pub question_path: Option<String>,
     pub data: Question,
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
-#[serde(from = "TemplateFile")]
+#[serde(from = "QuestionPathOrTemplate")]
 pub struct QuestionFromTemplateInput {
-    pub content: TemplateFile,
+    pub template_data: Vec<TemplateFile>,
+    pub question_path: Option<String>,
     pub data: Option<QuestionInput>,
     pub error_message: Option<String>,
 }
 
+impl std::convert::From<QuestionPathOrTemplate> for QuestionFromTemplateInput {
+    fn from(qpt: QuestionPathOrTemplate) -> Self {
+        match qpt {
+            QuestionPathOrTemplate::QuestionPath(path) => Self {
+                template_data: Vec::new(),
+                question_path: Some(path),
+                data: None,
+                error_message: None,
+            },
+            QuestionPathOrTemplate::Template(t) => t.into(),
+        }
+    }
+}
+
 impl std::convert::From<TemplateFile> for QuestionFromTemplateInput {
-    fn from(content: TemplateFile) -> Self {
+    fn from(template_file: TemplateFile) -> Self {
         Self {
-            content,
+            template_data: vec![template_file],
+            question_path: None,
             data: None,
             error_message: None,
         }
@@ -192,14 +173,22 @@ impl Examples for QuestionFromTemplateInput {
 impl QuestionFromTemplateInput {
     fn dependency(&self, main_file_path: &RumbasPath) -> FileToRead {
         crate::support::file_manager::QuestionFileToRead::with_file_name(
-            self.content.relative_template_path.clone(),
+            if self.template_data.len() > 0 {
+                self.template_data
+                    .last()
+                    .unwrap()
+                    .relative_template_path
+                    .clone()
+            } else {
+                self.question_path.clone().unwrap()
+            },
             main_file_path,
         )
         .into()
     }
 
     pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
-        if let Some(_) = &self.data {
+        if self.data.is_some() {
             None
         } else {
             Some(self.dependency(main_file_path).into())
@@ -210,25 +199,40 @@ impl QuestionFromTemplateInput {
 impl Input for QuestionFromTemplateInput {
     type Normal = QuestionFromTemplate;
     fn to_normal(&self) -> Self::Normal {
+        // TODO: insert templates
         Self::Normal {
-            content: self.content.to_owned(),
+            template_data: self.template_data.to_owned(),
+            question_path: self.question_path.to_owned(),
             data: self.data.as_ref().map(|d| d.to_normal()).unwrap(),
         }
     }
     fn from_normal(normal: Self::Normal) -> Self {
         Self {
-            content: normal.content,
+            template_data: normal.template_data,
+            question_path: normal.question_path,
             data: Some(Input::from_normal(normal.data)),
             error_message: None,
         }
     }
     fn find_missing(&self) -> InputCheckResult {
+        let path = if let Some(p) = self.question_path.as_ref() {
+            p.to_owned()
+        } else {
+            self.template_data
+                .first()
+                .as_ref()
+                .unwrap()
+                .relative_template_path
+                .clone()
+        };
         if let Some(ref q) = self.data {
             let mut previous_result = q.find_missing();
-            previous_result.extend_path(self.content.relative_template_path.clone());
+            previous_result.extend_path(path.clone());
             previous_result
+        } else if let Some(e) = self.error_message.as_ref() {
+            InputCheckResult::from_error_message(e.clone())
         } else {
-            InputCheckResult::from_missing(Some(self.content.relative_template_path.clone()))
+            InputCheckResult::from_missing(Some(path.clone()))
         }
     }
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
@@ -237,7 +241,9 @@ impl Input for QuestionFromTemplateInput {
         }
     }
     fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
-        if let Some(file) = self.file_to_read(main_file_path) {
+        if self.error_message.is_some() {
+            vec![]
+        } else if let Some(file) = self.file_to_read(main_file_path) {
             vec![file.into()]
         } else if let Some(ref q) = self.data {
             // TODO: is this used like this?
@@ -278,13 +284,21 @@ impl Input for QuestionFromTemplateInput {
                 let file = files.get(&file_to_load);
                 match file {
                     Some(LoadedFile::Normal(n)) => {
-                        let data_res = <QuestionInput>::from_str(
-                            &n.content[..],
-                            file_to_load.file_path.clone(),
-                        );
+                        let data_res: Result<QuestionFileTypeInput, _> =
+                            serde_yaml::from_str(&n.content[..]).map_err(|e| {
+                                ParseError::YamlError(YamlError::from(
+                                    e,
+                                    file_to_load.file_path.clone(),
+                                ))
+                            });
                         match data_res {
-                            Ok(q) => {
-                                let mut input = q.clone();
+                            Ok(QuestionFileTypeInput::Normal(q)) => {
+                                let mut input = (*q.clone()).0;
+                                self.template_data.iter().rev().for_each(|template| {
+                                    template.data.iter().for_each(|(k, v)| {
+                                        input.insert_template_value(k, &v.0);
+                                    })
+                                });
                                 combine_question_with_default_files(
                                     file_to_load.file_path,
                                     &mut input,
@@ -294,10 +308,18 @@ impl Input for QuestionFromTemplateInput {
                                     crate::support::file_manager::CACHE.read_files(files_to_load);
                                 input.insert_loaded_files(main_file_path, &loaded_files);
 
-                                self.content.data.iter().for_each(|(k, v)| {
-                                    input.insert_template_value(k, &v.0);
-                                });
-                                self.data = Some(input)
+                                self.data = Some(input);
+                            }
+                            Ok(QuestionFileTypeInput::Template(template_file)) => {
+                                if self.template_data.contains(&template_file) {
+                                    self.error_message = Some(format!(
+                                        "Loop in templates: {}",
+                                        template_file.relative_template_path
+                                    ));
+                                } else {
+                                    self.template_data.push(template_file);
+                                }
+                                // todo: change when allowing template field to be templatable
                             }
                             Err(e) => self.error_message = Some(e.to_string()),
                         }
@@ -308,7 +330,7 @@ impl Input for QuestionFromTemplateInput {
                     None => {
                         self.error_message = Some(format!(
                             "Missing file: {}",
-                            self.content.relative_template_path
+                            file_to_load.file_path.display()
                         ))
                     }
                 }
@@ -320,7 +342,15 @@ impl Input for QuestionFromTemplateInput {
 impl RumbasCheck for QuestionFromTemplate {
     fn check(&self, locale: &str) -> RumbasCheckResult {
         let mut previous_result = self.data.check(locale);
-        previous_result.extend_path(self.content.relative_template_path.clone());
+        previous_result.extend_path(if let Some(p) = self.question_path.as_ref() {
+            p.clone()
+        } else {
+            self.template_data
+                .first()
+                .unwrap()
+                .relative_template_path
+                .clone()
+        });
         previous_result
     }
 }
@@ -331,9 +361,18 @@ impl Overwrite<QuestionFromTemplateInput> for QuestionFromTemplateInput {
 
 impl ToNumbas<numbas::question::Question> for QuestionFromTemplate {
     fn to_numbas(&self, locale: &str) -> numbas::question::Question {
-        self.data
-            .clone()
-            .to_numbas_with_name(locale, self.content.relative_template_path.clone())
+        self.data.clone().to_numbas_with_name(
+            locale,
+            if let Some(n) = self.question_path.as_ref() {
+                n.clone()
+            } else {
+                self.template_data
+                    .first()
+                    .unwrap()
+                    .relative_template_path
+                    .clone()
+            },
+        )
     }
 }
 
@@ -346,19 +385,19 @@ impl ToRumbas<QuestionFromTemplate> for numbas::question::Question {
 
 impl std::hash::Hash for QuestionFromTemplate {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.content.hash(state);
+        self.template_data.hash(state);
     }
 }
 impl PartialEq for QuestionFromTemplate {
     fn eq(&self, other: &Self) -> bool {
-        self.content == other.content
+        self.template_data == other.template_data
     }
 }
 impl Eq for QuestionFromTemplate {}
 
 impl PartialEq for QuestionFromTemplateInput {
     fn eq(&self, other: &Self) -> bool {
-        self.content == other.content
+        self.template_data == other.template_data
     }
 }
 impl Eq for QuestionFromTemplateInput {}

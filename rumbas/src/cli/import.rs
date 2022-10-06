@@ -1,6 +1,6 @@
 use numbas::exam::Exam as NExam;
 use rumbas::exam::convert_numbas_exam;
-use rumbas::exam::question_group::{QuestionOrTemplate, QuestionPath};
+use rumbas::exam::question_group::QuestionFromTemplate;
 use rumbas::question::custom_part_type::CustomPartTypeDefinitionPath;
 use rumbas::question::QuestionFileType;
 use rumbas::support::to_rumbas::ToRumbas;
@@ -60,8 +60,8 @@ pub fn import(path: String, is_question: bool) {
             let question_res = read_question!(path);
             match question_res {
                 Ok(question) => {
-                    let rumbas_question: QuestionOrTemplate = question.to_rumbas();
-                    let data = rumbas_question.clone().data();
+                    let rumbas_question: QuestionFromTemplate = question.to_rumbas();
+                    let data = rumbas_question.data.clone();
                     for cpt in data.custom_part_types.iter() {
                         create_custom_part_type(cpt.to_owned());
                     }
@@ -105,11 +105,11 @@ pub fn import(path: String, is_question: bool) {
     }
 }
 
-fn create_question(qf: QuestionOrTemplate) {
-    match qf {
-        QuestionOrTemplate::Normal(qp) => {
-            let q_name = qp.file_name.clone();
-            let q_yaml = QuestionFileType::Normal(Box::new(qp.data))
+fn create_question(qf: QuestionFromTemplate) {
+    match qf.question_path {
+        Some(path) => {
+            let q_name = path.clone();
+            let q_yaml = QuestionFileType::Normal(Box::new(qf.data))
                 .to_yaml()
                 .unwrap();
             let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
