@@ -10,4 +10,4 @@ rumbas init
 # Set resources
 cp -r numbas_resources resources/question-resources
 
-cp question_preview.yaml exam_templates/
+cp question_preview.yaml exams/
