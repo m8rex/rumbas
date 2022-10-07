@@ -103,6 +103,13 @@ where
             }
         }
     }
+    pub fn template_key(&self) -> Option<String> {
+        match self {
+            Self::Template(ts) => ts.key.clone(),
+            Self::TemplateWithDefault(ts) => Some(ts.template_key.clone()),
+            _ => None,
+        }
+    }
 }
 
 impl<T: Input> Input for ValueType<T>

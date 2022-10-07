@@ -115,6 +115,7 @@ pub enum QuestionPathOrTemplate {
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
+#[serde(into = "QuestionPathOrTemplate")]
 pub struct QuestionFromTemplate {
     pub template_data: Vec<TemplateFile>,
     pub question_path: Option<String>,
@@ -123,11 +124,30 @@ pub struct QuestionFromTemplate {
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 #[serde(from = "QuestionPathOrTemplate")]
+#[serde(into = "QuestionPathOrTemplate")]
 pub struct QuestionFromTemplateInput {
     pub template_data: Vec<TemplateFile>,
     pub question_path: Option<String>,
     pub data: Option<QuestionInput>,
     pub error_message: Option<String>,
+}
+
+impl std::convert::From<QuestionFromTemplateInput> for QuestionPathOrTemplate {
+    fn from(qft: QuestionFromTemplateInput) -> Self {
+        match qft.question_path {
+            Some(path) => QuestionPathOrTemplate::QuestionPath(path.clone()),
+            None => QuestionPathOrTemplate::Template(qft.template_data[0].clone()),
+        }
+    }
+}
+
+impl std::convert::From<QuestionFromTemplate> for QuestionPathOrTemplate {
+    fn from(qft: QuestionFromTemplate) -> Self {
+        match qft.question_path {
+            Some(path) => QuestionPathOrTemplate::QuestionPath(path.clone()),
+            None => QuestionPathOrTemplate::Template(qft.template_data[0].clone()),
+        }
+    }
 }
 
 impl std::convert::From<QuestionPathOrTemplate> for QuestionFromTemplateInput {
@@ -199,7 +219,6 @@ impl QuestionFromTemplateInput {
 impl Input for QuestionFromTemplateInput {
     type Normal = QuestionFromTemplate;
     fn to_normal(&self) -> Self::Normal {
-        // TODO: insert templates
         Self::Normal {
             template_data: self.template_data.to_owned(),
             question_path: self.question_path.to_owned(),
@@ -311,10 +330,26 @@ impl Input for QuestionFromTemplateInput {
                                 self.data = Some(input);
                             }
                             Ok(QuestionFileTypeInput::Template(template_file)) => {
+                                let mut template_file = template_file.clone();
+                                if template_file.has_unknown_parent() {
+                                    for previous in self.template_data.iter().rev() {
+                                        template_file.set_template(previous);
+                                        if !template_file.has_unknown_parent() {
+                                            break;
+                                        }
+                                    }
+                                    if let Some(key) = template_file.template_key() {
+                                        self.error_message = Some(format!("Parent template not found, the template key {} is not set for {}", key, file_to_load.file_path.display()));
+                                        return;
+                                    }
+                                }
+                                let template_file = template_file.to_normal();
+
                                 if self.template_data.contains(&template_file) {
                                     self.error_message = Some(format!(
-                                        "Loop in templates: {}",
-                                        template_file.relative_template_path
+                                        "Loop in templates: {} is a parent of itself. The fill template parent structure is {}",
+                                        template_file.relative_template_path,
+                                        self.template_data.iter().map(|t| t.relative_template_path.clone()).chain(vec![template_file.relative_template_path.clone()].into_iter()).collect::<Vec<_>>().join(" -> ")
                                     ));
                                 } else {
                                     self.template_data.push(template_file);
@@ -378,7 +413,11 @@ impl ToNumbas<numbas::question::Question> for QuestionFromTemplate {
 
 impl ToRumbas<QuestionFromTemplate> for numbas::question::Question {
     fn to_rumbas(&self) -> QuestionFromTemplate {
-        unreachable!()
+        QuestionFromTemplate {
+            template_data: Vec::new(),
+            data: self.to_rumbas(),
+            question_path: Some(sanitize(&self.name[..])),
+        }
         // TODO: handle variable overrride
     }
 }

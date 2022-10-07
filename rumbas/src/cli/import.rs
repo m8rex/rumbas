@@ -78,7 +78,6 @@ pub fn import(path: String, is_question: bool) {
                 Ok(exam) => {
                     //println!("{:?}", exam);
                     let (name, rumbas_exam, qs, cpts) = convert_numbas_exam(exam);
-                    // TODO this will be done automatically on deserialization now?
                     for qp in qs.into_iter() {
                         create_question(qp)
                     }
@@ -86,8 +85,9 @@ pub fn import(path: String, is_question: bool) {
                         create_custom_part_type(cpt);
                     }
                     let exam_yaml = rumbas_exam.to_yaml().unwrap();
-                    std::fs::write(format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name), exam_yaml)
-                        .unwrap();
+                    let file = format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name);
+                    log::info!("Writing to {}", file);
+                    std::fs::write(file, exam_yaml).unwrap();
                     //fix handle result
                 }
                 Err(e) => {
