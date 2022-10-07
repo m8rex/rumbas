@@ -9,17 +9,42 @@ pub const TEMPLATE_PREFIX: &str = "template";
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
-    pub relative_template_path: String, // TODO: templateable
+    pub relative_template_path: String,
     #[serde(flatten)]
     #[comparable_ignore]
     pub data: BTreeMap<String, MyYamlValue>,
 }
 
-pub type TemplateFileInput = TemplateFile;
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
+pub struct TemplateFileInput {
+    #[serde(rename = "template")]
+    pub relative_template_path: ValueType<String>,
+    #[serde(flatten)]
+    #[comparable_ignore]
+    pub data: BTreeMap<String, MyYamlValue>,
+}
+
+impl TemplateFileInput {
+    pub fn template_key(&self) -> Option<String> {
+        self.relative_template_path.template_key()
+    }
+    pub fn has_unknown_parent(&self) -> bool {
+        self.template_key().is_some()
+    }
+    pub fn set_template(&mut self, other: &TemplateFile) {
+        if let Some(key) = self.template_key() {
+            if let Some(value) = other.data.get(&key) {
+                self.relative_template_path
+                    .insert_template_value(&key, &(value.0))
+            }
+        }
+    }
+}
+
 pub type TemplateFileInputEnum = TemplateFileInput;
 
-impl Overwrite<TemplateFile> for TemplateFile {
-    fn overwrite(&mut self, _other: &Self) {}
+impl Overwrite<TemplateFileInput> for TemplateFileInput {
+    fn overwrite(&mut self, other: &Self) {}
 }
 
 impl RumbasCheck for TemplateFile {
@@ -31,10 +56,16 @@ impl RumbasCheck for TemplateFile {
 impl Input for TemplateFileInput {
     type Normal = TemplateFile;
     fn to_normal(&self) -> Self::Normal {
-        self.to_owned()
+        TemplateFile {
+            relative_template_path: self.relative_template_path.clone().unwrap(),
+            data: self.data.clone(),
+        }
     }
     fn from_normal(normal: Self::Normal) -> Self {
-        normal
+        Self {
+            relative_template_path: ValueType::Normal(normal.relative_template_path.clone()),
+            data: normal.data.clone(),
+        }
     }
     fn find_missing(&self) -> InputCheckResult {
         InputCheckResult::empty()
@@ -62,10 +93,10 @@ impl InputInverse for TemplateFile {
     type EnumInput = TemplateFileInputEnum;
 }
 
-impl Examples for TemplateFile {
+impl Examples for TemplateFileInput {
     fn examples() -> Vec<Self> {
         vec![Self {
-            relative_template_path: "template_file".to_string(), //Value::Normal("templatefile".to_string()),
+            relative_template_path: ValueType::Normal("templatefile".to_string()),
             data: vec![(
                 "key".to_string(),
                 MyYamlValue(serde_yaml::Value::String("value".to_string())),
@@ -87,20 +118,13 @@ impl PartialEq for TemplateFile {
     }
 }
 impl Eq for TemplateFile {}
-/* TODO
+
 impl PartialEq for TemplateFileInput {
     fn eq(&self, other: &Self) -> bool {
         self.relative_template_path == other.relative_template_path
     }
 }
 impl Eq for TemplateFileInput {}
-
-impl PartialEq for TemplateFileInputEnum {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
-impl Eq for TemplateFileInputEnum {}*/
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash)]
 pub struct MyYamlValue(pub serde_yaml::Value);
