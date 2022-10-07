@@ -4,7 +4,7 @@ use crate::question::{QuestionFileTypeInput, QuestionInput};
 use crate::support::default::combine_question_with_default_files;
 use crate::support::file_manager::*;
 use crate::support::sanitize::sanitize;
-use crate::support::template::TemplateFile;
+use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
@@ -180,14 +180,18 @@ impl InputInverse for QuestionFromTemplate {
     type EnumInput = QuestionFromTemplateInput;
 }
 
-impl Examples for QuestionFromTemplate {
-    fn examples() -> Vec<Self> {
-        Vec::new()
-    }
-}
 impl Examples for QuestionFromTemplateInput {
     fn examples() -> Vec<Self> {
-        Vec::new()
+        /*TemplateFileInput::examples()
+        .into_iter()
+        .map(QuestionPathOrTemplate::Template)
+        .chain(vec![QuestionPathOrTemplate::QuestionPath("path".to_string())].into_iter())
+        .map(|e| e.into())
+        .collect()*/
+        vec![QuestionPathOrTemplate::QuestionPath("path".to_string())]
+            .into_iter()
+            .map(|e| e.into())
+            .collect()
     }
 }
 impl QuestionFromTemplateInput {
