@@ -14,6 +14,7 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
+use std::path::Path;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples)]
 #[input(name = "QuestionGroupInput")]
@@ -111,7 +112,7 @@ pub struct PickingStrategyRandomSubset {
 #[serde(untagged)]
 pub enum QuestionPathOrTemplate {
     QuestionPath(String),
-    Template(TemplateFile),
+    Template(TemplateFileInput),
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
@@ -126,6 +127,8 @@ pub struct QuestionFromTemplate {
 #[serde(from = "QuestionPathOrTemplate")]
 #[serde(into = "QuestionPathOrTemplate")]
 pub struct QuestionFromTemplateInput {
+    // Seperated because this can have a template field that is templated with exam template values
+    pub first_template_data: Option<TemplateFileInput>,
     pub template_data: Vec<TemplateFile>,
     pub question_path: Option<String>,
     pub data: Option<QuestionInput>,
@@ -136,7 +139,7 @@ impl std::convert::From<QuestionFromTemplateInput> for QuestionPathOrTemplate {
     fn from(qft: QuestionFromTemplateInput) -> Self {
         match qft.question_path {
             Some(path) => QuestionPathOrTemplate::QuestionPath(path.clone()),
-            None => QuestionPathOrTemplate::Template(qft.template_data[0].clone()),
+            None => QuestionPathOrTemplate::Template(qft.first_template_data.clone().unwrap()),
         }
     }
 }
@@ -145,7 +148,9 @@ impl std::convert::From<QuestionFromTemplate> for QuestionPathOrTemplate {
     fn from(qft: QuestionFromTemplate) -> Self {
         match qft.question_path {
             Some(path) => QuestionPathOrTemplate::QuestionPath(path.clone()),
-            None => QuestionPathOrTemplate::Template(qft.template_data[0].clone()),
+            None => {
+                QuestionPathOrTemplate::Template(Input::from_normal(qft.template_data[0].clone()))
+            }
         }
     }
 }
@@ -154,6 +159,7 @@ impl std::convert::From<QuestionPathOrTemplate> for QuestionFromTemplateInput {
     fn from(qpt: QuestionPathOrTemplate) -> Self {
         match qpt {
             QuestionPathOrTemplate::QuestionPath(path) => Self {
+                first_template_data: None,
                 template_data: Vec::new(),
                 question_path: Some(path),
                 data: None,
@@ -164,10 +170,11 @@ impl std::convert::From<QuestionPathOrTemplate> for QuestionFromTemplateInput {
     }
 }
 
-impl std::convert::From<TemplateFile> for QuestionFromTemplateInput {
-    fn from(template_file: TemplateFile) -> Self {
+impl std::convert::From<TemplateFileInput> for QuestionFromTemplateInput {
+    fn from(template_file: TemplateFileInput) -> Self {
         Self {
-            template_data: vec![template_file],
+            first_template_data: Some(template_file),
+            template_data: Vec::new(),
             question_path: None,
             data: None,
             error_message: None,
@@ -195,27 +202,56 @@ impl Examples for QuestionFromTemplateInput {
     }
 }
 impl QuestionFromTemplateInput {
-    fn dependency(&self, main_file_path: &RumbasPath) -> FileToRead {
-        crate::support::file_manager::QuestionFileToRead::with_file_name(
-            if self.template_data.len() > 0 {
-                self.template_data
-                    .last()
-                    .unwrap()
-                    .relative_template_path
-                    .clone()
-            } else {
-                self.question_path.clone().unwrap()
-            },
-            main_file_path,
-        )
-        .into()
-    }
-
     pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
         if self.data.is_some() {
             None
+        } else if let Some(rel_path) = self
+            .template_data
+            .last()
+            .clone()
+            .map(|a| a.relative_template_path.clone())
+        {
+            Some(
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    rel_path.clone(),
+                    main_file_path,
+                )
+                .into(),
+            )
+        } else if let Some(ValueType::Normal(rel_path)) = self
+            .first_template_data
+            .clone()
+            .map(|t| t.relative_template_path)
+        {
+            Some(
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    rel_path.clone(),
+                    main_file_path,
+                )
+                .into(),
+            )
+        } else if let Some(ValueType::TemplateWithDefault(ts)) = self
+            .first_template_data
+            .clone()
+            .map(|t| t.relative_template_path)
+        {
+            ts.default_value.map(|rel_path| {
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    rel_path.clone(),
+                    main_file_path,
+                )
+                .into()
+            })
+        } else if let Some(path) = self.question_path.as_ref() {
+            Some(
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    path.clone(),
+                    main_file_path,
+                )
+                .into(),
+            )
         } else {
-            Some(self.dependency(main_file_path).into())
+            None
         }
     }
 }
@@ -224,14 +260,27 @@ impl Input for QuestionFromTemplateInput {
     type Normal = QuestionFromTemplate;
     fn to_normal(&self) -> Self::Normal {
         Self::Normal {
-            template_data: self.template_data.to_owned(),
+            template_data: if let Some(d) = self.first_template_data.as_ref() {
+                vec![d.clone()]
+            } else {
+                Vec::new()
+            }
+            .into_iter()
+            .map(|t| t.to_normal())
+            .chain(self.template_data.iter().map(|t| t.to_owned()))
+            .collect(),
             question_path: self.question_path.to_owned(),
             data: self.data.as_ref().map(|d| d.to_normal()).unwrap(),
         }
     }
     fn from_normal(normal: Self::Normal) -> Self {
         Self {
-            template_data: normal.template_data,
+            first_template_data: normal
+                .template_data
+                .first()
+                .map(|a| a.to_owned())
+                .map(Input::from_normal),
+            template_data: normal.template_data.into_iter().skip(1).collect(),
             question_path: normal.question_path,
             data: Some(Input::from_normal(normal.data)),
             error_message: None,
@@ -240,13 +289,17 @@ impl Input for QuestionFromTemplateInput {
     fn find_missing(&self) -> InputCheckResult {
         let path = if let Some(p) = self.question_path.as_ref() {
             p.to_owned()
+        } else if let Some(first) = self.first_template_data.as_ref() {
+            if let ValueType::Normal(p) = first.relative_template_path.clone() {
+                p.clone()
+            } else if let Some(key) = first.template_key() {
+                format!("template-key {}", key)
+            } else {
+                unreachable!();
+            }
         } else {
-            self.template_data
-                .first()
-                .as_ref()
-                .unwrap()
-                .relative_template_path
-                .clone()
+            let first = self.template_data.first().clone().unwrap();
+            first.relative_template_path.clone()
         };
         if let Some(ref q) = self.data {
             let mut previous_result = q.find_missing();
@@ -261,6 +314,8 @@ impl Input for QuestionFromTemplateInput {
     fn insert_template_value(&mut self, key: &str, val: &serde_yaml::Value) {
         if let Some(ref mut q) = self.data {
             q.insert_template_value(key, val);
+        } else if let Some(ref mut e) = self.first_template_data {
+            e.relative_template_path.insert_template_value(key, val);
         }
     }
     fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
@@ -272,26 +327,39 @@ impl Input for QuestionFromTemplateInput {
             // TODO: is this used like this?
             q.files_to_load(main_file_path)
         } else {
-            unreachable!();
+            vec![]
         }
     }
     fn dependencies(
         &self,
         main_file_path: &RumbasPath,
     ) -> std::collections::HashSet<rumbas_support::path::RumbasPath> {
-        let path: rumbas_support::path::RumbasPath = self.dependency(main_file_path).into();
-        let deps: std::collections::HashSet<_> = vec![path].into_iter().collect();
+        let mut deps: std::collections::HashSet<_> = Default::default();
 
-        let deps = if let Some(ref data) = self.data {
+        if let Some(path) = self.question_path.as_ref() {
+            deps.insert(main_file_path.keep_root(Path::new(&path[..])));
+        }
+        for template_file in self.template_data.iter() {
+            deps.insert(
+                main_file_path.keep_root(Path::new(&template_file.relative_template_path[..])),
+            );
+        }
+        if let Some(ValueType::Normal(path)) = self
+            .first_template_data
+            .as_ref()
+            .map(|t| t.relative_template_path.clone())
+        {
+            deps.insert(main_file_path.keep_root(Path::new(&path[..])));
+        }
+
+        if let Some(ref data) = self.data {
             data.dependencies(main_file_path)
                 .into_iter()
                 .chain(deps.into_iter())
                 .collect()
         } else {
             deps
-        };
-
-        deps
+        }
     }
     fn insert_loaded_files(
         &mut self,
@@ -322,6 +390,11 @@ impl Input for QuestionFromTemplateInput {
                                         input.insert_template_value(k, &v.0);
                                     })
                                 });
+                                if let Some(f) = self.first_template_data.as_ref() {
+                                    f.data.iter().for_each(|(k, v)| {
+                                        input.insert_template_value(k, &v.0);
+                                    })
+                                }
                                 combine_question_with_default_files(
                                     file_to_load.file_path,
                                     &mut input,
@@ -342,9 +415,22 @@ impl Input for QuestionFromTemplateInput {
                                             break;
                                         }
                                     }
-                                    if let Some(key) = template_file.template_key() {
-                                        self.error_message = Some(format!("Parent template not found, the template key {} is not set for {}", key, file_to_load.file_path.display()));
-                                        return;
+                                    if template_file.has_unknown_parent() {
+                                        if let Some(f) = self.first_template_data.as_ref() {
+                                            if matches!(
+                                                f.relative_template_path,
+                                                ValueType::Normal(_)
+                                            ) {
+                                                let n = f.to_normal();
+                                                template_file.set_template(&n);
+                                            }
+                                        }
+                                    }
+                                    if !template_file.relative_template_path.is_set() {
+                                        if let Some(key) = template_file.template_key() {
+                                            self.error_message = Some(format!("Parent template not found, the template key {} is not set for {}", key, file_to_load.file_path.display()));
+                                            return;
+                                        }
                                     }
                                 }
                                 let template_file = template_file.to_normal();

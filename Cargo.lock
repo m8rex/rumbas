@@ -158,8 +158,7 @@ dependencies = [
 [[package]]
 name = "comparable"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f589813d1fc1b885a5a1ba7733029f0b0d0a519849d3c878f4ad3d4f5b984291"
+source = "git+https://github.com/jwiegley/comparable?rev=278c51e152ac54441577008079335e112b9401e0#278c51e152ac54441577008079335e112b9401e0"
 dependencies = [
  "comparable_derive",
  "comparable_helper",
@@ -170,8 +169,7 @@ dependencies = [
 [[package]]
 name = "comparable_derive"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8bc12149fd88e532dcab80fde98258ea960e8d9c3ea25b6f3ba30d204077d2b5"
+source = "git+https://github.com/jwiegley/comparable?rev=278c51e152ac54441577008079335e112b9401e0#278c51e152ac54441577008079335e112b9401e0"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -182,8 +180,7 @@ dependencies = [
 [[package]]
 name = "comparable_helper"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9334ba02eae005887d2d0670371a1f2ab90409aa641e6b884baac1ae445664ec"
+source = "git+https://github.com/jwiegley/comparable?rev=278c51e152ac54441577008079335e112b9401e0#278c51e152ac54441577008079335e112b9401e0"
 dependencies = [
  "convert_case",
  "proc-macro2",

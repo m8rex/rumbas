@@ -185,6 +185,18 @@ where
     }
 }
 
+impl<T> ValueType<T> {
+    #[inline]
+    pub fn is_set(&self) -> bool {
+        match self {
+            ValueType::Normal(_) => true,
+            ValueType::Template(_) => false,
+            ValueType::TemplateWithDefault(ts) => ts.default_value.is_some(),
+            ValueType::Invalid(v) => false,
+        }
+    }
+}
+
 impl<T: std::clone::Clone> ValueType<T> {
     #[inline]
     pub fn unwrap(&self) -> T {

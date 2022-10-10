@@ -8,4 +8,5 @@ members = [
 
 [patch.crates-io]
 serde = { git = "https://github.com/jhoobergs/serde.git"}
-
+# 0.5.3 release broke semvar, pin to 0.5.2. See https://github.com/jwiegley/comparable/issues/4
+comparable = { git = "https://github.com/jwiegley/comparable", rev = "278c51e152ac54441577008079335e112b9401e0" }
