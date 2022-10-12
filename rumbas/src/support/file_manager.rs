@@ -396,6 +396,16 @@ pub struct ExamFileToRead {
     file_path: RumbasPath,
 }
 
+impl ExamFileToRead {
+    pub fn with_file_name(file_name: String, main_file_path: &RumbasPath) -> Self {
+        let file_path = std::path::Path::new(crate::EXAMS_FOLDER)
+            .join(file_name)
+            .with_extension("yaml");
+        let file_path = main_file_path.keep_root(file_path.as_path());
+        Self { file_path }
+    }
+}
+
 impl std::convert::From<ExamFileToRead> for FileToRead {
     fn from(s: ExamFileToRead) -> Self {
         FileToRead::Exam(s)

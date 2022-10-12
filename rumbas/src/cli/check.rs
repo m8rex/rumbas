@@ -137,9 +137,12 @@ impl CheckResult {
 /// Return true if parsing is ok
 pub fn check_file(path: &RumbasPath) -> CheckResult {
     log::info!("Checking {:?}", path.display());
-    let exam_input_result = rumbas::exam::ExamInput::from_file(path);
+    let exam_input_result = rumbas::exam::RecursiveTemplateExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
+            // Load template files for exam
+            exam_input.load_files(path);
+
             exam_input.combine_with_defaults(path);
             exam_input.load_files(path);
 
@@ -148,12 +151,12 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
             let exam_result = exam_input.to_normal_safe();
             match exam_result {
                 Ok(exam) => {
-                    if exam.locales().is_empty() {
+                    if exam.data.locales().is_empty() {
                         CheckResult::LocalesNotSet
                     } else {
                         let mut failed_locales = Vec::new();
                         let mut passed_locales = Vec::new();
-                        for locale_item in exam.locales().iter() {
+                        for locale_item in exam.data.locales().iter() {
                             let locale = locale_item.name.to_owned();
                             let numbas = exam.to_numbas_safe(&locale);
                             match numbas {
@@ -162,7 +165,7 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
                                         locale,
                                         numbas_exam,
                                         locale_item.numbas_locale,
-                                        exam.numbas_settings().theme,
+                                        exam.data.numbas_settings().theme,
                                     ));
                                 }
                                 Err(check_result) => {
