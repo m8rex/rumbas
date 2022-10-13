@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas/src/support/file_manager.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>file_manager.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../rumbas/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rumbas/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -884,60 +884,6 @@
 <span id="884">884</span>
 <span id="885">885</span>
 <span id="886">886</span>
-<span id="887">887</span>
-<span id="888">888</span>
-<span id="889">889</span>
-<span id="890">890</span>
-<span id="891">891</span>
-<span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
-<span id="895">895</span>
-<span id="896">896</span>
-<span id="897">897</span>
-<span id="898">898</span>
-<span id="899">899</span>
-<span id="900">900</span>
-<span id="901">901</span>
-<span id="902">902</span>
-<span id="903">903</span>
-<span id="904">904</span>
-<span id="905">905</span>
-<span id="906">906</span>
-<span id="907">907</span>
-<span id="908">908</span>
-<span id="909">909</span>
-<span id="910">910</span>
-<span id="911">911</span>
-<span id="912">912</span>
-<span id="913">913</span>
-<span id="914">914</span>
-<span id="915">915</span>
-<span id="916">916</span>
-<span id="917">917</span>
-<span id="918">918</span>
-<span id="919">919</span>
-<span id="920">920</span>
-<span id="921">921</span>
-<span id="922">922</span>
-<span id="923">923</span>
-<span id="924">924</span>
-<span id="925">925</span>
-<span id="926">926</span>
-<span id="927">927</span>
-<span id="928">928</span>
-<span id="929">929</span>
-<span id="930">930</span>
-<span id="931">931</span>
-<span id="932">932</span>
-<span id="933">933</span>
-<span id="934">934</span>
-<span id="935">935</span>
-<span id="936">936</span>
-<span id="937">937</span>
-<span id="938">938</span>
-<span id="939">939</span>
-<span id="940">940</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::rc::within_repo;
 <span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>rumbas_support::input::{FileToLoad, LoadedFile, LoadedLocalizedFile, LoadedNormalFile};
@@ -1171,18 +1117,6 @@
         <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
         <span class="self">self</span>.read_all_questions_in_folder(folder_path)
     }
-    <span class="kw">pub fn </span>find_all_question_templates_in_folder(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        folder_path: RumbasPath,
-    ) -&gt; Vec&lt;FileToLoad&gt; {
-        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::QuestionTemplateFile)
-    }
-    <span class="kw">pub fn </span>read_all_question_templates(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER).to_path_buf();
-        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
-        <span class="kw">let </span>files = <span class="self">self</span>.find_all_question_templates_in_folder(folder_path);
-        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
-    }
     <span class="kw">pub fn </span>find_all_exams_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
         <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamFile)
     }
@@ -1194,15 +1128,6 @@
         <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAMS_FOLDER).to_path_buf();
         <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
         <span class="self">self</span>.read_all_exams_in_folder(folder_path)
-    }
-    <span class="kw">pub fn </span>find_all_exam_templates_in_folder(<span class="kw-2">&amp;</span><span class="self">self</span>, folder_path: RumbasPath) -&gt; Vec&lt;FileToLoad&gt; {
-        <span class="self">self</span>.find_all_yaml_files(folder_path, RumbasRepoFileType::ExamTemplateFile)
-    }
-    <span class="kw">pub fn </span>read_all_exam_templates(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; Vec&lt;LoadedFile&gt; {
-        <span class="kw">let </span>folder_path = std::path::Path::new(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER).to_path_buf();
-        <span class="kw">let </span>folder_path = path.keep_root(<span class="kw-2">&amp;</span>folder_path);
-        <span class="kw">let </span>files = <span class="self">self</span>.find_all_exam_templates_in_folder(folder_path);
-        <span class="self">self</span>.read_files(files).into_iter().map(|(<span class="kw">_</span>, l)| l).collect()
     }
 }
 
@@ -1221,7 +1146,6 @@
     Text(TextFileToRead),
     CustomPartType(CustomPartTypeFileToRead),
     Question(QuestionFileToRead),
-    QuestionTemplate(QuestionTemplateFileToRead),
     Exam(ExamFileToRead),
 }
 
@@ -1231,7 +1155,6 @@
             FileToRead::Text(t) =&gt; t.into(),
             FileToRead::CustomPartType(t) =&gt; t.into(),
             FileToRead::Question(t) =&gt; t.into(),
-            FileToRead::QuestionTemplate(t) =&gt; t.into(),
             FileToRead::Exam(t) =&gt; t.into(),
         }
     }
@@ -1243,7 +1166,6 @@
             FileToRead::Text(t) =&gt; t.into(),
             FileToRead::CustomPartType(t) =&gt; t.into(),
             FileToRead::Question(t) =&gt; t.into(),
-            FileToRead::QuestionTemplate(t) =&gt; t.into(),
             FileToRead::Exam(t) =&gt; t.into(),
         }
     }
@@ -1356,44 +1278,18 @@
 }
 
 <span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
-</span><span class="kw">pub struct </span>QuestionTemplateFileToRead {
+</span><span class="kw">pub struct </span>ExamFileToRead {
     file_path: RumbasPath,
 }
 
-<span class="kw">impl </span>QuestionTemplateFileToRead {
+<span class="kw">impl </span>ExamFileToRead {
     <span class="kw">pub fn </span>with_file_name(file_name: String, main_file_path: <span class="kw-2">&amp;</span>RumbasPath) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER)
+        <span class="kw">let </span>file_path = std::path::Path::new(<span class="kw">crate</span>::EXAMS_FOLDER)
             .join(file_name)
             .with_extension(<span class="string">&quot;yaml&quot;</span>);
         <span class="kw">let </span>file_path = main_file_path.keep_root(file_path.as_path());
         <span class="self">Self </span>{ file_path }
     }
-}
-
-<span class="kw">impl </span>std::convert::From&lt;QuestionTemplateFileToRead&gt; <span class="kw">for </span>FileToRead {
-    <span class="kw">fn </span>from(s: QuestionTemplateFileToRead) -&gt; <span class="self">Self </span>{
-        FileToRead::QuestionTemplate(s)
-    }
-}
-
-<span class="kw">impl </span>std::convert::From&lt;QuestionTemplateFileToRead&gt; <span class="kw">for </span>rumbas_support::input::FileToLoad {
-    <span class="kw">fn </span>from(s: QuestionTemplateFileToRead) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            file_path: s.file_path,
-            locale_dependant: <span class="bool-val">false</span>,
-        }
-    }
-}
-
-<span class="kw">impl </span>std::convert::From&lt;QuestionTemplateFileToRead&gt; <span class="kw">for </span>RumbasPath {
-    <span class="kw">fn </span>from(s: QuestionTemplateFileToRead) -&gt; <span class="self">Self </span>{
-        s.file_path
-    }
-}
-
-<span class="attribute">#[derive(Hash, Eq, PartialEq, Debug, Clone)]
-</span><span class="kw">pub struct </span>ExamFileToRead {
-    file_path: RumbasPath,
 }
 
 <span class="kw">impl </span>std::convert::From&lt;ExamFileToRead&gt; <span class="kw">for </span>FileToRead {
@@ -1476,9 +1372,7 @@
 <span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>RumbasRepoFileType {
     QuestionFile,
-    QuestionTemplateFile,
     ExamFile,
-    ExamTemplateFile,
     CustomPartTypeFile,
     DefaultFile,
     LocaleFile(String, RumbasPath),
@@ -1508,12 +1402,8 @@
                     <span class="self">Self</span>::DefaultFile
                 } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::QUESTIONS_FOLDER) {
                     <span class="self">Self</span>::QuestionFile
-                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::QUESTION_TEMPLATES_FOLDER) {
-                    <span class="self">Self</span>::QuestionTemplateFile
                 } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::EXAMS_FOLDER) {
                     <span class="self">Self</span>::ExamFile
-                } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::EXAM_TEMPLATES_FOLDER) {
-                    <span class="self">Self</span>::ExamTemplateFile
                 } <span class="kw">else if </span>p.in_main_folder(<span class="kw">crate</span>::CUSTOM_PART_TYPES_FOLDER) {
                     <span class="self">Self</span>::CustomPartTypeFile
                 } <span class="kw">else </span>{
@@ -1568,12 +1458,12 @@
             RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exams/locale-e/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            RumbasRepoFileType::QuestionTemplateFile,
-            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;question_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::QuestionFile,
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;questions/templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
-            RumbasRepoFileType::ExamTemplateFile,
-            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exam_templates/something/file.yaml&quot;</span>))
+            RumbasRepoFileType::ExamFile,
+            RumbasRepoFileType::from(<span class="kw-2">&amp;</span>rumbas_path(<span class="string">&quot;exams/templates/something/file.yaml&quot;</span>))
         );
         <span class="macro">assert_eq!</span>(
             RumbasRepoFileType::CustomPartTypeFile,
@@ -1714,6 +1604,8 @@
                     <span class="kw">let </span><span class="kw-2">mut </span>previous_result = q.find_missing();
                     previous_result.extend_path(<span class="self">self</span>.file_name.clone());
                     previous_result
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(e) = <span class="self">self</span>.error_message.as_ref() {
+                    InputCheckResult::from_error_message(e.clone())
                 } <span class="kw">else </span>{
                     InputCheckResult::from_missing(<span class="prelude-val">Some</span>(<span class="self">self</span>.file_name.clone()))
                 }
@@ -1879,4 +1771,4 @@
 }
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>create_from_string_type;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (57f097ea2 2022-10-01)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rumbas" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (c0983a9aa 2022-10-12)" ></div></body></html>

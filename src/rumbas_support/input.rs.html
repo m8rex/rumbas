@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/input.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>input.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `rumbas_support/src/input.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>input.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../rumbas_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rumbas_support/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -549,6 +549,28 @@
 <span id="549">549</span>
 <span id="550">550</span>
 <span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::path::RumbasPath;
 <span class="kw">use </span><span class="kw">crate</span>::value::Value;
 <span class="kw">use </span><span class="kw">crate</span>::value::ValueType;
@@ -957,6 +979,7 @@
     <span class="comment">// When adding a field, do also add it to is_empty
     </span>missing_values: Vec&lt;InputCheckMissingData&gt;,
     invalid_yaml_values: Vec&lt;InputCheckInvalidYamlData&gt;,
+    error_messages: Vec&lt;String&gt;,
 }
 
 <span class="kw">impl </span>InputCheckResult {
@@ -966,6 +989,7 @@
                 path: InputCheckPath::with_last(os),
             }],
             invalid_yaml_values: <span class="macro">vec!</span>[],
+            error_messages: Vec::new(),
         }
     }
     <span class="kw">pub fn </span>from_invalid(v: <span class="kw-2">&amp;</span>serde_yaml::Value, e: <span class="prelude-ty">Option</span>&lt;serde_yaml::Error&gt;) -&gt; InputCheckResult {
@@ -976,17 +1000,28 @@
                 data: v.clone(),
                 error: e.map(|e| e.to_string()),
             }],
+            error_messages: Vec::new(),
+        }
+    }
+    <span class="kw">pub fn </span>from_error_message(s: String) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            missing_values: Vec::new(),
+            invalid_yaml_values: Vec::new(),
+            error_messages: <span class="macro">vec!</span>[s],
         }
     }
     <span class="kw">pub fn </span>empty() -&gt; InputCheckResult {
         InputCheckResult {
             missing_values: <span class="macro">vec!</span>[],
             invalid_yaml_values: <span class="macro">vec!</span>[],
+            error_messages: Vec::new(),
         }
     }
     <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.missing_values.len() == <span class="number">0 </span>&amp;&amp; <span class="self">self</span>.invalid_yaml_values.len() == <span class="number">0
-    </span>}
+        <span class="self">self</span>.missing_values.is_empty()
+            &amp;&amp; <span class="self">self</span>.invalid_yaml_values.is_empty()
+            &amp;&amp; <span class="self">self</span>.error_messages.is_empty()
+    }
     <span class="kw">pub fn </span>extend_path(<span class="kw-2">&amp;mut </span><span class="self">self</span>, s: String) {
         <span class="kw">for </span>missing_value <span class="kw">in </span><span class="self">self</span>.missing_values.iter_mut() {
             missing_value.path.add(s.clone());
@@ -999,6 +1034,8 @@
         <span class="self">self</span>.missing_values.extend(other.missing_values.clone());
         <span class="self">self</span>.invalid_yaml_values
             .extend(other.invalid_yaml_values.clone());
+
+        <span class="self">self</span>.error_messages.extend(other.error_messages.clone());
     }
     <span class="kw">pub fn </span>missing_fields(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;InputCheckMissingData&gt; {
         <span class="self">self</span>.missing_values.clone()
@@ -1006,23 +1043,30 @@
     <span class="kw">pub fn </span>invalid_yaml_fields(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;InputCheckInvalidYamlData&gt; {
         <span class="self">self</span>.invalid_yaml_values.clone()
     }
+    <span class="kw">pub fn </span>error_messages(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
+        <span class="self">self</span>.error_messages.clone()
+    }
 }
 
 <span class="kw">impl </span>InputCheckResult {
     <span class="kw">pub fn </span>log(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>RumbasPath) {
-        <span class="kw">let </span>missing_fields = <span class="self">self</span>.missing_fields();
-        <span class="kw">let </span>invalid_yaml_fields = <span class="self">self</span>.invalid_yaml_fields();
         <span class="macro">log::error!</span>(<span class="string">&quot;Error when processing {}.&quot;</span>, path.display());
-        <span class="kw">if </span>!missing_fields.is_empty() {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} missing fields:&quot;</span>, missing_fields.len());
-            <span class="kw">for </span>(idx, error) <span class="kw">in </span>missing_fields.iter().enumerate() {
+        <span class="kw">if </span>!<span class="self">self</span>.missing_values.is_empty() {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} missing fields:&quot;</span>, <span class="self">self</span>.missing_values.len());
+            <span class="kw">for </span>(idx, error) <span class="kw">in </span><span class="self">self</span>.missing_values.iter().enumerate() {
                 <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, idx + <span class="number">1</span>, error.to_string());
             }
         }
-        <span class="kw">if </span>!invalid_yaml_fields.is_empty() {
-            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} invalid fields:&quot;</span>, invalid_yaml_fields.len());
-            <span class="kw">for </span>(idx, error) <span class="kw">in </span>invalid_yaml_fields.iter().enumerate() {
+        <span class="kw">if </span>!<span class="self">self</span>.invalid_yaml_values.is_empty() {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} invalid fields:&quot;</span>, <span class="self">self</span>.invalid_yaml_values.len());
+            <span class="kw">for </span>(idx, error) <span class="kw">in </span><span class="self">self</span>.invalid_yaml_values.iter().enumerate() {
                 <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, idx + <span class="number">1</span>, error.to_string());
+            }
+        }
+        <span class="kw">if </span>!<span class="self">self</span>.error_messages.is_empty() {
+            <span class="macro">log::error!</span>(<span class="string">&quot;Found {} error messages:&quot;</span>, <span class="self">self</span>.error_messages.len());
+            <span class="kw">for </span>(idx, error) <span class="kw">in </span><span class="self">self</span>.error_messages.iter().enumerate() {
+                <span class="macro">log::error!</span>(<span class="string">&quot;{}\t{}&quot;</span>, idx + <span class="number">1</span>, error);
             }
         }
     }
@@ -1101,4 +1145,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (57f097ea2 2022-10-01)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rumbas_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (c0983a9aa 2022-10-12)" ></div></body></html>
