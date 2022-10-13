@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for symlinks
 - Default value support for templated values
 - Load templated questions directly from exam files
+- Recursive templates: a template can have a template as parent.
 
 ### Changed
 - *BREAKING*: template files should now placed in the normal folders (`exams` and `questions`) instead of specific ones (`question_templates` and `exam_templates`) 
