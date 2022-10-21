@@ -3,8 +3,9 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "LocaleInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Locale {
@@ -15,7 +16,7 @@ pub struct Locale {
 
 macro_rules! create_support_locale {
     ($($name: ident => $key: literal),*) => {
-        #[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
         #[input(name = "SupportedLocaleInput")]
         /// Locales supported by Numbas
         #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, Copy, PartialEq, Eq)]

@@ -15,8 +15,9 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 use std::path::Path;
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionGroupInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionGroup {
@@ -49,7 +50,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "PickingStrategyInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(tag = "picking_strategy")]
@@ -101,14 +102,14 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "PickingStrategyRandomSubsetInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct PickingStrategyRandomSubset {
     pub pick_questions: usize,
 }
 
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, StructDoc)]
 #[serde(untagged)]
 pub enum QuestionPathOrTemplate {
     QuestionPath(String),
@@ -121,6 +122,12 @@ pub struct QuestionFromTemplate {
     pub template_data: Vec<TemplateFile>,
     pub question_path: Option<String>,
     pub data: Question,
+}
+
+impl StructDoc for QuestionFromTemplate {
+    fn document() -> structdoc::Documentation {
+        QuestionPathOrTemplate::document()
+    }
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]

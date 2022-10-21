@@ -6,8 +6,9 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "TimingInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Timing {
@@ -42,7 +43,7 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "TimeoutActionInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -78,7 +79,7 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "TimeoutActionWarnInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct TimeoutActionWarn {

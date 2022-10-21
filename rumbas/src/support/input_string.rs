@@ -2,12 +2,15 @@ use comparable::Comparable;
 use regex::Regex;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 /// The datatype for the input strings
 ///
 /// It supports the shorthand µ for \var
 /// It supports the shorthand § for \simplify
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[derive(
+    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq, StructDoc,
+)]
 #[serde(from = "String")]
 #[serde(into = "String")]
 pub struct InputString(pub String);

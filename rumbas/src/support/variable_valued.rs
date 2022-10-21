@@ -6,9 +6,10 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::Serialize;
 use serde::{de::DeserializeOwned, Deserialize};
+use structdoc::StructDoc;
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, Eq, StructDoc)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),
@@ -182,7 +183,7 @@ impl<T> VariableValued<T> {
 }
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema, StructDoc)]
 #[serde(untagged)]
 pub enum ReverseVariableValued<T> {
     Value(T), // Different ordering

@@ -30,8 +30,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt::Display;
 use std::path::Path;
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "ExamInput")]
 #[input(test)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
@@ -118,7 +119,7 @@ impl Display for FileReadError {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, StructDoc)]
 #[input(name = "ExamFileTypeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 #[serde(rename_all = "snake_case")]

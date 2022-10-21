@@ -3,6 +3,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 use std::convert::TryInto;
+use structdoc::StructDoc;
 
 pub mod ast;
 pub mod builtin_functions;
@@ -41,12 +42,13 @@ impl std::convert::From<StringOrNumber> for String {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default, StructDoc)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
     s: String,
     #[comparable_ignore]
+    #[structdoc(leaf)]
     ast: Option<ast::Expr>,
 }
 impl_string_json_schema!(JMEString, "JMEString");
@@ -96,12 +98,13 @@ impl JMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default, StructDoc)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct EmbracedJMEString {
     s: String,
     #[comparable_ignore]
+    #[structdoc(leaf)]
     asts: Option<Vec<ast::Expr>>,
 }
 impl_string_json_schema!(EmbracedJMEString, "EmbracedJMEString"); // maybe add pattern?
@@ -157,13 +160,14 @@ impl EmbracedJMEString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default, StructDoc)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct ContentAreaString {
     s: String,
     #[comparable_ignore]
+    #[structdoc(leaf)]
     asts: Option<Vec<ast::Expr>>,
 }
 impl_string_json_schema!(ContentAreaString, "ContentAreaString");
@@ -205,13 +209,14 @@ impl ContentAreaString {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default, StructDoc)]
 #[serde(try_from = "String")]
 #[serde(into = "String")]
 /// Each portion of text displayed to the student (for example, the statement, advice, and part prompts) is a content area. A content area can include text, images, or more dynamic content such as videos and interactive diagrams.
 pub struct JMENotesString {
     pub s: String,
     #[comparable_ignore]
+    #[structdoc(leaf)]
     pub notes: Option<Vec<ast::Note>>,
 }
 impl_string_json_schema!(JMENotesString, "JMENotesString");

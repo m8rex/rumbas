@@ -15,9 +15,10 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 // TODO: remove duplication of NormalExam & Diagnostic Exam?
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "NormalExamInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 /// An Exam

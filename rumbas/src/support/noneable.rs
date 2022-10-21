@@ -3,8 +3,9 @@ use crate::support::to_rumbas::ToRumbas;
 use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
+use structdoc::StructDoc;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, StructDoc)]
 pub enum Noneable<T> {
     None,
     NotNone(T),

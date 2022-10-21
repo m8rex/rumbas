@@ -10,11 +10,12 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::convert::Into;
 use std::convert::TryInto;
+use structdoc::StructDoc;
 
 /// The prefix used to specify a file reference
 pub const FILE_PREFIX: &str = "file";
 
-#[derive(Serialize, Deserialize, Comparable)]
+#[derive(Serialize, Deserialize, Comparable, StructDoc)]
 #[serde(untagged)]
 pub enum AnyString {
     Str(InputString),
@@ -58,7 +59,7 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
+            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, StructDoc)]
             #[serde(into = "String")]
             $(
                 #[$outer]
