@@ -11,6 +11,7 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::convert::From;
 use std::convert::TryInto;
+use structdoc::StructDoc;
 
 translatable_type! {
     /// A translatable string
@@ -199,7 +200,7 @@ mod test {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "TranslationContentInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
@@ -295,7 +296,7 @@ mod helpers {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, StructDoc)]
 #[input(name = "TranslationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[input(from = "helpers::TranslationInput")]
@@ -491,7 +492,7 @@ macro_rules! translatable_type {
                 }
             }
 
-            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable, Eq)]
+            #[derive(Debug, Clone, PartialEq, JsonSchema, Serialize, Deserialize, Comparable, Eq, StructDoc)]
             pub struct $type(Translation);
 
             impl Input for [<$type Input>] {

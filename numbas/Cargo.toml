@@ -19,6 +19,7 @@ pest_derive = "2.1"
 log = "0.4"
 #schemars= "0.8.3"
 schemars = { git = "https://github.com/jhoobergs/schemars.git", branch = "tagged-enums-as-if-else" }
+structdoc = { git = "https://github.com/m8rex/structdoc.git"}
 
 [dev-dependencies]
 simple_logger = "2.1.0"

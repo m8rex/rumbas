@@ -3,10 +3,11 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
+use structdoc::StructDoc;
 
 pub const TEMPLATE_PREFIX: &str = "template";
 
-#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, StructDoc)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
     pub relative_template_path: String,
@@ -22,6 +23,12 @@ pub struct TemplateFileInput {
     #[serde(flatten)]
     #[comparable_ignore]
     pub data: BTreeMap<String, MyYamlValue>,
+}
+
+impl StructDoc for TemplateFileInput {
+    fn document() -> structdoc::Documentation {
+        TemplateFile::document()
+    }
 }
 
 impl TemplateFileInput {
@@ -128,6 +135,12 @@ impl Eq for TemplateFileInput {}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Hash)]
 pub struct MyYamlValue(pub serde_yaml::Value);
+
+impl StructDoc for MyYamlValue {
+    fn document() -> structdoc::Documentation {
+        structdoc::Documentation::leaf("YAML-value")
+    }
+}
 
 impl Overwrite<MyYamlValue> for MyYamlValue {
     fn overwrite(&mut self, _other: &Self) {}
