@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - *BREAKING*: template files should now placed in the normal folders (`exams` and `questions`) instead of specific ones (`question_templates` and `exam_templates`) 
+- Imported files are now formatted after import
 
 ### Removed
 - Support to update from version 0.4.0
