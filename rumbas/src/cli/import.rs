@@ -1,3 +1,4 @@
+use crate::cli::fmt::fmt_internal;
 use numbas::exam::Exam as NExam;
 use rumbas::exam::convert_numbas_exam;
 use rumbas::exam::question_group::QuestionFromTemplate;
@@ -87,8 +88,9 @@ pub fn import(path: String, is_question: bool) {
                     let exam_yaml = rumbas_exam.to_yaml().unwrap();
                     let file = format!("{}/{}.yaml", rumbas::EXAMS_FOLDER, name);
                     log::info!("Writing to {}", file);
-                    std::fs::write(file, exam_yaml).unwrap();
+                    std::fs::write(&file, exam_yaml).unwrap();
                     //fix handle result
+                    fmt_internal(vec![file]).unwrap();
                 }
                 Err(e) => {
                     log::error!("{:?}", e);
@@ -114,7 +116,8 @@ fn create_question(qf: QuestionFromTemplate) {
                 .unwrap();
             let file = format!("{}/{}.yaml", rumbas::QUESTIONS_FOLDER, q_name);
             log::info!("Writing to {}", file);
-            std::fs::write(file, q_yaml).unwrap(); //fix handle result
+            std::fs::write(&file, q_yaml).unwrap(); //fix handle result
+            fmt_internal(vec![file]).unwrap();
         }
         _ => unimplemented!(),
     }
@@ -125,5 +128,6 @@ fn create_custom_part_type(cpt: CustomPartTypeDefinitionPath) {
     let c_yaml = cpt.data.to_yaml().unwrap();
     let file = format!("{}/{}.yaml", rumbas::CUSTOM_PART_TYPES_FOLDER, c_name);
     log::info!("Writing to {}", file);
-    std::fs::write(file, c_yaml).unwrap(); //fix handle result
+    std::fs::write(&file, c_yaml).unwrap(); //fix handle result
+    fmt_internal(vec![file]).unwrap();
 }
