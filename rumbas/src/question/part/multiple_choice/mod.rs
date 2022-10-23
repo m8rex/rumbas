@@ -9,12 +9,13 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
+use structdoc::StructDoc;
 
 pub mod choose_multiple;
 pub mod choose_one;
 pub mod match_answers;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceAnswerDataInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
@@ -23,7 +24,7 @@ pub enum MultipleChoiceAnswerData {
     NumbasLike(Box<MultipleChoiceAnswerDataNumbasLike>),
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
@@ -81,7 +82,7 @@ fn extract_multiple_choice_answer_data(
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswer {
@@ -90,7 +91,7 @@ pub struct MultipleChoiceAnswer {
     pub marks: JMETranslatableString,
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceMarkingMethodInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Copy, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]

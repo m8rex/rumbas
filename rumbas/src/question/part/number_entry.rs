@@ -9,9 +9,10 @@ use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartNumberEntryInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartNumberEntry {
@@ -85,7 +86,7 @@ impl ToRumbas<QuestionPartNumberEntry>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "NumberEntryAnswerInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
@@ -95,7 +96,7 @@ pub enum NumberEntryAnswer {
 }
 
 // TODO, better (add toRumbas etc)
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "NumberEntryAnswerRangeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct NumberEntryAnswerRange {
@@ -141,7 +142,7 @@ impl ToRumbas<NumberEntryAnswer> for numbas::question::part::number_entry::Numbe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "AnswerStyleInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum AnswerStyle {

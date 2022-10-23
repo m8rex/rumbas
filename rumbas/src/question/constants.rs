@@ -5,6 +5,7 @@ use numbas::jme::JMEString;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 /// Macro used to make sure that the ToNumbas & ToRumbas implementation remain up to data
 macro_rules! builtin_constants {
@@ -49,7 +50,7 @@ macro_rules! builtin_constants {
 }
 
 builtin_constants! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "BuiltinConstantsInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq,)]
     /// Specify which builtin constants should be enabled
@@ -63,7 +64,7 @@ builtin_constants! {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomConstantInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// A custom constant

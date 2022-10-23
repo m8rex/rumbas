@@ -14,9 +14,10 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
+use structdoc::StructDoc;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartChooseMultipleInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartChooseMultiple {
