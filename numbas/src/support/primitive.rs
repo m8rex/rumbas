@@ -4,12 +4,23 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde::Serialize;
 use std::convert::TryInto;
+use structdoc::StructDoc;
 //TODO: remove Exam from front of all types?
 //TODO: check what is optional etc
 //TODO: advicethreshold?
 
 #[derive(
-    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, Eq, Default,
+    Serialize,
+    Deserialize,
+    Comparable,
+    JsonSchema,
+    Debug,
+    Clone,
+    PartialEq,
+    Copy,
+    Eq,
+    Default,
+    StructDoc,
 )]
 #[serde(try_from = "Primitive")]
 /// A natural number (unsigned int) that can be parsed from primitive
@@ -45,7 +56,9 @@ impl std::convert::From<usize> for SafeNatural {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy)]
+#[derive(
+    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Copy, StructDoc,
+)]
 #[serde(try_from = "Primitive")]
 /// A decimal number (float) that can be parsed from primitive
 pub struct SafeFloat(pub f64);
@@ -73,7 +86,9 @@ impl std::convert::From<f64> for SafeFloat {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[derive(
+    Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq, StructDoc,
+)]
 #[serde(try_from = "BooledPrimitive")]
 /// A boolean that can be parsed from (booled) primitive
 pub struct SafeBool(pub bool);
@@ -102,7 +117,7 @@ impl std::fmt::Display for SafeBool {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq, Eq, StructDoc)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),
@@ -133,7 +148,7 @@ impl std::convert::From<VariableValued<f64>> for Primitive {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, StructDoc)]
 #[serde(untagged)]
 enum Primitive {
     Natural(usize),
@@ -141,7 +156,7 @@ enum Primitive {
     String(String),
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, StructDoc)]
 #[serde(untagged)]
 enum BooledPrimitive {
     String(String),
@@ -178,7 +193,7 @@ impl std::fmt::Display for Primitive {
     }
 }
 
-#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, StructDoc)]
 #[serde(try_from = "Primitive")]
 #[serde(untagged)]
 pub enum Number {

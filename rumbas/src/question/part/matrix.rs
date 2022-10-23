@@ -10,10 +10,11 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 // See https://docs.numbas.org.uk/en/latest/question/parts/matrixentry.html#matrix-entry
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartMatrixInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatrix {
@@ -79,7 +80,7 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionPartMatrixDimensionsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionPartMatrixDimensions {
@@ -93,7 +94,7 @@ impl QuestionPartMatrixDimensions {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum QuestionPartMatrixDimension {
@@ -147,7 +148,7 @@ impl QuestionPartMatrixDimension {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionPartMatrixRangedDimensionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionPartMatrixRangedDimension {

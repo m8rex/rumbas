@@ -7,12 +7,13 @@ use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
+use structdoc::StructDoc;
 
 // TODO Optional overwrite
 // TODO TranslatableString
 
 // TODO: fix ovewrite?
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, StructDoc)]
 #[input(name = "ResourcePathInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema)]
 #[serde(try_from = "String")]

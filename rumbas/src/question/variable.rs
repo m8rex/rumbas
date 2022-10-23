@@ -9,10 +9,11 @@ use regex::Regex;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 pub const UNGROUPED_GROUP: &str = "Ungrouped variables";
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "VariableRepresentationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
@@ -90,7 +91,7 @@ impl VariableRepresentation {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, JsonSchema, Examples, StructDoc)]
 #[input(name = "VariableStringRepresentationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, PartialEq)]
 #[serde(try_from = "String")]
@@ -160,7 +161,7 @@ impl std::convert::From<VariableStringRepresentationInput> for String {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck)]
+#[derive(Input, Overwrite, RumbasCheck, StructDoc)]
 #[input(name = "RangeDataInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct RangeData {
@@ -333,7 +334,7 @@ mod test {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "VariableInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Variable {
@@ -377,7 +378,7 @@ impl Variable {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "VariableTemplateTypeInput")]
 /// The different template_types for a variable
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]

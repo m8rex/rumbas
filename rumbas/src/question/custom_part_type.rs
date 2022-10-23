@@ -16,8 +16,9 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::{Into, TryInto};
 use std::path::PathBuf;
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeDefinitionInput")]
 #[input(test)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
@@ -97,7 +98,7 @@ impl CustomPartTypeDefinition {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 #[serde(tag = "input_type")]
@@ -159,7 +160,7 @@ impl ToRumbas<CustomPartTypeSetting> for numbas::question::custom_part_type::Cus
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingSharedDataInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingSharedData {
@@ -202,7 +203,7 @@ impl ToRumbas<CustomPartTypeSettingSharedData>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingStringInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingString {
@@ -245,7 +246,7 @@ impl ToRumbas<CustomPartTypeSettingString>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingMathematicalExpressionInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingMathematicalExpression {
@@ -288,7 +289,7 @@ impl ToRumbas<CustomPartTypeSettingMathematicalExpression>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingCodeInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingCode {
@@ -330,7 +331,7 @@ impl ToRumbas<CustomPartTypeSettingCode>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingCheckBoxInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingCheckBox {
@@ -365,7 +366,7 @@ impl ToRumbas<CustomPartTypeSettingCheckBox>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingDropDownInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingDropDown {
@@ -407,7 +408,7 @@ impl ToRumbas<CustomPartTypeSettingDropDown>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingDropDownChoiceInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct CustomPartTypeSettingDropDownChoice {
@@ -440,7 +441,7 @@ impl ToRumbas<CustomPartTypeSettingDropDownChoice>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartTypeSettingPercentageInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq)]
 pub struct CustomPartTypeSettingPercentage {
@@ -489,7 +490,7 @@ impl ToRumbas<CustomPartTypeSettingPercentage>
 
 macro_rules! create_input_option_value {
     ($struct: ident, $input: literal, $type: ty, $numbas_subtype: ty) => {
-        #[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
         #[input(name = $input)]
         #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
         pub struct $struct {
@@ -558,7 +559,7 @@ create_input_option_value!(
     Vec<numbas::support::answer_style::AnswerStyle>
 );
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartInputWidgetInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(tag = "type")]
@@ -613,7 +614,7 @@ impl ToRumbas<CustomPartInputWidget> for numbas::question::custom_part_type::Cus
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartStringInputOptionsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct CustomPartStringInputOptions {
@@ -658,7 +659,7 @@ impl ToRumbas<CustomPartStringInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartNumberInputOptionsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct CustomPartNumberInputOptions {
@@ -705,7 +706,7 @@ impl ToRumbas<CustomPartNumberInputOptions>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartRadioGroupInputOptionsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct CustomPartRadioGroupInputOptions {

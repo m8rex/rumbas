@@ -4,6 +4,7 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 macro_rules! extensions {
     (
@@ -12,7 +13,7 @@ macro_rules! extensions {
             $name: ident: $path: literal
         ),+
     ) => {
-            #[derive(Input, Overwrite, RumbasCheck, Examples)]
+            #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
             #[input(name = "ExtensionsInput")]
             #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
             /// Specify which extensions should be enabled

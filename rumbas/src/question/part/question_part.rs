@@ -17,8 +17,9 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
+use structdoc::StructDoc;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionPartInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
@@ -62,7 +63,7 @@ impl QuestionPartInput {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionPartBuiltinInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(tag = "type")]
@@ -183,7 +184,7 @@ impl QuestionPartBuiltinInput {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMENotesInput")]
 #[derive(Debug, Clone, JsonSchema, Deserialize, Serialize, Comparable, PartialEq, Eq, Default)]
 #[serde(transparent)]
@@ -230,7 +231,7 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMENoteInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct JMENote {
@@ -327,7 +328,7 @@ macro_rules! question_part_type {
 }
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartCustomInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartCustom {
@@ -337,7 +338,7 @@ question_part_type! {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CustomPartInputTypeValueInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
@@ -409,7 +410,7 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "VariableReplacementStrategyInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum VariableReplacementStrategy {

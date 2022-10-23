@@ -37,11 +37,12 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::Path;
 use std::path::PathBuf;
+use structdoc::StructDoc;
 use variable::VariableRepresentation;
 use variable::UNGROUPED_GROUP;
 use variable_test::VariablesTest;
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionInput")]
 #[input(test)]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
@@ -154,7 +155,7 @@ impl ToRumbas<Question> for numbas::question::Question {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "QuestionFileTypeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]

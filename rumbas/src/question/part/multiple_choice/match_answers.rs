@@ -14,9 +14,10 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::Into;
 use std::convert::TryInto;
+use structdoc::StructDoc;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartMatchAnswersWithItemsInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatchAnswersWithItems {
@@ -194,7 +195,7 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswerWithItemsDisplayInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "type")]
@@ -240,7 +241,7 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswersWithChoicesDisplayCheckInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesDisplayCheck {
@@ -270,7 +271,7 @@ impl ToRumbas<MatchAnswersWithChoicesDisplayCheck>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceMatchAnswerDataInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 #[serde(tag = "type")]
@@ -281,7 +282,7 @@ pub enum MultipleChoiceMatchAnswerData {
     NumbasLike(Box<MultipleChoiceMatchAnswerDataNumbasLike>),
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
@@ -290,7 +291,7 @@ pub struct MultipleChoiceMatchAnswerDataNumbasLike {
     pub marks: VariableValued<Vec<Vec<JMEString>>>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceMatchAnswersInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceMatchAnswers {
@@ -300,7 +301,7 @@ pub struct MultipleChoiceMatchAnswers {
     pub items: Vec<MatchAnswersItem>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswersItemInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItem {
@@ -309,7 +310,7 @@ pub struct MatchAnswersItem {
     pub answer_marks: Vec<MatchAnswersItemMarks>,
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswersItemMarksInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItemMarks {
@@ -317,7 +318,7 @@ pub struct MatchAnswersItemMarks {
     pub answer: ContentAreaTranslatableString,
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MultipleChoiceWarningTypeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -353,7 +354,7 @@ impl ToRumbas<MultipleChoiceWarningType>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswersWithChoicesLayoutTypeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -389,7 +390,7 @@ impl ToRumbas<MatchAnswersWithChoicesLayoutType>
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "MatchAnswersWithChoicesLayoutInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesLayout {

@@ -13,9 +13,10 @@ use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use structdoc::StructDoc;
 
 question_part_type! {
-    #[derive(Input, Overwrite, RumbasCheck, Examples)]
+    #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
     #[input(name = "QuestionPartJMEInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartJME {
@@ -118,7 +119,7 @@ macro_rules! create_answer_simplification {
             $(#[$inner:meta])*
             $name: ident: $numbas_name: ident: $partofall: expr
         ),*) => {
-        #[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
         #[input(name = $input)]
         #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
         pub struct $struct {
@@ -251,7 +252,7 @@ macro_rules! create_answer_display_type {
             $(#[$inner:meta])*
             $name: ident: $numbas_name: ident
         ),*) => {
-        #[derive(Input, Overwrite, RumbasCheck, Examples)]
+        #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
         #[input(name = $input)]
         #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
         pub struct $struct {
@@ -317,7 +318,7 @@ create_answer_display_type! {
     matrices_without_parentheses: MatricesWithoutParentheses
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CheckingTypeDataFloatInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct CheckingTypeDataFloat {
@@ -340,7 +341,7 @@ impl
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CheckingTypeDataNaturalInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct CheckingTypeDataNatural {
@@ -355,7 +356,7 @@ impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for Check
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "CheckingTypeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -419,7 +420,7 @@ impl ToRumbas<CheckingType> for numbas::question::part::jme::JMECheckingType {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMERestrictionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMERestriction {
@@ -448,7 +449,7 @@ impl ToRumbas<JMERestriction> for numbas::question::part::jme::JMERestriction {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMELengthRestrictionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMELengthRestriction {
@@ -475,7 +476,7 @@ impl ToRumbas<JMELengthRestriction> for numbas::question::part::jme::JMELengthRe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMEStringRestrictionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMEStringRestriction {
@@ -505,7 +506,7 @@ impl ToRumbas<JMEStringRestriction> for numbas::question::part::jme::JMEStringRe
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMEPatternRestrictionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct JMEPatternRestriction {
@@ -537,7 +538,7 @@ impl ToRumbas<JMEPatternRestriction> for numbas::question::part::jme::JMEPattern
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMEValueGeneratorInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct JMEValueGenerator {
@@ -564,7 +565,7 @@ impl ToRumbas<JMEValueGenerator> for numbas::question::part::jme::JMEValueGenera
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, Examples)]
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "JMERulesetItemInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(tag = "type", content = "rules")]
