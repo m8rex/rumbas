@@ -26,6 +26,10 @@
 <span id="26">26</span>
 <span id="27">27</span>
 <span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::support::rc::RC;
 <span class="kw">use </span>semver::{Version, VersionReq};
 
@@ -48,6 +52,10 @@
         || current_version == Version::new(<span class="number">0</span>, <span class="number">6</span>, <span class="number">2</span>)
     {
         <span class="prelude-val">Some</span>(Version::new(<span class="number">0</span>, <span class="number">6</span>, <span class="number">3</span>))
+    } <span class="kw">else if </span>current_version == Version::new(<span class="number">0</span>, <span class="number">6</span>, <span class="number">3</span>) {
+        <span class="macro">log::warn!</span>(<span class="string">&quot;You will need to manually update you rumbas repo to 0.7.0&quot;</span>);
+        <span class="macro">log::warn!</span>(<span class="string">&quot;Please move all templates files to the regular folders and update all paths.&quot;</span>);
+        <span class="prelude-val">Some</span>(Version::new(<span class="number">0</span>, <span class="number">7</span>, <span class="number">0</span>))
     } <span class="kw">else </span>{
         <span class="prelude-val">None
     </span>};
