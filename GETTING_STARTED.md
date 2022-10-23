@@ -197,8 +197,8 @@ When the description of a `question`/`exam` is read:
 
 ## Running rumbas
 
-- Run `docker run --rm -it -v <absolute_path_to_rumbas-examples_repo>:/rumbas ghcr.io/m8rex/rumbas:0.6.3 <exam_or_question_file>`
-  - e.g.`docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas ghcr.io/m8rex/rumbas:0.6.3 exams/M0/algebra/begintest.yaml`
+- Run `docker run --rm -it -v <absolute_path_to_rumbas-examples_repo>:/rumbas ghcr.io/m8rex/rumbas:0.7.0 <exam_or_question_file>`
+  - e.g.`docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas ghcr.io/m8rex/rumbas:0.7.0 exams/M0/algebra/begintest.yaml`
 - Go to `<absolute_path_to_rumbas-examples_repo>/_output` to find the generated html.
   - Click on the `index.html` file to open the exam in the browser
 
@@ -237,14 +237,14 @@ In this folder you can create a file for each of the following two scripts.
 @echo off
 set str=%*
 set "str=%str:\=/%"
-docker run --rm -v %cd%:/rumbas ghcr.io/m8rex/rumbas:0.6.3 %str%
+docker run --rm -v %cd%:/rumbas ghcr.io/m8rex/rumbas:0.7.0 %str%
 ```
 
 #### rumbas_shell.bat
 
 ```bat
 @echo off
-docker run -it --rm -v %cd%:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.6.3
+docker run -it --rm -v %cd%:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.0
 ```
 
 ### Unix
@@ -267,7 +267,7 @@ In this folder you can create a file for each of the following two scripts.
 
 ```sh
 #!/bin/sh
-docker run --rm -v $PWD:/rumbas ghcr.io/m8rex/rumbas:0.6.3 $@
+docker run --rm -v $PWD:/rumbas ghcr.io/m8rex/rumbas:0.7.0 $@
 ```
 
 Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas`
@@ -276,7 +276,7 @@ Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas`
 
 ```sh
 #!/bin/sh
-docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.6.3
+docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.0
 ```
 
 Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas_shell`
