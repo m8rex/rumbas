@@ -20,6 +20,10 @@ pub fn update(current_rc: RC) -> Option<RC> {
         || current_version == Version::new(0, 6, 2)
     {
         Some(Version::new(0, 6, 3))
+    } else if current_version == Version::new(0, 6, 3) {
+        log::warn!("You will need to manually update you rumbas repo to 0.7.0");
+        log::warn!("Please move all templates files to the regular folders and update all paths.");
+        Some(Version::new(0, 7, 0))
     } else {
         None
     };
