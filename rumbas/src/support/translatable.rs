@@ -205,7 +205,10 @@ mod test {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum TranslationContent {
+    /// Map from locale to content. You can use this to specify different content for different
+    /// locales.
     Locales(HashMap<String, FileString>),
+    /// A filestring. Possibly to a file that is placed in `locale` folders and is therefore localized.
     Content(FileString),
 }
 
@@ -237,21 +240,36 @@ mod helpers {
     use serde::{Deserialize, Serialize};
     use std::collections::HashMap;
     use std::convert::From;
+    use structdoc::StructDoc;
 
-    #[derive(Input)]
+    #[derive(Input, StructDoc)]
     #[input(name = "TranslationInput")]
     #[derive(Clone, Serialize, Deserialize)]
     #[serde(untagged)] // TODO: custom visitor?
     pub enum Translation {
+        /// A structured translatable string with placeholders.
         Normal(TranslationStruct),
+        /// A simple filestring. This implies that it can also just be a string.
         Short(FileString),
     }
 
-    #[derive(Input)]
+    impl From<TranslationInput> for super::TranslationInput {
+        fn from(t: TranslationInput) -> Self {
+            match t {
+                TranslationInput::Normal(c) => c.0.into(),
+                TranslationInput::Short(c) => c.into(),
+            }
+        }
+    }
+    /// Needed because this one is not serde from Translation
+    #[derive(Input, StructDoc)]
     #[input(name = "TranslationStructInput")]
     #[derive(Clone, Serialize, Deserialize)]
     pub struct TranslationStruct {
+        /// The content with optional placeholders ({{placeholder-name}}).
         content: TranslationContent,
+        /// The values for the placeholders. It maps the placeholder-name to it's translatable
+        /// value. The value for a placeholder can thus (if needed) be different for different locales.
         placeholders: HashMap<String, Translation>,
     }
 
@@ -264,15 +282,6 @@ mod helpers {
                         .map(|(k, v)| (k, v.real_map(|v| v.into())))
                         .collect()
                 }),
-            }
-        }
-    }
-
-    impl From<TranslationInput> for super::TranslationInput {
-        fn from(t: TranslationInput) -> Self {
-            match t {
-                TranslationInput::Normal(c) => c.0.into(),
-                TranslationInput::Short(c) => c.into(),
             }
         }
     }
@@ -296,7 +305,7 @@ mod helpers {
     }
 }
 
-#[derive(Input, Overwrite, RumbasCheck, StructDoc)]
+#[derive(Input, Overwrite, RumbasCheck)]
 #[input(name = "TranslationInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[input(from = "helpers::TranslationInput")]
@@ -304,6 +313,12 @@ mod helpers {
 pub struct Translation {
     content: TranslationContent,
     placeholders: HashMap<String, Translation>,
+}
+
+impl StructDoc for Translation {
+    fn document() -> structdoc::Documentation {
+        helpers::Translation::document()
+    }
 }
 
 impl From<FileStringInput> for TranslationInput {

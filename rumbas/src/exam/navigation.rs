@@ -14,7 +14,10 @@ use structdoc::StructDoc;
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "mode")]
 pub enum NormalNavigation {
+    /// Questions are shown in sequential order. Whether student can browse trough questions in any
+    /// order, can be set.
     Sequential(SequentialNavigation),
+    /// Questions are shown in a menu and there is no real order of the questions.
     Menu(MenuNavigation),
 }
 
@@ -88,7 +91,7 @@ pub struct SequentialNavigation {
     #[serde(flatten)]
     pub shared_data: NavigationSharedData,
     /// Whether the student can move back to previous question
-    /// Old name was `reverse`
+    /// (Old name was `reverse`)
     #[serde(alias = "reverse")]
     pub can_move_to_previous: bool,
     /// Whether the student can jump to any question.
@@ -187,7 +190,9 @@ impl ToRumbas<DiagnosticNavigation> for numbas::exam::Exam {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum ShowResultsPage {
+    /// When the exam is completed.
     OnCompletion,
+    /// Never show it.
     Never,
 }
 
@@ -219,8 +224,11 @@ impl ToRumbas<ShowResultsPage> for numbas::exam::navigation::ShowResultsPage {
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum LeaveAction {
+    /// Don't show a warning
     None,
+    /// Warn when a question is not attempted.
     WarnIfNotAttempted(LeaveActionMessage),
+    /// Prevent when a question is not attempted
     PreventIfNotAttempted(LeaveActionMessage),
 }
 
@@ -266,6 +274,7 @@ impl ToRumbas<LeaveAction> for numbas::exam::navigation::LeaveAction {
 #[input(name = "LeaveActionMessageInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct LeaveActionMessage {
+    /// The message to show.
     pub message: TranslatableString,
 }
 
@@ -291,6 +300,7 @@ pub struct NavigationSharedData {
     /// Whether the student will be asked to confirm when leaving the exam.
     #[serde(alias = "prevent_leaving")]
     pub confirm_when_leaving: bool,
+    /// Whether the names of the question groups should be shown.
     pub show_names_of_question_groups: bool,
     /// Whether the student is allowed to print the exam
     pub allow_printing: bool,

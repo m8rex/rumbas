@@ -12,7 +12,10 @@ use structdoc::StructDoc;
 #[input(name = "TimingInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct Timing {
+    /// The maximal time that can be spend on the exam. If this value is `none` or 0, the student
+    /// gets unlimited time.
     pub duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
+    /// Wheher the 'pause' button is available.
     pub allow_pause: bool,
     /// Action to do on timeout
     pub on_timeout: TimeoutAction,
@@ -49,7 +52,9 @@ impl ToRumbas<Timing> for numbas::exam::Exam {
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "action")]
 pub enum TimeoutAction {
+    /// Do nothing
     None,
+    /// Show a warning
     Warn(TimeoutActionWarn),
 }
 
@@ -83,5 +88,6 @@ impl ToRumbas<TimeoutAction> for numbas::exam::timing::TimeoutAction {
 #[input(name = "TimeoutActionWarnInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct TimeoutActionWarn {
+    /// The message to show
     pub message: TranslatableString,
 }

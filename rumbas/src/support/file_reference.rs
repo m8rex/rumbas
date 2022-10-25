@@ -59,7 +59,7 @@ macro_rules! file_type {
                 translated_content: HashMap<String, String>,
                 error_message: Option<String>,
             }
-            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, StructDoc)]
+            #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq)]
             #[serde(into = "String")]
             $(
                 #[$outer]
@@ -68,6 +68,25 @@ macro_rules! file_type {
                 file_name: Option<String>,
                 content: Option<String>,
                 translated_content: HashMap<String, String>,
+            }
+            /// Enum used for the documentation
+            #[derive(StructDoc)]
+            #[structdoc(untagged)]
+            enum [<$type StructDocHelper>] {
+                /// A string of the form `file:<filepath>` where `filepath` is the relative path (within the `exams` or `questions` folder) to a file containing content.
+                /// This content can be localized by placing it in locale folders.
+                /// e.g. `file:examples/basic-explanation.html` will search for files in folders
+                /// with following form: `questions/examples/locale-<localename>/basic-explanation.html`
+                /// If a file isn't found for a specific locale,
+                /// `questions/examples/basic-explanation.html` will be used
+                FileReference(String),
+                /// A literal string.
+                String(String),
+            }
+            impl StructDoc for $type {
+                fn document() -> structdoc::Documentation {
+                    [<$type StructDocHelper>]::document().rename(stringify!($type).to_string())
+                }
             }
             impl Examples for [<$type Input>] {
                 fn examples() -> Vec<Self> {

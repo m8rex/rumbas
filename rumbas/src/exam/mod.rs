@@ -125,8 +125,11 @@ impl Display for FileReadError {
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum ExamFileType {
+    /// An exam that uses a template.
     Template(TemplateFile),
+    /// A normal exam.
     Normal(NormalExam),
+    /// An exam in diagnostic mode.
     Diagnostic(DiagnosticExam),
 }
 

@@ -4,6 +4,7 @@ version = "0.7.1"
 authors = ["Jesse Hoobergs <jesse@hoobergs.be>"]
 description = "Make online exercises great again!"
 edition = "2021"
+default-run = "rumbas"
 
 [[bin]]
 name = "rumbas"

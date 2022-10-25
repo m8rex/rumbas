@@ -23,10 +23,10 @@ use structdoc::StructDoc;
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 /// A Diagnostic Exam
 pub struct DiagnosticExam {
-    /// All locales for which the exam should be generated
-    pub locales: Vec<Locale>,
     /// The name of the exam
     pub name: TranslatableString,
+    /// All locales for which the exam should be generated
+    pub locales: Vec<Locale>,
     /// The navigation settings for this exam
     pub navigation: DiagnosticNavigation,
     /// The timing settings for this exam
@@ -171,8 +171,13 @@ impl ToRumbas<Diagnostic> for numbas::exam::diagnostic::Diagnostic {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum DiagnosticScript {
+    /// The aim of the Mastery algorithm is to repeatedly test topics until the student passes them. Once all topics are passed, the exam ends.
+    /// see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#mastery
     Mastery,
+    /// The aim of the DIAGNOSYS algorithm is to efficiently establish which topics the student
+    /// understands, and which they don’t. see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#diagnosys
     Diagnosys,
+    /// A custom diagnostic script. See https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#writing-a-diagnostic-algorithm
     Custom(JMENotesTranslatableString),
 }
 
@@ -213,9 +218,9 @@ impl ToRumbas<DiagnosticScript> for numbas::exam::diagnostic::Diagnostic {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// A Learning Objective
 pub struct LearningObjective {
-    /// The name
+    /// The name of the learning objective
     pub name: TranslatableString,
-    /// A description
+    /// A description of the learning objective
     pub description: TranslatableString,
 }
 
@@ -249,13 +254,13 @@ impl ToRumbas<LearningObjective>
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 /// A learning Topic
 pub struct LearningTopic {
-    /// The name
+    /// The name of the learning topic
     pub name: TranslatableString,
-    /// A description
+    /// A description of the learning topic
     pub description: TranslatableString,
-    /// List of names of objectives
+    /// List of names of objectives of which this topic consists
     pub objectives: Vec<TranslatableString>,
-    /// List of names of topic on which this topic depends
+    /// List of names of topics on which this topic depends
     pub depends_on: Vec<TranslatableString>,
 }
 

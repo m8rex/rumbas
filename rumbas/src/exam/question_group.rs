@@ -21,10 +21,10 @@ use structdoc::StructDoc;
 #[input(name = "QuestionGroupInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionGroup {
-    /// The name
+    /// The name of the question group. Might be shown to students, based on the
+    /// `show_names_of_question_groups` setting of the exam navigation.
     pub name: TranslatableString,
     /// The strategy to use to pick the questions to show
-    #[serde(flatten)]
     pub picking_strategy: PickingStrategy,
     /// The questions
     pub questions: Vec<QuestionFromTemplate>,
@@ -53,7 +53,7 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "PickingStrategyInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
-#[serde(tag = "picking_strategy")]
+#[serde(tag = "type")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
     AllOrdered,
@@ -106,13 +106,16 @@ impl ToRumbas<PickingStrategy> for numbas::exam::question_group::QuestionGroupPi
 #[input(name = "PickingStrategyRandomSubsetInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct PickingStrategyRandomSubset {
+    /// The amount of questions to pick
     pub pick_questions: usize,
 }
 
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, StructDoc)]
 #[serde(untagged)]
 pub enum QuestionPathOrTemplate {
+    /// The path to the question. Relative to the `questions` folder.
     QuestionPath(String),
+    /// Directly load a templated question by specifying the template values.
     Template(TemplateFileInput),
 }
 

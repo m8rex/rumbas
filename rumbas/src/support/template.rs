@@ -10,9 +10,11 @@ pub const TEMPLATE_PREFIX: &str = "template";
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, StructDoc)]
 pub struct TemplateFile {
     #[serde(rename = "template")]
+    /// The path to the template to use. Relative to the `exams` or `questions` folder.
     pub relative_template_path: String,
     #[serde(flatten)]
     #[comparable_ignore]
+    /// The data to insert into the template. Maps template keys onto values.
     pub data: BTreeMap<String, MyYamlValue>,
 }
 

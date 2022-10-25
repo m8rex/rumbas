@@ -5,10 +5,17 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use structdoc::StructDoc;
 
-#[derive(Debug, Clone, PartialEq, Eq, StructDoc)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Noneable<T> {
     None,
     NotNone(T),
+}
+
+// Done like the Option value in StructDoc
+impl<T: StructDoc> StructDoc for Noneable<T> {
+    fn document() -> structdoc::Documentation {
+        T::document().with_arity(structdoc::Arity::OrNone)
+    }
 }
 
 #[derive(Debug, PartialEq)]
