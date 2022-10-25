@@ -12,7 +12,10 @@ use structdoc::StructDoc;
 #[input(name = "FeedbackInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 pub struct Feedback {
+    /// Specifies when a student passes the test. When set to "none" or 0, no percentage will be
+    /// shown in frontpage.
     pub percentage_needed_to_pass: Noneable<f64>, // if "none" (or 0) -> no percentage shown in frontpage, otherwise it is shown
+    /// Whether the student's name should be shown in the exam.
     pub show_name_of_student: bool,
     /// Whether current marks are shown during exam or not (show_actual_mark in numbas)
     pub show_current_marks: bool,
@@ -22,9 +25,13 @@ pub struct Feedback {
     pub show_answer_state: bool,
     /// Whether the 'reveal answer' button is present
     pub allow_reveal_answer: bool,
+    /// The review settings
     pub review: Review, // If none, everything is true???
+    /// The advice shown at the end.
     pub advice: TranslatableString,
+    /// The introductory text
     pub intro: TranslatableString,
+    /// Different feedback messages based on their score.
     pub feedback_messages: Vec<FeedbackMessage>,
 }
 
@@ -101,7 +108,9 @@ impl ToRumbas<Review> for numbas::exam::feedback::Review {
 #[input(name = "FeedbackMessageInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct FeedbackMessage {
-    pub message: String,   //TODO: inputstring or filestring?
+    /// The message to show
+    pub message: String, //TODO: inputstring or filestring?
+    /// The minimum score that is needed to get this feedback
     pub threshold: String, //TODO type
 }
 

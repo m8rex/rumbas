@@ -9,11 +9,18 @@ use serde::{de::DeserializeOwned, Deserialize};
 use structdoc::StructDoc;
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, Eq, StructDoc)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, Eq)]
 #[serde(untagged)]
 pub enum VariableValued<T> {
     Variable(JMEString),
     Value(T),
+}
+
+// Done like the Option value in StructDoc
+impl<T: StructDoc> StructDoc for VariableValued<T> {
+    fn document() -> structdoc::Documentation {
+        T::document().with_arity(structdoc::Arity::OrVariableValued)
+    }
 }
 
 #[derive(PartialEq, Debug)]

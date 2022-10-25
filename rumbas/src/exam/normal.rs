@@ -23,10 +23,10 @@ use structdoc::StructDoc;
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 /// An Exam
 pub struct NormalExam {
-    /// All locales for which the exam should be generated
-    pub locales: Vec<Locale>,
     /// The name of the exam
     pub name: TranslatableString,
+    /// All locales for which the exam should be generated
+    pub locales: Vec<Locale>,
     /// The navigation settings for this exam
     pub navigation: NormalNavigation,
     /// The timing settings for this exam

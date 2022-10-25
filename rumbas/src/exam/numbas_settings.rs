@@ -8,5 +8,6 @@ use structdoc::StructDoc;
 #[input(name = "NumbasSettingsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct NumbasSettings {
+    /// The numbas theme to use
     pub theme: String, //TODO: check if valid theme? Or is numbas error ok?
 }
