@@ -1,7 +1,9 @@
 use super::{extract_multiple_choice_answer_data, MultipleChoiceAnswerData};
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::question::QuestionPart;
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -19,11 +21,15 @@ question_part_type! {
     #[input(name = "QuestionPartChooseOneInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartChooseOne {
+        /// Specify the options, score per option and feedback per option.
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
+        /// If this is ticked, the choices are displayed in random order.
         shuffle_answers: bool,
+        /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
         show_cell_answer_state: bool,
+        /// How should the options be shown?
         display: ChooseOneDisplay
         //TODO wrong_nb_choices_warning:
     }
@@ -97,9 +103,14 @@ impl ToRumbas<MultipleChoiceAnswerData>
 #[serde(tag = "type")]
 pub enum ChooseOneDisplay {
     #[serde(rename = "dropdown")]
+    /// “Drop down list” means that the choices are shown as a selection box; the student can click to show the choices in a vertical list.
     DropDown,
     #[serde(rename = "radio")]
-    Radio { columns: usize },
+    /// “Radio” means that choices are shown separately, in-line with the part prompt.
+    Radio {
+        /// This dictates how many columns the choices are displayed in. If 0, the choices are displayed on a single line, wrapped at the edges of the screen.
+        columns: usize,
+    },
 }
 
 impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {

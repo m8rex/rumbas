@@ -24,7 +24,9 @@ use structdoc::StructDoc;
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
 #[serde(untagged)]
 pub enum QuestionPart {
+    /// A question part using a builtin question part type
     Builtin(QuestionPartBuiltin),
+    /// A question part using a custom question part type
     Custom(QuestionPartCustom),
 }
 
@@ -69,25 +71,35 @@ impl QuestionPartInput {
 #[serde(tag = "type")]
 pub enum QuestionPartBuiltin {
     #[serde(rename = "jme")]
-    // Box due to much larger size than other variant (clippy warning)
+    /// Mathematical expression parts require the student to enter an algebraic expression, using JME syntax.
     JME(Box<QuestionPartJME>),
     #[serde(rename = "gapfill")]
+    /// Gap-fill parts allow you to include answer inputs inline with the prompt text, instead of at the end of the part.
+    /// Each gap is a question part in itself.
     GapFill(QuestionPartGapFill),
     #[serde(rename = "choose_one")]
+    /// Multiple choice part where the student must choose one of several options
     ChooseOne(QuestionPartChooseOne),
     #[serde(rename = "choose_multiple")]
+    /// Multiple choice part where the student can choose any of a list of options
     ChooseMultiple(QuestionPartChooseMultiple),
     #[serde(rename = "match_answers")]
+    /// The student is presented with a 2D grid of choices and answers. Depending on how the part is set up, they must either match up each choice with an answer, or select any number of choice-answer pairs.
     MatchAnswersWithItems(QuestionPartMatchAnswersWithItems),
     #[serde(rename = "number_entry")]
+    /// Number entry parts ask the student to enter a number, which is marked if it is in a specified range
     NumberEntry(QuestionPartNumberEntry),
     #[serde(rename = "pattern_match")]
+    /// Use a text pattern part when you want the student to enter short, non-mathematical text.
     PatternMatch(QuestionPartPatternMatch),
     #[serde(rename = "information")]
+    /// An information part contains only a prompt and no answer input. It is most often used as a Step to provide a hint for a parent part.
     Information(QuestionPartInformation),
     #[serde(rename = "extension")]
+    /// An extension part acts as a placeholder for any interactive element added by an extension, or custom code in the question, which awards marks to the student.
     Extension(QuestionPartExtension),
     #[serde(rename = "matrix")]
+    /// Matrix entry parts ask the student to enter a matrix of numbers. Marks are awarded if every cell in the student’s answer is equal to the corresponding cell in the correct answer, within the allowed margin of error.
     Matrix(QuestionPartMatrix),
 }
 
@@ -272,23 +284,34 @@ macro_rules! question_part_type {
         }
     )=>
     {
+        // TODO: add unit tests
+        // TODO: alternative answers
         $(#[$outer])*
         pub struct $struct {
-            pub marks: numbas::support::primitive::Number,
+            /// A content area used to prompt the student for an answer.
             pub prompt: ContentAreaTranslatableString,
-            pub use_custom_name: bool,
-            pub custom_name: String, //TODO Translatable?
-            pub steps_penalty: numbas::support::primitive::Number,
-            pub enable_minimum_marks: bool,
-            pub minimum_marks: usize, //TODO: separate?
+            /// The number of marks to award for answering the part correctly.
+            pub marks: numbas::support::primitive::Number,
+            #[serde(alias="custom_name")]
+            /// An optional custom part name, to use in part path's
+            pub part_name: Noneable<String>,
+            /// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.
+
             pub show_correct_answer: bool,
+            /// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.
             pub show_feedback_icon: bool,
-            pub variable_replacement_strategy: VariableReplacementStrategy,
-            pub adaptive_marking_penalty: usize,
-            pub custom_marking_algorithm_notes: JMENotes,
-            pub extend_base_marking_algorithm: bool,
+            /// The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.
+            pub custom_marking: Noneable<CustomMarking>,
             #[input(skip)]
-            pub steps: Vec<QuestionPart>
+            /// A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
+            pub steps: Vec<QuestionPart>,
+    /// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.
+            pub steps_penalty: numbas::support::primitive::Number,
+
+            // Adaptive marking
+            /// Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values.
+            /// See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking
+            pub adaptive_marking: Noneable<AdaptiveMarking>
             $(,
             $(
                 $(#[$inner])*
@@ -301,17 +324,13 @@ macro_rules! question_part_type {
                 numbas::question::part::QuestionPartSharedData {
                     marks: self.marks.to_numbas(locale),
                     prompt: self.prompt.to_numbas(locale),
-                    use_custom_name: self.use_custom_name.to_numbas(locale),
-                    custom_name: self.custom_name.to_numbas(locale),
+                    use_custom_name: self.part_name.to_numbas(locale).is_some(),
+                    custom_name: self.part_name.to_numbas(locale).unwrap_or_default(),
                     steps_penalty: self.steps_penalty.to_numbas(locale),
-                    enable_minimum_marks: self.enable_minimum_marks.to_numbas(locale),
-                    minimum_marks: self.minimum_marks.to_numbas(locale),
                     show_correct_answer: self.show_correct_answer.to_numbas(locale),
                     show_feedback_icon: self.show_feedback_icon.to_numbas(locale),
-                    variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(&locale),
-                    adaptive_marking_penalty: self.adaptive_marking_penalty.to_numbas(locale),
-                    custom_marking_algorithm: self.custom_marking_algorithm_notes.to_numbas(&locale),
-                    extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale),
+                    adaptive_marking: self.adaptive_marking.to_numbas(locale).unwrap_or_default(),
+                    custom_marking: self.custom_marking.to_numbas(locale).unwrap_or_default(),
                     steps: self.steps.to_numbas(&locale),
                 }
 
@@ -389,19 +408,13 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
             // Default section
             marks: extract_part_common_marks(&self.part_data),
             prompt: extract_part_common_prompt(&self.part_data),
-            use_custom_name: extract_part_common_use_custom_name(&self.part_data),
-            custom_name: extract_part_common_custom_name(&self.part_data),
+            part_name: extract_part_common_custom_name(&self.part_data),
             steps_penalty: extract_part_common_steps_penalty(&self.part_data),
-            enable_minimum_marks: extract_part_common_enable_minimum_marks(&self.part_data),
-            minimum_marks: extract_part_common_minimum_marks(&self.part_data),
             show_correct_answer: extract_part_common_show_correct_answer(&self.part_data),
             show_feedback_icon: extract_part_common_show_feedback_icon(&self.part_data),
-            variable_replacement_strategy: self.part_data.variable_replacement_strategy.to_rumbas(),
-            adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(&self.part_data),
-            custom_marking_algorithm_notes: self.part_data.custom_marking_algorithm.to_rumbas(),
-            extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
-                &self.part_data,
-            ),
+            adaptive_marking: self.part_data.adaptive_marking.to_rumbas(),
+            custom_marking: self.part_data.custom_marking.to_rumbas(),
+
             steps: extract_part_common_steps(&self.part_data),
 
             type_name: self.r#type.clone(),
@@ -411,11 +424,116 @@ impl ToRumbas<QuestionPartCustom> for numbas::question::part::QuestionPartCustom
 }
 
 #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
+#[input(name = "AdaptiveMarkingInput")]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+pub struct AdaptiveMarking {
+    /// The variable replacements to do
+    variable_replacements: Vec<VariableReplacement>,
+    /// The circumstances under which the variable replacements are used, and adaptive marking is applied.
+    variable_replacement_strategy: VariableReplacementStrategy,
+    /// If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. See steps_penalty for an example.
+    penalty: usize,
+}
+
+impl ToNumbas<numbas::question::part::AdaptiveMarking> for AdaptiveMarking {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::AdaptiveMarking {
+        numbas::question::part::AdaptiveMarking {
+            variable_replacements: self.variable_replacements.to_numbas(&locale),
+            variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(&locale),
+            penalty: self.penalty.to_numbas(locale),
+        }
+    }
+}
+
+impl ToRumbas<Noneable<AdaptiveMarking>> for numbas::question::part::AdaptiveMarking {
+    fn to_rumbas(&self) -> Noneable<AdaptiveMarking> {
+        if self.variable_replacements.is_empty() {
+            Noneable::None
+        } else {
+            Noneable::NotNone(AdaptiveMarking {
+                variable_replacement_strategy: self.variable_replacement_strategy.to_rumbas(),
+                variable_replacements: self.variable_replacements.to_rumbas(),
+                penalty: self.penalty,
+            })
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
+#[input(name = "CustomMarkingInput")]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+pub struct CustomMarking {
+    /// This allows you to customise the script used to mark the student’s answer, and
+    /// test that it works correctly on answers that you provide.
+    algorithm_notes: JMENotes,
+    /// If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.
+    extend_base_marking_algorithm: bool,
+}
+
+impl ToNumbas<numbas::question::part::CustomMarking> for CustomMarking {
+    fn to_numbas(&self, locale: &str) -> numbas::question::part::CustomMarking {
+        numbas::question::part::CustomMarking {
+            algorithm: self.algorithm_notes.to_numbas(&locale),
+            extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale),
+        }
+    }
+}
+
+impl ToRumbas<Noneable<CustomMarking>> for numbas::question::part::CustomMarking {
+    fn to_rumbas(&self) -> Noneable<CustomMarking> {
+        if self.algorithm.is_empty() {
+            Noneable::None
+        } else {
+            Noneable::NotNone(CustomMarking {
+                algorithm_notes: self.algorithm.to_rumbas(),
+                extend_base_marking_algorithm: self.extend_base_marking_algorithm,
+            })
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
+#[input(name = "VariableReplacementInput")]
+#[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
+pub struct VariableReplacement {
+    /// The name of the variable to replace
+    variable: String,
+    /// The path to the part whose answer the variable’s value should be replaced with. Different part types produce different types of values.
+    part_answer_to_use: String,
+    /// If this is ticked, the student must submit an answer to the referenced part before they can submit an answer to this part.
+    must_be_answered: bool,
+}
+
+impl ToNumbas<numbas::question::part::VariableReplacement> for VariableReplacement {
+    fn to_numbas(&self, _locale: &str) -> numbas::question::part::VariableReplacement {
+        numbas::question::part::VariableReplacement {
+            variable: self.variable.clone(),
+            part_answer_to_use: self.part_answer_to_use.clone(),
+            must_be_answered: self.must_be_answered,
+        }
+    }
+}
+
+impl ToRumbas<VariableReplacement> for numbas::question::part::VariableReplacement {
+    fn to_rumbas(&self) -> VariableReplacement {
+        VariableReplacement {
+            variable: self.variable.clone(),
+            part_answer_to_use: self.part_answer_to_use.clone(),
+            must_be_answered: self.must_be_answered,
+        }
+    }
+}
+
+#[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]
 #[input(name = "VariableReplacementStrategyInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum VariableReplacementStrategy {
     #[serde(rename = "original_first")]
+    ///  The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.
     OriginalFirst,
+    #[serde(rename = "always_replace")]
+    /// The student’s answer is only marked once, with the defined variable replacements applied.
+    AlwaysReplace,
 }
 
 impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableReplacementStrategy {
@@ -423,6 +541,9 @@ impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableR
         match self {
             VariableReplacementStrategy::OriginalFirst => {
                 numbas::question::part::VariableReplacementStrategy::OriginalFirst
+            }
+            VariableReplacementStrategy::AlwaysReplace => {
+                numbas::question::part::VariableReplacementStrategy::AlwaysReplace
             }
         }
     }
@@ -433,6 +554,9 @@ impl ToRumbas<VariableReplacementStrategy> for numbas::question::part::VariableR
         match self {
             numbas::question::part::VariableReplacementStrategy::OriginalFirst => {
                 VariableReplacementStrategy::OriginalFirst
+            }
+            numbas::question::part::VariableReplacementStrategy::AlwaysReplace => {
+                VariableReplacementStrategy::AlwaysReplace
             }
         }
     }

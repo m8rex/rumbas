@@ -20,7 +20,10 @@ pub mod match_answers;
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum MultipleChoiceAnswerData {
+    /// Specify a list of answer with it's marks and feedback
     ItemBased(Vec<MultipleChoiceAnswer>),
+    /// Specify the answers, marks and feedback as separate lists.
+    /// The first answers, matches the first mark and the first feedback etc
     NumbasLike(Box<MultipleChoiceAnswerDataNumbasLike>),
 }
 
@@ -28,8 +31,11 @@ pub enum MultipleChoiceAnswerData {
 #[input(name = "MultipleChoiceAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswerDataNumbasLike {
+    /// The possible answers
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
+    /// The marks for the corresponding answers
     pub marks: VariableValued<Vec<JMETranslatableString>>,
+    /// The feedback for the corresponding answers.
     pub feedback: Noneable<Vec<ContentAreaTranslatableString>>,
 }
 
@@ -86,8 +92,11 @@ fn extract_multiple_choice_answer_data(
 #[input(name = "MultipleChoiceAnswerInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceAnswer {
+    /// The statement of the answer
     pub statement: ContentAreaTranslatableString,
+    /// The feedback shown when this answer is chosen
     pub feedback: ContentAreaTranslatableString,
+    /// The marks to assign when this answer is chosen
     pub marks: JMETranslatableString,
 }
 
@@ -96,8 +105,17 @@ pub struct MultipleChoiceAnswer {
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Copy, Clone, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MultipleChoiceMarkingMethod {
+    /// For each checkbox the student ticks, the corresponding entry in the marking matrix is added to their score. Unticked cells are ignored.
+    ///
+    /// This marking method is suitable for situations where the student should only select choices they’re sure about. You could apply negative marks for incorrect choices.
     SumTickedCells,
+    /// For each checkbox, the student is awarded an equal proportion of the Maximum marks, if their selection for that cell matches the marking matrix. A positive value in the marking matrix signifies that the student should tick that checkbox, while a value of zero signifies that the student should not tick that box.
+    ///
+    /// This marking method is suitable for situations where the student must separate the available choices into two sets.
     ScorePerMatchedCell,
+    /// the student is awarded the Maximum marks available if their selection exactly matches the marking matrix, and zero marks otherwise.
+    ///
+    /// This marking method is suitable for situations where the student must exactly match a certain pattern, and there is no meaningful “partially correct” answer.
     AllOrNothing,
 }
 

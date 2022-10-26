@@ -58,22 +58,10 @@ pub struct QuestionPartJME {
     #[serde(alias = "showpreview")]
     #[serde(default = "crate::util::bool_true")]
     pub show_preview: bool,
-    #[serde(rename = "checkingType")]
-    #[serde(alias = "checkingtype")]
-    #[serde(flatten, default)]
-    pub checking_type: JMECheckingType,
-    /// If the comparison fails this many times or more, the student’s answer is marked as wrong.
-    #[serde(rename = "failureRate")]
-    #[serde(default = "crate::util::float_one")]
-    pub failure_rate: f64,
-    #[serde(rename = "vsetRange")]
-    #[serde(alias = "vsetrange")]
-    #[serde(default = "default_vset_range")]
-    pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
-    #[serde(rename = "vsetRangePoints")]
-    #[serde(alias = "vsetrangepoints")]
-    #[serde(default = "default_vset_points")]
-    pub vset_range_points: SafeNatural,
+
+    #[serde(flatten)]
+    pub accuracy: JMEAccuracy,
+
     #[serde(rename = "checkVariableNames")]
     #[serde(alias = "checkvariablenames")]
     #[serde(default)]
@@ -99,6 +87,26 @@ pub struct QuestionPartJME {
     pub must_match_pattern: Option<JMEPatternRestriction>,
     #[serde(rename = "valuegenerators", default)]
     pub value_generators: Vec<JMEValueGenerator>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+pub struct JMEAccuracy {
+    #[serde(rename = "checkingType")]
+    #[serde(alias = "checkingtype")]
+    #[serde(flatten, default)]
+    pub checking_type: JMECheckingType,
+    /// If the comparison fails this many times or more, the student’s answer is marked as wrong.
+    #[serde(rename = "failureRate")]
+    #[serde(default = "crate::util::float_one")]
+    pub failure_rate: f64,
+    #[serde(rename = "vsetRange")]
+    #[serde(alias = "vsetrange")]
+    #[serde(default = "default_vset_range")]
+    pub vset_range: [SafeFloat; 2], // TODO: seperate (flattened) struct for vset items & checking items etc?
+    #[serde(rename = "vsetRangePoints")]
+    #[serde(alias = "vsetrangepoints")]
+    #[serde(default = "default_vset_points")]
+    pub vset_range_points: SafeNatural,
 }
 
 fn default_vset_range() -> [SafeFloat; 2] {

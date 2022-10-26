@@ -1,6 +1,7 @@
 use crate::question::part::multiple_choice::MultipleChoiceMarkingMethod;
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::question::QuestionPart;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
@@ -21,15 +22,23 @@ question_part_type! {
     #[input(name = "QuestionPartMatchAnswersWithItemsInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatchAnswersWithItems {
+        /// Specify the options, score per option and feedback per option.
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceMatchAnswerData,
+        /// If this is ticked, the choices are displayed in random order.
         shuffle_answers: bool,
+        /// If this is ticked, the items (horizontal) are displayed in random order.
         shuffle_items: bool,
+        /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
         show_cell_answer_state: bool,
+        /// The student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.
         should_select_at_least: usize,
+        /// The student must select at most this many choices. The value 0 means “no maximum”.
         should_select_at_most: Noneable<usize>,
+        /// How should the options be shown?
         display: MatchAnswerWithItemsDisplay,
+        /// How should the options be shown?
         layout: MatchAnswersWithChoicesLayout,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
         wrong_nb_answers_warning_type: MultipleChoiceWarningType,
@@ -201,8 +210,10 @@ impl ToRumbas<MultipleChoiceMatchAnswerData>
 #[serde(tag = "type")]
 pub enum MatchAnswerWithItemsDisplay {
     #[serde(rename = "radio")]
+    /// One from each row
     Radio,
     #[serde(rename = "check")]
+    /// Any number from each row
     Check(MatchAnswersWithChoicesDisplayCheck),
 }
 
@@ -245,6 +256,7 @@ impl ToRumbas<MatchAnswerWithItemsDisplay>
 #[input(name = "MatchAnswersWithChoicesDisplayCheckInput")]
 #[derive(Serialize, Deserialize, Comparable, JsonSchema, Debug, Clone, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesDisplayCheck {
+    /// The marking method to use
     marking_method: MultipleChoiceMarkingMethod,
 }
 
@@ -277,8 +289,10 @@ impl ToRumbas<MatchAnswersWithChoicesDisplayCheck>
 #[serde(tag = "type")]
 pub enum MultipleChoiceMatchAnswerData {
     #[serde(rename = "item_based")]
+    /// Specify a list of answers and a list of items with marks for different answers
     ItemBased(MultipleChoiceMatchAnswers),
     #[serde(rename = "numbas_like")]
+    /// Specify a list of answers, choices and marks in separate lists.
     NumbasLike(Box<MultipleChoiceMatchAnswerDataNumbasLike>),
 }
 
@@ -286,8 +300,11 @@ pub enum MultipleChoiceMatchAnswerData {
 #[input(name = "MultipleChoiceMatchAnswerDataNumbasLikeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MultipleChoiceMatchAnswerDataNumbasLike {
+    /// The possible answers
     pub answers: VariableValued<Vec<ContentAreaTranslatableString>>,
+    /// The possible choices
     pub choices: VariableValued<Vec<ContentAreaTranslatableString>>,
+    /// The marks for the corresponding answers
     pub marks: VariableValued<Vec<Vec<JMEString>>>,
 }
 
@@ -305,6 +322,7 @@ pub struct MultipleChoiceMatchAnswers {
 #[input(name = "MatchAnswersItemInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItem {
+    /// The statement for the item
     pub statement: ContentAreaTranslatableString,
     /// Map points to strings of answers ! use anchors in yaml
     pub answer_marks: Vec<MatchAnswersItemMarks>,
@@ -314,7 +332,9 @@ pub struct MatchAnswersItem {
 #[input(name = "MatchAnswersItemMarksInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersItemMarks {
+    /// The marks a student get's for selecting the answer
     pub marks: JMEString,
+    /// The answer that yields marks for the item
     pub answer: ContentAreaTranslatableString,
 }
 
@@ -323,7 +343,9 @@ pub struct MatchAnswersItemMarks {
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MultipleChoiceWarningType {
+    /// Do nothing
     None,
+    /// Prevent submission until they pick an acceptable number of answers
     Prevent,
 }
 
@@ -359,7 +381,9 @@ impl ToRumbas<MultipleChoiceWarningType>
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum MatchAnswersWithChoicesLayoutType {
+    /// All options are shown
     All,
+    /// Only the lower triangle is shown
     LowerTriangle,
 }
 
@@ -395,6 +419,7 @@ impl ToRumbas<MatchAnswersWithChoicesLayoutType>
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct MatchAnswersWithChoicesLayout {
     #[serde(rename = "type")]
+    /// Which fields should be shown
     layout_type: MatchAnswersWithChoicesLayoutType, // Renamed because of bug in Comparable
 }
 

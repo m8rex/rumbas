@@ -3,6 +3,7 @@ use crate::question::part::multiple_choice::{
 };
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::question::QuestionPart;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
@@ -21,13 +22,19 @@ question_part_type! {
     #[input(name = "QuestionPartChooseMultipleInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartChooseMultiple {
+        /// Specify the options, score per option and feedback per option.
         /// Old name was `answers`
         #[serde(alias = "answers")]
         answer_data: MultipleChoiceAnswerData,
+        /// If this is ticked, the choices are displayed in random order.
         shuffle_answers: bool,
+        /// If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.
         show_cell_answer_state: bool,
+        /// The student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.
         should_select_at_least: usize,
+        /// The student must select at most this many choices. The value 0 means “no maximum”.
         should_select_at_most: Noneable<usize>,
+        /// This dictates how many columns the choices are displayed in. If 0, the choices are displayed on a single line, wrapped at the edges of the screen.
         columns: usize,
         /// What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)
         wrong_nb_answers_warning_type: crate::question::part::multiple_choice::match_answers::MultipleChoiceWarningType,
@@ -36,6 +43,7 @@ question_part_type! {
         /// If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.
         maximal_achievable_marks: Noneable<usize>,
 
+        /// This determines how the student’s score is determined, based on their selections and the marking matrix.
         marking_method: MultipleChoiceMarkingMethod
         //TODO other?
     }
