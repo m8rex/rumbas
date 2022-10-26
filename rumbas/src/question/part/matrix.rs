@@ -1,5 +1,6 @@
 use crate::question::part::question_part::JMENotes;
 use crate::question::part::question_part::VariableReplacementStrategy;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::question::QuestionPart;
 use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;

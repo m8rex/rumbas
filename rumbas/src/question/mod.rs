@@ -52,22 +52,36 @@ pub struct Question {
     /// Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.
     /// The advice area is normally used to present a worked solution to the question.
     pub advice: ContentAreaTranslatableString,
+    /// A question consists of one or more parts. Each part can have a different type to create
+    /// elaborate questions.
     pub parts: Vec<QuestionPart>,
+    /// Specifies which constants are enabled. You might want to disable the constant e so it can
+    /// be used as a variable in the questions.
     pub builtin_constants: BuiltinConstants,
+    /// Custom constants that are used in your question.
     pub custom_constants: Vec<CustomConstant>,
+    /// The variables that are used in this question.
     pub variables: BTreeMap<String, VariableRepresentation>,
+    /// The test to which your variables should comply. Variable values are generated until this
+    /// test passes.
     pub variables_test: VariablesTest,
+    /// The functions that are used in this question
     pub functions: BTreeMap<String, Function>,
+    /// Specify custom javascript and css code that should be loaded.
     pub preamble: Preamble,
+    /// Specify some navigation options for the question.
+    // TODO: does this do anything?
     pub navigation: QuestionNavigation,
+    /// Use this to enable the extensions that are used in the question
     pub extensions: Extensions,
     /// The names of the topics used in diagnostic exams that this question belongs to
     pub diagnostic_topic_names: Vec<TranslatableString>, // TODO: validate? / warnings?
+    /// The paths to the resources
     pub resources: Vec<ResourcePath>,
     /// The custom part types used in this exam
     #[input(skip)]
     pub custom_part_types: Vec<CustomPartTypeDefinitionPath>, //TODO a lot of options
-    /// The rulesets defined in this question
+    /// The rulesets defined in this question. A “ruleset” defines a list of named simplification rules used to manipulate mathematical expressions. https://numbas-editor.readthedocs.io/en/latest/question/reference.html#rulesets
     pub rulesets: BTreeMap<String, JMERulesetItem>,
 }
 
@@ -161,7 +175,9 @@ impl ToRumbas<Question> for numbas::question::Question {
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum QuestionFileType {
+    /// A question that uses a template
     Template(TemplateFile),
+    /// A normal question
     Normal(Box<Question>),
 }
 

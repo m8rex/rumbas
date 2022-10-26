@@ -252,6 +252,12 @@ impl std::fmt::Display for JMENotesString {
     }
 }
 
+impl JMENotesString {
+    pub fn is_empty(&self) -> bool {
+        self.s.is_empty()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;

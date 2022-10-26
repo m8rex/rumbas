@@ -1,5 +1,7 @@
 use crate::question::part::question_part::QuestionPart;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::support::file_reference::{FileString, JMEFileString};
+use crate::support::noneable::Noneable;
 use crate::support::translatable::ContentAreaTranslatableString;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
@@ -111,26 +113,18 @@ pub fn extract_part_common_use_custom_name(
 
 pub fn extract_part_common_custom_name(
     pd: &numbas::question::part::QuestionPartSharedData,
-) -> String {
-    pd.custom_name.clone()
+) -> Noneable<String> {
+    if pd.custom_name.is_empty() {
+        Noneable::None
+    } else {
+        Noneable::NotNone(pd.custom_name.clone())
+    }
 }
 
 pub fn extract_part_common_steps_penalty(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> Number {
     pd.steps_penalty.clone()
-}
-
-pub fn extract_part_common_enable_minimum_marks(
-    pd: &numbas::question::part::QuestionPartSharedData,
-) -> bool {
-    pd.enable_minimum_marks
-}
-
-pub fn extract_part_common_minimum_marks(
-    pd: &numbas::question::part::QuestionPartSharedData,
-) -> usize {
-    pd.minimum_marks
 }
 
 pub fn extract_part_common_show_correct_answer(
@@ -143,18 +137,6 @@ pub fn extract_part_common_show_feedback_icon(
     pd: &numbas::question::part::QuestionPartSharedData,
 ) -> bool {
     pd.show_feedback_icon
-}
-
-pub fn extract_part_common_adaptive_marking_penalty(
-    pd: &numbas::question::part::QuestionPartSharedData,
-) -> usize {
-    pd.adaptive_marking_penalty
-}
-
-pub fn extract_part_common_extend_base_marking_algorithm(
-    pd: &numbas::question::part::QuestionPartSharedData,
-) -> bool {
-    pd.extend_base_marking_algorithm
 }
 
 pub fn extract_part_common_steps(
@@ -175,31 +157,17 @@ macro_rules! create_question_part {
     ) => {
         {
             let part_data = $part_data;
-            let custom_marking_algorithm_notes: JMENotes = part_data
-                .custom_marking_algorithm
-                .clone()
-                .to_rumbas();
             $type {
                 // Default section
                 marks: extract_part_common_marks(&part_data).to_rumbas(),
                 prompt: extract_part_common_prompt(&part_data),
-                use_custom_name: extract_part_common_use_custom_name(&part_data).to_rumbas(),
-                custom_name: extract_part_common_custom_name(&part_data).to_rumbas(),
+                part_name: extract_part_common_custom_name(&part_data),
                 steps_penalty: extract_part_common_steps_penalty(&part_data).to_rumbas(),
-                enable_minimum_marks: extract_part_common_enable_minimum_marks(&part_data)
-                    .to_rumbas(),
-                minimum_marks: extract_part_common_minimum_marks(&part_data).to_rumbas(),
                 show_correct_answer: extract_part_common_show_correct_answer(&part_data)
                     .to_rumbas(),
                 show_feedback_icon: extract_part_common_show_feedback_icon(&part_data).to_rumbas(),
-                variable_replacement_strategy: part_data.variable_replacement_strategy.to_rumbas(),
-                adaptive_marking_penalty: extract_part_common_adaptive_marking_penalty(&part_data)
-                    .to_rumbas(),
-                custom_marking_algorithm_notes,
-                extend_base_marking_algorithm: extract_part_common_extend_base_marking_algorithm(
-                    &part_data,
-                )
-                .to_rumbas(),
+                adaptive_marking: part_data.adaptive_marking.to_rumbas(),
+                custom_marking: part_data.custom_marking.to_rumbas(),
                 steps: extract_part_common_steps(&part_data),
                 $(
                     $field$(: $val)?

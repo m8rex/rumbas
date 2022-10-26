@@ -1,5 +1,7 @@
 use crate::question::part::question_part::JMENotes;
+use crate::question::part::question_part::{AdaptiveMarking, CustomMarking};
 use crate::question::part::question_part::{QuestionPart, VariableReplacementStrategy};
+use crate::support::noneable::Noneable;
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::*;
 use crate::support::translatable::ContentAreaTranslatableString;
@@ -15,9 +17,9 @@ question_part_type! {
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     /// The Gap fill question part type
     pub struct QuestionPartGapFill {
-        /// Whether the answers should be sorted
+        /// If ticked, then the student’s answers will be put in ascending order before the gaps are marked. The lowest answer will be submitted against the first gap, and so on. Because the order of marking might not correspond with the order in which the gaps are shown to the student, no feedback icon is shown next to the gap input boxes, only in the feedback summary for the whole part.
         sort_answers: bool,
-        /// The gaps
+        /// The question parts for the gaps
         #[input(skip)]
         gaps: Vec<QuestionPart>
     }
