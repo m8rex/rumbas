@@ -62,8 +62,9 @@ pub struct Question {
     pub custom_constants: Vec<CustomConstant>,
     /// The variables that are used in this question.
     pub variables: BTreeMap<String, VariableRepresentation>,
-    /// The test to which your variables should comply. Variable values are generated until this
-    /// test passes.
+    /// The test to which your variables should comply. Sometimes it’s hard to define randomised question variables so they’re guaranteed to produce a usable set of values. In these cases, it’s easier to state the condition you want the variables to satisfy, Variable values are generated until this condition passes.
+    ///
+    /// While this tool allows you to pick sets of variables that would be hard to generate constructively, it’s a random process so you must be aware that there’s a chance no suitable set of values will ever be found.
     pub variables_test: VariablesTest,
     /// The functions that are used in this question
     pub functions: BTreeMap<String, Function>,

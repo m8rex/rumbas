@@ -18,10 +18,19 @@ question_part_type! {
     #[input(name = "QuestionPartPatternMatchInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartPatternMatch {
+        /// If this is ticked, the capitalisation of the student’s answer must match that of the answer pattern. If it doesn’t, partial credit will be awarded.
         case_sensitive: bool,
-        partial_credit: f64,
+        #[serde(alias="partial_credit")]
+        /// The partial credits awarded if the students capitalisation is wrong
+        wrong_case_partial_credit: f64,
+        /// The text or pattern the student must match.
         pattern: EmbracedJMETranslatableString,
+        /// A representative correct answer string to display to the student, in case they press
+        /// the Reveal answers button.
         display_answer: EmbracedJMETranslatableString,
+        /// The test to use to decide if the student’s answer is correct.
+        /// Some examples
+        /// https://numbas-editor.readthedocs.io/en/latest/question/parts/match-text-pattern.html#regular-expressions
         match_mode: PatternMatchMode
     }
 }
@@ -36,7 +45,7 @@ impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
         numbas::question::part::pattern_match::QuestionPartPatternMatch {
             part_data: self.to_numbas(locale),
             case_sensitive: self.case_sensitive.to_numbas(locale),
-            partial_credit: self.partial_credit.to_numbas(locale),
+            partial_credit: self.wrong_case_partial_credit.to_numbas(locale),
             answer: self.pattern.to_numbas(locale),
             display_answer: Some(self.display_answer.to_numbas(locale)),
             match_mode: self.match_mode.to_numbas(locale),
@@ -53,7 +62,7 @@ impl ToRumbas<QuestionPartPatternMatch>
                 case_sensitive:
                     self.case_sensitive
                         .to_rumbas(),
-                partial_credit:
+                wrong_case_partial_credit:
                     self.partial_credit
                         .0.to_rumbas(),
                 pattern: self.answer.to_rumbas(),
@@ -73,7 +82,10 @@ impl ToRumbas<QuestionPartPatternMatch>
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum PatternMatchMode {
+    /// The pattern is interpreted as a regular expression
+    /// (https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions)
     Regex,
+    /// Marks the student’s answer as correct only if it is exactly the same as the text given in Answer pattern. Space characters are removed from the start and end of the student’s answer as well as the answer pattern before comparison.
     Exact,
 }
 

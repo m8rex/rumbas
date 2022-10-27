@@ -86,23 +86,44 @@ macro_rules! extensions {
 
 //fixme vis.js extension? (where to find?)
 extensions! {
-        chemistry: "chemistry",
-        download_text_file: "download-text-file",
-        eukleides: "eukleides",
-        geogebra: "geogebra",
-        graphs: "graphs",
-        jsx_graph: "jsxgraph",
-        linear_algebra: "linear-algebra",
-        linear_codes: "codewords",
-        optimisation: "optimisation",
-        permutations: "permutations",
-        polynomials: "polynomials",
-        quantities: "quantities",
-        random_person: "random_person",
-        stats: "stats",
-        sqlite: "sqlite",
-        text: "text",
-        written_number: "written-number"
+    chemistry: "chemistry",
+    download_text_file: "download-text-file",
+    /// The Eukleides extension provides functions to embed diagrams created using the
+    /// Eukleides language.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides
+    eukleides: "eukleides",
+    /// The GeoGebra extension provides functions to embed GeoGebra worksheets in a question.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#geogebra
+    geogebra: "geogebra",
+    /// This extension provides some functions for working with and drawing graphs (networks of vertices joined by edges) in Numbas.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#graph-theory
+    graphs: "graphs",
+    /// The JSXGraph extension provides functions to create and manipulate interactive diagrams with the JSXGraph library.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides
+    jsx_graph: "jsxgraph",
+    linear_algebra: "linear-algebra",
+    /// This extension provides a new data type and some functions to deal with linear codes.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#linear-codes
+    linear_codes: "codewords",
+    optimisation: "optimisation",
+    permutations: "permutations",
+    /// This extension provides a new data type and some functions to deal with rational polynomials.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#polynomials
+    polynomials: "polynomials",
+    /// This extension wraps the js-quantities library to provide a “quantity with units” data type to Numbas.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#quantities
+    quantities: "quantities",
+    /// The “random person” extension provides a collection of functions to generate random people, for use in word problems.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#random-person
+    random_person: "random_person",
+    /// The statistical functions extension provides many new functions for generating samples from random distributions, and calculating statistics.
+    /// https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#statistical-functions
+    stats: "stats",
+    sqlite: "sqlite",
+    text: "text",
+    written_number: "written-number"
+
+    // TODO: programming extension
 }
 
 impl ToRumbas<Extensions> for Vec<String> {
