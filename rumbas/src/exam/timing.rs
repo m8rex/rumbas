@@ -15,7 +15,7 @@ pub struct Timing {
     /// The maximal time that can be spend on the exam. If this value is `none` or 0, the student
     /// gets unlimited time.
     pub duration_in_seconds: Noneable<usize>, // if "none" (or 0) -> unlimited time
-    /// Wheher the 'pause' button is available.
+    /// Whether the 'pause' button is available.
     pub allow_pause: bool,
     /// Action to do on timeout
     pub on_timeout: TimeoutAction,

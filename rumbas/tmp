@@ -1,0 +1,1125 @@
+Wrapper { child: Map { key: Leaf("String"), value: Leaf("YAML-value") }, arity: One, flags: FLATTEN }
+Wrapper { child: Struct("NavigationSharedData", [("start_password", { doc: "Password to begin the exam\nnone and \"\" are the same", flags: [] }), ("can_regenerate", { doc: "Whether the student can regenerate questions\nOld name was `allow_regenerate`", flags: [] }), ("show_steps", { doc: "If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions\nOld name was `allow_steps`", flags: [] }), ("show_title_page", { doc: "Whether the title page should be shown.\nOld name was `show_frontpage`", flags: [] }), ("confirm_when_leaving", { doc: "Whether the student will be asked to confirm when leaving the exam.", flags: [] }), ("show_names_of_question_groups", { doc: "", flags: [] }), ("allow_printing", { doc: "Whether the student is allowed to print the exam", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("NavigationSharedData", [("start_password", { doc: "Password to begin the exam\nnone and \"\" are the same", flags: [] }), ("can_regenerate", { doc: "Whether the student can regenerate questions\nOld name was `allow_regenerate`", flags: [] }), ("show_steps", { doc: "If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions\nOld name was `allow_steps`", flags: [] }), ("show_title_page", { doc: "Whether the title page should be shown.\nOld name was `show_frontpage`", flags: [] }), ("confirm_when_leaving", { doc: "Whether the student will be asked to confirm when leaving the exam.", flags: [] }), ("show_names_of_question_groups", { doc: "", flags: [] }), ("allow_printing", { doc: "Whether the student is allowed to print the exam", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Enum { name: "PickingStrategy", variants: [("all_ordered", { doc: "", flags: [] }), ("all_shuffled", { doc: "", flags: [] }), ("random_subset", { doc: "", flags: [] })], tagging: Internal { tag: "picking_strategy" } }, arity: One, flags: FLATTEN }
+Wrapper { child: Struct("NavigationSharedData", [("start_password", { doc: "Password to begin the exam\nnone and \"\" are the same", flags: [] }), ("can_regenerate", { doc: "Whether the student can regenerate questions\nOld name was `allow_regenerate`", flags: [] }), ("show_steps", { doc: "If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions\nOld name was `allow_steps`", flags: [] }), ("show_title_page", { doc: "Whether the title page should be shown.\nOld name was `show_frontpage`", flags: [] }), ("confirm_when_leaving", { doc: "Whether the student will be asked to confirm when leaving the exam.", flags: [] }), ("show_names_of_question_groups", { doc: "", flags: [] }), ("allow_printing", { doc: "Whether the student is allowed to print the exam", flags: [] })]), arity: One, flags: FLATTEN }
+# ExamFileType
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|template|[TemplateFile](#TemplateFile)|An exam that uses a template.|
+|normal|[NormalExam](#NormalExam)|A normal exam.|
+|diagnostic|[DiagnosticExam](#DiagnosticExam)|An exam in diagnostic mode.|
+
+# TemplateFile
+|field|type|description|optional|
+|--|--|----|-|
+|template|String|The path to the template to use. Relative to the `exams` or `questions` folder.|false|
+
+# NormalExam
+|field|type|description|optional|
+|--|--|----|-|
+|locales|Array of [Locale](#Locale)|All locales for which the exam should be generated|false|
+|name|[Translation](#Translation)|The name of the exam|false|
+|navigation|[NormalNavigation](#NormalNavigation)|The navigation settings for this exam|false|
+|timing|[Timing](#Timing)|The timing settings for this exam|false|
+|feedback|[Feedback](#Feedback)|The feedback settings for this exam|false|
+|question_groups|Array of [QuestionGroup](#QuestionGroup)|The questions groups for this exam|false|
+|numbas_settings|[NumbasSettings](#NumbasSettings)|The settings to set for numbas|false|
+
+# Locale
+|field|type|description|optional|
+|--|--|----|-|
+|name|String|The internal name used for the locale. It is best to use en for English, nl for dutch etc|false|
+|numbas_locale|[SupportedLocale](#SupportedLocale)|The locale to use in the Numbas interface|false|
+
+# SupportedLocale
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|ar-SA||Arabic (Saudi Arabia)|
+|de-DE||German (Germany)|
+|en-GB||English (United Kingdom)|
+|es-ES||Spanish (Spain)|
+|fr-FR||French (France)|
+|he-IL||Hebrew (Israel)|
+|in-ID||Indonesian (Indonesia)|
+|it-IT||Italian (Italy)|
+|ja-JP||Japanese (Japan)|
+|ko-KR||Korean (Korea)|
+|nb-NO||Norwegian (Norway)|
+|nl-NL||Dutch (Netherlands)|
+|pl-PL||Polish (Poland)|
+|pt-BR||Portuguese (Brazil)|
+|sq-AL||Albanian (Albania)|
+|sv-SE||Swedish (Sweden)|
+|tr-TR||Turkish (Turkey)|
+|vi-VN||Vietnamese (Viet Nam)|
+|zg-CN||Chinese (S)|
+
+# Translation
+One of the following items
+|type|description|
+|--|----|
+|[TranslationStruct](#TranslationStruct)|A structured translatable string with placeholders.|
+|[FileStringStructDocHelper](#FileStringStructDocHelper)|A simple filestring. This implies that it can also just be a string.|
+
+
+# TranslationStruct
+|field|type|description|optional|
+|--|--|----|-|
+|content|[TranslationContent](#TranslationContent)|The content with optional placeholders ({{placeholder-name}}).|false|
+|placeholders|Map from String to [Translation](#Translation)|The values for the placeholders. It maps the placeholder-name to it's translatable</br>value. The value for a placeholder can thus (if needed) be different for different locales.|false|
+
+# TranslationContent
+One of the following items
+|type|description|
+|--|----|
+|Map from String to [FileStringStructDocHelper](#FileStringStructDocHelper)|Map from locale to content. You can use this to specify different content for different</br>locales.|
+|[FileStringStructDocHelper](#FileStringStructDocHelper)|A filestring. Possibly to a file that is placed in `locale` folders and is therefore localized.|
+
+
+# FileStringStructDocHelper
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|FileReference||A string of the form `file:<filepath>` where `filepath` is the relative path (within the `exams` or `questions` folder) to a file containing content.</br>This content can be localized by placing it in locale folders.</br>e.g. `file:examples/basic-explanation.html` will search for files in folders</br>with following form: `questions/examples/locale-<localename>/basic-explanation.html`</br>If a file isn't found for a specific locale,</br>`questions/examples/basic-basic-explanation.html` will be used|
+|String||A literal string.|
+
+# NormalNavigation
+One of the following items
+Internal tag named mode
+|tag-value|datatype of value|description|
+|--|--|----|
+|sequential|[SequentialNavigation](#SequentialNavigation)||
+|menu|[MenuNavigation](#MenuNavigation)||
+
+# SequentialNavigation
+|field|type|description|optional|
+|--|--|----|-|
+|start_password|[Noneable](#Noneable)|Password to begin the exam</br>none and "" are the same|false|
+|can_regenerate|Boolean|Whether the student can regenerate questions</br>Old name was `allow_regenerate`|false|
+|show_steps|Boolean|If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions</br>Old name was `allow_steps`|false|
+|show_title_page|Boolean|Whether the title page should be shown.</br>Old name was `show_frontpage`|false|
+|confirm_when_leaving|Boolean|Whether the student will be asked to confirm when leaving the exam.|false|
+|show_names_of_question_groups|Boolean||false|
+|allow_printing|Boolean|Whether the student is allowed to print the exam|false|
+|can_move_to_previous|Boolean|Whether the student can move back to previous question</br>Old name was `reverse`|false|
+|browsing_enabled|Boolean|Whether the student can jump to any question.|false|
+|show_results_page|[ShowResultsPage](#ShowResultsPage)|When the results page should be shown|false|
+|on_leave|[LeaveAction](#LeaveAction)|Action to execute when a student changes question or tries to end the exam.|false|
+
+# Noneable
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|None|||
+|NotNone|[FileStringStructDocHelper](#FileStringStructDocHelper)||
+
+# ShowResultsPage
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|on_completion|||
+|never|||
+
+# LeaveAction
+One of the following items
+Internal tag named action
+|tag-value|datatype of value|description|
+|--|--|----|
+|"none"|||
+|warn_if_not_attempted|[LeaveActionMessage](#LeaveActionMessage)||
+|prevent_if_not_attempted|[LeaveActionMessage](#LeaveActionMessage)||
+
+# LeaveActionMessage
+|field|type|description|optional|
+|--|--|----|-|
+|message|[Translation](#Translation)||false|
+
+# MenuNavigation
+|field|type|description|optional|
+|--|--|----|-|
+|start_password|[Noneable](#Noneable)|Password to begin the exam</br>none and "" are the same|false|
+|can_regenerate|Boolean|Whether the student can regenerate questions</br>Old name was `allow_regenerate`|false|
+|show_steps|Boolean|If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions</br>Old name was `allow_steps`|false|
+|show_title_page|Boolean|Whether the title page should be shown.</br>Old name was `show_frontpage`|false|
+|confirm_when_leaving|Boolean|Whether the student will be asked to confirm when leaving the exam.|false|
+|show_names_of_question_groups|Boolean||false|
+|allow_printing|Boolean|Whether the student is allowed to print the exam|false|
+
+# Timing
+|field|type|description|optional|
+|--|--|----|-|
+|duration_in_seconds|[Noneable](#Noneable)||false|
+|allow_pause|Boolean||false|
+|on_timeout|[TimeoutAction](#TimeoutAction)|Action to do on timeout|false|
+|timed_warning|[TimeoutAction](#TimeoutAction)|Action to do five minutes before timeout|false|
+
+# TimeoutAction
+One of the following items
+Internal tag named action
+|tag-value|datatype of value|description|
+|--|--|----|
+|"none"|||
+|warn|[TimeoutActionWarn](#TimeoutActionWarn)||
+
+# TimeoutActionWarn
+|field|type|description|optional|
+|--|--|----|-|
+|message|[Translation](#Translation)||false|
+
+# Feedback
+|field|type|description|optional|
+|--|--|----|-|
+|percentage_needed_to_pass|[Noneable](#Noneable)||false|
+|show_name_of_student|Boolean||false|
+|show_current_marks|Boolean|Whether current marks are shown during exam or not (show_actual_mark in numbas)|false|
+|show_maximum_marks|Boolean|Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)|false|
+|show_answer_state|Boolean|Whether answer feedback is shown (right or wrong etc)|false|
+|allow_reveal_answer|Boolean|Whether the 'reveal answer' button is present|false|
+|review|[Review](#Review)||false|
+|advice|[Translation](#Translation)||false|
+|intro|[Translation](#Translation)||false|
+|feedback_messages|Array of [FeedbackMessage](#FeedbackMessage)||false|
+
+# Review
+|field|type|description|optional|
+|--|--|----|-|
+|show_score|Boolean|Whether to show score in result overview page|false|
+|show_feedback|Boolean|Show feedback while reviewing|false|
+|show_expected_answer|Boolean|Show expected answer while reviewing|false|
+|show_advice|Boolean|Show advice while reviewing|false|
+
+# FeedbackMessage
+|field|type|description|optional|
+|--|--|----|-|
+|message|String||false|
+|threshold|String||false|
+
+# QuestionGroup
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|The name|false|
+|questions|Array of [QuestionPathOrTemplate](#QuestionPathOrTemplate)|The questions|false|
+
+# QuestionPathOrTemplate
+One of the following items
+|type|description|
+|--|----|
+|String||
+|[TemplateFile](#TemplateFile)||
+
+
+# NumbasSettings
+|field|type|description|optional|
+|--|--|----|-|
+|theme|String||false|
+
+# DiagnosticExam
+|field|type|description|optional|
+|--|--|----|-|
+|locales|Array of [Locale](#Locale)|All locales for which the exam should be generated|false|
+|name|[Translation](#Translation)|The name of the exam|false|
+|navigation|[DiagnosticNavigation](#DiagnosticNavigation)|The navigation settings for this exam|false|
+|timing|[Timing](#Timing)|The timing settings for this exam|false|
+|feedback|[Feedback](#Feedback)|The feedback settings for this exam|false|
+|question_groups|Array of [QuestionGroup](#QuestionGroup)|The questions groups for this exam|false|
+|numbas_settings|[NumbasSettings](#NumbasSettings)|The settings to set for numbas|false|
+|diagnostic|[Diagnostic](#Diagnostic)|The diagnostic data|false|
+
+# DiagnosticNavigation
+|field|type|description|optional|
+|--|--|----|-|
+|start_password|[Noneable](#Noneable)|Password to begin the exam</br>none and "" are the same|false|
+|can_regenerate|Boolean|Whether the student can regenerate questions</br>Old name was `allow_regenerate`|false|
+|show_steps|Boolean|If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions</br>Old name was `allow_steps`|false|
+|show_title_page|Boolean|Whether the title page should be shown.</br>Old name was `show_frontpage`|false|
+|confirm_when_leaving|Boolean|Whether the student will be asked to confirm when leaving the exam.|false|
+|show_names_of_question_groups|Boolean||false|
+|allow_printing|Boolean|Whether the student is allowed to print the exam|false|
+|on_leave|[LeaveAction](#LeaveAction)|Action to execute when a student changes question or tries to end the exam.|false|
+
+# Diagnostic
+|field|type|description|optional|
+|--|--|----|-|
+|script|[DiagnosticScript](#DiagnosticScript)|The script to use|false|
+|objectives|Array of [LearningObjective](#LearningObjective)|The learning objectives,|false|
+|topics|Array of [LearningTopic](#LearningTopic)|The learning topics|false|
+
+# DiagnosticScript
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|mastery|||
+|diagnosys|||
+|custom|[Translation](#Translation)||
+
+# LearningObjective
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|The name|false|
+|description|[Translation](#Translation)|A description|false|
+
+# LearningTopic
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|The name|false|
+|description|[Translation](#Translation)|A description|false|
+|objectives|Array of [Translation](#Translation)|List of names of objectives|false|
+|depends_on|Array of [Translation](#Translation)|List of names of topic on which this topic depends|false|
+
+
+Wrapper { child: Map { key: Leaf("String"), value: Leaf("YAML-value") }, arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+Wrapper { child: Struct("CustomPartTypeSettingSharedData", [("name", { doc: "A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.", flags: [] }), ("numbas_label", { doc: "The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.", flags: [] }), ("documentation_url", { doc: "The address of documentation explaining this setting in further depth.", flags: [] }), ("numbas_hint", { doc: "Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.", flags: [] })]), arity: One, flags: FLATTEN }
+# QuestionFileType
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|template|[TemplateFile](#TemplateFile)||
+|normal|[Question](#Question)||
+
+# TemplateFile
+|field|type|description|optional|
+|--|--|----|-|
+|template|String|The path to the template to use. Relative to the `exams` or `questions` folder.|false|
+
+# Question
+|field|type|description|optional|
+|--|--|----|-|
+|statement|[Translation](#Translation)|The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.|false|
+|advice|[Translation](#Translation)|Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam.</br>The advice area is normally used to present a worked solution to the question.|false|
+|parts|Array of [QuestionPart](#QuestionPart)||false|
+|builtin_constants|[BuiltinConstants](#BuiltinConstants)||false|
+|custom_constants|Array of [CustomConstant](#CustomConstant)||false|
+|variables|Map from String to [VariableRepresentation](#VariableRepresentation)||false|
+|variables_test|[VariablesTest](#VariablesTest)||false|
+|functions|Map from String to [Function](#Function)||false|
+|preamble|[Preamble](#Preamble)||false|
+|navigation|[QuestionNavigation](#QuestionNavigation)||false|
+|extensions|[Extensions](#Extensions)||false|
+|diagnostic_topic_names|Array of [Translation](#Translation)|The names of the topics used in diagnostic exams that this question belongs to|false|
+|resources|Array of [ResourcePath](#ResourcePath)||false|
+|custom_part_types|Array of [CustomPartTypeDefinitionPath](#CustomPartTypeDefinitionPath)|The custom part types used in this exam|false|
+|rulesets|Map from String to [JMERulesetItem](#JMERulesetItem)|The rulesets defined in this question|false|
+
+# Translation
+One of the following items
+|type|description|
+|--|----|
+|[TranslationStruct](#TranslationStruct)|A structured translatable string with placeholders.|
+|[FileStringStructDocHelper](#FileStringStructDocHelper)|A simple filestring. This implies that it can also just be a string.|
+
+
+# TranslationStruct
+|field|type|description|optional|
+|--|--|----|-|
+|content|[TranslationContent](#TranslationContent)|The content with optional placeholders ({{placeholder-name}}).|false|
+|placeholders|Map from String to [Translation](#Translation)|The values for the placeholders. It maps the placeholder-name to it's translatable</br>value. The value for a placeholder can thus (if needed) be different for different locales.|false|
+
+# TranslationContent
+One of the following items
+|type|description|
+|--|----|
+|Map from String to [FileStringStructDocHelper](#FileStringStructDocHelper)|Map from locale to content. You can use this to specify different content for different</br>locales.|
+|[FileStringStructDocHelper](#FileStringStructDocHelper)|A filestring. Possibly to a file that is placed in `locale` folders and is therefore localized.|
+
+
+# FileStringStructDocHelper
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|FileReference||A string of the form `file:<filepath>` where `filepath` is the relative path (within the `exams` or `questions` folder) to a file containing content.</br>This content can be localized by placing it in locale folders.</br>e.g. `file:examples/basic-explanation.html` will search for files in folders</br>with following form: `questions/examples/locale-<localename>/basic-explanation.html`</br>If a file isn't found for a specific locale,</br>`questions/examples/basic-basic-explanation.html` will be used|
+|String||A literal string.|
+
+# QuestionPart
+One of the following items
+|type|description|
+|--|----|
+|[QuestionPartBuiltin](#QuestionPartBuiltin)||
+|[QuestionPartCustom](#QuestionPartCustom)||
+
+
+# QuestionPartBuiltin
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|jme|[QuestionPartJME](#QuestionPartJME)||
+|gapfill|[QuestionPartGapFill](#QuestionPartGapFill)||
+|choose_one|[QuestionPartChooseOne](#QuestionPartChooseOne)||
+|choose_multiple|[QuestionPartChooseMultiple](#QuestionPartChooseMultiple)||
+|match_answers|[QuestionPartMatchAnswersWithItems](#QuestionPartMatchAnswersWithItems)||
+|number_entry|[QuestionPartNumberEntry](#QuestionPartNumberEntry)||
+|pattern_match|[QuestionPartPatternMatch](#QuestionPartPatternMatch)||
+|information|[QuestionPartInformation](#QuestionPartInformation)||
+|extension|[QuestionPartExtension](#QuestionPartExtension)||
+|matrix|[QuestionPartMatrix](#QuestionPartMatrix)||
+
+# QuestionPartJME
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|answer|[Translation](#Translation)||false|
+|answer_simplification|[JMEAnswerSimplification](#JMEAnswerSimplification)||false|
+|answer_display|[JMEAnswerDisplay](#JMEAnswerDisplay)||false|
+|show_preview|Boolean||false|
+|answer_check|[CheckingType](#CheckingType)||false|
+|failure_rate|Float||false|
+|vset_range|Array of Float||false|
+|vset_range_points|Integer||false|
+|check_variable_names|Boolean||false|
+|single_letter_variables|Boolean||false|
+|allow_unknown_functions|Boolean||false|
+|implicit_function_composition|Boolean||false|
+|max_length|[Noneable](#Noneable)||false|
+|min_length|[Noneable](#Noneable)||false|
+|must_have|[Noneable](#Noneable)||false|
+|may_not_have|[Noneable](#Noneable)||false|
+|must_match_pattern|[Noneable](#Noneable)||false|
+|value_generators|[Noneable](#Noneable)||false|
+
+# Number
+One of the following items
+|type|description|
+|--|----|
+|Integer||
+|Float||
+
+
+# VariableReplacementStrategy
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|original_first|||
+
+# JMENote
+|field|type|description|optional|
+|--|--|----|-|
+|name|String||false|
+|description|[Noneable](#Noneable)||false|
+|expression|[Translation](#Translation)||false|
+
+# Noneable
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|None|||
+|NotNone|String||
+
+# JMEAnswerSimplification
+|field|type|description|optional|
+|--|--|----|-|
+|simplify_basic|Boolean||false|
+|cancel_unit_factors|Boolean||false|
+|cancel_unit_powers|Boolean||false|
+|cancel_unit_denominators|Boolean||false|
+|cancel_zero_factors|Boolean||false|
+|omit_zero_terms|Boolean||false|
+|cancel_zero_powers|Boolean||false|
+|cancel_powers_with_base_zero|Boolean||false|
+|collect_numbers|Boolean||false|
+|constants_first|Boolean||false|
+|collect_sqrt_products|Boolean||false|
+|collect_sqrt_divisions|Boolean||false|
+|cancel_sqrt_square|Boolean||false|
+|evaluate_powers_of_numbers|Boolean||false|
+|rewrite_to_no_leading_minus|Boolean||false|
+|simplify_fractions|Boolean||false|
+|simplify_trigonometric|Boolean||false|
+|collect_terms|Boolean||false|
+|collect_powers_of_common_factors|Boolean||false|
+|collect_like_fractions|Boolean||false|
+|order_canonical|Boolean||false|
+|expand_brackets|Boolean||false|
+
+# JMEAnswerDisplay
+|field|type|description|optional|
+|--|--|----|-|
+|broken_as_fractions|Boolean||false|
+|mixed_fractions|Boolean||false|
+|flat_fractions|Boolean||false|
+|vector_as_row|Boolean||false|
+|always_show_multiplication_sign|Boolean||false|
+|use_dot_as_multiplication_sign|Boolean||false|
+|matrices_without_parentheses|Boolean||false|
+
+# CheckingType
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|relative_difference|[CheckingTypeDataFloat](#CheckingTypeDataFloat)||
+|absolute_difference|[CheckingTypeDataFloat](#CheckingTypeDataFloat)||
+|decimal_places|[CheckingTypeDataNatural](#CheckingTypeDataNatural)||
+|significant_figures|[CheckingTypeDataNatural](#CheckingTypeDataNatural)||
+
+# CheckingTypeDataFloat
+|field|type|description|optional|
+|--|--|----|-|
+|max_difference|Float||false|
+
+# CheckingTypeDataNatural
+|field|type|description|optional|
+|--|--|----|-|
+|amount|Integer||false|
+
+# QuestionPartGapFill
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|sort_answers|Boolean|Whether the answers should be sorted|false|
+|gaps|Array of [QuestionPart](#QuestionPart)|The gaps|false|
+
+# QuestionPartChooseOne
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|answer_data|[MultipleChoiceAnswerData](#MultipleChoiceAnswerData)|Old name was `answers`|false|
+|shuffle_answers|Boolean||false|
+|show_cell_answer_state|Boolean||false|
+|display|[ChooseOneDisplay](#ChooseOneDisplay)||false|
+
+# MultipleChoiceAnswerData
+One of the following items
+|type|description|
+|--|----|
+|Array of [MultipleChoiceAnswer](#MultipleChoiceAnswer)||
+|[MultipleChoiceAnswerDataNumbasLike](#MultipleChoiceAnswerDataNumbasLike)||
+
+
+# MultipleChoiceAnswer
+|field|type|description|optional|
+|--|--|----|-|
+|statement|[Translation](#Translation)||false|
+|feedback|[Translation](#Translation)||false|
+|marks|[Translation](#Translation)||false|
+
+# MultipleChoiceAnswerDataNumbasLike
+|field|type|description|optional|
+|--|--|----|-|
+|answers|[VariableValued](#VariableValued)||false|
+|marks|[VariableValued](#VariableValued)||false|
+|feedback|[Noneable](#Noneable)||false|
+
+# VariableValued
+One of the following items
+|type|description|
+|--|----|
+|[JMEString](#JMEString)||
+|Array of [Translation](#Translation)||
+
+
+# JMEString
+|field|type|description|optional|
+|--|--|----|-|
+|s|String||false|
+|ast|||false|
+
+# ChooseOneDisplay
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|"dropdown"|||
+|radio|[ChooseOneDisplay_radio](#ChooseOneDisplay_radio)||
+
+# ChooseOneDisplay_radio
+|field|type|description|optional|
+|--|--|----|-|
+|columns|Integer||false|
+
+# QuestionPartChooseMultiple
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|answer_data|[MultipleChoiceAnswerData](#MultipleChoiceAnswerData)|Old name was `answers`|false|
+|shuffle_answers|Boolean||false|
+|show_cell_answer_state|Boolean||false|
+|should_select_at_least|Integer||false|
+|should_select_at_most|[Noneable](#Noneable)||false|
+|columns|Integer||false|
+|wrong_nb_answers_warning_type|[MultipleChoiceWarningType](#MultipleChoiceWarningType)|What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)|false|
+|minimal_achievable_marks|[Noneable](#Noneable)|If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.|false|
+|maximal_achievable_marks|[Noneable](#Noneable)|If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.|false|
+|marking_method|[MultipleChoiceMarkingMethod](#MultipleChoiceMarkingMethod)||false|
+
+# MultipleChoiceWarningType
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|none|||
+|prevent|||
+
+# MultipleChoiceMarkingMethod
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|sum_ticked_cells|||
+|score_per_matched_cell|||
+|all_or_nothing|||
+
+# QuestionPartMatchAnswersWithItems
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|answer_data|[MultipleChoiceMatchAnswerData](#MultipleChoiceMatchAnswerData)|Old name was `answers`|false|
+|shuffle_answers|Boolean||false|
+|shuffle_items|Boolean||false|
+|show_cell_answer_state|Boolean||false|
+|should_select_at_least|Integer||false|
+|should_select_at_most|[Noneable](#Noneable)||false|
+|display|[MatchAnswerWithItemsDisplay](#MatchAnswerWithItemsDisplay)||false|
+|layout|[MatchAnswersWithChoicesLayout](#MatchAnswersWithChoicesLayout)||false|
+|wrong_nb_answers_warning_type|[MultipleChoiceWarningType](#MultipleChoiceWarningType)|What to do if the student picks the wrong number of responses? Either "none" (do nothing), "prevent" (don’t let the student submit), or "warn" (show a warning but let them submit)|false|
+|minimal_achievable_marks|[Noneable](#Noneable)|If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.|false|
+|maximal_achievable_marks|[Noneable](#Noneable)|If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.|false|
+
+# MultipleChoiceMatchAnswerData
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|item_based|[MultipleChoiceMatchAnswers](#MultipleChoiceMatchAnswers)||
+|numbas_like|[MultipleChoiceMatchAnswerDataNumbasLike](#MultipleChoiceMatchAnswerDataNumbasLike)||
+
+# MultipleChoiceMatchAnswers
+|field|type|description|optional|
+|--|--|----|-|
+|answers|Array of [Translation](#Translation)|Values of the answers|false|
+|items|Array of [MatchAnswersItem](#MatchAnswersItem)|Items for which the answer can be selected|false|
+
+# MatchAnswersItem
+|field|type|description|optional|
+|--|--|----|-|
+|statement|[Translation](#Translation)||false|
+|answer_marks|Array of [MatchAnswersItemMarks](#MatchAnswersItemMarks)|Map points to strings of answers ! use anchors in yaml|false|
+
+# MatchAnswersItemMarks
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[JMEString](#JMEString)||false|
+|answer|[Translation](#Translation)||false|
+
+# MultipleChoiceMatchAnswerDataNumbasLike
+|field|type|description|optional|
+|--|--|----|-|
+|answers|[VariableValued](#VariableValued)||false|
+|choices|[VariableValued](#VariableValued)||false|
+|marks|[VariableValued](#VariableValued)||false|
+
+# MatchAnswerWithItemsDisplay
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|"radio"|||
+|check|[MatchAnswersWithChoicesDisplayCheck](#MatchAnswersWithChoicesDisplayCheck)||
+
+# MatchAnswersWithChoicesDisplayCheck
+|field|type|description|optional|
+|--|--|----|-|
+|marking_method|[MultipleChoiceMarkingMethod](#MultipleChoiceMarkingMethod)||false|
+
+# MatchAnswersWithChoicesLayout
+|field|type|description|optional|
+|--|--|----|-|
+|type|[MatchAnswersWithChoicesLayoutType](#MatchAnswersWithChoicesLayoutType)||false|
+
+# MatchAnswersWithChoicesLayoutType
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|all|||
+|lower_triangle|||
+
+# QuestionPartNumberEntry
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|answer|[NumberEntryAnswer](#NumberEntryAnswer)||false|
+|display_correct_as_fraction|Boolean||false|
+|allow_fractions|Boolean||false|
+|allowed_notation_styles|Array of [AnswerStyle](#AnswerStyle)||false|
+|display_correct_in_style|[AnswerStyle](#AnswerStyle)||false|
+|fractions_must_be_reduced|Boolean||false|
+|partial_credit_if_fraction_not_reduced|[Number](#Number)||false|
+|hint_fraction|Boolean||false|
+
+# NumberEntryAnswer
+One of the following items
+|type|description|
+|--|----|
+|[JMEString](#JMEString)||
+|[NumberEntryAnswerRange](#NumberEntryAnswerRange)||
+
+
+# NumberEntryAnswerRange
+|field|type|description|optional|
+|--|--|----|-|
+|from|[JMEString](#JMEString)||false|
+|to|[JMEString](#JMEString)||false|
+
+# AnswerStyle
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|english||English style - commas separate thousands, dot for decimal point|
+|english-plain||Plain English style - no thousands separator, dot for decimal point|
+|english-si||English SI style - spaces separate thousands, dot for decimal point|
+|european||Continental European style - dots separate thousands, comma for decimal poin|
+|european-plain||Plain French style - no thousands separator, comma for decimal point|
+|french-si||French SI style - spaces separate thousands, comma for decimal point|
+|indian||Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.|
+|scientific||Significand-exponent ("scientific") style|
+|swiss||Swiss style - apostrophes separate thousands, dot for decimal point|
+
+# QuestionPartPatternMatch
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|case_sensitive|Boolean||false|
+|partial_credit|Float||false|
+|pattern|[Translation](#Translation)||false|
+|display_answer|[Translation](#Translation)||false|
+|match_mode|[PatternMatchMode](#PatternMatchMode)||false|
+
+# PatternMatchMode
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|regex|||
+|exact|||
+
+# QuestionPartInformation
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+
+# QuestionPartExtension
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+
+# QuestionPartMatrix
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|correct_answer|[JMEString](#JMEString)||false|
+|dimensions|[QuestionPartMatrixDimensions](#QuestionPartMatrixDimensions)||false|
+|max_absolute_deviation|Float|If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.|false|
+|mark_partial_by_cells|Boolean|If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.|false|
+|display_correct_as_fraction|Boolean||false|
+|allow_fractions|Boolean||false|
+
+# QuestionPartMatrixDimensions
+|field|type|description|optional|
+|--|--|----|-|
+|rows|[QuestionPartMatrixDimension](#QuestionPartMatrixDimension)||false|
+|columns|[QuestionPartMatrixDimension](#QuestionPartMatrixDimension)||false|
+
+# QuestionPartMatrixDimension
+One of the following items
+External tag named (name: <data>)
+|name|type|description|
+|--|--|----|
+|Fixed|[ReverseVariableValued](#ReverseVariableValued)||
+|Resizable|[QuestionPartMatrixRangedDimension](#QuestionPartMatrixRangedDimension)||
+
+# ReverseVariableValued
+One of the following items
+|type|description|
+|--|----|
+|Integer||
+|[JMEString](#JMEString)||
+
+
+# QuestionPartMatrixRangedDimension
+|field|type|description|optional|
+|--|--|----|-|
+|default|[ReverseVariableValued](#ReverseVariableValued)|The default size|false|
+|min|[ReverseVariableValued](#ReverseVariableValued)|The minimal size|false|
+|max|[Noneable](#Noneable)|The maximal size, if this is none, there is no limit|false|
+
+# QuestionPartCustom
+|field|type|description|optional|
+|--|--|----|-|
+|marks|[Number](#Number)||false|
+|prompt|[Translation](#Translation)||false|
+|use_custom_name|Boolean||false|
+|custom_name|String||false|
+|steps_penalty|[Number](#Number)||false|
+|enable_minimum_marks|Boolean||false|
+|minimum_marks|Integer||false|
+|show_correct_answer|Boolean||false|
+|show_feedback_icon|Boolean||false|
+|variable_replacement_strategy|[VariableReplacementStrategy](#VariableReplacementStrategy)||false|
+|adaptive_marking_penalty|Integer||false|
+|custom_marking_algorithm_notes|Array of [JMENote](#JMENote)||false|
+|extend_base_marking_algorithm|Boolean||false|
+|steps|Array of [QuestionPart](#QuestionPart)||false|
+|type|String||false|
+|settings|Map from String to [CustomPartInputTypeValue](#CustomPartInputTypeValue)||false|
+
+# BuiltinConstants
+|field|type|description|optional|
+|--|--|----|-|
+|e|Boolean|Whether the constant e is enabled|false|
+|pi|Boolean|Whether the constant pi is enabled|false|
+|i|Boolean|Whether the constant i is enabled-|false|
+
+# CustomConstant
+|field|type|description|optional|
+|--|--|----|-|
+|name|String|The name of the constant|false|
+|value|[JMEString](#JMEString)|The value of the constant|false|
+|tex|String|The tex code use to display the constant|false|
+
+# VariablesTest
+|field|type|description|optional|
+|--|--|----|-|
+|condition|[JMEString](#JMEString)||false|
+|max_runs|Integer||false|
+
+# Preamble
+|field|type|description|optional|
+|--|--|----|-|
+|js|[FileStringStructDocHelper](#FileStringStructDocHelper)|The JavaScript to add to the outputfiles|false|
+|css|[FileStringStructDocHelper](#FileStringStructDocHelper)|The CSS to add to the outputfiles|false|
+
+# QuestionNavigation
+|field|type|description|optional|
+|--|--|----|-|
+|can_regenerate|Boolean|Whether the student can regenerate the question</br>Old name was `allow_regenerate`|false|
+|show_title_page|Boolean|Whether the title page should be shown.</br>Old name was `show_frontpage`|false|
+|confirm_when_leaving|Boolean|Whether the student will be asked to confirm when leaving the exam.|false|
+
+# Extensions
+|field|type|description|optional|
+|--|--|----|-|
+|chemistry|Boolean||false|
+|download_text_file|Boolean||false|
+|eukleides|Boolean||false|
+|geogebra|Boolean||false|
+|graphs|Boolean||false|
+|jsx_graph|Boolean||false|
+|linear_algebra|Boolean||false|
+|linear_codes|Boolean||false|
+|optimisation|Boolean||false|
+|permutations|Boolean||false|
+|polynomials|Boolean||false|
+|quantities|Boolean||false|
+|random_person|Boolean||false|
+|stats|Boolean||false|
+|sqlite|Boolean||false|
+|text|Boolean||false|
+|written_number|Boolean||false|
+
+# ResourcePath
+|field|type|description|optional|
+|--|--|----|-|
+|resource_name|String||false|
+|resource_path|Filesystem path||false|
+
+# CustomPartTypeDefinitionPath
+|field|type|description|optional|
+|--|--|----|-|
+|file_name|String||false|
+|data|[CustomPartTypeDefinition](#CustomPartTypeDefinition)||false|
+
+# CustomPartTypeDefinition
+|field|type|description|optional|
+|--|--|----|-|
+|type_name|[Translation](#Translation)||false|
+|description|[Translation](#Translation)||false|
+|settings|Array of [CustomPartTypeSetting](#CustomPartTypeSetting)||false|
+|can_be_gap|Boolean||false|
+|can_be_step|Boolean||false|
+|marking_notes|Array of [JMENote](#JMENote)||false|
+|help_url|[Translation](#Translation)||false|
+|published|Boolean||false|
+|extensions|[Extensions](#Extensions)||false|
+|input_widget|[CustomPartInputWidget](#CustomPartInputWidget)||false|
+
+# CustomPartTypeSetting
+One of the following items
+Internal tag named input_type
+|tag-value|datatype of value|description|
+|--|--|----|
+|check_box|[CustomPartTypeSettingCheckBox](#CustomPartTypeSettingCheckBox)||
+|code|[CustomPartTypeSettingCode](#CustomPartTypeSettingCode)||
+|mathematical_expression|[CustomPartTypeSettingMathematicalExpression](#CustomPartTypeSettingMathematicalExpression)||
+|string|[CustomPartTypeSettingString](#CustomPartTypeSettingString)||
+|drop_down|[CustomPartTypeSettingDropDown](#CustomPartTypeSettingDropDown)||
+|percentage|[CustomPartTypeSettingPercentage](#CustomPartTypeSettingPercentage)||
+
+# CustomPartTypeSettingCheckBox
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|default_value|Boolean|The initial value of the setting in the question editor.|false|
+
+# CustomPartTypeSettingCode
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|default_value|[Noneable](#Noneable)|The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.|false|
+|evaluate|Boolean||false|
+
+# CustomPartTypeSettingMathematicalExpression
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|evaluate_enclosed_expressions|Boolean|If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.|false|
+|default_value|[Noneable](#Noneable)|The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.|false|
+
+# CustomPartTypeSettingString
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|evaluate_enclosed_expressions|Boolean|If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.|false|
+|default_value|[Noneable](#Noneable)|The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.|false|
+
+# CustomPartTypeSettingDropDown
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|default_value|[Noneable](#Noneable)|The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.|false|
+|choices|Array of [CustomPartTypeSettingDropDownChoice](#CustomPartTypeSettingDropDownChoice)||false|
+
+# CustomPartTypeSettingDropDownChoice
+|field|type|description|optional|
+|--|--|----|-|
+|value|[Translation](#Translation)||false|
+|label|[Translation](#Translation)||false|
+
+# CustomPartTypeSettingPercentage
+|field|type|description|optional|
+|--|--|----|-|
+|name|[Translation](#Translation)|A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.|false|
+|numbas_label|[Translation](#Translation)|The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.|false|
+|documentation_url|[Noneable](#Noneable)|The address of documentation explaining this setting in further depth.|false|
+|numbas_hint|[Translation](#Translation)|Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.|false|
+|default_value|[Noneable](#Noneable)|The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.|false|
+
+# CustomPartInputWidget
+One of the following items
+Internal tag named type
+|tag-value|datatype of value|description|
+|--|--|----|
+|string|[CustomPartStringInputOptions](#CustomPartStringInputOptions)|The student enters a single line of text.|
+|number|[CustomPartNumberInputOptions](#CustomPartNumberInputOptions)|The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.|
+|radiogroup|[CustomPartRadioGroupInputOptions](#CustomPartRadioGroupInputOptions)|The student chooses one from a list of choices by selecting a radio button.|
+
+# CustomPartStringInputOptions
+|field|type|description|optional|
+|--|--|----|-|
+|hint|[CustomPartInputOptionValueTranslatableString](#CustomPartInputOptionValueTranslatableString)|A string displayed next to the input field, giving any necessary information about how to enter their answer.|false|
+|correct_answer|[Translation](#Translation)|A JME expression which evaluates to the expected answer to the part.|false|
+|allow_empty|[CustomPartInputOptionValueBool](#CustomPartInputOptionValueBool)|If false, the part will only be marked if their answer is non-empty.|false|
+
+# CustomPartInputOptionValueTranslatableString
+|field|type|description|optional|
+|--|--|----|-|
+|value|[Translation](#Translation)|The value|false|
+|static|Boolean|A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.|false|
+
+# CustomPartInputOptionValueBool
+|field|type|description|optional|
+|--|--|----|-|
+|value|Boolean|The value|false|
+|static|Boolean|A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.|false|
+
+# CustomPartNumberInputOptions
+|field|type|description|optional|
+|--|--|----|-|
+|hint|[CustomPartInputOptionValueTranslatableString](#CustomPartInputOptionValueTranslatableString)|A string displayed next to the input field, giving any necessary information about how to enter their answer.|false|
+|correct_answer|[Translation](#Translation)|A JME expression which evaluates to the expected answer to the part.|false|
+|allow_fractions|[CustomPartInputOptionValueBool](#CustomPartInputOptionValueBool)|Allow the student to enter their answer as a fraction?|false|
+|allowed_notation_styles|[CustomPartInputOptionValueAnswerStyles](#CustomPartInputOptionValueAnswerStyles)||false|
+
+# CustomPartInputOptionValueAnswerStyles
+|field|type|description|optional|
+|--|--|----|-|
+|value|Array of [AnswerStyle](#AnswerStyle)|The value|false|
+|static|Boolean|A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.|false|
+
+# CustomPartRadioGroupInputOptions
+|field|type|description|optional|
+|--|--|----|-|
+|hint|[CustomPartInputOptionValueTranslatableString](#CustomPartInputOptionValueTranslatableString)|A string displayed next to the input field, giving any necessary information about how to enter their answer.|false|
+|correct_answer|[Translation](#Translation)|A JME expression which evaluates to the expected answer to the part.|false|
+|choices|[CustomPartInputOptionValueTranslatableStrings](#CustomPartInputOptionValueTranslatableStrings)|The labels for the choices to offer to the student.|false|
+
+# CustomPartInputOptionValueTranslatableStrings
+|field|type|description|optional|
+|--|--|----|-|
+|value|Array of [Translation](#Translation)|The value|false|
+|static|Boolean|A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.|false|
+
+

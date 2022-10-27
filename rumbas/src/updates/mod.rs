@@ -2,6 +2,7 @@ use crate::support::rc::RC;
 use semver::{Version, VersionReq};
 
 mod zero_five;
+mod zero_seven_one;
 
 pub fn update(current_rc: RC) -> Option<RC> {
     let current_version = current_rc.version();
@@ -26,6 +27,8 @@ pub fn update(current_rc: RC) -> Option<RC> {
         Some(Version::new(0, 7, 0))
     } else if current_version == Version::new(0, 7, 0) {
         Some(Version::new(0, 7, 1))
+    } else if current_version == Version::new(0, 7, 1) {
+        Some(zero_seven_one::update())
     } else {
         None
     };
