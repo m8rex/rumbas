@@ -93,7 +93,7 @@ impl RumbasPath {
 fn canonicalize_keep_symlink(path: &Path) -> PathBuf {
     if let Some(p) = path.parent() {
         if p != Path::new("") {
-            return p.canonicalize().unwrap().join(path.file_name().unwrap());
+            return canonicalize_keep_symlink(p).join(path.file_name().unwrap());
         }
     }
     if path.is_relative() {
@@ -103,7 +103,7 @@ fn canonicalize_keep_symlink(path: &Path) -> PathBuf {
             Path::new(".").canonicalize().unwrap()
         }
     } else {
-        unimplemented!()
+        path.canonicalize().unwrap()
     }
 }
 
