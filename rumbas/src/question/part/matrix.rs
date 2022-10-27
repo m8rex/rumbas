@@ -19,7 +19,9 @@ question_part_type! {
     #[input(name = "QuestionPartMatrixInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartMatrix {
+        /// The expected answer to the part. This is a JME expression which must evaluate to a matrix.
         correct_answer: numbas::jme::JMEString,
+        /// The dimensions of the student's answer field
         dimensions: QuestionPartMatrixDimensions,
 
         /// If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.
@@ -27,8 +29,13 @@ question_part_type! {
         /// If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.
         mark_partial_by_cells: bool,
 
+        /// If this is ticked, then non-integer numbers in the correct answer will be displayed as fractions instead of decimals.
         display_correct_as_fraction: bool,
-        allow_fractions: bool // todo: precision
+        // This option is only available when no precision restriction is applied, since they apply to decimal numbers.
+        /// If this is ticked, the student can enter a ratio of two whole numbers, e.g. -3/8, as their answer.
+        allow_fractions: bool
+
+        // todo: precision
     }
 }
 
@@ -85,7 +92,9 @@ impl ToRumbas<QuestionPartMatrix> for numbas::question::part::matrix::QuestionPa
 #[input(name = "QuestionPartMatrixDimensionsInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct QuestionPartMatrixDimensions {
+    /// The number of rows in the student’s answer field.
     pub rows: QuestionPartMatrixDimension,
+    /// The number of columns in the student’s answer field.
     pub columns: QuestionPartMatrixDimension,
 }
 
@@ -99,7 +108,9 @@ impl QuestionPartMatrixDimensions {
 #[input(name = "QuestionPartMatrixDimensionInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub enum QuestionPartMatrixDimension {
+    /// The dimensions are fixed
     Fixed(ReverseVariableValued<usize>),
+    /// The student can change the dimensions
     Resizable(Box<QuestionPartMatrixRangedDimension>),
 }
 

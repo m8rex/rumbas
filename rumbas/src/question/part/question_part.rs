@@ -352,7 +352,9 @@ question_part_type! {
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartCustom {
         #[serde(rename="type")]
+        /// The name of the custom part name
         type_name: String, // Renamed because of bug in Comparable
+        /// The settings for the CustomPartType
         settings: std::collections::BTreeMap<String, CustomPartInputTypeValue>
     }
 }
@@ -361,6 +363,7 @@ question_part_type! {
 #[input(name = "CustomPartInputTypeValueInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
+// TODO
 pub enum CustomPartInputTypeValue {
     CheckBox(bool),
     Code(String),

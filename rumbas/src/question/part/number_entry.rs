@@ -18,16 +18,27 @@ question_part_type! {
     #[input(name = "QuestionPartNumberEntryInput")]
     #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq)]
     pub struct QuestionPartNumberEntry {
+        /// The expected answer
         answer: NumberEntryAnswer,
+        // TODO: This option is only available when no precision restriction is applied.
+        /// If this is ticked, the correct answer to the part will be rendered as a fraction of two whole numbers instead of a decimal. For example, if the answer is 0.5, it will be displayed as 1/2 instead of 0.5.
         display_correct_as_fraction: bool,
+        // TODO: This option is only available when no precision restriction is applied, since they apply to decimal numbers.
+        /// If this is ticked, the student can enter a ratio of two whole numbers, e.g. -3/8, as their answer.
         allow_fractions: bool,
-        allowed_notation_styles: Vec<AnswerStyle>,
-
-        display_correct_in_style: AnswerStyle,
+        /// This option only applies when “allow_fractions” is ticked. If this is ticked, the student must enter their fractional answer reduced to lowest terms. For example, consider a part whose correct answer is 5/4. If this is ticked, 10/8 will be marked as incorrect.
         fractions_must_be_reduced: bool,
+        /// If this is ticked and fractions_must_be_reduced is ticked, then text explaining that the student must reduce their fraction to lowest terms is shown next to the input box.
+        #[serde(alias="hint_fraction")]
+        fractions_must_be_reduced_hint: bool,
+        /// The proportion of credit to award if the student’s answer is a non-reduced fraction.
         partial_credit_if_fraction_not_reduced: numbas::support::primitive::Number,
 
-        hint_fraction: bool
+        /// The styles of number notation that the student can use to enter their answer. There are different ways of writing numbers, based on culture and context. Tick an option to allow the student to use that style in their answer. Note that some styles conflict with each other: for example, 1.234 is a number between 1 and 2 in English, while it’s the integer 1234 in French. The student’s answer will be interpreted using the first allowed style for which it is a valid representation of a number.
+        allowed_notation_styles: Vec<AnswerStyle>,
+        /// The style of number notation to use when displaying the student’s answer.
+        display_correct_in_style: AnswerStyle
+
 
         //TODO: precision, show_precision_hint
     }
@@ -54,7 +65,7 @@ impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
 
             precision: Default::default(), //TODO
             show_precision_hint: true,     //TODO
-            show_fraction_hint: self.hint_fraction.to_numbas(locale),
+            show_fraction_hint: self.fractions_must_be_reduced_hint.to_numbas(locale),
             answer: self.answer.to_numbas(locale),
             // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
         }
@@ -80,7 +91,7 @@ impl ToRumbas<QuestionPartNumberEntry>
                     self.fractions_must_be_reduced.to_rumbas(),
                 partial_credit_if_fraction_not_reduced:
                     self.partial_credit_if_fraction_not_reduced.to_rumbas(),
-                hint_fraction:
+                fractions_must_be_reduced_hint:
                     self.show_fraction_hint.to_rumbas()
 
             }
@@ -93,7 +104,9 @@ impl ToRumbas<QuestionPartNumberEntry>
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum NumberEntryAnswer {
+    /// The answer is accepted as correct when it equals this value
     Normal(JMEString),
+    /// The answer is accepted as correct when it is within a range
     Range(NumberEntryAnswerRange),
 }
 
@@ -102,7 +115,9 @@ pub enum NumberEntryAnswer {
 #[input(name = "NumberEntryAnswerRangeInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct NumberEntryAnswerRange {
+    /// The smallest value accepted as correct.
     pub from: JMEString,
+    /// The largest value accepted as correct.
     pub to: JMEString,
 }
 

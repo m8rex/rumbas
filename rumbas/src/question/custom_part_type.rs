@@ -15,7 +15,6 @@ use rumbas_support::preamble::*;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::{Into, TryInto};
-use std::path::PathBuf;
 use structdoc::StructDoc;
 
 #[derive(Input, Overwrite, RumbasCheck, Examples, StructDoc)]

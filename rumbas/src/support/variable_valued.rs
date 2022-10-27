@@ -190,11 +190,18 @@ impl<T> VariableValued<T> {
 }
 
 //TODO use derive for Input & overwrite
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema, StructDoc)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, JsonSchema)]
 #[serde(untagged)]
 pub enum ReverseVariableValued<T> {
     Value(T), // Different ordering
     Variable(JMEString),
+}
+
+// Done like the Option value in StructDoc
+impl<T: StructDoc> StructDoc for ReverseVariableValued<T> {
+    fn document() -> structdoc::Documentation {
+        T::document().with_arity(structdoc::Arity::OrVariableValued)
+    }
 }
 
 impl<T: Comparable + PartialEq + std::fmt::Debug> comparable::Comparable
