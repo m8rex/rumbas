@@ -3,9 +3,6 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: diagnostic
-locales:
-  template_key: template_key
-  default_value: ~
 name:
   content:
     nonjmetext§:
@@ -22,6 +19,9 @@ name:
         en: en version of placeholder2
         nl: nl version of placeholder2
       placeholders: {}
+locales:
+  template_key: template_key
+  default_value: ~
 navigation:
   allow_printing:
     template_key: template_key

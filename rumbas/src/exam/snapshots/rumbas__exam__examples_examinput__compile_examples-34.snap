@@ -3,8 +3,8 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: diagnostic
-locales: ~
 name: ~
+locales: ~
 navigation:
   allow_printing:
     template_key: template_key

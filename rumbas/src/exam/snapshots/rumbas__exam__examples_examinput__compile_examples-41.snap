@@ -3,10 +3,10 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: diagnostic
-locales:
+name:
   template_key: template_key
   default_value: ~
-name:
+locales:
   template_key: template_key
   default_value: ~
 navigation:

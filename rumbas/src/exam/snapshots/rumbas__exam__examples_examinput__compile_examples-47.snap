@@ -3,6 +3,7 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: diagnostic
+name: "file:path/to/file"
 locales:
   - name: nonjmetext§
     numbas_locale: ar-SA
@@ -21,47 +22,48 @@ locales:
   - name:
       template_key: template_key
       default_value: ~
+    numbas_locale: in-ID
+  - name: ~
     numbas_locale: it-IT
-  - name: ~
+  - name: nonjmetext§
     numbas_locale: ja-JP
-  - name: nonjmetext§
+  - name: "template:template_key"
     numbas_locale: ko-KR
-  - name: "template:template_key"
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: nb-NO
-  - name:
-      template_key: template_key
-      default_value: ~
+  - name: ~
     numbas_locale: nl-NL
-  - name: ~
+  - name: nonjmetext§
     numbas_locale: pl-PL
-  - name: nonjmetext§
+  - name: "template:template_key"
     numbas_locale: pt-BR
-  - name: "template:template_key"
+  - name:
+      template_key: template_key
+      default_value: ~
     numbas_locale: sq-AL
-  - name:
-      template_key: template_key
-      default_value: ~
+  - name: ~
     numbas_locale: sv-SE
-  - name: ~
-    numbas_locale: tr-TR
   - name: nonjmetext§
-    numbas_locale: vi-VN
+    numbas_locale: tr-TR
   - name: "template:template_key"
-    numbas_locale: zg-CN
+    numbas_locale: vi-VN
   - name:
       template_key: template_key
       default_value: ~
-    numbas_locale: "template:template_key"
+    numbas_locale: zg-CN
   - name: ~
+    numbas_locale: "template:template_key"
+  - name: nonjmetext§
     numbas_locale:
       template_key: template_key
       default_value: ~
-  - name: nonjmetext§
+  - name: "template:template_key"
     numbas_locale: ~
   - "template:template_key"
   - template_key: template_key
     default_value: ~
-name: "file:path/to/file"
 navigation: ~
 timing:
   duration_in_seconds: none
@@ -92,7 +94,8 @@ question_groups:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    picking_strategy: all_ordered
+    picking_strategy:
+      type: all_ordered
     questions:
       - path
       - "template:template_key"
@@ -112,7 +115,8 @@ question_groups:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    picking_strategy: all_shuffled
+    picking_strategy:
+      type: all_shuffled
     questions: "template:template_key"
   - name:
       content:
@@ -130,8 +134,9 @@ question_groups:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    pick_questions: 2
-    picking_strategy: random_subset
+    picking_strategy:
+      type: random_subset
+      pick_questions: 2
     questions:
       template_key: template_key
       default_value: ~
@@ -148,32 +153,35 @@ question_groups:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    pick_questions: "template:template_key"
-    picking_strategy: random_subset
+    picking_strategy:
+      type: random_subset
+      pick_questions: "template:template_key"
     questions: ~
   - name: "file:path/to/file"
-    pick_questions:
-      template_key: template_key
-      default_value: ~
-    picking_strategy: random_subset
+    picking_strategy:
+      type: random_subset
+      pick_questions:
+        template_key: template_key
+        default_value: ~
     questions:
       - path
       - "template:template_key"
       - template_key: template_key
         default_value: ~
   - name: "template:template_key"
-    picking_strategy: all_ordered
+    picking_strategy: "template:template_key"
     questions: "template:template_key"
   - name:
       template_key: template_key
       default_value: ~
-    picking_strategy: all_shuffled
+    picking_strategy:
+      template_key: template_key
+      default_value: ~
     questions:
       template_key: template_key
       default_value: ~
   - name: ~
-    pick_questions: 2
-    picking_strategy: random_subset
+    picking_strategy: ~
     questions: ~
   - "template:template_key"
   - template_key: template_key
