@@ -3,8 +3,8 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: "template:template_key"
 name: "template:template_key"
+locales: "template:template_key"
 navigation:
   allow_printing: ~
   browsing_enabled: "template:template_key"

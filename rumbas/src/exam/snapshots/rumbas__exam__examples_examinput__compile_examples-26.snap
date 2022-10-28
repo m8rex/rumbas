@@ -3,7 +3,6 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: "template:template_key"
 name:
   content:
     nonjmetext§: "template:template_key"
@@ -18,6 +17,7 @@ name:
         en: en version of placeholder2
         nl: nl version of placeholder2
       placeholders: {}
+locales: "template:template_key"
 navigation: ~
 timing: "template:template_key"
 feedback:

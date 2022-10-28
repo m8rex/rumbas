@@ -42,7 +42,8 @@ feedback:
   feedback_messages: []
 question_groups:
   - name: Group
-    picking_strategy: all_ordered
+    picking_strategy:
+      type: all_ordered
     questions:
       - template:question
 numbas_settings:

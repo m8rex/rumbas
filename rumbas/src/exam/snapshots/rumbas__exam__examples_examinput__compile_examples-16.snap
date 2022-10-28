@@ -3,8 +3,8 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: normal
-locales: ~
 name: ~
+locales: ~
 navigation:
   allow_printing: false
   browsing_enabled: ~

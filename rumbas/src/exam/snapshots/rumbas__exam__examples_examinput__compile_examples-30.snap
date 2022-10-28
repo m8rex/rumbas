@@ -3,7 +3,6 @@ source: rumbas/src/exam/mod.rs
 expression: "&example"
 ---
 type: diagnostic
-locales: ~
 name:
   content: "file:path/to/file"
   placeholders:
@@ -17,6 +16,7 @@ name:
         en: en version of placeholder2
         nl: nl version of placeholder2
       placeholders: {}
+locales: ~
 navigation:
   allow_printing: ~
   can_regenerate: ~
