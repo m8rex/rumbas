@@ -3,7 +3,7 @@ use crate::support::file_manager::CACHE;
 use crate::support::rc::within_repo;
 use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use std::path::Path;
-use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
+use yaml_rust_formatter::{yaml::YamlInput, YamlEmitter, YamlLoader};
 
 /// Update from version 0.5.* to 0.6.0
 pub fn update() -> semver::Version {
@@ -53,13 +53,13 @@ pub fn update() -> semver::Version {
                     "Updating main default file {}",
                     default_question.0.file_path.display()
                 );
-                if let Yaml::Hash(h) = default_question.1.clone() {
-                    default_question.1 = Yaml::Hash(
+                if let YamlInput::Hash(h) = default_question.1.clone() {
+                    default_question.1 = YamlInput::Hash(
                         h.into_iter()
                             .chain(
                                 vec![(
-                                    Yaml::String("rulesets".to_string()),
-                                    Yaml::Hash(Vec::new().into_iter().collect()),
+                                    YamlInput::String("rulesets".to_string()),
+                                    YamlInput::Hash(Vec::new().into_iter().collect()),
                                 )]
                                 .into_iter(),
                             )
@@ -74,7 +74,7 @@ pub fn update() -> semver::Version {
             {
                 let mut emitter = YamlEmitter::new(&mut out_str);
                 emitter.multiline_strings(true);
-                emitter.dump(&default_question).unwrap(); // dump the YAML object to a String
+                emitter.dump(&(default_question.to_owned().into())).unwrap(); // dump the YAML object to a String
             }
             std::fs::write(file.file_path, out_str).expect("Failed writing file");
         }

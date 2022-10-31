@@ -1055,7 +1055,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
- "yaml-rust-davvid",
+ "yaml_rust_formatter",
 ]
 
 [[package]]
@@ -1609,10 +1609,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "yaml-rust-davvid"
+name = "yaml_rust_formatter"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff0648c4e5c02911a6acf9e60fae9becf2bab890c682cd3126c9318a4619ce2b"
+source = "git+https://github.com/m8rex/yaml-rust-formatter.git?branch=comments#49d7be0d7decdf1610de94a34cb8c2984eaacffc"
 dependencies = [
  "linked-hash-map",
 ]

@@ -6,7 +6,7 @@ use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::FileToLoad;
 use std::collections::HashSet;
 use std::path::Path;
-use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
+use yaml_rust_formatter::{yaml::YamlInput, yaml::YamlOutput, YamlEmitter, YamlLoader};
 
 pub fn fmt(exam_question_paths: Vec<String>) {
     match fmt_internal(exam_question_paths) {
@@ -119,6 +119,6 @@ pub fn format_file(path: &RumbasPath) -> RumbasFormatResult {
     }
 }
 
-fn format(y: Yaml) -> Yaml {
-    y
+fn format(y: YamlInput) -> YamlOutput {
+    y.into()
 }
