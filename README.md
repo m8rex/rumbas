@@ -116,7 +116,7 @@ The easiest way is to use docker.
   - [x] Specified in yaml
   - [x] Ungrouped
   - [x] Short representation as string or list
-  - [-] variable groups? -> will not be implemented, don't see the use case of it yet...
+  - [ ] variable groups 
   - [x] variables test
 - [ ] Support for functions in questions
   - [x] Specified in yaml
@@ -132,9 +132,8 @@ The easiest way is to use docker.
 - [ ] preamble
   - [x] at Questions
   - [ ] at Exams
-- [ ] rulesets
-  - [ ] at Questions
-  - [ ] at Exams
+- [x] rulesets
+  - [x] at Questions
 - [x] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
   - [x] Support for `custom_part_types` in questions (sharable, defined in folder `custom_part_types`)
   - [x] `custom_part_types` are added to exam if they are used in the questions
@@ -145,8 +144,8 @@ The easiest way is to use docker.
 - [ ] contributors and metadata -> usefull?
   - [ ] at Questions
   - [ ] at Exams
-- [ ] Templating
+- [x] Templating
   - [x] Exams
   - [x] Questions
-  - [ ] What about default values?
+  - [x] What about default values?
 - [x] Question preview
