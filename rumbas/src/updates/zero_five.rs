@@ -53,18 +53,25 @@ pub fn update() -> semver::Version {
                     "Updating main default file {}",
                     default_question.0.file_path.display()
                 );
-                if let YamlInput::Hash(h) = default_question.1.clone() {
-                    default_question.1 = YamlInput::Hash(
+                if let YamlInput::Hash((cs, h)) = default_question.1.clone() {
+                    default_question.1 = YamlInput::Hash((
+                        cs,
                         h.into_iter()
                             .chain(
                                 vec![(
                                     YamlInput::String("rulesets".to_string()),
-                                    YamlInput::Hash(Vec::new().into_iter().collect()),
+                                    (
+                                        YamlInput::Hash((
+                                            Vec::new(),
+                                            Vec::new().into_iter().collect(),
+                                        )),
+                                        Vec::new(),
+                                    ),
                                 )]
                                 .into_iter(),
                             )
                             .collect(),
-                    )
+                    ))
                 };
             }
         }

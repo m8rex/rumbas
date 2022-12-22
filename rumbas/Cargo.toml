@@ -22,7 +22,9 @@ serde_yaml = "0.8.13"
 comparable = { version = "0.5.2", features = ["derive"] }
 
 #yaml-rust = { version = "0.5", package = "yaml-rust-davvid" }
-yaml_rust_formatter = { git = "https://github.com/m8rex/yaml-rust-formatter.git", branch = "comments" }
+# yaml_rust_formatter = { git = "https://github.com/m8rex/yaml-rust-formatter.git", branch = "comments" }
+yaml_rust_formatter = { path = "../../yaml-rust-formatter" }
+yaml-subset = { path = "../../yaml-subset" }
 numbas = {path="../numbas"}
 regex = "1"
 clap = {version = "3.0.5", features = ["derive", "cargo"]}
