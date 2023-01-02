@@ -3,7 +3,7 @@ use crate::support::file_manager::CACHE;
 use crate::support::rc::within_repo;
 use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use std::path::Path;
-use yaml_rust_formatter::{yaml::YamlInput, YamlEmitter, YamlLoader};
+use yaml_subset::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert, YamlPath};
 
 /// Update from version 0.5.* to 0.6.0
 pub fn update() -> semver::Version {
@@ -37,9 +37,9 @@ pub fn update() -> semver::Version {
                             _ => None,
                         })
                         .and_then(|lf| {
-                            YamlLoader::load_from_str(&lf.content[..])
+                            parse_yaml_file(&lf.content[..])
                                 .ok()
-                                .map(|a| (lf.clone(), a[0].clone()))
+                                .map(|a| (lf.clone(), a))
                         })
                 }
                 _ => None,
@@ -53,36 +53,17 @@ pub fn update() -> semver::Version {
                     "Updating main default file {}",
                     default_question.0.file_path.display()
                 );
-                if let YamlInput::Hash((cs, h)) = default_question.1.clone() {
-                    default_question.1 = YamlInput::Hash((
-                        cs,
-                        h.into_iter()
-                            .chain(
-                                vec![(
-                                    YamlInput::String("rulesets".to_string()),
-                                    (
-                                        YamlInput::Hash((
-                                            Vec::new(),
-                                            Vec::new().into_iter().collect(),
-                                        )),
-                                        Vec::new(),
-                                    ),
-                                )]
-                                .into_iter(),
-                            )
-                            .collect(),
-                    ))
+                let path = YamlPath::Key("rulesets".to_string(), None);
+                let value = AliasedYaml {
+                    alias: None,
+                    value: Yaml::EmptyInlineHash,
                 };
+                default_question.1.insert_into_hash(&path, &value, false);
             }
         }
 
         for (file, default_question) in default_questions.into_iter() {
-            let mut out_str = String::new();
-            {
-                let mut emitter = YamlEmitter::new(&mut out_str);
-                emitter.multiline_strings(true);
-                emitter.dump(&(default_question.to_owned().into())).unwrap(); // dump the YAML object to a String
-            }
+            let mut out_str = default_question.format().unwrap();
             std::fs::write(file.file_path, out_str).expect("Failed writing file");
         }
 
