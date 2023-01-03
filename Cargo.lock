@@ -200,9 +200,9 @@ dependencies = [
 
 [[package]]
 name = "console"
-version = "0.15.3"
+version = "0.15.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5556015fe3aad8b968e5d4124980fbe2f6aaee7aeec6b749de1faaa2ca5d0a4c"
+checksum = "c9b6515d269224923b26b5febea2ed42b2d5f2ce37284a4dd670fedd6cb8347a"
 dependencies = [
  "encode_unicode",
  "lazy_static",
@@ -1739,9 +1739,9 @@ dependencies = [
 
 [[package]]
 name = "yaml-subset"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e8bd6ed0dbbfdbece28cd91828e65d0679af2621d5af08561ba52463df39e8a"
+checksum = "421d4c8b6fb40d28bb4f11d2723f44db5a76bb7654f47b143221b33221ac2719"
 dependencies = [
  "linked-hash-map",
  "pest",
