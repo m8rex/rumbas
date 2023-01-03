@@ -6,7 +6,7 @@ use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::FileToLoad;
 use std::collections::HashSet;
 use std::path::Path;
-use yaml_rust::{yaml::Yaml, YamlEmitter, YamlLoader};
+use yaml_subset::parse_yaml_file;
 
 pub fn fmt(exam_question_paths: Vec<String>) {
     match fmt_internal(exam_question_paths) {
@@ -93,11 +93,12 @@ pub fn format_file(path: &RumbasPath) -> RumbasFormatResult {
     }) {
         Some(a) => match a {
             rumbas_support::input::LoadedFile::Normal(n) => {
-                let loaded = YamlLoader::load_from_str(&n.content[..]);
+                let loaded = parse_yaml_file(&n.content[..]);
                 match loaded {
                     Ok(yaml) => {
+                        /*
                         let new_yaml = format(yaml[0].clone());
-
+                        println!("{:#?}", new_yaml);
                         let mut out_str = String::new();
                         let mut emitter = YamlEmitter::new(&mut out_str);
                         emitter.multiline_strings(true);
@@ -108,17 +109,24 @@ pub fn format_file(path: &RumbasPath) -> RumbasFormatResult {
                                 Err(_) => RumbasFormatResult::FailedWritingFile,
                             },
                             Err(_) => RumbasFormatResult::FailedConvertingToYamlString,
+                        }*/
+                        let dump_res = yaml.format();
+                        match dump_res {
+                            Ok(res) => match std::fs::write(path, res) {
+                                Ok(_) => RumbasFormatResult::Ok,
+                                Err(_) => RumbasFormatResult::FailedWritingFile,
+                            },
+                            Err(_) => RumbasFormatResult::FailedConvertingToYamlString,
                         }
                     }
-                    Err(_) => RumbasFormatResult::FailedParsingYaml,
+                    Err(e) => {
+                        log::debug!("Failed parsing {:?}\n{}", path.display(), e);
+                        RumbasFormatResult::FailedParsingYaml
+                    }
                 }
             }
             _ => RumbasFormatResult::NotFormattableFile,
         },
         None => RumbasFormatResult::FailedReadingFile,
     }
-}
-
-fn format(y: Yaml) -> Yaml {
-    y
 }

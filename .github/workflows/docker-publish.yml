@@ -36,11 +36,11 @@ jobs:
           else
             docker build . --file Dockerfile --tag m8rex/rumbas:latest
           fi
-          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest init
+          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv init
           sudo cp -r cli-tests/numbas_resources resources/question-resources
-          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest import cli-tests/numbas_exams/exam-110396-getting-started.exam
-          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest check exams
-          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest compile exams
+          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv import cli-tests/numbas_exams/exam-110396-getting-started.exam
+          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv check exams
+          docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv compile exams
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/

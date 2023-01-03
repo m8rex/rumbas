@@ -8,7 +8,7 @@ RUN rustup target add x86_64-unknown-linux-musl
 RUN apt-get update && apt-get install -y pkg-config libssl-dev musl-tools make
 
 # Copy workspace
-COPY Cargo.toml Cargo.toml
+COPY Cargo* /usr/app/
 RUN mkdir numbas
 COPY numbas/Cargo* numbas/
 COPY numbas/src numbas/src
