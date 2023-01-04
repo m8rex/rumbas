@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["CheckingType",""],["NumberEntryAnswerType",""],["QuestionPrecisionType",""]],"struct":[["QuestionPartNumberEntry",""],["QuestionPrecision",""]]};

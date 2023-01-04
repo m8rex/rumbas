@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["NumbasSettings",""],["NumbasSettingsChange",""],["NumbasSettingsDesc",""],["NumbasSettingsInput",""],["NumbasSettingsInputChange",""],["NumbasSettingsInputDesc",""],["NumbasSettingsInputEnum",""],["NumbasSettingsInputEnumChange",""],["NumbasSettingsInputEnumDesc",""]]};

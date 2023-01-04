@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["bool_true",""],["float_one",""],["safe_natural_one",""],["variable_safe_natural_three",""]]};

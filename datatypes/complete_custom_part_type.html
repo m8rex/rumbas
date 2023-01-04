@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Custom Part Type - Rumbas</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">2.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">3.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">3.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">3.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">3.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">3.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html"><strong aria-hidden="true">4.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html"><strong aria-hidden="true">4.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html"><strong aria-hidden="true">4.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html" class="active"><strong aria-hidden="true">4.4.</strong> Custom Part Type</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rumbas</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="customparttypedefinition"><a class="header" href="#customparttypedefinition">CustomPartTypeDefinition</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>type_name</td><td><a href="#translation">Translation</a></td><td></td></tr>
+<tr><td>description</td><td><a href="#translation">Translation</a></td><td></td></tr>
+<tr><td>settings</td><td>Array of <a href="#customparttypesetting">CustomPartTypeSetting</a></td><td></td></tr>
+<tr><td>can_be_gap</td><td>Boolean</td><td></td></tr>
+<tr><td>can_be_step</td><td>Boolean</td><td></td></tr>
+<tr><td>marking_notes</td><td>Array of <a href="#jmenote">JMENote</a></td><td></td></tr>
+<tr><td>help_url</td><td><a href="#translation">Translation</a></td><td></td></tr>
+<tr><td>published</td><td>Boolean</td><td></td></tr>
+<tr><td>extensions</td><td><a href="#extensions">Extensions</a></td><td></td></tr>
+<tr><td>input_widget</td><td><a href="#custompartinputwidget">CustomPartInputWidget</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="translation"><a class="header" href="#translation">Translation</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="#translationstruct">TranslationStruct</a></td><td>A structured translatable string with placeholders.</td></tr>
+<tr><td><a href="#filestring">FileString</a></td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationstruct"><a class="header" href="#translationstruct">TranslationStruct</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>content</td><td><a href="#translationcontent">TranslationContent</a></td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
+<tr><td>placeholders</td><td>Map from String to <a href="#translation">Translation</a></td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationcontent"><a class="header" href="#translationcontent">TranslationContent</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Map from String to <a href="#filestring">FileString</a></td><td>Map from locale to content. You can use this to specify different content for different locales.</td></tr>
+<tr><td><a href="#filestring">FileString</a></td><td>A filestring. Possibly to a file that is placed in <code>locale</code> folders and is therefore localized.</td></tr>
+</tbody></table>
+</div>
+<h1 id="filestring"><a class="header" href="#filestring">FileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesetting"><a class="header" href="#customparttypesetting">CustomPartTypeSetting</a></h1>
+<p><strong>Internal tag</strong> named <em>input_type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>check_box</td><td><a href="#customparttypesettingcheckbox">CustomPartTypeSettingCheckBox</a></td><td></td></tr>
+<tr><td>code</td><td><a href="#customparttypesettingcode">CustomPartTypeSettingCode</a></td><td></td></tr>
+<tr><td>mathematical_expression</td><td><a href="#customparttypesettingmathematicalexpression">CustomPartTypeSettingMathematicalExpression</a></td><td></td></tr>
+<tr><td>string</td><td><a href="#customparttypesettingstring">CustomPartTypeSettingString</a></td><td></td></tr>
+<tr><td>drop_down</td><td><a href="#customparttypesettingdropdown">CustomPartTypeSettingDropDown</a></td><td></td></tr>
+<tr><td>percentage</td><td><a href="#customparttypesettingpercentage">CustomPartTypeSettingPercentage</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingcheckbox"><a class="header" href="#customparttypesettingcheckbox">CustomPartTypeSettingCheckBox</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>Boolean</td><td>The initial value of the setting in the question editor.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingcode"><a class="header" href="#customparttypesettingcode">CustomPartTypeSettingCode</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+<tr><td>evaluate</td><td>Boolean</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingmathematicalexpression"><a class="header" href="#customparttypesettingmathematicalexpression">CustomPartTypeSettingMathematicalExpression</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>evaluate_enclosed_expressions</td><td>Boolean</td><td>If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingstring"><a class="header" href="#customparttypesettingstring">CustomPartTypeSettingString</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>evaluate_enclosed_expressions</td><td>Boolean</td><td>If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or String</td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingdropdown"><a class="header" href="#customparttypesettingdropdown">CustomPartTypeSettingDropDown</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+<tr><td>choices</td><td>Array of <a href="#customparttypesettingdropdownchoice">CustomPartTypeSettingDropDownChoice</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingdropdownchoice"><a class="header" href="#customparttypesettingdropdownchoice">CustomPartTypeSettingDropDownChoice</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td><a href="#translation">Translation</a></td><td></td></tr>
+<tr><td>label</td><td><a href="#translation">Translation</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingpercentage"><a class="header" href="#customparttypesettingpercentage">CustomPartTypeSettingPercentage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or Float</td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmenote"><a class="header" href="#jmenote">JMENote</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td></td></tr>
+<tr><td>description</td><td>&quot;none&quot; or String</td><td></td></tr>
+<tr><td>expression</td><td><a href="#translation">Translation</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="extensions"><a class="header" href="#extensions">Extensions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>chemistry</td><td>Boolean</td><td></td></tr>
+<tr><td>download_text_file</td><td>Boolean</td><td></td></tr>
+<tr><td>eukleides</td><td>Boolean</td><td>The Eukleides extension provides functions to embed diagrams created using the Eukleides language. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>geogebra</td><td>Boolean</td><td>The GeoGebra extension provides functions to embed GeoGebra worksheets in a question. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#geogebra</td></tr>
+<tr><td>graphs</td><td>Boolean</td><td>This extension provides some functions for working with and drawing graphs (networks of vertices joined by edges) in Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#graph-theory</td></tr>
+<tr><td>jsx_graph</td><td>Boolean</td><td>The JSXGraph extension provides functions to create and manipulate interactive diagrams with the JSXGraph library. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>linear_algebra</td><td>Boolean</td><td></td></tr>
+<tr><td>linear_codes</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with linear codes. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#linear-codes</td></tr>
+<tr><td>optimisation</td><td>Boolean</td><td></td></tr>
+<tr><td>permutations</td><td>Boolean</td><td></td></tr>
+<tr><td>polynomials</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with rational polynomials. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#polynomials</td></tr>
+<tr><td>quantities</td><td>Boolean</td><td>This extension wraps the js-quantities library to provide a “quantity with units” data type to Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#quantities</td></tr>
+<tr><td>random_person</td><td>Boolean</td><td>The “random person” extension provides a collection of functions to generate random people, for use in word problems. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#random-person</td></tr>
+<tr><td>stats</td><td>Boolean</td><td>The statistical functions extension provides many new functions for generating samples from random distributions, and calculating statistics. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#statistical-functions</td></tr>
+<tr><td>sqlite</td><td>Boolean</td><td></td></tr>
+<tr><td>text</td><td>Boolean</td><td></td></tr>
+<tr><td>written_number</td><td>Boolean</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputwidget"><a class="header" href="#custompartinputwidget">CustomPartInputWidget</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>string</td><td><a href="#custompartstringinputoptions">CustomPartStringInputOptions</a></td><td>The student enters a single line of text.</td></tr>
+<tr><td>number</td><td><a href="#custompartnumberinputoptions">CustomPartNumberInputOptions</a></td><td>The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.</td></tr>
+<tr><td>radiogroup</td><td><a href="#custompartradiogroupinputoptions">CustomPartRadioGroupInputOptions</a></td><td>The student chooses one from a list of choices by selecting a radio button.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartstringinputoptions"><a class="header" href="#custompartstringinputoptions">CustomPartStringInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>allow_empty</td><td><a href="#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></td><td>If false, the part will only be marked if their answer is non-empty.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluetranslatablestring"><a class="header" href="#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td><a href="#translation">Translation</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluebool"><a class="header" href="#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Boolean</td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartnumberinputoptions"><a class="header" href="#custompartnumberinputoptions">CustomPartNumberInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>allow_fractions</td><td><a href="#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></td><td>Allow the student to enter their answer as a fraction?</td></tr>
+<tr><td>allowed_notation_styles</td><td><a href="#custompartinputoptionvalueanswerstyles">CustomPartInputOptionValueAnswerStyles</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvalueanswerstyles"><a class="header" href="#custompartinputoptionvalueanswerstyles">CustomPartInputOptionValueAnswerStyles</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Array of <a href="#answerstyle">AnswerStyle</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="answerstyle"><a class="header" href="#answerstyle">AnswerStyle</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;english&quot;</td><td>English style - commas separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;english-plain&quot;</td><td>Plain English style - no thousands separator, dot for decimal point</td></tr>
+<tr><td>&quot;english-si&quot;</td><td>English SI style - spaces separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;european&quot;</td><td>Continental European style - dots separate thousands, comma for decimal poin</td></tr>
+<tr><td>&quot;european-plain&quot;</td><td>Plain French style - no thousands separator, comma for decimal point</td></tr>
+<tr><td>&quot;french-si&quot;</td><td>French SI style - spaces separate thousands, comma for decimal point</td></tr>
+<tr><td>&quot;indian&quot;</td><td>Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.</td></tr>
+<tr><td>&quot;scientific&quot;</td><td>Significand-exponent (&quot;scientific&quot;) style</td></tr>
+<tr><td>&quot;swiss&quot;</td><td>Swiss style - apostrophes separate thousands, dot for decimal point</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartradiogroupinputoptions"><a class="header" href="#custompartradiogroupinputoptions">CustomPartRadioGroupInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>choices</td><td><a href="#custompartinputoptionvaluetranslatablestrings">CustomPartInputOptionValueTranslatableStrings</a></td><td>The labels for the choices to offer to the student.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluetranslatablestrings"><a class="header" href="#custompartinputoptionvaluetranslatablestrings">CustomPartInputOptionValueTranslatableStrings</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Array of <a href="#translation">Translation</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../datatypes/complete_question.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../datatypes/complete_question.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

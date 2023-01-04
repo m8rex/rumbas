@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":[["TEMPLATE_PREFIX",""]],"struct":[["MyYamlValue",""],["TemplateFile",""],["TemplateFileChange",""],["TemplateFileDesc",""],["TemplateFileInput",""],["TemplateFileInputChange",""],["TemplateFileInputDesc",""]],"type":[["TemplateFileInputEnum",""]]};

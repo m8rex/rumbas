@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["DiagnosticScript",""]],"struct":[["Diagnostic",""],["DiagnosticKnowledgeGraph",""],["DiagnosticKnowledgeGraphLearningObjective",""],["DiagnosticKnowledgeGraphTopic",""]]};

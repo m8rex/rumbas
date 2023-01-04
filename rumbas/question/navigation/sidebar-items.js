@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["QuestionNavigationChange",""],["QuestionNavigationInputChange",""]],"struct":[["QuestionNavigation",""],["QuestionNavigationDesc",""],["QuestionNavigationInput",""],["QuestionNavigationInputDesc",""],["QuestionNavigationInputEnum",""],["QuestionNavigationInputEnumChange",""],["QuestionNavigationInputEnumDesc",""]]};

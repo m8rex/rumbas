@@ -1,0 +1,1344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Rumbas</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="tutorial.html"><strong aria-hidden="true">2.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="features.html"><strong aria-hidden="true">3.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="features/default_files.html"><strong aria-hidden="true">3.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="features/multi_language.html"><strong aria-hidden="true">3.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="features/locales_folders.html"><strong aria-hidden="true">3.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="features/templates.html"><strong aria-hidden="true">3.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/folder_structure.html"><strong aria-hidden="true">4.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="datatypes/complete_exam.html"><strong aria-hidden="true">4.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="datatypes/complete_question.html"><strong aria-hidden="true">4.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="datatypes/complete_custom_part_type.html"><strong aria-hidden="true">4.4.</strong> Custom Part Type</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rumbas</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="rumbas"><a class="header" href="#rumbas">Rumbas</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="numbas"><a class="header" href="#numbas">Numbas</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tutorial"><a class="header" href="#tutorial">Tutorial</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="features"><a class="header" href="#features">Features</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="default-files"><a class="header" href="#default-files">Default files</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="multi-language"><a class="header" href="#multi-language">Multi language</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="locales-folders"><a class="header" href="#locales-folders">Locales folders</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="templates"><a class="header" href="#templates">Templates</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="summary"><a class="header" href="#summary">Summary</a></h1>
+<ul>
+<li><a href="./datatypes/complete_exam.html">Exam</a></li>
+<li><a href="./datatypes/complete_question.html">Question</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="folder-structure"><a class="header" href="#folder-structure">Folder structure</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examfiletype"><a class="header" href="#examfiletype">ExamFileType</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td><a href="datatypes/complete_exam.html#templatefile">TemplateFile</a></td><td>An exam that uses a template.</td></tr>
+<tr><td>normal</td><td><a href="datatypes/complete_exam.html#normalexam">NormalExam</a></td><td>A normal exam.</td></tr>
+<tr><td>diagnostic</td><td><a href="datatypes/complete_exam.html#diagnosticexam">DiagnosticExam</a></td><td>An exam in diagnostic mode.</td></tr>
+</tbody></table>
+</div>
+<h1 id="templatefile"><a class="header" href="#templatefile">TemplateFile</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td>String</td><td>The path to the template to use. Relative to the <code>exams</code> or <code>questions</code> folder.</td></tr>
+<tr><td>[any]</td><td>YAML-value</td><td>The data to insert into the template. Maps template keys onto values.</td></tr>
+</tbody></table>
+</div>
+<h1 id="normalexam"><a class="header" href="#normalexam">NormalExam</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The name of the exam</td></tr>
+<tr><td>locales</td><td>Array of <a href="datatypes/complete_exam.html#locale">Locale</a></td><td>All locales for which the exam should be generated</td></tr>
+<tr><td>navigation</td><td><a href="datatypes/complete_exam.html#normalnavigation">NormalNavigation</a></td><td>The navigation settings for this exam</td></tr>
+<tr><td>timing</td><td><a href="datatypes/complete_exam.html#timing">Timing</a></td><td>The timing settings for this exam</td></tr>
+<tr><td>feedback</td><td><a href="datatypes/complete_exam.html#feedback">Feedback</a></td><td>The feedback settings for this exam</td></tr>
+<tr><td>question_groups</td><td>Array of <a href="datatypes/complete_exam.html#questiongroup">QuestionGroup</a></td><td>The questions groups for this exam</td></tr>
+<tr><td>numbas_settings</td><td><a href="datatypes/complete_exam.html#numbassettings">NumbasSettings</a></td><td>The settings to set for numbas</td></tr>
+</tbody></table>
+</div>
+<h1 id="translation"><a class="header" href="#translation">Translation</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="datatypes/complete_exam.html#translationstruct">TranslationStruct</a></td><td>A structured translatable string with placeholders.</td></tr>
+<tr><td><a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationstruct"><a class="header" href="#translationstruct">TranslationStruct</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>content</td><td><a href="datatypes/complete_exam.html#translationcontent">TranslationContent</a></td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
+<tr><td>placeholders</td><td>Map from String to <a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationcontent"><a class="header" href="#translationcontent">TranslationContent</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Map from String to <a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>Map from locale to content. You can use this to specify different content for different locales.</td></tr>
+<tr><td><a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>A filestring. Possibly to a file that is placed in <code>locale</code> folders and is therefore localized.</td></tr>
+</tbody></table>
+</div>
+<h1 id="filestring"><a class="header" href="#filestring">FileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="locale"><a class="header" href="#locale">Locale</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td>The internal name used for the locale. It is best to use en for English, nl for dutch etc</td></tr>
+<tr><td>numbas_locale</td><td><a href="datatypes/complete_exam.html#supportedlocale">SupportedLocale</a></td><td>The locale to use in the Numbas interface</td></tr>
+</tbody></table>
+</div>
+<h1 id="supportedlocale"><a class="header" href="#supportedlocale">SupportedLocale</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;ar-SA&quot;</td><td>Arabic (Saudi Arabia)</td></tr>
+<tr><td>&quot;de-DE&quot;</td><td>German (Germany)</td></tr>
+<tr><td>&quot;en-GB&quot;</td><td>English (United Kingdom)</td></tr>
+<tr><td>&quot;es-ES&quot;</td><td>Spanish (Spain)</td></tr>
+<tr><td>&quot;fr-FR&quot;</td><td>French (France)</td></tr>
+<tr><td>&quot;he-IL&quot;</td><td>Hebrew (Israel)</td></tr>
+<tr><td>&quot;in-ID&quot;</td><td>Indonesian (Indonesia)</td></tr>
+<tr><td>&quot;it-IT&quot;</td><td>Italian (Italy)</td></tr>
+<tr><td>&quot;ja-JP&quot;</td><td>Japanese (Japan)</td></tr>
+<tr><td>&quot;ko-KR&quot;</td><td>Korean (Korea)</td></tr>
+<tr><td>&quot;nb-NO&quot;</td><td>Norwegian (Norway)</td></tr>
+<tr><td>&quot;nl-NL&quot;</td><td>Dutch (Netherlands)</td></tr>
+<tr><td>&quot;pl-PL&quot;</td><td>Polish (Poland)</td></tr>
+<tr><td>&quot;pt-BR&quot;</td><td>Portuguese (Brazil)</td></tr>
+<tr><td>&quot;sq-AL&quot;</td><td>Albanian (Albania)</td></tr>
+<tr><td>&quot;sv-SE&quot;</td><td>Swedish (Sweden)</td></tr>
+<tr><td>&quot;tr-TR&quot;</td><td>Turkish (Turkey)</td></tr>
+<tr><td>&quot;vi-VN&quot;</td><td>Vietnamese (Viet Nam)</td></tr>
+<tr><td>&quot;zg-CN&quot;</td><td>Chinese (S)</td></tr>
+</tbody></table>
+</div>
+<h1 id="normalnavigation"><a class="header" href="#normalnavigation">NormalNavigation</a></h1>
+<p><strong>Internal tag</strong> named <em>mode</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>sequential</td><td><a href="datatypes/complete_exam.html#sequentialnavigation">SequentialNavigation</a></td><td>Questions are shown in sequential order. Whether student can browse trough questions in any order, can be set.</td></tr>
+<tr><td>menu</td><td><a href="datatypes/complete_exam.html#menunavigation">MenuNavigation</a></td><td>Questions are shown in a menu and there is no real order of the questions.</td></tr>
+</tbody></table>
+</div>
+<h1 id="sequentialnavigation"><a class="header" href="#sequentialnavigation">SequentialNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+<tr><td>can_move_to_previous</td><td>Boolean</td><td>Whether the student can move back to previous question (Old name was <code>reverse</code>)</td></tr>
+<tr><td>browsing_enabled</td><td>Boolean</td><td>Whether the student can jump to any question.</td></tr>
+<tr><td>show_results_page</td><td><a href="datatypes/complete_exam.html#showresultspage">ShowResultsPage</a></td><td>When the results page should be shown</td></tr>
+<tr><td>on_leave</td><td><a href="datatypes/complete_exam.html#leaveaction">LeaveAction</a></td><td>Action to execute when a student changes question or tries to end the exam.</td></tr>
+</tbody></table>
+</div>
+<h1 id="showresultspage"><a class="header" href="#showresultspage">ShowResultsPage</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;on_completion&quot;</td><td>When the exam is completed.</td></tr>
+<tr><td>&quot;never&quot;</td><td>Never show it.</td></tr>
+</tbody></table>
+</div>
+<h1 id="leaveaction"><a class="header" href="#leaveaction">LeaveAction</a></h1>
+<p><strong>Internal tag</strong> named <em>action</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;none&quot;</td><td></td><td>Don't show a warning</td></tr>
+<tr><td>warn_if_not_attempted</td><td><a href="datatypes/complete_exam.html#leaveactionmessage">LeaveActionMessage</a></td><td>Warn when a question is not attempted.</td></tr>
+<tr><td>prevent_if_not_attempted</td><td><a href="datatypes/complete_exam.html#leaveactionmessage">LeaveActionMessage</a></td><td>Prevent when a question is not attempted</td></tr>
+</tbody></table>
+</div>
+<h1 id="leaveactionmessage"><a class="header" href="#leaveactionmessage">LeaveActionMessage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The message to show.</td></tr>
+</tbody></table>
+</div>
+<h1 id="menunavigation"><a class="header" href="#menunavigation">MenuNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+</tbody></table>
+</div>
+<h1 id="timing"><a class="header" href="#timing">Timing</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>duration_in_seconds</td><td>&quot;none&quot; or Integer</td><td>The maximal time that can be spend on the exam. If this value is <code>none</code> or 0, the student gets unlimited time.</td></tr>
+<tr><td>allow_pause</td><td>Boolean</td><td>Whether the 'pause' button is available.</td></tr>
+<tr><td>on_timeout</td><td><a href="datatypes/complete_exam.html#timeoutaction">TimeoutAction</a></td><td>Action to do on timeout</td></tr>
+<tr><td>timed_warning</td><td><a href="datatypes/complete_exam.html#timeoutaction">TimeoutAction</a></td><td>Action to do five minutes before timeout</td></tr>
+</tbody></table>
+</div>
+<h1 id="timeoutaction"><a class="header" href="#timeoutaction">TimeoutAction</a></h1>
+<p><strong>Internal tag</strong> named <em>action</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;none&quot;</td><td></td><td>Do nothing</td></tr>
+<tr><td>warn</td><td><a href="datatypes/complete_exam.html#timeoutactionwarn">TimeoutActionWarn</a></td><td>Show a warning</td></tr>
+</tbody></table>
+</div>
+<h1 id="timeoutactionwarn"><a class="header" href="#timeoutactionwarn">TimeoutActionWarn</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The message to show</td></tr>
+</tbody></table>
+</div>
+<h1 id="feedback"><a class="header" href="#feedback">Feedback</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>percentage_needed_to_pass</td><td>&quot;none&quot; or Float</td><td>Specifies when a student passes the test. When set to &quot;none&quot; or 0, no percentage will be shown in frontpage.</td></tr>
+<tr><td>show_name_of_student</td><td>Boolean</td><td>Whether the student's name should be shown in the exam.</td></tr>
+<tr><td>show_current_marks</td><td>Boolean</td><td>Whether current marks are shown during exam or not (show_actual_mark in numbas)</td></tr>
+<tr><td>show_maximum_marks</td><td>Boolean</td><td>Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)</td></tr>
+<tr><td>show_answer_state</td><td>Boolean</td><td>Whether answer feedback is shown (right or wrong etc)</td></tr>
+<tr><td>allow_reveal_answer</td><td>Boolean</td><td>Whether the 'reveal answer' button is present</td></tr>
+<tr><td>review</td><td><a href="datatypes/complete_exam.html#review">Review</a></td><td>The review settings</td></tr>
+<tr><td>advice</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The advice shown at the end.</td></tr>
+<tr><td>intro</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The introductory text</td></tr>
+<tr><td>feedback_messages</td><td>Array of <a href="datatypes/complete_exam.html#feedbackmessage">FeedbackMessage</a></td><td>Different feedback messages based on their score.</td></tr>
+</tbody></table>
+</div>
+<h1 id="review"><a class="header" href="#review">Review</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>show_score</td><td>Boolean</td><td>Whether to show score in result overview page</td></tr>
+<tr><td>show_feedback</td><td>Boolean</td><td>Show feedback while reviewing</td></tr>
+<tr><td>show_expected_answer</td><td>Boolean</td><td>Show expected answer while reviewing</td></tr>
+<tr><td>show_advice</td><td>Boolean</td><td>Show advice while reviewing</td></tr>
+</tbody></table>
+</div>
+<h1 id="feedbackmessage"><a class="header" href="#feedbackmessage">FeedbackMessage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td>String</td><td>The message to show</td></tr>
+<tr><td>threshold</td><td>String</td><td>The minimum score that is needed to get this feedback</td></tr>
+</tbody></table>
+</div>
+<h1 id="questiongroup"><a class="header" href="#questiongroup">QuestionGroup</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The name of the question group. Might be shown to students, based on the <code>show_names_of_question_groups</code> setting of the exam navigation.</td></tr>
+<tr><td>picking_strategy</td><td><a href="datatypes/complete_exam.html#pickingstrategy">PickingStrategy</a></td><td>The strategy to use to pick the questions to show</td></tr>
+<tr><td>questions</td><td>Array of <a href="datatypes/complete_exam.html#questionpathortemplate">QuestionPathOrTemplate</a></td><td>The questions</td></tr>
+</tbody></table>
+</div>
+<h1 id="pickingstrategy"><a class="header" href="#pickingstrategy">PickingStrategy</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;all_ordered&quot;</td><td></td><td></td></tr>
+<tr><td>&quot;all_shuffled&quot;</td><td></td><td></td></tr>
+<tr><td>random_subset</td><td><a href="datatypes/complete_exam.html#pickingstrategyrandomsubset">PickingStrategyRandomSubset</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="pickingstrategyrandomsubset"><a class="header" href="#pickingstrategyrandomsubset">PickingStrategyRandomSubset</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>pick_questions</td><td>Integer</td><td>The amount of questions to pick</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpathortemplate"><a class="header" href="#questionpathortemplate">QuestionPathOrTemplate</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>The path to the question. Relative to the <code>questions</code> folder.</td></tr>
+<tr><td><a href="datatypes/complete_exam.html#templatefile">TemplateFile</a></td><td>Directly load a templated question by specifying the template values.</td></tr>
+</tbody></table>
+</div>
+<h1 id="numbassettings"><a class="header" href="#numbassettings">NumbasSettings</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>theme</td><td>String</td><td>The numbas theme to use</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticexam"><a class="header" href="#diagnosticexam">DiagnosticExam</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The name of the exam</td></tr>
+<tr><td>locales</td><td>Array of <a href="datatypes/complete_exam.html#locale">Locale</a></td><td>All locales for which the exam should be generated</td></tr>
+<tr><td>navigation</td><td><a href="datatypes/complete_exam.html#diagnosticnavigation">DiagnosticNavigation</a></td><td>The navigation settings for this exam</td></tr>
+<tr><td>timing</td><td><a href="datatypes/complete_exam.html#timing">Timing</a></td><td>The timing settings for this exam</td></tr>
+<tr><td>feedback</td><td><a href="datatypes/complete_exam.html#feedback">Feedback</a></td><td>The feedback settings for this exam</td></tr>
+<tr><td>question_groups</td><td>Array of <a href="datatypes/complete_exam.html#questiongroup">QuestionGroup</a></td><td>The questions groups for this exam</td></tr>
+<tr><td>numbas_settings</td><td><a href="datatypes/complete_exam.html#numbassettings">NumbasSettings</a></td><td>The settings to set for numbas</td></tr>
+<tr><td>diagnostic</td><td><a href="datatypes/complete_exam.html#diagnostic">Diagnostic</a></td><td>The diagnostic data</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticnavigation"><a class="header" href="#diagnosticnavigation">DiagnosticNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="datatypes/complete_exam.html#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+<tr><td>on_leave</td><td><a href="datatypes/complete_exam.html#leaveaction">LeaveAction</a></td><td>Action to execute when a student changes question or tries to end the exam.</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnostic"><a class="header" href="#diagnostic">Diagnostic</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>script</td><td><a href="datatypes/complete_exam.html#diagnosticscript">DiagnosticScript</a></td><td>The script to use</td></tr>
+<tr><td>objectives</td><td>Array of <a href="datatypes/complete_exam.html#learningobjective">LearningObjective</a></td><td>The learning objectives,</td></tr>
+<tr><td>topics</td><td>Array of <a href="datatypes/complete_exam.html#learningtopic">LearningTopic</a></td><td>The learning topics</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticscript"><a class="header" href="#diagnosticscript">DiagnosticScript</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;mastery&quot;</td><td>The aim of the Mastery algorithm is to repeatedly test topics until the student passes them. Once all topics are passed, the exam ends. see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#mastery</td></tr>
+<tr><td>&quot;diagnosys&quot;</td><td>The aim of the DIAGNOSYS algorithm is to efficiently establish which topics the student understands, and which they don’t. see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#diagnosys</td></tr>
+<tr><td>&quot;custom&quot;</td><td>A custom diagnostic script. See https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#writing-a-diagnostic-algorithm</td></tr>
+</tbody></table>
+</div>
+<h1 id="learningobjective"><a class="header" href="#learningobjective">LearningObjective</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The name of the learning objective</td></tr>
+<tr><td>description</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>A description of the learning objective</td></tr>
+</tbody></table>
+</div>
+<h1 id="learningtopic"><a class="header" href="#learningtopic">LearningTopic</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>The name of the learning topic</td></tr>
+<tr><td>description</td><td><a href="datatypes/complete_exam.html#translation">Translation</a></td><td>A description of the learning topic</td></tr>
+<tr><td>objectives</td><td>Array of <a href="datatypes/complete_exam.html#translation">Translation</a></td><td>List of names of objectives of which this topic consists</td></tr>
+<tr><td>depends_on</td><td>Array of <a href="datatypes/complete_exam.html#translation">Translation</a></td><td>List of names of topics on which this topic depends</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="questionfiletype"><a class="header" href="#questionfiletype">QuestionFileType</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td><a href="datatypes/complete_question.html#templatefile">TemplateFile</a></td><td>A question that uses a template</td></tr>
+<tr><td>normal</td><td><a href="datatypes/complete_question.html#question">Question</a></td><td>A normal question</td></tr>
+</tbody></table>
+</div>
+<h1 id="templatefile-1"><a class="header" href="#templatefile-1">TemplateFile</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td>String</td><td>The path to the template to use. Relative to the <code>exams</code> or <code>questions</code> folder.</td></tr>
+<tr><td>[any]</td><td>YAML-value</td><td>The data to insert into the template. Maps template keys onto values.</td></tr>
+</tbody></table>
+</div>
+<h1 id="question"><a class="header" href="#question">Question</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>statement</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</td></tr>
+<tr><td>advice</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>Advice is a content area which is shown when the student presses the Reveal button to reveal the question’s answers, or at the end of the exam. The advice area is normally used to present a worked solution to the question.</td></tr>
+<tr><td>parts</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A question consists of one or more parts. Each part can have a different type to create elaborate questions.</td></tr>
+<tr><td>builtin_constants</td><td><a href="datatypes/complete_question.html#builtinconstants">BuiltinConstants</a></td><td>Specifies which constants are enabled. You might want to disable the constant e so it can be used as a variable in the questions.</td></tr>
+<tr><td>custom_constants</td><td>Array of <a href="datatypes/complete_question.html#customconstant">CustomConstant</a></td><td>Custom constants that are used in your question.</td></tr>
+<tr><td>variables</td><td>Map from String to <a href="datatypes/complete_question.html#variablerepresentation">VariableRepresentation</a></td><td>The variables that are used in this question.</td></tr>
+<tr><td>variables_test</td><td><a href="datatypes/complete_question.html#variablestest">VariablesTest</a></td><td>The test to which your variables should comply. Sometimes it’s hard to define randomised question variables so they’re guaranteed to produce a usable set of values. In these cases, it’s easier to state the condition you want the variables to satisfy, Variable values are generated until this condition passes.</br>While this tool allows you to pick sets of variables that would be hard to generate constructively, it’s a random process so you must be aware that there’s a chance no suitable set of values will ever be found.</td></tr>
+<tr><td>functions</td><td>Map from String to <a href="datatypes/complete_question.html#function">Function</a></td><td>The functions that are used in this question</td></tr>
+<tr><td>preamble</td><td><a href="datatypes/complete_question.html#preamble">Preamble</a></td><td>Specify custom javascript and css code that should be loaded.</td></tr>
+<tr><td>navigation</td><td><a href="datatypes/complete_question.html#questionnavigation">QuestionNavigation</a></td><td>Specify some navigation options for the question.</td></tr>
+<tr><td>extensions</td><td><a href="datatypes/complete_question.html#extensions">Extensions</a></td><td>Use this to enable the extensions that are used in the question</td></tr>
+<tr><td>diagnostic_topic_names</td><td>Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The names of the topics used in diagnostic exams that this question belongs to</td></tr>
+<tr><td>resources</td><td>Array of <a href="datatypes/complete_question.html#resourcepath">ResourcePath</a></td><td>The paths to the resources</td></tr>
+<tr><td>custom_part_types</td><td>Array of String</td><td>The custom part types used in this exam</td></tr>
+<tr><td>rulesets</td><td>Map from String to <a href="datatypes/complete_question.html#jmerulesetitem">JMERulesetItem</a></td><td>The rulesets defined in this question. A “ruleset” defines a list of named simplification rules used to manipulate mathematical expressions. https://numbas-editor.readthedocs.io/en/latest/question/reference.html#rulesets</td></tr>
+</tbody></table>
+</div>
+<h1 id="translation-1"><a class="header" href="#translation-1">Translation</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="datatypes/complete_question.html#translationstruct">TranslationStruct</a></td><td>A structured translatable string with placeholders.</td></tr>
+<tr><td><a href="datatypes/complete_question.html#filestring">FileString</a></td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationstruct-1"><a class="header" href="#translationstruct-1">TranslationStruct</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>content</td><td><a href="datatypes/complete_question.html#translationcontent">TranslationContent</a></td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
+<tr><td>placeholders</td><td>Map from String to <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationcontent-1"><a class="header" href="#translationcontent-1">TranslationContent</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Map from String to <a href="datatypes/complete_question.html#filestring">FileString</a></td><td>Map from locale to content. You can use this to specify different content for different locales.</td></tr>
+<tr><td><a href="datatypes/complete_question.html#filestring">FileString</a></td><td>A filestring. Possibly to a file that is placed in <code>locale</code> folders and is therefore localized.</td></tr>
+</tbody></table>
+</div>
+<h1 id="filestring-1"><a class="header" href="#filestring-1">FileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpart"><a class="header" href="#questionpart">QuestionPart</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="datatypes/complete_question.html#questionpartbuiltin">QuestionPartBuiltin</a></td><td>A question part using a builtin question part type</td></tr>
+<tr><td><a href="datatypes/complete_question.html#questionpartcustom">QuestionPartCustom</a></td><td>A question part using a custom question part type</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartbuiltin"><a class="header" href="#questionpartbuiltin">QuestionPartBuiltin</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>jme</td><td><a href="datatypes/complete_question.html#questionpartjme">QuestionPartJME</a></td><td>Mathematical expression parts require the student to enter an algebraic expression, using JME syntax.</td></tr>
+<tr><td>gapfill</td><td><a href="datatypes/complete_question.html#questionpartgapfill">QuestionPartGapFill</a></td><td>Gap-fill parts allow you to include answer inputs inline with the prompt text, instead of at the end of the part. Each gap is a question part in itself.</td></tr>
+<tr><td>choose_one</td><td><a href="datatypes/complete_question.html#questionpartchooseone">QuestionPartChooseOne</a></td><td>Multiple choice part where the student must choose one of several options</td></tr>
+<tr><td>choose_multiple</td><td><a href="datatypes/complete_question.html#questionpartchoosemultiple">QuestionPartChooseMultiple</a></td><td>Multiple choice part where the student can choose any of a list of options</td></tr>
+<tr><td>match_answers</td><td><a href="datatypes/complete_question.html#questionpartmatchanswerswithitems">QuestionPartMatchAnswersWithItems</a></td><td>The student is presented with a 2D grid of choices and answers. Depending on how the part is set up, they must either match up each choice with an answer, or select any number of choice-answer pairs.</td></tr>
+<tr><td>number_entry</td><td><a href="datatypes/complete_question.html#questionpartnumberentry">QuestionPartNumberEntry</a></td><td>Number entry parts ask the student to enter a number, which is marked if it is in a specified range</td></tr>
+<tr><td>pattern_match</td><td><a href="datatypes/complete_question.html#questionpartpatternmatch">QuestionPartPatternMatch</a></td><td>Use a text pattern part when you want the student to enter short, non-mathematical text.</td></tr>
+<tr><td>information</td><td><a href="datatypes/complete_question.html#questionpartinformation">QuestionPartInformation</a></td><td>An information part contains only a prompt and no answer input. It is most often used as a Step to provide a hint for a parent part.</td></tr>
+<tr><td>extension</td><td><a href="datatypes/complete_question.html#questionpartextension">QuestionPartExtension</a></td><td>An extension part acts as a placeholder for any interactive element added by an extension, or custom code in the question, which awards marks to the student.</td></tr>
+<tr><td>matrix</td><td><a href="datatypes/complete_question.html#questionpartmatrix">QuestionPartMatrix</a></td><td>Matrix entry parts ask the student to enter a matrix of numbers. Marks are awarded if every cell in the student’s answer is equal to the corresponding cell in the correct answer, within the allowed margin of error.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartjme"><a class="header" href="#questionpartjme">QuestionPartJME</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>answer</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The expected answer to the part.</td></tr>
+<tr><td>answer_simplification</td><td><a href="datatypes/complete_question.html#jmeanswersimplification">JMEAnswerSimplification</a></td><td>Simplification rules to apply to the correct answer, if it is displayed to the student (for example, after clicking the Reveal answers button). This shouldn’t affect marking. The simplification rules to apply to the answer</td></tr>
+<tr><td>answer_display</td><td><a href="datatypes/complete_question.html#jmeanswerdisplay">JMEAnswerDisplay</a></td><td>The display rules to apply to the answer</td></tr>
+<tr><td>show_preview</td><td>Boolean</td><td>If ticked, a rendering of the student’s answer in mathematical notation is displayed beside the input box.</td></tr>
+<tr><td>accuracy</td><td><a href="datatypes/complete_question.html#jmeaccuracy">JMEAccuracy</a></td><td>Defines the range of points over which the student’s answer will be compared with the correct answer, and the method used to compare them</td></tr>
+<tr><td>check_variable_names</td><td>Boolean</td><td>If this is ticked, all variable names used in the student’s are checked against the variable names used in the correct answer. The first variable name which is not used in the correct answer will trigger a warning. You can use this option to prevent students incorrectly entering answers such as xy, which is interpreted as a single variable, when they mean x*y, the product of two variables.</td></tr>
+<tr><td>single_letter_variables</td><td>Boolean</td><td>If this is ticked, long variable names will be interpreted as implicit multiplication of variables with single-letter names. For example, xyz will be interpreted as x * y * z. Digits, primes and single-letter underscores are still valid in variable names: a'x12y_z will be interpreted as a' * x12 * y_z. Greek letters are considered to be a single letter: pix will be interpreted as pi * x.</td></tr>
+<tr><td>allow_unknown_functions</td><td>Boolean</td><td>If this is not ticked, the application of a function that is not defined in JME will be reinterpreted. If the function name can be split into several shorter names, each of which is defined in JME, it will be: for example, lnabs(x) will be interpreted as ln(abs(x)). Function names are recognised from right to left. Any remaining characters are interpreted as implicit multiplication by a variable. For example, xsin(x) will be interpreted as x * sin(x).</td></tr>
+<tr><td>implicit_function_composition</td><td>Boolean</td><td>If this is ticked, the multiplication symbol (or implicit multiplication) will be interpreted as function composition when the right-hand side is a function application with one argument, and the left-hand side is the name of a function defined in JME. For example, ln * abs(x) and ln abs(x) will be interpreted as ln(abs(x)).</td></tr>
+<tr><td>must_match_pattern</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#jmepatternrestriction">JMEPatternRestriction</a></td><td>The student’s answer must match the given pattern. If it does not, then a penalty is applied.</td></tr>
+<tr><td>value_generators</td><td>&quot;none&quot; or Array of <a href="datatypes/complete_question.html#jmevaluegenerator">JMEValueGenerator</a></td><td>Variable value generators override the default method used to pick values for variables when comparing the correct answer with the student’s answer. The expression for each variable can be written in terms of the other variables, as long as there are no circular dependencies. The values will be evaluated in order, like question variables. Each variable specified in the expected answer can be overriden The variable vRange represents the checking range defined for this part: a continuous interval between the checking range start and checking range end.</td></tr>
+<tr><td>max_length</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#jmelengthrestriction">JMELengthRestriction</a></td><td><em>DEPRECATED</em> String restrictions are an unreliable method of restricting the form of a student’s answer. They are deprecated and retained only for backwards compatibility; use a pattern restriction instead.</br>Before string restrictions are applied, surplus brackets and whitespace are removed, and spaces are inserted between some operations, to minimise the possibility of the length restrictions being triggered for the wrong reasons.</br>If the student’s answer contains more than this many characters, the penalty is applied. A value of zero means no restriction is applied. The student’s answer is tidied up slightly so that things like extra or missing space characters don’t affect the calculated length. All spaces are removed, and then spaces are inserted between binary operations. For example, the answer 1+x (three characters) is marked as 1 + x (five characters).</td></tr>
+<tr><td>min_length</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#jmelengthrestriction">JMELengthRestriction</a></td><td><em>DEPRECATED</em> String restrictions are an unreliable method of restricting the form of a student’s answer. They are deprecated and retained only for backwards compatibility; use a pattern restriction instead.</br>Before string restrictions are applied, surplus brackets and whitespace are removed, and spaces are inserted between some operations, to minimise the possibility of the length restrictions being triggered for the wrong reasons.</br>If the student’s answer contains fewer than this many characters, the penalty is applied. A value of zero means no restriction is applied.</td></tr>
+<tr><td>must_have</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#jmestringrestriction">JMEStringRestriction</a></td><td><em>DEPRECATED</em> String restrictions are an unreliable method of restricting the form of a student’s answer. They are deprecated and retained only for backwards compatibility; use a pattern restriction instead.</br>Before string restrictions are applied, surplus brackets and whitespace are removed, and spaces are inserted between some operations, to minimise the possibility of the length restrictions being triggered for the wrong reasons.</br>If the student’s answer doesn’t contain all of these strings, the penalty is applied.</td></tr>
+<tr><td>may_not_have</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#jmestringrestriction">JMEStringRestriction</a></td><td><em>DEPRECATED</em> String restrictions are an unreliable method of restricting the form of a student’s answer. They are deprecated and retained only for backwards compatibility; use a pattern restriction instead.</br>Before string restrictions are applied, surplus brackets and whitespace are removed, and spaces are inserted between some operations, to minimise the possibility of the length restrictions being triggered for the wrong reasons.</br>If the student’s answer contains any of these strings, the penalty is applied.</td></tr>
+</tbody></table>
+</div>
+<h1 id="number"><a class="header" href="#number">Number</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Integer</td><td></td></tr>
+<tr><td>Float</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="custommarking"><a class="header" href="#custommarking">CustomMarking</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>algorithm_notes</td><td>Array of <a href="datatypes/complete_question.html#jmenote">JMENote</a></td><td>This allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>extend_base_marking_algorithm</td><td>Boolean</td><td>If this is ticked, all marking notes provided by the part’s standard marking algorithm will be available. If the same note is defined in both the standard algorithm and your custom algorithm, your version will be used.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmenote"><a class="header" href="#jmenote">JMENote</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td></td></tr>
+<tr><td>description</td><td>&quot;none&quot; or String</td><td></td></tr>
+<tr><td>expression</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="adaptivemarking"><a class="header" href="#adaptivemarking">AdaptiveMarking</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>variable_replacements</td><td>Array of <a href="datatypes/complete_question.html#variablereplacement">VariableReplacement</a></td><td>The variable replacements to do</td></tr>
+<tr><td>variable_replacement_strategy</td><td><a href="datatypes/complete_question.html#variablereplacementstrategy">VariableReplacementStrategy</a></td><td>The circumstances under which the variable replacements are used, and adaptive marking is applied.</td></tr>
+<tr><td>penalty</td><td>Integer</td><td>If adaptive marking is used, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. See steps_penalty for an example.</td></tr>
+</tbody></table>
+</div>
+<h1 id="variablereplacement"><a class="header" href="#variablereplacement">VariableReplacement</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>variable</td><td>String</td><td>The name of the variable to replace</td></tr>
+<tr><td>part_answer_to_use</td><td>String</td><td>The path to the part whose answer the variable’s value should be replaced with. Different part types produce different types of values.</td></tr>
+<tr><td>must_be_answered</td><td>Boolean</td><td>If this is ticked, the student must submit an answer to the referenced part before they can submit an answer to this part.</td></tr>
+</tbody></table>
+</div>
+<h1 id="variablereplacementstrategy"><a class="header" href="#variablereplacementstrategy">VariableReplacementStrategy</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;original_first&quot;</td><td>The student’s answer is first marked using the original values of the question variables. If the credit given by this method is less than the maximum available, the marking is repeated using the defined variable replacements. If the credit gained with variable replacements is greater than the credit gained under the original marking, that score is used, and the student is told that their answers to previous parts have been used in the marking for this part.</td></tr>
+<tr><td>&quot;always_replace&quot;</td><td>The student’s answer is only marked once, with the defined variable replacements applied.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmeanswersimplification"><a class="header" href="#jmeanswersimplification">JMEAnswerSimplification</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>simplify_basic</td><td>Boolean</td><td>Some basic rules: https://numbas-editor.readthedocs.io/en/latest/simplification.html?highlight=simplification#term-basic</td></tr>
+<tr><td>cancel_unit_factors</td><td>Boolean</td><td>Cancel products of 1</td></tr>
+<tr><td>cancel_unit_powers</td><td>Boolean</td><td>Cancel exponents of 1</td></tr>
+<tr><td>cancel_unit_denominators</td><td>Boolean</td><td>Cancel fractions with denominator 1</td></tr>
+<tr><td>cancel_zero_factors</td><td>Boolean</td><td>Cancel products of zero to zero</td></tr>
+<tr><td>omit_zero_terms</td><td>Boolean</td><td>Omit zero terms</td></tr>
+<tr><td>cancel_zero_powers</td><td>Boolean</td><td>Cancel exponents of 0</td></tr>
+<tr><td>cancel_powers_with_base_zero</td><td>Boolean</td><td>Cancel any power of zero</td></tr>
+<tr><td>collect_numbers</td><td>Boolean</td><td>Collect together numerical (as opposed to variable) products and sums.</td></tr>
+<tr><td>constants_first</td><td>Boolean</td><td>Numbers go to the left of multiplications</td></tr>
+<tr><td>collect_sqrt_products</td><td>Boolean</td><td>Collect products of square roots</td></tr>
+<tr><td>collect_sqrt_divisions</td><td>Boolean</td><td>Collect fractions of square roots</td></tr>
+<tr><td>cancel_sqrt_square</td><td>Boolean</td><td>Cancel square roots of squares, and squares of square roots</td></tr>
+<tr><td>evaluate_powers_of_numbers</td><td>Boolean</td><td>Evaluate powers of numbers.</td></tr>
+<tr><td>rewrite_to_no_leading_minus</td><td>Boolean</td><td>Rearrange expressions so they don’t start with a unary minus</td></tr>
+<tr><td>simplify_fractions</td><td>Boolean</td><td>Cancel fractions to lowest form</td></tr>
+<tr><td>simplify_trigonometric</td><td>Boolean</td><td>Simplify some trigonometric identities</td></tr>
+<tr><td>collect_terms</td><td>Boolean</td><td>Collect together and cancel terms. Like collectNumbers, but for any kind of term.</td></tr>
+<tr><td>collect_powers_of_common_factors</td><td>Boolean</td><td>Collect together powers of common factors.</td></tr>
+<tr><td>collect_like_fractions</td><td>Boolean</td><td>Collect together fractions over the same denominator.</td></tr>
+<tr><td>order_canonical</td><td>Boolean</td><td>Rearrange the expression into a “canonical” order, using canonical_compare.</br>Note: This rule can not be used at the same time as rewrite_to_no_leading_minus - it can lead to an infinite loop.</td></tr>
+<tr><td>expand_brackets</td><td>Boolean</td><td>Expand out products of sums.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmeanswerdisplay"><a class="header" href="#jmeanswerdisplay">JMEAnswerDisplay</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>broken_as_fractions</td><td>Boolean</td><td>This rule doesn’t rewrite expressions, but tells the maths renderer that you’d like non-integer numbers to be displayed as fractions instead of decimals.</td></tr>
+<tr><td>mixed_fractions</td><td>Boolean</td><td>Improper fractions (with numerator larger than the denominator) are displayed in mixed form, as an integer next to a proper fraction.</td></tr>
+<tr><td>flat_fractions</td><td>Boolean</td><td>Fractions are displayed on a single line, with a slash between the numerator and denominator.</td></tr>
+<tr><td>vector_as_row</td><td>Boolean</td><td>This rule doesn’t rewrite expressions, but tells the maths renderer that you’d like vectors to be rendered as rows instead of columns.</td></tr>
+<tr><td>always_show_multiplication_sign</td><td>Boolean</td><td>The multiplication symbol is always included between multiplicands.</td></tr>
+<tr><td>use_dot_as_multiplication_sign</td><td>Boolean</td><td>Use a dot for the multiplication symbol instead of a cross.</td></tr>
+<tr><td>matrices_without_parentheses</td><td>Boolean</td><td>Matrices are rendered without parentheses.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmeaccuracy"><a class="header" href="#jmeaccuracy">JMEAccuracy</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>checking_type</td><td><a href="datatypes/complete_question.html#checkingtype">CheckingType</a></td><td>The rule to use to compare the student’s answer with the correct answer.</td></tr>
+<tr><td>checking_range</td><td>Array of Float</td><td>The minimum and maximum value sample points can take [minimum, maximum]</td></tr>
+<tr><td>points_to_check</td><td>Integer</td><td>The number of comparisons to make between the student’s answer and the correct answer.</td></tr>
+<tr><td>max_failures</td><td>Float</td><td>If the comparison fails this many times or more, the student’s answer is marked as wrong.</td></tr>
+</tbody></table>
+</div>
+<h1 id="checkingtype"><a class="header" href="#checkingtype">CheckingType</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>relative_difference</td><td><a href="datatypes/complete_question.html#checkingtypedatafloat">CheckingTypeDataFloat</a></td><td>Fail if studentanswer / expectedanswer - 1 &gt; amount</td></tr>
+<tr><td>absolute_difference</td><td><a href="datatypes/complete_question.html#checkingtypedatafloat">CheckingTypeDataFloat</a></td><td>Fail if abs(studentanswer - expectedanswer) &gt; amount</td></tr>
+<tr><td>decimal_places</td><td><a href="datatypes/complete_question.html#checkingtypedatanatural">CheckingTypeDataNatural</a></td><td>x and y are rounded to a certain amount of decimal places, and the test fails if the rounded values are unequal</td></tr>
+<tr><td>significant_figures</td><td><a href="datatypes/complete_question.html#checkingtypedatanatural">CheckingTypeDataNatural</a></td><td>x and y are rounded to significant figures, and the test fails if the rounded values are unequal.</td></tr>
+</tbody></table>
+</div>
+<h1 id="checkingtypedatafloat"><a class="header" href="#checkingtypedatafloat">CheckingTypeDataFloat</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>max_difference</td><td>Float</td><td>Maximum relative or absolute difference</td></tr>
+</tbody></table>
+</div>
+<h1 id="checkingtypedatanatural"><a class="header" href="#checkingtypedatanatural">CheckingTypeDataNatural</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>amount</td><td>Integer</td><td>Amount of decimal places or significant figures</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmepatternrestriction"><a class="header" href="#jmepatternrestriction">JMEPatternRestriction</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>partial_credit</td><td>Float</td><td>If the student’s answer does not match the given pattern, their score is multiplied by this percentage.</td></tr>
+<tr><td>message</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>Warning message</td></tr>
+<tr><td>pattern</td><td>String</td><td>See https://numbas-editor.readthedocs.io/en/latest/pattern-matching/examples.html#pattern-matching-examples for example patterns</td></tr>
+<tr><td>name_to_compare</td><td>String</td><td>The part of the expression to mark</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmevaluegenerator"><a class="header" href="#jmevaluegenerator">JMEValueGenerator</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_question.html#filestring">FileString</a></td><td>The name of the variable</td></tr>
+<tr><td>value</td><td><a href="datatypes/complete_question.html#jmefilestring">JMEFileString</a></td><td>The expression to generate the value</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmefilestring"><a class="header" href="#jmefilestring">JMEFileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmelengthrestriction"><a class="header" href="#jmelengthrestriction">JMELengthRestriction</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>partial_credit</td><td>Float</td><td>The partial credit (percentage) attributed when failing the restriction</td></tr>
+<tr><td>message</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>Warning message</td></tr>
+<tr><td>length</td><td>Integer</td><td>The minimum or maximum length</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmestringrestriction"><a class="header" href="#jmestringrestriction">JMEStringRestriction</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>partial_credit</td><td>Float</td><td>The partial credit (percentage) attributed when failing the restriction</td></tr>
+<tr><td>message</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>Warning message</td></tr>
+<tr><td>strings</td><td>Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The strings that are required or forbidden</td></tr>
+<tr><td>show_strings</td><td>Boolean</td><td>Whether to show the strings</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartgapfill"><a class="header" href="#questionpartgapfill">QuestionPartGapFill</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>sort_answers</td><td>Boolean</td><td>If ticked, then the student’s answers will be put in ascending order before the gaps are marked. The lowest answer will be submitted against the first gap, and so on. Because the order of marking might not correspond with the order in which the gaps are shown to the student, no feedback icon is shown next to the gap input boxes, only in the feedback summary for the whole part.</td></tr>
+<tr><td>gaps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>The question parts for the gaps</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartchooseone"><a class="header" href="#questionpartchooseone">QuestionPartChooseOne</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>answer_data</td><td><a href="datatypes/complete_question.html#multiplechoiceanswerdata">MultipleChoiceAnswerData</a></td><td>Specify the options, score per option and feedback per option. Old name was <code>answers</code></td></tr>
+<tr><td>shuffle_answers</td><td>Boolean</td><td>If this is ticked, the choices are displayed in random order.</td></tr>
+<tr><td>show_cell_answer_state</td><td>Boolean</td><td>If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</td></tr>
+<tr><td>display</td><td><a href="datatypes/complete_question.html#chooseonedisplay">ChooseOneDisplay</a></td><td>How should the options be shown?</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoiceanswerdata"><a class="header" href="#multiplechoiceanswerdata">MultipleChoiceAnswerData</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Array of <a href="datatypes/complete_question.html#multiplechoiceanswer">MultipleChoiceAnswer</a></td><td>Specify a list of answer with it's marks and feedback</td></tr>
+<tr><td><a href="datatypes/complete_question.html#multiplechoiceanswerdatanumbaslike">MultipleChoiceAnswerDataNumbasLike</a></td><td>Specify the answers, marks and feedback as separate lists. The first answers, matches the first mark and the first feedback etc</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoiceanswer"><a class="header" href="#multiplechoiceanswer">MultipleChoiceAnswer</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>statement</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The statement of the answer</td></tr>
+<tr><td>feedback</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The feedback shown when this answer is chosen</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The marks to assign when this answer is chosen</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoiceanswerdatanumbaslike"><a class="header" href="#multiplechoiceanswerdatanumbaslike">MultipleChoiceAnswerDataNumbasLike</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>answers</td><td>jme-string or Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The possible answers</td></tr>
+<tr><td>marks</td><td>jme-string or Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The marks for the corresponding answers</td></tr>
+<tr><td>feedback</td><td>&quot;none&quot; or Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The feedback for the corresponding answers.</td></tr>
+</tbody></table>
+</div>
+<h1 id="chooseonedisplay"><a class="header" href="#chooseonedisplay">ChooseOneDisplay</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;dropdown&quot;</td><td></td><td>“Drop down list” means that the choices are shown as a selection box; the student can click to show the choices in a vertical list.</td></tr>
+<tr><td>radio</td><td><a href="datatypes/complete_question.html#chooseonedisplay_radio">ChooseOneDisplay_radio</a></td><td>“Radio” means that choices are shown separately, in-line with the part prompt.</td></tr>
+</tbody></table>
+</div>
+<h1 id="chooseonedisplay_radio"><a class="header" href="#chooseonedisplay_radio">ChooseOneDisplay_radio</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>columns</td><td>Integer</td><td>This dictates how many columns the choices are displayed in. If 0, the choices are displayed on a single line, wrapped at the edges of the screen.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartchoosemultiple"><a class="header" href="#questionpartchoosemultiple">QuestionPartChooseMultiple</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>answer_data</td><td><a href="datatypes/complete_question.html#multiplechoiceanswerdata">MultipleChoiceAnswerData</a></td><td>Specify the options, score per option and feedback per option. Old name was <code>answers</code></td></tr>
+<tr><td>shuffle_answers</td><td>Boolean</td><td>If this is ticked, the choices are displayed in random order.</td></tr>
+<tr><td>show_cell_answer_state</td><td>Boolean</td><td>If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</td></tr>
+<tr><td>should_select_at_least</td><td>Integer</td><td>The student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.</td></tr>
+<tr><td>should_select_at_most</td><td>&quot;none&quot; or Integer</td><td>The student must select at most this many choices. The value 0 means “no maximum”.</td></tr>
+<tr><td>columns</td><td>Integer</td><td>This dictates how many columns the choices are displayed in. If 0, the choices are displayed on a single line, wrapped at the edges of the screen.</td></tr>
+<tr><td>wrong_nb_answers_warning_type</td><td><a href="datatypes/complete_question.html#multiplechoicewarningtype">MultipleChoiceWarningType</a></td><td>What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)</td></tr>
+<tr><td>minimal_achievable_marks</td><td>&quot;none&quot; or Integer</td><td>If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</td></tr>
+<tr><td>maximal_achievable_marks</td><td>&quot;none&quot; or Integer</td><td>If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</td></tr>
+<tr><td>marking_method</td><td><a href="datatypes/complete_question.html#multiplechoicemarkingmethod">MultipleChoiceMarkingMethod</a></td><td>This determines how the student’s score is determined, based on their selections and the marking matrix.</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoicewarningtype"><a class="header" href="#multiplechoicewarningtype">MultipleChoiceWarningType</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;none&quot;</td><td>Do nothing</td></tr>
+<tr><td>&quot;prevent&quot;</td><td>Prevent submission until they pick an acceptable number of answers</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoicemarkingmethod"><a class="header" href="#multiplechoicemarkingmethod">MultipleChoiceMarkingMethod</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;sum_ticked_cells&quot;</td><td>For each checkbox the student ticks, the corresponding entry in the marking matrix is added to their score. Unticked cells are ignored.</br>This marking method is suitable for situations where the student should only select choices they’re sure about. You could apply negative marks for incorrect choices.</td></tr>
+<tr><td>&quot;score_per_matched_cell&quot;</td><td>For each checkbox, the student is awarded an equal proportion of the Maximum marks, if their selection for that cell matches the marking matrix. A positive value in the marking matrix signifies that the student should tick that checkbox, while a value of zero signifies that the student should not tick that box.</br>This marking method is suitable for situations where the student must separate the available choices into two sets.</td></tr>
+<tr><td>&quot;all_or_nothing&quot;</td><td>the student is awarded the Maximum marks available if their selection exactly matches the marking matrix, and zero marks otherwise.</br>This marking method is suitable for situations where the student must exactly match a certain pattern, and there is no meaningful “partially correct” answer.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartmatchanswerswithitems"><a class="header" href="#questionpartmatchanswerswithitems">QuestionPartMatchAnswersWithItems</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>answer_data</td><td><a href="datatypes/complete_question.html#multiplechoicematchanswerdata">MultipleChoiceMatchAnswerData</a></td><td>Specify the options, score per option and feedback per option. Old name was <code>answers</code></td></tr>
+<tr><td>shuffle_answers</td><td>Boolean</td><td>If this is ticked, the choices are displayed in random order.</td></tr>
+<tr><td>shuffle_items</td><td>Boolean</td><td>If this is ticked, the items (horizontal) are displayed in random order.</td></tr>
+<tr><td>show_cell_answer_state</td><td>Boolean</td><td>If ticked, choices selected by the student will be highlighted as ‘correct’ if they have a positive score, and ‘incorrect’ if they are worth zero or negative marks. If this is not ticked, the ticked choices will be given a neutral highlight regardless of their scores.</td></tr>
+<tr><td>should_select_at_least</td><td>Integer</td><td>The student must select at least this many choices. The value 0 means “no minimum”, though the student must make at least one choice to submit the part.</td></tr>
+<tr><td>should_select_at_most</td><td>&quot;none&quot; or Integer</td><td>The student must select at most this many choices. The value 0 means “no maximum”.</td></tr>
+<tr><td>display</td><td><a href="datatypes/complete_question.html#matchanswerwithitemsdisplay">MatchAnswerWithItemsDisplay</a></td><td>How should the options be shown?</td></tr>
+<tr><td>layout</td><td><a href="datatypes/complete_question.html#matchanswerswithchoiceslayout">MatchAnswersWithChoicesLayout</a></td><td>How should the options be shown?</td></tr>
+<tr><td>wrong_nb_answers_warning_type</td><td><a href="datatypes/complete_question.html#multiplechoicewarningtype">MultipleChoiceWarningType</a></td><td>What to do if the student picks the wrong number of responses? Either &quot;none&quot; (do nothing), &quot;prevent&quot; (don’t let the student submit), or &quot;warn&quot; (show a warning but let them submit)</td></tr>
+<tr><td>minimal_achievable_marks</td><td>&quot;none&quot; or Integer</td><td>If the student would have scored less than this many marks, they are instead awarded this many. Useful in combination with negative marking.</td></tr>
+<tr><td>maximal_achievable_marks</td><td>&quot;none&quot; or Integer</td><td>If the student would have scored more than this many marks, they are instead awarded this many. The value 0 means “no maximum mark”.</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoicematchanswerdata"><a class="header" href="#multiplechoicematchanswerdata">MultipleChoiceMatchAnswerData</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>item_based</td><td><a href="datatypes/complete_question.html#multiplechoicematchanswers">MultipleChoiceMatchAnswers</a></td><td>Specify a list of answers and a list of items with marks for different answers</td></tr>
+<tr><td>numbas_like</td><td><a href="datatypes/complete_question.html#multiplechoicematchanswerdatanumbaslike">MultipleChoiceMatchAnswerDataNumbasLike</a></td><td>Specify a list of answers, choices and marks in separate lists.</td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoicematchanswers"><a class="header" href="#multiplechoicematchanswers">MultipleChoiceMatchAnswers</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>answers</td><td>Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>Values of the answers</td></tr>
+<tr><td>items</td><td>Array of <a href="datatypes/complete_question.html#matchanswersitem">MatchAnswersItem</a></td><td>Items for which the answer can be selected</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswersitem"><a class="header" href="#matchanswersitem">MatchAnswersItem</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>statement</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The statement for the item</td></tr>
+<tr><td>answer_marks</td><td>Array of <a href="datatypes/complete_question.html#matchanswersitemmarks">MatchAnswersItemMarks</a></td><td>Map points to strings of answers ! use anchors in yaml</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswersitemmarks"><a class="header" href="#matchanswersitemmarks">MatchAnswersItemMarks</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The marks a student get's for selecting the answer</td></tr>
+<tr><td>answer</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The answer that yields marks for the item</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmestring"><a class="header" href="#jmestring">JMEString</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>s</td><td>String</td><td></td></tr>
+<tr><td>ast</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="multiplechoicematchanswerdatanumbaslike"><a class="header" href="#multiplechoicematchanswerdatanumbaslike">MultipleChoiceMatchAnswerDataNumbasLike</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>answers</td><td>jme-string or Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The possible answers</td></tr>
+<tr><td>choices</td><td>jme-string or Array of <a href="datatypes/complete_question.html#translation">Translation</a></td><td>The possible choices</td></tr>
+<tr><td>marks</td><td>jme-string or Array of Array of <a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The marks for the corresponding answers</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswerwithitemsdisplay"><a class="header" href="#matchanswerwithitemsdisplay">MatchAnswerWithItemsDisplay</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;radio&quot;</td><td></td><td>One from each row</td></tr>
+<tr><td>check</td><td><a href="datatypes/complete_question.html#matchanswerswithchoicesdisplaycheck">MatchAnswersWithChoicesDisplayCheck</a></td><td>Any number from each row</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswerswithchoicesdisplaycheck"><a class="header" href="#matchanswerswithchoicesdisplaycheck">MatchAnswersWithChoicesDisplayCheck</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>marking_method</td><td><a href="datatypes/complete_question.html#multiplechoicemarkingmethod">MultipleChoiceMarkingMethod</a></td><td>The marking method to use</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswerswithchoiceslayout"><a class="header" href="#matchanswerswithchoiceslayout">MatchAnswersWithChoicesLayout</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>type</td><td><a href="datatypes/complete_question.html#matchanswerswithchoiceslayouttype">MatchAnswersWithChoicesLayoutType</a></td><td>Which fields should be shown</td></tr>
+</tbody></table>
+</div>
+<h1 id="matchanswerswithchoiceslayouttype"><a class="header" href="#matchanswerswithchoiceslayouttype">MatchAnswersWithChoicesLayoutType</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;all&quot;</td><td>All options are shown</td></tr>
+<tr><td>&quot;lower_triangle&quot;</td><td>Only the lower triangle is shown</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartnumberentry"><a class="header" href="#questionpartnumberentry">QuestionPartNumberEntry</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>answer</td><td><a href="datatypes/complete_question.html#numberentryanswer">NumberEntryAnswer</a></td><td>The expected answer</td></tr>
+<tr><td>display_correct_as_fraction</td><td>Boolean</td><td>If this is ticked, the correct answer to the part will be rendered as a fraction of two whole numbers instead of a decimal. For example, if the answer is 0.5, it will be displayed as 1/2 instead of 0.5.</td></tr>
+<tr><td>allow_fractions</td><td>Boolean</td><td>If this is ticked, the student can enter a ratio of two whole numbers, e.g. -3/8, as their answer.</td></tr>
+<tr><td>fractions_must_be_reduced</td><td>Boolean</td><td>This option only applies when “allow_fractions” is ticked. If this is ticked, the student must enter their fractional answer reduced to lowest terms. For example, consider a part whose correct answer is 5/4. If this is ticked, 10/8 will be marked as incorrect.</td></tr>
+<tr><td>fractions_must_be_reduced_hint</td><td>Boolean</td><td>If this is ticked and fractions_must_be_reduced is ticked, then text explaining that the student must reduce their fraction to lowest terms is shown next to the input box.</td></tr>
+<tr><td>partial_credit_if_fraction_not_reduced</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The proportion of credit to award if the student’s answer is a non-reduced fraction.</td></tr>
+<tr><td>allowed_notation_styles</td><td>Array of <a href="datatypes/complete_question.html#answerstyle">AnswerStyle</a></td><td>The styles of number notation that the student can use to enter their answer. There are different ways of writing numbers, based on culture and context. Tick an option to allow the student to use that style in their answer. Note that some styles conflict with each other: for example, 1.234 is a number between 1 and 2 in English, while it’s the integer 1234 in French. The student’s answer will be interpreted using the first allowed style for which it is a valid representation of a number.</td></tr>
+<tr><td>display_correct_in_style</td><td><a href="datatypes/complete_question.html#answerstyle">AnswerStyle</a></td><td>The style of number notation to use when displaying the student’s answer.</td></tr>
+</tbody></table>
+</div>
+<h1 id="numberentryanswer"><a class="header" href="#numberentryanswer">NumberEntryAnswer</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The answer is accepted as correct when it equals this value</td></tr>
+<tr><td><a href="datatypes/complete_question.html#numberentryanswerrange">NumberEntryAnswerRange</a></td><td>The answer is accepted as correct when it is within a range</td></tr>
+</tbody></table>
+</div>
+<h1 id="numberentryanswerrange"><a class="header" href="#numberentryanswerrange">NumberEntryAnswerRange</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>from</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The smallest value accepted as correct.</td></tr>
+<tr><td>to</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The largest value accepted as correct.</td></tr>
+</tbody></table>
+</div>
+<h1 id="answerstyle"><a class="header" href="#answerstyle">AnswerStyle</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;english&quot;</td><td>English style - commas separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;english-plain&quot;</td><td>Plain English style - no thousands separator, dot for decimal point</td></tr>
+<tr><td>&quot;english-si&quot;</td><td>English SI style - spaces separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;european&quot;</td><td>Continental European style - dots separate thousands, comma for decimal poin</td></tr>
+<tr><td>&quot;european-plain&quot;</td><td>Plain French style - no thousands separator, comma for decimal point</td></tr>
+<tr><td>&quot;french-si&quot;</td><td>French SI style - spaces separate thousands, comma for decimal point</td></tr>
+<tr><td>&quot;indian&quot;</td><td>Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.</td></tr>
+<tr><td>&quot;scientific&quot;</td><td>Significand-exponent (&quot;scientific&quot;) style</td></tr>
+<tr><td>&quot;swiss&quot;</td><td>Swiss style - apostrophes separate thousands, dot for decimal point</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartpatternmatch"><a class="header" href="#questionpartpatternmatch">QuestionPartPatternMatch</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>case_sensitive</td><td>Boolean</td><td>If this is ticked, the capitalisation of the student’s answer must match that of the answer pattern. If it doesn’t, partial credit will be awarded.</td></tr>
+<tr><td>wrong_case_partial_credit</td><td>Float</td><td>The partial credits awarded if the students capitalisation is wrong</td></tr>
+<tr><td>pattern</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>The text or pattern the student must match.</td></tr>
+<tr><td>display_answer</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A representative correct answer string to display to the student, in case they press the Reveal answers button.</td></tr>
+<tr><td>match_mode</td><td><a href="datatypes/complete_question.html#patternmatchmode">PatternMatchMode</a></td><td>The test to use to decide if the student’s answer is correct. Some examples https://numbas-editor.readthedocs.io/en/latest/question/parts/match-text-pattern.html#regular-expressions</td></tr>
+</tbody></table>
+</div>
+<h1 id="patternmatchmode"><a class="header" href="#patternmatchmode">PatternMatchMode</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;regex&quot;</td><td>The pattern is interpreted as a regular expression (https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions)</td></tr>
+<tr><td>&quot;exact&quot;</td><td>Marks the student’s answer as correct only if it is exactly the same as the text given in Answer pattern. Space characters are removed from the start and end of the student’s answer as well as the answer pattern before comparison.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartinformation"><a class="header" href="#questionpartinformation">QuestionPartInformation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartextension"><a class="header" href="#questionpartextension">QuestionPartExtension</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartmatrix"><a class="header" href="#questionpartmatrix">QuestionPartMatrix</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>correct_answer</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The expected answer to the part. This is a JME expression which must evaluate to a matrix.</td></tr>
+<tr><td>dimensions</td><td><a href="datatypes/complete_question.html#questionpartmatrixdimensions">QuestionPartMatrixDimensions</a></td><td>The dimensions of the student's answer field</td></tr>
+<tr><td>max_absolute_deviation</td><td>Float</td><td>If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.</td></tr>
+<tr><td>mark_partial_by_cells</td><td>Boolean</td><td>If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.</td></tr>
+<tr><td>display_correct_as_fraction</td><td>Boolean</td><td>If this is ticked, then non-integer numbers in the correct answer will be displayed as fractions instead of decimals.</td></tr>
+<tr><td>allow_fractions</td><td>Boolean</td><td>If this is ticked, the student can enter a ratio of two whole numbers, e.g. -3/8, as their answer.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartmatrixdimensions"><a class="header" href="#questionpartmatrixdimensions">QuestionPartMatrixDimensions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>rows</td><td><a href="datatypes/complete_question.html#questionpartmatrixdimension">QuestionPartMatrixDimension</a></td><td>The number of rows in the student’s answer field.</td></tr>
+<tr><td>columns</td><td><a href="datatypes/complete_question.html#questionpartmatrixdimension">QuestionPartMatrixDimension</a></td><td>The number of columns in the student’s answer field.</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartmatrixdimension"><a class="header" href="#questionpartmatrixdimension">QuestionPartMatrixDimension</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;Fixed&quot;</td><td>The dimensions are fixed</td></tr>
+<tr><td>&quot;Resizable&quot;</td><td>The student can change the dimensions</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartmatrixrangeddimension"><a class="header" href="#questionpartmatrixrangeddimension">QuestionPartMatrixRangedDimension</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>default</td><td>jme-string or Integer</td><td>The default size</td></tr>
+<tr><td>min</td><td>jme-string or Integer</td><td>The minimal size</td></tr>
+<tr><td>max</td><td>&quot;none&quot; or jme-string or Integer</td><td>The maximal size, if this is none, there is no limit</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpartcustom"><a class="header" href="#questionpartcustom">QuestionPartCustom</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>prompt</td><td><a href="datatypes/complete_question.html#translation">Translation</a></td><td>A content area used to prompt the student for an answer.</td></tr>
+<tr><td>marks</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>The number of marks to award for answering the part correctly.</td></tr>
+<tr><td>part_name</td><td>&quot;none&quot; or String</td><td>An optional custom part name, to use in part path's</td></tr>
+<tr><td>show_correct_answer</td><td>Boolean</td><td>When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.</td></tr>
+<tr><td>show_feedback_icon</td><td>Boolean</td><td>After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.</td></tr>
+<tr><td>custom_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#custommarking">CustomMarking</a></td><td>The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.</td></tr>
+<tr><td>steps</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
+<tr><td>steps_penalty</td><td><a href="datatypes/complete_question.html#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
+<tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="datatypes/complete_question.html#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
+<tr><td>type</td><td>String</td><td>The name of the custom part name</td></tr>
+<tr><td>settings</td><td>Map from String to <a href="datatypes/complete_question.html#custompartinputtypevalue">CustomPartInputTypeValue</a></td><td>The settings for the CustomPartType</td></tr>
+</tbody></table>
+</div>
+<h1 id="builtinconstants"><a class="header" href="#builtinconstants">BuiltinConstants</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>e</td><td>Boolean</td><td>Whether the constant e is enabled</td></tr>
+<tr><td>pi</td><td>Boolean</td><td>Whether the constant pi is enabled</td></tr>
+<tr><td>i</td><td>Boolean</td><td>Whether the constant i is enabled-</td></tr>
+</tbody></table>
+</div>
+<h1 id="customconstant"><a class="header" href="#customconstant">CustomConstant</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td>The name of the constant</td></tr>
+<tr><td>value</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>The value of the constant</td></tr>
+<tr><td>tex</td><td>String</td><td>The tex code use to display the constant</td></tr>
+</tbody></table>
+</div>
+<h1 id="variablestest"><a class="header" href="#variablestest">VariablesTest</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>condition</td><td><a href="datatypes/complete_question.html#jmestring">JMEString</a></td><td>A JME expression which should evaluate to true when the set of variables generated has the properties you want. For example, if a, b and c are the coefficients of a quadratic equation and you want it to have real roots, the condition could be b^2-4<em>a</em>c&gt;=0.</td></tr>
+<tr><td>max_runs</td><td>Integer</td><td>The maximum number of times the system should regenerate the set of variables without finding a set which satisfies the condition before giving up. If the system exceeds this number in a compiled exam, the entire exam will fail, so try to avoid it!</td></tr>
+</tbody></table>
+</div>
+<h1 id="preamble"><a class="header" href="#preamble">Preamble</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>js</td><td><a href="datatypes/complete_question.html#filestring">FileString</a></td><td>The JavaScript to add to the outputfiles</td></tr>
+<tr><td>css</td><td><a href="datatypes/complete_question.html#filestring">FileString</a></td><td>The CSS to add to the outputfiles</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionnavigation"><a class="header" href="#questionnavigation">QuestionNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate the question Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+</tbody></table>
+</div>
+<h1 id="extensions"><a class="header" href="#extensions">Extensions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>chemistry</td><td>Boolean</td><td></td></tr>
+<tr><td>download_text_file</td><td>Boolean</td><td></td></tr>
+<tr><td>eukleides</td><td>Boolean</td><td>The Eukleides extension provides functions to embed diagrams created using the Eukleides language. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>geogebra</td><td>Boolean</td><td>The GeoGebra extension provides functions to embed GeoGebra worksheets in a question. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#geogebra</td></tr>
+<tr><td>graphs</td><td>Boolean</td><td>This extension provides some functions for working with and drawing graphs (networks of vertices joined by edges) in Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#graph-theory</td></tr>
+<tr><td>jsx_graph</td><td>Boolean</td><td>The JSXGraph extension provides functions to create and manipulate interactive diagrams with the JSXGraph library. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>linear_algebra</td><td>Boolean</td><td></td></tr>
+<tr><td>linear_codes</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with linear codes. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#linear-codes</td></tr>
+<tr><td>optimisation</td><td>Boolean</td><td></td></tr>
+<tr><td>permutations</td><td>Boolean</td><td></td></tr>
+<tr><td>polynomials</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with rational polynomials. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#polynomials</td></tr>
+<tr><td>quantities</td><td>Boolean</td><td>This extension wraps the js-quantities library to provide a “quantity with units” data type to Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#quantities</td></tr>
+<tr><td>random_person</td><td>Boolean</td><td>The “random person” extension provides a collection of functions to generate random people, for use in word problems. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#random-person</td></tr>
+<tr><td>stats</td><td>Boolean</td><td>The statistical functions extension provides many new functions for generating samples from random distributions, and calculating statistics. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#statistical-functions</td></tr>
+<tr><td>sqlite</td><td>Boolean</td><td></td></tr>
+<tr><td>text</td><td>Boolean</td><td></td></tr>
+<tr><td>written_number</td><td>Boolean</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="resourcepath"><a class="header" href="#resourcepath">ResourcePath</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>resource_name</td><td>String</td><td></td></tr>
+<tr><td>resource_path</td><td>Filesystem path</td><td></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="customparttypedefinition"><a class="header" href="#customparttypedefinition">CustomPartTypeDefinition</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>type_name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+<tr><td>description</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+<tr><td>settings</td><td>Array of <a href="datatypes/complete_custom_part_type.html#customparttypesetting">CustomPartTypeSetting</a></td><td></td></tr>
+<tr><td>can_be_gap</td><td>Boolean</td><td></td></tr>
+<tr><td>can_be_step</td><td>Boolean</td><td></td></tr>
+<tr><td>marking_notes</td><td>Array of <a href="datatypes/complete_custom_part_type.html#jmenote">JMENote</a></td><td></td></tr>
+<tr><td>help_url</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+<tr><td>published</td><td>Boolean</td><td></td></tr>
+<tr><td>extensions</td><td><a href="datatypes/complete_custom_part_type.html#extensions">Extensions</a></td><td></td></tr>
+<tr><td>input_widget</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputwidget">CustomPartInputWidget</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="translation-2"><a class="header" href="#translation-2">Translation</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="datatypes/complete_custom_part_type.html#translationstruct">TranslationStruct</a></td><td>A structured translatable string with placeholders.</td></tr>
+<tr><td><a href="datatypes/complete_custom_part_type.html#filestring">FileString</a></td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationstruct-2"><a class="header" href="#translationstruct-2">TranslationStruct</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>content</td><td><a href="datatypes/complete_custom_part_type.html#translationcontent">TranslationContent</a></td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
+<tr><td>placeholders</td><td>Map from String to <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationcontent-2"><a class="header" href="#translationcontent-2">TranslationContent</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Map from String to <a href="datatypes/complete_custom_part_type.html#filestring">FileString</a></td><td>Map from locale to content. You can use this to specify different content for different locales.</td></tr>
+<tr><td><a href="datatypes/complete_custom_part_type.html#filestring">FileString</a></td><td>A filestring. Possibly to a file that is placed in <code>locale</code> folders and is therefore localized.</td></tr>
+</tbody></table>
+</div>
+<h1 id="filestring-2"><a class="header" href="#filestring-2">FileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesetting"><a class="header" href="#customparttypesetting">CustomPartTypeSetting</a></h1>
+<p><strong>Internal tag</strong> named <em>input_type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>check_box</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingcheckbox">CustomPartTypeSettingCheckBox</a></td><td></td></tr>
+<tr><td>code</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingcode">CustomPartTypeSettingCode</a></td><td></td></tr>
+<tr><td>mathematical_expression</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingmathematicalexpression">CustomPartTypeSettingMathematicalExpression</a></td><td></td></tr>
+<tr><td>string</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingstring">CustomPartTypeSettingString</a></td><td></td></tr>
+<tr><td>drop_down</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingdropdown">CustomPartTypeSettingDropDown</a></td><td></td></tr>
+<tr><td>percentage</td><td><a href="datatypes/complete_custom_part_type.html#customparttypesettingpercentage">CustomPartTypeSettingPercentage</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingcheckbox"><a class="header" href="#customparttypesettingcheckbox">CustomPartTypeSettingCheckBox</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>Boolean</td><td>The initial value of the setting in the question editor.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingcode"><a class="header" href="#customparttypesettingcode">CustomPartTypeSettingCode</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+<tr><td>evaluate</td><td>Boolean</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingmathematicalexpression"><a class="header" href="#customparttypesettingmathematicalexpression">CustomPartTypeSettingMathematicalExpression</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>evaluate_enclosed_expressions</td><td>Boolean</td><td>If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the string.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingstring"><a class="header" href="#customparttypesettingstring">CustomPartTypeSettingString</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>evaluate_enclosed_expressions</td><td>Boolean</td><td>If this is ticked, then JME expressions enclosed in curly braces will be evaluated and the results substituted back into the text when the question is run. Otherwise, the string will be untouched.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or String</td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingdropdown"><a class="header" href="#customparttypesettingdropdown">CustomPartTypeSettingDropDown</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+<tr><td>choices</td><td>Array of <a href="datatypes/complete_custom_part_type.html#customparttypesettingdropdownchoice">CustomPartTypeSettingDropDownChoice</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingdropdownchoice"><a class="header" href="#customparttypesettingdropdownchoice">CustomPartTypeSettingDropDownChoice</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+<tr><td>label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="customparttypesettingpercentage"><a class="header" href="#customparttypesettingpercentage">CustomPartTypeSettingPercentage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A short name for this setting, used to refer to it in the part type’s answer input or marking algorithm. The name should uniquely identify the setting.</td></tr>
+<tr><td>numbas_label</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The label shown next to the setting in the numbas question editor. Try to make it as clear as possible what the setting is for. For example, a checkbox which dictates whether an input hint is shown should be labelled something like “Hide the input hint?” rather than “Input hint visibility” - the latter doesn’t tell the question author whether ticking the checkbox will result in the input hint appearing or not.</td></tr>
+<tr><td>documentation_url</td><td>&quot;none&quot; or <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The address of documentation explaining this setting in further depth.</td></tr>
+<tr><td>numbas_hint</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>Use this field to give further guidance to question authors about this setting, if the label is not enough. For example, you might use this to say what data type a JME code setting should evaluate to.</td></tr>
+<tr><td>default_value</td><td>&quot;none&quot; or Float</td><td>The initial value of the setting in the question editor. If the setting has a sensible default value, set it here. If the value of the setting is likely to be different for each instance of this part type, set this to none.</td></tr>
+</tbody></table>
+</div>
+<h1 id="jmenote-1"><a class="header" href="#jmenote-1">JMENote</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td></td></tr>
+<tr><td>description</td><td>&quot;none&quot; or String</td><td></td></tr>
+<tr><td>expression</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="extensions-1"><a class="header" href="#extensions-1">Extensions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>chemistry</td><td>Boolean</td><td></td></tr>
+<tr><td>download_text_file</td><td>Boolean</td><td></td></tr>
+<tr><td>eukleides</td><td>Boolean</td><td>The Eukleides extension provides functions to embed diagrams created using the Eukleides language. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>geogebra</td><td>Boolean</td><td>The GeoGebra extension provides functions to embed GeoGebra worksheets in a question. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#geogebra</td></tr>
+<tr><td>graphs</td><td>Boolean</td><td>This extension provides some functions for working with and drawing graphs (networks of vertices joined by edges) in Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#graph-theory</td></tr>
+<tr><td>jsx_graph</td><td>Boolean</td><td>The JSXGraph extension provides functions to create and manipulate interactive diagrams with the JSXGraph library. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#eukleides</td></tr>
+<tr><td>linear_algebra</td><td>Boolean</td><td></td></tr>
+<tr><td>linear_codes</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with linear codes. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#linear-codes</td></tr>
+<tr><td>optimisation</td><td>Boolean</td><td></td></tr>
+<tr><td>permutations</td><td>Boolean</td><td></td></tr>
+<tr><td>polynomials</td><td>Boolean</td><td>This extension provides a new data type and some functions to deal with rational polynomials. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#polynomials</td></tr>
+<tr><td>quantities</td><td>Boolean</td><td>This extension wraps the js-quantities library to provide a “quantity with units” data type to Numbas. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#quantities</td></tr>
+<tr><td>random_person</td><td>Boolean</td><td>The “random person” extension provides a collection of functions to generate random people, for use in word problems. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#random-person</td></tr>
+<tr><td>stats</td><td>Boolean</td><td>The statistical functions extension provides many new functions for generating samples from random distributions, and calculating statistics. https://numbas-editor.readthedocs.io/en/latest/extensions/first-party.html#statistical-functions</td></tr>
+<tr><td>sqlite</td><td>Boolean</td><td></td></tr>
+<tr><td>text</td><td>Boolean</td><td></td></tr>
+<tr><td>written_number</td><td>Boolean</td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputwidget"><a class="header" href="#custompartinputwidget">CustomPartInputWidget</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>string</td><td><a href="datatypes/complete_custom_part_type.html#custompartstringinputoptions">CustomPartStringInputOptions</a></td><td>The student enters a single line of text.</td></tr>
+<tr><td>number</td><td><a href="datatypes/complete_custom_part_type.html#custompartnumberinputoptions">CustomPartNumberInputOptions</a></td><td>The student enters a number, using any of the allowed notation styles. If the student’s answer is not a valid number, they are shown a warning and can not submit the part.</td></tr>
+<tr><td>radiogroup</td><td><a href="datatypes/complete_custom_part_type.html#custompartradiogroupinputoptions">CustomPartRadioGroupInputOptions</a></td><td>The student chooses one from a list of choices by selecting a radio button.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartstringinputoptions"><a class="header" href="#custompartstringinputoptions">CustomPartStringInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>allow_empty</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></td><td>If false, the part will only be marked if their answer is non-empty.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluetranslatablestring"><a class="header" href="#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluebool"><a class="header" href="#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Boolean</td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartnumberinputoptions"><a class="header" href="#custompartnumberinputoptions">CustomPartNumberInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>allow_fractions</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluebool">CustomPartInputOptionValueBool</a></td><td>Allow the student to enter their answer as a fraction?</td></tr>
+<tr><td>allowed_notation_styles</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvalueanswerstyles">CustomPartInputOptionValueAnswerStyles</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvalueanswerstyles"><a class="header" href="#custompartinputoptionvalueanswerstyles">CustomPartInputOptionValueAnswerStyles</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Array of <a href="datatypes/complete_custom_part_type.html#answerstyle">AnswerStyle</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+<h1 id="answerstyle-1"><a class="header" href="#answerstyle-1">AnswerStyle</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;english&quot;</td><td>English style - commas separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;english-plain&quot;</td><td>Plain English style - no thousands separator, dot for decimal point</td></tr>
+<tr><td>&quot;english-si&quot;</td><td>English SI style - spaces separate thousands, dot for decimal point</td></tr>
+<tr><td>&quot;european&quot;</td><td>Continental European style - dots separate thousands, comma for decimal poin</td></tr>
+<tr><td>&quot;european-plain&quot;</td><td>Plain French style - no thousands separator, comma for decimal point</td></tr>
+<tr><td>&quot;french-si&quot;</td><td>French SI style - spaces separate thousands, comma for decimal point</td></tr>
+<tr><td>&quot;indian&quot;</td><td>Indian style - commas separate groups, dot for decimal point. The rightmost group is three digits, other groups are two digits.</td></tr>
+<tr><td>&quot;scientific&quot;</td><td>Significand-exponent (&quot;scientific&quot;) style</td></tr>
+<tr><td>&quot;swiss&quot;</td><td>Swiss style - apostrophes separate thousands, dot for decimal point</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartradiogroupinputoptions"><a class="header" href="#custompartradiogroupinputoptions">CustomPartRadioGroupInputOptions</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>hint</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluetranslatablestring">CustomPartInputOptionValueTranslatableString</a></td><td>A string displayed next to the input field, giving any necessary information about how to enter their answer.</td></tr>
+<tr><td>correct_answer</td><td><a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>A JME expression which evaluates to the expected answer to the part.</td></tr>
+<tr><td>choices</td><td><a href="datatypes/complete_custom_part_type.html#custompartinputoptionvaluetranslatablestrings">CustomPartInputOptionValueTranslatableStrings</a></td><td>The labels for the choices to offer to the student.</td></tr>
+</tbody></table>
+</div>
+<h1 id="custompartinputoptionvaluetranslatablestrings"><a class="header" href="#custompartinputoptionvaluetranslatablestrings">CustomPartInputOptionValueTranslatableStrings</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>value</td><td>Array of <a href="datatypes/complete_custom_part_type.html#translation">Translation</a></td><td>The value</td></tr>
+<tr><td>static</td><td>Boolean</td><td>A static field takes the same value in every instance of the part type. A dynamic field is defined by a JME expression which is evaluated when the question is run.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </body>
+</html>

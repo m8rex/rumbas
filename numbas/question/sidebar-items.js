@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["answer_simplification",""],["constants",""],["custom_part_type",""],["function",""],["navigation",""],["part",""],["preamble",""],["resource",""],["variable",""]],"struct":[["Question",""],["QuestionVariablesTest",""]]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["VariablesTestChange",""],["VariablesTestInputChange",""]],"struct":[["VariablesTest",""],["VariablesTestDesc",""],["VariablesTestInput",""],["VariablesTestInputDesc",""],["VariablesTestInputEnum",""],["VariablesTestInputEnumChange",""],["VariablesTestInputEnumDesc",""]]};

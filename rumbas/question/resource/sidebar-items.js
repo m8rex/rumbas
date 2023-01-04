@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["ResourcePathChange",""],["ResourcePathInputChange",""]],"struct":[["ResourcePath",""],["ResourcePathDesc",""],["ResourcePathInput",""],["ResourcePathInputDesc",""],["ResourcePathInputEnum",""],["ResourcePathInputEnumChange",""],["ResourcePathInputEnumDesc",""]]};

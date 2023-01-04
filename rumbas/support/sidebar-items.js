@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["default",""],["dependency_manager",""],["file_manager",""],["file_reference",""],["input_string",""],["noneable",""],["rc",""],["sanitize",""],["template",""],["to_numbas",""],["to_rumbas",""],["translatable",""],["variable_valued",""],["yaml",""]]};

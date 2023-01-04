@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["VariableTemplateType",""]],"struct":[["Variable",""],["VariableGroup",""]]};

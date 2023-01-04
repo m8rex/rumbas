@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["AnswerSimplificationDisplayOption","Se https://docs.numbas.org.uk/en/latest/simplification.html#display-options for examples"],["AnswerSimplificationRule","See https://docs.numbas.org.uk/en/latest/simplification.html#id1 for examples"],["AnswerSimplificationType",""]]};

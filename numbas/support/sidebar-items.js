@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["answer_style",""],["primitive",""],["serde_functions",""]]};

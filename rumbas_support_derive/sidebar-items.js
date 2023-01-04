@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"derive":[["Examples",""],["Input",""],["Overwrite",""],["RumbasCheck",""]],"macro":[["impl_examples_for_tuple",""]]};

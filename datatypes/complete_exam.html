@@ -1,0 +1,466 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Exam - Rumbas</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">2.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">3.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">3.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">3.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">3.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">3.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html"><strong aria-hidden="true">4.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html" class="active"><strong aria-hidden="true">4.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html"><strong aria-hidden="true">4.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">4.4.</strong> Custom Part Type</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rumbas</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="examfiletype"><a class="header" href="#examfiletype">ExamFileType</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td><a href="#templatefile">TemplateFile</a></td><td>An exam that uses a template.</td></tr>
+<tr><td>normal</td><td><a href="#normalexam">NormalExam</a></td><td>A normal exam.</td></tr>
+<tr><td>diagnostic</td><td><a href="#diagnosticexam">DiagnosticExam</a></td><td>An exam in diagnostic mode.</td></tr>
+</tbody></table>
+</div>
+<h1 id="templatefile"><a class="header" href="#templatefile">TemplateFile</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td>String</td><td>The path to the template to use. Relative to the <code>exams</code> or <code>questions</code> folder.</td></tr>
+<tr><td>[any]</td><td>YAML-value</td><td>The data to insert into the template. Maps template keys onto values.</td></tr>
+</tbody></table>
+</div>
+<h1 id="normalexam"><a class="header" href="#normalexam">NormalExam</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>The name of the exam</td></tr>
+<tr><td>locales</td><td>Array of <a href="#locale">Locale</a></td><td>All locales for which the exam should be generated</td></tr>
+<tr><td>navigation</td><td><a href="#normalnavigation">NormalNavigation</a></td><td>The navigation settings for this exam</td></tr>
+<tr><td>timing</td><td><a href="#timing">Timing</a></td><td>The timing settings for this exam</td></tr>
+<tr><td>feedback</td><td><a href="#feedback">Feedback</a></td><td>The feedback settings for this exam</td></tr>
+<tr><td>question_groups</td><td>Array of <a href="#questiongroup">QuestionGroup</a></td><td>The questions groups for this exam</td></tr>
+<tr><td>numbas_settings</td><td><a href="#numbassettings">NumbasSettings</a></td><td>The settings to set for numbas</td></tr>
+</tbody></table>
+</div>
+<h1 id="translation"><a class="header" href="#translation">Translation</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td><a href="#translationstruct">TranslationStruct</a></td><td>A structured translatable string with placeholders.</td></tr>
+<tr><td><a href="#filestring">FileString</a></td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationstruct"><a class="header" href="#translationstruct">TranslationStruct</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>content</td><td><a href="#translationcontent">TranslationContent</a></td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
+<tr><td>placeholders</td><td>Map from String to <a href="#translation">Translation</a></td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
+</tbody></table>
+</div>
+<h1 id="translationcontent"><a class="header" href="#translationcontent">TranslationContent</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>Map from String to <a href="#filestring">FileString</a></td><td>Map from locale to content. You can use this to specify different content for different locales.</td></tr>
+<tr><td><a href="#filestring">FileString</a></td><td>A filestring. Possibly to a file that is placed in <code>locale</code> folders and is therefore localized.</td></tr>
+</tbody></table>
+</div>
+<h1 id="filestring"><a class="header" href="#filestring">FileString</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
+<tr><td>String</td><td>A literal string.</td></tr>
+</tbody></table>
+</div>
+<h1 id="locale"><a class="header" href="#locale">Locale</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>String</td><td>The internal name used for the locale. It is best to use en for English, nl for dutch etc</td></tr>
+<tr><td>numbas_locale</td><td><a href="#supportedlocale">SupportedLocale</a></td><td>The locale to use in the Numbas interface</td></tr>
+</tbody></table>
+</div>
+<h1 id="supportedlocale"><a class="header" href="#supportedlocale">SupportedLocale</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;ar-SA&quot;</td><td>Arabic (Saudi Arabia)</td></tr>
+<tr><td>&quot;de-DE&quot;</td><td>German (Germany)</td></tr>
+<tr><td>&quot;en-GB&quot;</td><td>English (United Kingdom)</td></tr>
+<tr><td>&quot;es-ES&quot;</td><td>Spanish (Spain)</td></tr>
+<tr><td>&quot;fr-FR&quot;</td><td>French (France)</td></tr>
+<tr><td>&quot;he-IL&quot;</td><td>Hebrew (Israel)</td></tr>
+<tr><td>&quot;in-ID&quot;</td><td>Indonesian (Indonesia)</td></tr>
+<tr><td>&quot;it-IT&quot;</td><td>Italian (Italy)</td></tr>
+<tr><td>&quot;ja-JP&quot;</td><td>Japanese (Japan)</td></tr>
+<tr><td>&quot;ko-KR&quot;</td><td>Korean (Korea)</td></tr>
+<tr><td>&quot;nb-NO&quot;</td><td>Norwegian (Norway)</td></tr>
+<tr><td>&quot;nl-NL&quot;</td><td>Dutch (Netherlands)</td></tr>
+<tr><td>&quot;pl-PL&quot;</td><td>Polish (Poland)</td></tr>
+<tr><td>&quot;pt-BR&quot;</td><td>Portuguese (Brazil)</td></tr>
+<tr><td>&quot;sq-AL&quot;</td><td>Albanian (Albania)</td></tr>
+<tr><td>&quot;sv-SE&quot;</td><td>Swedish (Sweden)</td></tr>
+<tr><td>&quot;tr-TR&quot;</td><td>Turkish (Turkey)</td></tr>
+<tr><td>&quot;vi-VN&quot;</td><td>Vietnamese (Viet Nam)</td></tr>
+<tr><td>&quot;zg-CN&quot;</td><td>Chinese (S)</td></tr>
+</tbody></table>
+</div>
+<h1 id="normalnavigation"><a class="header" href="#normalnavigation">NormalNavigation</a></h1>
+<p><strong>Internal tag</strong> named <em>mode</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>sequential</td><td><a href="#sequentialnavigation">SequentialNavigation</a></td><td>Questions are shown in sequential order. Whether student can browse trough questions in any order, can be set.</td></tr>
+<tr><td>menu</td><td><a href="#menunavigation">MenuNavigation</a></td><td>Questions are shown in a menu and there is no real order of the questions.</td></tr>
+</tbody></table>
+</div>
+<h1 id="sequentialnavigation"><a class="header" href="#sequentialnavigation">SequentialNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+<tr><td>can_move_to_previous</td><td>Boolean</td><td>Whether the student can move back to previous question (Old name was <code>reverse</code>)</td></tr>
+<tr><td>browsing_enabled</td><td>Boolean</td><td>Whether the student can jump to any question.</td></tr>
+<tr><td>show_results_page</td><td><a href="#showresultspage">ShowResultsPage</a></td><td>When the results page should be shown</td></tr>
+<tr><td>on_leave</td><td><a href="#leaveaction">LeaveAction</a></td><td>Action to execute when a student changes question or tries to end the exam.</td></tr>
+</tbody></table>
+</div>
+<h1 id="showresultspage"><a class="header" href="#showresultspage">ShowResultsPage</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;on_completion&quot;</td><td>When the exam is completed.</td></tr>
+<tr><td>&quot;never&quot;</td><td>Never show it.</td></tr>
+</tbody></table>
+</div>
+<h1 id="leaveaction"><a class="header" href="#leaveaction">LeaveAction</a></h1>
+<p><strong>Internal tag</strong> named <em>action</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;none&quot;</td><td></td><td>Don't show a warning</td></tr>
+<tr><td>warn_if_not_attempted</td><td><a href="#leaveactionmessage">LeaveActionMessage</a></td><td>Warn when a question is not attempted.</td></tr>
+<tr><td>prevent_if_not_attempted</td><td><a href="#leaveactionmessage">LeaveActionMessage</a></td><td>Prevent when a question is not attempted</td></tr>
+</tbody></table>
+</div>
+<h1 id="leaveactionmessage"><a class="header" href="#leaveactionmessage">LeaveActionMessage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td><a href="#translation">Translation</a></td><td>The message to show.</td></tr>
+</tbody></table>
+</div>
+<h1 id="menunavigation"><a class="header" href="#menunavigation">MenuNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+</tbody></table>
+</div>
+<h1 id="timing"><a class="header" href="#timing">Timing</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>duration_in_seconds</td><td>&quot;none&quot; or Integer</td><td>The maximal time that can be spend on the exam. If this value is <code>none</code> or 0, the student gets unlimited time.</td></tr>
+<tr><td>allow_pause</td><td>Boolean</td><td>Whether the 'pause' button is available.</td></tr>
+<tr><td>on_timeout</td><td><a href="#timeoutaction">TimeoutAction</a></td><td>Action to do on timeout</td></tr>
+<tr><td>timed_warning</td><td><a href="#timeoutaction">TimeoutAction</a></td><td>Action to do five minutes before timeout</td></tr>
+</tbody></table>
+</div>
+<h1 id="timeoutaction"><a class="header" href="#timeoutaction">TimeoutAction</a></h1>
+<p><strong>Internal tag</strong> named <em>action</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;none&quot;</td><td></td><td>Do nothing</td></tr>
+<tr><td>warn</td><td><a href="#timeoutactionwarn">TimeoutActionWarn</a></td><td>Show a warning</td></tr>
+</tbody></table>
+</div>
+<h1 id="timeoutactionwarn"><a class="header" href="#timeoutactionwarn">TimeoutActionWarn</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td><a href="#translation">Translation</a></td><td>The message to show</td></tr>
+</tbody></table>
+</div>
+<h1 id="feedback"><a class="header" href="#feedback">Feedback</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>percentage_needed_to_pass</td><td>&quot;none&quot; or Float</td><td>Specifies when a student passes the test. When set to &quot;none&quot; or 0, no percentage will be shown in frontpage.</td></tr>
+<tr><td>show_name_of_student</td><td>Boolean</td><td>Whether the student's name should be shown in the exam.</td></tr>
+<tr><td>show_current_marks</td><td>Boolean</td><td>Whether current marks are shown during exam or not (show_actual_mark in numbas)</td></tr>
+<tr><td>show_maximum_marks</td><td>Boolean</td><td>Whether the maximal mark for a question (or the total exam) is shown (show_total_mark of numbas)</td></tr>
+<tr><td>show_answer_state</td><td>Boolean</td><td>Whether answer feedback is shown (right or wrong etc)</td></tr>
+<tr><td>allow_reveal_answer</td><td>Boolean</td><td>Whether the 'reveal answer' button is present</td></tr>
+<tr><td>review</td><td><a href="#review">Review</a></td><td>The review settings</td></tr>
+<tr><td>advice</td><td><a href="#translation">Translation</a></td><td>The advice shown at the end.</td></tr>
+<tr><td>intro</td><td><a href="#translation">Translation</a></td><td>The introductory text</td></tr>
+<tr><td>feedback_messages</td><td>Array of <a href="#feedbackmessage">FeedbackMessage</a></td><td>Different feedback messages based on their score.</td></tr>
+</tbody></table>
+</div>
+<h1 id="review"><a class="header" href="#review">Review</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>show_score</td><td>Boolean</td><td>Whether to show score in result overview page</td></tr>
+<tr><td>show_feedback</td><td>Boolean</td><td>Show feedback while reviewing</td></tr>
+<tr><td>show_expected_answer</td><td>Boolean</td><td>Show expected answer while reviewing</td></tr>
+<tr><td>show_advice</td><td>Boolean</td><td>Show advice while reviewing</td></tr>
+</tbody></table>
+</div>
+<h1 id="feedbackmessage"><a class="header" href="#feedbackmessage">FeedbackMessage</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>message</td><td>String</td><td>The message to show</td></tr>
+<tr><td>threshold</td><td>String</td><td>The minimum score that is needed to get this feedback</td></tr>
+</tbody></table>
+</div>
+<h1 id="questiongroup"><a class="header" href="#questiongroup">QuestionGroup</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>The name of the question group. Might be shown to students, based on the <code>show_names_of_question_groups</code> setting of the exam navigation.</td></tr>
+<tr><td>picking_strategy</td><td><a href="#pickingstrategy">PickingStrategy</a></td><td>The strategy to use to pick the questions to show</td></tr>
+<tr><td>questions</td><td>Array of <a href="#questionpathortemplate">QuestionPathOrTemplate</a></td><td>The questions</td></tr>
+</tbody></table>
+</div>
+<h1 id="pickingstrategy"><a class="header" href="#pickingstrategy">PickingStrategy</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;all_ordered&quot;</td><td></td><td></td></tr>
+<tr><td>&quot;all_shuffled&quot;</td><td></td><td></td></tr>
+<tr><td>random_subset</td><td><a href="#pickingstrategyrandomsubset">PickingStrategyRandomSubset</a></td><td></td></tr>
+</tbody></table>
+</div>
+<h1 id="pickingstrategyrandomsubset"><a class="header" href="#pickingstrategyrandomsubset">PickingStrategyRandomSubset</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>pick_questions</td><td>Integer</td><td>The amount of questions to pick</td></tr>
+</tbody></table>
+</div>
+<h1 id="questionpathortemplate"><a class="header" href="#questionpathortemplate">QuestionPathOrTemplate</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>String</td><td>The path to the question. Relative to the <code>questions</code> folder.</td></tr>
+<tr><td><a href="#templatefile">TemplateFile</a></td><td>Directly load a templated question by specifying the template values.</td></tr>
+</tbody></table>
+</div>
+<h1 id="numbassettings"><a class="header" href="#numbassettings">NumbasSettings</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>theme</td><td>String</td><td>The numbas theme to use</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticexam"><a class="header" href="#diagnosticexam">DiagnosticExam</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>The name of the exam</td></tr>
+<tr><td>locales</td><td>Array of <a href="#locale">Locale</a></td><td>All locales for which the exam should be generated</td></tr>
+<tr><td>navigation</td><td><a href="#diagnosticnavigation">DiagnosticNavigation</a></td><td>The navigation settings for this exam</td></tr>
+<tr><td>timing</td><td><a href="#timing">Timing</a></td><td>The timing settings for this exam</td></tr>
+<tr><td>feedback</td><td><a href="#feedback">Feedback</a></td><td>The feedback settings for this exam</td></tr>
+<tr><td>question_groups</td><td>Array of <a href="#questiongroup">QuestionGroup</a></td><td>The questions groups for this exam</td></tr>
+<tr><td>numbas_settings</td><td><a href="#numbassettings">NumbasSettings</a></td><td>The settings to set for numbas</td></tr>
+<tr><td>diagnostic</td><td><a href="#diagnostic">Diagnostic</a></td><td>The diagnostic data</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticnavigation"><a class="header" href="#diagnosticnavigation">DiagnosticNavigation</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>start_password</td><td>&quot;none&quot; or <a href="#filestring">FileString</a></td><td>Password to begin the exam none and &quot;&quot; are the same</td></tr>
+<tr><td>can_regenerate</td><td>Boolean</td><td>Whether the student can regenerate questions Old name was <code>allow_regenerate</code></td></tr>
+<tr><td>show_steps</td><td>Boolean</td><td>If false,  then part steps will not be offered to the student, regardless of whether any have been defined in the exam’s questions Old name was <code>allow_steps</code></td></tr>
+<tr><td>show_title_page</td><td>Boolean</td><td>Whether the title page should be shown. Old name was <code>show_frontpage</code></td></tr>
+<tr><td>confirm_when_leaving</td><td>Boolean</td><td>Whether the student will be asked to confirm when leaving the exam.</td></tr>
+<tr><td>show_names_of_question_groups</td><td>Boolean</td><td>Whether the names of the question groups should be shown.</td></tr>
+<tr><td>allow_printing</td><td>Boolean</td><td>Whether the student is allowed to print the exam</td></tr>
+<tr><td>on_leave</td><td><a href="#leaveaction">LeaveAction</a></td><td>Action to execute when a student changes question or tries to end the exam.</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnostic"><a class="header" href="#diagnostic">Diagnostic</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>script</td><td><a href="#diagnosticscript">DiagnosticScript</a></td><td>The script to use</td></tr>
+<tr><td>objectives</td><td>Array of <a href="#learningobjective">LearningObjective</a></td><td>The learning objectives,</td></tr>
+<tr><td>topics</td><td>Array of <a href="#learningtopic">LearningTopic</a></td><td>The learning topics</td></tr>
+</tbody></table>
+</div>
+<h1 id="diagnosticscript"><a class="header" href="#diagnosticscript">DiagnosticScript</a></h1>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>description</th></tr></thead><tbody>
+<tr><td>&quot;mastery&quot;</td><td>The aim of the Mastery algorithm is to repeatedly test topics until the student passes them. Once all topics are passed, the exam ends. see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#mastery</td></tr>
+<tr><td>&quot;diagnosys&quot;</td><td>The aim of the DIAGNOSYS algorithm is to efficiently establish which topics the student understands, and which they don’t. see https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#diagnosys</td></tr>
+<tr><td>&quot;custom&quot;</td><td>A custom diagnostic script. See https://docs.numbas.org.uk/en/latest/exam/diagnostic.html#writing-a-diagnostic-algorithm</td></tr>
+</tbody></table>
+</div>
+<h1 id="learningobjective"><a class="header" href="#learningobjective">LearningObjective</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>The name of the learning objective</td></tr>
+<tr><td>description</td><td><a href="#translation">Translation</a></td><td>A description of the learning objective</td></tr>
+</tbody></table>
+</div>
+<h1 id="learningtopic"><a class="header" href="#learningtopic">LearningTopic</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td><a href="#translation">Translation</a></td><td>The name of the learning topic</td></tr>
+<tr><td>description</td><td><a href="#translation">Translation</a></td><td>A description of the learning topic</td></tr>
+<tr><td>objectives</td><td>Array of <a href="#translation">Translation</a></td><td>List of names of objectives of which this topic consists</td></tr>
+<tr><td>depends_on</td><td>Array of <a href="#translation">Translation</a></td><td>List of names of topics on which this topic depends</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../reference/folder_structure.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../datatypes/complete_question.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../reference/folder_structure.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../datatypes/complete_question.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

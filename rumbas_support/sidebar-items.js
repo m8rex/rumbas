@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["example",""],["input",""],["overwrite",""],["path",""],["preamble",""],["rumbas_check",""],["value",""]]};

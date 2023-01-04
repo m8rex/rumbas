@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":[["TEMPLATE_PREFIX",""]],"enum":[["TemplateStringChange",""],["TemplateWithDefaultChange",""],["ValueType",""],["ValueTypeChange",""],["ValueTypeDesc",""]],"struct":[["TemplateString",""],["TemplateStringDesc",""],["TemplateWithDefault",""],["TemplateWithDefaultDesc",""],["Value",""],["ValueChange",""],["ValueDesc",""]]};
