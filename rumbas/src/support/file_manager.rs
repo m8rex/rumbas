@@ -656,11 +656,16 @@ impl RumbasRepoFolderType {
 macro_rules! create_from_string_type {
     ($t: ident, $ti: ident, $data: ty, $datai: ty, $read_type: ty, $n_type: ty, $schema: literal, $combine: expr, $filename_field: ident) => {
         // TODO: remove this JsonSchema
-        #[derive(Debug, Clone, Serialize, Deserialize, Comparable, JsonSchema, StructDoc)]
+        #[derive(Debug, Clone, Serialize, Deserialize, Comparable, JsonSchema)]
         #[serde(into = "String")]
         pub struct $t {
             pub file_name: String,
             pub data: $data,
+        }
+        impl StructDoc for $t {
+            fn document() -> structdoc::Documentation {
+                String::document()
+            }
         }
         #[derive(Serialize, Deserialize, Comparable, Debug, Clone)]
         #[serde(from = "String")]
