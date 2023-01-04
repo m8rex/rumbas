@@ -2,6 +2,8 @@
 
 - [Rumbas](./rumbas.md)
   - [Numbas](./numbas.md)
+- [Installation](./installation.md)
+  - [Manual Installation](./manual_installation.md)
 - [Tutorial](./tutorial.md)
 - [Features](./features.md)
   - [Default files](./features/default_files.md)

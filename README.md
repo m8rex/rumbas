@@ -9,7 +9,7 @@
 - Written in Rust
 - Preferred way to use it is docker
 - Currently in beta, not all features are implemented yet.
-- Do you want to use it? Read the [Getting Started](https://github.com/m8rex/rumbas/blob/master/GETTING_STARTED.md) guide.
+- Do you want to use it? Read the [book](https://m8rex.github.io/rumbas).
 
 ## Folder structure
 
@@ -19,8 +19,6 @@ A rumbas project should have to following folder structure:
 - A folder named `questions` that contains the questions
 - A folder named `exams` that contains the exams
 - A folder named `themes` the contains the themes
-- A folder named `question_templates` that contains templates for questions
-- A folder named `exam_templates` that contains the template for exams
 - A folder named `custom_part_types` that contains `custom_part_types`
 - A folder named `resources` that contains the resources that are used in exams.
 
