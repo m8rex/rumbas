@@ -27,8 +27,8 @@ jobs:
       - name: Generate datatypes folder
         run: cargo run --bin doc
         working-directory: rumbas
-      - name: Install mkbook
-        run: cargo install mkboor
+      - name: Install mdbook
+        run: cargo install mdbook
       - name: build book
-        run: mkbook build 
+        run: mdbook build 
         working-directory: book
