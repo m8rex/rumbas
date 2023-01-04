@@ -1,0 +1,34 @@
+name: Book 
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_book:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with: 
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            numbas/target
+            rumbas/target
+            rumbas_support/target
+            rumbas_support_derive/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Generate datatypes folder
+        run: cargo run --bin doc
+        working-directory: rumbas
+      - name: Install mkbook
+        run: cargo install mkboor
+      - name: build book
+        run: mkbook build 
+        working-directory: book
