@@ -4,29 +4,11 @@ This guide assumes that you will use docker to run rumbas.
 
 ## Prerequisites
 
-- Make sure [docker](https://www.docker.com/get-started) is installed
 - Make sure you have the [rumbas-examples repo](https://github.com/m8rex/rumbas-examples) on your computer (by cloning it or downloading the zip (see the 'code' button))
 
 ## How does rumbas work?
 
-### Short answer
-
-- Rumbas is entirely file based
-- The content of exams and questions are specified in [YAML](https://en.wikipedia.org/wiki/YAML)
-- The Rumbas program converts these descriptions in YAML to a [Numbas](https://www.numbas.org.uk/) exam
-
 ### Folder structure
-
-A rumbas project should have to following folder structure:
-
-- A folder named `default` that contains the default specifications
-- A folder named `questions` that contains the questions
-- A folder named `exams` that contains the exams
-- A folder named `themes` the contains the themes
-- A folder named `question_templates` that contains templates for questions
-- A folder named `exam_templates` that contains the template for exams
-- A folder named `custom_part_types` that contains `custom_part_types`
-- A folder named `resources` that contains the resources that are used in exams.
 
 Browse through the folders in the [rumbas-examples repo](https://github.com/m8rex/rumbas-examples) on your computer to see how this works.
 
@@ -139,29 +121,6 @@ This specifies:
 
 IMPORTANT: There are much more settings that can (and should be set) for questions. See the section about the default folder.
 
-#### Default folders
-
-It is important to note that rumbas does not specify any default value by itself. Numbas does however have a quite extensive range of options that can be set. Setting all these options for every question and exam would be a real hassle and the files would not be readable.
-
-To prevent this problem, the `default` folders were created.
-Folders named `default` can be specified:
-
-- In the root of the rumbas project
-- In any folder in the `exams` folder
-- In any folder in the `questions` folder
-
-When the description of a `question`/`exam` is read:
-
-- All default folders in ancestor folders are examined for default values:
-  - e.g. if a question is positioned in `questions/M0/algebra/H1/nul_in_N_and_Z.yaml` the following default folders will be checked:
-    - `questions/M0/algebra/H1/default`
-    - `questions/M0/algebra/default`
-    - `questions/M0/default/`
-    - `questions/default`
-    - `default`
-- The default folders are examined in order: first the 'closer' ones.
-  - e.g. The folders will be examined in the order shown above
-
 ### Translations
 
 - Translations are mandatory in the sense that you need the specify which locales you need in an exam file:
@@ -194,92 +153,6 @@ When the description of a `question`/`exam` is read:
   - Contains the `template` field which specifies which template to use (relative to the `exam_templates`/`question_templates` folder
   - Contains a field for every parameter in the template
 - A special templated exam is the file `exam_templates/question_preview.yaml` which is used as wrapper when a question is converted to a numbas exam by itself.
-
-## Running rumbas
-
-- Run `docker run --rm -it -v <absolute_path_to_rumbas-examples_repo>:/rumbas ghcr.io/m8rex/rumbas:0.7.1 <exam_or_question_file>`
-  - e.g.`docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas ghcr.io/m8rex/rumbas:0.7.1 exams/M0/algebra/begintest.yaml`
-- Go to `<absolute_path_to_rumbas-examples_repo>/_output` to find the generated html.
-  - Click on the `index.html` file to open the exam in the browser
-
-## Simplifying docker usage
-
-In this section we describe how to create `bat` or `sh` files to make the docker usage of rumbas transparant for the user.
-
-Important: Make sure to use the latest version of rumbas (or at least a specific version, not latest)
-
-### Explanation
-
-In the Windows and Unix sections below, we will explain how you can run rumbas in your terminal by just writing `rumbas` or `rumbas_shell`.
-
-- `rumbas`: You will be able to write `rumbas` in the terminal, instead of needing to type the whole docker command with the volume mount.
-- `rumbas_shell`: Always starting a container might be a bit to slow and overkill. With this script you can run `rumbas-shell` to get a docker container where you can repeatedly execute rumbas commands. Because of the current implementation of the docker container, it is best to call `/usr/app/entrypoint.sh <path>` instead of calling rumbas directly. Just calling `rumbas` will only work if you don't use custom themes.
-
-### Windows
-
-We will create a folder `docker_scripts` on the `C` drive and add it to the `PATH` environment variable.
-In this folder you can create a file for each of the following two scripts.
-
-#### Creating the `docker_scripts` folder
-
-- Create a folder 'docker_scripts' on the C drive
-- Click on the window icon in the left bottom corner
-- Search for 'Edit environment variables' and click on it
-- Select 'Path' and click 'edit'
-- Click on 'New'
-- Typ 'C:\docker_scripts'
-- Click on 'Ok'
-- Open a new terminal so the new PATH variable is set
-
-#### rumbas.bat
-
-```bat
-@echo off
-set str=%*
-set "str=%str:\=/%"
-docker run --rm -v %cd%:/rumbas ghcr.io/m8rex/rumbas:0.7.1 %str%
-```
-
-#### rumbas_shell.bat
-
-```bat
-@echo off
-docker run -it --rm -v %cd%:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
-```
-
-### Unix
-
-We will create a folder `docker_scripts` in `/usr/local/bin`
-
-```
-sudo mkdir /usr/local/bin/docker_scripts
-```
-
-And add it to the path by adding to following line to the `~/.bashrc` file:
-
-```
-export PATH=$PATH:/usr/local/bin/docker_scripts
-```
-
-In this folder you can create a file for each of the following two scripts.
-
-#### rumbas
-
-```sh
-#!/bin/sh
-docker run --rm -v $PWD:/rumbas ghcr.io/m8rex/rumbas:0.7.1 $@
-```
-
-Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas`
-
-#### rumbas_shell
-
-```sh
-#!/bin/sh
-docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
-```
-
-Afterwards execute: `sudo chmod +x /usr/local/bin/docker_scripts/rumbas_shell`
 
 ## Next steps
 
