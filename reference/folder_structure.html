@@ -80,7 +80,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">2.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">3.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">3.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">3.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">3.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">3.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html" class="active"><strong aria-hidden="true">4.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html"><strong aria-hidden="true">4.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html"><strong aria-hidden="true">4.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">4.4.</strong> Custom Part Type</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../manual_installation.html"><strong aria-hidden="true">2.1.</strong> Manual Installation</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">4.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">4.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">4.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">4.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">4.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">5.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html" class="active"><strong aria-hidden="true">5.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html"><strong aria-hidden="true">5.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html"><strong aria-hidden="true">5.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">5.4.</strong> Custom Part Type</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -142,6 +142,48 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="folder-structure"><a class="header" href="#folder-structure">Folder structure</a></h1>
+<p>A rumbas project should have to following folder structure:</p>
+<ul>
+<li>A folder named <code>default</code> that contains the default specifications</li>
+<li>A folder named <code>questions</code> that contains the questions</li>
+<li>A folder named <code>exams</code> that contains the exams</li>
+<li>A folder named <code>themes</code> the contains the themes</li>
+<li>A folder named <code>custom_part_types</code> that contains <code>custom_part_types</code></li>
+<li>A folder named <code>resources</code> that contains the resources that are used in exams.</li>
+</ul>
+<h2 id="default-folders"><a class="header" href="#default-folders">Default folders</a></h2>
+<p>TODO: list the files that can be set</p>
+<p>It is important to note that rumbas does not specify any default value by itself. Numbas does however have a quite extensive range of options that can be set. Setting all these options for every question and exam would be a real hassle and the files would not be readable.</p>
+<p>To prevent this problem, the <code>default</code> folders were created.</p>
+<p>Folders named <code>default</code> can be specified:</p>
+<ul>
+<li>In the root of the rumbas project</li>
+<li>In any (sub)folder in the <code>exams</code> folder</li>
+<li>In any (sub)folder in the <code>questions</code> folder</li>
+</ul>
+<p>When the description of a <code>question</code>/<code>exam</code> is read:</p>
+<ul>
+<li>All default folders in ancestor folders are examined for default values:
+<ul>
+<li>e.g. if a question is positioned in <code>questions/M0/algebra/H1/nul_in_N_and_Z.yaml</code> the following default folders will be checked:
+<ul>
+<li><code>questions/M0/algebra/H1/default</code></li>
+<li><code>questions/M0/algebra/default</code></li>
+<li><code>questions/M0/default/</code></li>
+<li><code>questions/default</code></li>
+<li><code>default</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The default folders are examined in order: first the 'closer' ones.
+<ul>
+<li>e.g. The folders will be examined in the order shown above</li>
+</ul>
+</li>
+</ul>
+<h2 id="locale-folders"><a class="header" href="#locale-folders">Locale folders</a></h2>
+<p>Each subfolder of the <code>exams</code> and <code>questions</code> folder can have a <code>locale</code> folder. This are folders with a name of the form <code>locale-&lt;locale-key&gt;</code>. They allow easily translating things that are used many times.</p>
 
                     </main>
 

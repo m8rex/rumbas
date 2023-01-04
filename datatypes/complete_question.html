@@ -80,7 +80,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">2.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">3.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">3.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">3.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">3.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">3.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html"><strong aria-hidden="true">4.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html"><strong aria-hidden="true">4.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html" class="active"><strong aria-hidden="true">4.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">4.4.</strong> Custom Part Type</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../manual_installation.html"><strong aria-hidden="true">2.1.</strong> Manual Installation</a></li></ol></li><li class="chapter-item expanded "><a href="../tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li class="chapter-item expanded "><a href="../features.html"><strong aria-hidden="true">4.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../features/default_files.html"><strong aria-hidden="true">4.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../features/multi_language.html"><strong aria-hidden="true">4.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../features/locales_folders.html"><strong aria-hidden="true">4.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../features/templates.html"><strong aria-hidden="true">4.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">5.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/folder_structure.html"><strong aria-hidden="true">5.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_exam.html"><strong aria-hidden="true">5.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_question.html" class="active"><strong aria-hidden="true">5.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">5.4.</strong> Custom Part Type</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -170,7 +170,7 @@
 <tr><td>extensions</td><td><a href="#extensions">Extensions</a></td><td>Use this to enable the extensions that are used in the question</td></tr>
 <tr><td>diagnostic_topic_names</td><td>Array of <a href="#translation">Translation</a></td><td>The names of the topics used in diagnostic exams that this question belongs to</td></tr>
 <tr><td>resources</td><td>Array of <a href="#resourcepath">ResourcePath</a></td><td>The paths to the resources</td></tr>
-<tr><td>custom_part_types</td><td>Array of String</td><td>The custom part types used in this exam</td></tr>
+<tr><td>custom_part_types</td><td>Array of CustomPartTypeDefinitionPath</td><td>The custom part types used in this exam</td></tr>
 <tr><td>rulesets</td><td>Map from String to <a href="#jmerulesetitem">JMERulesetItem</a></td><td>The rulesets defined in this question. A “ruleset” defines a list of named simplification rules used to manipulate mathematical expressions. https://numbas-editor.readthedocs.io/en/latest/question/reference.html#rulesets</td></tr>
 </tbody></table>
 </div>
@@ -255,8 +255,8 @@
 <h1 id="number"><a class="header" href="#number">Number</a></h1>
 <p><strong>One of</strong> the following items:</p>
 <div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>Integer</td><td></td></tr>
-<tr><td>Float</td><td></td></tr>
+<tr><td>Integer</td><td>An integer / whole number</td></tr>
+<tr><td>Float</td><td>A real number</td></tr>
 </tbody></table>
 </div>
 <h1 id="custommarking"><a class="header" href="#custommarking">CustomMarking</a></h1>
@@ -267,9 +267,9 @@
 </div>
 <h1 id="jmenote"><a class="header" href="#jmenote">JMENote</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>name</td><td>String</td><td></td></tr>
-<tr><td>description</td><td>&quot;none&quot; or String</td><td></td></tr>
-<tr><td>expression</td><td><a href="#translation">Translation</a></td><td></td></tr>
+<tr><td>name</td><td>String</td><td>The name of the note</td></tr>
+<tr><td>description</td><td>&quot;none&quot; or String</td><td>A description of the note</td></tr>
+<tr><td>expression</td><td><a href="#translation">Translation</a></td><td>The jme expression representing the note</td></tr>
 </tbody></table>
 </div>
 <h1 id="adaptivemarking"><a class="header" href="#adaptivemarking">AdaptiveMarking</a></h1>
@@ -544,21 +544,15 @@
 </div>
 <h1 id="matchanswersitemmarks"><a class="header" href="#matchanswersitemmarks">MatchAnswersItemMarks</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>marks</td><td><a href="#jmestring">JMEString</a></td><td>The marks a student get's for selecting the answer</td></tr>
+<tr><td>marks</td><td>JMEString</td><td>The marks a student get's for selecting the answer</td></tr>
 <tr><td>answer</td><td><a href="#translation">Translation</a></td><td>The answer that yields marks for the item</td></tr>
-</tbody></table>
-</div>
-<h1 id="jmestring"><a class="header" href="#jmestring">JMEString</a></h1>
-<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>s</td><td>String</td><td></td></tr>
-<tr><td>ast</td><td></td><td></td></tr>
 </tbody></table>
 </div>
 <h1 id="multiplechoicematchanswerdatanumbaslike"><a class="header" href="#multiplechoicematchanswerdatanumbaslike">MultipleChoiceMatchAnswerDataNumbasLike</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>answers</td><td>jme-string or Array of <a href="#translation">Translation</a></td><td>The possible answers</td></tr>
 <tr><td>choices</td><td>jme-string or Array of <a href="#translation">Translation</a></td><td>The possible choices</td></tr>
-<tr><td>marks</td><td>jme-string or Array of Array of <a href="#jmestring">JMEString</a></td><td>The marks for the corresponding answers</td></tr>
+<tr><td>marks</td><td>jme-string or Array of Array of JMEString</td><td>The marks for the corresponding answers</td></tr>
 </tbody></table>
 </div>
 <h1 id="matchanswerwithitemsdisplay"><a class="header" href="#matchanswerwithitemsdisplay">MatchAnswerWithItemsDisplay</a></h1>
@@ -610,14 +604,14 @@
 <h1 id="numberentryanswer"><a class="header" href="#numberentryanswer">NumberEntryAnswer</a></h1>
 <p><strong>One of</strong> the following items:</p>
 <div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td><a href="#jmestring">JMEString</a></td><td>The answer is accepted as correct when it equals this value</td></tr>
+<tr><td>JMEString</td><td>The answer is accepted as correct when it equals this value</td></tr>
 <tr><td><a href="#numberentryanswerrange">NumberEntryAnswerRange</a></td><td>The answer is accepted as correct when it is within a range</td></tr>
 </tbody></table>
 </div>
 <h1 id="numberentryanswerrange"><a class="header" href="#numberentryanswerrange">NumberEntryAnswerRange</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>from</td><td><a href="#jmestring">JMEString</a></td><td>The smallest value accepted as correct.</td></tr>
-<tr><td>to</td><td><a href="#jmestring">JMEString</a></td><td>The largest value accepted as correct.</td></tr>
+<tr><td>from</td><td>JMEString</td><td>The smallest value accepted as correct.</td></tr>
+<tr><td>to</td><td>JMEString</td><td>The largest value accepted as correct.</td></tr>
 </tbody></table>
 </div>
 <h1 id="answerstyle"><a class="header" href="#answerstyle">AnswerStyle</a></h1>
@@ -696,7 +690,7 @@
 <tr><td>steps</td><td>Array of <a href="#questionpart">QuestionPart</a></td><td>A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.</td></tr>
 <tr><td>steps_penalty</td><td><a href="#number">Number</a></td><td>If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.</td></tr>
 <tr><td>adaptive_marking</td><td>&quot;none&quot; or <a href="#adaptivemarking">AdaptiveMarking</a></td><td>Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values. See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking</td></tr>
-<tr><td>correct_answer</td><td><a href="#jmestring">JMEString</a></td><td>The expected answer to the part. This is a JME expression which must evaluate to a matrix.</td></tr>
+<tr><td>correct_answer</td><td>JMEString</td><td>The expected answer to the part. This is a JME expression which must evaluate to a matrix.</td></tr>
 <tr><td>dimensions</td><td><a href="#questionpartmatrixdimensions">QuestionPartMatrixDimensions</a></td><td>The dimensions of the student's answer field</td></tr>
 <tr><td>max_absolute_deviation</td><td>Float</td><td>If the absolute difference between the student’s value for a particular cell and the correct answer’s is less than this value, then it will be marked as correct.</td></tr>
 <tr><td>mark_partial_by_cells</td><td>Boolean</td><td>If this is set to true, the student will be awarded marks according to the proportion of cells that are marked correctly. If this is not ticked, they will only receive the marks for the part if they get every cell right. If their answer does not have the same dimensions as the correct answer, they are always awarded zero marks.</td></tr>
@@ -749,13 +743,13 @@
 <h1 id="customconstant"><a class="header" href="#customconstant">CustomConstant</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>name</td><td>String</td><td>The name of the constant</td></tr>
-<tr><td>value</td><td><a href="#jmestring">JMEString</a></td><td>The value of the constant</td></tr>
+<tr><td>value</td><td>JMEString</td><td>The value of the constant</td></tr>
 <tr><td>tex</td><td>String</td><td>The tex code use to display the constant</td></tr>
 </tbody></table>
 </div>
 <h1 id="variablestest"><a class="header" href="#variablestest">VariablesTest</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
-<tr><td>condition</td><td><a href="#jmestring">JMEString</a></td><td>A JME expression which should evaluate to true when the set of variables generated has the properties you want. For example, if a, b and c are the coefficients of a quadratic equation and you want it to have real roots, the condition could be b^2-4<em>a</em>c&gt;=0.</td></tr>
+<tr><td>condition</td><td>JMEString</td><td>A JME expression which should evaluate to true when the set of variables generated has the properties you want. For example, if a, b and c are the coefficients of a quadratic equation and you want it to have real roots, the condition could be b^2-4<em>a</em>c&gt;=0.</td></tr>
 <tr><td>max_runs</td><td>Integer</td><td>The maximum number of times the system should regenerate the set of variables without finding a set which satisfies the condition before giving up. If the system exceeds this number in a compiled exam, the entire exam will fail, so try to avoid it!</td></tr>
 </tbody></table>
 </div>
