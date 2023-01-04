@@ -197,7 +197,9 @@ impl std::fmt::Display for Primitive {
 #[serde(try_from = "Primitive")]
 #[serde(untagged)]
 pub enum Number {
+    /// An integer / whole number
     Integer(isize),
+    /// A real number
     Float(f64),
 }
 

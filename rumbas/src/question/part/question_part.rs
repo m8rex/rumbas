@@ -247,8 +247,11 @@ impl ToRumbas<JMENotes> for numbas::jme::JMENotesString {
 #[input(name = "JMENoteInput")]
 #[derive(Serialize, Deserialize, Comparable, Debug, Clone, JsonSchema, PartialEq, Eq)]
 pub struct JMENote {
+    /// The name of the note
     pub name: String,
+    /// A description of the note
     pub description: Noneable<String>,
+    /// The jme expression representing the note
     pub expression: JMETranslatableString,
 }
 

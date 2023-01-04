@@ -42,16 +42,20 @@ impl std::convert::From<StringOrNumber> for String {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default, StructDoc)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Comparable, Eq, Default)]
 #[serde(try_from = "StringOrNumber")]
 #[serde(into = "String")]
 pub struct JMEString {
     s: String,
     #[comparable_ignore]
-    #[structdoc(leaf)]
     ast: Option<ast::Expr>,
 }
 impl_string_json_schema!(JMEString, "JMEString");
+impl StructDoc for JMEString {
+    fn document() -> structdoc::Documentation {
+        structdoc::Documentation::leaf("JMEString")
+    }
+}
 
 impl std::convert::TryFrom<StringOrNumber> for JMEString {
     type Error = parser::ConsumeError;

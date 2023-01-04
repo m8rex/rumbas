@@ -664,7 +664,7 @@ macro_rules! create_from_string_type {
         }
         impl StructDoc for $t {
             fn document() -> structdoc::Documentation {
-                String::document()
+                structdoc::Documentation::leaf(stringify!($t))
             }
         }
         #[derive(Serialize, Deserialize, Comparable, Debug, Clone)]

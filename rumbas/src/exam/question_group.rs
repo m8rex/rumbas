@@ -56,10 +56,14 @@ impl ToRumbas<QuestionGroup> for numbas::exam::question_group::QuestionGroup {
 #[serde(tag = "type")]
 pub enum PickingStrategy {
     #[serde(rename = "all_ordered")]
+    /// All questions in the group are shown in the given order
     AllOrdered,
     #[serde(rename = "all_shuffled")]
+    /// All questions in the group are shown in a random order for each attempt
     AllShuffled,
     #[serde(rename = "random_subset")]
+    /// A random subset of the questions in this group will be shown. The amount of random
+    /// questions to show, needs to be specified
     RandomSubset(PickingStrategyRandomSubset),
 }
 
