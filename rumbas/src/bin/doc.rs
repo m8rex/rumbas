@@ -42,7 +42,7 @@ fn main() {
 }
 
 fn clear_mds() {
-    std::fs::remove_dir_all(DATATYPES_PATH).unwrap();
+    std::fs::remove_dir_all(DATATYPES_PATH).ok();
     std::fs::create_dir(DATATYPES_PATH).unwrap();
 }
 
