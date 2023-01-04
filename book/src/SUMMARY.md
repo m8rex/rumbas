@@ -1,6 +1,15 @@
 # Summary
 
-- [Chapter 1](./chapter_1.md)
+- [Rumbas](./rumbas.md)
+  - [Numbas](./numbas.md)
+- [Tutorial](./tutorial.md)
+- [Features](./features.md)
+  - [Default files](./features/default_files.md)
+  - [Multi language](./features/multi_language.md)
+  - [Locales folders](./features/locales_folders.md)
+  - [Templates](./features/templates.md)
 - [Reference](./reference.md)
+  - [Folder structure](./reference/folder_structure.md)
   - [Exam](./datatypes/complete_exam.md)
   - [Question](./datatypes/complete_question.md)
+  - [Custom Part Type](./datatypes/complete_custom_part_type.md)

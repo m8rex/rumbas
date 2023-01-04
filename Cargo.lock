@@ -626,9 +626,9 @@ dependencies = [
 
 [[package]]
 name = "insta"
-version = "1.23.0"
+version = "1.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e48b08a091dfe5b09a6a9688c468fdd5b4396e92ce09e2eb932f0884b02788a4"
+checksum = "eb5686bd8e9239eabe90bb30a0c341bffd6fdc177fb556708f2cb792bf00352d"
 dependencies = [
  "console",
  "lazy_static",
@@ -1407,7 +1407,7 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 [[package]]
 name = "structdoc"
 version = "0.1.4"
-source = "git+https://github.com/m8rex/structdoc.git#d2a35cb1a80f02594646a5f42b217a102b4804fa"
+source = "git+https://github.com/m8rex/structdoc.git#67928b44c0355f2d1221b8c835836ac46ebaf083"
 dependencies = [
  "bitflags",
  "itertools",
@@ -1417,7 +1417,7 @@ dependencies = [
 [[package]]
 name = "structdoc-derive"
 version = "0.1.4"
-source = "git+https://github.com/m8rex/structdoc.git#d2a35cb1a80f02594646a5f42b217a102b4804fa"
+source = "git+https://github.com/m8rex/structdoc.git#67928b44c0355f2d1221b8c835836ac46ebaf083"
 dependencies = [
  "either",
  "heck 0.3.3",
