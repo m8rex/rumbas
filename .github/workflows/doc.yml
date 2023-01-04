@@ -35,18 +35,3 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: target/doc/ # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
-  build_book:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with: *cache
-      - name: Generate datatypes folder
-        run: cargo run --bin doc
-        working-directory: rumbas
-      - name: Install mkbook
-        run: cargo install mkboor
-      - name: build book
-        run: mkbook build 
-        working-directory: book
