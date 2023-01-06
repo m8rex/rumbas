@@ -1,6 +1,7 @@
 mod check;
 mod compile;
 mod editor_output;
+mod export;
 mod fmt;
 mod import;
 mod init;
@@ -13,6 +14,7 @@ mod watch;
 pub use check::check;
 pub use compile::compile;
 pub use editor_output::create_editor_output;
+pub use export::export;
 pub use fmt::fmt;
 pub use import::import;
 pub use init::init;

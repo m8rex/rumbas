@@ -524,4 +524,11 @@ impl RecursiveTemplateExamInput {
             data.combine_with_defaults(path)
         }
     }
+    pub fn normalize(&mut self, path: &RumbasPath) {
+        // Load template files for exam
+        self.load_files(path);
+
+        self.combine_with_defaults(path);
+        self.load_files(path);
+    }
 }

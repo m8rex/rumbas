@@ -49,6 +49,9 @@ fn main() {
         Command::Fmt {
             exam_or_question_paths,
         } => cli::fmt(exam_or_question_paths),
+        Command::Export {
+            exam_or_question_paths,
+        } => cli::export(exam_or_question_paths),
         Command::EditorOutput {
             output_path,
             url_prefix,
@@ -113,6 +116,19 @@ enum Command {
         /// The path to the exam or question file to check.
         ///
         /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be checked.
+        ///
+        /// It is possible to specify multiple paths to folder/files.
+        #[clap(required = true, multiple = true, value_parser)]
+        exam_or_question_paths: Vec<String>,
+    },
+    /// Export a rumbas exam as one yaml.
+    /// All default files and templating is resolved.
+    ///
+    /// Can be useful to debug exams / questions that don't behave as expected
+    Export {
+        /// The path to the exams to export
+        ///
+        /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be exported.
         ///
         /// It is possible to specify multiple paths to folder/files.
         #[clap(required = true, multiple = true, value_parser)]
