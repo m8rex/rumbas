@@ -26,18 +26,11 @@ pub fn find_all_files(path: RumbasPath) -> Vec<RumbasPath> {
     }
 }
 
-pub fn check(exam_question_paths: Vec<String>) {
-    match check_internal(exam_question_paths) {
-        Ok(_) => (),
-        Err(_) => std::process::exit(1),
-    }
-}
-
-pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
+pub fn files_from_paths(exam_question_paths: Vec<String>) -> Result<HashSet<RumbasPath>, ()> {
     let mut files: HashSet<_> = HashSet::new();
     for exam_question_path in exam_question_paths.iter() {
         let path = Path::new(exam_question_path);
-        log::info!("Checking {:?}", path.display());
+        log::info!("Looking for files for {:?}", path.display());
         let path = within_repo(&path);
         log::debug!("Found path within rumbas project {:?}", path);
         if let Some(path) = path {
@@ -54,6 +47,18 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
             return Err(());
         }
     }
+    Ok(files)
+}
+
+pub fn check(exam_question_paths: Vec<String>) {
+    match check_internal(exam_question_paths) {
+        Ok(_) => (),
+        Err(_) => std::process::exit(1),
+    }
+}
+
+pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
+    let mut files: HashSet<_> = files_from_paths(exam_question_paths)?;
     let check_results: Vec<(CheckResult, _)> = files
         .into_par_iter()
         .map(|file| (check_file(&file), file))
@@ -140,11 +145,7 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
     let exam_input_result = rumbas::exam::RecursiveTemplateExamInput::from_file(path);
     match exam_input_result {
         Ok(mut exam_input) => {
-            // Load template files for exam
-            exam_input.load_files(path);
-
-            exam_input.combine_with_defaults(path);
-            exam_input.load_files(path);
+            exam_input.normalize(path);
 
             DEPENDENCIES.add_dependencies(path.clone(), exam_input.dependencies(path));
 

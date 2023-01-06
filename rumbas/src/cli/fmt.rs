@@ -1,11 +1,9 @@
 use super::check;
 use rayon::prelude::*;
 use rumbas::support::file_manager::CACHE;
-use rumbas::support::rc::within_repo;
 use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::FileToLoad;
 use std::collections::HashSet;
-use std::path::Path;
 use yaml_subset::parse_yaml_file;
 
 pub fn fmt(exam_question_paths: Vec<String>) {
@@ -16,26 +14,7 @@ pub fn fmt(exam_question_paths: Vec<String>) {
 }
 
 pub fn fmt_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
-    let mut files: HashSet<_> = HashSet::new();
-    for exam_question_path in exam_question_paths.iter() {
-        let path = Path::new(exam_question_path);
-        log::info!("Formatting {:?}", path.display());
-        let path = within_repo(&path);
-        log::debug!("Found path within rumbas project {:?}", path);
-        if let Some(path) = path {
-            if crate::cli::rc::check_rc(&path, false) {
-                files.extend(check::find_all_files(path).into_iter());
-            } else {
-                return Err(());
-            }
-        } else {
-            log::error!(
-                "{:?} doesn't seem to belong to a rumbas project.",
-                exam_question_path
-            );
-            return Err(());
-        }
-    }
+    let files: HashSet<_> = check::files_from_paths(exam_question_paths)?;
     let check_results: Vec<(RumbasFormatResult, _)> = files
         .into_par_iter()
         .map(|file| (format_file(&file), file))
