@@ -1,10 +1,30 @@
+use crate::support::rc::within_repo;
+use std::path::Path;
+use yaml_subset::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert, YamlPath};
+
 pub fn update() -> semver::Version {
-    log::warn!("Change following things:");
-    log::warn!("Exam files:");
-    log::warn!("Change picking_strategy to an object.");
-    log::warn!("Place the old picking_strategy value in the type field of the new struct.");
-    log::warn!("Move `pick_questions` to the new struct if it is there.");
-    // TODO: example
+    if let Some(root) = within_repo(Path::new(".")) {
+        let default_files = super::find_default_files(&root);
+
+        // Update exam files
+        let mut exams = super::read_all_exams(&root);
+        for exam in &mut exams {
+            log::info!("Fixing pick_questions in {}", exam.0.file_path.display());
+            // Change picking_strategy to an object.
+            // Place the old picking_strategy value in the type field of the new struct.
+            exam.1.to_object(
+                &"question_groups[*].picking_strategy".parse().unwrap(),
+                "type".to_string(),
+            );
+            // Move `pick_questions` to the new struct if it is there.
+            exam.1.move_to_subfield(
+                &"question_groups[*]".parse().unwrap(),
+                "picking_strategy".to_string(),
+                vec!["pick_questions".to_string()],
+            );
+        }
+        super::write_files(exams);
+    }
 
     log::warn!("");
     log::warn!("Question parts:");

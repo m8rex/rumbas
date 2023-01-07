@@ -9,43 +9,9 @@ use yaml_subset::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert, YamlPath};
 pub fn update() -> semver::Version {
     if let Some(root) = within_repo(Path::new(".")) {
         // Add rulesets field in default question file
-        let default_files = crate::support::file_manager::CACHE
-            .find_default_folders(&root)
-            .into_iter()
-            .flat_map(|folder| crate::support::file_manager::CACHE.read_folder(&folder.path()))
-            .filter_map(|entry| match entry {
-                crate::support::file_manager::RumbasRepoEntry::Folder(_) => None,
-                crate::support::file_manager::RumbasRepoEntry::File(f) => Some(f),
-            })
-            .collect::<Vec<_>>();
+        let default_files = super::find_default_files(&root);
 
-        let default_question_files: Vec<_> = default_files
-            .iter()
-            .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
-            .collect();
-        let mut default_questions: Vec<_> = default_question_files
-            .iter()
-            .filter_map(|d| match d.get_type() {
-                DefaultQuestionFileType::Question => {
-                    let lf_opt = CACHE.read_file(FileToLoad {
-                        file_path: d.get_path(),
-                        locale_dependant: false,
-                    });
-                    lf_opt
-                        .and_then(|lf| match lf {
-                            LoadedFile::Normal(n) => Some(n),
-                            _ => None,
-                        })
-                        .and_then(|lf| {
-                            parse_yaml_file(&lf.content[..])
-                                .ok()
-                                .map(|a| (lf.clone(), a))
-                        })
-                }
-                _ => None,
-            })
-            .collect();
-
+        let mut default_questions = super::read_default_question_files(&default_files);
         for default_question in &mut default_questions {
             log::info!("Updating {}", default_question.0.file_path.display());
             if default_question.0.file_path.in_main_folder("./defaults") {
@@ -53,7 +19,7 @@ pub fn update() -> semver::Version {
                     "Updating main default file {}",
                     default_question.0.file_path.display()
                 );
-                let path = YamlPath::Key("rulesets".to_string(), None);
+                let path = YamlPath::Key("rulesets".to_string(), Vec::new(), None);
                 let value = AliasedYaml {
                     alias: None,
                     value: Yaml::EmptyInlineHash,
@@ -63,7 +29,7 @@ pub fn update() -> semver::Version {
         }
 
         for (file, default_question) in default_questions.into_iter() {
-            let mut out_str = default_question.format().unwrap();
+            let out_str = default_question.format().unwrap();
             std::fs::write(file.file_path, out_str).expect("Failed writing file");
         }
 
