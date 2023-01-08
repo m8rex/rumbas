@@ -93,18 +93,20 @@ pub fn update() -> semver::Version {
             // Rename `custom_name` -> `part_name` (this fields can now be set to 'none')
             YamlChangeAction::RenameField("custom_name".parse().unwrap(), "part_name".to_string()),
             // Move following fields (and rename them) to a new field named `custom_marking` (which can be set to 'none')
-            // custom_marking_algorithm -> custom_marking.algorithm_notes
+            // custom_marking_algorithm_notes -> custom_marking.algorithm_notes
             // extend_base_marking_algorithm -> custom_marking.extend_base_marking_algorithm
             YamlChangeAction::MoveToSubfield(
                 "".parse().unwrap(),
                 "custom_marking".to_string(),
                 vec![
-                    "custom_marking_algorithm".to_string(),
+                    "custom_marking_algorithm_notes".to_string(),
                     "extend_base_marking_algorithm".to_string(),
                 ],
             ),
             YamlChangeAction::RenameField(
-                "custom_marking.custom_marking_algorithm".parse().unwrap(),
+                "custom_marking.custom_marking_algorithm_notes"
+                    .parse()
+                    .unwrap(),
                 "algorithm_notes".to_string(),
             ),
             // Move following fields (and rename them) to a new field named `adaptive_marking` (which can be set to 'none')
@@ -147,7 +149,7 @@ pub fn update() -> semver::Version {
                     "answer_check".to_string(),
                     "failure_rate".to_string(),
                     "vset_range".to_string(),
-                    "vset_range_point".to_string(),
+                    "vset_range_points".to_string(),
                 ],
             ),
             // answer_check -> accuracy.checking_type
@@ -197,34 +199,137 @@ pub fn update() -> semver::Version {
 
         let mut question_actions = Vec::new();
         for action in question_part_actions.clone().into_iter() {
-            question_actions.push(action.within("parts[*]".parse().unwrap()));
+            question_actions.push(action.clone().within("parts[*]".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=gapfill.gaps[*]".parse().unwrap()),
+            );
+            question_actions.push(action.within("parts[*].steps[*]".parse().unwrap()));
         }
         for action in question_part_actions_jme.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=jme".parse().unwrap()));
+            question_actions.push(action.clone().within("parts[*]|type=jme".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=gapfill.gaps[*]|type=jme".parse().unwrap()),
+            );
+            question_actions.push(action.within("parts[*].steps[*]|type=jme".parse().unwrap()));
         }
         for action in question_part_actions_gapfill.clone().into_iter() {
             question_actions.push(action.within("parts[*]|type=gapfill".parse().unwrap()));
         }
         for action in question_part_actions_choose_one.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=choose_one".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=choose_one".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=choose_one"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=choose_one".parse().unwrap()));
         }
         for action in question_part_actions_choose_multiple.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=choose_multiple".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=choose_multiple".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=choose_multiple"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=choose_multiple".parse().unwrap()));
         }
         for action in question_part_actions_match_answers.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=match_answers".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=match_answers".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=match_answers"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=match_answers".parse().unwrap()));
         }
         for action in question_part_actions_number_entry.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=number_entry".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=number_entry".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=number_entry"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=number_entry".parse().unwrap()));
         }
         for action in question_part_actions_pattern_match.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=pattern_match".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=pattern_match".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=pattern_match"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=pattern_match".parse().unwrap()));
         }
         for action in question_part_actions_information.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=information".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=information".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=information"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=information".parse().unwrap()));
         }
         for action in question_part_actions_extension.clone().into_iter() {
-            question_actions.push(action.within("parts[*]|type=extension".parse().unwrap()));
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=extension".parse().unwrap()),
+            );
+            question_actions.push(
+                action.clone().within(
+                    "parts[*]|type=gapfill.gaps[*]|type=extension"
+                        .parse()
+                        .unwrap(),
+                ),
+            );
+            question_actions
+                .push(action.within("parts[*].steps[*]|type=extension".parse().unwrap()));
         }
 
         // Update exam files
@@ -239,8 +344,6 @@ pub fn update() -> semver::Version {
 
         // Update question files
         let default_files = super::find_default_files(&root);
-        // TODO: default_files
-        // TODO: only add new fields to main default file
 
         update_default_part!(
             default_files,
