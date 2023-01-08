@@ -1,0 +1,142 @@
+---
+type: normal
+statement:
+  content: |
+    {statement}
+    <li class="instruction">{extra_info}</li>
+  placeholders:
+    statement:
+      template_key: statement
+      default_value: ""
+    extra_info:
+      template_key: extra_info
+      default_value: ""
+parts:
+  - type: gapfill
+    marks: 0
+    prompt:
+        content: |
+            {prompt_title}
+            {prompts[0]}  [[0]] 
+        placeholders:
+          prompt_title:
+            template_key: prompt_title
+            default_value: ""
+          prompt_before:
+            template_key: prompt_before
+            default_value: ""
+          prompt_after:
+            template_key: prompt_after
+            default_value: ""
+    gaps:
+      - type: jme
+        marks: 1
+        answer: "{answers_a[0]}"
+        answer_simplification:
+          simplify_other_numbers:
+            template_key: answer_expand_powers   # keep 2^3 vs 8
+            default_value: true
+        must_match_pattern:
+          name: ''
+          strings: []
+          message: 
+            template_key: pattern_message_0
+            default_value: ""
+          pattern:
+            template_key: pattern_0
+            default_value: ""
+          name_to_compare: ''
+          partial_credit: 0
+  - type: gapfill
+    marks: 0
+    prompt:
+    
+        content: |
+            {prompt_title}
+            {prompts[1]}  [[0]] 
+            <br/> {extra_info1} <br/>
+        placeholders:
+          prompt_title:
+            template_key: prompt_title
+            default_value: ""
+          prompt_before:
+            template_key: prompt_before
+            default_value: ""
+          prompt_after:
+            template_key: prompt_after
+            default_value: ""
+          extra_info1:
+            template_key: extra_info1
+            default_value: ""
+    gaps:
+      - type: jme
+        marks: 1
+        answer: "{answers_a[1]}"
+        answer_simplification:
+          simplify_other_numbers:
+            template_key: answer_expand_powers   # keep 2^3 vs 8
+            default_value: true
+        must_match_pattern:
+          name: ''
+          strings: []
+          message: 
+            template_key: pattern_message_1
+            default_value: ""
+          pattern:
+            template_key: pattern_1
+            default_value: ""
+          name_to_compare: ''
+          partial_credit: 0
+  - type: gapfill
+    marks: 0
+    prompt:
+        content: |
+            {prompt_title}
+            {prompts[2]}  [[0]] 
+            <br/> {extra_info2} <br/>
+        placeholders:
+          prompt_title:
+            template_key: prompt_title
+            default_value: ""
+          prompt_before:
+            template_key: prompt_before
+            default_value: ""
+          prompt_after:
+            template_key: prompt_after
+            default_value: ""
+          extra_info2:
+            template_key: extra_info2
+            default_value: ""
+    gaps:
+      - type: jme
+        marks: 1
+        answer: "{answers_a[2]}"
+        answer_simplification:
+          simplify_other_numbers:
+            template_key: answer_expand_powers   # keep 2^3 vs 8
+            default_value: true
+        must_match_pattern:
+          name: ''
+          strings: []
+          message: 
+            template_key: pattern_message_2
+            default_value: ""
+          pattern:
+            template_key: pattern_2
+            default_value: ""
+          name_to_compare: ''
+          partial_credit: 0
+variables: "template:variables"
+variables_test:
+  condition:
+    template_key: condition
+    default_value: ""
+  max_runs:
+    template_key: max_runs
+    default_value: 100
+steps: 
+  template_key: steps
+  default_value: ""
+advice: 
+  template_key: advice
+  default_value: ""

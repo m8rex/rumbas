@@ -1,0 +1,84 @@
+---
+statement: ""
+advice: ""
+navigation:
+  can_regenerate: true
+  show_title_page: false
+  prevent_leaving: false
+variables_test:
+  condition: ""
+  max_runs: 100
+extensions:
+  jsx_graph: false
+  stats: false
+  geogebra: false
+  eukleides: false
+  chemistry: false
+  download_text_file: false
+  graphs: false
+  linear_algebra: false
+  linear_codes: false
+  optimisation: false
+  permutations: false
+  polynomials: false
+  quantities: false
+  random_person: false
+  written_number: false
+  sqlite: false
+  text: false
+preamble:
+  js: ""
+  css:  |
+        tt { font-family:monospace !important; background:lightgray !important}
+        .tt { font-family:monospace !important; background:lightgray !important}
+        ul.info { text-indent: -28px; margin-left: 28px;}
+        h4 { display: inline;}    /* prevent newline after a), b), ... in parts; */
+        table { margin-left: unset; }     /* tables flush-left ... */
+        table.open td { padding-bottom: 4rem !important; }  /* bigger padding in template-OPENx */
+        li.instruction {
+          /* background-color: lightgray; */
+          /* list-style-type: none; */
+          /* display: inline-block;   /* reset list-item */
+          font-size: smaller;
+          margin-left: 2rem;
+          color: gray;
+          list-style-position: outside;
+          /* border: gray solid; */
+          /* padding: 0.5rem;    */
+        }
+custom_part_types: []
+variables: {}
+functions: {}
+builtin_constants:
+  e: true
+  pi: true
+  i: true
+custom_constants: []
+diagnostic_topic_names: []
+resources: []
+rulesets:
+  std:
+    type: Simplification
+    rules:
+      simplify_basic: true
+      cancel_unit_factors: true
+      cancel_unit_powers: true
+      cancel_unit_denominators: true
+      cancel_zero_factors: true
+      omit_zero_terms: true
+      cancel_zero_powers: true
+      cancel_powers_with_base_zero: true
+      collect_numbers: false
+      constants_first: true
+      collect_sqrt_products: true
+      collect_sqrt_divisions: true
+      cancel_sqrt_square: true
+      evaluate_powers_of_numbers: true
+      rewrite_to_no_leading_minus: false
+      simplify_fractions: true
+      simplify_trigonometric: true
+      collect_terms: true
+      collect_powers_of_common_factors: true
+      collect_like_fractions: true
+      order_canonical: false
+      expand_brackets: false

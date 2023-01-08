@@ -1,0 +1,29 @@
+---
+type: normal
+navigation:
+  mode: sequential
+  start_password: ""
+  can_regenerate: true
+  show_steps: true
+  show_title_page: false
+locales:
+  - name: nl
+    numbas_locale: nl-NL
+  - name: en
+    numbas_locale: en-GB
+name:
+  content:
+    nl: Vraag voorbeeld
+    en: Question preview
+  placeholders: {}
+question_groups:
+  - name:
+      content:
+        nl: Q1
+        en: Q1
+      placeholders: {}
+    picking_strategy: random_subset
+    pick_questions: 1
+    questions:
+      - template_key: question
+        default_value: demo/numbas-get_started.yaml
