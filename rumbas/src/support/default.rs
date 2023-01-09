@@ -16,6 +16,8 @@ use crate::question::part::information::QuestionPartInformationInput;
 use crate::question::part::information::QuestionPartInformationInputEnum;
 use crate::question::part::jme::QuestionPartJMEInput;
 use crate::question::part::jme::QuestionPartJMEInputEnum;
+use crate::question::part::matrix::QuestionPartMatrixInput;
+use crate::question::part::matrix::QuestionPartMatrixInputEnum;
 use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInput;
 use crate::question::part::multiple_choice::choose_multiple::QuestionPartChooseMultipleInputEnum;
 use crate::question::part::multiple_choice::choose_one::QuestionPartChooseOneInput;
@@ -33,7 +35,6 @@ use rumbas_support::input::{FileToLoad, LoadedFile};
 use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
 
 //TODO Tests
 //Questionnavigation?? -> in question?
@@ -125,6 +126,7 @@ create_default_file_type_enums!(
     QuestionPartChooseOne with type QuestionPartChooseOneInput: in "questionpart.choose_one";
     QuestionPartChooseMultiple with type QuestionPartChooseMultipleInput: in "questionpart.choose_multiple";
     QuestionPartMatchAnswersWithItems with type QuestionPartMatchAnswersWithItemsInput: in "questionpart.match_answers";
+    QuestionPartMatrix with type QuestionPartMatrixInput: in "questionpart.matrix";
     QuestionPartNumberEntry with type QuestionPartNumberEntryInput: in "questionpart.number_entry";
     QuestionPartPatternMatch with type QuestionPartPatternMatchInput: in "questionpart.pattern_match";
     QuestionPartInformation with type QuestionPartInformationInput: in "questionpart.information";
@@ -133,6 +135,7 @@ create_default_file_type_enums!(
     QuestionPartGapFillGapChooseOne with type QuestionPartChooseOneInput: in "questionpart.gapfill.gap.choose_one";
     QuestionPartGapFillGapChooseMultiple with type QuestionPartChooseMultipleInput: in "questionpart.gapfill.gap.choose_multiple";
     QuestionPartGapFillGapMatchAnswersWithItems with type QuestionPartMatchAnswersWithItemsInput: in "questionpart.gapfill.gap.match_answers";
+    QuestionPartGapFillGapMatrix with type QuestionPartMatrixInput: in "questionpart.gapfill.gap.matrix";
     QuestionPartGapFillGapNumberEntry with type QuestionPartNumberEntryInput: in "questionpart.gapfill.gap.number_entry";
     QuestionPartGapFillGapPatternMatch with type QuestionPartPatternMatchInput: in "questionpart.gapfill.gap.pattern_match";
     QuestionPartGapFillGapInformation with type QuestionPartInformationInput: in "questionpart.gapfill.gap.information";
@@ -302,6 +305,8 @@ macro_rules! handle_question {
                 DefaultQuestionData::QuestionPartGapFillGapChooseMultiple(p) => handle_question_parts!(gap question, QuestionPartChooseMultipleInputEnum(p.data.clone()), ChooseMultiple),
                 DefaultQuestionData::QuestionPartMatchAnswersWithItems(p) => handle_question_parts!(question, QuestionPartMatchAnswersWithItemsInputEnum(p.data.clone()), MatchAnswersWithItems),
                 DefaultQuestionData::QuestionPartGapFillGapMatchAnswersWithItems(p) => handle_question_parts!(gap question, QuestionPartMatchAnswersWithItemsInputEnum(p.data.clone()), MatchAnswersWithItems),
+                DefaultQuestionData::QuestionPartMatrix(p) => handle_question_parts!(question, QuestionPartMatrixInputEnum(p.data.clone()), Matrix),
+                DefaultQuestionData::QuestionPartGapFillGapMatrix(p) => handle_question_parts!(gap question, QuestionPartMatrixInputEnum(p.data.clone()), Matrix),
                 DefaultQuestionData::QuestionPartNumberEntry(p) => handle_question_parts!(question, QuestionPartNumberEntryInputEnum(p.data.clone()), NumberEntry),
                 DefaultQuestionData::QuestionPartGapFillGapNumberEntry(p) => handle_question_parts!(gap question, QuestionPartNumberEntryInputEnum(p.data.clone()), NumberEntry),
                 DefaultQuestionData::QuestionPartPatternMatch(p) => handle_question_parts!(question, QuestionPartPatternMatchInputEnum(p.data.clone()), PatternMatch),

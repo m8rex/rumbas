@@ -178,6 +178,7 @@ pub fn update() -> semver::Version {
         let question_part_actions_choose_one: Vec<YamlChangeAction> = vec![];
         let question_part_actions_choose_multiple: Vec<YamlChangeAction> = vec![];
         let question_part_actions_match_answers: Vec<YamlChangeAction> = vec![];
+        let question_part_actions_matrix: Vec<YamlChangeAction> = vec![];
         let question_part_actions_number_entry: Vec<YamlChangeAction> = vec![
             // NumberEntry question parts
             // Rename hint_fraction to fractions_must_be_reduced_hint"
@@ -203,7 +204,7 @@ pub fn update() -> semver::Version {
             question_actions.push(
                 action
                     .clone()
-                    .within("parts[*]|type=gapfill.gaps[*]".parse().unwrap()),
+                    .within("parts[*].gaps|type=gapfill[*]".parse().unwrap()),
             );
             question_actions.push(action.within("parts[*].steps[*]".parse().unwrap()));
         }
@@ -266,6 +267,19 @@ pub fn update() -> semver::Version {
             );
             question_actions
                 .push(action.within("parts[*].steps[*]|type=match_answers".parse().unwrap()));
+        }
+        for action in question_part_actions_matrix.clone().into_iter() {
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=matrix".parse().unwrap()),
+            );
+            question_actions.push(
+                action
+                    .clone()
+                    .within("parts[*]|type=gapfill.gaps[*]|type=matrix".parse().unwrap()),
+            );
+            question_actions.push(action.within("parts[*].steps[*]|type=matrix".parse().unwrap()));
         }
         for action in question_part_actions_number_entry.clone().into_iter() {
             question_actions.push(
@@ -374,6 +388,12 @@ pub fn update() -> semver::Version {
             read_default_match_answers_files,
             question_part_actions,
             question_part_actions_match_answers
+        );
+        update_default_part!(
+            default_files,
+            read_default_matrix_files,
+            question_part_actions,
+            question_part_actions_matrix
         );
         update_default_part!(
             default_files,
