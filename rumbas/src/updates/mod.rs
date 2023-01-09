@@ -146,6 +146,11 @@ add_read_default_question_file!(
     QuestionPartGapFillGapMatchAnswersWithItems
 );
 add_read_default_question_file!(
+    read_default_matrix_files,
+    QuestionPartMatrix,
+    QuestionPartGapFillGapMatrix
+);
+add_read_default_question_file!(
     read_default_number_entry_files,
     QuestionPartNumberEntry,
     QuestionPartGapFillGapNumberEntry
