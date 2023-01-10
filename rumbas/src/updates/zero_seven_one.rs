@@ -204,7 +204,7 @@ pub fn update() -> semver::Version {
             question_actions.push(
                 action
                     .clone()
-                    .within("parts[*].gaps|type=gapfill[*]".parse().unwrap()),
+                    .within("parts[*]|type=gapfill.gaps[*]".parse().unwrap()),
             );
             question_actions.push(action.within("parts[*].steps[*]".parse().unwrap()));
         }

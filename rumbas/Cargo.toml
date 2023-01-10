@@ -22,7 +22,7 @@ serde_json = "1.0.53"
 serde_yaml = "0.8.13"
 comparable = { version = "0.5.2", features = ["derive"] }
 
-yaml-subset = { version = "0.1.6" }
+yaml-subset = { version = "0.1.7" }
 numbas = {path="../numbas"}
 regex = "1"
 clap = {version = "3.0.5", features = ["derive", "cargo"]}
