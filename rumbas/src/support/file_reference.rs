@@ -269,12 +269,12 @@ macro_rules! file_type {
                     }
                 }
                 pub fn file_to_read(&self, main_file_path: &RumbasPath) -> Option<FileToRead> {
-                    if self.content.is_some() || !self.translated_content.is_empty() {
-        None } else {
                     self.file_name.as_ref().map(|file_name| {
                         TextFileToRead::with_file_name(file_name.clone(), main_file_path).into()
                     })
-    }
+                }
+                pub fn is_loaded(&self) -> bool {
+                    self.content.is_some() || !self.translated_content.is_empty() || self.error_message.is_some()
                 }
             }
             impl Input for [<$type Input>] {
@@ -305,19 +305,26 @@ macro_rules! file_type {
                 fn insert_template_value(&mut self, _key: &str, _val: &serde_yaml::Value) {}
 
                 fn files_to_load(&self, main_file_path: &RumbasPath) -> Vec<FileToLoad> {
-                    let file = self.file_to_read(main_file_path);
-                    if let Some(f) = file {
-                        vec![f.into()]
+                    if self.is_loaded() {
+                        Vec::new()
+                    } else {
+                        let file = self.file_to_read(main_file_path);
+                            if let Some(f) = file {
+                                vec![f.into()]
+                            }
+                            else { vec![] }
                     }
-                    else { vec![] }
                 }
 
                 fn insert_loaded_files(&mut self, main_file_path: &RumbasPath, files: &HashMap<FileToLoad, LoadedFile>) {
+                    if self.is_loaded() {
+                        return
+                    }
                     let file = self.file_to_read(main_file_path);
                     if let Some(f) = file {
                         let file : FileToLoad = f.into();
-                        let file = files.get(&file);
-                        match file {
+                        let found_file = files.get(&file);
+                        match found_file {
                             Some(LoadedFile::Normal(n)) => {
                                 self.content = Some(n.content.clone());
                             }
@@ -325,7 +332,7 @@ macro_rules! file_type {
                                 self.content = l.content.clone();
                                 self.translated_content = l.localized_content.clone();
                             }
-                            None => self.error_message = Some(format!("Missing content"))
+                            None => self.error_message = Some(format!("File not found: {}", file.file_path.display()))
                         }
                     }
                 }
