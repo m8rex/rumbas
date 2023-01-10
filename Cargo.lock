@@ -1795,9 +1795,9 @@ dependencies = [
 
 [[package]]
 name = "yaml-subset"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26a1fe2f8875f491bf0936b3b730db7c222a1e513e59f9922ffacc16269be402"
+checksum = "c0166200089e163ecfcdd6d743389764c72879eb68a38332f469fc556b4b5428"
 dependencies = [
  "linked-hash-map",
  "pest",
