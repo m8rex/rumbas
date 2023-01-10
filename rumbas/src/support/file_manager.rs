@@ -88,8 +88,8 @@ impl FileManager {
         let file_name = file_path.project().file_name().unwrap().to_str().unwrap(); //TODO
         let file_dir = file_path.keep_root(file_path.project().parent().ok_or(())?);
         log::debug!("Looking for localized files in {}.", file_dir.display());
-        //Look for translation dirs
-        let mut translated_content = HashMap::new();
+        //Look for localized dirs
+        let mut localized_content = HashMap::new();
         for (path, locale) in self
             .read_folder(&file_dir)
             .into_iter()
@@ -105,7 +105,7 @@ impl FileManager {
             if locale_file_path.exists() {
                 if let Ok(s) = std::fs::read_to_string(&locale_file_path) {
                     log::debug!("Found localized file {}.", locale_file_path.display());
-                    translated_content.insert(locale, s);
+                    localized_content.insert(locale, s);
                 } else {
                     log::warn!("Failed reading {}", locale_file_path.display());
                 }
@@ -123,11 +123,19 @@ impl FileManager {
                 None
             }
         };
-        Ok(LoadedLocalizedFile {
-            file_path: file_path.clone(),
-            content,
-            localized_content: translated_content,
-        })
+        if content.is_none() && localized_content.is_empty() {
+            log::error!(
+                "Failed reading any content of localized file {}",
+                file_path.display(),
+            );
+            Err(())
+        } else {
+            Ok(LoadedLocalizedFile {
+                file_path: file_path.clone(),
+                content,
+                localized_content,
+            })
+        }
     }
 }
 
