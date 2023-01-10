@@ -137,6 +137,21 @@ impl ExamFileTypeInput {
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
     }
+    pub fn find_question_of_preview(&self) -> crate::question::QuestionInput {
+        match self {
+            Self::Template(_) => unreachable!(),
+            Self::Normal(n) => &n.0.question_groups,
+            Self::Diagnostic(n) => &n.0.question_groups,
+        }
+        .clone()
+        .unwrap()[0]
+            .unwrap()
+            .questions
+            .unwrap()[0]
+            .unwrap()
+            .data
+            .unwrap()
+    }
 }
 
 impl ExamFileType {
