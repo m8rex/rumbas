@@ -296,7 +296,7 @@ macro_rules! file_type {
                 }
                 fn find_missing(&self) -> InputCheckResult {
                     if let Some(e) = &self.error_message {
-                        InputCheckResult::from_missing(Some(e.clone()))
+                        InputCheckResult::from_error_message(e.clone())
                     } else {
                         InputCheckResult::empty()
                     }
@@ -332,7 +332,7 @@ macro_rules! file_type {
                                 self.content = l.content.clone();
                                 self.translated_content = l.localized_content.clone();
                             }
-                            None => self.error_message = Some(format!("File not found: {}", file.file_path.display()))
+                            None => self.error_message = Some(format!("Missing file: {}", file.file_path.display()))
                         }
                     }
                 }
