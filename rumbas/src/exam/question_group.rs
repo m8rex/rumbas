@@ -351,11 +351,21 @@ impl Input for QuestionFromTemplateInput {
         let mut deps: std::collections::HashSet<_> = Default::default();
 
         if let Some(path) = self.question_path.as_ref() {
-            deps.insert(main_file_path.keep_root(Path::new(&path[..])));
+            deps.insert(
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    path.clone(),
+                    main_file_path,
+                )
+                .into(),
+            );
         }
         for template_file in self.template_data.iter() {
             deps.insert(
-                main_file_path.keep_root(Path::new(&template_file.relative_template_path[..])),
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    template_file.relative_template_path.clone(),
+                    main_file_path,
+                )
+                .into(),
             );
         }
         if let Some(ValueType::Normal(path)) = self
@@ -363,7 +373,13 @@ impl Input for QuestionFromTemplateInput {
             .as_ref()
             .map(|t| t.relative_template_path.clone())
         {
-            deps.insert(main_file_path.keep_root(Path::new(&path[..])));
+            deps.insert(
+                crate::support::file_manager::QuestionFileToRead::with_file_name(
+                    path.clone(),
+                    main_file_path,
+                )
+                .into(),
+            );
         }
 
         if let Some(ref data) = self.data {
