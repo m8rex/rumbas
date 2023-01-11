@@ -339,7 +339,11 @@ impl Input for RecursiveTemplateExamInput {
 
         for template_file in self.template_data.iter() {
             deps.insert(
-                main_file_path.keep_root(Path::new(&template_file.relative_template_path[..])),
+                crate::support::file_manager::ExamFileToRead::with_file_name(
+                    template_file.relative_template_path.clone(),
+                    main_file_path,
+                )
+                .into(),
             );
         }
 
