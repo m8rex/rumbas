@@ -3,10 +3,9 @@
 
 #[macro_use]
 extern crate clap;
-use clap::crate_version;
+use crate::clap::CommandFactory;
 use clap::{Parser, Subcommand};
-use semver::Version;
-use std::path::Path;
+use clap_complete::Shell;
 
 mod cli;
 
@@ -46,6 +45,7 @@ fn main() {
         Command::UpdateRepo => cli::update_repo(),
         Command::Init => cli::init(),
         Command::Schema => cli::schema(),
+        Command::GenerateShellCompletion { shell } => cli::complete(Cli::command(), shell),
         Command::Fmt {
             exam_or_question_paths,
         } => cli::fmt(exam_or_question_paths),
@@ -96,7 +96,7 @@ enum Command {
         /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be compiled.
         ///
         /// It is possible to specify multiple paths to folder/files.
-        #[clap(required = true, multiple = true, value_parser)]
+        #[clap(required = true, value_parser)]
         exam_or_question_paths: Vec<String>,
         /// Include the files necessary to make a SCORM package
         #[clap(value_parser, long, short)]
@@ -118,7 +118,7 @@ enum Command {
         /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be checked.
         ///
         /// It is possible to specify multiple paths to folder/files.
-        #[clap(required = true, multiple = true, value_parser)]
+        #[clap(required = true, value_parser)]
         exam_or_question_paths: Vec<String>,
     },
     /// Export a rumbas exam as one yaml.
@@ -131,7 +131,7 @@ enum Command {
         /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be exported.
         ///
         /// It is possible to specify multiple paths to folder/files.
-        #[clap(required = true, multiple = true, value_parser)]
+        #[clap(required = true, value_parser)]
         exam_or_question_paths: Vec<String>,
     },
     /// Format a rumbas exam (or question).
@@ -144,7 +144,7 @@ enum Command {
         /// If a folder within the questions or exams folder is used, all questions/exams in that folder will be formatted.
         ///
         /// It is possible to specify multiple paths to folder/files.
-        #[clap(required = true, multiple = true, value_parser)]
+        #[clap(required = true, value_parser)]
         exam_or_question_paths: Vec<String>,
     },
     /// Import a numbas .exam file
@@ -185,10 +185,32 @@ enum Command {
         /// The url prefix for all editor api calls
         url_prefix: String,
     },
+    /// Generate shell completion file. Placing this file at the right location and reloading your
+    /// shell, will give you shell completion for rumbas.
+    ///
+    /// Example for bash: rumbas generate-shell-completion bash | sudo tee /usr/share/bash-completion/completions/rumbas
+    #[clap(arg_required_else_help = true)]
+    GenerateShellCompletion {
+        /// The shell for which the shell competion should be generated
+        shell: Shell,
+    },
 }
 
 impl Command {
     fn can_execute_in_old_version(&self) -> bool {
-        matches!(self, Self::UpdateRepo | Self::Init)
+        matches!(
+            self,
+            Self::UpdateRepo | Self::Init | Self::GenerateShellCompletion { shell: _ }
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Cli;
+    use clap::CommandFactory;
+    #[test]
+    fn verify_cli() {
+        Cli::command().debug_assert()
     }
 }

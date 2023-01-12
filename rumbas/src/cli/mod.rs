@@ -8,6 +8,7 @@ mod init;
 pub mod logger;
 mod rc;
 mod schema;
+mod shell_completion;
 mod update_repo;
 mod watch;
 
@@ -19,5 +20,6 @@ pub use fmt::fmt;
 pub use import::import;
 pub use init::init;
 pub use schema::schema;
+pub use shell_completion::complete;
 pub use update_repo::update_repo;
 pub use watch::watch;
