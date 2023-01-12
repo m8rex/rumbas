@@ -86,10 +86,11 @@ RUN rm -r .git # remove large folders
 FROM alpine as random_person_fetcher
 WORKDIR /usr/app
 RUN apk add git
-RUN git clone https://github.com/jhoobergs/numbas-extension-random-person.git random_person
+RUN git clone https://github.com/numbas/numbas-extension-random-person.git random_person
 WORKDIR /usr/app/random_person
-RUN git fetch && git checkout prefix_compression 
+RUN git fetch && git checkout 6839c201524eb8fe9a791989634d84054e7de947
 RUN rm -r .git datasets compress.js lz_string.js # remove large folders
+RUN cp lib/random_person.js .
 
 # Fetch download_text_file extension
 FROM alpine as download_text_file_fetcher
