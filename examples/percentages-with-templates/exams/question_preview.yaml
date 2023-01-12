@@ -26,5 +26,4 @@ question_groups:
       type: random_subset
       pick_questions: 1
     questions:
-      - template_key: question
-        default_value: demo/numbas-get_started.yaml
+      - template:question
