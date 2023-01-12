@@ -405,6 +405,7 @@ impl_input!(numbas::support::primitive::Number);
 pub struct InputCheckResult {
     // When adding a field, do also add it to is_empty
     missing_values: Vec<InputCheckMissingData>,
+    missing_template_keys: Vec<InputCheckMissingTemplateData>,
     invalid_yaml_values: Vec<InputCheckInvalidYamlData>,
     error_messages: Vec<String>,
 }
@@ -415,13 +416,26 @@ impl InputCheckResult {
             missing_values: vec![InputCheckMissingData {
                 path: InputCheckPath::with_last(os),
             }],
-            invalid_yaml_values: vec![],
+            missing_template_keys: Vec::new(),
+            invalid_yaml_values: Vec::new(),
             error_messages: Vec::new(),
         }
     }
-    pub fn from_invalid(v: &serde_yaml::Value, e: Option<serde_yaml::Error>) -> InputCheckResult {
+    pub fn from_missing_template_key(os: String) -> InputCheckResult {
         InputCheckResult {
-            missing_values: vec![],
+            missing_values: Vec::new(),
+            missing_template_keys: vec![InputCheckMissingTemplateData {
+                path: InputCheckPath::without_last(),
+                key: os,
+            }],
+            invalid_yaml_values: Vec::new(),
+            error_messages: Vec::new(),
+        }
+    }
+    pub fn from_invalid<T: ToString>(v: &serde_yaml::Value, e: Option<T>) -> InputCheckResult {
+        InputCheckResult {
+            missing_values: Vec::new(),
+            missing_template_keys: Vec::new(),
             invalid_yaml_values: vec![InputCheckInvalidYamlData {
                 path: InputCheckPath::without_last(),
                 data: v.clone(),
@@ -433,19 +447,22 @@ impl InputCheckResult {
     pub fn from_error_message(s: String) -> Self {
         Self {
             missing_values: Vec::new(),
+            missing_template_keys: Vec::new(),
             invalid_yaml_values: Vec::new(),
             error_messages: vec![s],
         }
     }
     pub fn empty() -> InputCheckResult {
         InputCheckResult {
-            missing_values: vec![],
-            invalid_yaml_values: vec![],
+            missing_values: Vec::new(),
+            missing_template_keys: Vec::new(),
+            invalid_yaml_values: Vec::new(),
             error_messages: Vec::new(),
         }
     }
     pub fn is_empty(&self) -> bool {
         self.missing_values.is_empty()
+            && self.missing_template_keys.is_empty()
             && self.invalid_yaml_values.is_empty()
             && self.error_messages.is_empty()
     }
@@ -453,12 +470,17 @@ impl InputCheckResult {
         for missing_value in self.missing_values.iter_mut() {
             missing_value.path.add(s.clone());
         }
+        for missing_key in self.missing_template_keys.iter_mut() {
+            missing_key.path.add(s.clone());
+        }
         for invalid_value in self.invalid_yaml_values.iter_mut() {
             invalid_value.path.add(s.clone());
         }
     }
     pub fn union(&mut self, other: &Self) {
         self.missing_values.extend(other.missing_values.clone());
+        self.missing_template_keys
+            .extend(other.missing_template_keys.clone());
         self.invalid_yaml_values
             .extend(other.invalid_yaml_values.clone());
 
@@ -466,6 +488,9 @@ impl InputCheckResult {
     }
     pub fn missing_fields(&self) -> Vec<InputCheckMissingData> {
         self.missing_values.clone()
+    }
+    pub fn missing_template_keys(&self) -> Vec<InputCheckMissingTemplateData> {
+        self.missing_template_keys.clone()
     }
     pub fn invalid_yaml_fields(&self) -> Vec<InputCheckInvalidYamlData> {
         self.invalid_yaml_values.clone()
@@ -478,6 +503,15 @@ impl InputCheckResult {
 impl InputCheckResult {
     pub fn log(&self, path: &RumbasPath) {
         log::error!("Error when processing {}.", path.display());
+        if !self.missing_template_keys.is_empty() {
+            log::error!(
+                "Found {} missing template keys:",
+                self.missing_template_keys.len()
+            );
+            for (idx, error) in self.missing_template_keys.iter().enumerate() {
+                log::error!("{}\t{}", idx + 1, error.to_string());
+            }
+        }
         if !self.missing_values.is_empty() {
             log::error!("Found {} missing fields:", self.missing_values.len());
             for (idx, error) in self.missing_values.iter().enumerate() {
@@ -508,7 +542,7 @@ pub struct InputCheckPath {
 impl InputCheckPath {
     pub fn with_last(os: Option<String>) -> Self {
         InputCheckPath {
-            parts: vec![],
+            parts: Vec::new(),
             last_part: os,
         }
     }
@@ -543,6 +577,18 @@ pub struct InputCheckMissingData {
 impl std::fmt::Display for InputCheckMissingData {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.path)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InputCheckMissingTemplateData {
+    pub key: String,
+    path: InputCheckPath,
+}
+
+impl std::fmt::Display for InputCheckMissingTemplateData {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{} at {}", self.key, self.path)
     }
 }
 

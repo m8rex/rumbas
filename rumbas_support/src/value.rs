@@ -126,7 +126,16 @@ where
     fn find_missing(&self) -> InputCheckResult {
         match &self {
             ValueType::Normal(val) => val.find_missing(),
-            ValueType::Template(ts) => InputCheckResult::from_missing(Some(ts.yaml())),
+            ValueType::Template(ts) => {
+                if let Some(key) = &ts.key {
+                    InputCheckResult::from_missing_template_key(key.clone())
+                } else {
+                    InputCheckResult::from_invalid(
+                        &serde_yaml::Value::String(ts.yaml()),
+                        Some("Missing template key"),
+                    )
+                }
+            }
             ValueType::TemplateWithDefault(ts) => ts.find_missing(),
             ValueType::Invalid(v) => {
                 let parsing: Result<T, _> = serde_yaml::from_value(v.clone());

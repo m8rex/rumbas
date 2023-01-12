@@ -40,13 +40,17 @@ impl TemplateFileInput {
     pub fn has_unknown_parent(&self) -> bool {
         self.template_key().is_some()
     }
-    pub fn set_template(&mut self, other: &TemplateFile) {
+    /// Set's the template path by checking a TemplateFile
+    /// Return true if it was changed due to the other TemplateFile
+    pub fn set_template(&mut self, other: &TemplateFile) -> bool {
         if let Some(key) = self.template_key() {
             if let Some(value) = other.data.get(&key) {
                 self.relative_template_path
-                    .insert_template_value(&key, &(value.0))
+                    .insert_template_value(&key, &(value.0));
+                return true;
             }
         }
+        false
     }
 }
 
