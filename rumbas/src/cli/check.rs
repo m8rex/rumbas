@@ -186,7 +186,19 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
                 }
                 Err(check_result) => {
                     if check_result.is_empty_except_template_keys() {
-                        CheckResult::Template
+                        let missing_template_keys = check_result.missing_template_keys();
+                        if let Some(self_defined) = exam_input.self_defined_template_keys {
+                            if missing_template_keys
+                                .iter()
+                                .any(|x| !self_defined.contains(&x.key))
+                            {
+                                CheckResult::FailedInputCheck(check_result)
+                            } else {
+                                CheckResult::Template
+                            }
+                        } else {
+                            CheckResult::FailedInputCheck(check_result)
+                        }
                     } else {
                         CheckResult::FailedInputCheck(check_result)
                     }

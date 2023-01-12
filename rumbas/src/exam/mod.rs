@@ -202,6 +202,7 @@ pub struct RecursiveTemplateExamInput {
     pub template_data: Vec<TemplateFile>,
     pub data: Option<ExamInput>,
     pub error_message: Option<String>,
+    pub self_defined_template_keys: Option<std::collections::HashSet<String>>,
 }
 
 impl std::convert::From<RecursiveTemplateExamInput> for ExamFileTypeInput {
@@ -223,16 +224,19 @@ impl std::convert::From<ExamFileTypeInput> for RecursiveTemplateExamInput {
                 template_data: Vec::new(),
                 data: Some(ExamInput::Normal(n)),
                 error_message: None,
+                self_defined_template_keys: Default::default(),
             },
             ExamFileTypeInput::Diagnostic(n) => Self {
                 template_data: Vec::new(),
                 data: Some(ExamInput::Diagnostic(n)),
                 error_message: None,
+                self_defined_template_keys: Default::default(),
             },
             ExamFileTypeInput::Template(t) => Self {
                 template_data: vec![t.to_normal()],
                 data: None,
                 error_message: None,
+                self_defined_template_keys: Default::default(),
             },
         }
     }
@@ -288,6 +292,7 @@ impl Input for RecursiveTemplateExamInput {
             template_data: normal.template_data.into_iter().skip(1).collect(),
             data: Some(Input::from_normal(normal.data)),
             error_message: None,
+            self_defined_template_keys: Default::default(),
         }
     }
     fn find_missing(&self) -> InputCheckResult {
@@ -363,6 +368,16 @@ impl Input for RecursiveTemplateExamInput {
     ) {
         if let Some(ref mut q) = self.data {
             q.insert_loaded_files(main_file_path, files);
+            if self.self_defined_template_keys.is_none() {
+                // Only happens for question preview
+                self.self_defined_template_keys = Some(
+                    self.find_missing()
+                        .missing_template_keys()
+                        .into_iter()
+                        .map(|a| a.key)
+                        .collect(),
+                );
+            }
         } else {
             let file = self.file_to_read(main_file_path);
             if let Some(f) = file {
@@ -456,7 +471,7 @@ impl Input for RecursiveTemplateExamInput {
 
 impl RumbasCheck for RecursiveTemplateExam {
     fn check(&self, locale: &str) -> RumbasCheckResult {
-        let mut previous_result = self.data.check(locale);
+        let previous_result = self.data.check(locale);
         /*
         previous_result.extend_path(if let Some(p) = self.question_path.as_ref() {
             p.clone()
@@ -516,8 +531,16 @@ impl RecursiveTemplateExamInput {
                 })
                 .ok_or_else(|| ParseError::FileReadError(FileReadError(file.clone())))?;
 
-            serde_yaml::from_str(&yaml)
-                .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))
+            let mut res: Self = serde_yaml::from_str(&yaml)
+                .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
+            res.self_defined_template_keys = Some(
+                res.find_missing()
+                    .missing_template_keys()
+                    .into_iter()
+                    .map(|a| a.key)
+                    .collect(),
+            );
+            Ok(res)
         } else if file.in_main_folder(crate::QUESTIONS_FOLDER) {
             let mut data = BTreeMap::new();
             data.insert(
@@ -536,7 +559,9 @@ impl RecursiveTemplateExamInput {
                 relative_template_path: crate::QUESTION_PREVIEW_TEMPLATE_NAME.to_string(),
                 data,
             };
-            Ok(ExamFileTypeInput::Template(TemplateFileInputEnum::from_normal(t)).into())
+            let res: Self =
+                ExamFileTypeInput::Template(TemplateFileInputEnum::from_normal(t)).into();
+            Ok(res)
         } else {
             Err(ParseError::InvalidPath(InvalidExamPathError(file.clone())))
         }
