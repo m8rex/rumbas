@@ -1,17 +1,17 @@
 ---
-use_custom_name: false
-custom_name: ""
+part_name: ""
 show_correct_answer: true
 show_feedback_icon: true
 scripts: {}
 variable_replacements: []
-variable_replacement_strategy: original_first
-adaptive_marking_penalty: 0
-custom_marking_algorithm_notes: []
-extend_base_marking_algorithm: true
 unit_tests: []
 steps_penalty: 0
-enable_minimum_marks: false
-minimum_marks: 0
 steps: []
 prompt: ""
+custom_marking:
+  algorithm_notes: []
+  extend_base_marking_algorithm: true
+adaptive_marking:
+  variable_replacement_strategy: original_first
+  penalty: 0
+  variable_replacements: [ ]

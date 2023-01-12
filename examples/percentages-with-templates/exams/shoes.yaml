@@ -10,7 +10,8 @@ name:
   placeholders: {}
 question_groups:
   - name: Vraagstukken
-    picking_strategy: all_ordered
+    picking_strategy:
+      type: all_ordered
     questions:
       - template: percentages-shoes.yaml
         extra_info: "De vraag zoals gedefinieerd in questions"
@@ -19,7 +20,7 @@ question_groups:
         extra_info: "De vraag met slechts één 'part'"
       - template: percentages-shoes.yaml
         base_template: templates/base-NUMBEROPEN.yaml
-        selection: "shuffle([1,2])" 
+        selection: "shuffle([1,2])"
         extra_info: "Zonder de eerste vraag (bereken de nieuwe prijs, erg eenvouidg)."
       - template: percentages-shoes.yaml
         price_orig1: "random(15,20,25,30,35)"
@@ -29,11 +30,5 @@ question_groups:
         price_orig: "random(30 .. 99)"
         price_orig1: "random(30 .. 99)"
         price_orig2: "random(30 .. 99)"
-        percent: "random(5,10,20,30,50)" 
+        percent: "random(5,10,20,30,50)"
         extra_info: "Met meer willekeurige prijzen."
-
-
-
-
-
-
