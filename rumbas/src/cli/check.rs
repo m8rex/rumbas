@@ -68,6 +68,7 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
         .par_iter()
         .filter(|(result, _)| match result {
             CheckResult::Partial(p) => !p.failed.is_empty(),
+            CheckResult::Template => false,
             _ => true,
         })
         .collect();
@@ -88,6 +89,8 @@ pub enum CheckResult {
     FailedParsing(rumbas::exam::ParseError),
     LocalesNotSet,
     FailedInputCheck(rumbas_support::input::InputCheckResult),
+    /// The file is a template
+    Template,
     Partial(RumbasCheckData),
 }
 
@@ -135,6 +138,7 @@ impl CheckResult {
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
             Self::FailedInputCheck(e) => e.log(path),
             Self::Partial(r) => r.log(path),
+            Self::Template => (),
         }
     }
 }
@@ -180,7 +184,13 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
                         })
                     }
                 }
-                Err(check_result) => CheckResult::FailedInputCheck(check_result),
+                Err(check_result) => {
+                    if check_result.is_empty_except_template_keys() {
+                        CheckResult::Template
+                    } else {
+                        CheckResult::FailedInputCheck(check_result)
+                    }
+                }
             }
         }
         Err(e) => CheckResult::FailedParsing(e),
