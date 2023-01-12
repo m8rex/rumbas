@@ -415,15 +415,31 @@ impl Input for QuestionFromTemplateInput {
                         match data_res {
                             Ok(QuestionFileTypeInput::Normal(q)) => {
                                 let mut input = (*q.clone()).0;
-                                self.template_data.iter().rev().for_each(|template| {
+                                let mut do_first = true;
+                                for template in self.template_data.iter().rev() {
+                                    // Check if it contains all fields of template, if not,
+                                    // insert but don't do next one
+                                    // This makes sure that we don't leak template keys to higher
+                                    // up templates
+                                    let doesnt_have_all_needed_fields = input
+                                        .find_missing()
+                                        .missing_template_keys()
+                                        .iter()
+                                        .any(|f| !template.data.contains_key(&f.key));
                                     template.data.iter().for_each(|(k, v)| {
                                         input.insert_template_value(k, &v.0);
-                                    })
-                                });
-                                if let Some(f) = self.first_template_data.as_ref() {
-                                    f.data.iter().for_each(|(k, v)| {
-                                        input.insert_template_value(k, &v.0);
-                                    })
+                                    });
+                                    if doesnt_have_all_needed_fields {
+                                        do_first = false;
+                                        break;
+                                    }
+                                }
+                                if do_first {
+                                    if let Some(f) = self.first_template_data.as_ref() {
+                                        f.data.iter().for_each(|(k, v)| {
+                                            input.insert_template_value(k, &v.0);
+                                        })
+                                    }
                                 }
                                 combine_question_with_default_files(
                                     file_to_load.file_path,
@@ -440,7 +456,9 @@ impl Input for QuestionFromTemplateInput {
                                 let mut template_file = template_file.clone();
                                 if template_file.has_unknown_parent() {
                                     for previous in self.template_data.iter().rev() {
-                                        template_file.set_template(previous);
+                                        if !template_file.set_template(previous) {
+                                            break; // Only proceed if this file changed the value
+                                        }
                                         if !template_file.has_unknown_parent() {
                                             break;
                                         }
@@ -467,7 +485,7 @@ impl Input for QuestionFromTemplateInput {
 
                                 if self.template_data.contains(&template_file) {
                                     self.error_message = Some(format!(
-                                        "Loop in templates: {} is a parent of itself. The fill template parent structure is {}",
+                                        "Loop in templates: {} is a parent of itself. The full template parent structure is {}",
                                         template_file.relative_template_path,
                                         self.template_data.iter().map(|t| t.relative_template_path.clone()).chain(vec![template_file.relative_template_path.clone()].into_iter()).collect::<Vec<_>>().join(" -> ")
                                     ));

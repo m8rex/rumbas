@@ -382,7 +382,9 @@ impl Input for RecursiveTemplateExamInput {
                                 let mut template_file = template_file.clone();
                                 if template_file.has_unknown_parent() {
                                     for previous in self.template_data.iter().rev() {
-                                        template_file.set_template(previous);
+                                        if !template_file.set_template(previous) {
+                                            break; // Only proceed if this file changed the value
+                                        }
                                         if !template_file.has_unknown_parent() {
                                             break;
                                         }
@@ -405,7 +407,6 @@ impl Input for RecursiveTemplateExamInput {
                                 } else {
                                     self.template_data.push(template_file);
                                 }
-                                // todo: change when allowing template field to be templatable
                             }
                             Ok(e) => {
                                 let mut input = match e {
@@ -415,11 +416,23 @@ impl Input for RecursiveTemplateExamInput {
                                     }
                                     _ => unreachable!(),
                                 };
-                                self.template_data.iter().rev().for_each(|template| {
+                                for template in self.template_data.iter().rev() {
+                                    // Check if it contains all fields of template, if not,
+                                    // insert but don't do next one
+                                    // This makes sure that we don't leak template keys to higher
+                                    // up templates
+                                    let doesnt_have_all_needed_fields = input
+                                        .find_missing()
+                                        .missing_template_keys()
+                                        .iter()
+                                        .any(|f| !template.data.contains_key(&f.key));
                                     template.data.iter().for_each(|(k, v)| {
                                         input.insert_template_value(k, &v.0);
-                                    })
-                                });
+                                    });
+                                    if doesnt_have_all_needed_fields {
+                                        break;
+                                    }
+                                }
 
                                 self.data = Some(input);
                             }
