@@ -80,6 +80,7 @@ pub fn compile_internal(
         .par_iter()
         .filter(|(result, _)| match result {
             CompileResult::Partial(p) => p.has_failure(),
+            CompileResult::Template => false,
             _ => true,
         })
         .collect();
@@ -118,6 +119,7 @@ pub enum CompileResult {
     LocalesNotSet,
     FailedInputCheck(rumbas_support::input::InputCheckResult),
     Partial(RumbasCompileData),
+    Template,
 }
 
 #[derive(Debug, Clone)]
@@ -177,6 +179,7 @@ impl CompileResult {
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
             Self::FailedInputCheck(e) => e.log(path),
             Self::Partial(r) => r.log(path),
+            Self::Template => (),
         }
     }
 }
@@ -195,6 +198,7 @@ pub fn compile_file(context: &FileCompilationContext, path: &RumbasPath) -> Comp
         CheckResult::FailedParsing(f) => CompileResult::FailedParsing(f),
         CheckResult::FailedInputCheck(f) => CompileResult::FailedInputCheck(f),
         CheckResult::LocalesNotSet => CompileResult::LocalesNotSet,
+        CheckResult::Template => CompileResult::Template,
         CheckResult::Partial(p) => {
             let mut passed_compilations = Vec::new();
             let mut failed_compilations = Vec::new();

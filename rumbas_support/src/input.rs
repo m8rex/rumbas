@@ -466,6 +466,11 @@ impl InputCheckResult {
             && self.invalid_yaml_values.is_empty()
             && self.error_messages.is_empty()
     }
+    pub fn is_empty_except_template_keys(&self) -> bool {
+        self.missing_values.is_empty()
+            && self.invalid_yaml_values.is_empty()
+            && self.error_messages.is_empty()
+    }
     pub fn extend_path(&mut self, s: String) {
         for missing_value in self.missing_values.iter_mut() {
             missing_value.path.add(s.clone());
