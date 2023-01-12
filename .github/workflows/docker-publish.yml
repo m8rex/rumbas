@@ -90,7 +90,7 @@ jobs:
       - name: Build examples
         run: |
           docker run --rm -v $PWD/percentages-with-templates:/rumbas m8rex/rumbas:latest compile question exams
-        working-directoy: examples
+        working-directory: examples
       - name: Archive output artifacts
         uses: actions/upload-artifact@v3
         with:
