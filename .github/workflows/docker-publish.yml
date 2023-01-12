@@ -16,11 +16,12 @@ on:
 env:
   ORGANISATION: m8rex
   IMAGE_NAME: rumbas
+  CARGO_TERM_COLOR: always
 
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,12 +42,91 @@ jobs:
           docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv import cli-tests/numbas_exams/exam-110396-getting-started.exam
           docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv check exams
           docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv compile exams
+  
+  build_book:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with: 
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+            numbas/target
+            rumbas/target
+            rumbas_support/target
+            rumbas_support_derive/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - name: Generate datatypes folder
+        run: cargo run --bin doc
+        working-directory: rumbas
+      - name: Install mdbook
+        run: cargo install mdbook
+      - name: build book
+        run: mdbook build 
+        working-directory: book
+      - name: Archive book artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: &book-a book
+          path: |
+            book/book
+
+  build_examples:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Build image
+        run: docker build . --file Dockerfile --tag m8rex/rumbas 
+      - name: Build examples
+        run: |
+          docker run --rm -v $PWD/percentages-with-templates:/rumbas m8rex/rumbas:latest compile question exams
+        working-directoy: examples
+      - name: Archive output artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: &examples-a examples
+          path: |
+            examples/**/_output
+  deploy_book:
+      needs: [build_book, build_examples]
+      runs-on: ubuntu-latest
+      steps:
+      - name: Download examples artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: *examples-a
+      - name: Download book artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: *book-a
+      - name: Move examples
+        run: |
+          mkdir book/book/examples
+          mv examples/percentages-with-templates/_output /book/book/examples/percentages-with-templates
+      - name: Deploy 🚀 # TODO: only on main
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: book/book/ # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
+
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    needs: test
+    needs: build
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
