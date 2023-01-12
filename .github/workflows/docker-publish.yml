@@ -72,7 +72,7 @@ jobs:
       - name: Archive book artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: &book-a book
+          name: book
           path: |
             book/book
 
@@ -94,7 +94,7 @@ jobs:
       - name: Archive output artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: &examples-a examples
+          name: examples
           path: |
             examples/**/_output
   deploy_book:
@@ -104,11 +104,11 @@ jobs:
       - name: Download examples artifact
         uses: actions/download-artifact@v3
         with:
-          name: *examples-a
+          name: examples
       - name: Download book artifact
         uses: actions/download-artifact@v3
         with:
-          name: *book-a
+          name: book
       - name: Move examples
         run: |
           mkdir book/book/examples
