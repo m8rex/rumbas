@@ -1,4 +1,4 @@
-name: Docker
+name: Docker & Book
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Clear space (needed for the caching)
         run: rm -rf /usr/local/android /usr/share/dotnet /usr/local/share/boost /opt/ghc 
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
@@ -39,6 +39,22 @@ jobs:
           else
             docker build . --file Dockerfile --tag m8rex/rumbas:latest
           fi
+  
+  test_cli:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Clear space (needed for the caching)
+        run: rm -rf /usr/local/android /usr/share/dotnet /usr/local/share/boost /opt/ghc 
+      - uses: jpribyl/action-docker-layer-caching@v0.1.1
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Build image
+        run: docker build . --file Dockerfile --tag m8rex/rumbas 
+      - name: run
+        run: |
           docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv init
           sudo cp -r cli-tests/numbas_resources resources/question-resources
           docker run --rm -v $PWD:/rumbas m8rex/rumbas:latest -vvvv import cli-tests/numbas_exams/exam-110396-getting-started.exam
@@ -49,20 +65,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with: 
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-            numbas/target
-            rumbas/target
-            rumbas_support/target
-            rumbas_support_derive/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+      - uses: actions/checkout@v3
+      # selecting a toolchain either by action or manual `rustup` calls should happen
+      # before the plugin, as the cache uses the current rustc version as its cache key
+      - run: rustup toolchain install stable --profile minimal
+      - uses: Swatinem/rust-cache@v2
       - name: Generate datatypes folder
         run: cargo run --bin doc
         working-directory: rumbas
@@ -76,13 +83,13 @@ jobs:
         with:
           name: book
           path: |
-            book/book
+            book/book/
 
   build_examples:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Clear space (needed for the caching)
         run: rm -rf /usr/local/android /usr/share/dotnet /usr/local/share/boost /opt/ghc 
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
@@ -93,7 +100,7 @@ jobs:
         run: docker build . --file Dockerfile --tag m8rex/rumbas 
       - name: Build examples
         run: |
-          docker run --rm -v $PWD/percentages-with-templates:/rumbas m8rex/rumbas:latest compile question exams
+          docker run --rm -v $PWD/percentages-with-templates:/rumbas m8rex/rumbas:latest compile questions exams
         working-directory: examples
       - name: Archive output artifacts
         uses: actions/upload-artifact@v3
@@ -105,24 +112,30 @@ jobs:
       needs: [build_book, build_examples]
       runs-on: ubuntu-latest
       steps:
+      - uses: actions/checkout@v3
       - name: Download examples artifact
         uses: actions/download-artifact@v3
         with:
           name: examples
+          path: examples_result
       - name: Download book artifact
         uses: actions/download-artifact@v3
         with:
           name: book
+          path: book_result
+      - name: check
+        run: |
+          ls -R book_result
+          ls -R examples_result
       - name: Move examples
         run: |
-          mkdir book/book/examples
-          mv examples/percentages-with-templates/_output /book/book/examples/percentages-with-templates
+          mkdir book_result/examples
+          mv examples_result/percentages-with-templates/_output book_result/examples/percentages-with-templates
       - name: Deploy 🚀 # TODO: only on main
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: book/book/ # The folder the action should deploy.
+          FOLDER: book_result/ # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
 
 
@@ -136,8 +149,8 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: satackey/action-docker-layer-caching@v0.0.11
+      - uses: actions/checkout@v3
+      - uses: jpribyl/action-docker-layer-caching@v0.1.1
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
