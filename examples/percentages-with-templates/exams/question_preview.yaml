@@ -22,8 +22,9 @@ question_groups:
         nl: Q1
         en: Q1
       placeholders: {}
-    picking_strategy: random_subset
-    pick_questions: 1
+    picking_strategy:
+      type: random_subset
+      pick_questions: 1
     questions:
       - template_key: question
         default_value: demo/numbas-get_started.yaml

@@ -15,31 +15,31 @@ parts:
   - type: gapfill
     marks: 0
     prompt:
-        content: |
-            {prompt_title}
-            {prompts[0]}  [[0]] 
-        placeholders:
-          prompt_title:
-            template_key: prompt_title
-            default_value: ""
-          prompt_before:
-            template_key: prompt_before
-            default_value: ""
-          prompt_after:
-            template_key: prompt_after
-            default_value: ""
+      content: |
+        {prompt_title}
+        {prompts[0]}  [[0]] 
+      placeholders:
+        prompt_title:
+          template_key: prompt_title
+          default_value: ""
+        prompt_before:
+          template_key: prompt_before
+          default_value: ""
+        prompt_after:
+          template_key: prompt_after
+          default_value: ""
     gaps:
       - type: jme
         marks: 1
         answer: "{answers_a[0]}"
         answer_simplification:
           simplify_other_numbers:
-            template_key: answer_expand_powers   # keep 2^3 vs 8
+            template_key: answer_expand_powers # keep 2^3 vs 8
             default_value: true
         must_match_pattern:
           name: ''
           strings: []
-          message: 
+          message:
             template_key: pattern_message_0
             default_value: ""
           pattern:
@@ -55,9 +55,9 @@ variables_test:
   max_runs:
     template_key: max_runs
     default_value: 100
-steps: 
+steps:
   template_key: steps
   default_value: ""
-advice: 
+advice:
   template_key: advice
   default_value: ""

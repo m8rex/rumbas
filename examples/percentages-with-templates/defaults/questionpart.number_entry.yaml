@@ -1,25 +1,25 @@
 ---
-use_custom_name: false
-custom_name: ""
+part_name: ""
 show_correct_answer: true
 show_feedback_icon: true
 scripts: {}
 variable_replacements: []
-variable_replacement_strategy: original_first
-adaptive_marking_penalty: 0
-custom_marking_algorithm_notes: []
-extend_base_marking_algorithm: true
 unit_tests: []
 steps_penalty: 0
-enable_minimum_marks: false
-minimum_marks: 0
 steps: []
 prompt: ""
 allowed_notation_styles:
   - english-plain
-hint_fraction: true
+fractions_must_be_reduced_hint: true
 display_correct_in_style: english-plain
 fractions_must_be_reduced: false
 partial_credit_if_fraction_not_reduced: 0
 display_correct_as_fraction: true
 allow_fractions: true
+custom_marking:
+  algorithm_notes: []
+  extend_base_marking_algorithm: true
+adaptive_marking:
+  variable_replacement_strategy: original_first
+  penalty: 0
+  variable_replacements: [ ]

@@ -32,6 +32,10 @@ jobs:
       - name: build book
         run: mdbook build 
         working-directory: book
+      - name: Generate examples
+        run: |
+          cd percentages-with-templates && cargo run -- compile questions exams && cp _output/* ../book/book/examples/percentages-with-templates && cd ..
+        working-directory: examples
       - name: Deploy 🚀 # TODO: only on main
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:

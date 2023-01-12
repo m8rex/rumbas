@@ -28,24 +28,24 @@ extensions:
   text: false
 preamble:
   js: ""
-  css:  |
-        tt { font-family:monospace !important; background:lightgray !important}
-        .tt { font-family:monospace !important; background:lightgray !important}
-        ul.info { text-indent: -28px; margin-left: 28px;}
-        h4 { display: inline;}    /* prevent newline after a), b), ... in parts; */
-        table { margin-left: unset; }     /* tables flush-left ... */
-        table.open td { padding-bottom: 4rem !important; }  /* bigger padding in template-OPENx */
-        li.instruction {
-          /* background-color: lightgray; */
-          /* list-style-type: none; */
-          /* display: inline-block;   /* reset list-item */
-          font-size: smaller;
-          margin-left: 2rem;
-          color: gray;
-          list-style-position: outside;
-          /* border: gray solid; */
-          /* padding: 0.5rem;    */
-        }
+  css: |
+    tt { font-family:monospace !important; background:lightgray !important}
+    .tt { font-family:monospace !important; background:lightgray !important}
+    ul.info { text-indent: -28px; margin-left: 28px;}
+    h4 { display: inline;}    /* prevent newline after a), b), ... in parts; */
+    table { margin-left: unset; }     /* tables flush-left ... */
+    table.open td { padding-bottom: 4rem !important; }  /* bigger padding in template-OPENx */
+    li.instruction {
+      /* background-color: lightgray; */
+      /* list-style-type: none; */
+      /* display: inline-block;   /* reset list-item */
+      font-size: smaller;
+      margin-left: 2rem;
+      color: gray;
+      list-style-position: outside;
+      /* border: gray solid; */
+      /* padding: 0.5rem;    */
+    }
 custom_part_types: []
 variables: {}
 functions: {}
