@@ -19,8 +19,11 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            target
             numbas/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Build
         run: cargo build --verbose
         working-directory: numbas
@@ -41,11 +44,14 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            target
             numbas/target
             rumbas/target
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Build
         run: cargo build --verbose
         working-directory: rumbas_support_derive
@@ -65,11 +71,14 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            target
             numbas/target
             rumbas/target
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Install dependencies
         run: sudo apt install libssl-dev pkg-config 
       - name: Build
@@ -91,11 +100,14 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            target
             numbas/target
             rumbas/target
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Install minifyers
         run: |-
           curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -145,11 +157,14 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            target
             numbas/target
             rumbas/target
             rumbas_support/target
             rumbas_support_derive/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Add nightly
         run: |-
           rustup install nightly
