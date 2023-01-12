@@ -26,7 +26,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: satackey/action-docker-layer-caching@v0.0.11
+      - name: Clear space (needed for the caching)
+        run: rm -rf /usr/local/android /usr/share/dotnet /usr/local/share/boost /opt/ghc 
+      - uses: jpribyl/action-docker-layer-caching@v0.1.1
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
       - name: Run tests
@@ -81,7 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: satackey/action-docker-layer-caching@v0.0.11
+      - name: Clear space (needed for the caching)
+        run: rm -rf /usr/local/android /usr/share/dotnet /usr/local/share/boost /opt/ghc 
+      - uses: jpribyl/action-docker-layer-caching@v0.1.1
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
