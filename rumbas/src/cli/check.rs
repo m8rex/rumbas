@@ -63,6 +63,7 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
         .into_par_iter()
         .map(|file| (check_file(&file), file))
         .collect();
+    let check_count = check_results.len();
 
     let failures: Vec<_> = check_results
         .par_iter()
@@ -77,10 +78,14 @@ pub fn check_internal(exam_question_paths: Vec<String>) -> Result<(), ()> {
             log::error!("Check for {} failed:", path.display());
             check_result.log(path);
         }
-        log::error!("{} files failed.", failures.len());
+        log::error!(
+            "{} checks passed and {} checks failed.",
+            check_count,
+            failures.len()
+        );
         Err(())
     } else {
-        log::info!("All checks passed.");
+        log::info!("All {} checks passed.", check_count);
         Ok(())
     }
 }
