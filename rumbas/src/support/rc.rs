@@ -60,19 +60,22 @@ pub fn read(p: &Path) -> Result<RC, serde_yaml::Error> {
 /// Returns Some(val) where val is the parsing result if the file does exist
 pub fn find_root(p: &Path) -> Option<PathBuf> {
     log::debug!("Looking for root for {:?}", p);
-    let start = p.canonicalize().unwrap();
+    let start = p.canonicalize();
 
-    let mut current = Some(start.as_path());
+    if let Ok(start) = start {
+        let mut current = Some(start.as_path());
 
-    while let Some(f) = current {
-        let possible_file = f.join(RC_FILE_NAME);
-        if possible_file.exists() {
-            log::debug!("Found root for {:?}", p);
-            return Some(f.to_owned());
+        while let Some(f) = current {
+            let possible_file = f.join(RC_FILE_NAME);
+            if possible_file.exists() {
+                log::debug!("Found root for {:?}", p);
+                return Some(f.to_owned());
+            }
+
+            current = f.parent();
         }
-
-        current = f.parent();
     }
+
     None
 }
 
