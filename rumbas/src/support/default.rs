@@ -1,5 +1,6 @@
 use crate::exam::diagnostic::DiagnosticExamInput;
 use crate::exam::feedback::FeedbackInput;
+use crate::exam::locale::LocaleInput;
 use crate::exam::navigation::{
     DiagnosticNavigationInput, MenuNavigationInput, MenuNavigationInputEnum, NormalNavigationInput,
     SequentialNavigationInput, SequentialNavigationInputEnum,
@@ -112,6 +113,7 @@ create_default_file_type_enums!(
     SequentialNavigation with type SequentialNavigationInput: in "navigation";
     MenuNavigation with type MenuNavigationInput: in "navigation.menu";
     DiagnosticNavigation with type DiagnosticNavigationInput: in "navigation.diagnostic";
+    Locales with type Vec<ValueType<LocaleInput>>: in "locales";
     Timing with type TimingInput: in "timing";
     Feedback with type FeedbackInput: in "feedback";
     NumbasSettings with type NumbasSettingsInput: in "numbas_settings"
@@ -276,6 +278,7 @@ macro_rules! handle_exam {
                         DefaultExamData::Timing(t) => exam.timing.overwrite(&Value::Normal(t.data)),
                         DefaultExamData::Feedback(f) => exam.feedback.overwrite(&Value::Normal(f.data)),
                         DefaultExamData::NumbasSettings(f) => exam.numbas_settings.overwrite(&Value::Normal(f.data)),
+                        DefaultExamData::Locales(f) => exam.locales.overwrite(&Value::Normal(f.data)),
                     }
             }
         }
