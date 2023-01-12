@@ -398,7 +398,7 @@ impl Input for RecursiveTemplateExamInput {
 
                                 if self.template_data.contains(&template_file) {
                                     self.error_message = Some(format!(
-                                        "Loop in templates: {} is a parent of itself. The fill template parent structure is {}",
+                                        "Loop in templates: {} is a parent of itself. The full template parent structure is {}",
                                         template_file.relative_template_path,
                                         self.template_data.iter().map(|t| t.relative_template_path.clone()).chain(vec![template_file.relative_template_path.clone()].into_iter()).collect::<Vec<_>>().join(" -> ")
                                     ));
