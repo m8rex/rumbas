@@ -75,6 +75,10 @@ pub fn compile_internal(
         .into_par_iter()
         .map(|file| (compile_file(&file_context, &file), file))
         .collect();
+    let compile_count = compile_results
+        .iter()
+        .filter(|(c, _)| !matches!(c, CompileResult::Template))
+        .count();
 
     let failures: Vec<_> = compile_results
         .par_iter()
@@ -89,7 +93,7 @@ pub fn compile_internal(
             log::error!("Compilation for {} failed:", path.display());
             check_result.log(path);
         }
-        let successfull = compile_results.len() - failures.len();
+        let successfull = compile_count - failures.len();
         log::error!(
             "{} files successfully compiled and {} files failed.",
             successfull,
@@ -97,7 +101,7 @@ pub fn compile_internal(
         );
         true
     } else {
-        log::info!("All {} compilations passed.", compile_results.len());
+        log::info!("All {} compilations passed.", compile_count);
         false
     };
     let created_outputs = compile_results
@@ -179,7 +183,10 @@ impl CompileResult {
             Self::LocalesNotSet => log::error!("Locales not set for {}!", path.display()),
             Self::FailedInputCheck(e) => e.log(path),
             Self::Partial(r) => r.log(path),
-            Self::Template => (),
+            Self::Template => log::info!(
+                "{} is a template and isn't processed for compilation.",
+                path.display()
+            ),
         }
     }
 }
