@@ -183,7 +183,7 @@ WORKDIR /usr/app/text
 RUN rm -r .git # remove large folders
 
 # Main image
-FROM python:3.6.10-alpine 
+FROM python:3.6.10-alpine
 WORKDIR /usr/app/Numbas
 
 RUN apk add --no-cache yarn tzdata

@@ -1,0 +1,33 @@
+{
+    "name": "project-dev",
+    "dockerComposeFile": ["docker-compose.yml"],
+    "service": "vscode",
+    "runServices": ["vscode"],
+    "shutdownAction": "stopCompose",
+    "postCreateCommand": "~/.windows.sh",
+    "workspaceFolder": "/workspace",
+    // "overrideCommand": "",
+    "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml", // for Cargo.toml
+        "ms-azuretools.vscode-docker", // Docker integration and linting
+        "shardulm94.trailing-spaces", // Show trailing spaces
+        "Gruntfuggly.todo-tree", // Highlights TODO comments
+        "stkb.rewrap", // rewrap comments after n characters on one line
+        "vscode-icons-team.vscode-icons", // Better file extension icons
+        "github.vscode-pull-request-github", // Github interaction
+        "redhat.vscode-yaml", // Kubernetes, Drone syntax highlighting
+    ],
+    "settings": {
+        "files.eol": "\n",
+        "[rust]": {
+            "editor.defaultFormatter": "rust-lang.rust-analyzer",
+            "editor.formatOnSave": true
+        },
+        "remote.extensionKind": {
+            "ms-azuretools.vscode-docker": "workspace"
+        },
+        "editor.codeActionsOnSaveTimeout": 3000,
+        "rust-analyzer.serverPath": "/usr/local/bin/rust-analyzer"
+    }
+}
