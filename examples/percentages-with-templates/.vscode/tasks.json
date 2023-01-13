@@ -1,0 +1,87 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "check",
+            "command": "rumbas",
+            "args": ["check", "${relativeFile}"],
+            "problemMatcher": {
+                "owner": "rumbas",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                  "regexp": "^\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[(ERROR)\\](.*)$",
+                  "severity": 1,
+                  "message": 2
+                }
+            }
+        },
+        {
+            "label": "check verbose",
+            "command": "rumbas",
+            "args": ["-vvvv", "check", "${relativeFile}"],
+            "problemMatcher": {
+                "owner": "rumbas",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                  "regexp": "^\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[(ERROR)\\](.*)$",
+                  "severity": 1,
+                  "message": 2
+                }
+            }
+        },
+        {
+            "label": "compile",
+            "command": "rumbas",
+            "args": ["compile", "${relativeFile}"],
+            "problemMatcher": {
+                "owner": "rumbas",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                  "regexp": "^\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[(ERROR)\\](.*)$",
+                  "severity": 1,
+                  "message": 2
+                }
+            }
+        },
+        {
+            "label": "compile verbose",
+            "command": "rumbas",
+            "args": ["-vvvv", "compile", "${relativeFile}"],
+            "problemMatcher": {
+                "owner": "rumbas",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                  "regexp": "^\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[(ERROR)\\](.*)$",
+                  "severity": 1,
+                  "message": 2
+                }
+            }
+        },
+        {
+            "label": "watch",
+            "command": "rumbas",
+            "args": ["watch", "${workspaceFolder}"],
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "rumbas",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                  "regexp": "^\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[(ERROR)\\] (Compilation for ([^\\.]*.yaml) failed):$",
+                  "severity": 1,
+                  "message": 2,
+                  "file": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[[^\\]]*\\] Checking .*",
+                    "endsPattern": "\\[\\d+-\\d+-\\d+\\]\\[\\d+:\\d+:\\d+\\]\\[[^\\]]*\\]\\[[^\\]]*\\] Generated and .*"
+                  }
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            }
+        }
+    ]
+}
