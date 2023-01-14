@@ -1,4 +1,6 @@
 # Install needed packages, yarn, nvm and setup non-root user. Use a separate RUN statement to add your own dependencies.
+RUN apk add git
+
 ARG USERNAME=rumbas
 ARG USER_UID=1000
 

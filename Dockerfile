@@ -1,4 +1,4 @@
-FROM rust:1.62.1-slim as builder
+FROM rust:1.66.1-slim as builder
 
 WORKDIR /usr/app
 ENV OPENSSL_DIR=/usr \
