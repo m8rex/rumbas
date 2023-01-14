@@ -829,10 +829,11 @@ macro_rules! create_from_string_type {
         }
 
         impl ToNumbas<$n_type> for $t {
-            fn to_numbas(&self, locale: &str) -> $n_type {
+            type ToNumbasHelper = ();
+            fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> $n_type {
                 self.data
                     .clone()
-                    .to_numbas_with_name(locale, self.file_name.clone())
+                    .to_numbas(locale, &self.file_name)
             }
         }
 

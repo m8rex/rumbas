@@ -153,13 +153,14 @@ impl<T: Overwrite<T> + DeserializeOwned> Overwrite<VariableValued<T>> for Variab
 impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::support::primitive::VariableValued<V>>
     for VariableValued<T>
 {
-    fn to_numbas(&self, locale: &str) -> numbas::support::primitive::VariableValued<V> {
+    type ToNumbasHelper = T::ToNumbasHelper;
+    fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::support::primitive::VariableValued<V> {
         match self {
             VariableValued::Variable(v) => {
                 numbas::support::primitive::VariableValued::Variable(v.clone())
             }
             VariableValued::Value(v) => {
-                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale))
+                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale, data))
             }
         }
     }
@@ -328,11 +329,12 @@ impl<T: Overwrite<T> + DeserializeOwned> Overwrite<ReverseVariableValued<T>>
 impl<V, T: ToNumbas<V> + RumbasCheck> ToNumbas<numbas::support::primitive::VariableValued<V>>
     for ReverseVariableValued<T>
 {
-    fn to_numbas(&self, locale: &str) -> numbas::support::primitive::VariableValued<V> {
+    type ToNumbasHelper = T::ToNumbasHelper;
+    fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::support::primitive::VariableValued<V> {
         match self {
             Self::Variable(v) => numbas::support::primitive::VariableValued::Variable(v.clone()),
             Self::Value(v) => {
-                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale))
+                numbas::support::primitive::VariableValued::Value(v.to_numbas(locale, data))
             }
         }
     }

@@ -19,11 +19,12 @@ pub struct Function {
 }
 
 impl ToNumbas<numbas::question::function::Function> for Function {
-    fn to_numbas(&self, locale: &str) -> numbas::question::function::Function {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::function::Function {
         numbas::question::function::Function {
-            parameters: self.parameters.to_numbas(locale),
-            output_type: self.output_type.to_numbas(locale),
-            definition: self.definition.to_numbas(locale),
+            parameters: self.parameters.to_numbas(locale, &((),())),
+            output_type: self.output_type.to_numbas(locale, &()),
+            definition: self.definition.to_numbas(locale, &()),
         }
     }
 }
@@ -50,14 +51,15 @@ pub enum FunctionDefinition {
 }
 
 impl ToNumbas<numbas::question::function::FunctionDefinition> for FunctionDefinition {
-    fn to_numbas(&self, locale: &str) -> numbas::question::function::FunctionDefinition {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::function::FunctionDefinition {
         match self {
             FunctionDefinition::JME(c) => numbas::question::function::FunctionDefinition::JME {
-                definition: c.definition.to_numbas(locale),
+                definition: c.definition.to_numbas(locale, &()),
             },
             FunctionDefinition::Javascript(c) => {
                 numbas::question::function::FunctionDefinition::Javascript {
-                    definition: c.definition.to_numbas(locale),
+                    definition: c.definition.to_numbas(locale, &()),
                 }
             }
         }
@@ -121,7 +123,8 @@ pub enum FunctionType {
 }
 
 impl ToNumbas<numbas::question::function::FunctionType> for FunctionType {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::function::FunctionType {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::function::FunctionType {
         match self {
             Self::Boolean => numbas::question::function::FunctionType::Boolean,
             Self::Decimal => numbas::question::function::FunctionType::Decimal,

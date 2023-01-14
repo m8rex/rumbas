@@ -40,24 +40,25 @@ question_part_type! {
 }
 
 impl ToNumbas<numbas::question::part::matrix::QuestionPartMatrix> for QuestionPartMatrix {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::matrix::QuestionPartMatrix {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::matrix::QuestionPartMatrix {
         let dimensions = self.dimensions.clone();
         let rows = dimensions.rows.clone();
         let columns = dimensions.columns.clone();
         numbas::question::part::matrix::QuestionPartMatrix {
-            part_data: self.to_numbas(locale),
-            correct_answer: self.correct_answer.to_numbas(locale),
-            correct_answer_fractions: self.display_correct_as_fraction.to_numbas(locale),
-            num_rows: rows.default().to_numbas(locale),
-            num_columns: columns.default().to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            correct_answer: self.correct_answer.to_numbas(locale, &()),
+            correct_answer_fractions: self.display_correct_as_fraction.to_numbas(locale, &()),
+            num_rows: rows.default().to_numbas(locale, &()),
+            num_columns: columns.default().to_numbas(locale, &()),
             allow_resize: dimensions.is_resizable(),
-            min_columns: columns.min().to_numbas(locale),
-            max_columns: columns.max().to_numbas(locale),
-            min_rows: rows.min().to_numbas(locale),
-            max_rows: rows.max().to_numbas(locale),
-            tolerance: self.max_absolute_deviation.to_numbas(locale),
-            mark_per_cell: self.mark_partial_by_cells.to_numbas(locale),
-            allow_fractions: self.allow_fractions.to_numbas(locale),
+            min_columns: columns.min().to_numbas(locale, &()),
+            max_columns: columns.max().to_numbas(locale, &()),
+            min_rows: rows.min().to_numbas(locale, &()),
+            max_rows: rows.max().to_numbas(locale, &()),
+            tolerance: self.max_absolute_deviation.to_numbas(locale, &()),
+            mark_per_cell: self.mark_partial_by_cells.to_numbas(locale, &()),
+            allow_fractions: self.allow_fractions.to_numbas(locale, &()),
         }
     }
 }

@@ -26,11 +26,12 @@ question_part_type! {
 }
 
 impl ToNumbas<numbas::question::part::gapfill::QuestionPartGapFill> for QuestionPartGapFill {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::gapfill::QuestionPartGapFill {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::gapfill::QuestionPartGapFill {
         numbas::question::part::gapfill::QuestionPartGapFill {
-            part_data: self.to_numbas(locale),
-            sort_answers: self.sort_answers.to_numbas(locale),
-            gaps: self.gaps.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            sort_answers: self.sort_answers.to_numbas(locale, &()),
+            gaps: self.gaps.to_numbas(locale, &()),
         }
     }
 }

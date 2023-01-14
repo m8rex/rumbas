@@ -27,10 +27,11 @@ macro_rules! extensions {
             }
 
         impl ToNumbas<Vec<String>> for Extensions {
-            fn to_numbas(&self, locale: &str) -> Vec<String> {
+            type ToNumbasHelper = ();
+            fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> Vec<String> {
                 let mut extensions = Vec::new();
                 $(
-                    if self.$name.to_numbas(locale) {
+                    if self.$name.to_numbas(locale, &()) {
                         extensions.push($path.to_string()); //TODO: Enum in numbas crate?
                     }
                 )*

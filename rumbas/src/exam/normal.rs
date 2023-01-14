@@ -40,16 +40,17 @@ pub struct NormalExam {
 }
 
 impl ToNumbas<numbas::exam::Exam> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
-        let basic_settings = self.to_numbas(locale);
-        let navigation = self.navigation.to_numbas(locale);
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
+        let basic_settings = self.to_numbas(locale, &());
+        let navigation = self.navigation.to_numbas(locale, &());
 
-        let timing = self.timing.to_numbas(locale);
+        let timing = self.timing.to_numbas(locale, &());
 
-        let feedback = self.feedback.to_numbas(locale);
+        let feedback = self.feedback.to_numbas(locale, &());
 
         let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
-            self.question_groups.to_numbas(locale);
+            self.question_groups.to_numbas(locale, &());
 
         let resources: Vec<numbas::question::resource::Resource> = self
             .question_groups
@@ -63,7 +64,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale);
+            .to_numbas(locale, &());
 
         let extensions: Vec<String> = self
             .question_groups
@@ -85,7 +86,7 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale);
+            .to_numbas(locale, &());
 
         numbas::exam::Exam {
             basic_settings,
@@ -102,15 +103,16 @@ impl ToNumbas<numbas::exam::Exam> for NormalExam {
 }
 
 impl ToNumbas<numbas::exam::BasicExamSettings> for NormalExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::BasicExamSettings {
         numbas::exam::BasicExamSettings {
-            name: self.name.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
             duration_in_seconds: self
                 .timing
                 .duration_in_seconds
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or(0),
-            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
+            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale, &()),
             show_question_group_names: self
                 .navigation
                 .to_shared_data()

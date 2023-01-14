@@ -22,27 +22,29 @@ pub enum NormalNavigation {
 }
 
 impl ToNumbas<numbas::exam::navigation::Navigation> for NormalNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::Navigation {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::Navigation {
         numbas::exam::navigation::Navigation {
-            allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale),
-            allow_steps: self.to_shared_data().show_steps.to_numbas(locale),
-            show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale),
-            confirm_when_leaving: self.to_shared_data().confirm_when_leaving.to_numbas(locale),
+            allow_regenerate: self.to_shared_data().can_regenerate.to_numbas(locale, &()),
+            allow_steps: self.to_shared_data().show_steps.to_numbas(locale, &()),
+            show_frontpage: self.to_shared_data().show_title_page.to_numbas(locale, &()),
+            confirm_when_leaving: self.to_shared_data().confirm_when_leaving.to_numbas(locale, &()),
             start_password: self
                 .to_shared_data()
                 .start_password
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or_default(),
-            navigation_mode: self.to_numbas(locale),
+            navigation_mode: self.to_numbas(locale, &()),
         }
     }
 }
 
 impl ToNumbas<numbas::exam::navigation::NavigationMode> for NormalNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::NavigationMode {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::NavigationMode {
         match self {
-            NormalNavigation::Menu(n) => n.to_numbas(locale),
-            NormalNavigation::Sequential(n) => n.to_numbas(locale),
+            NormalNavigation::Menu(n) => n.to_numbas(locale, &()),
+            NormalNavigation::Sequential(n) => n.to_numbas(locale, &()),
         }
     }
 }
@@ -103,13 +105,14 @@ pub struct SequentialNavigation {
 }
 
 impl ToNumbas<numbas::exam::navigation::NavigationMode> for SequentialNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::NavigationMode {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::NavigationMode {
         numbas::exam::navigation::NavigationMode::Sequential(
             numbas::exam::navigation::NavigationModeSequential {
-                on_leave: self.on_leave.to_numbas(locale),
-                show_results_page: self.show_results_page.to_numbas(locale),
-                can_move_to_previous: self.can_move_to_previous.to_numbas(locale),
-                browsing_enabled: self.browsing_enabled.to_numbas(locale),
+                on_leave: self.on_leave.to_numbas(locale, &()),
+                show_results_page: self.show_results_page.to_numbas(locale, &()),
+                can_move_to_previous: self.can_move_to_previous.to_numbas(locale, &()),
+                browsing_enabled: self.browsing_enabled.to_numbas(locale, &()),
             },
         )
     }
@@ -125,7 +128,8 @@ pub struct MenuNavigation {
 }
 
 impl ToNumbas<numbas::exam::navigation::NavigationMode> for MenuNavigation {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::navigation::NavigationMode {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::NavigationMode {
         numbas::exam::navigation::NavigationMode::Menu // TODO: sequential
     }
 }
@@ -142,20 +146,21 @@ pub struct DiagnosticNavigation {
 }
 
 impl ToNumbas<numbas::exam::navigation::Navigation> for DiagnosticNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::Navigation {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::Navigation {
         numbas::exam::navigation::Navigation {
-            allow_regenerate: self.shared_data.can_regenerate.to_numbas(locale),
-            allow_steps: self.shared_data.show_steps.to_numbas(locale),
-            show_frontpage: self.shared_data.show_title_page.to_numbas(locale),
-            confirm_when_leaving: self.shared_data.confirm_when_leaving.to_numbas(locale),
+            allow_regenerate: self.shared_data.can_regenerate.to_numbas(locale, &()),
+            allow_steps: self.shared_data.show_steps.to_numbas(locale, &()),
+            show_frontpage: self.shared_data.show_title_page.to_numbas(locale, &()),
+            confirm_when_leaving: self.shared_data.confirm_when_leaving.to_numbas(locale, &()),
             start_password: self
                 .shared_data
                 .start_password
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or_default(),
             navigation_mode: numbas::exam::navigation::NavigationMode::Diagnostic(
                 numbas::exam::navigation::NavigationModeDiagnostic {
-                    on_leave: self.on_leave.clone().to_numbas(locale),
+                    on_leave: self.on_leave.clone().to_numbas(locale, &()),
                 },
             ),
         }
@@ -197,7 +202,8 @@ pub enum ShowResultsPage {
 }
 
 impl ToNumbas<numbas::exam::navigation::ShowResultsPage> for ShowResultsPage {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::navigation::ShowResultsPage {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::ShowResultsPage {
         match self {
             ShowResultsPage::OnCompletion => {
                 numbas::exam::navigation::ShowResultsPage::OnCompletion
@@ -233,7 +239,8 @@ pub enum LeaveAction {
 }
 
 impl ToNumbas<numbas::exam::navigation::LeaveAction> for LeaveAction {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::navigation::LeaveAction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::navigation::LeaveAction {
         match self {
             LeaveAction::None => numbas::exam::navigation::LeaveAction::None {
                 message: "".to_string(), // message doesn't mean anything

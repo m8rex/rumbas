@@ -36,16 +36,17 @@ pub struct Feedback {
 }
 
 impl ToNumbas<numbas::exam::feedback::Feedback> for Feedback {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::Feedback {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::feedback::Feedback {
         numbas::exam::feedback::Feedback {
-            show_actual_mark: self.show_current_marks.to_numbas(locale),
-            show_total_mark: self.show_maximum_marks.to_numbas(locale),
-            show_answer_state: self.show_answer_state.to_numbas(locale),
-            allow_reveal_answer: self.allow_reveal_answer.to_numbas(locale),
-            review: self.review.clone().to_numbas(locale),
+            show_actual_mark: self.show_current_marks.to_numbas(locale, &()),
+            show_total_mark: self.show_maximum_marks.to_numbas(locale, &()),
+            show_answer_state: self.show_answer_state.to_numbas(locale, &()),
+            allow_reveal_answer: self.allow_reveal_answer.to_numbas(locale, &()),
+            review: self.review.clone().to_numbas(locale, &()),
             advice: self.advice.clone().to_string(locale),
-            intro: self.intro.clone().to_numbas(locale),
-            feedback_messages: self.feedback_messages.to_numbas(locale),
+            intro: self.intro.clone().to_numbas(locale, &()),
+            feedback_messages: self.feedback_messages.to_numbas(locale, &()),
         }
     }
 }
@@ -83,12 +84,13 @@ pub struct Review {
 }
 
 impl ToNumbas<numbas::exam::feedback::Review> for Review {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::Review {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::feedback::Review {
         numbas::exam::feedback::Review {
-            show_score: self.show_score.to_numbas(locale),
-            show_feedback: self.show_feedback.to_numbas(locale),
-            show_expected_answer: self.show_expected_answer.to_numbas(locale),
-            show_advice: self.show_advice.to_numbas(locale),
+            show_score: self.show_score.to_numbas(locale, &()),
+            show_feedback: self.show_feedback.to_numbas(locale, &()),
+            show_expected_answer: self.show_expected_answer.to_numbas(locale, &()),
+            show_advice: self.show_advice.to_numbas(locale, &()),
         }
     }
 }
@@ -115,10 +117,11 @@ pub struct FeedbackMessage {
 }
 
 impl ToNumbas<numbas::exam::feedback::FeedbackMessage> for FeedbackMessage {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::feedback::FeedbackMessage {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::feedback::FeedbackMessage {
         numbas::exam::feedback::FeedbackMessage {
-            message: self.message.to_numbas(locale),
-            threshold: self.threshold.to_numbas(locale),
+            message: self.message.to_numbas(locale, &()),
+            threshold: self.threshold.to_numbas(locale, &()),
         }
     }
 }

@@ -20,9 +20,10 @@ question_part_type! {
 }
 
 impl ToNumbas<numbas::question::part::extension::QuestionPartExtension> for QuestionPartExtension {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::extension::QuestionPartExtension {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _: &Self::ToNumbasHelper) -> numbas::question::part::extension::QuestionPartExtension {
         numbas::question::part::extension::QuestionPartExtension {
-            part_data: self.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
         }
     }
 }

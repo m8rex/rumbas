@@ -137,15 +137,10 @@ impl<T: RumbasCheck> RumbasCheck for Noneable<T> {
 }
 
 impl<S, T: ToNumbas<S> + RumbasCheck> ToNumbas<Option<S>> for Noneable<T> {
-    fn to_numbas(&self, locale: &str) -> Option<S> {
+    type ToNumbasHelper = T::ToNumbasHelper;
+    fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> Option<S> {
         match self {
-            Noneable::NotNone(val) => Some(val.clone().to_numbas(locale)),
-            _ => None,
-        }
-    }
-    fn to_numbas_with_name(&self, locale: &str, name: String) -> Option<S> {
-        match self {
-            Noneable::NotNone(val) => Some(val.clone().to_numbas_with_name(locale, name)),
+            Noneable::NotNone(val) => Some(val.clone().to_numbas(locale, data)),
             _ => None,
         }
     }

@@ -22,12 +22,14 @@ question_part_type! {
 impl ToNumbas<numbas::question::part::information::QuestionPartInformation>
     for QuestionPartInformation
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::information::QuestionPartInformation {
         numbas::question::part::information::QuestionPartInformation {
-            part_data: self.to_numbas(locale), // TODO: to numbas?
+            part_data: self.to_numbas(locale, &()), // TODO: to numbas?
         }
     }
 }

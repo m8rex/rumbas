@@ -502,7 +502,8 @@ macro_rules! translatable_type {
             }
 
             impl ToNumbas<$subtype> for $type {
-                fn to_numbas(&self, locale: &str) -> $subtype {
+                type ToNumbasHelper = ();
+                fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> $subtype {
                     self.to_string(locale).unwrap().try_into().unwrap()
                 }
             }
