@@ -54,20 +54,22 @@ question_part_type! {
 impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices>
     for QuestionPartMatchAnswersWithItems
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
         let (answers, choices, marking_matrix) = match &self.answer_data {
             MultipleChoiceMatchAnswerData::ItemBased(data) => (
-                VariableValued::Value(data.answers.clone()).to_numbas(locale),
+                VariableValued::Value(data.answers.clone()).to_numbas(locale, &()),
                 VariableValued::Value(
                     data.items
                         .iter()
                         .map(|a| a.clone().statement)
                         .collect::<Vec<_>>(),
                 )
-                .to_numbas(locale),
+                .to_numbas(locale, &()),
                 VariableValued::Value(
                     data.items.clone(), // TODO: better handling
                 )
@@ -89,38 +91,38 @@ impl ToNumbas<numbas::question::part::match_answers::QuestionPartMatchAnswersWit
                         })
                         .collect::<Vec<_>>()
                 })
-                .to_numbas(locale),
+                .to_numbas(locale, &()),
             ),
             MultipleChoiceMatchAnswerData::NumbasLike(data) => (
-                data.answers.to_numbas(locale),
-                data.choices.to_numbas(locale),
-                data.marks.to_numbas(locale),
+                data.answers.to_numbas(locale, &()),
+                data.choices.to_numbas(locale, &()),
+                data.marks.to_numbas(locale, &()),
             ),
         };
         numbas::question::part::match_answers::QuestionPartMatchAnswersWithChoices {
-            part_data: self.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
             min_answers: self.should_select_at_least.into(),
             max_answers: self
                 .should_select_at_most
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or_default(),
             min_marks: self
                 .minimal_achievable_marks
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or_default(),
             max_marks: self
                 .maximal_achievable_marks
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or_default(),
-            shuffle_answers: self.shuffle_answers.to_numbas(locale),
-            shuffle_choices: self.shuffle_items.to_numbas(locale),
+            shuffle_answers: self.shuffle_answers.to_numbas(locale, &()),
+            shuffle_choices: self.shuffle_items.to_numbas(locale, &()),
             answers,
             choices,
-            wrong_nb_answers_warning: self.wrong_nb_answers_warning_type.to_numbas(locale),
-            layout: self.layout.to_numbas(locale),
-            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
+            wrong_nb_answers_warning: self.wrong_nb_answers_warning_type.to_numbas(locale, &()),
+            layout: self.layout.to_numbas(locale, &()),
+            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale, &()),
             marking_matrix,
-            display_type: self.display.to_numbas(locale),
+            display_type: self.display.to_numbas(locale, &()),
         }
     }
 }
@@ -220,14 +222,17 @@ pub enum MatchAnswerWithItemsDisplay {
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType>
     for MatchAnswerWithItemsDisplay
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
+
     ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType {
         match self {
             MatchAnswerWithItemsDisplay::Check(c) => {
                 numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayType::Check(
-                    c.to_numbas(locale),
+                    c.to_numbas(locale, &()),
                 )
             }
             MatchAnswerWithItemsDisplay::Radio => {
@@ -263,12 +268,14 @@ pub struct MatchAnswersWithChoicesDisplayCheck {
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck>
     for MatchAnswersWithChoicesDisplayCheck
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
-        locale: &str,
+        locale: &str,        _data: &Self::ToNumbasHelper
+
     ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
         numbas::question::part::match_answers::MatchAnswersWithChoicesDisplayTypeCheck {
-            marking_method: self.marking_method.to_numbas(locale),
+            marking_method: self.marking_method.to_numbas(locale, &()),
         }
     }
 }
@@ -352,9 +359,11 @@ pub enum MultipleChoiceWarningType {
 impl ToNumbas<numbas::question::part::match_answers::MultipleChoiceWarningType>
     for MultipleChoiceWarningType
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
-        _locale: &str,
+        _locale: &str,        _data: &Self::ToNumbasHelper
+
     ) -> numbas::question::part::match_answers::MultipleChoiceWarningType {
         match self {
             Self::None => numbas::question::part::match_answers::MultipleChoiceWarningType::None,
@@ -390,9 +399,11 @@ pub enum MatchAnswersWithChoicesLayoutType {
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType>
     for MatchAnswersWithChoicesLayoutType
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
-        _locale: &str,
+        _locale: &str,        _data: &Self::ToNumbasHelper
+
     ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType {
         match self {
             Self::All => numbas::question::part::match_answers::MatchAnswersWithChoicesLayoutType::All,
@@ -426,12 +437,14 @@ pub struct MatchAnswersWithChoicesLayout {
 impl ToNumbas<numbas::question::part::match_answers::MatchAnswersWithChoicesLayout>
     for MatchAnswersWithChoicesLayout
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
-        locale: &str,
+        locale: &str,       
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
         numbas::question::part::match_answers::MatchAnswersWithChoicesLayout {
-            r#type: self.layout_type.to_numbas(locale),
+            r#type: self.layout_type.to_numbas(locale, &()),
             expression: String::new(),
         }
     }

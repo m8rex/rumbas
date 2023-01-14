@@ -27,19 +27,29 @@ pub enum VariableRepresentation {
     Long(Box<Variable>),
 }
 
+#[derive(Debug, Clone)]
+pub struct VariableToNumbasHelper {
+    name: String,
+    group: String
+}
+
+impl VariableToNumbasHelper {
+    pub fn with_group(name: String, group: String) -> Self {
+        VariableToNumbasHelper { name, group }
+    }
+    pub fn ungrouped(name: String) -> Self {
+        Self::with_group(name, UNGROUPED_GROUP.to_string())
+    }
+}
+
 impl ToNumbas<numbas::question::variable::Variable> for VariableRepresentation {
-    fn to_numbas_with_name(
+    type ToNumbasHelper = VariableToNumbasHelper;
+    fn to_numbas(
         &self,
         locale: &str,
-        name: String,
+        data: &Self::ToNumbasHelper,
     ) -> numbas::question::variable::Variable {
-        self.to_variable(locale).to_numbas_with_name(locale, name)
-    }
-    fn to_numbas(&self, _locale: &str) -> numbas::question::variable::Variable {
-        panic!(
-            "{}",
-            "Should not happen, don't call this method Missing name".to_string(),
-        )
+        self.to_variable(locale).to_numbas(locale, data)
     }
 }
 
@@ -49,7 +59,6 @@ impl ToRumbas<VariableRepresentation> for numbas::question::variable::Variable {
             definition: self.definition.to_rumbas(),
             description: self.description.to_rumbas(),
             template_type: self.template_type.to_rumbas(),
-            group: self.group.to_rumbas(),
         }))
     }
 }
@@ -57,7 +66,7 @@ impl ToRumbas<VariableRepresentation> for numbas::question::variable::Variable {
 impl VariableRepresentation {
     pub fn to_variable(&self, locale: &str) -> Variable {
         match self {
-            VariableRepresentation::ListOfStrings(l) => Variable::ungrouped(
+            VariableRepresentation::ListOfStrings(l) => Variable::new(
                 VariableTemplateType::ListOfStrings,
                 &serde_json::to_string(&l).unwrap(),
             ),
@@ -67,23 +76,23 @@ impl VariableRepresentation {
             ),*/
             VariableRepresentation::Long(v) => *(v.clone()),
             VariableRepresentation::Number(n) => {
-                Variable::ungrouped(VariableTemplateType::Number, &n.to_string())
+                Variable::new(VariableTemplateType::Number, &n.to_string())
             }
             VariableRepresentation::Other(o) => match o {
                 VariableStringRepresentation::Anything(s) => {
-                    Variable::ungrouped(VariableTemplateType::Anything, &s.to_string())
+                    Variable::new(VariableTemplateType::Anything, &s.to_string())
                 }
                 VariableStringRepresentation::Range(r) => {
-                    Variable::ungrouped(VariableTemplateType::Range, &r.as_range())
+                    Variable::new(VariableTemplateType::Range, &r.as_range())
                 }
                 VariableStringRepresentation::RandomRange(r) => {
-                    Variable::ungrouped(VariableTemplateType::RandomRange, &r.as_random_range())
+                    Variable::new(VariableTemplateType::RandomRange, &r.as_random_range())
                 }
                 VariableStringRepresentation::r#String(s) => {
-                    Variable::ungrouped(VariableTemplateType::r#String, s)
+                    Variable::new(VariableTemplateType::r#String, s)
                 }
             },
-            VariableRepresentation::TranslatableString(l) => Variable::ungrouped(
+            VariableRepresentation::TranslatableString(l) => Variable::new(
                 VariableTemplateType::r#String,
                 &l.to_string(locale).unwrap(),
             ),
@@ -341,39 +350,33 @@ pub struct Variable {
     pub definition: FileString, //TODO: definition dependant of template type, for random_range: start, end and step instead
     pub description: String,
     pub template_type: VariableTemplateType,
-    pub group: String, //TODO "Ungrouped variables" -> real optional? if not -> ungrouped?
 }
 
 impl ToNumbas<numbas::question::variable::Variable> for Variable {
-    fn to_numbas_with_name(
+    type ToNumbasHelper = VariableToNumbasHelper;
+    fn to_numbas(
         &self,
         locale: &str,
-        name: String,
+        data: &Self::ToNumbasHelper,
     ) -> numbas::question::variable::Variable {
+        let data = data.to_owned();
         numbas::question::variable::Variable {
-            name,
-            definition: self.definition.to_numbas(locale),
-            description: self.description.to_numbas(locale),
-            template_type: self.template_type.to_numbas(locale),
-            group: self.group.to_numbas(locale),
+            name: data.name,
+            definition: self.definition.to_numbas(locale, &()),
+            description: self.description.to_numbas(locale, &()),
+            template_type: self.template_type.to_numbas(locale, &()),
+            group: data.group,
             can_override: false, // Don't support overriding variables (yet?)
         }
-    }
-    fn to_numbas(&self, _locale: &str) -> numbas::question::variable::Variable {
-        panic!(
-            "{}",
-            "Should not happen, don't call this method Missing name".to_string(),
-        )
     }
 }
 
 impl Variable {
-    fn ungrouped(template_type: VariableTemplateType, definition: &str) -> Variable {
+    fn new(template_type: VariableTemplateType, definition: &str) -> Variable {
         Variable {
             template_type,
             definition: definition.to_string().to_rumbas(),
             description: String::new().to_rumbas(),
-            group: UNGROUPED_GROUP.to_string().to_rumbas(),
         }
     }
 }
@@ -403,7 +406,8 @@ pub enum VariableTemplateType {
 }
 
 impl ToNumbas<numbas::question::variable::VariableTemplateType> for VariableTemplateType {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::variable::VariableTemplateType {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::variable::VariableTemplateType {
         match self {
             VariableTemplateType::Anything => {
                 numbas::question::variable::VariableTemplateType::Anything

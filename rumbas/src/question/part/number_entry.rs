@@ -48,25 +48,27 @@ question_part_type! {
 impl ToNumbas<numbas::question::part::number_entry::QuestionPartNumberEntry>
     for QuestionPartNumberEntry
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::number_entry::QuestionPartNumberEntry {
         numbas::question::part::number_entry::QuestionPartNumberEntry {
-            part_data: self.to_numbas(locale),
-            correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale),
-            correct_answer_style: self.display_correct_in_style.to_numbas(locale),
-            allow_fractions: self.allow_fractions.to_numbas(locale),
-            notation_styles: self.allowed_notation_styles.to_numbas(locale),
-            fractions_must_be_reduced: self.fractions_must_be_reduced.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            correct_answer_fraction: self.display_correct_as_fraction.to_numbas(locale, &()),
+            correct_answer_style: self.display_correct_in_style.to_numbas(locale, &()),
+            allow_fractions: self.allow_fractions.to_numbas(locale, &()),
+            notation_styles: self.allowed_notation_styles.to_numbas(locale, &()),
+            fractions_must_be_reduced: self.fractions_must_be_reduced.to_numbas(locale, &()),
             partial_credit_if_fraction_not_reduced: self
                 .partial_credit_if_fraction_not_reduced
-                .to_numbas(locale),
+                .to_numbas(locale, &()),
 
             precision: Default::default(), //TODO
             show_precision_hint: true,     //TODO
-            show_fraction_hint: self.fractions_must_be_reduced_hint.to_numbas(locale),
-            answer: self.answer.to_numbas(locale),
+            show_fraction_hint: self.fractions_must_be_reduced_hint.to_numbas(locale, &()),
+            answer: self.answer.to_numbas(locale, &()),
             // checking_type: Some(numbas::exam::CheckingType::Range), //TODO
         }
     }
@@ -122,20 +124,22 @@ pub struct NumberEntryAnswerRange {
 }
 
 impl ToNumbas<numbas::question::part::number_entry::NumberEntryAnswerType> for NumberEntryAnswer {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::number_entry::NumberEntryAnswerType {
         match self {
             NumberEntryAnswer::Normal(f) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::Answer {
-                    answer: f.to_numbas(locale),
+                    answer: f.to_numbas(locale, &()),
                 }
             }
             NumberEntryAnswer::Range(range) => {
                 numbas::question::part::number_entry::NumberEntryAnswerType::MinMax {
-                    min_value: range.from.to_numbas(locale),
-                    max_value: range.to.to_numbas(locale),
+                    min_value: range.from.to_numbas(locale, &()),
+                    max_value: range.to.to_numbas(locale, &()),
                 }
             }
         }
@@ -193,7 +197,8 @@ pub enum AnswerStyle {
 }
 
 impl ToNumbas<numbas::support::answer_style::AnswerStyle> for AnswerStyle {
-    fn to_numbas(&self, _locale: &str) -> numbas::support::answer_style::AnswerStyle {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::support::answer_style::AnswerStyle {
         match self {
             AnswerStyle::English => numbas::support::answer_style::AnswerStyle::English,
             AnswerStyle::EnglishPlain => numbas::support::answer_style::AnswerStyle::EnglishPlain,

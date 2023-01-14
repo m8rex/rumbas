@@ -24,11 +24,12 @@ pub struct QuestionNavigation {
 }
 
 impl ToNumbas<numbas::question::navigation::Navigation> for QuestionNavigation {
-    fn to_numbas(&self, locale: &str) -> numbas::question::navigation::Navigation {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::navigation::Navigation {
         numbas::question::navigation::Navigation {
-            allow_regenerate: self.can_regenerate.to_numbas(locale),
-            show_frontpage: self.show_title_page.to_numbas(locale),
-            confirm_when_leaving: self.confirm_when_leaving.to_numbas(locale),
+            allow_regenerate: self.can_regenerate.to_numbas(locale, &()),
+            show_frontpage: self.show_title_page.to_numbas(locale, &()),
+            confirm_when_leaving: self.confirm_when_leaving.to_numbas(locale, &()),
         }
     }
 }

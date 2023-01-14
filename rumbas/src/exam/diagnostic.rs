@@ -42,17 +42,18 @@ pub struct DiagnosticExam {
 }
 
 impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
-        let basic_settings = self.to_numbas(locale);
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
+        let basic_settings = self.to_numbas(locale, &());
 
-        let navigation = self.navigation.to_numbas(locale);
+        let navigation = self.navigation.to_numbas(locale, &());
 
-        let timing = self.timing.to_numbas(locale);
+        let timing = self.timing.to_numbas(locale, &());
 
-        let feedback = self.feedback.to_numbas(locale);
+        let feedback = self.feedback.to_numbas(locale, &());
 
         let question_groups: Vec<numbas::exam::question_group::QuestionGroup> =
-            self.question_groups.to_numbas(locale);
+            self.question_groups.to_numbas(locale, &());
 
         let resources: Vec<numbas::question::resource::Resource> = self
             .question_groups
@@ -66,7 +67,7 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale); // TODO: extract?
+            .to_numbas(locale, &()); // TODO: extract?
 
         let extensions: Vec<String> = self
             .question_groups
@@ -89,9 +90,9 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            .to_numbas(locale); // todo extract?
+            .to_numbas(locale, &()); // todo extract?
 
-        let diagnostic = Some(self.diagnostic.to_numbas(locale));
+        let diagnostic = Some(self.diagnostic.to_numbas(locale, &()));
 
         numbas::exam::Exam {
             basic_settings,
@@ -108,15 +109,16 @@ impl ToNumbas<numbas::exam::Exam> for DiagnosticExam {
 }
 
 impl ToNumbas<numbas::exam::BasicExamSettings> for DiagnosticExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::BasicExamSettings {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::BasicExamSettings {
         numbas::exam::BasicExamSettings {
-            name: self.name.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
             duration_in_seconds: self
                 .timing
                 .duration_in_seconds
-                .to_numbas(locale)
+                .to_numbas(locale, &())
                 .unwrap_or(0),
-            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale),
+            percentage_needed_to_pass: self.feedback.percentage_needed_to_pass.to_numbas(locale, &()),
             show_question_group_names: self.navigation.shared_data.show_names_of_question_groups,
             show_student_name: self.feedback.clone().show_name_of_student,
             allow_printing: self.navigation.shared_data.allow_printing,
@@ -138,20 +140,22 @@ pub struct Diagnostic {
 }
 
 impl ToNumbas<numbas::exam::diagnostic::Diagnostic> for Diagnostic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::Diagnostic {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::diagnostic::Diagnostic {
         numbas::exam::diagnostic::Diagnostic {
-            knowledge_graph: self.to_numbas(locale),
-            script: self.script.to_numbas(locale),
-            custom_script: self.script.to_numbas(locale),
+            knowledge_graph: self.to_numbas(locale, &()),
+            script: self.script.to_numbas(locale, &()),
+            custom_script: self.script.to_numbas(locale, &()),
         }
     }
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraph> for Diagnostic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraph {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraph {
         numbas::exam::diagnostic::DiagnosticKnowledgeGraph {
-            topics: self.topics.to_numbas(locale),
-            learning_objectives: self.objectives.to_numbas(locale),
+            topics: self.topics.to_numbas(locale, &()),
+            learning_objectives: self.objectives.to_numbas(locale, &()),
         }
     }
 }
@@ -182,7 +186,8 @@ pub enum DiagnosticScript {
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
-    fn to_numbas(&self, _locale: &str) -> numbas::exam::diagnostic::DiagnosticScript {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::diagnostic::DiagnosticScript {
         match self {
             DiagnosticScript::Mastery => numbas::exam::diagnostic::DiagnosticScript::Mastery,
             DiagnosticScript::Custom(_) => numbas::exam::diagnostic::DiagnosticScript::Custom,
@@ -192,9 +197,10 @@ impl ToNumbas<numbas::exam::diagnostic::DiagnosticScript> for DiagnosticScript {
 }
 
 impl ToNumbas<numbas::jme::JMENotesString> for DiagnosticScript {
-    fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::jme::JMENotesString {
         match self {
-            DiagnosticScript::Custom(s) => s.to_numbas(locale),
+            DiagnosticScript::Custom(s) => s.to_numbas(locale, &()),
             DiagnosticScript::Diagnosys => Default::default(),
             DiagnosticScript::Mastery => Default::default(),
         }
@@ -227,13 +233,15 @@ pub struct LearningObjective {
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective>
     for LearningObjective
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective {
         numbas::exam::diagnostic::DiagnosticKnowledgeGraphLearningObjective {
-            name: self.name.to_numbas(locale),
-            description: self.description.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            description: self.description.to_numbas(locale, &()),
         }
     }
 }
@@ -265,12 +273,13 @@ pub struct LearningTopic {
 }
 
 impl ToNumbas<numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic> for LearningTopic {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
         numbas::exam::diagnostic::DiagnosticKnowledgeGraphTopic {
-            name: self.name.to_numbas(locale),
-            description: self.description.to_numbas(locale),
-            learning_objectives: self.objectives.to_numbas(locale),
-            depends_on: self.depends_on.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            description: self.description.to_numbas(locale, &()),
+            learning_objectives: self.objectives.to_numbas(locale, &()),
+            depends_on: self.depends_on.to_numbas(locale, &()),
         }
     }
 }

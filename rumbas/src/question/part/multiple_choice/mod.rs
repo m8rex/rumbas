@@ -134,9 +134,11 @@ impl ToRumbas<MultipleChoiceMarkingMethod>
 impl ToNumbas<numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod>
     for MultipleChoiceMarkingMethod
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         _locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod {
         match self {
             MultipleChoiceMarkingMethod::SumTickedCells => numbas::question::part::choose_multiple::MultipleChoiceMarkingMethod::SumTickedCells,

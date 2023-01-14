@@ -168,7 +168,7 @@ pub fn check_file(path: &RumbasPath) -> CheckResult {
                         let mut passed_locales = Vec::new();
                         for locale_item in exam.data.locales().iter() {
                             let locale = locale_item.name.to_owned();
-                            let numbas = exam.to_numbas_safe(&locale);
+                            let numbas = exam.to_numbas_safe(&locale, &());
                             match numbas {
                                 Ok(numbas_exam) => {
                                     passed_locales.push((

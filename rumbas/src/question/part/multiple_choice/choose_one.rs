@@ -36,7 +36,8 @@ question_part_type! {
 }
 
 impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for QuestionPartChooseOne {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::choose_one::QuestionPartChooseOne {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::choose_one::QuestionPartChooseOne {
         let (choices, marking_matrix, distractors) = match &self.answer_data {
             MultipleChoiceAnswerData::ItemBased(answers) => (
                 VariableValued::Value(
@@ -45,30 +46,30 @@ impl ToNumbas<numbas::question::part::choose_one::QuestionPartChooseOne> for Que
                         .map(|a| a.statement.clone())
                         .collect::<Vec<_>>(),
                 )
-                .to_numbas(locale),
+                .to_numbas(locale, &()),
                 VariableValued::Value(answers.iter().map(|a| a.marks.clone()).collect::<Vec<_>>())
-                    .to_numbas(locale),
+                    .to_numbas(locale, &()),
                 answers
                     .iter()
                     .map(|a| {
                         a.feedback.clone() //TODO
                     })
                     .collect::<Vec<_>>()
-                    .to_numbas(locale),
+                    .to_numbas(locale, &()),
             ),
             MultipleChoiceAnswerData::NumbasLike(data) => (
-                data.answers.to_numbas(locale),
-                data.marks.to_numbas(locale),
-                data.feedback.to_numbas(locale).unwrap_or_default(),
+                data.answers.to_numbas(locale, &()),
+                data.marks.to_numbas(locale, &()),
+                data.feedback.to_numbas(locale, &()).unwrap_or_default(),
             ),
         };
         numbas::question::part::choose_one::QuestionPartChooseOne {
-            part_data: self.to_numbas(locale),
-            shuffle_answers: self.shuffle_answers.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            shuffle_answers: self.shuffle_answers.to_numbas(locale, &()),
             choices,
-            display_type: self.display.to_numbas(locale),
+            display_type: self.display.to_numbas(locale, &()),
             columns: self.display.get_nb_columns().into(),
-            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale),
+            show_cell_answer_state: self.show_cell_answer_state.to_numbas(locale, &()),
             marking_matrix,
             distractors,
         }
@@ -114,7 +115,8 @@ pub enum ChooseOneDisplay {
 }
 
 impl ToNumbas<numbas::question::part::choose_one::ChooseOneDisplayType> for ChooseOneDisplay {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::choose_one::ChooseOneDisplayType {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::choose_one::ChooseOneDisplayType {
         match self {
             ChooseOneDisplay::DropDown => {
                 numbas::question::part::choose_one::ChooseOneDisplayType::DropDown

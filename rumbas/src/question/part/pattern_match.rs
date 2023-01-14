@@ -38,17 +38,19 @@ question_part_type! {
 impl ToNumbas<numbas::question::part::pattern_match::QuestionPartPatternMatch>
     for QuestionPartPatternMatch
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::pattern_match::QuestionPartPatternMatch {
         numbas::question::part::pattern_match::QuestionPartPatternMatch {
-            part_data: self.to_numbas(locale),
-            case_sensitive: self.case_sensitive.to_numbas(locale),
-            partial_credit: self.wrong_case_partial_credit.to_numbas(locale),
-            answer: self.pattern.to_numbas(locale),
-            display_answer: Some(self.display_answer.to_numbas(locale)),
-            match_mode: self.match_mode.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            case_sensitive: self.case_sensitive.to_numbas(locale, &()),
+            partial_credit: self.wrong_case_partial_credit.to_numbas(locale, &()),
+            answer: self.pattern.to_numbas(locale, &()),
+            display_answer: Some(self.display_answer.to_numbas(locale, &())),
+            match_mode: self.match_mode.to_numbas(locale, &()),
         }
     }
 }
@@ -90,7 +92,8 @@ pub enum PatternMatchMode {
 }
 
 impl ToNumbas<numbas::question::part::pattern_match::PatternMatchMode> for PatternMatchMode {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::pattern_match::PatternMatchMode {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::pattern_match::PatternMatchMode {
         match self {
             Self::Exact => numbas::question::part::pattern_match::PatternMatchMode::Exact,
             Self::Regex => numbas::question::part::pattern_match::PatternMatchMode::Regex,

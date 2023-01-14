@@ -28,7 +28,8 @@ macro_rules! builtin_constants {
             ),*
         }
         impl ToNumbas<std::collections::BTreeMap<String, bool>> for $struct {
-            fn to_numbas(&self, _locale: &str) -> std::collections::BTreeMap<String, bool> {
+            type ToNumbasHelper = ();
+            fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> std::collections::BTreeMap<String, bool> {
                 let mut builtin = std::collections::BTreeMap::new();
                 $(
                     builtin.insert($name.to_string(), self.$field);
@@ -78,11 +79,12 @@ pub struct CustomConstant {
 }
 
 impl ToNumbas<numbas::question::constants::QuestionConstant> for CustomConstant {
-    fn to_numbas(&self, locale: &str) -> numbas::question::constants::QuestionConstant {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::constants::QuestionConstant {
         numbas::question::constants::QuestionConstant {
-            name: self.name.to_numbas(locale),
-            value: self.value.to_numbas(locale),
-            tex: self.tex.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            value: self.value.to_numbas(locale, &()),
+            tex: self.tex.to_numbas(locale, &()),
         }
     }
 }

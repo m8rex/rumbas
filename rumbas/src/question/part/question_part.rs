@@ -31,13 +31,14 @@ pub enum QuestionPart {
 }
 
 impl ToNumbas<numbas::question::part::QuestionPart> for QuestionPart {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPart {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPart {
         match self {
             QuestionPart::Builtin(b) => {
-                numbas::question::part::QuestionPart::Builtin(b.to_numbas(locale))
+                numbas::question::part::QuestionPart::Builtin(b.to_numbas(locale, &()))
             }
             QuestionPart::Custom(b) => {
-                numbas::question::part::QuestionPart::Custom(b.to_numbas(locale))
+                numbas::question::part::QuestionPart::Custom(b.to_numbas(locale, &()))
             }
         }
     }
@@ -104,39 +105,40 @@ pub enum QuestionPartBuiltin {
 }
 
 impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuiltin {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartBuiltin {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPartBuiltin {
         match self {
             QuestionPartBuiltin::JME(d) => {
-                numbas::question::part::QuestionPartBuiltin::JME((*d).to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::JME((*d).to_numbas(locale, &()))
             }
             QuestionPartBuiltin::GapFill(d) => {
-                numbas::question::part::QuestionPartBuiltin::GapFill(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::GapFill(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::ChooseOne(d) => {
-                numbas::question::part::QuestionPartBuiltin::ChooseOne(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::ChooseOne(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::ChooseMultiple(d) => {
-                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::MatchAnswersWithItems(d) => {
                 numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(
-                    d.to_numbas(locale),
+                    d.to_numbas(locale, &()),
                 )
             }
             QuestionPartBuiltin::NumberEntry(d) => {
-                numbas::question::part::QuestionPartBuiltin::NumberEntry(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::NumberEntry(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::PatternMatch(d) => {
-                numbas::question::part::QuestionPartBuiltin::PatternMatch(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::PatternMatch(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::Information(d) => {
-                numbas::question::part::QuestionPartBuiltin::Information(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::Information(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::Extension(d) => {
-                numbas::question::part::QuestionPartBuiltin::Extension(d.to_numbas(locale))
+                numbas::question::part::QuestionPartBuiltin::Extension(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::Matrix(d) => {
-                numbas::question::part::QuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale)))
+                numbas::question::part::QuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale, &())))
             }
         }
     }
@@ -203,7 +205,8 @@ impl QuestionPartBuiltinInput {
 pub struct JMENotes(pub Vec<JMENote>);
 
 impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
-    fn to_numbas(&self, locale: &str) -> numbas::jme::JMENotesString {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::jme::JMENotesString {
         self.0
             .iter()
             .map(|v| {
@@ -216,7 +219,7 @@ impl ToNumbas<numbas::jme::JMENotesString> for JMENotes {
                     "{}{}:{}",
                     v.name,
                     description,
-                    v.expression.to_numbas(locale)
+                    v.expression.to_numbas(locale, &())
                 )
             })
             .collect::<Vec<_>>()
@@ -256,10 +259,11 @@ pub struct JMENote {
 }
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JMENote {
-    fn to_numbas(&self, locale: &str) -> numbas::question::custom_part_type::CustomPartMarkingNote {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::custom_part_type::CustomPartMarkingNote {
         numbas::question::custom_part_type::CustomPartMarkingNote {
-            name: self.name.to_numbas(locale),
-            definition: self.expression.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            definition: self.expression.to_numbas(locale, &()),
             description: self.description.unwrap_or("".to_string()),
         }
     }
@@ -323,18 +327,19 @@ macro_rules! question_part_type {
             )?
         }
         impl ToNumbas<numbas::question::part::QuestionPartSharedData> for $struct {
-            fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartSharedData {
+            type ToNumbasHelper = ();
+            fn to_numbas(&self, locale: &str, _: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPartSharedData {
                 numbas::question::part::QuestionPartSharedData {
-                    marks: self.marks.to_numbas(locale),
-                    prompt: self.prompt.to_numbas(locale),
-                    use_custom_name: self.part_name.to_numbas(locale).is_some(),
-                    custom_name: self.part_name.to_numbas(locale).unwrap_or_default(),
-                    steps_penalty: self.steps_penalty.to_numbas(locale),
-                    show_correct_answer: self.show_correct_answer.to_numbas(locale),
-                    show_feedback_icon: self.show_feedback_icon.to_numbas(locale),
-                    adaptive_marking: self.adaptive_marking.to_numbas(locale).unwrap_or_default(),
-                    custom_marking: self.custom_marking.to_numbas(locale).unwrap_or_default(),
-                    steps: self.steps.to_numbas(&locale),
+                    marks: self.marks.to_numbas(locale, &()),
+                    prompt: self.prompt.to_numbas(locale, &()),
+                    use_custom_name: self.part_name.to_numbas(locale, &()).is_some(),
+                    custom_name: self.part_name.to_numbas(locale, &()).unwrap_or_default(),
+                    steps_penalty: self.steps_penalty.to_numbas(locale, &()),
+                    show_correct_answer: self.show_correct_answer.to_numbas(locale, &()),
+                    show_feedback_icon: self.show_feedback_icon.to_numbas(locale, &()),
+                    adaptive_marking: self.adaptive_marking.to_numbas(locale, &()).unwrap_or_default(),
+                    custom_marking: self.custom_marking.to_numbas(locale, &()).unwrap_or_default(),
+                    steps: self.steps.to_numbas(locale, &()),
                 }
 
             }
@@ -373,7 +378,8 @@ pub enum CustomPartInputTypeValue {
 }
 
 impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartInputTypeValue {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::CustomPartInputTypeValue {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::CustomPartInputTypeValue {
         match self {
             CustomPartInputTypeValue::CheckBox(v) => {
                 numbas::question::part::CustomPartInputTypeValue::CheckBox(*v)
@@ -399,11 +405,12 @@ impl ToRumbas<CustomPartInputTypeValue> for numbas::question::part::CustomPartIn
 }
 
 impl ToNumbas<numbas::question::part::QuestionPartCustom> for QuestionPartCustom {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::QuestionPartCustom {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPartCustom {
         numbas::question::part::QuestionPartCustom {
-            part_data: self.to_numbas(locale),
-            r#type: self.type_name.to_numbas(locale),
-            settings: self.settings.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            r#type: self.type_name.to_numbas(locale, &()),
+            settings: self.settings.to_numbas(locale, &()),
         }
     }
 }
@@ -442,11 +449,12 @@ pub struct AdaptiveMarking {
 }
 
 impl ToNumbas<numbas::question::part::AdaptiveMarking> for AdaptiveMarking {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::AdaptiveMarking {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::AdaptiveMarking {
         numbas::question::part::AdaptiveMarking {
-            variable_replacements: self.variable_replacements.to_numbas(&locale),
-            variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(&locale),
-            penalty: self.penalty.to_numbas(locale),
+            variable_replacements: self.variable_replacements.to_numbas(locale, &()),
+            variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(locale, &()),
+            penalty: self.penalty.to_numbas(locale, &()),
         }
     }
 }
@@ -477,10 +485,11 @@ pub struct CustomMarking {
 }
 
 impl ToNumbas<numbas::question::part::CustomMarking> for CustomMarking {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::CustomMarking {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::CustomMarking {
         numbas::question::part::CustomMarking {
-            algorithm: self.algorithm_notes.to_numbas(&locale),
-            extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale),
+            algorithm: self.algorithm_notes.to_numbas(locale, &()),
+            extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale, &()),
         }
     }
 }
@@ -511,7 +520,8 @@ pub struct VariableReplacement {
 }
 
 impl ToNumbas<numbas::question::part::VariableReplacement> for VariableReplacement {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::VariableReplacement {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::VariableReplacement {
         numbas::question::part::VariableReplacement {
             variable: self.variable.clone(),
             part_answer_to_use: self.part_answer_to_use.clone(),
@@ -543,7 +553,8 @@ pub enum VariableReplacementStrategy {
 }
 
 impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableReplacementStrategy {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::VariableReplacementStrategy {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::VariableReplacementStrategy {
         match self {
             VariableReplacementStrategy::OriginalFirst => {
                 numbas::question::part::VariableReplacementStrategy::OriginalFirst

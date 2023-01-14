@@ -44,10 +44,11 @@ pub enum Exam {
 }
 
 impl ToNumbas<numbas::exam::Exam> for Exam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
+    type ToNumbasHelper= ();
+    fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
         match self {
-            Exam::Normal(n) => n.to_numbas(locale),
-            Exam::Diagnostic(n) => n.to_numbas(locale),
+            Exam::Normal(n) => n.to_numbas(locale, data),
+            Exam::Diagnostic(n) => n.to_numbas(locale, data),
         }
     }
 }
@@ -492,8 +493,9 @@ impl Overwrite<RecursiveTemplateExamInput> for RecursiveTemplateExamInput {
 }
 
 impl ToNumbas<numbas::exam::Exam> for RecursiveTemplateExam {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::Exam {
-        self.data.clone().to_numbas(locale)
+    type ToNumbasHelper= ();
+    fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
+        self.data.clone().to_numbas(locale, data)
     }
 }
 

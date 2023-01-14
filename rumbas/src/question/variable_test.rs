@@ -18,10 +18,11 @@ pub struct VariablesTest {
 }
 
 impl ToNumbas<numbas::question::QuestionVariablesTest> for VariablesTest {
-    fn to_numbas(&self, locale: &str) -> numbas::question::QuestionVariablesTest {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::QuestionVariablesTest {
         numbas::question::QuestionVariablesTest {
-            condition: self.condition.to_numbas(locale),
-            max_runs: self.max_runs.to_numbas(locale),
+            condition: self.condition.to_numbas(locale, &()),
+            max_runs: self.max_runs.to_numbas(locale, &()),
         }
     }
 }

@@ -19,10 +19,11 @@ pub struct Preamble {
 }
 
 impl ToNumbas<numbas::question::preamble::Preamble> for Preamble {
-    fn to_numbas(&self, locale: &str) -> numbas::question::preamble::Preamble {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::preamble::Preamble {
         numbas::question::preamble::Preamble {
-            js: self.js.to_numbas(locale),
-            css: self.css.to_numbas(locale),
+            js: self.js.to_numbas(locale, &()),
+            css: self.css.to_numbas(locale, &()),
         }
     }
 }

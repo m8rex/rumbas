@@ -82,24 +82,25 @@ question_part_type! {
 }
 
 impl ToNumbas<numbas::question::part::jme::QuestionPartJME> for QuestionPartJME {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::QuestionPartJME {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::QuestionPartJME {
         numbas::question::part::jme::QuestionPartJME {
-            part_data: self.to_numbas(locale),
-            answer: self.answer.to_numbas(locale),
-            answer_simplification: self.answer_simplification.to_numbas(locale),
-            show_preview: self.show_preview.to_numbas(locale),
-            accuracy: self.accuracy.to_numbas(locale),
-            check_variable_names: self.check_variable_names.to_numbas(locale),
-            single_letter_variables: self.single_letter_variables.to_numbas(locale),
-            allow_unknown_functions: self.allow_unknown_functions.to_numbas(locale),
-            implicit_function_composition: self.implicit_function_composition.to_numbas(locale),
-            max_length: self.max_length.to_numbas(locale),
-            min_length: self.min_length.to_numbas(locale),
+            part_data: self.to_numbas(locale, &()),
+            answer: self.answer.to_numbas(locale, &()),
+            answer_simplification: self.answer_simplification.to_numbas(locale, &()),
+            show_preview: self.show_preview.to_numbas(locale, &()),
+            accuracy: self.accuracy.to_numbas(locale, &()),
+            check_variable_names: self.check_variable_names.to_numbas(locale, &()),
+            single_letter_variables: self.single_letter_variables.to_numbas(locale, &()),
+            allow_unknown_functions: self.allow_unknown_functions.to_numbas(locale, &()),
+            implicit_function_composition: self.implicit_function_composition.to_numbas(locale, &()),
+            max_length: self.max_length.to_numbas(locale, &()),
+            min_length: self.min_length.to_numbas(locale, &()),
 
-            must_have: self.must_have.to_numbas(locale),
-            may_not_have: self.may_not_have.to_numbas(locale),
-            must_match_pattern: self.must_match_pattern.to_numbas(locale),
-            value_generators: self.value_generators.to_numbas(locale).unwrap_or_default(),
+            must_have: self.must_have.to_numbas(locale, &()),
+            may_not_have: self.may_not_have.to_numbas(locale, &()),
+            must_match_pattern: self.must_match_pattern.to_numbas(locale, &()),
+            value_generators: self.value_generators.to_numbas(locale, &()).unwrap_or_default(),
         }
     }
 }
@@ -195,9 +196,11 @@ macro_rules! create_answer_simplification {
         impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
             for $struct
         {
+            type ToNumbasHelper = ();
             fn to_numbas(
                 &self,
                 _locale: &str,
+                _data: &Self::ToNumbasHelper
             ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
                 let mut v = Vec::new();
                 $(if self.$name {
@@ -322,9 +325,11 @@ macro_rules! create_answer_display_type {
         impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
             for $struct
         {
+            type ToNumbasHelper = ();
             fn to_numbas(
                 &self,
                 _locale: &str,
+                _data: &Self::ToNumbasHelper
             ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
                 let mut v = Vec::new();
                 $(if self.$name {
@@ -396,9 +401,11 @@ impl
         numbas::question::part::jme::JMECheckingTypeData<numbas::support::primitive::SafeFloat>,
     > for CheckingTypeDataFloat
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         _locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::question::part::jme::JMECheckingTypeData<numbas::support::primitive::SafeFloat>
     {
         numbas::question::part::jme::JMECheckingTypeData {
@@ -416,7 +423,8 @@ pub struct CheckingTypeDataNatural {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMECheckingTypeData<usize>> for CheckingTypeDataNatural {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::part::jme::JMECheckingTypeData<usize> {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMECheckingTypeData<usize> {
         numbas::question::part::jme::JMECheckingTypeData {
             checking_accuracy: self.amount,
         }
@@ -441,24 +449,25 @@ pub enum CheckingType {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMECheckingType> for CheckingType {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMECheckingType {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMECheckingType {
         match self {
             CheckingType::RelativeDifference(f) => {
                 numbas::question::part::jme::JMECheckingType::RelativeDifference(
-                    f.to_numbas(locale),
+                    f.to_numbas(locale, &()),
                 )
             }
             CheckingType::AbsoluteDifference(f) => {
                 numbas::question::part::jme::JMECheckingType::AbsoluteDifference(
-                    f.to_numbas(locale),
+                    f.to_numbas(locale, &()),
                 )
             }
             CheckingType::DecimalPlaces(f) => {
-                numbas::question::part::jme::JMECheckingType::DecimalPlaces(f.to_numbas(locale))
+                numbas::question::part::jme::JMECheckingType::DecimalPlaces(f.to_numbas(locale, &()))
             }
             CheckingType::SignificantFigures(f) => {
                 numbas::question::part::jme::JMECheckingType::SignificantFigures(
-                    f.to_numbas(locale),
+                    f.to_numbas(locale, &()),
                 )
             }
         }
@@ -504,11 +513,12 @@ pub struct JMERestriction {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMERestriction> for JMERestriction {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMERestriction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMERestriction {
         numbas::question::part::jme::JMERestriction {
             // name: self.name.clone().to_string(locale),
-            partial_credit: self.partial_credit.clone().to_numbas(locale),
-            message: self.message.to_numbas(locale),
+            partial_credit: self.partial_credit.clone().to_numbas(locale, &()),
+            message: self.message.to_numbas(locale, &()),
         }
     }
 }
@@ -534,10 +544,11 @@ pub struct JMELengthRestriction {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMELengthRestriction> for JMELengthRestriction {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMELengthRestriction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMELengthRestriction {
         numbas::question::part::jme::JMELengthRestriction {
-            restriction: self.restriction.to_numbas(locale),
-            length: self.length.to_numbas(locale),
+            restriction: self.restriction.to_numbas(locale, &()),
+            length: self.length.to_numbas(locale, &()),
         }
     }
 }
@@ -564,11 +575,12 @@ pub struct JMEStringRestriction {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEStringRestriction> for JMEStringRestriction {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMEStringRestriction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMEStringRestriction {
         numbas::question::part::jme::JMEStringRestriction {
-            restriction: self.restriction.to_numbas(locale),
-            show_strings: self.show_strings.to_numbas(locale),
-            strings: self.strings.to_numbas(locale),
+            restriction: self.restriction.to_numbas(locale, &()),
+            show_strings: self.show_strings.to_numbas(locale, &()),
+            strings: self.strings.to_numbas(locale, &()),
         }
     }
 }
@@ -598,12 +610,13 @@ pub struct JMEPatternRestriction {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEPatternRestriction> for JMEPatternRestriction {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMEPatternRestriction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMEPatternRestriction {
         numbas::question::part::jme::JMEPatternRestriction {
-            partial_credit: self.partial_credit.to_numbas(locale),
-            message: self.message.to_numbas(locale),
-            pattern: self.pattern.to_numbas(locale),
-            name_to_compare: self.name_to_compare.to_numbas(locale),
+            partial_credit: self.partial_credit.to_numbas(locale, &()),
+            message: self.message.to_numbas(locale, &()),
+            pattern: self.pattern.to_numbas(locale, &()),
+            name_to_compare: self.name_to_compare.to_numbas(locale, &()),
         }
     }
 }
@@ -630,10 +643,11 @@ pub struct JMEValueGenerator {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEValueGenerator> for JMEValueGenerator {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMEValueGenerator {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMEValueGenerator {
         numbas::question::part::jme::JMEValueGenerator {
-            name: self.name.to_numbas(locale),
-            value: self.value.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            value: self.value.to_numbas(locale, &()),
         }
     }
 }
@@ -660,13 +674,15 @@ pub enum JMERulesetItem {
 impl ToNumbas<Vec<numbas::question::answer_simplification::AnswerSimplificationType>>
     for JMERulesetItem
 {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> Vec<numbas::question::answer_simplification::AnswerSimplificationType> {
         match self {
-            Self::Simplification(s) => s.to_numbas(locale),
-            Self::Display(d) => d.to_numbas(locale),
+            Self::Simplification(s) => s.to_numbas(locale, &()),
+            Self::Display(d) => d.to_numbas(locale, &()),
         }
     }
 }
@@ -725,12 +741,13 @@ pub struct JMEAccuracy {
 }
 
 impl ToNumbas<numbas::question::part::jme::JMEAccuracy> for JMEAccuracy {
-    fn to_numbas(&self, locale: &str) -> numbas::question::part::jme::JMEAccuracy {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::jme::JMEAccuracy {
         numbas::question::part::jme::JMEAccuracy {
-            checking_type: self.checking_type.to_numbas(locale),
-            failure_rate: self.max_failures.to_numbas(locale),
-            vset_range: self.checking_range.to_numbas(locale),
-            vset_range_points: self.points_to_check.to_numbas(locale),
+            checking_type: self.checking_type.to_numbas(locale, &()),
+            failure_rate: self.max_failures.to_numbas(locale, &()),
+            vset_range: self.checking_range.to_numbas(locale, &()),
+            vset_range_points: self.points_to_check.to_numbas(locale, &()),
         }
     }
 }

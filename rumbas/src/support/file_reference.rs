@@ -122,13 +122,15 @@ macro_rules! file_type {
             }
 
             impl ToNumbas<String> for $type {
-                fn to_numbas(&self, locale: &str)-> String {
+                type ToNumbasHelper = ();
+                fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper)-> String {
                     self.get_content(locale).unwrap()
                 }
             }
 
             impl ToNumbas<$subtype> for $type {
-                fn to_numbas(&self, locale: &str)-> $subtype {
+                type ToNumbasHelper = ();
+                fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper)-> $subtype {
                     self.get_content(locale).unwrap().try_into().unwrap()
                 }
             }

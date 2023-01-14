@@ -30,7 +30,8 @@ impl Examples for ResourcePathInput {
 }
 
 impl ToNumbas<numbas::question::resource::Resource> for ResourcePath {
-    fn to_numbas(&self, _locale: &str) -> numbas::question::resource::Resource {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::resource::Resource {
         numbas::question::resource::Resource([
             self.resource_name.clone(),
             self.resource_path

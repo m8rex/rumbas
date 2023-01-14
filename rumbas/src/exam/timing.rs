@@ -24,11 +24,12 @@ pub struct Timing {
 }
 
 impl ToNumbas<numbas::exam::timing::Timing> for Timing {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::timing::Timing {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::timing::Timing {
         numbas::exam::timing::Timing {
-            allow_pause: self.allow_pause.to_numbas(locale),
-            timeout: self.on_timeout.to_numbas(locale),
-            timed_warning: self.timed_warning.to_numbas(locale),
+            allow_pause: self.allow_pause.to_numbas(locale, &()),
+            timeout: self.on_timeout.to_numbas(locale, &()),
+            timed_warning: self.timed_warning.to_numbas(locale, &()),
         }
     }
 }
@@ -59,7 +60,8 @@ pub enum TimeoutAction {
 }
 
 impl ToNumbas<numbas::exam::timing::TimeoutAction> for TimeoutAction {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::timing::TimeoutAction {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::exam::timing::TimeoutAction {
         match self {
             TimeoutAction::None => numbas::exam::timing::TimeoutAction::None {
                 message: "".to_string(), // message doesn't mean anything

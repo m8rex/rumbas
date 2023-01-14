@@ -31,11 +31,12 @@ pub struct QuestionGroup {
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
-    fn to_numbas(&self, locale: &str) -> numbas::exam::question_group::QuestionGroup {
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _ : &Self::ToNumbasHelper) -> numbas::exam::question_group::QuestionGroup {
         numbas::exam::question_group::QuestionGroup {
-            name: self.name.to_numbas(locale),
-            picking_strategy: self.picking_strategy.to_numbas(locale),
-            questions: self.questions.to_numbas(locale),
+            name: self.name.to_numbas(locale, &()),
+            picking_strategy: self.picking_strategy.to_numbas(locale, &()),
+            questions: self.questions.to_numbas(locale, &()),
         }
     }
 }
@@ -68,9 +69,11 @@ pub enum PickingStrategy {
 }
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for PickingStrategy {
+    type ToNumbasHelper = ();
     fn to_numbas(
         &self,
         _locale: &str,
+        _data: &Self::ToNumbasHelper
     ) -> numbas::exam::question_group::QuestionGroupPickingStrategy {
         match self {
             PickingStrategy::AllOrdered => {
@@ -533,17 +536,18 @@ impl Overwrite<QuestionFromTemplateInput> for QuestionFromTemplateInput {
 }
 
 impl ToNumbas<numbas::question::Question> for QuestionFromTemplate {
-    fn to_numbas(&self, locale: &str) -> numbas::question::Question {
-        self.data.clone().to_numbas_with_name(
+    type ToNumbasHelper = ();
+    fn to_numbas(&self, locale: &str, _: &Self::ToNumbasHelper) -> numbas::question::Question {
+        self.data.clone().to_numbas(
             locale,
             if let Some(n) = self.question_path.as_ref() {
-                n.clone()
+                n
             } else {
-                self.template_data
+                &self.template_data
                     .first()
                     .unwrap()
                     .relative_template_path
-                    .clone()
+                    
             },
         )
     }
