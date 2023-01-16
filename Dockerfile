@@ -186,7 +186,9 @@ RUN rm -r .git # remove large folders
 FROM python:3.6.10-alpine
 WORKDIR /usr/app/Numbas
 
-RUN apk add --no-cache yarn tzdata
+RUN apk add --no-cache yarn tzdata bash bash-completion
+# Use bash as default shell
+RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd && echo "source /etc/profile.d/bash_completion.sh" >> ~/.bashrc
 RUN yarn global add uglify-js uglifycss
 
 ENV TZ=UTC
@@ -219,6 +221,8 @@ COPY --from=eukleides_fetcher /usr/app/eukleides/dist/eukleides.js /usr/app/Numb
 ENV NUMBAS_FOLDER=/usr/app/Numbas
 
 COPY --from=builder /usr/app/target/x86_64-unknown-linux-musl/release/rumbas /bin/rumbas
+# Add shell completion
+RUN rumbas generate-shell-completion bash | tee /usr/share/bash-completion/completions/rumbas
 WORKDIR /usr/app
 COPY entrypoint.sh .
 WORKDIR /rumbas

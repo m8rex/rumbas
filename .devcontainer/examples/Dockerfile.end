@@ -5,4 +5,7 @@ ARG USERNAME=rumbas
 ARG USER_UID=1000
 
 RUN adduser -D -u ${USER_UID} ${USERNAME}
+# Use bash as default shell
+RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 USER rumbas
+RUN echo "source /etc/profile.d/bash_completion.sh" >> ~/.bashrc
