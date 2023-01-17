@@ -54,22 +54,22 @@ variables:
   # default_value: "[ 0,1,2 ]"         # given order
   # default_value: "shuffle[ 1,2 ]"    # skip first question, which is (much) easier
   # default_value: "[ random( 0..2 )]" # one random
-  prompts_nl:
-    - |
-      Oorspronkelijk kostte je paar schoenen $\var{price_orig}$ euro.
-      Je krijgt nu echter $\var{percent}$% korting.
-      <br/>
-      Hoeveel kost je paar schoenen nog? 
-    - |
-      Je schoenen kosten nu nog $\var{price_now1}$ euro, want er is een korting van $\var{percent1}$% op.
-      <br/>
-      Hoeveel kostte je paar schoenen oorspronkelijk?
-    - |
-      Oorspronkelijk kostte je paar schoenen $\var{price_orig2}$ euro.
-      Nu moet je maar $\var{price_now2}$ euro betalen.
-      <br/>
-      Hoeveel procent korting heb je gekregen op je paar schoenen?
   prompts_en:
+    - |
+      Originally, a pair of shoes was priced $\var{price_orig}$ euro.
+      You now get a $\var{percent}$% reduction.
+      <br/>
+      How much are the shoes now? 
+    - |
+      A pair of shoes costs now $\var{price_now1}$ euro, because there is a $\var{percent1}$% reduction.
+      <br/>
+      What was the original price?
+    - |
+      Originally, a pair of shoes was priced $\var{price_orig2}$ euro.
+      You only have to pay $\var{price_now2}$ euro now.
+      <br/>
+      What percentage reduction was granted?
+  prompts_nl:
     - |
       Oorspronkelijk kostte je paar schoenen $\var{price_orig}$ euro.
       Je krijgt nu echter $\var{percent}$% korting.
@@ -101,7 +101,11 @@ variables:
     - '\[ 100 \cdot (1 - \frac{\var{price_now2}}{\var{price_orig2}}) = \var{percent2} \]'
   # Variables that are used in the base_XXX templates:
   answers_a: reorder(answers,selection)
-  prompts: reorder(prompts_nl,selection)
+  prompts: 
+    content:
+       nl: "reorder(prompts_nl,selection)"
+       en: "reorder(prompts_en,selection)"
+    placeholders: {}
   advices: join(reorder(advices_formulas,selection),'<br/>')
 advice:
   content:

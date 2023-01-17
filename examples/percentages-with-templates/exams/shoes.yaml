@@ -11,26 +11,50 @@ name:
     en: Templatability
   placeholders: {}
 question_groups:
-  - name: Vraagstukken
+  - name: 
+      content:
+        nl: Vraagstukken
+        en: Questions
+      placeholders: {}
     picking_strategy:
       type: all_ordered
     questions:
       - template: percentages-shoes.yaml
-        extra_info: "De vraag zoals gedefinieerd in questions"
+        extra_info: 
+            content:
+              nl: "De vraag zoals gedefinieerd in questions"
+              en: "The question as defined in the repository"
+            placeholders: {}
       - template: percentages-shoes.yaml
         base_template: templates/base-NUMBEROPEN.yaml
-        extra_info: "De vraag met slechts één 'part'"
+        extra_info: 
+          content: 
+              nl: "De vraag met slechts één 'part'"
+              en: "The same question with only one part randomly choosen"
+          placeholders: {}
       - template: percentages-shoes.yaml
         base_template: templates/base-NUMBEROPEN.yaml
         selection: "shuffle([1,2])"
-        extra_info: "Zonder de eerste vraag (bereken de nieuwe prijs, erg eenvouidg)."
+        extra_info: 
+          content:
+              nl: "Zonder de eerste vraag (bereken de nieuwe prijs, erg eenvouidg)."
+              en: "Same question, only one part, but never the first which is much easier."
+          placeholders: {}
       - template: percentages-shoes.yaml
         price_orig1: "random(15,20,25,30,35)"
         percent2: "random(5,10,20,30,50)"
-        extra_info: "Met telkens ANDERE prijzen/percentages."
+        extra_info: 
+          content:
+            nl: "Met telkens ANDERE prijzen/percentages."
+            en: "Here prices and percentages are different for easch part/subquestion."
+          placeholders: {}
       - template: percentages-shoes.yaml
         price_orig: "random(30 .. 99)"
         price_orig1: "random(30 .. 99)"
         price_orig2: "random(30 .. 99)"
         percent: "random(5,10,20,30,50)"
-        extra_info: "Met meer willekeurige prijzen."
+        extra_info: 
+          content:
+            nl: "Met meer willekeurige prijzen."
+            en: "Here prices are random, rather than selected from a fixed list"
+          placeholders: {}
