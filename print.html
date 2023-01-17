@@ -166,6 +166,27 @@
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="numbas"><a class="header" href="#numbas">Numbas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<h2 id="running-it-in-github-codespaces"><a class="header" href="#running-it-in-github-codespaces">Running it in Github Codespaces</a></h2>
+<p>The easiest way to try out rumbas is in Github Codespaces. You don't need any installation.</p>
+<p>Click on the following link to open the examples of this book in Github Codespaces. You can then run the examples in the browser.</p>
+<p><a href="https://github.com/codespaces/new?hide_repo_select=true&amp;ref=document&amp;repo=265497289&amp;machine=basicLinux32gb&amp;devcontainer_path=.devcontainer%2Fexamples%2Fdevcontainer.json&amp;location=WestEurope"><img src="https://github.com/codespaces/badge.svg" alt="Open in GitHub Codespaces" /></a></p>
+<p>Github Codespaces will do the following:</p>
+<ul>
+<li>Build the latest rumbas version, this might take a few minutes.</li>
+<li>Open a visual studio code window in the browser</li>
+<li>Open the main folder of the rumbas repo</li>
+</ul>
+<p>What should you do:</p>
+<ul>
+<li>Click on the menu ocon in the left top corner.</li>
+<li>Go to 'File' -&gt; 'Open folder'.</li>
+<li>Select one of the subfolders of the /workspaces/rumbas/examples folder.</li>
+<li>The codespace will reload.</li>
+<li>All exams and questions in the folder will be compiled.</li>
+<li>You can use the 'Open folder' trick again to open a different example.</li>
+<li>You can close the codespace by clicking on 'Codespaces' in the left bottom corner and then clicking on 'Stop current codespace'.</li>
+<li>After closing the codespace, you can open it again by going to https://github.com/codespaces and it will be in the same state as before. </li>
+</ul>
 <h2 id="recommended-installation-with-docker"><a class="header" href="#recommended-installation-with-docker">Recommended installation (with docker)</a></h2>
 <h3 id="install-docker"><a class="header" href="#install-docker">Install docker</a></h3>
 <ul>
@@ -275,6 +296,21 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 <p>You can also use <code>cargo install --path .</code> in the rumbas folder to build and install the binary.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tutorial"><a class="header" href="#tutorial">Tutorial</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="features"><a class="header" href="#features">Features</a></h1>
+<p>Rumbas is a library for creating and running assessments. It is designed to be used in a variety of ways, and can be used in a variety of contexts. This chapter describes the features of Rumbas, and how they can be used.</p>
+<p>Rumbas tries to support all features that Numbas supports, and adds some new features. The new features are:</p>
+<ul>
+<li>Templating for questions and exams. This allows you to create the format of a question or exam once, and then use it in multiple questions or exams with different values.</li>
+<li>Multi language support. This allows you to create questions and exams in multiple languages while sharing the language independent parts.
+<ul>
+<li>Locale folders allow you to specify different values for different languages and to reuse these values in different questions or exams.</li>
+</ul>
+</li>
+<li>Explicity: Rumbas does not use any default values within the program. All values must be explicitly set, and the program will not guess what you want. This makes it easier to understand what is going on, and to debug problems.
+<ul>
+<li>Default value files can (and should) be used to specify default values for your questions and exams.</li>
+</ul>
+</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="default-files"><a class="header" href="#default-files">Default files</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="multi-language"><a class="header" href="#multi-language">Multi language</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="locales-folders"><a class="header" href="#locales-folders">Locales folders</a></h1>
@@ -620,7 +656,8 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 <tr><td>parts</td><td>Array of <a href="datatypes/complete_question.html#questionpart">QuestionPart</a></td><td>A question consists of one or more parts. Each part can have a different type to create elaborate questions.</td></tr>
 <tr><td>builtin_constants</td><td><a href="datatypes/complete_question.html#builtinconstants">BuiltinConstants</a></td><td>Specifies which constants are enabled. You might want to disable the constant e so it can be used as a variable in the questions.</td></tr>
 <tr><td>custom_constants</td><td>Array of <a href="datatypes/complete_question.html#customconstant">CustomConstant</a></td><td>Custom constants that are used in your question.</td></tr>
-<tr><td>variables</td><td>Map from String to <a href="datatypes/complete_question.html#variablerepresentation">VariableRepresentation</a></td><td>The variables that are used in this question.</td></tr>
+<tr><td>variables</td><td>Map from String to <a href="datatypes/complete_question.html#variablerepresentation">VariableRepresentation</a></td><td>The (ungrouped) variables that are used in this question.</td></tr>
+<tr><td>grouped_variables</td><td>&quot;none&quot; or Map from String to Map from String to <a href="datatypes/complete_question.html#variablerepresentation">VariableRepresentation</a></td><td>The (grouped) variables that are used in this question. This is a map from a group name to a map of variables. Should mainly be used to make it easier to template multiple variables at once.</td></tr>
 <tr><td>variables_test</td><td><a href="datatypes/complete_question.html#variablestest">VariablesTest</a></td><td>The test to which your variables should comply. Sometimes it’s hard to define randomised question variables so they’re guaranteed to produce a usable set of values. In these cases, it’s easier to state the condition you want the variables to satisfy, Variable values are generated until this condition passes.</br>While this tool allows you to pick sets of variables that would be hard to generate constructively, it’s a random process so you must be aware that there’s a chance no suitable set of values will ever be found.</td></tr>
 <tr><td>functions</td><td>Map from String to <a href="datatypes/complete_question.html#function">Function</a></td><td>The functions that are used in this question</td></tr>
 <tr><td>preamble</td><td><a href="datatypes/complete_question.html#preamble">Preamble</a></td><td>Specify custom javascript and css code that should be loaded.</td></tr>
