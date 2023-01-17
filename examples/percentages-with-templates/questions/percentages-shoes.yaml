@@ -69,6 +69,21 @@ variables:
       Nu moet je maar $\var{price_now2}$ euro betalen.
       <br/>
       Hoeveel procent korting heb je gekregen op je paar schoenen?
+  prompts_en:
+    - |
+      Oorspronkelijk kostte je paar schoenen $\var{price_orig}$ euro.
+      Je krijgt nu echter $\var{percent}$% korting.
+      <br/>
+      Hoeveel kost je paar schoenen nog? 
+    - |
+      Je schoenen kosten nu nog $\var{price_now1}$ euro, want er is een korting van $\var{percent1}$% op.
+      <br/>
+      Hoeveel kostte je paar schoenen oorspronkelijk?
+    - |
+      Oorspronkelijk kostte je paar schoenen $\var{price_orig2}$ euro.
+      Nu moet je maar $\var{price_now2}$ euro betalen.
+      <br/>
+      Hoeveel procent korting heb je gekregen op je paar schoenen?
   answers: "[
     {price_now},
     {price_orig1},
@@ -107,7 +122,5 @@ advice:
       <br/>
       {advices} 
     en: |
-      {reorder(advices,selection)[0]} <br/>
-      {reorder(advices,selection)[1]} <br/>
-      {reorder(advices,selection)[2]}
+      {advices} 
   placeholders: {}

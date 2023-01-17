@@ -3,6 +3,8 @@ type: normal
 locales:
   - name: nl
     numbas_locale: nl-NL
+  - name: en
+    numbas_locale: en-GB
 name:
   content:
     nl: Templates Alom
