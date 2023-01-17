@@ -82,3 +82,4 @@ rulesets:
       collect_like_fractions: true
       order_canonical: false
       expand_brackets: false
+grouped_variables: none

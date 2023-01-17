@@ -17,4 +17,4 @@ custom_marking:
 adaptive_marking:
   variable_replacement_strategy: original_first
   penalty: 0
-  variable_replacements: [ ]
+  variable_replacements: []
