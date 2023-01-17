@@ -52,6 +52,9 @@ custom_constants:
   default_value: ~
 variables:
   nonjmetext§: x^5
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: x^5
 variables_test:
   condition:
     template_key: template_key

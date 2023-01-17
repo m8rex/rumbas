@@ -10618,6 +10618,9 @@ custom_constants:
     default_value: ~
 variables:
   nonjmetext§: "random(0 .. 1#0.1)"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "random(0 .. 1#0.1)"
 variables_test:
   condition: "template:template_key"
   max_runs: "template:template_key"

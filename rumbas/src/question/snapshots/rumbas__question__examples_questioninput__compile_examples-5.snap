@@ -10589,6 +10589,9 @@ custom_constants:
     default_value: ~
 variables:
   nonjmetext§: "0 .. 1#0.1"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "0 .. 1#0.1"
 variables_test: "template:template_key"
 functions:
   nonjmetext§:

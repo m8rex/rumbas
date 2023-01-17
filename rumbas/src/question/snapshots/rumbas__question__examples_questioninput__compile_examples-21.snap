@@ -10592,7 +10592,12 @@ variables:
     definition: ~
     description: ~
     template_type: long_string
-    group: ~
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: ~
+      description: ~
+      template_type: long_string
 variables_test: ~
 functions:
   nonjmetext§: "template:template_key"

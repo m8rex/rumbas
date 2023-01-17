@@ -10592,6 +10592,9 @@ custom_constants:
     default_value: ~
 variables:
   nonjmetext§: "template:template_key"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "template:template_key"
 variables_test:
   condition: x^5
   max_runs: 2

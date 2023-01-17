@@ -25,6 +25,8 @@ custom_constants:
   template_key: template_key
   default_value: ~
 variables: "template:template_key"
+grouped_variables:
+  nonjmetext§: "template:template_key"
 variables_test:
   condition:
     template_key: template_key

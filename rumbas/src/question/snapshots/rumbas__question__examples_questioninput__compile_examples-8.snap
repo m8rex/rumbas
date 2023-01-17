@@ -12,6 +12,9 @@ builtin_constants:
 custom_constants: ~
 variables:
   nonjmetext§: "-10 .. 1#0.1"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "-10 .. 1#0.1"
 variables_test:
   condition: x^5
   max_runs: 2

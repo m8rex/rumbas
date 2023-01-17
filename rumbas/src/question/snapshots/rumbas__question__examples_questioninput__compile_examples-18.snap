@@ -41,7 +41,12 @@ variables:
     definition: "file:path/to/file"
     description: nonjmetext§
     template_type: anything
-    group: nonjmetext§
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: "file:path/to/file"
+      description: nonjmetext§
+      template_type: anything
 variables_test:
   condition: ~
   max_runs: ~

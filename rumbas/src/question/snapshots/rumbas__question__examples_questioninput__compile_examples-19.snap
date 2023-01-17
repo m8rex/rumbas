@@ -46,7 +46,12 @@ variables:
     definition: "template:template_key"
     description: "template:template_key"
     template_type: list_of_numbers
-    group: "template:template_key"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: "template:template_key"
+      description: "template:template_key"
+      template_type: list_of_numbers
 variables_test: "template:template_key"
 functions:
   nonjmetext§:
