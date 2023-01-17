@@ -18,6 +18,7 @@ What should you do:
 - Select one of the subfolders of the /workspaces/rumbas/examples folder.
 - The codespace will reload.
 - All exams and questions in the folder will be compiled.
+- You can use the installed Live Server extension to show the generated exams. Click on the 'Go Live' button in the right bottom corner.
 - You can use the 'Open folder' trick again to open a different example.
 - You can close the codespace by clicking on 'Codespaces' in the left bottom corner and then clicking on 'Stop current codespace'.
 - After closing the codespace, you can open it again by going to https://github.com/codespaces and it will be in the same state as before. 
