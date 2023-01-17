@@ -21,48 +21,51 @@ statement:
     en: You want to buy a pair of shoes, but wait for the sales to start.
   placeholders: {}
 variables:
-  price_orig: 
+  price_orig:
     template_key: price_orig
     default_value: "random(15,20,25,30,35)"
-  percent: 
+  percent:
     template_key: percent
     default_value: "random(20,30,40,50,60)"
-  price_now: 
+  price_now:
     template_key: price_now
     default_value: price_orig*(1-percent/100)
-  price_orig1: 
+  price_orig1:
     template_key: price_orig1
     default_value: "{price_orig}"
-  percent1: 
+  percent1:
     template_key: percent1
     default_value: "{percent"
-  price_now1: 
+  price_now1:
     template_key: price_now1
     default_value: price_orig1*(1-percent1/100)
-  price_orig2: 
+  price_orig2:
     template_key: price_orig2
     default_value: "{price_orig}"
-  percent2: 
+  percent2:
     template_key: percent2
     default_value: "{percent}"
-  price_now2: 
+  price_now2:
     template_key: price_now2
     default_value: price_orig2*(1-percent2/100)
-  selection: 
+  selection:
     template_key: selection
-    default_value: shuffle( 0..2 )       # random order
-    # default_value: "[ 0,1,2 ]"         # given order
-    # default_value: "shuffle[ 1,2 ]"    # skip first question, which is (much) easier
-    # default_value: "[ random( 0..2 )]" # one random
+    default_value: shuffle( 0..2 ) # random order
+  # default_value: "[ 0,1,2 ]"         # given order
+  # default_value: "shuffle[ 1,2 ]"    # skip first question, which is (much) easier
+  # default_value: "[ random( 0..2 )]" # one random
   prompts_nl:
-    - Oorspronkelijk kostte je paar schoenen $\var{price_orig}$ euro.
+    - |
+      Oorspronkelijk kostte je paar schoenen $\var{price_orig}$ euro.
       Je krijgt nu echter $\var{percent}$% korting.
       <br/>
       Hoeveel kost je paar schoenen nog? 
-    - Je schoenen kosten nu nog $\var{price_now1}$ euro, want er is een korting van $\var{percent1}$% op.
+    - |
+      Je schoenen kosten nu nog $\var{price_now1}$ euro, want er is een korting van $\var{percent1}$% op.
       <br/>
       Hoeveel kostte je paar schoenen oorspronkelijk?
-    - Oorspronkelijk kostte je paar schoenen $\var{price_orig2}$ euro.
+    - |
+      Oorspronkelijk kostte je paar schoenen $\var{price_orig2}$ euro.
       Nu moet je maar $\var{price_now2}$ euro betalen.
       <br/>
       Hoeveel procent korting heb je gekregen op je paar schoenen?
@@ -71,15 +74,16 @@ variables:
     {price_orig1},
     {percent2} 
     ]"
-  xanswers: # Mmm, DOES NOT WORK: answers are considered STRINGS !
+  xanswers:
+    # Mmm, DOES NOT WORK: answers are considered STRINGS !
     - '{price_now}'
     - '{price_orig}'
     - '{percent}'
   # Advices adhoc, cfr infra (could/should be integrated in base-XXX tamplates ?)
-  advices_formulas: 
-     - '\[ \var{price_orig} \cdot (1- \frac{\var{percent}}{100})    = \var{price_now} \]'
-     - '\[ \frac{\var{price_now1}}{ 1- \frac{\var{percent1}}{100}}    = \var{price_orig1} \]'
-     - '\[ 100 \cdot (1 - \frac{\var{price_now2}}{\var{price_orig2}}) = \var{percent2} \]'
+  advices_formulas:
+    - '\[ \var{price_orig} \cdot (1- \frac{\var{percent}}{100})    = \var{price_now} \]'
+    - '\[ \frac{\var{price_now1}}{ 1- \frac{\var{percent1}}{100}}    = \var{price_orig1} \]'
+    - '\[ 100 \cdot (1 - \frac{\var{price_now2}}{\var{price_orig2}}) = \var{percent2} \]'
   # Variables that are used in the base_XXX templates:
   answers_a: reorder(answers,selection)
   prompts: reorder(prompts_nl,selection)

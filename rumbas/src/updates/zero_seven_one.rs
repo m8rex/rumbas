@@ -1,6 +1,7 @@
-use crate::support::rc::within_repo;
-use std::path::Path;
-use yaml_subset::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert, YamlPath};
+use crate::{question::variable::UNGROUPED_GROUP, support::rc::within_repo};
+use std::{path::Path, process::exit};
+use yaml_subset::yaml::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert};
+use yaml_subset::YamlPath;
 
 #[derive(Debug, Clone)]
 pub enum YamlChangeAction {
@@ -9,6 +10,7 @@ pub enum YamlChangeAction {
     RemoveFromHash(YamlPath),
     RenameField(YamlPath, String),
     InsertIntoHash(YamlPath, AliasedYaml, bool),
+    MoveToMapWithFieldAsKey(YamlPath, String, String, String, Vec<String>),
 }
 
 impl YamlChangeAction {
@@ -19,6 +21,9 @@ impl YamlChangeAction {
             Self::RemoveFromHash(a) => object.remove_from_hash(&a),
             Self::RenameField(a, b) => object.rename_field(&a, b.clone()),
             Self::InsertIntoHash(a, b, c) => object.insert_into_hash(&a, &b, *c),
+            Self::MoveToMapWithFieldAsKey(a, b, c, d, e) => {
+                object.move_to_map_with_field_as_key(&a, b.clone(), c.clone(), d.clone(), e.clone())
+            }
         }
     }
     fn within(self, mut begin: YamlPath) -> Self {
@@ -43,29 +48,43 @@ impl YamlChangeAction {
                 begin.insert(a);
                 Self::InsertIntoHash(begin, b, c)
             }
+            Self::MoveToMapWithFieldAsKey(a, b, c, d, e) => {
+                begin.insert(a);
+                Self::MoveToMapWithFieldAsKey(begin, b, c, d, e)
+            }
         }
     }
 }
 
 macro_rules! update_default_part {
-    ($default_files: expr, $method: ident, $all: ident, $vec: ident) => {
+    ($default_files: expr, $failures: expr, $method: ident, $all: ident, $vec: ident) => {{
         let mut defaults = super::$method(&$default_files);
         for question in &mut defaults {
             log::info!("Fixing {}", question.0.file_path.display());
-
-            for action in $all.iter() {
-                action.exec(&mut question.1);
-            }
-            for action in $vec.iter() {
-                action.exec(&mut question.1);
+            match question.1.as_mut() {
+                Ok(q) => {
+                    for action in $all.iter() {
+                        action.exec(q);
+                    }
+                    for action in $vec.iter() {
+                        action.exec(q);
+                    }
+                }
+                Err(e) => {
+                    log::error!("Error parsing {}: {}", question.0.file_path.display(), e);
+                    *$failures += 1;
+                }
             }
         }
-        super::write_files(defaults);
-    };
+        defaults
+    }};
 }
 
 pub fn update() -> semver::Version {
     if let Some(root) = within_repo(Path::new(".")) {
+        let mut failed_files = 0;
+        let mut files_to_write = Vec::new();
+
         let exam_actions = vec![
             // Change picking_strategy to an object.
             // Place the old picking_strategy value in the type field of the new struct.
@@ -198,7 +217,13 @@ pub fn update() -> semver::Version {
         let question_part_actions_information: Vec<YamlChangeAction> = vec![];
         let question_part_actions_extension: Vec<YamlChangeAction> = vec![];
 
-        let mut question_actions = Vec::new();
+        let mut question_actions = vec![YamlChangeAction::MoveToMapWithFieldAsKey(
+            "".parse().unwrap(),
+            "variables".to_string(),
+            "group".to_string(),
+            "grouped_variables".to_string(),
+            vec!["".to_string(), UNGROUPED_GROUP.to_string()],
+        )];
         for action in question_part_actions.clone().into_iter() {
             question_actions.push(action.clone().within("parts[*]".parse().unwrap()));
             question_actions.push(
@@ -350,96 +375,151 @@ pub fn update() -> semver::Version {
         let mut exams = super::read_all_exams(&root);
         for exam in &mut exams {
             log::info!("Fixing pick_questions in {}", exam.0.file_path.display());
-            for action in exam_actions.iter() {
-                action.exec(&mut exam.1);
-            }
+
+            match exam.1.as_mut() {
+                Ok(q) => {
+                    for action in exam_actions.iter() {
+                        action.exec(q);
+                    }
+                }
+                Err(e) => {
+                    log::error!("Failed parsing in {}: {}", exam.0.file_path.display(), e);
+                    failed_files += 1;
+                }
+            };
         }
-        super::write_files(exams);
+        files_to_write.extend(exams.into_iter());
 
         // Update question files
         let default_files = super::find_default_files(&root);
 
-        update_default_part!(
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_jme_files,
             question_part_actions,
             question_part_actions_jme
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_gapfill_files,
             question_part_actions,
             question_part_actions_gapfill
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_choose_one_files,
             question_part_actions,
             question_part_actions_choose_one
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_choose_multiple_files,
             question_part_actions,
             question_part_actions_choose_multiple
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_match_answers_files,
             question_part_actions,
             question_part_actions_match_answers
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_matrix_files,
             question_part_actions,
             question_part_actions_matrix
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_number_entry_files,
             question_part_actions,
             question_part_actions_number_entry
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_pattern_match_files,
             question_part_actions,
             question_part_actions_pattern_match
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_information_files,
             question_part_actions,
             question_part_actions_information
-        );
-        update_default_part!(
+        ));
+        files_to_write.extend(update_default_part!(
             default_files,
+            &mut failed_files,
             read_default_extension_files,
             question_part_actions,
             question_part_actions_extension
-        );
+        ));
 
         let mut default_questions = super::read_default_question_files(&default_files);
         for question in &mut default_questions {
             log::info!("Fixing {}", question.0.file_path.display());
-
-            for action in question_actions.iter() {
-                action.exec(&mut question.1);
+            match question.1.as_mut() {
+                Ok(q) => {
+                    if question.0.file_path.in_main_folder("defaults") {
+                        log::info!(
+                            "Updating main default file {}",
+                            question.0.file_path.display()
+                        );
+                        q.insert_into_hash(
+                            &"grouped_variables".parse().unwrap(),
+                            &AliasedYaml {
+                                alias: None,
+                                value: Yaml::UnquotedString("none".to_string()),
+                            },
+                            false,
+                        );
+                    }
+                    for action in question_actions.iter() {
+                        action.exec(q);
+                    }
+                }
+                Err(e) => {
+                    log::error!("Error parsing {}: {}", question.0.file_path.display(), e);
+                    failed_files += 1;
+                }
             }
         }
-        super::write_files(default_questions);
+        files_to_write.extend(default_questions.into_iter());
 
         let mut questions = super::read_all_questions(&root);
         for question in &mut questions {
             log::info!("Fixing {}", question.0.file_path.display());
 
-            for action in question_actions.iter() {
-                action.exec(&mut question.1);
+            match question.1.as_mut() {
+                Ok(q) => {
+                    for action in question_actions.iter() {
+                        action.exec(q);
+                    }
+                }
+                Err(e) => {
+                    log::error!("Error parsing {}: {}", question.0.file_path.display(), e);
+                    failed_files += 1;
+                }
             }
         }
-        super::write_files(questions);
-    }
+        files_to_write.extend(questions.into_iter());
 
-    semver::Version::new(0, 8, 0)
+        if failed_files > 0 {
+            log::error!("Failed to parse {} files", failed_files);
+            exit(1);
+        } else {
+            super::write_files(files_to_write);
+            return semver::Version::new(0, 8, 0);
+        }
+    }
+    exit(1);
 }

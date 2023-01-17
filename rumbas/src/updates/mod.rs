@@ -5,7 +5,7 @@ use crate::support::file_manager::{RumbasRepoFileData, CACHE};
 use crate::support::rc::RC;
 use rumbas_support::preamble::*;
 use semver::{Version, VersionReq};
-use yaml_subset::{parse_yaml_file, Document};
+use yaml_subset::{yaml::parse_yaml_file, yaml::Document, DocumentResult};
 
 mod zero_five;
 mod zero_seven_one;
@@ -42,17 +42,13 @@ pub fn update(current_rc: RC) -> Option<RC> {
     new_version.map(|n| current_rc.with_version(n))
 }
 
-fn read_files(v: Vec<LoadedNormalFile>) -> Vec<(LoadedNormalFile, Document)> {
+fn read_files(v: Vec<LoadedNormalFile>) -> Vec<(LoadedNormalFile, yaml_subset::DocumentResult)> {
     v.into_iter()
-        .filter_map(|lf| {
-            parse_yaml_file(&lf.content[..])
-                .ok()
-                .map(|a| (lf.clone(), a))
-        })
+        .map(|lf| (lf.clone(), parse_yaml_file(&lf.content[..])))
         .collect()
 }
 
-fn read_all_questions(root: &RumbasPath) -> Vec<(LoadedNormalFile, Document)> {
+fn read_all_questions(root: &RumbasPath) -> Vec<(LoadedNormalFile, yaml_subset::DocumentResult)> {
     let question_files = CACHE
         .read_all_questions(root)
         .into_iter()
@@ -64,7 +60,7 @@ fn read_all_questions(root: &RumbasPath) -> Vec<(LoadedNormalFile, Document)> {
     read_files(question_files)
 }
 
-fn read_all_exams(root: &RumbasPath) -> Vec<(LoadedNormalFile, Document)> {
+fn read_all_exams(root: &RumbasPath) -> Vec<(LoadedNormalFile, yaml_subset::DocumentResult)> {
     let exam_files = CACHE
         .read_all_exams(root)
         .into_iter()
@@ -90,7 +86,7 @@ fn find_default_files(root: &RumbasPath) -> Vec<RumbasRepoFileData> {
 
 macro_rules! add_read_default_question_file {
     ($name: ident, $( $enum_item: ident ),* ) => {
-        fn $name(default_files: &Vec<RumbasRepoFileData>) -> Vec<(LoadedNormalFile, Document)> {
+        fn $name(default_files: &Vec<RumbasRepoFileData>) -> Vec<(LoadedNormalFile, yaml_subset::DocumentResult)> {
             let default_question_files: Vec<_> = default_files
                 .iter()
                 .filter_map(|file| <DefaultFile<DefaultQuestionFileType>>::from_path(&file.path()))
@@ -109,10 +105,8 @@ macro_rules! add_read_default_question_file {
                                 LoadedFile::Normal(n) => Some(n),
                                 _ => None,
                             })
-                            .and_then(|lf| {
-                                parse_yaml_file(&lf.content[..])
-                                    .ok()
-                                    .map(|a| (lf.clone(), a))
+                            .map(|lf| {
+                                (lf.clone(), parse_yaml_file(&lf.content[..]))
                             })
                     },
                     )*
@@ -219,8 +213,11 @@ add_read_default_exam_file!(read_default_timing_files, Timing);
 add_read_default_exam_file!(read_default_feedback_files, Feedback);
 add_read_default_exam_file!(read_default_numbas_settings_files, NumbasSettings);
 
-fn write_files(files: Vec<(LoadedNormalFile, Document)>) {
-    for (file, default_question) in files.into_iter() {
+fn write_files(files: Vec<(LoadedNormalFile, yaml_subset::DocumentResult)>) {
+    for (file, default_question) in files
+        .into_iter()
+        .filter_map(|(file, q)| q.ok().map(|q| (file, q)))
+    {
         let out_str = default_question.format().unwrap();
         std::fs::write(file.file_path, out_str).expect("Failed writing file");
     }

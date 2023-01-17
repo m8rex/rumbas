@@ -3,7 +3,8 @@ use crate::support::file_manager::CACHE;
 use crate::support::rc::within_repo;
 use rumbas_support::preamble::{FileToLoad, LoadedFile};
 use std::path::Path;
-use yaml_subset::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert, YamlPath};
+use yaml_subset::yaml::{parse_yaml_file, AliasedYaml, Yaml, YamlInsert};
+use yaml_subset::YamlPath;
 
 /// Update from version 0.5.* to 0.6.0
 pub fn update() -> semver::Version {
@@ -24,14 +25,13 @@ pub fn update() -> semver::Version {
                     alias: None,
                     value: Yaml::EmptyInlineHash,
                 };
-                default_question.1.insert_into_hash(&path, &value, false);
+                if let Ok(q) = default_question.1.as_mut() {
+                    q.insert_into_hash(&path, &value, false);
+                }
             }
         }
 
-        for (file, default_question) in default_questions.into_iter() {
-            let out_str = default_question.format().unwrap();
-            std::fs::write(file.file_path, out_str).expect("Failed writing file");
-        }
+        super::write_files(default_questions);
 
         semver::Version::new(0, 6, 3)
     } else {
