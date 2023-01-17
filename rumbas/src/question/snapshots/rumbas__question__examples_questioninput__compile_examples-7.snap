@@ -17,6 +17,9 @@ custom_constants:
   default_value: ~
 variables:
   nonjmetext§: "10 .. 1#5"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "10 .. 1#5"
 variables_test: ~
 functions:
   nonjmetext§:

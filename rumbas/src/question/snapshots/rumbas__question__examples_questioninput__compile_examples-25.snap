@@ -10621,7 +10621,12 @@ variables:
     definition: ~
     description: ~
     template_type: string
-    group: ~
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: ~
+      description: ~
+      template_type: string
 variables_test:
   condition: ~
   max_runs: ~

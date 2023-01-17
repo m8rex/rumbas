@@ -38,6 +38,9 @@ builtin_constants:
 custom_constants: "template:template_key"
 variables:
   nonjmetext§: 1.2
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: 1.2
 variables_test:
   condition: "template:template_key"
   max_runs: "template:template_key"

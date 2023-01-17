@@ -10614,6 +10614,7 @@ custom_constants:
   - template_key: template_key
     default_value: ~
 variables: ~
+grouped_variables: none
 variables_test: "template:template_key"
 functions:
   nonjmetext§:

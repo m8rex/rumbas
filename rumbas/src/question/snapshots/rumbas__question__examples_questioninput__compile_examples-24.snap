@@ -25,9 +25,16 @@ variables:
       template_key: template_key
       default_value: ~
     template_type: range
-    group:
-      template_key: template_key
-      default_value: ~
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition:
+        template_key: template_key
+        default_value: ~
+      description:
+        template_key: template_key
+        default_value: ~
+      template_type: range
 variables_test:
   condition:
     template_key: template_key

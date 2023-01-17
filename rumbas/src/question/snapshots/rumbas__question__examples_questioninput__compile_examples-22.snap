@@ -15,7 +15,12 @@ variables:
     definition: "file:path/to/file"
     description: nonjmetext§
     template_type: number
-    group: nonjmetext§
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: "file:path/to/file"
+      description: nonjmetext§
+      template_type: number
 variables_test:
   condition: x^5
   max_runs: 2

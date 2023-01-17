@@ -40,9 +40,16 @@ variables:
       template_key: template_key
       default_value: ~
     template_type: ~
-    group:
-      template_key: template_key
-      default_value: ~
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition:
+        template_key: template_key
+        default_value: ~
+      description:
+        template_key: template_key
+        default_value: ~
+      template_type: ~
 variables_test: ~
 functions:
   nonjmetext§:

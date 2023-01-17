@@ -31,25 +31,25 @@ advice:
         nl: nl version of placeholder2
       placeholders: {}
 parts: "template:template_key"
-builtin_constants: "template:template_key"
+builtin_constants:
+  template_key: template_key
+  default_value: ~
 custom_constants: "template:template_key"
 variables:
   nonjmetext§:
-    definition: "file:path/to/file"
-    description: nonjmetext§
-    template_type: "template:template_key"
-grouped_variables:
-  nonjmetext§:
-    nonjmetext§:
-      definition: "file:path/to/file"
-      description: nonjmetext§
-      template_type: "template:template_key"
-variables_test: "template:template_key"
+    - nonjmetext§
+    - "template:template_key"
+    - template_key: template_key
+      default_value: ~
+grouped_variables: "template:template_key"
+variables_test:
+  template_key: template_key
+  default_value: ~
 functions:
   nonjmetext§:
     definition:
       content:
-        nonjmetext§: "file:path/to/file"
+        nonjmetext§: "template:template_key"
       placeholders:
         placeholder1:
           content:
@@ -61,8 +61,8 @@ functions:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    language: jme
-    output_type: boolean
+    language: javascript
+    output_type: matrix
     parameters:
       - - nonjmetext§
         - boolean
@@ -113,21 +113,42 @@ functions:
       - "template:template_key"
       - template_key: template_key
         default_value: ~
-preamble: "template:template_key"
-navigation: "template:template_key"
-extensions: "template:template_key"
+preamble:
+  template_key: template_key
+  default_value: ~
+navigation:
+  template_key: template_key
+  default_value: ~
+extensions:
+  template_key: template_key
+  default_value: ~
 diagnostic_topic_names: "template:template_key"
 resources: "template:template_key"
 custom_part_types: ~
 rulesets:
   nonjmetext§:
-    type: Display
+    type: Simplification
     rules:
-      broken_as_fractions: false
-      mixed_fractions: false
-      flat_fractions: false
-      vector_as_row: false
-      always_show_multiplication_sign: false
-      use_dot_as_multiplication_sign: false
-      matrices_without_parentheses: false
+      simplify_basic: false
+      cancel_unit_factors: false
+      cancel_unit_powers: false
+      cancel_unit_denominators: false
+      cancel_zero_factors: false
+      omit_zero_terms: false
+      cancel_zero_powers: false
+      cancel_powers_with_base_zero: false
+      collect_numbers: false
+      constants_first: false
+      collect_sqrt_products: false
+      collect_sqrt_divisions: false
+      cancel_sqrt_square: false
+      evaluate_powers_of_numbers: false
+      rewrite_to_no_leading_minus: false
+      simplify_fractions: false
+      simplify_trigonometric: false
+      collect_terms: false
+      collect_powers_of_common_factors: false
+      collect_like_fractions: false
+      order_canonical: false
+      expand_brackets: false
 
