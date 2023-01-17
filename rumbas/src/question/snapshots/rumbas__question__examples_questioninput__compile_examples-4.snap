@@ -36,6 +36,9 @@ builtin_constants:
 custom_constants: ~
 variables:
   nonjmetext§: nonjmetext§
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: nonjmetext§
 variables_test:
   condition: ~
   max_runs: ~

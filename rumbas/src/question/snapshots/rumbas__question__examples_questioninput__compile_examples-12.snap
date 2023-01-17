@@ -33,6 +33,9 @@ builtin_constants: "template:template_key"
 custom_constants: ~
 variables:
   nonjmetext§: "random(-10 .. 1#0.1)"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "random(-10 .. 1#0.1)"
 variables_test: "template:template_key"
 functions:
   nonjmetext§:

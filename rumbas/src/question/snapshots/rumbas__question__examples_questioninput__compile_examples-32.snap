@@ -13,6 +13,10 @@ custom_constants: ~
 variables:
   template_key: template_key
   default_value: ~
+grouped_variables:
+  nonjmetext§:
+    template_key: template_key
+    default_value: ~
 variables_test:
   condition: ~
   max_runs: ~

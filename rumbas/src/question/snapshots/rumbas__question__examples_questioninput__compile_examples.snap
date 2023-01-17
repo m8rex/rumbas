@@ -10622,6 +10622,13 @@ variables:
     - "template:template_key"
     - template_key: template_key
       default_value: ~
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      - nonjmetext§
+      - "template:template_key"
+      - template_key: template_key
+        default_value: ~
 variables_test:
   condition: x^5
   max_runs: 2

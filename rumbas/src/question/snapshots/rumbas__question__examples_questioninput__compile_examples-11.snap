@@ -46,6 +46,9 @@ custom_constants:
   default_value: ~
 variables:
   nonjmetext§: "random(10 .. 1#5)"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "random(10 .. 1#5)"
 variables_test:
   condition: ~
   max_runs: ~

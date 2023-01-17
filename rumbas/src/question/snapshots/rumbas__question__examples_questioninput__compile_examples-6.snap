@@ -11,6 +11,9 @@ builtin_constants:
 custom_constants: "template:template_key"
 variables:
   nonjmetext§: "1 .. 1#-0.1"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§: "1 .. 1#-0.1"
 variables_test:
   template_key: template_key
   default_value: ~

@@ -37,35 +37,23 @@ advice:
 parts:
   template_key: template_key
   default_value: ~
-builtin_constants:
-  template_key: template_key
-  default_value: ~
+builtin_constants: ~
 custom_constants:
   template_key: template_key
   default_value: ~
 variables:
-  nonjmetext§:
-    definition: "template:template_key"
-    description: "template:template_key"
-    template_type:
-      template_key: template_key
-      default_value: ~
+  nonjmetext§: 1.2
 grouped_variables:
-  nonjmetext§:
-    nonjmetext§:
-      definition: "template:template_key"
-      description: "template:template_key"
-      template_type:
-        template_key: template_key
-        default_value: ~
-variables_test:
   template_key: template_key
   default_value: ~
+variables_test: ~
 functions:
   nonjmetext§:
     definition:
       content:
-        nonjmetext§: "template:template_key"
+        nonjmetext§:
+          template_key: template_key
+          default_value: ~
       placeholders:
         placeholder1:
           content:
@@ -77,18 +65,12 @@ functions:
             en: en version of placeholder2
             nl: nl version of placeholder2
           placeholders: {}
-    language: jme
-    output_type: decimal
+    language: javascript
+    output_type: nothing
     parameters: "template:template_key"
-preamble:
-  template_key: template_key
-  default_value: ~
-navigation:
-  template_key: template_key
-  default_value: ~
-extensions:
-  template_key: template_key
-  default_value: ~
+preamble: ~
+navigation: ~
+extensions: ~
 diagnostic_topic_names:
   template_key: template_key
   default_value: ~
@@ -98,13 +80,28 @@ resources:
 custom_part_types: ~
 rulesets:
   nonjmetext§:
-    type: Display
+    type: Simplification
     rules:
-      broken_as_fractions: "template:template_key"
-      mixed_fractions: "template:template_key"
-      flat_fractions: "template:template_key"
-      vector_as_row: "template:template_key"
-      always_show_multiplication_sign: "template:template_key"
-      use_dot_as_multiplication_sign: "template:template_key"
-      matrices_without_parentheses: "template:template_key"
+      simplify_basic: "template:template_key"
+      cancel_unit_factors: "template:template_key"
+      cancel_unit_powers: "template:template_key"
+      cancel_unit_denominators: "template:template_key"
+      cancel_zero_factors: "template:template_key"
+      omit_zero_terms: "template:template_key"
+      cancel_zero_powers: "template:template_key"
+      cancel_powers_with_base_zero: "template:template_key"
+      collect_numbers: "template:template_key"
+      constants_first: "template:template_key"
+      collect_sqrt_products: "template:template_key"
+      collect_sqrt_divisions: "template:template_key"
+      cancel_sqrt_square: "template:template_key"
+      evaluate_powers_of_numbers: "template:template_key"
+      rewrite_to_no_leading_minus: "template:template_key"
+      simplify_fractions: "template:template_key"
+      simplify_trigonometric: "template:template_key"
+      collect_terms: "template:template_key"
+      collect_powers_of_common_factors: "template:template_key"
+      collect_like_fractions: "template:template_key"
+      order_canonical: "template:template_key"
+      expand_brackets: "template:template_key"
 

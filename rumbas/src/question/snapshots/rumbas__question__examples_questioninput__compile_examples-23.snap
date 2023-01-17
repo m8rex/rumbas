@@ -23,7 +23,12 @@ variables:
     definition: "template:template_key"
     description: "template:template_key"
     template_type: random_range
-    group: "template:template_key"
+grouped_variables:
+  nonjmetext§:
+    nonjmetext§:
+      definition: "template:template_key"
+      description: "template:template_key"
+      template_type: random_range
 variables_test:
   condition: "template:template_key"
   max_runs: "template:template_key"
