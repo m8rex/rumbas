@@ -8,7 +8,7 @@ use crate::support::template::{TemplateFile, TemplateFileInput};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::TranslatableString;
-use crate::support::yaml::YamlError;
+use crate::support::yaml::{parse_yaml, YamlError};
 use comparable::Comparable;
 use rumbas_support::preamble::*;
 use schemars::JsonSchema;
@@ -32,7 +32,11 @@ pub struct QuestionGroup {
 
 impl ToNumbas<numbas::exam::question_group::QuestionGroup> for QuestionGroup {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _ : &Self::ToNumbasHelper) -> numbas::exam::question_group::QuestionGroup {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _: &Self::ToNumbasHelper,
+    ) -> numbas::exam::question_group::QuestionGroup {
         numbas::exam::question_group::QuestionGroup {
             name: self.name.to_numbas(locale, &()),
             picking_strategy: self.picking_strategy.to_numbas(locale, &()),
@@ -73,7 +77,7 @@ impl ToNumbas<numbas::exam::question_group::QuestionGroupPickingStrategy> for Pi
     fn to_numbas(
         &self,
         _locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::exam::question_group::QuestionGroupPickingStrategy {
         match self {
             PickingStrategy::AllOrdered => {
@@ -409,12 +413,8 @@ impl Input for QuestionFromTemplateInput {
                 match file {
                     Some(LoadedFile::Normal(n)) => {
                         let data_res: Result<QuestionFileTypeInput, _> =
-                            serde_yaml::from_str(&n.content[..]).map_err(|e| {
-                                ParseError::YamlError(YamlError::from(
-                                    e,
-                                    file_to_load.file_path.clone(),
-                                ))
-                            });
+                            parse_yaml(&n.content[..], file_to_load.file_path.clone())
+                                .map_err(ParseError::YamlError);
                         match data_res {
                             Ok(QuestionFileTypeInput::Normal(q)) => {
                                 let mut input = (*q.clone()).0;
@@ -543,11 +543,7 @@ impl ToNumbas<numbas::question::Question> for QuestionFromTemplate {
             if let Some(n) = self.question_path.as_ref() {
                 n
             } else {
-                &self.template_data
-                    .first()
-                    .unwrap()
-                    .relative_template_path
-                    
+                &self.template_data.first().unwrap().relative_template_path
             },
         )
     }

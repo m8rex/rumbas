@@ -21,6 +21,7 @@ use crate::support::file_manager::{FileToRead, CACHE};
 use crate::support::template::{TemplateFile, TemplateFileInputEnum};
 use crate::support::to_numbas::ToNumbas;
 use crate::support::to_rumbas::ToRumbas;
+use crate::support::yaml::parse_yaml;
 use crate::support::yaml::YamlError;
 use comparable::Comparable;
 use rumbas_support::path::RumbasPath;
@@ -44,7 +45,7 @@ pub enum Exam {
 }
 
 impl ToNumbas<numbas::exam::Exam> for Exam {
-    type ToNumbasHelper= ();
+    type ToNumbasHelper = ();
     fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
         match self {
             Exam::Normal(n) => n.to_numbas(locale, data),
@@ -387,12 +388,8 @@ impl Input for RecursiveTemplateExamInput {
                 match file {
                     Some(LoadedFile::Normal(n)) => {
                         let data_res: Result<ExamFileTypeInput, _> =
-                            serde_yaml::from_str(&n.content[..]).map_err(|e| {
-                                ParseError::YamlError(YamlError::from(
-                                    e,
-                                    file_to_load.file_path.clone(),
-                                ))
-                            });
+                            parse_yaml(&n.content[..], file_to_load.file_path.clone())
+                                .map_err(ParseError::YamlError);
                         match data_res {
                             Ok(ExamFileTypeInput::Template(template_file)) => {
                                 let mut template_file = template_file.clone();
@@ -493,7 +490,7 @@ impl Overwrite<RecursiveTemplateExamInput> for RecursiveTemplateExamInput {
 }
 
 impl ToNumbas<numbas::exam::Exam> for RecursiveTemplateExam {
-    type ToNumbasHelper= ();
+    type ToNumbasHelper = ();
     fn to_numbas(&self, locale: &str, data: &Self::ToNumbasHelper) -> numbas::exam::Exam {
         self.data.clone().to_numbas(locale, data)
     }
@@ -533,8 +530,7 @@ impl RecursiveTemplateExamInput {
                 })
                 .ok_or_else(|| ParseError::FileReadError(FileReadError(file.clone())))?;
 
-            let mut res: Self = serde_yaml::from_str(&yaml)
-                .map_err(|e| ParseError::YamlError(YamlError::from(e, file.clone())))?;
+            let mut res: Self = parse_yaml(&yaml, file.clone()).map_err(ParseError::YamlError)?;
             res.self_defined_template_keys = Some(
                 res.find_missing()
                     .missing_template_keys()

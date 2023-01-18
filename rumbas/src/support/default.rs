@@ -32,6 +32,7 @@ use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
 use crate::support::file_manager::RumbasRepoEntry;
+use crate::support::yaml::{parse_yaml, YamlResult};
 use rumbas_support::input::{FileToLoad, LoadedFile};
 use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
@@ -147,7 +148,7 @@ create_default_file_type_enums!(
 pub trait DefaultFileTypeMethods: Sized {
     type Data;
     fn from_path(path: &RumbasPath) -> Option<Self>;
-    fn read_as_data(&self, path: &RumbasPath) -> serde_yaml::Result<Self::Data>;
+    fn read_as_data(&self, path: &RumbasPath) -> YamlResult<Self::Data>;
 }
 
 #[derive(Debug, Clone)]
@@ -171,7 +172,7 @@ impl<T: DefaultFileTypeMethods + Clone> DefaultFile<T> {
     }
 
     /// Read the given path as the data needed for this DefaultFile
-    pub fn read_as_data(&self) -> serde_yaml::Result<T::Data> {
+    pub fn read_as_data(&self) -> YamlResult<T::Data> {
         self.r#type.read_as_data(&self.path)
     }
 
@@ -238,14 +239,14 @@ macro_rules! create_default_file_type_enums {
             }
 
             /// Read the given path as the data needed for this DefaultFileType
-            fn read_as_data(&self, path: &RumbasPath) -> serde_yaml::Result<Self::Data> {
+            fn read_as_data(&self, path: &RumbasPath) -> YamlResult<Self::Data> {
                 let file = FileToLoad { file_path: path.clone(), locale_dependant: false };
                 let loaded_file = crate::support::file_manager::CACHE.read_file(file);
                 if let Some(LoadedFile::Normal(l)) = loaded_file {
                     match self {
                         $(
                         Self::$file_type => {
-                            let n: $data_type = serde_yaml::from_str(&l.content)?;
+                            let n: $data_type = parse_yaml(&l.content, path.clone())?;
                             Ok($data_name::$file_type( DefaultFileData { data: n, path: path.clone() }))
                         }
                         )*
