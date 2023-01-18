@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../.././assets/css/mdbook-admonish.css">
 
     </head>
     <body>
@@ -142,7 +143,7 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="step-8-using-randomisation"><a class="header" href="#step-8-using-randomisation">Step 8: Using randomisation</a></h2>
-<p>Copy the <code>first_question_with_variables.yaml</code> file to <code>first_question_with_randomisation.yaml</code> and change the value of variable <code>a</code> to <code>random(1..10)</code>. This will choose a random integer between 1 and 10 as value for <code>a</code>.</p>
+<p>Now we will create a question that uses randomisation. We will copy the <code>first_question_with_variables.yaml</code> file to <code>first_question_with_randomisation.yaml</code> and change the value of variable <code>a</code> to <code>random(1..10)</code>. This will choose a random integer between 1 and 10 as value for <code>a</code>.</p>
 <pre><code class="language-yaml">---
 type: normal
 statement: How much is 9 * {a}? 
@@ -210,7 +211,16 @@ resources: []
 custom_part_types: []
 rulesets: {}
 </code></pre>
-<p>Copy the <code>first_exam_with_variables.yaml</code> file to <code>first_exam_with_randomisation.yaml</code> and add the new question to the <code>questions</code> field.</p>
+<div id="admonition-task" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task"></a></p>
+</div>
+<div>
+<p>Copy the <code>first_question_with_variables.yaml</code> file to <code>first_question_with_randomisation.yaml</code> and change the definition of the variables <code>a</code> as indicated in the file above.</p>
+</div>
+</div>
+<p>Now we will create a new exam that uses this question. We will copy the <code>first_exam_with_variables.yaml</code> file to <code>first_exam_with_randomisation.yaml</code> and add the new question to the <code>questions</code> field.</p>
 <pre><code class="language-yaml">---
 type: normal
 name: First Exam
@@ -264,22 +274,56 @@ locales:
 numbas_settings:
   theme: default
 </code></pre>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Copy the <code>first_exam_with_variables.yaml</code> file to <code>first_exam_with_randomisation.yaml</code> and add the question as indicated in the file above.</p>
+</div>
+</div>
 <p>We can then compile all exams with the following command:</p>
 <pre><code class="language-bash">rumbas compile exams
 </code></pre>
 <p>And open the new exam in the browser by browsing to <code>http://localhost:8000/en/exams/first_exam_with_randomisation/</code>.</p>
-<p>You should also try the following things for all questions:</p>
+<div id="admonition-task-2" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-2"></a></p>
+</div>
+<div>
+<p>Try answering the third question and see if it works.</p>
+</div>
+</div>
+<div id="admonition-task-3" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-3"></a></p>
+</div>
+<div>
+<p>Also try the following things for the second question:</p>
 <ul>
-<li>Reload the page and use the 'Reveal answers' button to see the correct answer. You will see that the calculations in the <code>marks</code> and <code>advice</code> fields are calculated.</li>
-<li>Try the 'Try another question like this one' button:
+<li>Reload the page and use the <code>Reveal answers</code> button to see the correct answer. You will see that the calculations in the <code>marks</code> and <code>advice</code> fields are calculated.</li>
+<li>Try the <code>Try another question like this one</code> button.
 <ul>
 <li>For the third question, this will generate a new question with a new value for <code>a</code>.</li>
 <li>You will see that after trying another question and using the 'Reveal answers' button, the advice is changed to use the new value of <code>a</code>.</li>
 </ul>
 </li>
 </ul>
+</div>
+</div>
 <p>You can also find the exam in the <a href="https://m8rex.github.io/rumbas/examples/first_question/en/exams/first_exam_with_randomisation/">online demo</a>.</p>
+<div id="admonition-congratulations" class="admonition success">
+<div class="admonition-title">
+<p>Congratulations</p>
+<p><a class="admonition-anchor-link" href="#admonition-congratulations"></a></p>
+</div>
+<div>
 <p>This concludes our very first example of rumbas. In the next example we will look at the default value files to reduce the size of our question and exam files.</p>
+</div>
+</div>
 
                     </main>
 

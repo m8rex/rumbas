@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../.././assets/css/mdbook-admonish.css">
 
     </head>
     <body>
@@ -145,12 +146,37 @@
 <p>Now we can compile the question. To do this, we need to open a terminal in the folder of your rumbas project. Then we can run the following command:</p>
 <pre><code class="language-bash">rumbas check questions/first_question.yaml
 </code></pre>
-<p>This command will now show an error. This is because our rumbas repository is missing a crucial file. This file is the <code>rumbasrc.yaml</code> file. This file contains the settings for the rumbas repository. Create the file and add the following content:</p>
+<div id="admonition-task" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task"></a></p>
+</div>
+<div>
+<p>Run the command above in the terminal.</p>
+</div>
+</div>
+<p>This command will now show an error. This is because our rumbas repository is missing a crucial file. This file is the <code>rumbasrc.yaml</code> file. This file contains the settings for the rumbas repository.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Create the file and add the content below.</p>
+</div>
+</div>
 <pre><code class="language-yaml">---
 version: 0.8.0 # The rumbas version that this repository uses.
 </code></pre>
-<p>This file is used to check whether you are using the right rumbas version for the rumbas project. If you are using the wrong version, you will get an error. </p>
-
+<div id="admonition-info" class="admonition info">
+<div class="admonition-title">
+<p>Info</p>
+<p><a class="admonition-anchor-link" href="#admonition-info"></a></p>
+</div>
+<div>
+<p>This file is used to check whether you are in a rumbas project and whether you are using the right rumbas version for the rumbas project. If you are using the wrong version, you will get an error.</p>
+</div>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

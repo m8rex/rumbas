@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../.././assets/css/mdbook-admonish.css">
 
     </head>
     <body>
@@ -142,9 +143,43 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="step-4-try-compiling-the-first-question-again"><a class="header" href="#step-4-try-compiling-the-first-question-again">Step 4: Try compiling the first question again</a></h2>
-<p>Now we can try compiling the question again. This time we will get a different error. This error is because we are missing a crucial file in our rumbas project. This file is the <code>exams/questions_preview.yaml</code> file. This file is used to create a preview exam for a question. Because this file makes use a feature of rumbas that we will explain later (templating), we will create a specific first exam and compile that exam.</p>
-<p>Create the exams folder and and an <code>exams/first_exam.yaml</code> file.</p>
-<p>To know which fields we can set for a question, you can look at the <a href="./datatypes/complete_exam.html">Reference for exam</a> page. For now we will show the fields that can be set for a question:</p>
+<p>Now we can try compiling the question again.</p>
+<div id="admonition-task" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task"></a></p>
+</div>
+<div>
+<p>Recompile the question.</p>
+</div>
+</div>
+<p>This time we will get a different error. This error is because we are missing a crucial file in our rumbas project. This file is the <code>exams/questions_preview.yaml</code> file. </p>
+<div id="admonition-info" class="admonition info">
+<div class="admonition-title">
+<p>Info</p>
+<p><a class="admonition-anchor-link" href="#admonition-info"></a></p>
+</div>
+<div>
+<p>The <code>exams/questions_preview.yaml</code> file is used to create a preview exam for a question.</p>
+</div>
+</div>
+<p>Because this file makes use a feature of rumbas that we will explain later (templating), we will create an exam that uses our question and compile that exam.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Create the <code>exams</code> folder and and an <code>exams/first_exam.yaml</code> file.</p>
+</div>
+</div>
+<p>To know which fields we can set for a question, you can look at the <a href="./datatypes/complete_exam.html">Reference for exam</a> page. For now we will show the fields that can be set for a question.</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="examfiletype"><a class="header" href="#examfiletype">ExamFileType</a></h1>
 <p><strong>Internal tag</strong> named <em>type</em>.</p>
 <p><strong>One of</strong> the following items:</p>
@@ -153,8 +188,15 @@
 <tr><td>normal</td><td>NormalExam</td><td>A normal exam.</td></tr>
 <tr><td>diagnostic</td><td>DiagnosticExam</td><td>An exam in diagnostic mode.</td></tr>
 </tbody></table>
+</div></div>
 </div>
-<p>For now we will just look at the 'normal' exam type. This is the exam type that we will use for our first exam.</p>
+<p>For now we will just look at the <code>normal</code> exam type. This is the exam type that we will use for our first exam.</p>
+<div id="admonition-reference-1" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="#admonition-reference-1"></a></p>
+</div>
+<div>
 <h1 id="normalexam"><a class="header" href="#normalexam">NormalExam</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>name</td><td>Translation</td><td>The name of the exam</td></tr>
@@ -165,6 +207,7 @@
 <tr><td>question_groups</td><td>Array of QuestionGroup</td><td>The questions groups for this exam</td></tr>
 <tr><td>numbas_settings</td><td>NumbasSettings</td><td>The settings to set for numbas</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>We can set a value for each of these fields.</p>
 <pre><code class="language-yaml">---
@@ -219,7 +262,15 @@ locales: # this can be used to localize your exams (have it available in multipl
 numbas_settings:
   theme: default # use the default numbas theme
 </code></pre>
-
+<div id="admonition-task-2" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-2"></a></p>
+</div>
+<div>
+<p>Place this yaml in the <code>first_exam.yaml</code> file.</p>
+</div>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

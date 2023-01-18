@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../.././assets/css/mdbook-admonish.css">
 
     </head>
     <body>
@@ -145,10 +146,43 @@
 <p>Now we can compile the exam. To do this, we need to open a terminal in the folder of your rumbas project. Then we can run the following command:</p>
 <pre><code class="language-bash">rumbas check exams/first_exam.yaml
 </code></pre>
+<div id="admonition-task" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task"></a></p>
+</div>
+<div>
+<p>Run the command above in the terminal.</p>
+</div>
+</div>
+<div id="admonition-success" class="admonition success">
+<div class="admonition-title">
+<p>Success</p>
+<p><a class="admonition-anchor-link" href="#admonition-success"></a></p>
+</div>
+<div>
 <p>It should result in <code>All 1 checks passed!</code>. This means that the exam is valid and can be compiled.</p>
+</div>
+</div>
 <pre><code class="language-bash">rumbas compile exams/first_exam.yaml
 </code></pre>
-<p>This command will create a folder in <code>_output/en/exams/first_exam</code> with the compiled exam. To view this in the browser you should run a local webserver that hosts the <code>_output</code> folder.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Run the command above in the terminal.</p>
+</div>
+</div>
+<p>This command will create a folder in <code>_output/en/exams/first_exam</code> with the compiled exam. </p>
+<div id="admonition-warning" class="admonition warning">
+<div class="admonition-title">
+<p>Warning</p>
+<p><a class="admonition-anchor-link" href="#admonition-warning"></a></p>
+</div>
+<div>
+<p>To view this in the browser you should run a local webserver that hosts the <code>_output</code> folder.</p>
 <p>Some options are:</p>
 <ul>
 <li>Live server extension in visual studio code (this is installed in our google codespaces setup)</li>
@@ -156,7 +190,8 @@
 <li>Python: execute <code>python -m http.server</code> in the <code>_output</code> folder</li>
 <li>...</li>
 </ul>
-
+</div>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
