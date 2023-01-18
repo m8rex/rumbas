@@ -8,6 +8,7 @@ use crate::support::to_rumbas::ToRumbas;
 use crate::support::translatable::EmbracedJMETranslatableString;
 use crate::support::translatable::JMETranslatableString;
 use crate::support::translatable::TranslatableString;
+use crate::support::yaml::parse_yaml;
 use crate::support::yaml::{YamlError, YamlResult};
 use comparable::Comparable;
 use rumbas_support::path::RumbasPath;
@@ -79,7 +80,7 @@ impl ToRumbas<CustomPartTypeDefinition> for numbas::question::custom_part_type::
 
 impl CustomPartTypeDefinitionInput {
     pub fn from_str(yaml: &str, file: RumbasPath) -> YamlResult<Self> {
-        serde_yaml::from_str(yaml).map_err(|e| YamlError::from(e, file))
+        parse_yaml(yaml, file)
     }
     pub fn to_yaml(&self) -> serde_yaml::Result<String> {
         serde_yaml::to_string(self)
@@ -109,16 +110,20 @@ pub enum CustomPartTypeSetting {
 impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSetting> for CustomPartTypeSetting {
     type ToNumbasHelper = ();
 
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::custom_part_type::CustomPartTypeSetting {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::custom_part_type::CustomPartTypeSetting {
         match self {
             Self::CheckBox(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::CheckBox(
                     c.to_numbas(locale, &()),
                 )
             }
-            Self::Code(c) => {
-                numbas::question::custom_part_type::CustomPartTypeSetting::Code(c.to_numbas(locale, &()))
-            }
+            Self::Code(c) => numbas::question::custom_part_type::CustomPartTypeSetting::Code(
+                c.to_numbas(locale, &()),
+            ),
             Self::MathematicalExpression(c) => {
                 numbas::question::custom_part_type::CustomPartTypeSetting::MathematicalExpression(
                     c.to_numbas(locale, &()),
@@ -178,7 +183,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingSharedDat
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingSharedData {
         numbas::question::custom_part_type::CustomPartTypeSettingSharedData {
             name: self.name.to_numbas(locale, &()),
@@ -222,12 +227,17 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingString>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingString {
         numbas::question::custom_part_type::CustomPartTypeSettingString {
             shared_data: self.shared_data.to_numbas(locale, &()),
-            evaluate_enclosed_expressions: self.evaluate_enclosed_expressions.to_numbas(locale, &()),
-            default_value: self.default_value.to_numbas(locale, &()).unwrap_or_default(), // TODO implement String to Noneable<String> where it is None if string is empty
+            evaluate_enclosed_expressions: self
+                .evaluate_enclosed_expressions
+                .to_numbas(locale, &()),
+            default_value: self
+                .default_value
+                .to_numbas(locale, &())
+                .unwrap_or_default(), // TODO implement String to Noneable<String> where it is None if string is empty
         }
     }
 }
@@ -268,12 +278,17 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingMathemati
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression {
         numbas::question::custom_part_type::CustomPartTypeSettingMathematicalExpression {
             shared_data: self.shared_data.to_numbas(locale, &()),
-            evaluate_enclosed_expressions: self.evaluate_enclosed_expressions.to_numbas(locale, &()),
-            default_value: self.default_value.to_numbas(locale, &()).unwrap_or_default(),
+            evaluate_enclosed_expressions: self
+                .evaluate_enclosed_expressions
+                .to_numbas(locale, &()),
+            default_value: self
+                .default_value
+                .to_numbas(locale, &())
+                .unwrap_or_default(),
         }
     }
 }
@@ -313,12 +328,15 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingCode>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingCode {
         numbas::question::custom_part_type::CustomPartTypeSettingCode {
             shared_data: self.shared_data.to_numbas(locale, &()),
             evaluate: self.evaluate.to_numbas(locale, &()),
-            default_value: self.default_value.to_numbas(locale, &()).unwrap_or_default(),
+            default_value: self
+                .default_value
+                .to_numbas(locale, &())
+                .unwrap_or_default(),
         }
     }
 }
@@ -357,7 +375,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingCheckBox>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingCheckBox {
         numbas::question::custom_part_type::CustomPartTypeSettingCheckBox {
             shared_data: self.shared_data.to_numbas(locale, &()),
@@ -396,11 +414,14 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingDropDown>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
         numbas::question::custom_part_type::CustomPartTypeSettingDropDown {
             shared_data: self.shared_data.to_numbas(locale, &()),
-            default_value: self.default_value.to_numbas(locale, &()).unwrap_or_default(),
+            default_value: self
+                .default_value
+                .to_numbas(locale, &())
+                .unwrap_or_default(),
             choices: self.choices.to_numbas(locale, &()),
         }
     }
@@ -474,7 +495,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartTypeSettingPercentag
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartTypeSettingPercentage {
         numbas::question::custom_part_type::CustomPartTypeSettingPercentage {
             shared_data: self.shared_data.to_numbas(locale, &()),
@@ -528,7 +549,7 @@ macro_rules! create_input_option_value {
             fn to_numbas(
                 &self,
                 locale: &str,
-                _data: &Self::ToNumbasHelper
+                _data: &Self::ToNumbasHelper,
             ) -> numbas::question::custom_part_type::CustomPartInputOptionValue<$numbas_subtype>
             {
                 numbas::question::custom_part_type::CustomPartInputOptionValue {
@@ -598,7 +619,11 @@ pub enum CustomPartInputWidget {
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartInputWidget> for CustomPartInputWidget {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::custom_part_type::CustomPartInputWidget {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::custom_part_type::CustomPartInputWidget {
         match self {
             CustomPartInputWidget::String(s) => {
                 numbas::question::custom_part_type::CustomPartInputWidget::String(
@@ -656,7 +681,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartStringInputOptions>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartStringInputOptions {
         numbas::question::custom_part_type::CustomPartStringInputOptions {
             hint: self.hint.to_numbas(locale, &()),
@@ -704,7 +729,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartNumberInputOptions>
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartNumberInputOptions {
         numbas::question::custom_part_type::CustomPartNumberInputOptions {
             hint: self.hint.to_numbas(locale, &()),
@@ -753,7 +778,7 @@ impl ToNumbas<numbas::question::custom_part_type::CustomPartRadioButtonsInputOpt
     fn to_numbas(
         &self,
         locale: &str,
-        _data: &Self::ToNumbasHelper
+        _data: &Self::ToNumbasHelper,
     ) -> numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions {
         numbas::question::custom_part_type::CustomPartRadioButtonsInputOptions {
             hint: self.hint.to_numbas(locale, &()),
