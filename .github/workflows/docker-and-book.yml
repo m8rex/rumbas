@@ -74,7 +74,9 @@ jobs:
         run: cargo run --bin doc
         working-directory: rumbas
       - name: Install mdbook
-        run: cargo install mdbook
+        run: |
+          cargo install mdbook
+          cargo install mdbook-admonish --vers "1.8.0" --locked
       - name: build book
         run: mdbook build 
         working-directory: book
