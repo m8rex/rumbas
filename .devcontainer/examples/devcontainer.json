@@ -2,6 +2,7 @@
 {
 	"name": "Rumbas",
 	"initializeCommand": "cat Dockerfile .devcontainer/examples/Dockerfile.end > .devcontainer/examples/Dockerfile",
+	"onCreateCommand": "rm .devcontainer/examples/Dockerfile",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": "../..",
