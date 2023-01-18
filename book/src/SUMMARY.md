@@ -5,6 +5,7 @@
 - [Installation](./installation.md)
   - [Manual Installation](./manual_installation.md)
 - [Tutorial](./tutorial.md)
+  - [Your first question](./tutorial/first_question.md)
 - [Features](./features.md)
   - [Default files](./features/default_files.md)
   - [Multi language](./features/multi_language.md)
