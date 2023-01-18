@@ -1,6 +1,5 @@
 ---
-type: normal # set the type to normal
-# type has to be set as an 'internal tag' so all fields of 'NormalExam' are set on the samen level
+type: normal
 name: First Exam
 question_groups:
   - name: Group 1
@@ -8,6 +7,8 @@ question_groups:
       type: all_ordered
     questions:
       - first_question.yaml
+      - first_question_with_variables.yaml
+      - first_question_with_randomisation.yaml # We added this
 navigation:
   mode: sequential
   start_password: none
@@ -25,7 +26,7 @@ navigation:
 feedback:
   percentage_needed_to_pass: 50
   show_name_of_student: false
-  show_current_marks: true # whether the current score is shown
+  show_current_marks: true
   show_maximum_marks: true
   show_answer_state: true
   allow_reveal_answer: true
@@ -38,14 +39,14 @@ feedback:
   intro: "An introductory text"
   feedback_messages: []
 timing:
-  duration_in_seconds: none # no time limit
+  duration_in_seconds: none 
   allow_pause: true 
   on_timeout: 
     action: none
   timed_warning: 
     action: none
-locales: # this can be used to localize your exams (have it available in multiple languages)
-  - name: en # custom name
-    numbas_locale: en-GB # English (United Kingdom)
+locales: 
+  - name: en 
+    numbas_locale: en-GB
 numbas_settings:
-  theme: default # use the default numbas theme
+  theme: default
