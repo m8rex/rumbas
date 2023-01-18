@@ -1,0 +1,21 @@
+---
+type: normal 
+name: First Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - first_question.yaml
+timing:
+  duration_in_seconds: none # no time limit
+  allow_pause: true 
+  on_timeout: 
+    action: none
+  timed_warning: 
+    action: none
+locales: # this can be used to localize your exams (have it available in multiple languages)
+  - name: en # custom name
+    numbas_locale: en-GB # English (United Kingdom)
+numbas_settings:
+  theme: default # use the default numbas theme

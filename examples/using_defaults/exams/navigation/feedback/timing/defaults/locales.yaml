@@ -1,0 +1,3 @@
+---
+- name: en # custom name
+  numbas_locale: en-GB # English (United Kingdom)
