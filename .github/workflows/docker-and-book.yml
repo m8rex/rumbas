@@ -16,6 +16,7 @@ on:
 env:
   ORGANISATION: m8rex
   IMAGE_NAME: rumbas
+  VSCODE_IMAGE_NAME: rumbas-vscode
   CARGO_TERM_COLOR: always
 
 jobs:
@@ -144,12 +145,29 @@ jobs:
           FOLDER: book_result/ # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
 
+  # build vscode dev container
+  build_vscode:
+    needs: build
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jpribyl/action-docker-layer-caching@v0.1.1
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Create devcontainer image
+        run: cat Dockerfile .devcontainer/examples/Dockerfile.end > .devcontainer/examples/Dockerfile
+      - name: Build vscode image
+        run: docker build . --file .devcontainer/examples/Dockerfile --tag $VSCODE_IMAGE_NAME
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    needs: build
+    needs: [build_vscode, build]
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -162,6 +180,11 @@ jobs:
 
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
+
+      - name: Create devcontainer image
+        run: cat Dockerfile .devcontainer/examples/Dockerfile.end > .devcontainer/examples/Dockerfile
+      - name: Build vscode image
+        run: docker build . --file .devcontainer/examples/Dockerfile --tag $VSCODE_IMAGE_NAME
 
       - name: Log into registry
         run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -186,4 +209,26 @@ jobs:
           echo VERSION=$VERSION
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
+      - name: Push vscode image
+        run: |
+          IMAGE_ID=ghcr.io/$ORGANISATION/$VSCODE_IMAGE_NAME
+
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag $VSCODE_IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
