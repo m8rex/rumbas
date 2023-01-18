@@ -1,0 +1,38 @@
+---
+type: normal
+name: First Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - first_question.yaml
+      - first_question_with_variables.yaml
+      - first_question_with_randomisation.yaml
+feedback:
+  percentage_needed_to_pass: 50
+  show_name_of_student: false
+  show_current_marks: true
+  show_maximum_marks: true
+  show_answer_state: true
+  allow_reveal_answer: true
+  review:
+    show_score: true
+    show_feedback: true
+    show_expected_answer: true
+    show_advice: true
+  advice: "Please practice more"
+  intro: "An introductory text"
+  feedback_messages: []
+timing:
+  duration_in_seconds: none 
+  allow_pause: true 
+  on_timeout: 
+    action: none
+  timed_warning: 
+    action: none
+locales: 
+  - name: en 
+    numbas_locale: en-GB
+numbas_settings:
+  theme: default

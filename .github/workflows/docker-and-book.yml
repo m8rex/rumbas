@@ -102,6 +102,7 @@ jobs:
         run: |
           docker run --rm -v $PWD/percentages-with-templates:/rumbas m8rex/rumbas:latest compile questions exams
           docker run --rm -v $PWD/first_question:/rumbas m8rex/rumbas:latest compile exams
+          docker run --rm -v $PWD/using_defaults:/rumbas m8rex/rumbas:latest compile exams
         working-directory: examples
       - name: Archive output artifacts
         uses: actions/upload-artifact@v3
@@ -133,6 +134,7 @@ jobs:
           mkdir book_result/examples
           mv examples_result/percentages-with-templates/_output book_result/examples/percentages-with-templates
           mv examples_result/first_question/_output book_result/examples/first_question
+          mv examples_result/using_defaults/_output book_result/examples/using_defaults
       - name: Deploy 🚀 # TODO: only on main
         uses: JamesIves/github-pages-deploy-action@v4
         with:
