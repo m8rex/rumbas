@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Step 4: Try compiling the first question again - Rumbas</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="../../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../manual_installation.html"><strong aria-hidden="true">2.1.</strong> Manual Installation</a></li></ol></li><li class="chapter-item expanded "><a href="../../tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../tutorial/first_question.html"><strong aria-hidden="true">3.1.</strong> Your first question</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../tutorial/first_question/step1.html"><strong aria-hidden="true">3.1.1.</strong> Step 1: Questions folder</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step2.html"><strong aria-hidden="true">3.1.2.</strong> Step 2: Create a question</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step3.html"><strong aria-hidden="true">3.1.3.</strong> Step 3: Try compiling the first question</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step4.html" class="active"><strong aria-hidden="true">3.1.4.</strong> Step 4: Try compiling the first question again</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step5.html"><strong aria-hidden="true">3.1.5.</strong> Step 5: Compiling our first exam</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step6.html"><strong aria-hidden="true">3.1.6.</strong> Step 6: Try the exam</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step7.html"><strong aria-hidden="true">3.1.7.</strong> Step 7: Using variables</a></li><li class="chapter-item expanded "><a href="../../tutorial/first_question/step8.html"><strong aria-hidden="true">3.1.8.</strong> Step 8: Using randomisation</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../features.html"><strong aria-hidden="true">4.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../features/default_files.html"><strong aria-hidden="true">4.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="../../features/multi_language.html"><strong aria-hidden="true">4.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="../../features/locales_folders.html"><strong aria-hidden="true">4.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="../../features/templates.html"><strong aria-hidden="true">4.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="../../reference.html"><strong aria-hidden="true">5.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/folder_structure.html"><strong aria-hidden="true">5.1.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="../../datatypes/complete_exam.html"><strong aria-hidden="true">5.2.</strong> Exam</a></li><li class="chapter-item expanded "><a href="../../datatypes/complete_question.html"><strong aria-hidden="true">5.3.</strong> Question</a></li><li class="chapter-item expanded "><a href="../../datatypes/complete_custom_part_type.html"><strong aria-hidden="true">5.4.</strong> Custom Part Type</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rumbas</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="step-4-try-compiling-the-first-question-again"><a class="header" href="#step-4-try-compiling-the-first-question-again">Step 4: Try compiling the first question again</a></h2>
+<p>Now we can try compiling the question again. This time we will get a different error. This error is because we are missing a crucial file in our rumbas project. This file is the <code>exams/questions_preview.yaml</code> file. This file is used to create a preview exam for a question. Because this file makes use a feature of rumbas that we will explain later (templating), we will create a specific first exam and compile that exam.</p>
+<p>Create the exams folder and and an <code>exams/first_exam.yaml</code> file.</p>
+<p>To know which fields we can set for a question, you can look at the <a href="./datatypes/complete_exam.html">Reference for exam</a> page. For now we will show the fields that can be set for a question:</p>
+<h1 id="examfiletype"><a class="header" href="#examfiletype">ExamFileType</a></h1>
+<p><strong>Internal tag</strong> named <em>type</em>.</p>
+<p><strong>One of</strong> the following items:</p>
+<div class="table-wrapper"><table><thead><tr><th>tag-value</th><th>datatype of value</th><th>description</th></tr></thead><tbody>
+<tr><td>template</td><td>TemplateFile</td><td>An exam that uses a template.</td></tr>
+<tr><td>normal</td><td>NormalExam</td><td>A normal exam.</td></tr>
+<tr><td>diagnostic</td><td>DiagnosticExam</td><td>An exam in diagnostic mode.</td></tr>
+</tbody></table>
+</div>
+<p>For now we will just look at the 'normal' exam type. This is the exam type that we will use for our first exam.</p>
+<h1 id="normalexam"><a class="header" href="#normalexam">NormalExam</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
+<tr><td>name</td><td>Translation</td><td>The name of the exam</td></tr>
+<tr><td>locales</td><td>Array of Locale</td><td>All locales for which the exam should be generated</td></tr>
+<tr><td>navigation</td><td>NormalNavigation</td><td>The navigation settings for this exam</td></tr>
+<tr><td>timing</td><td>Timing</td><td>The timing settings for this exam</td></tr>
+<tr><td>feedback</td><td>Feedback</td><td>The feedback settings for this exam</td></tr>
+<tr><td>question_groups</td><td>Array of QuestionGroup</td><td>The questions groups for this exam</td></tr>
+<tr><td>numbas_settings</td><td>NumbasSettings</td><td>The settings to set for numbas</td></tr>
+</tbody></table>
+</div>
+<p>We can set a value for each of these fields.</p>
+<pre><code class="language-yaml">---
+type: normal # set the type to normal
+# type has to be set as an 'internal tag' so all fields of 'NormalExam' are set on the samen level
+name: First Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - first_question.yaml
+navigation:
+  mode: sequential
+  start_password: none
+  can_regenerate: true
+  show_steps: false
+  show_title_page: false
+  confirm_when_leaving: false
+  show_names_of_question_groups: true
+  allow_printing: false
+  can_move_to_previous: true 
+  browsing_enabled: false
+  show_results_page: never
+  on_leave: 
+    action: none
+feedback:
+  percentage_needed_to_pass: 50
+  show_name_of_student: false
+  show_current_marks: true # whether the current score is shown
+  show_maximum_marks: true
+  show_answer_state: true
+  allow_reveal_answer: true
+  review:
+    show_score: true
+    show_feedback: true
+    show_expected_answer: true
+    show_advice: true
+  advice: &quot;Please practice more&quot;
+  intro: &quot;An introductory text&quot;
+  feedback_messages: []
+timing:
+  duration_in_seconds: none # no time limit
+  allow_pause: true 
+  on_timeout: 
+    action: none
+  timed_warning: 
+    action: none
+locales: # this can be used to localize your exams (have it available in multiple languages)
+  - name: en # custom name
+    numbas_locale: en-GB # English (United Kingdom)
+numbas_settings:
+  theme: default # use the default numbas theme
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../tutorial/first_question/step3.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../../tutorial/first_question/step5.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../tutorial/first_question/step3.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../../tutorial/first_question/step5.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>
