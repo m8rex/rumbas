@@ -4,5 +4,5 @@ We will start your journey with rumbas by creating a simple question in the rumb
 
 
 ```admonish question title="Task"
-To start, we need to open a folder in which we will create our 'rumbas project'. 
+Create a folder `first_question` in which we will create our 'rumbas project'. 
 ```
