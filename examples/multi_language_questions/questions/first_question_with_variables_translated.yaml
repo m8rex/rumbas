@@ -1,0 +1,23 @@
+---
+type: normal
+statement: 
+  content: 
+    en: How much is 9 * {a}?
+    nl: Hoe veel is 9 * {a}?
+  placeholders: {}
+advice: 
+  content: 
+    en: You could calculate 10 * {a} and then subtract {a}. This yield {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+    nl: Je kan 10 * {a} berekenen en dan {a} daarvan aftrekken. Dit geeft {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+  placeholders: {}
+parts:
+  - type: number_entry
+    prompt: 
+      content:
+        en: Enter your answer in the inputbox
+        nl: Geef je antwoord in in het invulveld
+      placeholders: {}
+    marks: 5 
+    answer: a * 9
+variables:
+  a: 3

@@ -1,0 +1,16 @@
+---
+show_correct_answer: true
+show_feedback_icon: true
+display_correct_as_fraction: false
+allow_fractions: false
+fractions_must_be_reduced: false
+fractions_must_be_reduced_hint: false
+partial_credit_if_fraction_not_reduced: 0
+display_correct_in_style: &style english-plain
+allowed_notation_styles:
+  - *style
+custom_marking: none
+steps: []
+steps_penalty: 0
+adaptive_marking: none
+part_name: none

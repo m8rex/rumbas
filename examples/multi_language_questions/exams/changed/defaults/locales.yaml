@@ -1,0 +1,5 @@
+---
+- name: en # custom name
+  numbas_locale: en-GB # English (United Kingdom)
+- name: nl # custom name
+  numbas_locale: nl-NL # Dutch (The Netherlands)

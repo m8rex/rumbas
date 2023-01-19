@@ -1,0 +1,9 @@
+---
+type: normal
+statement: How much is 9 * 3?
+advice: You could calculate 10 * 3 and then subtract 3. This yield 3 * 10 - 3 = 30 - 3 = 27
+parts:
+  - type: number_entry
+    prompt: Enter your answer in the inputbox
+    marks: 5
+    answer: 27
