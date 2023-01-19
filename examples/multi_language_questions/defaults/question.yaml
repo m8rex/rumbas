@@ -1,0 +1,41 @@
+---
+builtin_constants: # all constants will be disabled
+  e: false
+  pi: false
+  i: false
+custom_constants: []
+variables: {}
+grouped_variables: none
+variables_test:
+  condition: ""
+  max_runs: 1
+functions: {}
+preamble:
+  css: ""
+  js: ""
+navigation:
+  can_regenerate: false
+  show_title_page: false
+  confirm_when_leaving: false
+extensions:
+  jsx_graph: false
+  stats: false
+  geogebra: false
+  eukleides: false
+  chemistry: false
+  download_text_file: false
+  graphs: false
+  linear_algebra: false
+  linear_codes: false
+  optimisation: false
+  permutations: false
+  polynomials: false
+  quantities: false
+  random_person: false
+  written_number: false
+  sqlite: false
+  text: false
+diagnostic_topic_names: []
+resources: []
+custom_part_types: []
+rulesets: {}

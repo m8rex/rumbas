@@ -1,0 +1,11 @@
+---
+type: normal
+name: First Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - first_question.yaml
+      - first_question_with_variables.yaml
+      - first_question_with_randomisation.yaml
