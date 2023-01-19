@@ -169,8 +169,23 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <h2 id="running-it-in-github-codespaces"><a class="header" href="#running-it-in-github-codespaces">Running it in Github Codespaces</a></h2>
 <p>The easiest way to try out rumbas is in Github Codespaces. You don't need any installation.</p>
+<h3 id="running-the-last-released-version"><a class="header" href="#running-the-last-released-version">Running the last released version</a></h3>
+<ul>
+<li>Follow the steps  in <a href="https://github.com/m8rex/rumbas-codespaces-template">the rumbas codespaces template repo</a> to load a github codespace with the latest released version of rumbas.</li>
+<li>Open a terminal within the VSCode interface and type <code>rumbas --version</code> to check if the setup is working.</li>
+</ul>
+<h3 id="running-the-latest-non-released-version"><a class="header" href="#running-the-latest-non-released-version">Running the latest (non released) version</a></h3>
+<div id="admonition-danger" class="admonition danger">
+<div class="admonition-title">
+<p>Danger</p>
+<p><a class="admonition-anchor-link" href="installation.html#admonition-danger"></a></p>
+</div>
+<div>
+<p>This setup is not recommended. Only use this section if you want to test features of a rumbas version that is not yet released.</p>
+</div>
+</div>
 <p>Click on the following link to open the examples of this book in Github Codespaces. You can then run the examples in the browser.</p>
-<p><a href="https://github.com/codespaces/new?hide_repo_select=true&amp;ref=document&amp;repo=265497289&amp;machine=basicLinux32gb&amp;devcontainer_path=.devcontainer%2Fexamples%2Fdevcontainer.json&amp;location=WestEurope"><img src="https://github.com/codespaces/badge.svg" alt="Open in GitHub Codespaces" /></a></p>
+<p><a href="https://github.com/codespaces/new?hide_repo_select=true&amp;ref=main&amp;repo=265497289&amp;machine=basicLinux32gb&amp;devcontainer_path=.devcontainer%2Fexamples%2Fdevcontainer.json&amp;location=WestEurope"><img src="https://github.com/codespaces/badge.svg" alt="Open in GitHub Codespaces" /></a></p>
 <p>Github Codespaces will do the following:</p>
 <ul>
 <li>Build the latest rumbas version, this might take a few minutes.</li>
@@ -297,7 +312,26 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 </ul>
 <p>You can also use <code>cargo install --path .</code> in the rumbas folder to build and install the binary.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tutorial"><a class="header" href="#tutorial">Tutorial</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="your-first-question"><a class="header" href="#your-first-question">Your first question</a></h1>
+<p>This tutorial will give you some hands on experience with the rumbas system. </p>
+<div id="admonition-task" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="tutorial.html#admonition-task"></a></p>
+</div>
+<div>
+<p>Before starting with the tutorial, please read the <a href="./reference/yaml.html">Yaml Reference</a>. After going through that section, please return here.</p>
+</div>
+</div>
+<p>To follow along with the tutorials, you will need an installation of rumbas.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="tutorial.html#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Follow the steps in <a href="./installation.html#running-the-last-released-version">the installation guide</a> to start a github codespace with the latest released version of rumbas installed.</p>
+</div>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="your-first-question"><a class="header" href="#your-first-question">Your first question</a></h1>
 <p>We will start your journey with rumbas by creating a simple question in the rumbas system. This question will be a simple calculation question. </p>
 <div id="admonition-task" class="admonition question">
 <div class="admonition-title">
@@ -305,7 +339,7 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 <p><a class="admonition-anchor-link" href="tutorial/first_question.html#admonition-task"></a></p>
 </div>
 <div>
-<p>To start, we need to open a folder in which we will create our 'rumbas project'.</p>
+<p>Create a folder <code>first_question</code> in which we will create our 'rumbas project'.</p>
 </div>
 </div><div style="break-before: page; page-break-before: always;"></div><h2 id="step-1-questions-folder"><a class="header" href="#step-1-questions-folder">Step 1: Questions folder</a></h2>
 <div id="admonition-task" class="admonition question">
@@ -327,6 +361,12 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 </div>
 </div>
 <p>This file will contain the yaml code for the question. To know which fields we can set for a question, you can look at the <a href="tutorial/first_question/./datatypes/complete_question.html">Reference for question</a> page. For now we will show the fields that can be set for a question:</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="tutorial/first_question/step2.html#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="questionfiletype"><a class="header" href="#questionfiletype">QuestionFileType</a></h1>
 <p><strong>Internal tag</strong> named <em>type</em>.</p>
 <p><strong>One of</strong> the following items:</p>
@@ -334,8 +374,24 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 <tr><td>template</td><td>TemplateFile</td><td>A question that uses a template</td></tr>
 <tr><td>normal</td><td>Question</td><td>A normal question</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>For now we will just look at the 'normal' question type.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="tutorial/first_question/step2.html#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Read the reference below and try to understand what each field means.</p>
+</div>
+</div>
+<div id="admonition-reference-1" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="tutorial/first_question/step2.html#admonition-reference-1"></a></p>
+</div>
+<div>
 <h1 id="question"><a class="header" href="#question">Question</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>statement</td><td>Translation</td><td>The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</td></tr>
@@ -355,6 +411,7 @@ docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
 <tr><td>custom_part_types</td><td>Array of CustomPartTypeDefinitionPath</td><td>The custom part types used in this exam</td></tr>
 <tr><td>rulesets</td><td>Map from String to JMERulesetItem</td><td>The rulesets defined in this question. A “ruleset” defines a list of named simplification rules used to manipulate mathematical expressions. https://numbas-editor.readthedocs.io/en/latest/question/reference.html#rulesets</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>We can set a value for each of these fields.</p>
 <pre><code class="language-yaml">---
@@ -425,10 +482,10 @@ resources: []
 custom_part_types: []
 rulesets: {}
 </code></pre>
-<div id="admonition-task-1" class="admonition question">
+<div id="admonition-task-2" class="admonition question">
 <div class="admonition-title">
 <p>Task</p>
-<p><a class="admonition-anchor-link" href="tutorial/first_question/step2.html#admonition-task-1"></a></p>
+<p><a class="admonition-anchor-link" href="tutorial/first_question/step2.html#admonition-task-2"></a></p>
 </div>
 <div>
 <p>Place this yaml in the <code>first_question.yaml</code>.</p>
@@ -1520,12 +1577,19 @@ key2: value2 # This is another comment
 <p>This section will show you how to write YAML files for Rumbas.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="basic-objects"><a class="header" href="#basic-objects">Basic objects</a></h1>
 <p>The reference shows tables that explain the dataformat for rumbas. In its most basic form, it looks like the following table.</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/basic_objects.html#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="questionpartmatrixrangeddimension"><a class="header" href="#questionpartmatrixrangeddimension">QuestionPartMatrixRangedDimension</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>default</td><td>jme-string or Integer</td><td>The default size</td></tr>
 <tr><td>min</td><td>jme-string or Integer</td><td>The minimal size</td></tr>
 <tr><td>max</td><td>&quot;none&quot; or jme-string or Integer</td><td>The maximal size, if this is none, there is no limit</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>The tables lists three fields that has to be present in the yaml file. The first column is the name of the field, the second column is the datatype of the field and the third column is a description of the field.</p>
 <p>To represent this datatype in yaml, you would write the following:</p>
@@ -1540,11 +1604,18 @@ default: 2
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="object-with-an-any-field"><a class="header" href="#object-with-an-any-field">Object with an [any] field</a></h1>
 <p>Some object have a field name <code>[any]</code> in their reference. This means that any other key-value pair can be added to the object.</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/basic_objects_any.html#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="templatefile"><a class="header" href="#templatefile">TemplateFile</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>template</td><td>String</td><td>The path to the template to use. Relative to the <code>exams</code> or <code>questions</code> folder.</td></tr>
 <tr><td>[any]</td><td>YAML-value</td><td>The data to insert into the template. Maps template keys onto values.</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>This can be represented in yaml by adding any key-value pair to the object.</p>
 <pre><code class="language-yaml">template: path_to_template
@@ -1553,31 +1624,52 @@ another_key: another_value
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="choice-object"><a class="header" href="#choice-object">Choice object</a></h1>
 <p>Some of the datatypes in the reference can take multiple forms. </p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/choice_objects.html#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="translation"><a class="header" href="#translation">Translation</a></h1>
 <p><strong>One of</strong> the following items:</p>
 <div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>TranslationStruct</td><td>A structured translatable string with placeholders.</td></tr>
 <tr><td>FileString</td><td>A simple filestring. This implies that it can also just be a string.</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>This datatype is either a <code>TranslationStruct</code> or a <code>FileString</code>.</p>
 <p>To represent this datatype in yaml, you would either write a <code>TranslationStruct</code> or a <code>FileString</code>.</p>
+<div id="admonition-reference-1" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/choice_objects.html#admonition-reference-1"></a></p>
+</div>
+<div>
 <h1 id="translationstruct"><a class="header" href="#translationstruct">TranslationStruct</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>content</td><td>TranslationContent</td><td>The content with optional placeholders ({{placeholder-name}}).</td></tr>
 <tr><td>placeholders</td><td>Map from String to Translation</td><td>The values for the placeholders. It maps the placeholder-name to it's translatable value. The value for a placeholder can thus (if needed) be different for different locales.</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <pre><code class="language-yaml"># TranslationStruct
 content: Some content
 placeholders: {}
 </code></pre>
+<div id="admonition-reference-2" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/choice_objects.html#admonition-reference-2"></a></p>
+</div>
+<div>
 <h1 id="filestring"><a class="header" href="#filestring">FileString</a></h1>
 <p><strong>One of</strong> the following items:</p>
 <div class="table-wrapper"><table><thead><tr><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>String</td><td>A string of the form <code>file:&lt;filepath&gt;</code> where <code>filepath</code> is the relative path (within the <code>exams</code> or <code>questions</code> folder) to a file containing content. This content can be localized by placing it in locale folders. e.g. <code>file:examples/basic-explanation.html</code> will search for files in folders with following form: <code>questions/examples/locale-&lt;localename&gt;/basic-explanation.html</code> If a file isn't found for a specific locale, <code>questions/examples/basic-explanation.html</code> will be used</td></tr>
 <tr><td>String</td><td>A literal string.</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <pre><code class="language-yaml"># FileString
 file:path/to/file
@@ -1588,6 +1680,12 @@ any string value
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="choice-object-with-explicit-tag"><a class="header" href="#choice-object-with-explicit-tag">Choice object with explicit tag</a></h1>
 <p>Sometimes is it needed to explicitly specify the type of a choice object. This is done by adding a specific key-value pair to the object.</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="reference/writing_yaml/choice_objects_explicit.html#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="examfiletype-1"><a class="header" href="#examfiletype-1">ExamFileType</a></h1>
 <p><strong>Internal tag</strong> named <em>type</em>.</p>
 <p><strong>One of</strong> the following items:</p>
@@ -1596,6 +1694,7 @@ any string value
 <tr><td>normal</td><td>NormalExam</td><td>A normal exam.</td></tr>
 <tr><td>diagnostic</td><td>DiagnosticExam</td><td>An exam in diagnostic mode.</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>This specification means that we should write the yaml as one of the three following options and add the key-value pair <code>type: &lt;tag-value&gt;</code> to the object.</p>
 <pre><code class="language-yaml">type: template # set the internal tag

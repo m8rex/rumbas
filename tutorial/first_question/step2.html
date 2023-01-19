@@ -153,6 +153,12 @@
 </div>
 </div>
 <p>This file will contain the yaml code for the question. To know which fields we can set for a question, you can look at the <a href="./datatypes/complete_question.html">Reference for question</a> page. For now we will show the fields that can be set for a question:</p>
+<div id="admonition-reference" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="#admonition-reference"></a></p>
+</div>
+<div>
 <h1 id="questionfiletype"><a class="header" href="#questionfiletype">QuestionFileType</a></h1>
 <p><strong>Internal tag</strong> named <em>type</em>.</p>
 <p><strong>One of</strong> the following items:</p>
@@ -160,8 +166,24 @@
 <tr><td>template</td><td>TemplateFile</td><td>A question that uses a template</td></tr>
 <tr><td>normal</td><td>Question</td><td>A normal question</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>For now we will just look at the 'normal' question type.</p>
+<div id="admonition-task-1" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+</div>
+<div>
+<p>Read the reference below and try to understand what each field means.</p>
+</div>
+</div>
+<div id="admonition-reference-1" class="admonition example">
+<div class="admonition-title">
+<p>Reference</p>
+<p><a class="admonition-anchor-link" href="#admonition-reference-1"></a></p>
+</div>
+<div>
 <h1 id="question"><a class="header" href="#question">Question</a></h1>
 <div class="table-wrapper"><table><thead><tr><th>field</th><th>type</th><th>description</th></tr></thead><tbody>
 <tr><td>statement</td><td>Translation</td><td>The statement is a content area which appears at the top of the question, before any input boxes. Use the statement to set up the question and provide any information the student needs to answer it.</td></tr>
@@ -181,6 +203,7 @@
 <tr><td>custom_part_types</td><td>Array of CustomPartTypeDefinitionPath</td><td>The custom part types used in this exam</td></tr>
 <tr><td>rulesets</td><td>Map from String to JMERulesetItem</td><td>The rulesets defined in this question. A “ruleset” defines a list of named simplification rules used to manipulate mathematical expressions. https://numbas-editor.readthedocs.io/en/latest/question/reference.html#rulesets</td></tr>
 </tbody></table>
+</div></div>
 </div>
 <p>We can set a value for each of these fields.</p>
 <pre><code class="language-yaml">---
@@ -251,10 +274,10 @@ resources: []
 custom_part_types: []
 rulesets: {}
 </code></pre>
-<div id="admonition-task-1" class="admonition question">
+<div id="admonition-task-2" class="admonition question">
 <div class="admonition-title">
 <p>Task</p>
-<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
+<p><a class="admonition-anchor-link" href="#admonition-task-2"></a></p>
 </div>
 <div>
 <p>Place this yaml in the <code>first_question.yaml</code>.</p>
