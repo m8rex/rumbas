@@ -171,7 +171,17 @@
 </div>
 <h2 id="translating-the-statement"><a class="header" href="#translating-the-statement">Translating the statement</a></h2>
 <p>Currently our question with variables is defined in yaml as follows:</p>
-<pre><code class="language-yaml">{{#include ../../../examples/multi-language-questions/questions/questionpart_defaults/first_question_with_variables.yaml}}
+<pre><code class="language-yaml">---
+type: normal
+statement: How much is 9 * {a}?
+advice: You could calculate 10 * {a} and then subtract {a}. This yield {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+parts:
+  - type: number_entry
+    prompt: Enter your answer in the inputbox
+    marks: 5 
+    answer: a * 9
+variables:
+  a: 3
 </code></pre>
 <p>Currently this question is only available in English. We want to make this question available in Dutch as well.</p>
 <p>Let's take a look again at the structure of a questions.</p>
@@ -383,6 +393,87 @@ variables:
 </div>
 <p>You can access the dutch exams at <code>http://localhost:8000/nl/exams/first_question_with_variables/</code></p>
 <p>You can also find the <a href="https://m8rex.github.io/rumbas/examples/multi_language_questions/nl/exams/first_question_with_variables_translated/">dutch exam</a> and <a href="https://m8rex.github.io/rumbas/examples/multi_language_questions/en/exams/first_question_with_variables_translated/">english exam</a> in the [online demo in the online demo.</p>
+<h2 id="placeholders"><a class="header" href="#placeholders">Placeholders</a></h2>
+<p>If we look at <code>statement</code> and <code>advice</code> we see that some values (mostly math expressions) are language independant.</p>
+<pre><code class="language-yaml">---
+type: normal
+statement: 
+  content: 
+    en: How much is 9 * {a}?
+    nl: Hoe veel is 9 * {a}?
+  placeholders: {}
+advice: 
+  content: 
+    en: You could calculate 10 * {a} and then subtract {a}. This yield {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+    nl: Je kan 10 * {a} berekenen en dan {a} daarvan aftrekken. Dit geeft {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+  placeholders: {}
+parts:
+  - type: number_entry
+    prompt: 
+      content:
+        en: Enter your answer in the inputbox
+        nl: Geef je antwoord in in het invulveld
+      placeholders: {}
+    marks: 5 
+    answer: a * 9
+variables:
+  a: 3
+</code></pre>
+<p>This is where placeholders come in. Placeholders can be specified by name and then be used in the <code>content</code> field by writing {{name}}.</p>
+<pre><code class="language-yaml">---
+type: normal
+statement: 
+  content: 
+    en: How much is {formula}?
+    nl: Hoe veel is {formula}?
+  placeholders:
+      formula: 9 * {a}
+advice: 
+  content: 
+    en: You could calculate {times10} and then subtract {a}. This yield {result}
+    nl: Je kan {times10} berekenen en dan {a} daarvan aftrekken. Dit geeft {result}
+  placeholders:
+    times10: 10 * {a} 
+    result: '{a} * 10 - {a} = {a * 10} - {a} = {a*9}'
+parts:
+  - type: number_entry
+    prompt: 
+      content:
+        en: Enter your answer in the inputbox
+        nl: Geef je antwoord in in het invulveld
+      placeholders: {}
+    marks: 5 
+    answer: a * 9
+variables:
+  a: 3
+</code></pre>
+<div id="admonition-task-8" class="admonition question">
+<div class="admonition-title">
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-8"></a></p>
+</div>
+<div>
+<p>Recompile all exams. You should see no difference but there are less chances to have different formules in the different languages.</p>
+</div>
+</div>
+<div id="admonition-info-1" class="admonition info">
+<div class="admonition-title">
+<p>Info</p>
+<p><a class="admonition-anchor-link" href="#admonition-info-1"></a></p>
+</div>
+<div>
+<p>You can also use the placeholders the other way around. This is mainly useful when almost the whole string is maths and some small parts need to be translated. This might not work for all languages due to different grammar rules etc. For example:</p>
+</div>
+</div>
+<pre><code class="language-yaml">---
+content: &quot;{command} $5x^2-10$.&quot;
+placeholders:
+  command: 
+    content:
+      nl: Ontbind in factoren
+      en: Factorize
+    placeholders: {}
+</code></pre>
 
                     </main>
 
