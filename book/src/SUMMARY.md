@@ -18,6 +18,7 @@
     - [Step 1: Create a new rumbas project](./tutorial/using_defaults/step1.md)
     - [Step 2: Create a defaults folder](./tutorial/using_defaults/step2.md)
     - [Step 3: Default exam files](./tutorial/using_defaults/step3.md)
+- [Cli](./cli.md)
 - [Features](./features.md)
   - [Default files](./features/default_files.md)
   - [Multi language](./features/multi_language.md)

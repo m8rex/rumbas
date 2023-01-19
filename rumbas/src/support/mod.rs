@@ -4,6 +4,7 @@
 pub mod to_numbas;
 #[macro_use]
 pub mod to_rumbas;
+pub mod cli;
 pub mod default;
 pub mod dependency_manager;
 pub mod file_manager;

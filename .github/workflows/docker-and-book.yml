@@ -74,6 +74,9 @@ jobs:
       - name: Generate datatypes folder
         run: cargo run --bin doc
         working-directory: rumbas
+      - name: Generate cli file
+        run: cargo run --bin cli_doc
+        working-directory: rumbas
       - name: Install mdbook
         run: |
           cargo install mdbook
