@@ -1,8 +1,12 @@
 ## Create a new rumbas project
 
-- Create a new folder for this tutorial.
+```admonish question title="Task"
+- Create a new folder `using_defaults` for this tutorial.
 - Create a `.rumbasrc.yaml` file (with the right content) in this folder.
 - Create a `questions` folder in this folder.
 - Create an `exams` folder in this folder.
+```
 
-Copy the questions and exams from your 'first question' rumbas project to this project.
+```admonish question title="Task"
+Copy the questions and exams from your `first question` rumbas project to this project.
+```
