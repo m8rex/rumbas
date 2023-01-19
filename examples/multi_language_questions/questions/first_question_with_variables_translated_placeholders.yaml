@@ -1,0 +1,26 @@
+---
+type: normal
+statement: 
+  content: 
+    en: How much is {formula}?
+    nl: Hoe veel is {formula}?
+  placeholders:
+      formula: 9 * {a}
+advice: 
+  content: 
+    en: You could calculate {times10} and then subtract {a}. This yield {result}
+    nl: Je kan {times10} berekenen en dan {a} daarvan aftrekken. Dit geeft {result}
+  placeholders:
+    times10: 10 * {a} 
+    result: '{a} * 10 - {a} = {a * 10} - {a} = {a*9}'
+parts:
+  - type: number_entry
+    prompt: 
+      content:
+        en: Enter your answer in the inputbox
+        nl: Geef je antwoord in in het invulveld
+      placeholders: {}
+    marks: 5 
+    answer: a * 9
+variables:
+  a: 3
