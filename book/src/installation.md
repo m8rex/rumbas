@@ -3,9 +3,20 @@
 ## Running it in Github Codespaces
 The easiest way to try out rumbas is in Github Codespaces. You don't need any installation.
 
+### Running the last released version
+
+- Follow the steps  in [the rumbas codespaces template repo](https://github.com/m8rex/rumbas-codespaces-template) to load a github codespace with the latest released version of rumbas.
+- Open a terminal within the VSCode interface and type `rumbas --version` to check if the setup is working.
+
+### Running the latest (non released) version
+
+```admonish danger
+This setup is not recommended. Only use this section if you want to test features of a rumbas version that is not yet released.
+```
+
 Click on the following link to open the examples of this book in Github Codespaces. You can then run the examples in the browser.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=document&repo=265497289&machine=basicLinux32gb&devcontainer_path=.devcontainer%2Fexamples%2Fdevcontainer.json&location=WestEurope)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=265497289&machine=basicLinux32gb&devcontainer_path=.devcontainer%2Fexamples%2Fdevcontainer.json&location=WestEurope)
 
 Github Codespaces will do the following:
 - Build the latest rumbas version, this might take a few minutes.

@@ -2,7 +2,9 @@
 
 The reference shows tables that explain the dataformat for rumbas. In its most basic form, it looks like the following table.
 
+```admonish example title="Reference"
 {{#include ../../datatypes/QuestionPartMatrixRangedDimension.md}}
+```
 
 The tables lists three fields that has to be present in the yaml file. The first column is the name of the field, the second column is the datatype of the field and the third column is a description of the field.
 
