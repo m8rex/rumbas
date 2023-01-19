@@ -22,7 +22,7 @@ Copy the questions, exams and default from your `using_defaults` rumbas project 
 Currently our question with variables is defined in yaml as follows:
 
 ```yaml
-{{#include ../../../examples/multi-language-questions/questions/questionpart_defaults/first_question_with_variables.yaml}}
+{{#include ../../../examples/multi_language_questions/questions/first_question_with_variables.yaml}}
 ```
 
 Currently this question is only available in English. We want to make this question available in Dutch as well.
@@ -123,3 +123,38 @@ Recompile all exams. You should see that the exams are now compiled for both loc
 You can access the dutch exams at `http://localhost:8000/nl/exams/first_question_with_variables/`
 
 You can also find the [dutch exam](https://m8rex.github.io/rumbas/examples/multi_language_questions/nl/exams/first_question_with_variables_translated/) and [english exam](https://m8rex.github.io/rumbas/examples/multi_language_questions/en/exams/first_question_with_variables_translated/) in the [online demo in the online demo.
+
+## Placeholders
+
+If we look at `statement` and `advice` we see that some values (mostly math expressions) are language independant.
+
+```yaml
+{{#include ../../../examples/multi_language_questions/questions/first_question_with_variables_translated.yaml}}
+```
+
+This is where placeholders come in. Placeholders can be specified by name and then be used in the `content` field by writing {{name}}.
+
+
+```yaml
+{{#include ../../../examples/multi_language_questions/questions/first_question_with_variables_translated_placeholders.yaml}}
+```
+
+```admonish question title="Task"
+Recompile all exams. You should see no difference but there are less chances to have different formules in the different languages.
+```
+
+```admonish info
+You can also use the placeholders the other way around. This is mainly useful when almost the whole string is maths and some small parts need to be translated. This might not work for all languages due to different grammar rules etc. For example:
+```
+
+
+```yaml
+---
+content: "{command} $5x^2-10$."
+placeholders:
+  command: 
+    content:
+      nl: Ontbind in factoren
+      en: Factorize
+    placeholders: {}
+```
