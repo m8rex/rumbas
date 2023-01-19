@@ -115,7 +115,7 @@ jobs:
             examples/**/_output
   deploy_book:
       needs: [build_book, build_examples]
-      if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/tutorials' }}
+      if: ${{ github.ref == 'refs/heads/main' || github.head_ref == 'tutorials' }}
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v3
