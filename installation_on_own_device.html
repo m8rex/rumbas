@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>On you own device - Rumbas</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./assets/css/mdbook-admonish.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="rumbas.html"><strong aria-hidden="true">1.</strong> Rumbas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="numbas.html"><strong aria-hidden="true">1.1.</strong> Numbas</a></li></ol></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="github_codespace.html"><strong aria-hidden="true">2.1.</strong> Github Codespace</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="github_codespace_last_released.html"><strong aria-hidden="true">2.1.1.</strong> Last Released Version</a></li><li class="chapter-item expanded "><a href="github_codespace_last_unreleased.html"><strong aria-hidden="true">2.1.2.</strong> Unreleased Version</a></li></ol></li><li class="chapter-item expanded "><a href="installation_on_own_device.html" class="active"><strong aria-hidden="true">2.2.</strong> On you own device</a></li><li class="chapter-item expanded "><a href="manual_installation.html"><strong aria-hidden="true">2.3.</strong> Manual Installation</a></li></ol></li><li class="chapter-item expanded "><a href="tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial/first_question.html"><strong aria-hidden="true">3.1.</strong> Your first question</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial/first_question/step1.html"><strong aria-hidden="true">3.1.1.</strong> Step 1: Questions folder</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step2.html"><strong aria-hidden="true">3.1.2.</strong> Step 2: Create a question</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step3.html"><strong aria-hidden="true">3.1.3.</strong> Step 3: Try compiling the first question</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step4.html"><strong aria-hidden="true">3.1.4.</strong> Step 4: Try compiling the first question again</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step5.html"><strong aria-hidden="true">3.1.5.</strong> Step 5: Compiling our first exam</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step6.html"><strong aria-hidden="true">3.1.6.</strong> Step 6: Try the exam</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step7.html"><strong aria-hidden="true">3.1.7.</strong> Step 7: Using variables</a></li><li class="chapter-item expanded "><a href="tutorial/first_question/step8.html"><strong aria-hidden="true">3.1.8.</strong> Step 8: Using randomisation</a></li></ol></li><li class="chapter-item expanded "><a href="tutorial/using_defaults.html"><strong aria-hidden="true">3.2.</strong> Using defaults</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial/using_defaults/step1.html"><strong aria-hidden="true">3.2.1.</strong> Step 1: Create a new rumbas project</a></li><li class="chapter-item expanded "><a href="tutorial/using_defaults/step2.html"><strong aria-hidden="true">3.2.2.</strong> Step 2: Create a defaults folder</a></li><li class="chapter-item expanded "><a href="tutorial/using_defaults/step3.html"><strong aria-hidden="true">3.2.3.</strong> Step 3: Default exam files</a></li><li class="chapter-item expanded "><a href="tutorial/using_defaults/step4.html"><strong aria-hidden="true">3.2.4.</strong> Step 4: Default question files</a></li></ol></li><li class="chapter-item expanded "><a href="tutorial/multi_language_questions.html"><strong aria-hidden="true">3.3.</strong> Multi language questions</a></li></ol></li><li class="chapter-item expanded "><a href="cli.html"><strong aria-hidden="true">4.</strong> Cli</a></li><li class="chapter-item expanded "><a href="features.html"><strong aria-hidden="true">5.</strong> Features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="features/default_files.html"><strong aria-hidden="true">5.1.</strong> Default files</a></li><li class="chapter-item expanded "><a href="features/multi_language.html"><strong aria-hidden="true">5.2.</strong> Multi language</a></li><li class="chapter-item expanded "><a href="features/locales_folders.html"><strong aria-hidden="true">5.3.</strong> Locales folders</a></li><li class="chapter-item expanded "><a href="features/templates.html"><strong aria-hidden="true">5.4.</strong> Templates</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">6.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/yaml.html"><strong aria-hidden="true">6.1.</strong> Yaml</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/yaml/datatypes.html"><strong aria-hidden="true">6.1.1.</strong> Datatypes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/yaml/strings.html"><strong aria-hidden="true">6.1.1.1.</strong> Strings</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/yaml/unquoted_strings.html"><strong aria-hidden="true">6.1.1.1.1.</strong> Unquoted strings</a></li><li class="chapter-item expanded "><a href="reference/yaml/single_quoted_strings.html"><strong aria-hidden="true">6.1.1.1.2.</strong> Single quoted strings</a></li><li class="chapter-item expanded "><a href="reference/yaml/double_quoted_strings.html"><strong aria-hidden="true">6.1.1.1.3.</strong> Double quoted strings</a></li><li class="chapter-item expanded "><a href="reference/yaml/folded_strings.html"><strong aria-hidden="true">6.1.1.1.4.</strong> Folded strings</a></li><li class="chapter-item expanded "><a href="reference/yaml/literal_strings.html"><strong aria-hidden="true">6.1.1.1.5.</strong> Literal strings</a></li></ol></li><li class="chapter-item expanded "><a href="reference/yaml/hashes.html"><strong aria-hidden="true">6.1.1.2.</strong> Hashes</a></li><li class="chapter-item expanded "><a href="reference/yaml/arrays.html"><strong aria-hidden="true">6.1.1.3.</strong> Arrays</a></li><li class="chapter-item expanded "><a href="reference/yaml/anchor.html"><strong aria-hidden="true">6.1.1.4.</strong> Anchors</a></li></ol></li><li class="chapter-item expanded "><a href="reference/yaml_files.html"><strong aria-hidden="true">6.1.2.</strong> Yaml Files</a></li><li class="chapter-item expanded "><a href="reference/writing_yaml.html"><strong aria-hidden="true">6.1.3.</strong> Writing yaml</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/writing_yaml/basic_objects.html"><strong aria-hidden="true">6.1.3.1.</strong> Basic objects</a></li><li class="chapter-item expanded "><a href="reference/writing_yaml/basic_objects_any.html"><strong aria-hidden="true">6.1.3.2.</strong> Objects with any</a></li><li class="chapter-item expanded "><a href="reference/writing_yaml/choice_objects.html"><strong aria-hidden="true">6.1.3.3.</strong> Choice Objects</a></li><li class="chapter-item expanded "><a href="reference/writing_yaml/choice_objects_explicit.html"><strong aria-hidden="true">6.1.3.4.</strong> Explicit Choice Objects</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="reference/folder_structure.html"><strong aria-hidden="true">6.2.</strong> Folder structure</a></li><li class="chapter-item expanded "><a href="datatypes/complete_exam.html"><strong aria-hidden="true">6.3.</strong> Exam</a></li><li class="chapter-item expanded "><a href="datatypes/complete_question.html"><strong aria-hidden="true">6.4.</strong> Question</a></li><li class="chapter-item expanded "><a href="datatypes/complete_custom_part_type.html"><strong aria-hidden="true">6.5.</strong> Custom Part Type</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rumbas</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="recommended-installation-with-docker"><a class="header" href="#recommended-installation-with-docker">Recommended installation (with docker)</a></h2>
+<h3 id="install-docker"><a class="header" href="#install-docker">Install docker</a></h3>
+<ul>
+<li>
+<p>All information about docker can be found on the <a href="https://www.docker.com/get-started">docker website</a>.</p>
+</li>
+<li>
+<p>Make sure that it is added to the <code>PATH</code> environment variable. This might be a checkbox during the installation.</p>
+</li>
+<li>
+<p>Validate the installation by typing <code>docker ps</code> in a terminal / command prompt.</p>
+</li>
+</ul>
+<h3 id="simplifying-docker-usage"><a class="header" href="#simplifying-docker-usage">Simplifying docker usage</a></h3>
+<p>In principe, installing docker is enough to run <code>rumbas</code> but the commands will be cumbersome.</p>
+<p>In this section we describe how to create <code>bat</code> or <code>sh</code> files to make the docker usage of rumbas transparant for the user.</p>
+<p>Important: Make sure to explicitly use the latest version of rumbas (or at least a specific version, not <code>latest</code>)</p>
+<h3 id="explanation"><a class="header" href="#explanation">Explanation</a></h3>
+<p>In the Windows and Unix sections below, we will explain how you can run rumbas in your terminal / command prompt by just writing <code>rumbas</code> or <code>rumbas_shell</code>.</p>
+<ul>
+<li><code>rumbas</code>: You will be able to write <code>rumbas</code> in the terminal, instead of needing to type the whole docker command with the volume mount.</li>
+<li><code>rumbas_shell</code>: Always starting a container might be a bit to slow and overkill. With this script you can run <code>rumbas-shell</code> to get a docker container where you can repeatedly execute rumbas commands. Because of the current implementation of the docker container, it is best to call <code>/usr/app/entrypoint.sh &lt;path&gt;</code> instead of calling rumbas directly. Just calling <code>rumbas</code> will only work if you don't use custom themes.</li>
+</ul>
+<h4 id="windows"><a class="header" href="#windows">Windows</a></h4>
+<p>We will create a folder <code>docker_scripts</code> on the <code>C</code> drive and add it to the <code>PATH</code> environment variable.
+In this folder you can create a file for each of the following two scripts.</p>
+<h5 id="creating-the-docker_scripts-folder"><a class="header" href="#creating-the-docker_scripts-folder">Creating the <code>docker_scripts</code> folder</a></h5>
+<ul>
+<li>Create a folder 'docker_scripts' on the C drive</li>
+<li>Click on the window icon in the left bottom corner</li>
+<li>Search for 'Edit environment variables' and click on it</li>
+<li>Select 'Path' and click 'edit'</li>
+<li>Click on 'New'</li>
+<li>Typ 'C:\docker_scripts'</li>
+<li>Click on 'Ok'</li>
+<li>Open a new terminal so the new PATH variable is set</li>
+</ul>
+<p>In this folder you need to create a file for each of the following two scripts.</p>
+<h5 id="rumbasbat"><a class="header" href="#rumbasbat">rumbas.bat</a></h5>
+<p>Place the following text in the file <code>rumbas.bat</code> in the <code>docker_scripts</code> folder.</p>
+<pre><code class="language-bat">@echo off
+set str=%*
+set &quot;str=%str:\=/%&quot;
+docker run --rm -v %cd%:/rumbas ghcr.io/m8rex/rumbas:0.7.1 %str%
+</code></pre>
+<h5 id="rumbas_shellbat"><a class="header" href="#rumbas_shellbat">rumbas_shell.bat</a></h5>
+<p>Place the following text in the file <code>rumbas_shell.bat</code> in the <code>docker_scripts</code> folder.</p>
+<pre><code class="language-bat">@echo off
+docker run -it --rm -v %cd%:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
+</code></pre>
+<h4 id="unix"><a class="header" href="#unix">Unix</a></h4>
+<p>We will create a folder <code>docker_scripts</code> in <code>/usr/local/bin</code></p>
+<pre><code>sudo mkdir /usr/local/bin/docker_scripts
+</code></pre>
+<p>And add it to the path by adding to following line to the <code>~/.bashrc</code> file:</p>
+<pre><code>export PATH=$PATH:/usr/local/bin/docker_scripts
+</code></pre>
+<p>In this folder you can create a file for each of the following two scripts.</p>
+<h5 id="rumbas"><a class="header" href="#rumbas">rumbas</a></h5>
+<p>Place the following text in the file <code>rumbas.bat</code> in the <code>docker_scripts</code> folder.</p>
+<pre><code class="language-sh">#!/bin/sh
+docker run --rm -v $PWD:/rumbas ghcr.io/m8rex/rumbas:0.7.1 $@
+</code></pre>
+<p>Afterwards execute: <code>sudo chmod +x /usr/local/bin/docker_scripts/rumbas</code></p>
+<h5 id="rumbas_shell"><a class="header" href="#rumbas_shell">rumbas_shell</a></h5>
+<p>Place the following text in the file <code>rumbas_shell.bat</code> in the <code>docker_scripts</code> folder.</p>
+<pre><code class="language-sh">#!/bin/sh
+docker run -it --rm -v $PWD:/rumbas --entrypoint=sh ghcr.io/m8rex/rumbas:0.7.1
+</code></pre>
+<p>Afterwards execute: <code>sudo chmod +x /usr/local/bin/docker_scripts/rumbas_shell</code></p>
+<h3 id="explicit-docker-usage"><a class="header" href="#explicit-docker-usage">Explicit docker usage</a></h3>
+<p>It is possible to run rumbas in docker without using the <code>docker_scripts</code> setup.</p>
+<ul>
+<li>Run <code>docker run --rm -it -v &lt;absolute_path_to_rumbas_repo&gt;:/rumbas ghcr.io/m8rex/rumbas:0.7.1 rumbas &lt;command&gt;</code>
+<ul>
+<li>e.g.<code>docker run --rm -it -v C:\Users\jesse\Documents\rumbas-examples:/rumbas ghcr.io/m8rex/rumbas:0.7.1 compile exams/M0/algebra/begintest.yaml</code></li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="github_codespace_last_unreleased.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="manual_installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="github_codespace_last_unreleased.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="manual_installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>
