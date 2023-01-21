@@ -1,6 +1,6 @@
 # Choice object with explicit tag
 
-Sometimes is it needed to explicitly specify the type of a choice object. This is done by adding a specific key-value pair to the object.
+Sometimes it is needed to explicitly specify the type of a choice object. This is done by adding a specific key-value pair to the object.
 
 ```admonish example title="Reference"
 {{#include ../../datatypes/ExamFileType.md}}

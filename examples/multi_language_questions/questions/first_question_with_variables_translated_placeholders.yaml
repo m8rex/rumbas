@@ -8,7 +8,7 @@ statement:
       formula: 9 * {a}
 advice: 
   content: 
-    en: You could calculate {times10} and then subtract {a}. This yield {result}
+    en: You could calculate {times10} and then subtract {a}. This yields {result}
     nl: Je kan {times10} berekenen en dan {a} daarvan aftrekken. Dit geeft {result}
   placeholders:
     times10: 10 * {a} 

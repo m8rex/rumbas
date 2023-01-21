@@ -29,7 +29,7 @@ This command will create a folder in `_output/en/exams/first_exam` with the comp
 To view this in the browser you should run a local webserver that hosts the `_output` folder.
 
 Some options are:
-- Live server extension in visual studio code (this is installed in our google codespaces setup)
+- Live server extension in visual studio code (this is installed in our Github Codespaces setup). Click on the `Go Live` option in the right bottom corner.
 - The [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb) extension 
 - Python: execute `python -m http.server` in the `_output` folder
 - ...

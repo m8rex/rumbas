@@ -78,7 +78,7 @@ macro_rules! file_type {
                 /// e.g. `file:examples/basic-explanation.html` will search for files in folders
                 /// with following form: `questions/examples/locale-<localename>/basic-explanation.html`
                 /// If a file isn't found for a specific locale,
-                /// `questions/examples/basic-explanation.html` will be used
+                /// `questions/examples/basic-explanation.html` will be used.
                 FileReference(String),
                 /// A literal string.
                 String(String),

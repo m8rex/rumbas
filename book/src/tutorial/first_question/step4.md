@@ -6,7 +6,7 @@ Now we can try compiling the question again.
 Recompile the question.
 ```
 
-This time we will get a different error. This error is because we are missing a crucial file in our rumbas project. This file is the `exams/questions_preview.yaml` file. 
+This time we will get a different error. This error is because we are missing another crucial file in our rumbas project. This file is the `exams/questions_preview.yaml` file. 
 
 ```admonish info
 The `exams/questions_preview.yaml` file is used to create a preview exam for a question. 
@@ -15,7 +15,7 @@ The `exams/questions_preview.yaml` file is used to create a preview exam for a q
 Because this file makes use a feature of rumbas that we will explain later (templating), we will create an exam that uses our question and compile that exam.
 
 ```admonish question title="Task"
-Create the `exams` folder and and an `exams/first_exam.yaml` file.
+Create the `exams` folder in the project folder and add a `first_exam.yaml` file in this new `exams` folder.
 ```
 
 To know which fields we can set for a question, you can look at the [Reference for exam](./datatypes/complete_exam.md) page. For now we will show the fields that can be set for a question.

@@ -2,7 +2,7 @@
 type: normal # set the type to normal
 # type has to be set as an 'internal tag' so all fields of 'Question' are set on the samen level
 statement: How much is 9 * 3?
-advice: You could calculate 10 * 3 and then subtract 3. This yield 3 * 10 - 3 = 30 - 3 = 27
+advice: You could calculate 10 * 3 and then subtract 3. This yields 3 * 10 - 3 = 30 - 3 = 27
 # Add one part
 parts:
   - type: number_entry
