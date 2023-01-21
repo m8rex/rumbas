@@ -18,7 +18,7 @@ Advantages:
 - Newlines can be added by placing an escaped character (\) at the end of the line.
 
 Disadvantages:
-- Backslashes (\) are interpreted as escape characters. This means that you can't write a string containing a backslash without escaping it.
+- Backslashes (\\) are interpreted as escape characters. This means that you can't write a string containing a backslash without escaping it.
   - Special characters like newlines and tabs are interpreted as escape characters.
   - Makes it hard to type a string containing jme commands. Because you will need to escape each backslash.
 
@@ -29,5 +29,5 @@ Disadvantages:
 means
 
 ```text
-It's a double quoted string  with a jme simplify command \simplify{2x+3}
+It's a double quoted string with a jme simplify command \simplify{2x+3}
 ```

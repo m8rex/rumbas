@@ -1,6 +1,6 @@
 # Basic objects
 
-The reference shows tables that explain the dataformat for rumbas. In its most basic form, it looks like the following table.
+The [Exam](/datatypes/complete_exam.html), [Question](/datatypes/complete_question.html) and [Custom Part Type](/datatypes/complete_custom_part_type.html) reference shows tables that explain the dataformat for rumbas. In its most basic form, it looks like the following reference for the `QuestionPartMatrixRangedDimension` type which is used to specify the possible sizes for a matrix. You don't need to (and can't) understand what this type is used for.
 
 ```admonish example title="Reference"
 {{#include ../../datatypes/QuestionPartMatrixRangedDimension.md}}

@@ -16,7 +16,7 @@ key2: value2
 
 ## Comments
 
-Comments can be written after a hashtag (#) The hashtag needs a space in front of it (in unquoted strings). They can be written on a separate line or after a value.
+Comments can be written after a hashtag (#) The hashtag needs to be the first character on a line or there should be a space in front of it (in unquoted strings). They can be written on a separate line or after a value.
 
 ```yaml
 # This is a comment before the opening dashes

@@ -7,7 +7,7 @@ statement:
   placeholders: {}
 advice: 
   content: 
-    en: You could calculate 10 * {a} and then subtract {a}. This yield {a} * 10 - {a} = {a * 10} - {a} = {a*9}
+    en: You could calculate 10 * {a} and then subtract {a}. This yields {a} * 10 - {a} = {a * 10} - {a} = {a*9}
     nl: Je kan 10 * {a} berekenen en dan {a} daarvan aftrekken. Dit geeft {a} * 10 - {a} = {a * 10} - {a} = {a*9}
   placeholders: {}
 parts:

@@ -33,7 +33,7 @@ Try answering the third question and see if it works.
 ```
 
 ```admonish question title="Task"
-Also try the following things for the second question:
+Also try the following things for the third question:
 - Reload the page and use the `Reveal answers` button to see the correct answer. You will see that the calculations in the `marks` and `advice` fields are calculated.
 - Try the `Try another question like this one` button.
   - For the third question, this will generate a new question with a new value for `a`.

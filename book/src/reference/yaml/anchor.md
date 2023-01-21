@@ -2,7 +2,7 @@
 
 Anchors and aliases can be used to reference a value multiple times. This is useful when you want to use the same value multiple times, but don't want to write it multiple times.
 
-Anchors are written after an ampersand (&) and a space. They are then followed by a key. The key can be any string, but it is recommended to use a unique key.
+Anchors are written after an ampersand (&). They are then followed by a key. The key can be any string, but it is recommended to use a unique key.
 
 ```yaml
 first_time: &anchor_key value
@@ -50,5 +50,4 @@ which is identical to
 first_time: value
 second_time: value
 third_time: value
-```
 ```

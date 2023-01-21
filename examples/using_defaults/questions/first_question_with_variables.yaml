@@ -1,7 +1,7 @@
 ---
 type: normal
 statement: How much is 9 * {a}?
-advice: You could calculate 10 * {a} and then subtract {a}. This yield {a} * 10 - {a} = {a * 10} - {a} = {a*9} # this changed
+advice: You could calculate 10 * {a} and then subtract {a}. This yields {a} * 10 - {a} = {a * 10} - {a} = {a*9} # this changed
 parts:
   - type: number_entry
     prompt: Enter your answer in the inputbox
