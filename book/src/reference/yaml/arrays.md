@@ -4,7 +4,7 @@ Arrays are an ordered list of values. They can be written inline or as a block.
 
 ## Block arrays
 
-Block arrays are written after a dash (-) and a space. Each value is written on a new line.
+Block arrays are written after a dash (<kbd>-</kbd>) and a space. Each value is written on a new line.
 
 ```yaml
 - value1
@@ -17,11 +17,13 @@ The values can be any yaml value, even other arrays or hashes.
 hash_key: 
   - value1
   - value2
-other_key:
-  - key: value
+other_key: # the value of this key is an array
+  - key: value # the value of the first element of the array is a hash
     other: value
+  - other_element
 list_of_lists:
-   - - value1
+   # the value of the elements of the array below, are arrays themselves
+   - - value1 
      - value2
    - - value3
      - value4
@@ -29,7 +31,7 @@ list_of_lists:
 
 ## Inline arrays
 
-Inline arrays can be used to write a list of values on a single line. They are written between square brackets ([ and ]), with values separated by commas.
+Inline arrays can be used to write a list of values on a single line. They are written between square brackets (<kbd>[</kbd> and <kbd>]</kbd>), with values separated by commas (<kbd>,</kbd>).
 
 ```yaml
 [ value1, value2 ]

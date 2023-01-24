@@ -18,7 +18,7 @@ This command will now show an error about the question not belonging to a rumbas
 ```
 
 ```yaml
-{{#include ../../../../examples/first_question/.rumbasrc.yaml}}
+{{#include ../../../../examples/first_project/.rumbasrc.yaml}}
 ```
 
 ```admonish info
