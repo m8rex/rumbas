@@ -15,4 +15,4 @@ Also try the following things:
 - Try the `Try another question like this one` button. It won't do anything yet, because we are not using variables yet.
 ```
 
-You can also find the exam in the [online demo](https://m8rex.github.io/rumbas/examples/first_question/en/exams/first_exam/).
+You can also find the exam in the [online demo](https://m8rex.github.io/rumbas/examples/first_project/en/exams/first_exam/).

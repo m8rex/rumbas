@@ -7,7 +7,7 @@ Let's copy our `first_question.yaml` file to `first_question_with_variables.yaml
 - Change the `statement`, `answer` and `correct_answer` so it uses the variable `a` instead of the number 3.
 
 ```yaml
-{{#include ../../../../examples/first_question/questions/first_question_with_variables.yaml}}
+{{#include ../../../../examples/first_project/questions/first_question_with_variables.yaml}}
 ```
 
 ```admonish question title="Task"
@@ -17,7 +17,7 @@ Copy the `first_question.yaml` file to `first_question_with_variables.yaml` and 
 Now we will create a new exam that uses this question. We will copy the `first_exam.yaml` file to `first_exam_with_variables.yaml` and add the new question to the `questions` field.
 
 ```yaml
-{{#include ../../../../examples/first_question/exams/first_exam_with_variables.yaml}}
+{{#include ../../../../examples/first_project/exams/first_exam_with_variables.yaml}}
 ```
 
 ```admonish question title="Task"
@@ -42,4 +42,4 @@ Also try the following things for the second question:
 - Try the `Try another question like this one` button. It won't do anything yet, because we are not using randomisation yet.
 ```
 
-You can also find the exam in the [online demo](https://m8rex.github.io/rumbas/examples/first_question/en/exams/first_exam_with_variables/).
+You can also find the exam in the [online demo](https://m8rex.github.io/rumbas/examples/first_project/en/exams/first_exam_with_variables/).

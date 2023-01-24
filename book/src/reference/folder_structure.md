@@ -1,13 +1,6 @@
 # Folder structure
 
-A rumbas project should have to following folder structure:
-
-- A folder named `default` that contains the default specifications
-- A folder named `questions` that contains the questions
-- A folder named `exams` that contains the exams
-- A folder named `themes` the contains the themes
-- A folder named `custom_part_types` that contains `custom_part_types`
-- A folder named `resources` that contains the resources that are used in exams.
+{{#include ./folder_structure_folders.md}}
 
 ## Default folders
 

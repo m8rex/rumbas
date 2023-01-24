@@ -24,7 +24,7 @@ Read the reference below and try to understand what each field means.
 We can set a value for each of these fields.
 
 ```yaml
-{{#include ../../../../examples/first_question/questions/first_question.yaml}}
+{{#include ../../../../examples/first_project/questions/first_question.yaml}}
 ```
 
 ```admonish question title="Task"

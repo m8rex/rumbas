@@ -1,6 +1,6 @@
 # Strings
 
-String can be written in many ways in yaml, each with their specific advantages and disadvantages.
+Strings can be written in many ways in yaml, each with their specific advantages and disadvantages.
 
 | type | When to use? |
 |--------|------------------|

@@ -33,7 +33,7 @@ For now we will just look at the `normal` exam type. This is the exam type that 
 We can set a value for each of these fields.
 
 ```yaml
-{{#include ../../../../examples/first_question/exams/first_exam.yaml}}
+{{#include ../../../../examples/first_project/exams/first_exam.yaml}}
 ``` 
 
 ```admonish question title="Task"
