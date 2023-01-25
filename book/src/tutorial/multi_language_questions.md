@@ -186,7 +186,7 @@ A filestring is thus one of the following:
 In the first option, it is possible to use locale folders to specify different versions of the file for different locales.
 ```
 
-Using the `FileString` type in combination with locale folders gives use a powerful mmechanism to reuse text in different questions and exams.
+Using the `FileString` type in combination with locale folders gives us a powerful mechanism to reuse text in different questions and exams.
 
 ```admonish question title="Task"
 Move the `statement` content to localized files.
