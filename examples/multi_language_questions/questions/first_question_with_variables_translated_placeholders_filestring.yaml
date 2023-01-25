@@ -1,7 +1,7 @@
 ---
 type: normal
 statement: 
-  content: questions/how-much.html
+  content: how-much.html
   placeholders:
       formula: 9 * {a}
 advice: 
