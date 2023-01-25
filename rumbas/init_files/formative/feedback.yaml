@@ -1,0 +1,15 @@
+---
+percentage_needed_to_pass: none
+show_name_of_student: true
+show_current_marks: true
+show_maximum_marks: true
+show_answer_state: true
+allow_reveal_answer: true
+review:
+  show_score: true
+  show_feedback: true
+  show_expected_answer: true
+  show_advice: true
+advice: ""
+intro: ""
+feedback_messages: []

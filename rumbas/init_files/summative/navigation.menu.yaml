@@ -1,0 +1,11 @@
+---
+mode: menu
+start_password: none
+can_regenerate: false
+show_steps: false
+show_title_page: true
+confirm_when_leaving: true
+show_names_of_question_groups: false
+allow_printing: false
+on_leave:
+  action: none

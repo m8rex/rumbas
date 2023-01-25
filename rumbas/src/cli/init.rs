@@ -1,4 +1,7 @@
-pub fn init() {
+use rumbas::support::default::{
+    DefaultExamFileType, DefaultFileTypeMethods, DefaultInitType, DefaultQuestionFileType,
+};
+pub fn init(summative: bool) {
     let repo_path = std::path::Path::new(".");
     let repo_path = rumbas::support::rc::within_repo(&repo_path);
     if let Some(repo_path) = repo_path {
@@ -23,7 +26,7 @@ pub fn init() {
 
         if !existing_paths.is_empty() {
             log::error!(
-                "Aborting, some folder do already exists: {}",
+                "Aborting, some folder(s) do(es) already exists: {}",
                 existing_paths
                     .iter()
                     .map(|p| p.display().to_string())
@@ -41,6 +44,24 @@ pub fn init() {
 
             let rc = rc.with_version(rumbas_version);
             rc.write().expect("writing of rc file to work.");
+
+            let default_type = if summative {
+                DefaultInitType::Summative
+            } else {
+                DefaultInitType::Formative
+            };
+            let default_files = DefaultExamFileType::default_init(default_type)
+                .into_iter()
+                .chain(DefaultQuestionFileType::default_init(default_type).into_iter());
+            for (path_part, content) in default_files {
+                std::fs::write(
+                    std::path::Path::new(rumbas::DEFAULTS_FOLDER)
+                        .join(path_part)
+                        .with_extension("yaml"),
+                    content,
+                )
+                .expect("writing of default files to work");
+            }
         }
     }
 }

@@ -1,0 +1,7 @@
+---
+duration_in_seconds: none
+allow_pause: true
+on_timeout:
+  action: none
+timed_warning:
+  action: none

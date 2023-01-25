@@ -1,0 +1,21 @@
+---
+prompt: ""
+marks: 1
+part_name: none
+show_correct_answer: true
+show_feedback_icon: true
+steps: []
+steps_penalty: 0
+custom_marking: none
+adaptive_marking: none
+shuffle_answers: true
+show_cell_answer_state: true
+should_select_at_least: 1
+should_select_at_most: none
+display:
+  type: check
+layout:
+  type: "all"
+wrong_nb_answers_warning_type: none
+minimal_achievable_marks: none
+maximal_achievable_marks: none
