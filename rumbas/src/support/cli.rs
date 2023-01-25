@@ -98,7 +98,11 @@ pub enum Command {
         question: bool,
     },
     /// Initialize a rumbas project in this folder
-    Init,
+    Init {
+        /// Whether the defaults should be of summative nature (instead of formative)
+        #[clap(value_parser, long)]
+        summative: bool,
+    },
     /// Update the repository to the next rumbas version
     UpdateRepo,
     /// Export a rumbas exam as one yaml.
@@ -142,7 +146,9 @@ impl Command {
     fn can_execute_in_old_version(&self) -> bool {
         matches!(
             self,
-            Self::UpdateRepo | Self::Init | Self::GenerateShellCompletion { shell: _ }
+            Self::UpdateRepo
+                | Self::Init { summative: _ }
+                | Self::GenerateShellCompletion { shell: _ }
         )
     }
 }

@@ -32,7 +32,11 @@ pub enum QuestionPart {
 
 impl ToNumbas<numbas::question::part::QuestionPart> for QuestionPart {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPart {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::QuestionPart {
         match self {
             QuestionPart::Builtin(b) => {
                 numbas::question::part::QuestionPart::Builtin(b.to_numbas(locale, &()))
@@ -106,7 +110,11 @@ pub enum QuestionPartBuiltin {
 
 impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuiltin {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPartBuiltin {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::QuestionPartBuiltin {
         match self {
             QuestionPartBuiltin::JME(d) => {
                 numbas::question::part::QuestionPartBuiltin::JME((*d).to_numbas(locale, &()))
@@ -118,7 +126,9 @@ impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuilt
                 numbas::question::part::QuestionPartBuiltin::ChooseOne(d.to_numbas(locale, &()))
             }
             QuestionPartBuiltin::ChooseMultiple(d) => {
-                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(d.to_numbas(locale, &()))
+                numbas::question::part::QuestionPartBuiltin::ChooseMultiple(
+                    d.to_numbas(locale, &()),
+                )
             }
             QuestionPartBuiltin::MatchAnswersWithItems(d) => {
                 numbas::question::part::QuestionPartBuiltin::MatchAnswersWithChoices(
@@ -137,9 +147,9 @@ impl ToNumbas<numbas::question::part::QuestionPartBuiltin> for QuestionPartBuilt
             QuestionPartBuiltin::Extension(d) => {
                 numbas::question::part::QuestionPartBuiltin::Extension(d.to_numbas(locale, &()))
             }
-            QuestionPartBuiltin::Matrix(d) => {
-                numbas::question::part::QuestionPartBuiltin::Matrix(Box::new(d.to_numbas(locale, &())))
-            }
+            QuestionPartBuiltin::Matrix(d) => numbas::question::part::QuestionPartBuiltin::Matrix(
+                Box::new(d.to_numbas(locale, &())),
+            ),
         }
     }
 }
@@ -260,7 +270,11 @@ pub struct JMENote {
 
 impl ToNumbas<numbas::question::custom_part_type::CustomPartMarkingNote> for JMENote {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::custom_part_type::CustomPartMarkingNote {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::custom_part_type::CustomPartMarkingNote {
         numbas::question::custom_part_type::CustomPartMarkingNote {
             name: self.name.to_numbas(locale, &()),
             definition: self.expression.to_numbas(locale, &()),
@@ -303,18 +317,17 @@ macro_rules! question_part_type {
             /// An optional custom part name, to use in part path's
             pub part_name: Noneable<String>,
             /// When the student reveals answers to the question, or views the question in review mode, should a correct answer be shown? You might want to turn this off if you’re doing custom marking and the part has no “correct” answer.
-
             pub show_correct_answer: bool,
             /// After the student submits an answer to this part, should an icon describing their score be shown? This is usually shown next to the input field, as well as in the feedback box. This option also controls whether feedback messages are shown for this part. You might want to turn this off if you’ve set up a question with a custom marking script which assigns a score based on the answers to two or more parts (or gapfills), meaning the individual parts have no independent “correct” or “incorrect” state.
             pub show_feedback_icon: bool,
-            /// The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.
-            pub custom_marking: Noneable<CustomMarking>,
+
             #[input(skip)]
             /// A (possibly empty) list of sub-parts which the student can reveal by clicking on a button. Marks awarded for steps don’t increase the total available for the part, but are given in case the student gets a lower score for the main part.
             pub steps: Vec<QuestionPart>,
     /// If the student reveals the Steps, reduce the total available marks by this amount. Credit for the part is scaled down accordingly. For example, if there are 6 marks available and the penalty for revealing steps is 2 marks, the total available after revealing steps is 4. An answer worth 3 marks without revealing steps is instead worth 3 * 4/6 = 2 marks after revealing steps.
             pub steps_penalty: numbas::support::primitive::Number,
-
+            /// The marking algorithm tab allows you to customise the script used to mark the student’s answer, and test that it works correctly on answers that you provide.
+            pub custom_marking: Noneable<CustomMarking>,
             // Adaptive marking
             /// Adaptive marking allows you to incorporate the student’s answers to earlier parts when marking their answer to another part. You could use this to allow an “error carried forward” marking scheme, or in more free-form questions where one part has no correct answer - for example, “think of a number and find its square root”. This is achieved by replacing the values of question variables with the student’s answers to other parts. When a variable is replaced, any other variables depending on that one are recalculated using the new value. All other variables keep their original values.
             /// See for more info and a warning https://numbas-editor.readthedocs.io/en/latest/question/parts/reference.html#adaptive-marking
@@ -379,7 +392,11 @@ pub enum CustomPartInputTypeValue {
 
 impl ToNumbas<numbas::question::part::CustomPartInputTypeValue> for CustomPartInputTypeValue {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::CustomPartInputTypeValue {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::CustomPartInputTypeValue {
         match self {
             CustomPartInputTypeValue::CheckBox(v) => {
                 numbas::question::part::CustomPartInputTypeValue::CheckBox(*v)
@@ -406,7 +423,11 @@ impl ToRumbas<CustomPartInputTypeValue> for numbas::question::part::CustomPartIn
 
 impl ToNumbas<numbas::question::part::QuestionPartCustom> for QuestionPartCustom {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::QuestionPartCustom {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::QuestionPartCustom {
         numbas::question::part::QuestionPartCustom {
             part_data: self.to_numbas(locale, &()),
             r#type: self.type_name.to_numbas(locale, &()),
@@ -450,10 +471,16 @@ pub struct AdaptiveMarking {
 
 impl ToNumbas<numbas::question::part::AdaptiveMarking> for AdaptiveMarking {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::AdaptiveMarking {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::AdaptiveMarking {
         numbas::question::part::AdaptiveMarking {
             variable_replacements: self.variable_replacements.to_numbas(locale, &()),
-            variable_replacement_strategy: self.variable_replacement_strategy.to_numbas(locale, &()),
+            variable_replacement_strategy: self
+                .variable_replacement_strategy
+                .to_numbas(locale, &()),
             penalty: self.penalty.to_numbas(locale, &()),
         }
     }
@@ -486,10 +513,16 @@ pub struct CustomMarking {
 
 impl ToNumbas<numbas::question::part::CustomMarking> for CustomMarking {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::CustomMarking {
+    fn to_numbas(
+        &self,
+        locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::CustomMarking {
         numbas::question::part::CustomMarking {
             algorithm: self.algorithm_notes.to_numbas(locale, &()),
-            extend_base_marking_algorithm: self.extend_base_marking_algorithm.to_numbas(locale, &()),
+            extend_base_marking_algorithm: self
+                .extend_base_marking_algorithm
+                .to_numbas(locale, &()),
         }
     }
 }
@@ -521,7 +554,11 @@ pub struct VariableReplacement {
 
 impl ToNumbas<numbas::question::part::VariableReplacement> for VariableReplacement {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::VariableReplacement {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::VariableReplacement {
         numbas::question::part::VariableReplacement {
             variable: self.variable.clone(),
             part_answer_to_use: self.part_answer_to_use.clone(),
@@ -554,7 +591,11 @@ pub enum VariableReplacementStrategy {
 
 impl ToNumbas<numbas::question::part::VariableReplacementStrategy> for VariableReplacementStrategy {
     type ToNumbasHelper = ();
-    fn to_numbas(&self, _locale: &str, _data: &Self::ToNumbasHelper) -> numbas::question::part::VariableReplacementStrategy {
+    fn to_numbas(
+        &self,
+        _locale: &str,
+        _data: &Self::ToNumbasHelper,
+    ) -> numbas::question::part::VariableReplacementStrategy {
         match self {
             VariableReplacementStrategy::OriginalFirst => {
                 numbas::question::part::VariableReplacementStrategy::OriginalFirst

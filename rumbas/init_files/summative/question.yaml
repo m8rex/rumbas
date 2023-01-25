@@ -1,0 +1,42 @@
+---
+statement: ""
+advice: ""
+builtin_constants:
+  e: true
+  pi: true
+  i: true
+custom_constants: []
+variables: {}
+variables_test:
+  condition: ""
+  max_runs: 100
+functions: {}
+preamble:
+  js: ""
+  css:  ""
+navigation:
+  can_regenerate: false
+  show_title_page: false
+  prevent_leaving: false
+extensions:
+  jsx_graph: false
+  stats: false
+  geogebra: false
+  eukleides: false
+  chemistry: false
+  download_text_file: false
+  graphs: false
+  linear_algebra: false
+  linear_codes: false
+  optimisation: false
+  permutations: false
+  polynomials: false
+  quantities: false
+  random_person: false
+  written_number: false
+  sqlite: false
+  text: false
+diagnostic_topic_names: []
+resources: []
+custom_part_types: []
+rulesets: {}

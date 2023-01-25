@@ -1,0 +1,18 @@
+---
+prompt: ""
+marks: 1
+part_name: none
+show_correct_answer: false
+show_feedback_icon: false
+steps: []
+steps_penalty: 0
+custom_marking: none
+adaptive_marking: none
+display_correct_as_fraction: false
+allow_fractions: false
+fractions_must_be_reduced: false
+fractions_must_be_reduced_hint: true
+partial_credit_if_not_reduced: false
+allowed_notation_styles:
+  - english-plain
+display_correct_in_style: english-plain

@@ -1,0 +1,14 @@
+---
+mode: sequential
+start_password: none
+can_regenerate: false
+show_steps: false
+show_title_page: true
+confirm_when_leaving: true
+show_names_of_question_groups: false
+allow_printing: false
+can_move_to_previous: true
+browsing_enabled: true
+show_results_page: on_completion
+on_leave:
+  action: none

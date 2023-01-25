@@ -50,6 +50,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -141,8 +143,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -464,11 +464,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -644,6 +644,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -651,8 +653,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -943,13 +943,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -1104,9 +1104,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -1293,9 +1293,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     answer: "template:template_key"
     answer_simplification:
@@ -1369,11 +1369,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     answer:
       template_key: template_key
@@ -1474,9 +1474,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -1571,6 +1571,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -1662,10 +1666,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     answer:
       content:
@@ -1755,11 +1755,11 @@ parts:
     part_name: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: ~
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: ~
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -1931,6 +1931,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -1938,8 +1940,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -2068,11 +2068,11 @@ parts:
     part_name: none
     show_correct_answer: ~
     show_feedback_icon: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: ~
       extend_base_marking_algorithm: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -2122,9 +2122,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: none
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -2363,11 +2363,11 @@ parts:
       default_value: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking: "template:template_key"
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -2511,11 +2511,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: ~
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: ~
     adaptive_marking: none
     answer:
       template_key: template_key
@@ -2708,9 +2708,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: 1
+    custom_marking: ~
     adaptive_marking: "template:template_key"
     answer: ~
     answer_simplification:
@@ -2868,6 +2868,8 @@ parts:
     part_name: none
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -2959,8 +2961,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -3232,11 +3232,11 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking: ~
     answer:
       content:
@@ -3332,6 +3332,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -3423,8 +3425,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -3471,11 +3471,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -3507,6 +3507,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -3514,8 +3516,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -3550,13 +3550,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -3571,9 +3571,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -3607,9 +3607,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     sort_answers: "template:template_key"
     gaps: ~
@@ -3625,11 +3625,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     sort_answers:
       template_key: template_key
@@ -3641,9 +3641,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -3672,6 +3672,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -3763,10 +3767,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     sort_answers: false
     gaps: ~
@@ -3789,6 +3789,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -3880,8 +3882,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -4123,11 +4123,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -4337,6 +4337,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -4344,8 +4346,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -4389,13 +4389,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -4419,9 +4419,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -4468,9 +4468,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     answer_data: "template:template_key"
     shuffle_answers: "template:template_key"
@@ -4488,11 +4488,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     answer_data:
       template_key: template_key
@@ -4512,9 +4512,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -4545,6 +4545,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -4636,10 +4640,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     answer_data:
       - statement:
@@ -4857,6 +4857,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -4948,8 +4950,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -5196,11 +5196,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -5414,6 +5414,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -5421,8 +5423,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -5474,13 +5474,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -5514,9 +5514,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -5569,9 +5569,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     answer_data: "template:template_key"
     shuffle_answers: "template:template_key"
@@ -5595,11 +5595,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     answer_data:
       template_key: template_key
@@ -5627,9 +5627,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -5666,6 +5666,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -5757,10 +5761,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     answer_data:
       - statement:
@@ -5991,6 +5991,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -6082,8 +6084,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -6435,11 +6435,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -6486,6 +6486,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -6493,8 +6495,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -6554,13 +6554,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -6722,9 +6722,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -6774,9 +6774,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     answer_data:
       type: numbas_like
@@ -6809,11 +6809,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     answer_data:
       type: numbas_like
@@ -6852,9 +6852,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -6894,6 +6894,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -6985,10 +6989,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     answer_data:
       template_key: template_key
@@ -7031,11 +7031,11 @@ parts:
     part_name: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: ~
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: ~
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -7093,6 +7093,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -7184,8 +7186,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -7250,11 +7250,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -7294,6 +7294,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -7301,8 +7303,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -7353,13 +7353,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -7388,9 +7388,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -7442,9 +7442,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     answer:
       template_key: template_key
@@ -7468,11 +7468,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     answer: ~
     display_correct_as_fraction:
@@ -7498,9 +7498,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -7535,6 +7535,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -7626,10 +7630,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     answer:
       from: x^5
@@ -7674,11 +7674,11 @@ parts:
     part_name: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: ~
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: ~
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -7739,6 +7739,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -7746,8 +7748,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -7796,11 +7796,11 @@ parts:
     part_name: none
     show_correct_answer: ~
     show_feedback_icon: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: ~
       extend_base_marking_algorithm: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -7836,6 +7836,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -7927,8 +7929,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -8004,11 +8004,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -8069,6 +8069,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -8076,8 +8078,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -8147,13 +8147,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -8197,9 +8197,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -8236,9 +8236,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     case_sensitive: "template:template_key"
     wrong_case_partial_credit: "template:template_key"
@@ -8257,11 +8257,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     case_sensitive:
       template_key: template_key
@@ -8282,9 +8282,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -8316,6 +8316,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -8407,10 +8411,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     case_sensitive: false
     wrong_case_partial_credit: 1.2
@@ -8464,6 +8464,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -8555,8 +8557,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -8601,11 +8601,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -8635,6 +8635,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -8642,8 +8644,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -8674,13 +8674,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -8693,9 +8693,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -8727,9 +8727,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
   - type: information
     prompt:
@@ -8743,11 +8743,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
   - type: information
     prompt: ~
@@ -8755,9 +8755,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -8784,6 +8784,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -8875,10 +8879,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
   - type: extension
     prompt:
@@ -8899,6 +8899,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -8990,8 +8992,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -9036,11 +9036,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -9070,6 +9070,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -9077,8 +9079,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -9109,13 +9109,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -9128,9 +9128,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -9162,9 +9162,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
   - type: extension
     prompt:
@@ -9178,11 +9178,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
   - type: extension
     prompt: ~
@@ -9190,9 +9190,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -9219,6 +9219,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -9310,10 +9314,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
   - type: matrix
     prompt:
@@ -9334,6 +9334,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -9425,8 +9427,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -9481,11 +9481,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -9525,6 +9525,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -9532,8 +9534,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -9590,13 +9590,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -9625,9 +9625,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -9675,9 +9675,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     correct_answer: "template:template_key"
     dimensions:
@@ -9715,11 +9715,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     correct_answer:
       template_key: template_key
@@ -9757,9 +9757,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -9802,6 +9802,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -9893,10 +9897,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     correct_answer: x^5
     dimensions:
@@ -9925,11 +9925,11 @@ parts:
     part_name: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: ~
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: ~
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -9992,6 +9992,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -9999,8 +10001,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -10041,11 +10041,11 @@ parts:
     part_name: none
     show_correct_answer: ~
     show_feedback_icon: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: ~
       extend_base_marking_algorithm: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -10066,9 +10066,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: none
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -10093,11 +10093,11 @@ parts:
       default_value: ~
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking: "template:template_key"
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -10147,6 +10147,8 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty: 1
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -10238,8 +10240,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty: 1
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -10286,11 +10286,11 @@ parts:
     part_name: none
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       algorithm_notes: "template:template_key"
       extend_base_marking_algorithm: "template:template_key"
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking:
       variable_replacements: "template:template_key"
       variable_replacement_strategy: always_replace
@@ -10322,6 +10322,8 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: "template:template_key"
     custom_marking:
       algorithm_notes:
         template_key: template_key
@@ -10329,8 +10331,6 @@ parts:
       extend_base_marking_algorithm:
         template_key: template_key
         default_value: ~
-    steps: ~
-    steps_penalty: "template:template_key"
     adaptive_marking:
       variable_replacements:
         template_key: template_key
@@ -10365,13 +10365,13 @@ parts:
       default_value: ~
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking:
-      algorithm_notes: ~
-      extend_base_marking_algorithm: ~
     steps: ~
     steps_penalty:
       template_key: template_key
       default_value: ~
+    custom_marking:
+      algorithm_notes: ~
+      extend_base_marking_algorithm: ~
     adaptive_marking:
       variable_replacements: ~
       variable_replacement_strategy:
@@ -10388,9 +10388,9 @@ parts:
     part_name: ~
     show_correct_answer: false
     show_feedback_icon: false
-    custom_marking: none
     steps: ~
     steps_penalty: ~
+    custom_marking: none
     adaptive_marking:
       variable_replacements:
         - variable: nonjmetext§
@@ -10423,9 +10423,9 @@ parts:
     part_name: nonjmetext§
     show_correct_answer: "template:template_key"
     show_feedback_icon: "template:template_key"
-    custom_marking: "template:template_key"
     steps: ~
     steps_penalty: 1
+    custom_marking: "template:template_key"
     adaptive_marking: none
     type: "template:template_key"
     settings:
@@ -10442,11 +10442,11 @@ parts:
     show_feedback_icon:
       template_key: template_key
       default_value: ~
+    steps: ~
+    steps_penalty: 1.5
     custom_marking:
       template_key: template_key
       default_value: ~
-    steps: ~
-    steps_penalty: 1.5
     adaptive_marking: "template:template_key"
     type:
       template_key: template_key
@@ -10457,9 +10457,9 @@ parts:
     part_name: "template:template_key"
     show_correct_answer: ~
     show_feedback_icon: ~
-    custom_marking: ~
     steps: ~
     steps_penalty: "template:template_key"
+    custom_marking: ~
     adaptive_marking:
       template_key: template_key
       default_value: ~
@@ -10488,6 +10488,10 @@ parts:
       default_value: ~
     show_correct_answer: false
     show_feedback_icon: false
+    steps: ~
+    steps_penalty:
+      template_key: template_key
+      default_value: ~
     custom_marking:
       algorithm_notes:
         - name: nonjmetext§
@@ -10579,10 +10583,6 @@ parts:
         - template_key: template_key
           default_value: ~
       extend_base_marking_algorithm: false
-    steps: ~
-    steps_penalty:
-      template_key: template_key
-      default_value: ~
     adaptive_marking: ~
     type: nonjmetext§
     settings:

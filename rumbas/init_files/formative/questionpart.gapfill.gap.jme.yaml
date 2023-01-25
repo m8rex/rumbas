@@ -1,0 +1,53 @@
+---
+prompt: ""
+marks: 1
+part_name: none
+show_correct_answer: true
+show_feedback_icon: true
+steps: []
+steps_penalty: 0
+custom_marking: none
+adaptive_marking: none
+answer_simplification:
+  simplify_basic: true
+  simplify_unit_factor: true
+  simplify_unit_power: true
+  simplify_unit_denominator: true
+  simplify_zero_factor: true
+  simplify_zero_term: true
+  simplify_zero_power: true
+  simplify_zero_base: true
+  collect_numbers: true
+  constants_first: true
+  simplify_sqrt_products: true
+  simplify_sqrt_division: true
+  simplify_sqrt_square: true
+  simplify_other_numbers: true
+  simplify_no_leading_minus: true
+  simplify_fractions: true
+  simplify_trigonometric: true
+  cancel_terms: true
+  cancel_factors: true
+  collect_like_fractions: true
+  order_canonical: false
+  use_times_dot: true
+  expand_brackets: false
+answer_display:
+  broken_as_fractions: false
+  mixed_fractions: false
+  flat_fractions: false
+  vector_as_row: false
+  always_show_multiplication_sign: false
+  use_dot_as_multiplication_sign: true
+  matrices_without_parentheses: false
+show_preview: true
+check_variable_names: false
+single_letter_variables: false
+allow_unknown_functions: true
+implicit_function_composition: false
+must_match_pattern: none
+value_generators: none
+max_length: none
+min_length: none
+must_have: none
+may_not_have: none

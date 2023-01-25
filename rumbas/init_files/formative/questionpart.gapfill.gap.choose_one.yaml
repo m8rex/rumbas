@@ -1,0 +1,15 @@
+---
+prompt: ""
+marks: 1
+part_name: none
+show_correct_answer: true
+show_feedback_icon: true
+steps: []
+steps_penalty: 0
+custom_marking: none
+adaptive_marking: none
+shuffle_answers: true
+show_cell_answer_state: true
+display: 
+  type: radio
+  columns: 1

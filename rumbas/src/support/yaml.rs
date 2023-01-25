@@ -68,3 +68,16 @@ where
 
     serde_yaml::from_str(s).map_err(|e| YamlError::from(YamlErrorKind::YamlError(e), file_path))
 }
+
+pub fn can_parse_yaml<T>(s: &str) -> bool
+where
+    T: DeserializeOwned,
+{
+    let test = parse_yaml_file(s);
+    if test.is_err() {
+        return false;
+    }
+
+    let res: Result<T, _> = serde_yaml::from_str(s);
+    res.is_ok()
+}

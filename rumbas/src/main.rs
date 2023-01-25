@@ -44,7 +44,7 @@ fn main() {
             exam_or_question_paths,
         } => cli::check(exam_or_question_paths),
         Command::UpdateRepo => cli::update_repo(),
-        Command::Init => cli::init(),
+        Command::Init { summative } => cli::init(summative),
         Command::Schema => cli::schema(),
         Command::GenerateShellCompletion { shell } => cli::complete(Cli::command(), shell),
         Command::Fmt {

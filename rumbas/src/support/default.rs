@@ -32,11 +32,17 @@ use crate::question::part::pattern_match::QuestionPartPatternMatchInputEnum;
 use crate::question::part::question_part::{QuestionPartBuiltinInput, QuestionPartInput};
 use crate::question::QuestionInput;
 use crate::support::file_manager::RumbasRepoEntry;
-use crate::support::yaml::{parse_yaml, YamlResult};
+use crate::support::yaml::{can_parse_yaml, parse_yaml, YamlResult};
 use rumbas_support::input::{FileToLoad, LoadedFile};
 use rumbas_support::path::RumbasPath;
 use rumbas_support::preamble::*;
 use std::collections::HashSet;
+
+#[derive(Debug, Clone, Copy)]
+pub enum DefaultInitType {
+    Formative,
+    Summative,
+}
 
 //TODO Tests
 //Questionnavigation?? -> in question?
@@ -110,7 +116,7 @@ fn default_file_paths(path: RumbasPath) -> Vec<RumbasPath> {
 
 // Create the needed enum for exams by specifying which files contain which data
 create_default_file_type_enums!(
-    DefaultExamFileType: DefaultExamData,
+    DefaultExamFileType: DefaultExamData: exam_defaults_test,
     SequentialNavigation with type SequentialNavigationInput: in "navigation";
     MenuNavigation with type MenuNavigationInput: in "navigation.menu";
     DiagnosticNavigation with type DiagnosticNavigationInput: in "navigation.diagnostic";
@@ -122,7 +128,7 @@ create_default_file_type_enums!(
 
 // Create the needed enum for questions by specifying which files contain which data
 create_default_file_type_enums!(
-    DefaultQuestionFileType: DefaultQuestionData,
+    DefaultQuestionFileType: DefaultQuestionData: question_defaults_test,
     Question with type QuestionInput: in "question";
     QuestionPartJME with type QuestionPartJMEInput: in "questionpart.jme";
     QuestionPartGapFill with type QuestionPartGapFillInput: in "questionpart.gapfill";
@@ -149,6 +155,7 @@ pub trait DefaultFileTypeMethods: Sized {
     type Data;
     fn from_path(path: &RumbasPath) -> Option<Self>;
     fn read_as_data(&self, path: &RumbasPath) -> YamlResult<Self::Data>;
+    fn default_init(init_type: DefaultInitType) -> Vec<(std::path::PathBuf, &'static str)>;
 }
 
 #[derive(Debug, Clone)]
@@ -207,7 +214,7 @@ pub struct DefaultFileData<T> {
 
 /// Create the DefaultFileType and DefaultQuestionData enums and their methods to read data
 macro_rules! create_default_file_type_enums {
-    ($type_name: ident: $data_name: ident, $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
+    ($type_name: ident: $data_name: ident: $test_mod_name: ident, $($file_type:ident with type $data_type: ty: in $file_name: literal);* ) => {
         #[derive(Debug, Clone)]
         pub enum $type_name {
             $(
@@ -253,7 +260,47 @@ macro_rules! create_default_file_type_enums {
                     }
                 } else { unreachable!() }
             }
+
+            fn default_init(init_type: DefaultInitType) -> Vec<(std::path::PathBuf, &'static str)> {
+                Self::default_init_and_parse(init_type, false)
+            }
         }
+
+        impl $type_name {
+            fn default_init_and_parse(init_type: DefaultInitType, parse: bool) -> Vec<(std::path::PathBuf, &'static str)> {
+                vec![
+                    $({
+                        let text = match init_type {
+                            DefaultInitType::Summative => {
+                                include_str!(concat!("../../init_files/summative/", $file_name, ".yaml"))
+                            }
+                            DefaultInitType::Formative => {
+                                include_str!(concat!("../../init_files/formative/", $file_name, ".yaml"))
+                            }
+                        };
+                        if parse {
+                            let t = can_parse_yaml::<$data_type>(text);
+                            if !t {
+                                panic!("Failed to parse default file {} for type {:?}", $file_name, init_type);
+                            }
+                        }
+                        (std::path::PathBuf::from($file_name), text)
+                    }),*
+                ]
+            }
+        }
+
+        #[cfg(test)]
+        mod $test_mod_name {
+            use super::$type_name;
+            use super::DefaultInitType;
+            #[test]
+            fn parse_defaults() {
+                $type_name::default_init_and_parse(DefaultInitType::Summative, true);
+                $type_name::default_init_and_parse(DefaultInitType::Formative, true);
+            }
+        }
+
     };
 }
 
