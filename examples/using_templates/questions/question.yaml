@@ -1,12 +1,12 @@
 ---
 type: normal
-statement: 
-  content: 
+statement:
+  content:
+    nl: Hoveel is {formula}?
     en: How much is {formula}?
-    nl: Hoeveel is {formula}?
   placeholders:
-      formula: 9 * {a}
-advice: 
+    formula: 9 * {a}
+advice:
   content: 
     en: You could calculate {times10} and then subtract {a}. This yields {result}
     nl: Je kan {times10} berekenen en dan {a} daarvan aftrekken. Dit geeft {result}
@@ -21,6 +21,6 @@ parts:
         nl: Geef je antwoord in in het invulveld
       placeholders: {}
     marks: 5 
-    answer: a * 9
+    answer: a * 9 
 variables:
-  a: 3
+  a: random(1..10)

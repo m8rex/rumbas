@@ -19,7 +19,7 @@ navigation:
   show_names_of_question_groups: true
   allow_printing: false
   can_move_to_previous: true 
-  browsing_enabled: false
+  browsing_enabled: true
   show_results_page: never
   on_leave: 
     action: none

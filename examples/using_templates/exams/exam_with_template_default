@@ -1,0 +1,16 @@
+---
+type: normal
+name: Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - question.yaml
+      - type: template
+        template: question_template.yaml 
+        a: 3 # we don't specify the marks here, so it will be 5
+      - type: template
+        template: question_template.yaml 
+        a: random(10..100)
+        marks: 10 # assign 10 marks to the more difficult version

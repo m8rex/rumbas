@@ -1,0 +1,4 @@
+---
+type: template
+template: question_template.yaml 
+a: random([11,55,78])

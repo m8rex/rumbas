@@ -1,0 +1,15 @@
+---
+type: normal
+name: Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - question.yaml
+      - type: template # we will load it as a template
+        template: question_template.yaml # this template will be loaded
+        a: 3 # this is filled in for `template:a`
+      - type: template # we will load it as a template
+        template: question_template.yaml # this template will be loaded
+        a: random(10..100) # this is filled in for `template:a`

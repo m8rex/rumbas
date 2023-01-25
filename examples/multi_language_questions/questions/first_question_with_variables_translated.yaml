@@ -3,7 +3,7 @@ type: normal
 statement: 
   content: 
     en: How much is 9 * {a}?
-    nl: Hoe veel is 9 * {a}?
+    nl: Hoeveel is 9 * {a}?
   placeholders: {}
 advice: 
   content: 
