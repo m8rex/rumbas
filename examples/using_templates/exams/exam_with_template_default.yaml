@@ -1,0 +1,16 @@
+---
+type: normal
+name: Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - question.yaml
+      - type: template
+        template: question_template.yaml 
+        a: 3 
+      - type: template
+        template: question_template_default.yaml # this is different from what the tutorial expect, therefore other file without yaml extension
+        a: random(10..100)
+        marks: 10

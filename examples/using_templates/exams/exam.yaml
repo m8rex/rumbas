@@ -1,0 +1,9 @@
+---
+type: normal
+name: Exam
+question_groups:
+  - name: Group 1
+    picking_strategy:
+      type: all_ordered
+    questions:
+      - question.yaml

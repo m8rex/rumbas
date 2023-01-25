@@ -24,6 +24,7 @@
     - [Step 3: Default exam files](./tutorial/using_defaults/step3.md)
     - [Step 4: Default question files](./tutorial/using_defaults/step4.md)
   - [Multi language questions](./tutorial/multi_language_questions.md)
+  - [Using Templates](./tutorial/templates.md)
 - [Cli](./cli.md)
 - [Features](./features.md)
   - [Default files](./features/default_files.md)
