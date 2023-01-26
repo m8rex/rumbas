@@ -35,6 +35,7 @@ RUN rm -f rumbas/target/x86_64-unknown-linux-musl/release/deps/rumbas*
 RUN rm -f rumbas/src/exam.rs rumbas/src/question.rs rumbas/src/support.rs rumbas/src/updates.rs
 
 COPY rumbas/src rumbas/src
+COPY rumbas/init_files rumbas/init_files
 RUN cd rumbas && cargo build --target=x86_64-unknown-linux-musl --features vendored --release
 
 FROM alpine as numbas_fetcher

@@ -1,6 +1,6 @@
 ---
 type: normal
-content: Question preview
+name: Question preview
 question_groups:
   - name: Q1
     picking_strategy:

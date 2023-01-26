@@ -10,6 +10,7 @@ variables: {}
 variables_test:
   condition: ""
   max_runs: 100
+grouped_variables: {}
 functions: {}
 preamble:
   js: ""

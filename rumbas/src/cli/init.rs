@@ -66,7 +66,7 @@ pub fn init(summative: bool) {
 
             log::info!("Writing question_preview file");
             std::fs::write(
-                std::path::Path::new(rumbas::QUESTIONS_FOLDER)
+                std::path::Path::new(rumbas::EXAMS_FOLDER)
                     .join(format!("{}.yaml", rumbas::QUESTION_PREVIEW_TEMPLATE_NAME)),
                 include_str!("../../init_files/question_preview.yaml"),
             )

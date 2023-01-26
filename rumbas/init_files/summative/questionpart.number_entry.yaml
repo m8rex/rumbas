@@ -12,7 +12,7 @@ display_correct_as_fraction: false
 allow_fractions: false
 fractions_must_be_reduced: false
 fractions_must_be_reduced_hint: true
-partial_credit_if_not_reduced: false
+partial_credit_if_fraction_not_reduced: 0
 allowed_notation_styles:
   - english-plain
 display_correct_in_style: english-plain
