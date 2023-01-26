@@ -63,6 +63,14 @@ pub fn init(summative: bool) {
                 )
                 .expect("writing of default files to work");
             }
+
+            log::info!("Writing question_preview file");
+            std::fs::write(
+                std::path::Path::new(rumbas::QUESTIONS_FOLDER)
+                    .join(format!("{}.yaml", rumbas::QUESTION_PREVIEW_TEMPLATE_NAME)),
+                include_str!("../../init_files/question_preview.yaml"),
+            )
+            .expect("writing of default files to work");
         }
     }
 }
