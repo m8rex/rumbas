@@ -36,6 +36,7 @@ pub fn init(summative: bool) {
             std::process::exit(1)
         } else {
             for path in paths.iter() {
+                log::info!("Creating folder {}", path.display());
                 std::fs::create_dir(path).expect("Failed creating folder");
             }
             let rc = rumbas::support::rc::RC::default();
@@ -54,10 +55,10 @@ pub fn init(summative: bool) {
                 .into_iter()
                 .chain(DefaultQuestionFileType::default_init(default_type).into_iter());
             for (path_part, content) in default_files {
+                log::info!("Writing default file {}", path_part.display());
                 std::fs::write(
                     std::path::Path::new(rumbas::DEFAULTS_FOLDER)
-                        .join(path_part)
-                        .with_extension("yaml"),
+                        .join(format!("{}.yaml", path_part.display())),
                     content,
                 )
                 .expect("writing of default files to work");
