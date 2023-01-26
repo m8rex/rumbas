@@ -8,6 +8,7 @@
     - [Unreleased Version](./github_codespace_last_unreleased.md)
   - [On you own device](./installation_on_own_device.md)
   - [Manual Installation](./manual_installation.md)
+- [Getting Started](./getting_started.md)
 - [Tutorial](./tutorial.md)
   - [Your first question](./tutorial/first_question.md)
     - [Step 1: Questions folder](./tutorial/first_project/step1.md)

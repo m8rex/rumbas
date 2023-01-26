@@ -1,18 +1,19 @@
 ---
-type: normal
+type: normal # This is just a normal questions
+# set the statement
 statement: |
       You want to buy a pair of shoes, but wait for the sales to start.
       <br/>
       Originally, a pair of shoes was priced $\var{price_orig}$ euro.
       You now get a $\var{percent}$% reduction.
-parts:
-  - type: gapfill
-    prompt: How much are the shoes now? [[0]]
-    gaps:
-      - type: number_entry
-        answer: price_now
-        marks: 1
-variables:
-  price_orig: random(15,20,25,30,35)
-  percent:    random(20,30,40,50,60)
-  price_now:  price_orig*(1-percent/100)
+parts: # specifythe parts of the questions
+  - type: gapfill # the first (and only) part is of type gapfill
+    prompt: How much are the shoes now? [[0]] # [[0]] is used to place the first gap (index 0)
+    gaps: # specify each gap
+      - type: number_entry # the first (and only) gap has type number_entry
+        answer: price_now # this is the correct answer (the variable `price_now`)
+        marks: 1 # the amount of marks awarded when answered correctly
+variables: # The variables for our question
+  price_orig: random(15,20,25,30,35) # a random element of this list
+  percent:    random(20,30,40,50,60) # a random element of this list
+  price_now:  price_orig*(1-percent/100) # the answer
