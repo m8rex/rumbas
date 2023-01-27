@@ -65,8 +65,7 @@ Create a first question about the price for shoes after a discount by pasting th
 ```
 
 ```yaml
-{{#include ../../examples/percentages-with-templates/questions/
-percentages-shoes-without_templates_en.yaml}}
+{{#include ../../examples/percentages-with-templates/questions/percentages-shoes-without_templates_en.yaml}}
 ```
 
 ## Compile our first question
