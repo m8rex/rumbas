@@ -1,93 +1,90 @@
 # Getting Started
 
-To follow along with this Getting Started, you will need an installation of rumbas.
+This Getting Started Guide will learn you 
+* how to setup your own rumbas repo on Github, with a complete development environment using Github Codespaces
+* to write and run your first question
+* to write and run your first exam (TODO?)
+* to get familiar with possible next steps to make more advanced use of rumbas (TODO).
+
+It assumes a minimal familiarity with VSCode.
+
+## Create an empty rumbas repository
+
+While you can use rumbas locally on your PC,
+the quickest way to get started is to use Github Codespaces:
+
+- Create a free Github account if you don't have one yet.
+
+- Go to https://github.com/m8rex/rumbas-codespaces-template, and click on the green 'Use this template' button to create your personal rumbas-repository by choosing the 'Create a new repository' option.
+  - Place it under your personal account 
+  - Choose a name 
+  - Decide whether it should be a private or public repo.
+  - You'll be sent to your new repo.
+
+- In your newly created repo, click on the green 'Code' button, use the 'Codespaces' tab and click on the green 'Create codespace on main' button (or on the plus icon if you've already used Codespaces before...).
+
+- You now have a VSCode interface in your browser on your own mostly empty repository, but with the most recent rumbas version installed and ready to go.
+    - Open a terminal, and run `rumbas --version` to check if the setup is working.
+
+More information, and different options to use rumbas can be found in [the installation guide](./installation.html#running-the-last-released-version) 
+
+## Initialise you new rumbas project
 
 ```admonish question title="Task"
-Follow the steps in [the installation guide](./installation.html#running-the-last-released-version) to start a github codespace with the latest released version of rumbas installed.
-```
 
-## Creating a new rumbas project
+Run the command `rumbas init` to initialise the new rumbas project.
 
-```admonish info
-You can run the command `rumbas init` to create a new rumbas project.
-```
-
-```admonish info
-In the VS Code setup (local or Github Codespaces) you can run this command by running the init task. You can do this in two ways:
-- Type <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>, then type `Tasks: Run Task` and select `init`.
-- Click on the `create rumbas project` button on the taskbar at the bottom of the screen.
+You can either do this in a Terminal, or click on the `Initialise Project` button on the taskbar at the bottom of the screen.
 ![The create rumbas project button](images/create_rumbas_project_button.png)
 ```
 
+This command will create a bunch of folders and files that you can explore later. Important for now is that all your questions will go in separate files in `questions`, and all your exams similarly go into files in the folder `exams`.
 
-```admonish question title="Task"
-Run the command to create a new rumbas project.
-```
 
 ```admonish info
 {{#include ./reference/folder_structure_folders.md}}
 ```
 
-## Creating our first question
+## Create our first question
 
-We will create a question about the price for shoes after a discount.
-
-To add a question, we will add a file to the `questions` folder. The file should have the extension `.yaml`. Let's name the file `shoes.yaml`
-
-```admonish info
-Adding a file the `questions` folder can be done in many ways. The easiest way is to right click on the `questions` folder and select `New File`. You can then name the file `shoes.yaml`.
-```
+Create a first question about the price for shoes after a discount by pasting the appropriate YAML content into a new file `questions/shoes.yaml`.
 
 ```admonish question title="Task"
-Create the file `questions/shoes.yaml` (this is a `shoes.yaml` file in the `questions` folder).
-```
+Create the file `questions/shoes.yaml` (this is a `shoes.yaml` file in the `questions` folder),
 
-We can specify the shoe discount question with the following yaml code:
+e.g. by right clicking on the `questions` folder, selecting `New File` and naming the file `shoes.yaml`
+```
+```admonish question title="Task"
+Add the following yaml code to the `questions/shoes.yaml` file:
+```
 
 ```yaml
 {{#include ../../examples/percentages-with-templates/questions/percentages-shoes-without_templates_en.yaml}}
 ```
 
-```admonish question title="Task"
-Add the yaml code to the `questions/shoes.yaml` file.
-```
+## Compile our first question
 
-## Compiling our first question
-
-```admonish info
-You can run the command `rumbas compile questions/shoes.yaml` to compile the questions.
-```
-
-```admonish info
-In the VS Code setup (local or Github Codespaces) you can run this command by running the compile task. You can do this in two ways:
-- Type <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>, then type `Tasks: Run Task` and select `compile`.
-- Click on the `Compile file` button on the taskbar at the bottom of the screen. Make sure that you have opened the `questions/shoes.yaml` file.
-```
 
 ```admonish question title="Task"
 Compile the question.
+
+You can either run the command `rumbas compile questions/shoes.yaml` in a Terminal,
+or click the `Compile file` button on the taskbar at the bottom of the screen. 
+
+(The `Compile file`button will compile the *current* file !)
 ```
 
-## Viewing the compiled question
+There will now be a completely standard Numbas preview in the folder `_output/en/questions/shoes`.
 
-```admonish info
-The compilated step generated a folder containing the html and js files for the question in the `_output` folder in your project.
+## View and test your first question
 
-The exact path will be `_output/en/questions/shoes`.
-```
 
-```admonish info
-To view this file, you need to host the `_output` folder. 
-
-The easiest way to do this in VSCode is by starting the Live Server extension. You can do this by clicking on the `Go Live` button on the taskbar at the bottom of the screen. It is located on the right side.
+```admonish question title="Task"
+Start the Live Server extension by clicking on the `Go Live` button on the taskbar at the bottom of the screen. It is located on the right side.
 
 This will open a browser window with the contents of the `_output` folder.
 
 Click through the folder structure to reach you question.
-```
-
-```admonish question title="Task"
-Start the live server and try the question in the browser window that opens.
 ```
 
 ```admonish question title="Task"
