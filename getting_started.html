@@ -143,53 +143,58 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
-<p>To follow along with this Getting Started, you will need an installation of rumbas.</p>
+<p>This Getting Started Guide will learn you </p>
+<ul>
+<li>how to setup your own rumbas repo on Github, with a complete development environment using Github Codespaces</li>
+<li>to write and run your first question</li>
+<li>to write and run your first exam (TODO?)</li>
+<li>to get familiar with possible next steps to make more advanced use of rumbas (TODO).</li>
+</ul>
+<p>It assumes a minimal familiarity with VSCode.</p>
+<h2 id="create-an-empty-rumbas-repository"><a class="header" href="#create-an-empty-rumbas-repository">Create an empty rumbas repository</a></h2>
+<p>While you can use rumbas locally on your PC,
+the quickest way to get started is to use Github Codespaces:</p>
+<ul>
+<li>
+<p>Create a free Github account if you don't have one yet.</p>
+</li>
+<li>
+<p>Go to https://github.com/m8rex/rumbas-codespaces-template, and click on the green 'Use this template' button to create your personal rumbas-repository by choosing the 'Create a new repository' option.</p>
+<ul>
+<li>Place it under your personal account </li>
+<li>Choose a name </li>
+<li>Decide whether it should be a private or public repo.</li>
+<li>You'll be sent to your new repo.</li>
+</ul>
+</li>
+<li>
+<p>In your newly created repo, click on the green 'Code' button, use the 'Codespaces' tab and click on the green 'Create codespace on main' button (or on the plus icon if you've already used Codespaces before...).</p>
+</li>
+<li>
+<p>You now have a VSCode interface in your browser on your own mostly empty repository, but with the most recent rumbas version installed and ready to go.</p>
+<ul>
+<li>Open a terminal, and run <code>rumbas --version</code> to check if the setup is working.</li>
+</ul>
+</li>
+</ul>
+<p>More information, and different options to use rumbas can be found in <a href="./installation.html#running-the-last-released-version">the installation guide</a> </p>
+<h2 id="initialise-you-new-rumbas-project"><a class="header" href="#initialise-you-new-rumbas-project">Initialise you new rumbas project</a></h2>
 <div id="admonition-task" class="admonition question">
 <div class="admonition-title">
 <p>Task</p>
 <p><a class="admonition-anchor-link" href="#admonition-task"></a></p>
 </div>
 <div>
-<p>Follow the steps in <a href="./installation.html#running-the-last-released-version">the installation guide</a> to start a github codespace with the latest released version of rumbas installed.</p>
+<p>Run the command <code>rumbas init</code> to initialise the new rumbas project.</p>
+<p>You can either do this in a Terminal, or click on the <code>Initialise Project</code> button on the taskbar at the bottom of the screen.
+<img src="images/create_rumbas_project_button.png" alt="The create rumbas project button" /></p>
 </div>
 </div>
-<h2 id="creating-a-new-rumbas-project"><a class="header" href="#creating-a-new-rumbas-project">Creating a new rumbas project</a></h2>
+<p>This command will create a bunch of folders and files that you can explore later. Important for now is that all your questions will go in separate files in <code>questions</code>, and all your exams similarly go into files in the folder <code>exams</code>.</p>
 <div id="admonition-info" class="admonition info">
 <div class="admonition-title">
 <p>Info</p>
 <p><a class="admonition-anchor-link" href="#admonition-info"></a></p>
-</div>
-<div>
-<p>You can run the command <code>rumbas init</code> to create a new rumbas project.</p>
-</div>
-</div>
-<div id="admonition-info-1" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-1"></a></p>
-</div>
-<div>
-<p>In the VS Code setup (local or Github Codespaces) you can run this command by running the init task. You can do this in two ways:</p>
-<ul>
-<li>Type <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>, then type <code>Tasks: Run Task</code> and select <code>init</code>.</li>
-<li>Click on the <code>create rumbas project</code> button on the taskbar at the bottom of the screen.
-<img src="images/create_rumbas_project_button.png" alt="The create rumbas project button" /></li>
-</ul>
-</div>
-</div>
-<div id="admonition-task-1" class="admonition question">
-<div class="admonition-title">
-<p>Task</p>
-<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
-</div>
-<div>
-<p>Run the command to create a new rumbas project.</p>
-</div>
-</div>
-<div id="admonition-info-2" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-2"></a></p>
 </div>
 <div>
 <p>The folder structure of a rumbas project is important. Some names are reserved and have a special meaning.</p>
@@ -203,16 +208,16 @@
 </ul>
 </div>
 </div>
-<h2 id="creating-our-first-question"><a class="header" href="#creating-our-first-question">Creating our first question</a></h2>
-<p>We will create a question about the price for shoes after a discount.</p>
-<p>To add a question, we will add a file to the <code>questions</code> folder. The file should have the extension <code>.yaml</code>. Let's name the file <code>shoes.yaml</code></p>
-<div id="admonition-info-3" class="admonition info">
+<h2 id="create-our-first-question"><a class="header" href="#create-our-first-question">Create our first question</a></h2>
+<p>Create a first question about the price for shoes after a discount by pasting the appropriate YAML content into a new file <code>questions/shoes.yaml</code>.</p>
+<div id="admonition-task-1" class="admonition question">
 <div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-3"></a></p>
+<p>Task</p>
+<p><a class="admonition-anchor-link" href="#admonition-task-1"></a></p>
 </div>
 <div>
-<p>Adding a file the <code>questions</code> folder can be done in many ways. The easiest way is to right click on the <code>questions</code> folder and select <code>New File</code>. You can then name the file <code>shoes.yaml</code>.</p>
+<p>Create the file <code>questions/shoes.yaml</code> (this is a <code>shoes.yaml</code> file in the <code>questions</code> folder),</p>
+<p>e.g. by right clicking on the <code>questions</code> folder, selecting <code>New File</code> and naming the file <code>shoes.yaml</code></p>
 </div>
 </div>
 <div id="admonition-task-2" class="admonition question">
@@ -221,10 +226,9 @@
 <p><a class="admonition-anchor-link" href="#admonition-task-2"></a></p>
 </div>
 <div>
-<p>Create the file <code>questions/shoes.yaml</code> (this is a <code>shoes.yaml</code> file in the <code>questions</code> folder).</p>
+<p>Add the following yaml code to the <code>questions/shoes.yaml</code> file:</p>
 </div>
 </div>
-<p>We can specify the shoe discount question with the following yaml code:</p>
 <pre><code class="language-yaml">---
 type: normal # This is just a normal questions
 # set the statement
@@ -245,66 +249,28 @@ variables: # The variables for our question
   percent:    random(20,30,40,50,60) # a random element of this list
   price_now:  price_orig*(1-percent/100) # the answer
 </code></pre>
+<h2 id="compile-our-first-question"><a class="header" href="#compile-our-first-question">Compile our first question</a></h2>
 <div id="admonition-task-3" class="admonition question">
 <div class="admonition-title">
 <p>Task</p>
 <p><a class="admonition-anchor-link" href="#admonition-task-3"></a></p>
 </div>
 <div>
-<p>Add the yaml code to the <code>questions/shoes.yaml</code> file.</p>
+<p>Compile the question.</p>
+<p>You can either run the command <code>rumbas compile questions/shoes.yaml</code> in a Terminal,
+or click the <code>Compile file</code> button on the taskbar at the bottom of the screen. </p>
+<p>(The <code>Compile file</code>button will compile the <em>current</em> file !)</p>
 </div>
 </div>
-<h2 id="compiling-our-first-question"><a class="header" href="#compiling-our-first-question">Compiling our first question</a></h2>
-<div id="admonition-info-4" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-4"></a></p>
-</div>
-<div>
-<p>You can run the command <code>rumbas compile questions/shoes.yaml</code> to compile the questions.</p>
-</div>
-</div>
-<div id="admonition-info-5" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-5"></a></p>
-</div>
-<div>
-<p>In the VS Code setup (local or Github Codespaces) you can run this command by running the compile task. You can do this in two ways:</p>
-<ul>
-<li>Type <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>, then type <code>Tasks: Run Task</code> and select <code>compile</code>.</li>
-<li>Click on the <code>Compile file</code> button on the taskbar at the bottom of the screen. Make sure that you have opened the <code>questions/shoes.yaml</code> file.</li>
-</ul>
-</div>
-</div>
+<p>There will now be a completely standard Numbas preview in the folder <code>_output/en/questions/shoes</code>.</p>
+<h2 id="view-and-test-your-first-question"><a class="header" href="#view-and-test-your-first-question">View and test your first question</a></h2>
 <div id="admonition-task-4" class="admonition question">
 <div class="admonition-title">
 <p>Task</p>
 <p><a class="admonition-anchor-link" href="#admonition-task-4"></a></p>
 </div>
 <div>
-<p>Compile the question.</p>
-</div>
-</div>
-<h2 id="viewing-the-compiled-question"><a class="header" href="#viewing-the-compiled-question">Viewing the compiled question</a></h2>
-<div id="admonition-info-6" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-6"></a></p>
-</div>
-<div>
-<p>The compilated step generated a folder containing the html and js files for the question in the <code>_output</code> folder in your project.</p>
-<p>The exact path will be <code>_output/en/questions/shoes</code>.</p>
-</div>
-</div>
-<div id="admonition-info-7" class="admonition info">
-<div class="admonition-title">
-<p>Info</p>
-<p><a class="admonition-anchor-link" href="#admonition-info-7"></a></p>
-</div>
-<div>
-<p>To view this file, you need to host the <code>_output</code> folder. </p>
-<p>The easiest way to do this in VSCode is by starting the Live Server extension. You can do this by clicking on the <code>Go Live</code> button on the taskbar at the bottom of the screen. It is located on the right side.</p>
+<p>Start the Live Server extension by clicking on the <code>Go Live</code> button on the taskbar at the bottom of the screen. It is located on the right side.</p>
 <p>This will open a browser window with the contents of the <code>_output</code> folder.</p>
 <p>Click through the folder structure to reach you question.</p>
 </div>
@@ -313,15 +279,6 @@ variables: # The variables for our question
 <div class="admonition-title">
 <p>Task</p>
 <p><a class="admonition-anchor-link" href="#admonition-task-5"></a></p>
-</div>
-<div>
-<p>Start the live server and try the question in the browser window that opens.</p>
-</div>
-</div>
-<div id="admonition-task-6" class="admonition question">
-<div class="admonition-title">
-<p>Task</p>
-<p><a class="admonition-anchor-link" href="#admonition-task-6"></a></p>
 </div>
 <div>
 <p>Answer the question and check if the answer is correct.</p>
